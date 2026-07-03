@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read FVM config
+        id: fvm
+        uses: kuhnroyal/flutter-fvm-config-action@v2
+        with:
+          path: .fvmrc
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Lint
+        run: flutter analyze --fatal-infos
+
+      - name: Test with coverage
+        run: flutter test --coverage
+
+      - name: Filter coverage
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
+          lcov --ignore-errors unused \
+            --remove coverage/lcov.info \
+            'lib/main.dart' \
+            'lib/**/generated/**' \
+            -o coverage/lcov.info
+
+      - name: Check coverage >= 85%
+        uses: VeryGoodOpenSource/very_good_coverage@v3
+        with:
+          path: ${{ github.workspace }}/coverage/lcov.info
+          min_coverage: 85
