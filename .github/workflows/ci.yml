@@ -6,9 +6,16 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ci-${{ github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
@@ -35,8 +42,6 @@ jobs:
 
       - name: Filter coverage
         run: |
-          sudo apt-get update
-          sudo apt-get install -y lcov
           lcov --ignore-errors unused \
             --remove coverage/lcov.info \
             'lib/main.dart' \
