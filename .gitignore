@@ -47,11 +47,5 @@ app.*.map.json
 # FVM Version Cache
 .fvm/
 # --- Env (flutter_dotenv) ---
+# Real .env is per-developer (holds AUTH_URL etc.); commit only .env.example.
 .env
-
-# Generated localizations (flutter gen-l10n)
-lib/l10n/app_localizations*.dart
-
-# Generated code (freezed / json_serializable)
-*.freezed.dart
-*.g.dart

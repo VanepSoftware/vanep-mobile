@@ -1,8 +1,8 @@
-.PHONY: all install clean pub_get lint lint_fix test coverage coverage_open
+.PHONY: all install clean pub_get setup_env codegen lint lint_fix test coverage coverage_open
 
 all: install
 
-install: clean pub_get
+install: clean pub_get setup_env
 
 clean:
 	@echo "🧹 cleaning..."
@@ -11,6 +11,21 @@ clean:
 pub_get:
 	@echo "📦 pub get..."
 	fvm flutter pub get
+
+# Cria um .env de dev a partir do .env.example, se ainda não existir (não sobrescreve).
+# O .env está no .gitignore; ajuste AUTH_URL para o seu backend (ver README).
+setup_env:
+	@if [ -f .env ]; then \
+		echo "✅ .env já existe — mantendo."; \
+	else \
+		cp .env.example .env; \
+		echo "✅ .env criado a partir do .env.example. Ajuste AUTH_URL se necessário."; \
+	fi
+
+# Regenera o código do freezed / json_serializable / l10n após mudar DTOs ou ARBs.
+codegen:
+	@echo "🧬 codegen..."
+	fvm dart run build_runner build --delete-conflicting-outputs
 
 lint:
 	@echo "⚡ lint..."
