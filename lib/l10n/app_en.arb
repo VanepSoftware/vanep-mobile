@@ -1,0 +1,26 @@
+{
+  "@@locale": "en",
+  "appTitle": "Vanep",
+  "welcomeTagline": "School transport, simplified.",
+  "continueButton": "Continue",
+  "loginTitle": "Sign in",
+  "loginCancelled": "Sign-in was cancelled.",
+  "loginFailed": "Could not sign in. Please try again.",
+  "homeGreeting": "Hello, {name}!",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeSignedInAs": "You are signed in as {email}.",
+  "@homeSignedInAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "signOutButton": "Sign out"
+}
