@@ -46,3 +46,6 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+# --- Env (flutter_dotenv) ---
+# Real .env is per-developer (holds AUTH_URL etc.); commit only .env.example.
+.env

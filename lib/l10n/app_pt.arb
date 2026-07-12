@@ -1,0 +1,12 @@
+{
+  "@@locale": "pt",
+  "appTitle": "Vanep",
+  "welcomeTagline": "Transporte escolar, simplificado.",
+  "continueButton": "Continuar",
+  "loginTitle": "Entrar",
+  "loginCancelled": "O login foi cancelado.",
+  "loginFailed": "Não foi possível entrar. Tente novamente.",
+  "homeGreeting": "Olá, {name}!",
+  "homeSignedInAs": "Você está autenticado como {email}.",
+  "signOutButton": "Sair"
+}

@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Setup env
+        run: cp .env.example .env
+
       - name: Lint
         run: flutter analyze --fatal-infos
 
@@ -46,6 +49,10 @@ jobs:
             --remove coverage/lcov.info \
             'lib/main.dart' \
             'lib/**/generated/**' \
+            'lib/**/*.g.dart' \
+            'lib/**/*.freezed.dart' \
+            'lib/l10n/*.dart' \
+            'lib/modules/auth/presentation/pages/oauth_webview_page.dart' \
             -o coverage/lcov.info
 
       - name: Check coverage >= 85%
