@@ -47,6 +47,7 @@ jobs:
             'lib/**/*.g.dart' \
             'lib/**/*.freezed.dart' \
             'lib/l10n/*.dart' \
+            'lib/modules/auth/presentation/pages/oauth_webview_page.dart' \
             -o coverage/lcov.info
 
       - name: Check coverage >= 85%

@@ -67,4 +67,20 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('shows an info snackbar when login is cancelled', (tester) async {
+    whenListen(
+      cubit,
+      Stream<AuthState>.fromIterable(const [
+        AuthFailureState(CancelledAuthFailure()),
+        AuthUnauthenticated(),
+      ]),
+      initialState: const AuthUnauthenticated(),
+    );
+
+    await tester.pumpWidget(_harness(cubit));
+    await tester.pump();
+
+    expect(find.text('O login foi cancelado.'), findsOneWidget);
+  });
 }

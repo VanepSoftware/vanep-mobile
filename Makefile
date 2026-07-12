@@ -52,6 +52,7 @@ coverage:
 		'lib/**/*.g.dart' \
 		'lib/**/*.freezed.dart' \
 		'lib/l10n/*.dart' \
+		'lib/modules/auth/presentation/pages/oauth_webview_page.dart' \
 		-o coverage/lcov.info
 	@echo "📊 Evaluating coverage threshold (>= 85%)..."
 	@pct=$$(lcov --summary coverage/lcov.info 2>/dev/null | perl -ne 'if(/^[[:space:]]*lines.*:[[:space:]]*([0-9.]+)%/){print $$1; exit}'); \

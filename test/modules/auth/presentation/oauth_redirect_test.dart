@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/modules/auth/presentation/pages/oauth_webview_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/oauth_redirect.dart';
 
 import '../auth_fixtures.dart';
 
