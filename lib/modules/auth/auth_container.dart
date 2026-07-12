@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../core/environment/environment.dart';
 import '../../core/network/auth_interceptor.dart';
@@ -8,6 +9,7 @@ import '../../core/network/dio_client.dart';
 import '../../core/result/result.dart';
 import 'data/datasources/auth_local_datasource.dart';
 import 'data/datasources/oauth_remote_datasource.dart';
+import 'data/datasources/web_session_cleaner.dart';
 import 'data/pkce/pkce_generator.dart';
 import 'data/repositories/auth_repository_impl.dart';
 import 'domain/repositories/auth_repository.dart';
@@ -34,12 +36,16 @@ void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
     )
     ..registerSingleton<AuthLocalDataSource>(AuthLocalDataSource(authBox))
     ..registerSingleton<PkceGenerator>(PkceGenerator())
+    ..registerSingleton<WebSessionCleaner>(
+      WebViewWebSessionCleaner(WebViewCookieManager()),
+    )
     ..registerSingleton<AuthRepository>(
       AuthRepositoryImpl(
         remote: getIt<OAuthRemoteDataSource>(),
         local: getIt<AuthLocalDataSource>(),
         pkce: getIt<PkceGenerator>(),
         environment: environment,
+        webSession: getIt<WebSessionCleaner>(),
       ),
     )
     ..registerFactory<GetCurrentSession>(

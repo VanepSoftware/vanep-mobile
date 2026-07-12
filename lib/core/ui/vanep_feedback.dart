@@ -25,7 +25,12 @@ class VanepFeedback {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(message),
+          content: Text(
+            message,
+            // Both backgrounds are dark (navy / red); force light text so the
+            // message stays legible instead of the theme's dark default.
+            style: const TextStyle(color: VanepColors.foreground),
+          ),
           backgroundColor: background,
           behavior: SnackBarBehavior.floating,
         ),

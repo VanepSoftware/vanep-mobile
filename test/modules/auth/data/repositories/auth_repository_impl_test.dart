@@ -16,6 +16,7 @@ DioException _dioError() => DioException(
 void main() {
   late MockOAuthRemoteDataSource remote;
   late MockAuthLocalDataSource local;
+  late MockWebSessionCleaner webSession;
   late AuthRepositoryImpl repository;
 
   final fixedNow = DateTime.utc(2026, 7, 11, 12);
@@ -25,11 +26,13 @@ void main() {
   setUp(() {
     remote = MockOAuthRemoteDataSource();
     local = MockAuthLocalDataSource();
+    webSession = MockWebSessionCleaner();
     repository = AuthRepositoryImpl(
       remote: remote,
       local: local,
       pkce: PkceGenerator(),
       environment: testEnvironment,
+      webSession: webSession,
       clock: () => fixedNow,
     );
   });
@@ -153,11 +156,13 @@ void main() {
   });
 
   group('signOut', () {
-    test('revokes both tokens and clears the local session', () async {
+    test('revokes both tokens, clears the local session and web cookies',
+        () async {
       when(local.readSession).thenReturn(testAuthSessionDto());
       when(() => remote.revoke(any(), any()))
           .thenAnswer((_) => Future<void>.value());
       when(local.clearSession).thenAnswer((_) => Future<void>.value());
+      when(webSession.clear).thenAnswer((_) => Future<void>.value());
 
       final result = await repository.signOut();
 
@@ -165,6 +170,19 @@ void main() {
       verify(() => remote.revoke('refresh-1', 'refresh_token')).called(1);
       verify(() => remote.revoke('access-1', 'access_token')).called(1);
       verify(local.clearSession).called(1);
+      verify(webSession.clear).called(1);
+    });
+
+    test('clears web cookies even when there is no stored session', () async {
+      when(local.readSession).thenReturn(null);
+      when(local.clearSession).thenAnswer((_) => Future<void>.value());
+      when(webSession.clear).thenAnswer((_) => Future<void>.value());
+
+      final result = await repository.signOut();
+
+      expect(result.isOk, isTrue);
+      verifyNever(() => remote.revoke(any(), any()));
+      verify(webSession.clear).called(1);
     });
   });
 }

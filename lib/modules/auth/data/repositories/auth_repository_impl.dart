@@ -8,6 +8,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../domain/value_objects/authorization_request.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/oauth_remote_datasource.dart';
+import '../datasources/web_session_cleaner.dart';
 import '../dtos/auth_session_dto.dart';
 import '../dtos/token_response_dto.dart';
 import '../dtos/user_profile_dto.dart';
@@ -21,6 +22,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required this.local,
     required this.pkce,
     required this.environment,
+    required this.webSession,
     DateTime Function() clock = DateTime.now,
   }) : _now = clock;
 
@@ -28,6 +30,7 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource local;
   final PkceGenerator pkce;
   final Environment environment;
+  final WebSessionCleaner webSession;
   final DateTime Function() _now;
 
   @override
@@ -105,6 +108,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await _revokeQuietly(stored.accessToken, 'access_token');
     }
     await local.clearSession();
+    // Wipe the WebView session cookie so the next login shows the login page
+    // instead of silently reusing the still-authenticated server session.
+    await webSession.clear();
     return const Ok(null);
   }
 

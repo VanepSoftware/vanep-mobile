@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/oauth_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/web_session_cleaner.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/auth_session_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/token_response_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
@@ -11,6 +12,8 @@ import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
 class MockOAuthRemoteDataSource extends Mock implements OAuthRemoteDataSource {}
 
 class MockAuthLocalDataSource extends Mock implements AuthLocalDataSource {}
+
+class MockWebSessionCleaner extends Mock implements WebSessionCleaner {}
 
 class MockBox extends Mock implements Box<String> {}
 

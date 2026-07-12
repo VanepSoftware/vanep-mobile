@@ -22,6 +22,7 @@ abstract class AuthRepository {
   /// expired), or `null` when the user is not authenticated.
   Future<Result<AuthFailure, AuthSession?>> currentSession();
 
-  /// Revokes the tokens on the backend and clears the local session.
+  /// Revokes the tokens on the backend, clears the local session and wipes the
+  /// WebView session cookie so the next login is not silently reused.
   Future<Result<AuthFailure, void>> signOut();
 }
