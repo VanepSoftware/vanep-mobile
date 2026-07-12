@@ -56,8 +56,9 @@ void main() {
     verify(() => cubit.signOut()).called(1);
   });
 
-  testWidgets('renders without an email when the profile has none',
-      (tester) async {
+  testWidgets('renders without an email when the profile has none', (
+    tester,
+  ) async {
     await tester.pumpWidget(_harness(cubit, const _NamelessProfile()));
 
     expect(find.text('Sair'), findsOneWidget);

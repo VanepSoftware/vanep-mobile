@@ -9,7 +9,6 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/user_profile.dart';
 import '../cubit/auth_cubit.dart';
 
-/// Minimal authenticated landing: greets the user and offers sign-out.
 class HomePage extends StatelessWidget {
   const HomePage({required this.profile, super.key});
 

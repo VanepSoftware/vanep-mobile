@@ -5,10 +5,6 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/value_objects/authorization_request.dart';
 import 'oauth_redirect.dart';
 
-/// Hosts the backend login page in an in-app WebView and captures the OAuth
-/// authorization code by intercepting the navigation to the custom-scheme
-/// redirect URI. Pops with the `code` on success, or `null` when cancelled or
-/// the `state` does not match.
 class OAuthWebViewPage extends StatefulWidget {
   const OAuthWebViewPage({required this.request, super.key});
 

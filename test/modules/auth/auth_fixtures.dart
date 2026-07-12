@@ -2,7 +2,6 @@ import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_request.dart';
 
-/// Concrete stand-ins for the abstract domain entities, used across auth tests.
 class FakeUserProfile implements UserProfile {
   const FakeUserProfile({
     this.token = 'user-token-1',

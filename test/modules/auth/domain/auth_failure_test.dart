@@ -6,10 +6,7 @@ void main() {
     expect(const CancelledAuthFailure(), const CancelledAuthFailure());
     expect(const InvalidStateAuthFailure(), const InvalidStateAuthFailure());
     expect(const NetworkAuthFailure('x'), const NetworkAuthFailure('x'));
-    expect(
-      const NetworkAuthFailure('x'),
-      isNot(const NetworkAuthFailure('y')),
-    );
+    expect(const NetworkAuthFailure('x'), isNot(const NetworkAuthFailure('y')));
     expect(
       const UnexpectedAuthFailure('boom'),
       const UnexpectedAuthFailure('boom'),

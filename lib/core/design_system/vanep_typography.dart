@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'vanep_colors.dart';
 
-/// Typography tokens for the Vanep design system (constitution R10).
 class VanepTypography {
   const VanepTypography._();
 
-  /// The "vanep." wordmark logotype style.
   static const TextStyle wordmark = TextStyle(
     fontSize: 56,
     fontWeight: FontWeight.w800,

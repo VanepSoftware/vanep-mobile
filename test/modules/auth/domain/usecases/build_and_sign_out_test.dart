@@ -14,8 +14,9 @@ void main() {
   setUp(() => repository = MockAuthRepository());
 
   test('BuildAuthorizationRequest returns the request from the repository', () {
-    when(repository.buildAuthorizationRequest)
-        .thenReturn(fakeAuthorizationRequest);
+    when(
+      repository.buildAuthorizationRequest,
+    ).thenReturn(fakeAuthorizationRequest);
 
     final result = BuildAuthorizationRequest(repository)();
 
@@ -24,9 +25,9 @@ void main() {
   });
 
   test('SignOut delegates to the repository', () async {
-    when(repository.signOut).thenAnswer(
-      (_) async => const Ok<AuthFailure, void>(null),
-    );
+    when(
+      repository.signOut,
+    ).thenAnswer((_) async => const Ok<AuthFailure, void>(null));
 
     final result = await SignOut(repository)();
 

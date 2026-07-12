@@ -29,18 +29,18 @@ void main() {
   });
 
   AuthCubit buildCubit() => AuthCubit(
-        getCurrentSession: getCurrentSession,
-        buildAuthorizationRequest: buildAuthorizationRequest,
-        exchangeAuthorizationCode: exchangeAuthorizationCode,
-        signOut: signOut,
-      );
+    getCurrentSession: getCurrentSession,
+    buildAuthorizationRequest: buildAuthorizationRequest,
+    exchangeAuthorizationCode: exchangeAuthorizationCode,
+    signOut: signOut,
+  );
 
   group('checkSession', () {
     blocTest<AuthCubit, AuthState>(
       'emits authenticated when a session is restored',
-      setUp: () => when(getCurrentSession.call).thenAnswer(
-        (_) async => Ok<AuthFailure, AuthSession?>(session),
-      ),
+      setUp: () => when(
+        getCurrentSession.call,
+      ).thenAnswer((_) async => Ok<AuthFailure, AuthSession?>(session)),
       build: buildCubit,
       act: (cubit) => cubit.checkSession(),
       expect: () => [const AuthUnknown(), AuthAuthenticated(session)],
@@ -48,9 +48,9 @@ void main() {
 
     blocTest<AuthCubit, AuthState>(
       'emits unauthenticated when there is no session',
-      setUp: () => when(getCurrentSession.call).thenAnswer(
-        (_) async => const Ok<AuthFailure, AuthSession?>(null),
-      ),
+      setUp: () => when(
+        getCurrentSession.call,
+      ).thenAnswer((_) async => const Ok<AuthFailure, AuthSession?>(null)),
       build: buildCubit,
       act: (cubit) => cubit.checkSession(),
       expect: () => [const AuthUnknown(), const AuthUnauthenticated()],
@@ -59,8 +59,9 @@ void main() {
 
   blocTest<AuthCubit, AuthState>(
     'startLogin emits AuthAuthenticating with the built request',
-    setUp: () => when(buildAuthorizationRequest.call)
-        .thenReturn(fakeAuthorizationRequest),
+    setUp: () => when(
+      buildAuthorizationRequest.call,
+    ).thenReturn(fakeAuthorizationRequest),
     build: buildCubit,
     act: (cubit) => cubit.startLogin(),
     expect: () => [AuthAuthenticating(fakeAuthorizationRequest)],
@@ -83,14 +84,16 @@ void main() {
 
     blocTest<AuthCubit, AuthState>(
       'emits failure then unauthenticated on error',
-      setUp: () => when(
-        () => exchangeAuthorizationCode(
-          code: any(named: 'code'),
-          request: any(named: 'request'),
-        ),
-      ).thenAnswer(
-        (_) async => const Err<AuthFailure, AuthSession>(NetworkAuthFailure()),
-      ),
+      setUp: () =>
+          when(
+            () => exchangeAuthorizationCode(
+              code: any(named: 'code'),
+              request: any(named: 'request'),
+            ),
+          ).thenAnswer(
+            (_) async =>
+                const Err<AuthFailure, AuthSession>(NetworkAuthFailure()),
+          ),
       build: buildCubit,
       act: (cubit) =>
           cubit.submitAuthorizationCode('code', fakeAuthorizationRequest),
@@ -114,9 +117,9 @@ void main() {
 
   blocTest<AuthCubit, AuthState>(
     'signOut emits unauthenticated',
-    setUp: () => when(signOut.call).thenAnswer(
-      (_) async => const Ok<AuthFailure, void>(null),
-    ),
+    setUp: () => when(
+      signOut.call,
+    ).thenAnswer((_) async => const Ok<AuthFailure, void>(null)),
     build: buildCubit,
     act: (cubit) => cubit.signOut(),
     expect: () => [const AuthUnauthenticated()],

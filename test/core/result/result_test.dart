@@ -33,9 +33,14 @@ void main() {
       expect(const Ok<String, int>(1), const Ok<String, int>(1));
       expect(const Err<String, int>('x'), const Err<String, int>('x'));
       expect(const Ok<String, int>(1), isNot(const Ok<String, int>(2)));
-      expect(const Ok<String, int>(1).hashCode, const Ok<String, int>(1).hashCode);
-      expect(const Err<String, int>('x').hashCode,
-          const Err<String, int>('x').hashCode);
+      expect(
+        const Ok<String, int>(1).hashCode,
+        const Ok<String, int>(1).hashCode,
+      );
+      expect(
+        const Err<String, int>('x').hashCode,
+        const Err<String, int>('x').hashCode,
+      );
     });
   });
 }

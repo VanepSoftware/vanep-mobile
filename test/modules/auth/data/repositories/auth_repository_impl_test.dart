@@ -9,9 +9,9 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_req
 import '../auth_data_mocks.dart';
 
 DioException _dioError() => DioException(
-      requestOptions: RequestOptions(path: '/oauth2/token'),
-      message: 'boom',
-    );
+  requestOptions: RequestOptions(path: '/oauth2/token'),
+  message: 'boom',
+);
 
 void main() {
   late MockOAuthRemoteDataSource remote;
@@ -45,8 +45,10 @@ void main() {
       expect(uri.path, '/oauth2/authorize');
       expect(uri.queryParameters['response_type'], 'code');
       expect(uri.queryParameters['client_id'], 'vanep-mobile');
-      expect(uri.queryParameters['redirect_uri'],
-          'com.vanep.vanepmobile://oauth2redirect');
+      expect(
+        uri.queryParameters['redirect_uri'],
+        'com.vanep.vanepmobile://oauth2redirect',
+      );
       expect(uri.queryParameters['scope'], 'read write');
       expect(uri.queryParameters['code_challenge_method'], 'S256');
       expect(uri.queryParameters['code_challenge'], isNotEmpty);
@@ -63,38 +65,47 @@ void main() {
       codeVerifier: 'verifier-1',
     );
 
-    test('exchanges, fetches profile, persists and returns the session',
-        () async {
-      when(() => remote.exchangeCode(
+    test(
+      'exchanges, fetches profile, persists and returns the session',
+      () async {
+        when(
+          () => remote.exchangeCode(
             code: any(named: 'code'),
             codeVerifier: any(named: 'codeVerifier'),
             redirectUri: any(named: 'redirectUri'),
-          )).thenAnswer((_) async => testTokenResponseDto);
-      when(() => remote.fetchProfile(any()))
-          .thenAnswer((_) async => testUserProfileDto);
-      when(() => local.saveSession(any()))
-          .thenAnswer((_) => Future<void>.value());
+          ),
+        ).thenAnswer((_) async => testTokenResponseDto);
+        when(
+          () => remote.fetchProfile(any()),
+        ).thenAnswer((_) async => testUserProfileDto);
+        when(
+          () => local.saveSession(any()),
+        ).thenAnswer((_) => Future<void>.value());
 
-      final result =
-          await repository.exchangeCode(code: 'the-code', request: request);
+        final result = await repository.exchangeCode(
+          code: 'the-code',
+          request: request,
+        );
 
-      final session = result.valueOrNull!;
-      expect(session.accessToken, 'access-1');
-      expect(session.refreshToken, 'refresh-1');
-      expect(session.profile.token, 'user-token-1');
-      expect(session.expiresAt, fixedNow.add(const Duration(seconds: 900)));
-      verify(() => local.saveSession(any())).called(1);
-    });
+        final session = result.valueOrNull!;
+        expect(session.accessToken, 'access-1');
+        expect(session.refreshToken, 'refresh-1');
+        expect(session.profile.token, 'user-token-1');
+        expect(session.expiresAt, fixedNow.add(const Duration(seconds: 900)));
+        verify(() => local.saveSession(any())).called(1);
+      },
+    );
 
     test('maps a Dio error to NetworkAuthFailure', () async {
-      when(() => remote.exchangeCode(
-            code: any(named: 'code'),
-            codeVerifier: any(named: 'codeVerifier'),
-            redirectUri: any(named: 'redirectUri'),
-          )).thenThrow(_dioError());
+      when(
+        () => remote.exchangeCode(
+          code: any(named: 'code'),
+          codeVerifier: any(named: 'codeVerifier'),
+          redirectUri: any(named: 'redirectUri'),
+        ),
+      ).thenThrow(_dioError());
 
-      final result =
-          await repository.exchangeCode(code: 'x', request: request);
+      final result = await repository.exchangeCode(code: 'x', request: request);
 
       expect(result.errorOrNull, isA<NetworkAuthFailure>());
     });
@@ -129,8 +140,9 @@ void main() {
       when(() => remote.refresh(any())).thenAnswer(
         (_) async => testTokenResponseDto.copyWith(accessToken: 'access-2'),
       );
-      when(() => local.saveSession(any()))
-          .thenAnswer((_) => Future<void>.value());
+      when(
+        () => local.saveSession(any()),
+      ).thenAnswer((_) => Future<void>.value());
 
       final result = await repository.currentSession();
 
@@ -156,22 +168,25 @@ void main() {
   });
 
   group('signOut', () {
-    test('revokes both tokens, clears the local session and web cookies',
-        () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
-      when(() => remote.revoke(any(), any()))
-          .thenAnswer((_) => Future<void>.value());
-      when(local.clearSession).thenAnswer((_) => Future<void>.value());
-      when(webSession.clear).thenAnswer((_) => Future<void>.value());
+    test(
+      'revokes both tokens, clears the local session and web cookies',
+      () async {
+        when(local.readSession).thenReturn(testAuthSessionDto());
+        when(
+          () => remote.revoke(any(), any()),
+        ).thenAnswer((_) => Future<void>.value());
+        when(local.clearSession).thenAnswer((_) => Future<void>.value());
+        when(webSession.clear).thenAnswer((_) => Future<void>.value());
 
-      final result = await repository.signOut();
+        final result = await repository.signOut();
 
-      expect(result.isOk, isTrue);
-      verify(() => remote.revoke('refresh-1', 'refresh_token')).called(1);
-      verify(() => remote.revoke('access-1', 'access_token')).called(1);
-      verify(local.clearSession).called(1);
-      verify(webSession.clear).called(1);
-    });
+        expect(result.isOk, isTrue);
+        verify(() => remote.revoke('refresh-1', 'refresh_token')).called(1);
+        verify(() => remote.revoke('access-1', 'access_token')).called(1);
+        verify(local.clearSession).called(1);
+        verify(webSession.clear).called(1);
+      },
+    );
 
     test('clears web cookies even when there is no stored session', () async {
       when(local.readSession).thenReturn(null);

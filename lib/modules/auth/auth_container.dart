@@ -19,13 +19,8 @@ import 'domain/usecases/get_current_session.dart';
 import 'domain/usecases/sign_out.dart';
 import 'presentation/cubit/auth_cubit.dart';
 
-/// get_it name for the [Dio] configured with [AuthInterceptor], to be reused by
-/// future modules that call authenticated `/api/**` endpoints.
 const String authenticatedDioName = 'authenticatedDio';
 
-/// Registers the auth module's dependency graph (constitution R02/R03).
-///
-/// [authBox] is the already-open Hive box (opened in `main` before `runApp`).
 void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
   final environment = getIt<Environment>();
   final oauthDio = DioClient.create(environment.authBaseUrl);
@@ -72,8 +67,6 @@ void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
     );
 }
 
-/// A [Dio] for authenticated `/api/**` calls: injects the bearer token and
-/// refreshes it once on 401 via the auth repository (constitution R09).
 Dio _buildAuthenticatedDio(GetIt getIt, Environment environment) {
   final dio = DioClient.create(environment.authBaseUrl);
   dio.interceptors.add(

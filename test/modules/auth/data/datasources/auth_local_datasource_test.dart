@@ -23,7 +23,8 @@ void main() {
     await local.saveSession(session);
 
     final captured =
-        verify(() => box.put('session', captureAny())).captured.single as String;
+        verify(() => box.put('session', captureAny())).captured.single
+            as String;
     final decoded = jsonDecode(captured) as Map<String, dynamic>;
     expect(AuthSessionDto.fromJson(decoded), session);
   });

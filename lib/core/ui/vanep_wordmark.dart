@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../design_system/vanep_colors.dart';
 import '../design_system/vanep_typography.dart';
 
-/// The "vanep." logotype recreated in text, matching the brand wordmark.
 class VanepWordmark extends StatelessWidget {
   const VanepWordmark({super.key});
 

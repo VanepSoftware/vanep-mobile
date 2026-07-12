@@ -13,8 +13,6 @@ import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import 'oauth_webview_page.dart';
 
-/// Entry screen: shows the wordmark and a "Continue" button that starts the
-/// OAuth login. Reacts to [AuthCubit] to drive the WebView and show feedback.
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
@@ -28,7 +26,8 @@ class WelcomePage extends StatelessWidget {
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: _onStateChanged,
             builder: (context, state) {
-              final busy = state is AuthAuthenticating || state is AuthExchanging;
+              final busy =
+                  state is AuthAuthenticating || state is AuthExchanging;
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
@@ -64,9 +63,7 @@ class WelcomePage extends StatelessWidget {
     switch (state) {
       case AuthAuthenticating(:final request):
         final code = await Navigator.of(context).push<String>(
-          MaterialPageRoute(
-            builder: (_) => OAuthWebViewPage(request: request),
-          ),
+          MaterialPageRoute(builder: (_) => OAuthWebViewPage(request: request)),
         );
         if (!context.mounted) return;
         final cubit = context.read<AuthCubit>();

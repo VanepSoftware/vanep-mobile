@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import '../design_system/vanep_colors.dart';
 import '../design_system/vanep_typography.dart';
 
-/// The single primary action button of the design system (constitution R10b).
-///
-/// Shows a spinner and blocks taps while [isLoading] is true.
 class VanepPrimaryButton extends StatelessWidget {
   const VanepPrimaryButton({
     required this.label,

@@ -8,8 +8,6 @@ import '../../domain/usecases/sign_out.dart';
 import '../../domain/value_objects/authorization_request.dart';
 import 'auth_state.dart';
 
-/// Drives the authentication flow: resolve session at startup, start a login,
-/// exchange the captured code, and sign out.
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit({
     required this._getCurrentSession,
@@ -23,40 +21,37 @@ class AuthCubit extends Cubit<AuthState> {
   final ExchangeAuthorizationCode _exchangeAuthorizationCode;
   final SignOut _signOut;
 
-  /// Resolves the persisted session at startup.
   Future<void> checkSession() async {
     emit(const AuthUnknown());
     final result = await _getCurrentSession();
     result.fold(
       (_) => emit(const AuthUnauthenticated()),
       (session) => emit(
-        session == null ? const AuthUnauthenticated() : AuthAuthenticated(session),
+        session == null
+            ? const AuthUnauthenticated()
+            : AuthAuthenticated(session),
       ),
     );
   }
 
-  /// Builds a fresh authorization request and asks the UI to open the WebView.
   void startLogin() {
     emit(AuthAuthenticating(_buildAuthorizationRequest()));
   }
 
-  /// Exchanges the [code] captured by the WebView for an authenticated session.
   Future<void> submitAuthorizationCode(
     String code,
     AuthorizationRequest request,
   ) async {
     emit(const AuthExchanging());
-    final result = await _exchangeAuthorizationCode(code: code, request: request);
-    result.fold(
-      _emitFailure,
-      (session) => emit(AuthAuthenticated(session)),
+    final result = await _exchangeAuthorizationCode(
+      code: code,
+      request: request,
     );
+    result.fold(_emitFailure, (session) => emit(AuthAuthenticated(session)));
   }
 
-  /// The user closed the WebView before completing login.
   void cancelLogin() => _emitFailure(const CancelledAuthFailure());
 
-  /// Signs out and returns to the welcome screen.
   Future<void> signOut() async {
     await _signOut();
     emit(const AuthUnauthenticated());

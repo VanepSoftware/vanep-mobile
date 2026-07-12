@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../design_system/vanep_colors.dart';
 
-/// Shared navy gradient backdrop with the two teal glows (constitution R10b).
-///
-/// Extracted from the original splash screen so every full-screen page reuses
-/// the same brand chrome instead of re-declaring the gradients.
 class VanepGradientBackground extends StatelessWidget {
   const VanepGradientBackground({required this.child, super.key});
 
@@ -14,7 +10,6 @@ class VanepGradientBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      // Base navy gradient (linear-gradient 155deg from the frontend).
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment(-0.6, -1),
@@ -28,7 +23,6 @@ class VanepGradientBackground extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Teal glow, upper-right (radial-gradient at 72% 38%).
           const Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -44,7 +38,7 @@ class VanepGradientBackground extends StatelessWidget {
               ),
             ),
           ),
-          // Softer glow, lower-left (radial-gradient at 8% 88%).
+
           const Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(

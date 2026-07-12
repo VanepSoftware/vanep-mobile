@@ -19,7 +19,6 @@ class MockBox extends Mock implements Box<String> {}
 
 class MockDio extends Mock implements Dio {}
 
-/// Test [Environment] built from its public constructor (no dotenv needed).
 const testEnvironment = Environment(
   authBaseUrl: 'http://10.0.2.2:8080',
   oauthClientId: 'vanep-mobile',
@@ -43,11 +42,11 @@ const testTokenResponseDto = TokenResponseDto(
 );
 
 AuthSessionDto testAuthSessionDto({DateTime? expiresAt}) => AuthSessionDto(
-      accessToken: 'access-1',
-      refreshToken: 'refresh-1',
-      expiresAt: expiresAt ?? DateTime.utc(2999),
-      profile: testUserProfileDto,
-    );
+  accessToken: 'access-1',
+  refreshToken: 'refresh-1',
+  expiresAt: expiresAt ?? DateTime.utc(2999),
+  profile: testUserProfileDto,
+);
 
 void registerAuthDataFallbacks() {
   registerFallbackValue(testAuthSessionDto());

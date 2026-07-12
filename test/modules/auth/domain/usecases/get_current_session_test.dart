@@ -19,9 +19,9 @@ void main() {
 
   test('returns the persisted session when present', () async {
     final session = FakeAuthSession();
-    when(repository.currentSession).thenAnswer(
-      (_) async => Ok<AuthFailure, AuthSession?>(session),
-    );
+    when(
+      repository.currentSession,
+    ).thenAnswer((_) async => Ok<AuthFailure, AuthSession?>(session));
 
     final result = await usecase();
 
@@ -29,9 +29,9 @@ void main() {
   });
 
   test('returns null value when nobody is signed in', () async {
-    when(repository.currentSession).thenAnswer(
-      (_) async => const Ok<AuthFailure, AuthSession?>(null),
-    );
+    when(
+      repository.currentSession,
+    ).thenAnswer((_) async => const Ok<AuthFailure, AuthSession?>(null));
 
     final result = await usecase();
 

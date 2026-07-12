@@ -6,10 +6,6 @@ import 'user_profile_dto.dart';
 part 'auth_session_dto.freezed.dart';
 part 'auth_session_dto.g.dart';
 
-/// Persisted OAuth session (implements the [AuthSession] entity).
-///
-/// This is what the local datasource stores in Hive as a JSON string, so it
-/// carries [UserProfileDto] and an ISO-8601 [expiresAt].
 @freezed
 abstract class AuthSessionDto with _$AuthSessionDto implements AuthSession {
   const factory AuthSessionDto({

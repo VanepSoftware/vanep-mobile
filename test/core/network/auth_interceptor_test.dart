@@ -75,8 +75,9 @@ void main() {
     final handler = MockErrorHandler();
     final error = _unauthorized();
     final retried = _response(200, options: error.requestOptions);
-    when(() => retryClient.fetch<dynamic>(any()))
-        .thenAnswer((_) async => retried);
+    when(
+      () => retryClient.fetch<dynamic>(any()),
+    ).thenAnswer((_) async => retried);
     when(() => handler.resolve(any())).thenReturn(null);
 
     await interceptor.onError(error, handler);

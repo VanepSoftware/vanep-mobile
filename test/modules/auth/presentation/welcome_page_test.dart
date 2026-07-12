@@ -35,8 +35,11 @@ void main() {
   setUp(() {
     cubit = MockAuthCubit();
     when(() => cubit.state).thenReturn(const AuthUnauthenticated());
-    whenListen(cubit, const Stream<AuthState>.empty(),
-        initialState: const AuthUnauthenticated());
+    whenListen(
+      cubit,
+      const Stream<AuthState>.empty(),
+      initialState: const AuthUnauthenticated(),
+    );
   });
 
   testWidgets('tapping Continuar starts login', (tester) async {

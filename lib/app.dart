@@ -36,7 +36,6 @@ class VanepApp extends StatelessWidget {
   }
 }
 
-/// Routes between the splash, welcome and home screens based on [AuthState].
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
@@ -46,8 +45,9 @@ class AuthGate extends StatelessWidget {
       builder: (context, state) {
         return switch (state) {
           AuthUnknown() => const SplashScreen(),
-          AuthAuthenticated(:final session) =>
-            HomePage(profile: session.profile),
+          AuthAuthenticated(:final session) => HomePage(
+            profile: session.profile,
+          ),
           _ => const WelcomePage(),
         };
       },
@@ -55,16 +55,13 @@ class AuthGate extends StatelessWidget {
   }
 }
 
-/// Brand splash shown while the persisted session is resolved at startup.
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: VanepGradientBackground(
-        child: Center(child: VanepWordmark()),
-      ),
+      body: VanepGradientBackground(child: Center(child: VanepWordmark())),
     );
   }
 }

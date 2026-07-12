@@ -4,8 +4,6 @@ import '../failures/auth_failure.dart';
 import '../repositories/auth_repository.dart';
 import '../value_objects/authorization_request.dart';
 
-/// Exchanges the authorization code captured by the WebView for an
-/// authenticated, persisted [AuthSession].
 class ExchangeAuthorizationCode {
   const ExchangeAuthorizationCode(this._repository);
 

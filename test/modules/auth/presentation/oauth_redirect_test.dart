@@ -22,7 +22,10 @@ void main() {
   group('extractAuthorizationCode', () {
     test('returns the code when state matches', () {
       const url = '$redirect?code=the-code&state=state-123';
-      expect(extractAuthorizationCode(url, fakeAuthorizationRequest), 'the-code');
+      expect(
+        extractAuthorizationCode(url, fakeAuthorizationRequest),
+        'the-code',
+      );
     });
 
     test('returns null when state does not match', () {

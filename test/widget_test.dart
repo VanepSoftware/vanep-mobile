@@ -33,8 +33,11 @@ void main() {
 
   testWidgets('shows the splash while the session is unknown', (tester) async {
     when(() => cubit.state).thenReturn(const AuthUnknown());
-    whenListen(cubit, const Stream<AuthState>.empty(),
-        initialState: const AuthUnknown());
+    whenListen(
+      cubit,
+      const Stream<AuthState>.empty(),
+      initialState: const AuthUnknown(),
+    );
 
     await tester.pumpWidget(_harness(cubit));
 
@@ -44,16 +47,20 @@ void main() {
   testWidgets('shows the welcome screen with the Continue button when '
       'unauthenticated', (tester) async {
     when(() => cubit.state).thenReturn(const AuthUnauthenticated());
-    whenListen(cubit, const Stream<AuthState>.empty(),
-        initialState: const AuthUnauthenticated());
+    whenListen(
+      cubit,
+      const Stream<AuthState>.empty(),
+      initialState: const AuthUnauthenticated(),
+    );
 
     await tester.pumpWidget(_harness(cubit));
 
     expect(find.text('Continuar'), findsOneWidget);
   });
 
-  testWidgets('shows the home screen greeting when authenticated',
-      (tester) async {
+  testWidgets('shows the home screen greeting when authenticated', (
+    tester,
+  ) async {
     final state = AuthAuthenticated(FakeAuthSession());
     when(() => cubit.state).thenReturn(state);
     whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);

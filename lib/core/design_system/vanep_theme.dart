@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'vanep_colors.dart';
 
-/// Builds the single application [ThemeData] for Vanep (constitution R10).
 class VanepTheme {
   const VanepTheme._();
 

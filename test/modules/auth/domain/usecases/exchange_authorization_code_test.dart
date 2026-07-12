@@ -19,31 +19,39 @@ void main() {
     usecase = ExchangeAuthorizationCode(repository);
   });
 
-  test('delegates code and request to the repository and returns its session',
-      () async {
-    final session = FakeAuthSession();
-    when(() => repository.exchangeCode(
+  test(
+    'delegates code and request to the repository and returns its session',
+    () async {
+      final session = FakeAuthSession();
+      when(
+        () => repository.exchangeCode(
           code: any(named: 'code'),
           request: any(named: 'request'),
-        )).thenAnswer((_) async => Ok<AuthFailure, AuthSession>(session));
+        ),
+      ).thenAnswer((_) async => Ok<AuthFailure, AuthSession>(session));
 
-    final result = await usecase(
-      code: 'auth-code',
-      request: fakeAuthorizationRequest,
-    );
+      final result = await usecase(
+        code: 'auth-code',
+        request: fakeAuthorizationRequest,
+      );
 
-    expect(result.valueOrNull, session);
-    verify(() => repository.exchangeCode(
+      expect(result.valueOrNull, session);
+      verify(
+        () => repository.exchangeCode(
           code: 'auth-code',
           request: fakeAuthorizationRequest,
-        )).called(1);
-  });
+        ),
+      ).called(1);
+    },
+  );
 
   test('propagates repository failure', () async {
-    when(() => repository.exchangeCode(
-          code: any(named: 'code'),
-          request: any(named: 'request'),
-        )).thenAnswer(
+    when(
+      () => repository.exchangeCode(
+        code: any(named: 'code'),
+        request: any(named: 'request'),
+      ),
+    ).thenAnswer(
       (_) async => const Err<AuthFailure, AuthSession>(NetworkAuthFailure()),
     );
 

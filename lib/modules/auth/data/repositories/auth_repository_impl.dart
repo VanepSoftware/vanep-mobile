@@ -14,8 +14,6 @@ import '../dtos/token_response_dto.dart';
 import '../dtos/user_profile_dto.dart';
 import '../pkce/pkce_generator.dart';
 
-/// Data-layer implementation of [AuthRepository]: composes PKCE generation,
-/// the OAuth remote calls and local session persistence.
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this.remote,
@@ -87,11 +85,13 @@ class AuthRepositoryImpl implements AuthRepository {
     if (stored == null) return const Ok(null);
     if (!stored.isExpired(_now())) return Ok(stored);
 
-    // Access token expired: try a silent refresh; on failure, sign the user out.
     try {
       final token = await remote.refresh(stored.refreshToken);
-      final refreshed = _sessionFrom(token, stored.profile,
-          fallbackRefreshToken: stored.refreshToken);
+      final refreshed = _sessionFrom(
+        token,
+        stored.profile,
+        fallbackRefreshToken: stored.refreshToken,
+      );
       await local.saveSession(refreshed);
       return Ok(refreshed);
     } on DioException {
@@ -108,8 +108,7 @@ class AuthRepositoryImpl implements AuthRepository {
       await _revokeQuietly(stored.accessToken, 'access_token');
     }
     await local.clearSession();
-    // Wipe the WebView session cookie so the next login shows the login page
-    // instead of silently reusing the still-authenticated server session.
+
     await webSession.clear();
     return const Ok(null);
   }
@@ -129,10 +128,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   Future<void> _revokeQuietly(String token, String hint) async {
     if (token.isEmpty) return;
-    try {
-      await remote.revoke(token, hint);
-    } on DioException {
-      // Best-effort: local sign-out proceeds even if revocation fails.
-    }
+    await remote
+        .revoke(token, hint)
+        .catchError((Object _) {}, test: (e) => e is DioException);
   }
 }

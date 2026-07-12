@@ -27,14 +27,20 @@ void main() {
   });
 
   test('exchangeCode posts the authorization_code grant with PKCE', () async {
-    when(() => dio.post<Map<String, dynamic>>(any(),
-            data: any(named: 'data'), options: any(named: 'options')))
-        .thenAnswer((_) async => _ok({
-              'access_token': 'access-1',
-              'token_type': 'Bearer',
-              'expires_in': 900,
-              'refresh_token': 'refresh-1',
-            }));
+    when(
+      () => dio.post<Map<String, dynamic>>(
+        any(),
+        data: any(named: 'data'),
+        options: any(named: 'options'),
+      ),
+    ).thenAnswer(
+      (_) async => _ok({
+        'access_token': 'access-1',
+        'token_type': 'Bearer',
+        'expires_in': 900,
+        'refresh_token': 'refresh-1',
+      }),
+    );
 
     final token = await remote.exchangeCode(
       code: 'the-code',
@@ -44,11 +50,15 @@ void main() {
 
     expect(token.accessToken, 'access-1');
     expect(token.expiresInSeconds, 900);
-    final captured = verify(() => dio.post<Map<String, dynamic>>(
-          testEnvironment.tokenEndpoint,
-          data: captureAny(named: 'data'),
-          options: any(named: 'options'),
-        )).captured.single as Map<String, dynamic>;
+    final captured =
+        verify(
+              () => dio.post<Map<String, dynamic>>(
+                testEnvironment.tokenEndpoint,
+                data: captureAny(named: 'data'),
+                options: any(named: 'options'),
+              ),
+            ).captured.single
+            as Map<String, dynamic>;
     expect(captured['grant_type'], 'authorization_code');
     expect(captured['code'], 'the-code');
     expect(captured['code_verifier'], 'verifier-1');
@@ -56,60 +66,85 @@ void main() {
   });
 
   test('refresh posts the refresh_token grant', () async {
-    when(() => dio.post<Map<String, dynamic>>(any(),
-            data: any(named: 'data'), options: any(named: 'options')))
-        .thenAnswer((_) async => _ok({
-              'access_token': 'access-2',
-              'token_type': 'Bearer',
-              'expires_in': 900,
-            }));
+    when(
+      () => dio.post<Map<String, dynamic>>(
+        any(),
+        data: any(named: 'data'),
+        options: any(named: 'options'),
+      ),
+    ).thenAnswer(
+      (_) async => _ok({
+        'access_token': 'access-2',
+        'token_type': 'Bearer',
+        'expires_in': 900,
+      }),
+    );
 
     await remote.refresh('refresh-1');
 
-    final captured = verify(() => dio.post<Map<String, dynamic>>(
-          testEnvironment.tokenEndpoint,
-          data: captureAny(named: 'data'),
-          options: any(named: 'options'),
-        )).captured.single as Map<String, dynamic>;
+    final captured =
+        verify(
+              () => dio.post<Map<String, dynamic>>(
+                testEnvironment.tokenEndpoint,
+                data: captureAny(named: 'data'),
+                options: any(named: 'options'),
+              ),
+            ).captured.single
+            as Map<String, dynamic>;
     expect(captured['grant_type'], 'refresh_token');
     expect(captured['refresh_token'], 'refresh-1');
   });
 
   test('fetchProfile sends the bearer token and parses the profile', () async {
-    when(() => dio.get<Map<String, dynamic>>(any(),
-            options: any(named: 'options')))
-        .thenAnswer((_) async => _ok({
-              'token': 'user-token-1',
-              'name': 'Ana',
-              'email': 'ana@vanep.com.br',
-              'type': 'DRIVER',
-            }));
+    when(
+      () =>
+          dio.get<Map<String, dynamic>>(any(), options: any(named: 'options')),
+    ).thenAnswer(
+      (_) async => _ok({
+        'token': 'user-token-1',
+        'name': 'Ana',
+        'email': 'ana@vanep.com.br',
+        'type': 'DRIVER',
+      }),
+    );
 
     final profile = await remote.fetchProfile('access-1');
 
     expect(profile.token, 'user-token-1');
-    final options = verify(() => dio.get<Map<String, dynamic>>(
-          testEnvironment.userProfileEndpoint,
-          options: captureAny(named: 'options'),
-        )).captured.single as Options;
+    final options =
+        verify(
+              () => dio.get<Map<String, dynamic>>(
+                testEnvironment.userProfileEndpoint,
+                options: captureAny(named: 'options'),
+              ),
+            ).captured.single
+            as Options;
     expect(options.headers!['Authorization'], 'Bearer access-1');
   });
 
   test('revoke posts the token with its hint', () async {
-    when(() => dio.post<void>(any(),
-            data: any(named: 'data'), options: any(named: 'options')))
-        .thenAnswer((_) async => Response<void>(
-              requestOptions: RequestOptions(),
-              statusCode: 200,
-            ));
+    when(
+      () => dio.post<void>(
+        any(),
+        data: any(named: 'data'),
+        options: any(named: 'options'),
+      ),
+    ).thenAnswer(
+      (_) async =>
+          Response<void>(requestOptions: RequestOptions(), statusCode: 200),
+    );
 
     await remote.revoke('refresh-1', 'refresh_token');
 
-    final captured = verify(() => dio.post<void>(
-          testEnvironment.revocationEndpoint,
-          data: captureAny(named: 'data'),
-          options: any(named: 'options'),
-        )).captured.single as Map<String, dynamic>;
+    final captured =
+        verify(
+              () => dio.post<void>(
+                testEnvironment.revocationEndpoint,
+                data: captureAny(named: 'data'),
+                options: any(named: 'options'),
+              ),
+            ).captured.single
+            as Map<String, dynamic>;
     expect(captured['token'], 'refresh-1');
     expect(captured['token_type_hint'], 'refresh_token');
   });

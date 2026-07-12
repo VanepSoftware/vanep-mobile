@@ -5,7 +5,6 @@ import '../../domain/entities/user_profile.dart';
 part 'user_profile_dto.freezed.dart';
 part 'user_profile_dto.g.dart';
 
-/// Response of `/api/user/profile`; implements the [UserProfile] entity.
 @freezed
 abstract class UserProfileDto with _$UserProfileDto implements UserProfile {
   const factory UserProfileDto({

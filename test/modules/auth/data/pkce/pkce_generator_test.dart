@@ -6,7 +6,6 @@ import 'package:vanep_mobile/modules/auth/data/pkce/pkce_generator.dart';
 void main() {
   group('PkceGenerator', () {
     test('S256 challenge matches the RFC 7636 Appendix B example', () {
-      // Fixed vector from RFC 7636 so the crypto is verified exactly.
       const verifier = 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk';
       const expectedChallenge = 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM';
 
