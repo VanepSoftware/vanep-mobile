@@ -7,6 +7,7 @@ import 'core/di/service_locator.dart';
 import 'core/environment/environment.dart';
 import 'modules/auth/auth_container.dart';
 import 'modules/auth/data/datasources/auth_local_datasource.dart';
+import 'modules/drivers/drivers_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   final authBox = await Hive.openBox<String>(AuthLocalDataSource.boxName);
   registerAuthDependencies(getIt, authBox: authBox);
+  registerDriverDependencies(getIt);
 
   runApp(const VanepApp());
 }

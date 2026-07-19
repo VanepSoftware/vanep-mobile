@@ -38,4 +38,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signOutButton => 'Sign out';
+
+  @override
+  String get driversSearchHint => 'Search route or school…';
+
+  @override
+  String get driversSuggestionsNearYou => 'Suggestions near you';
+
+  @override
+  String driverExperienceYears(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years',
+      one: '1 year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get driversEmpty => 'No drivers found.';
+
+  @override
+  String get driversLoadError => 'Could not load drivers. Please try again.';
+
+  @override
+  String get driversRetryButton => 'Try again';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navVans => 'Vans';
+
+  @override
+  String get navNotifications => 'Notifications';
+
+  @override
+  String get navProfile => 'Profile';
+
+  @override
+  String get comingSoon => 'Coming soon';
 }

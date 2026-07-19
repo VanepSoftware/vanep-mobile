@@ -19,8 +19,6 @@ import 'domain/usecases/get_current_session.dart';
 import 'domain/usecases/sign_out.dart';
 import 'presentation/cubit/auth_cubit.dart';
 
-const String authenticatedDioName = 'authenticatedDio';
-
 void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
   final environment = getIt<Environment>();
   final oauthDio = DioClient.create(environment.authBaseUrl);

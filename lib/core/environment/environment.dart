@@ -33,6 +33,8 @@ class Environment {
 
   String get userProfileEndpoint => '$authBaseUrl/api/user/profile';
 
+  String get driversEndpoint => '$authBaseUrl/api/drivers';
+
   static String _require(DotEnv env, String key) {
     final value = env.maybeGet(key);
     if (value == null || value.isEmpty) {

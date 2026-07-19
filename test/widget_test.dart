@@ -5,12 +5,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/app.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
 
 import 'modules/auth/auth_fixtures.dart';
 import 'modules/auth/presentation/auth_presentation_mocks.dart';
+import 'modules/drivers/drivers_fixtures.dart';
+import 'modules/drivers/presentation/drivers_presentation_mocks.dart';
 
 Widget _harness(AuthCubit cubit) {
   return MaterialApp(
@@ -58,16 +63,29 @@ void main() {
     expect(find.text('Continuar'), findsOneWidget);
   });
 
-  testWidgets('shows the home screen greeting when authenticated', (
+  testWidgets('shows the client home shell when authenticated', (
     tester,
   ) async {
+    final driversCubit = MockDriversCubit();
+    whenListen(
+      driversCubit,
+      const Stream<DriversState>.empty(),
+      initialState: const DriversState(
+        status: DriversStatus.loaded,
+        drivers: testRecentDrivers,
+      ),
+    );
+    when(() => driversCubit.loadRecentDrivers()).thenAnswer((_) async {});
+    getIt.registerFactory<DriversCubit>(() => driversCubit);
+    addTearDown(getIt.reset);
+
     final state = AuthAuthenticated(FakeAuthSession());
     when(() => cubit.state).thenReturn(state);
     whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);
 
     await tester.pumpWidget(_harness(cubit));
 
-    expect(find.textContaining('Ana Motorista'), findsOneWidget);
-    expect(find.text('Sair'), findsOneWidget);
+    expect(find.text('Olá, Ana!'), findsOneWidget);
+    expect(find.text('Sugestões perto de você'), findsOneWidget);
   });
 }

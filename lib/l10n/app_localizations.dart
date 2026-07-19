@@ -151,6 +151,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign out'**
   String get signOutButton;
+
+  /// No description provided for @driversSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search route or school…'**
+  String get driversSearchHint;
+
+  /// No description provided for @driversSuggestionsNearYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions near you'**
+  String get driversSuggestionsNearYou;
+
+  /// No description provided for @driverExperienceYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 year} other{{count} years}}'**
+  String driverExperienceYears(int count);
+
+  /// No description provided for @driversEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No drivers found.'**
+  String get driversEmpty;
+
+  /// No description provided for @driversLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load drivers. Please try again.'**
+  String get driversLoadError;
+
+  /// No description provided for @driversRetryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get driversRetryButton;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navVans.
+  ///
+  /// In en, this message translates to:
+  /// **'Vans'**
+  String get navVans;
+
+  /// No description provided for @navNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get navNotifications;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get comingSoon;
 }
 
 class _AppLocalizationsDelegate

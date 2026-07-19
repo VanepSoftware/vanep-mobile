@@ -14,4 +14,15 @@ class VanepColors {
 
   static const Color glowSecondary = Color(0x2445A9C6);
   static const Color glowSecondaryFade = Color(0x0045A9C6);
+
+  static const Color surface = Color(0xFFF4F6F8);
+  static const Color card = Color(0xFFFFFFFF);
+  static const Color searchField = Color(0xFFE4EAF0);
+  static const Color textPrimary = Color(0xFF0B2038);
+  static const Color textSecondary = Color(0xFF6B7A8C);
+  static const Color textMuted = Color(0xFF9AA7B4);
+  static const Color divider = Color(0xFFE1E7ED);
+  static const Color ratingStar = Color(0xFFF5A623);
+  static const Color avatarPlaceholder = Color(0xFFD8E0E8);
+  static const Color navSelectedSurface = Color(0xFFDDE8F2);
 }
