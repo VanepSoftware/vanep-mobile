@@ -38,4 +38,46 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get signOutButton => 'Sair';
+
+  @override
+  String get driversSearchHint => 'Buscar rota ou escola…';
+
+  @override
+  String get driversSuggestionsNearYou => 'Sugestões perto de você';
+
+  @override
+  String driverExperienceYears(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count anos',
+      one: '1 ano',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get driversEmpty => 'Nenhum motorista encontrado.';
+
+  @override
+  String get driversLoadError =>
+      'Não foi possível carregar os motoristas. Tente novamente.';
+
+  @override
+  String get driversRetryButton => 'Tentar novamente';
+
+  @override
+  String get navHome => 'Início';
+
+  @override
+  String get navVans => 'Vans';
+
+  @override
+  String get navNotifications => 'Notificações';
+
+  @override
+  String get navProfile => 'Perfil';
+
+  @override
+  String get comingSoon => 'Em breve';
 }

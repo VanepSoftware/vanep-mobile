@@ -94,10 +94,28 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       await local.saveSession(refreshed);
       return Ok(refreshed);
-    } on DioException {
-      await local.clearSession();
-      return const Ok(null);
+    } on DioException catch (error) {
+      if (_isDefinitiveAuthRejection(error)) {
+        // The refresh token is invalid/expired/revoked: the session is dead.
+        await local.clearSession();
+        return const Ok(null);
+      }
+      // Transient failure (offline, timeout, 5xx, server restarting): keep the
+      // stored session so the user isn't logged out. The token endpoint will be
+      // retried on the next request/app start.
+      return Ok(stored);
     }
+  }
+
+  /// Whether the token endpoint definitively rejected the refresh token.
+  ///
+  /// OAuth 2.0 returns HTTP 400 `invalid_grant` for an invalid/expired/revoked
+  /// refresh token and 401 for client-auth problems. Anything else (no
+  /// response, timeout, 5xx) is treated as transient so we don't log the user
+  /// out over a flaky network or a backend restart.
+  bool _isDefinitiveAuthRejection(DioException error) {
+    final status = error.response?.statusCode;
+    return status == 400 || status == 401;
   }
 
   @override

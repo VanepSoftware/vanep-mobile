@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+const String authenticatedDioName = 'authenticatedDio';
+
 class DioClient {
   const DioClient._();
 

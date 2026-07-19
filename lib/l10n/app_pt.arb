@@ -8,5 +8,16 @@
   "loginFailed": "Não foi possível entrar. Tente novamente.",
   "homeGreeting": "Olá, {name}!",
   "homeSignedInAs": "Você está autenticado como {email}.",
-  "signOutButton": "Sair"
+  "signOutButton": "Sair",
+  "driversSearchHint": "Buscar rota ou escola…",
+  "driversSuggestionsNearYou": "Sugestões perto de você",
+  "driverExperienceYears": "{count, plural, =1{1 ano} other{{count} anos}}",
+  "driversEmpty": "Nenhum motorista encontrado.",
+  "driversLoadError": "Não foi possível carregar os motoristas. Tente novamente.",
+  "driversRetryButton": "Tentar novamente",
+  "navHome": "Início",
+  "navVans": "Vans",
+  "navNotifications": "Notificações",
+  "navProfile": "Perfil",
+  "comingSoon": "Em breve"
 }

@@ -9,8 +9,9 @@ import 'core/ui/vanep_wordmark.dart';
 import 'l10n/app_localizations.dart';
 import 'modules/auth/presentation/cubit/auth_cubit.dart';
 import 'modules/auth/presentation/cubit/auth_state.dart';
-import 'modules/auth/presentation/pages/home_page.dart';
 import 'modules/auth/presentation/pages/welcome_page.dart';
+import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'shell/client_shell.dart';
 
 class VanepApp extends StatelessWidget {
   const VanepApp({super.key});
@@ -45,8 +46,9 @@ class AuthGate extends StatelessWidget {
       builder: (context, state) {
         return switch (state) {
           AuthUnknown() => const SplashScreen(),
-          AuthAuthenticated(:final session) => HomePage(
-            profile: session.profile,
+          AuthAuthenticated(:final session) => BlocProvider<DriversCubit>(
+            create: (_) => getIt<DriversCubit>()..loadRecentDrivers(),
+            child: ClientShell(profile: session.profile),
           ),
           _ => const WelcomePage(),
         };

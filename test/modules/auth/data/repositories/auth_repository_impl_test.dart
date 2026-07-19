@@ -13,6 +13,15 @@ DioException _dioError() => DioException(
   message: 'boom',
 );
 
+DioException _invalidGrantError() => DioException(
+  requestOptions: RequestOptions(path: '/oauth2/token'),
+  response: Response<Map<String, dynamic>>(
+    requestOptions: RequestOptions(path: '/oauth2/token'),
+    statusCode: 400,
+    data: const {'error': 'invalid_grant'},
+  ),
+);
+
 void main() {
   late MockOAuthRemoteDataSource remote;
   late MockAuthLocalDataSource local;
@@ -151,12 +160,12 @@ void main() {
       verify(() => local.saveSession(any())).called(1);
     });
 
-    test('signs the user out when the refresh fails', () async {
+    test('signs the user out when the refresh token is rejected', () async {
       final expired = testAuthSessionDto(
         expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
       );
       when(local.readSession).thenReturn(expired);
-      when(() => remote.refresh(any())).thenThrow(_dioError());
+      when(() => remote.refresh(any())).thenThrow(_invalidGrantError());
       when(local.clearSession).thenAnswer((_) => Future<void>.value());
 
       final result = await repository.currentSession();
@@ -164,6 +173,20 @@ void main() {
       expect(result.isOk, isTrue);
       expect(result.valueOrNull, isNull);
       verify(local.clearSession).called(1);
+    });
+
+    test('keeps the session when the refresh fails transiently', () async {
+      final expired = testAuthSessionDto(
+        expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
+      );
+      when(local.readSession).thenReturn(expired);
+      when(() => remote.refresh(any())).thenThrow(_dioError());
+
+      final result = await repository.currentSession();
+
+      expect(result.isOk, isTrue);
+      expect(result.valueOrNull, expired);
+      verifyNever(local.clearSession);
     });
   });
 
