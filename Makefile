@@ -1,8 +1,8 @@
-.PHONY: all install clean pub_get setup_env codegen lint lint_fix test coverage coverage_open
+.PHONY: all install clean pub_get setup_env translate build lint lint_fix test coverage coverage_open
 
 all: install
 
-install: clean pub_get setup_env
+install: clean pub_get translate build
 
 clean:
 	@echo "🧹 cleaning..."
@@ -22,9 +22,14 @@ setup_env:
 		echo "✅ .env criado a partir do .env.example. Ajuste AUTH_URL se necessário."; \
 	fi
 
-# Regenera o código do freezed / json_serializable / l10n após mudar DTOs ou ARBs.
-codegen:
-	@echo "🧬 codegen..."
+# Regenera as traduções (l10n) a partir dos ARBs em lib/l10n.
+translate:
+	@echo "🌐 translate (gen-l10n)..."
+	fvm flutter gen-l10n
+
+# Regenera o código do freezed / json_serializable após mudar DTOs ou entities.
+build:
+	@echo "🧬 build (build_runner)..."
 	fvm dart run build_runner build --delete-conflicting-outputs
 
 lint:
