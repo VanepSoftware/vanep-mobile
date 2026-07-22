@@ -2,7 +2,7 @@
 
 all: install
 
-install: clean pub_get setup_env translate build
+install: clean pub_get translate build
 
 clean:
 	@echo "🧹 cleaning..."

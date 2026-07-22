@@ -102,7 +102,7 @@ Use the `Makefile` as the primary way to run Flutter tasks.
 
 | Command | Description |
 | --- | --- |
-| `make install` | Clean + `pub_get` + `setup_env` + `translate` + `build` (full post-clone setup) |
+| `make install` | Clean + `pub_get` + `translate` + `build` (full post-clone setup) |
 | `make clean` | `flutter clean` |
 | `make pub_get` | `flutter pub get` |
 | `make translate` | `flutter gen-l10n` (regenerate localizations from ARBs) |
