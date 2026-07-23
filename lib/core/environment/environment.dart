@@ -35,6 +35,12 @@ class Environment {
 
   String get driversEndpoint => '$authBaseUrl/api/drivers';
 
+  String get clientsMeEndpoint => '$authBaseUrl/api/clients/me';
+
+  String get driversMeEndpoint => '$authBaseUrl/api/drivers/me';
+
+  String get assistantsMeEndpoint => '$authBaseUrl/api/assistants/me';
+
   static String _require(DotEnv env, String key) {
     final value = env.maybeGet(key);
     if (value == null || value.isEmpty) {

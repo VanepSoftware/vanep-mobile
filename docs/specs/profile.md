@@ -132,10 +132,10 @@ Endpoints via `Environment` (`clientsMeEndpoint`, `driversMeEndpoint`,
 
 ## Phase 2 (branch name: feat/n-17-profile-summary)
 
-- [ ] 2.1 Spec updated: summary contracts + phase order (summary before UI)
-- [ ] 2.2 Tests: sealed DTO mapping by role; repository/usecase; cubit soft-fail; support helper
-- [ ] 2.3 Domain + data: sealed summaries; `Environment` endpoints; fetch by `UserType`; DI
-- [ ] 2.4 `make lint` / `make test`; device sign-off; commit/PR after approval (R27a)
+- [x] 2.1 Spec updated: summary contracts + phase order (summary before UI)
+- [x] 2.2 Tests: sealed DTO mapping by role; repository/usecase; cubit soft-fail; support helper
+- [x] 2.3 Domain + data: sealed summaries; `Environment` endpoints; fetch by `UserType`; DI
+- [x] 2.4 `make lint` / `make test`; device sign-off; commit/PR after approval (R27a)
 
 ## Phase 3 (branch name: feat/n-17-profile-ui-menus)
 
