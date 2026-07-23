@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/oauth_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 import '../auth_data_mocks.dart';
@@ -105,6 +106,10 @@ void main() {
         'token': 'user-token-1',
         'name': 'Ana',
         'email': 'ana@vanep.com.br',
+        'phone': '11999999999',
+        'document': '12345678901',
+        'birthDate': '1990-05-15',
+        'gender': 'FEMALE',
         'type': 'DRIVER',
       }),
     );
@@ -112,6 +117,10 @@ void main() {
     final profile = await remote.fetchProfile('access-1');
 
     expect(profile.token, 'user-token-1');
+    expect(profile.phone, '11999999999');
+    expect(profile.document, '12345678901');
+    expect(profile.birthDate, '1990-05-15');
+    expect(profile.gender, Gender.female);
     expect(profile.type, UserType.driver);
     expect(
       testEnvironment.userProfileEndpoint,

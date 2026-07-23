@@ -1,6 +1,7 @@
 import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_request.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 class FakeUserProfile implements UserProfile {
@@ -8,6 +9,10 @@ class FakeUserProfile implements UserProfile {
     this.token = 'user-token-1',
     this.name = 'Ana Motorista',
     this.email = 'ana@vanep.com.br',
+    this.phone = '11999999999',
+    this.document = '12345678901',
+    this.birthDate = '1990-05-15',
+    this.gender = Gender.female,
     this.type = UserType.driver,
   });
 
@@ -17,6 +22,14 @@ class FakeUserProfile implements UserProfile {
   final String? name;
   @override
   final String? email;
+  @override
+  final String? phone;
+  @override
+  final String? document;
+  @override
+  final String? birthDate;
+  @override
+  final Gender? gender;
   @override
   final UserType? type;
 }

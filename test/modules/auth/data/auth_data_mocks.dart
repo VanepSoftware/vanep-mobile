@@ -8,6 +8,7 @@ import 'package:vanep_mobile/modules/auth/data/datasources/web_session_cleaner.d
 import 'package:vanep_mobile/modules/auth/data/dtos/auth_session_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/token_response_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 class MockOAuthRemoteDataSource extends Mock implements OAuthRemoteDataSource {}
@@ -31,6 +32,10 @@ const testUserProfileDto = UserProfileDto(
   token: 'user-token-1',
   name: 'Ana Motorista',
   email: 'ana@vanep.com.br',
+  phone: '11999999999',
+  document: '12345678901',
+  birthDate: '1990-05-15',
+  gender: Gender.female,
   type: UserType.driver,
 );
 
