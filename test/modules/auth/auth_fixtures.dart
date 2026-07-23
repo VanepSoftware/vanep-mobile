@@ -1,12 +1,14 @@
 import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_request.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 class FakeUserProfile implements UserProfile {
   const FakeUserProfile({
     this.token = 'user-token-1',
     this.name = 'Ana Motorista',
     this.email = 'ana@vanep.com.br',
+    this.type = UserType.driver,
   });
 
   @override
@@ -15,6 +17,8 @@ class FakeUserProfile implements UserProfile {
   final String? name;
   @override
   final String? email;
+  @override
+  final UserType? type;
 }
 
 class FakeAuthSession implements AuthSession {

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/oauth_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 import '../auth_data_mocks.dart';
 
@@ -95,7 +96,7 @@ void main() {
     expect(captured['refresh_token'], 'refresh-1');
   });
 
-  test('fetchProfile sends the bearer token and parses the profile', () async {
+  test('fetchProfile calls /api/user/me and parses typed profile', () async {
     when(
       () =>
           dio.get<Map<String, dynamic>>(any(), options: any(named: 'options')),
@@ -111,6 +112,11 @@ void main() {
     final profile = await remote.fetchProfile('access-1');
 
     expect(profile.token, 'user-token-1');
+    expect(profile.type, UserType.driver);
+    expect(
+      testEnvironment.userProfileEndpoint,
+      'http://10.0.2.2:8080/api/user/me',
+    );
     final options =
         verify(
               () => dio.get<Map<String, dynamic>>(

@@ -13,7 +13,7 @@ Response<dynamic> _response(int status, {required RequestOptions options}) =>
     Response<dynamic>(requestOptions: options, statusCode: status);
 
 DioException _unauthorized() {
-  final options = RequestOptions(path: '/api/user/profile');
+  final options = RequestOptions(path: '/api/user/me');
   return DioException(
     requestOptions: options,
     response: _response(401, options: options),
@@ -45,7 +45,7 @@ void main() {
   test('onRequest injects the bearer token when present', () {
     final interceptor = buildInterceptor(token: 'access-1');
     final handler = MockRequestHandler();
-    final options = RequestOptions(path: '/api/user/profile');
+    final options = RequestOptions(path: '/api/user/me');
     when(() => handler.next(any())).thenReturn(null);
 
     interceptor.onRequest(options, handler);
@@ -59,7 +59,7 @@ void main() {
   test('onRequest leaves the request untouched when unauthenticated', () {
     final interceptor = buildInterceptor(token: null);
     final handler = MockRequestHandler();
-    final options = RequestOptions(path: '/api/user/profile');
+    final options = RequestOptions(path: '/api/user/me');
     when(() => handler.next(any())).thenReturn(null);
 
     interceptor.onRequest(options, handler);
@@ -104,7 +104,7 @@ void main() {
   test('onError passes non-401 errors straight through', () async {
     final interceptor = buildInterceptor(refresher: () async => 'access-2');
     final handler = MockErrorHandler();
-    final options = RequestOptions(path: '/api/user/profile');
+    final options = RequestOptions(path: '/api/user/me');
     final error = DioException(
       requestOptions: options,
       response: _response(500, options: options),

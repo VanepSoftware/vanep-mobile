@@ -86,7 +86,7 @@ Login uses the Vanep backend (Spring Authorization Server) via the
    custom-scheme navigation (no Android/iOS deep link needed) and extracts the
    authorization `code`.
 4. The app exchanges the code at `/oauth2/token` (with the PKCE `code_verifier`),
-   fetches the profile from `/api/user/profile`, and stores the session in
+   fetches the profile from `/api/user/me`, and stores the session in
    **Hive** — so the user stays signed in across app launches.
 5. **Sair** revokes the tokens (`/oauth2/revoke`) and clears the local session.
 

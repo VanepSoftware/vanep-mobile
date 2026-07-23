@@ -31,7 +31,7 @@ class Environment {
 
   String get revocationEndpoint => '$authBaseUrl/oauth2/revoke';
 
-  String get userProfileEndpoint => '$authBaseUrl/api/user/profile';
+  String get userProfileEndpoint => '$authBaseUrl/api/user/me';
 
   String get driversEndpoint => '$authBaseUrl/api/drivers';
 

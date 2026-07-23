@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/home_page.dart';
 
@@ -19,6 +20,8 @@ class _NamelessProfile implements UserProfile {
   String? get name => null;
   @override
   String? get email => null;
+  @override
+  UserType? get type => null;
 }
 
 Widget _harness(AuthCubit cubit, UserProfile profile) {
