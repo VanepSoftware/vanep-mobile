@@ -13,9 +13,10 @@ import '../widgets/profile_menu_card.dart';
 import 'personal_data_page.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({required this.profile, super.key});
+  const ProfilePage({required this.profile, this.photoUrl, super.key});
 
   final UserProfile profile;
+  final String? photoUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +27,15 @@ class ProfilePage extends StatelessWidget {
     return SafeArea(
       bottom: false,
       child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
           Text(l10n.navProfile, style: VanepTypography.pageTitle),
           const SizedBox(height: 20),
-          ProfileHeader(name: displayName, email: profile.email),
+          ProfileHeader(
+            name: displayName,
+            email: profile.email,
+            photoUrl: photoUrl,
+          ),
           const SizedBox(height: 24),
           for (var index = 0; index < sections.length; index++) ...[
             if (index > 0) const SizedBox(height: 16),
