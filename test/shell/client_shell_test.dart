@@ -74,12 +74,15 @@ void main() {
     expect(find.text('Em breve'), findsOneWidget);
   });
 
-  testWidgets('shows the profile tab with sign out', (tester) async {
+  testWidgets('shows the profile tab with profile content', (tester) async {
     await tester.pumpWidget(_harness(driversCubit, authCubit));
 
     await tester.tap(find.text('Perfil'));
     await tester.pumpAndSettle();
 
+    expect(find.text('Ana Motorista'), findsOneWidget);
+    expect(find.text('Dados pessoais'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Sair'), 200);
     expect(find.text('Sair'), findsOneWidget);
   });
 }

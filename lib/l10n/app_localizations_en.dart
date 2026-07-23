@@ -79,4 +79,83 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get comingSoon => 'Coming soon';
+
+  @override
+  String get profilePersonalData => 'Personal data';
+
+  @override
+  String get profileAddresses => 'Addresses';
+
+  @override
+  String get profilePaymentMethods => 'Payment methods';
+
+  @override
+  String get profileDependents => 'Manage dependents';
+
+  @override
+  String get profileVans => 'Vans';
+
+  @override
+  String get profileContracts => 'Contracts';
+
+  @override
+  String get profileProfessionalData => 'Professional data';
+
+  @override
+  String get profileAssistantInvite => 'Driver invite';
+
+  @override
+  String get profileSettings => 'Settings';
+
+  @override
+  String get profilePrivacySecurity => 'Privacy and security';
+
+  @override
+  String get profileSignOutTitle => 'Sign out of your account?';
+
+  @override
+  String get profileSignOutMessage =>
+      'You\'ll be signed out on this device. You can sign in again anytime.';
+
+  @override
+  String get profileSignOutCancel => 'Cancel';
+
+  @override
+  String get profileFieldName => 'Name';
+
+  @override
+  String get profileFieldEmail => 'Email';
+
+  @override
+  String get profileFieldPhone => 'Phone';
+
+  @override
+  String get profileFieldDocument => 'Document';
+
+  @override
+  String get profileFieldBirthDate => 'Date of birth';
+
+  @override
+  String get profileFieldGender => 'Gender';
+
+  @override
+  String get profileGenderMale => 'Male';
+
+  @override
+  String get profileGenderFemale => 'Female';
+
+  @override
+  String get profileGenderOther => 'Other';
+
+  @override
+  String get profileFieldEmpty => '—';
+
+  @override
+  String get profileSectionAccount => 'Account';
+
+  @override
+  String get profileSectionServices => 'Services';
+
+  @override
+  String get profileSectionPreferences => 'Preferences';
 }

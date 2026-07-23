@@ -4,7 +4,7 @@ import '../core/design_system/vanep_colors.dart';
 import '../core/ui/vanep_coming_soon.dart';
 import '../l10n/app_localizations.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
-import '../modules/auth/presentation/pages/home_page.dart';
+import '../modules/auth/presentation/pages/profile_page.dart';
 import '../modules/drivers/presentation/pages/drivers_home_tab.dart';
 import 'client_bottom_nav.dart';
 
@@ -36,7 +36,7 @@ class ClientShellState extends State<ClientShell> {
             title: l10n.navNotifications,
             message: l10n.comingSoon,
           ),
-          HomePage(profile: widget.profile),
+          ProfilePage(profile: widget.profile),
         ],
       ),
       bottomNavigationBar: ClientBottomNav(

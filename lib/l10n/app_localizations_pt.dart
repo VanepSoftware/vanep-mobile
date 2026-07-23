@@ -80,4 +80,83 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get comingSoon => 'Em breve';
+
+  @override
+  String get profilePersonalData => 'Dados pessoais';
+
+  @override
+  String get profileAddresses => 'Endereços';
+
+  @override
+  String get profilePaymentMethods => 'Formas de pagamento';
+
+  @override
+  String get profileDependents => 'Gerenciar dependentes';
+
+  @override
+  String get profileVans => 'Vans';
+
+  @override
+  String get profileContracts => 'Contratos';
+
+  @override
+  String get profileProfessionalData => 'Dados profissionais';
+
+  @override
+  String get profileAssistantInvite => 'Convite do motorista';
+
+  @override
+  String get profileSettings => 'Configurações';
+
+  @override
+  String get profilePrivacySecurity => 'Privacidade e segurança';
+
+  @override
+  String get profileSignOutTitle => 'Sair da conta?';
+
+  @override
+  String get profileSignOutMessage =>
+      'Sua sessão neste aparelho será encerrada. Você pode entrar de novo quando quiser.';
+
+  @override
+  String get profileSignOutCancel => 'Cancelar';
+
+  @override
+  String get profileFieldName => 'Nome';
+
+  @override
+  String get profileFieldEmail => 'E-mail';
+
+  @override
+  String get profileFieldPhone => 'Telefone';
+
+  @override
+  String get profileFieldDocument => 'Documento';
+
+  @override
+  String get profileFieldBirthDate => 'Data de nascimento';
+
+  @override
+  String get profileFieldGender => 'Gênero';
+
+  @override
+  String get profileGenderMale => 'Masculino';
+
+  @override
+  String get profileGenderFemale => 'Feminino';
+
+  @override
+  String get profileGenderOther => 'Outro';
+
+  @override
+  String get profileFieldEmpty => '—';
+
+  @override
+  String get profileSectionAccount => 'Conta';
+
+  @override
+  String get profileSectionServices => 'Serviços';
+
+  @override
+  String get profileSectionPreferences => 'Preferências';
 }

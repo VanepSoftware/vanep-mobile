@@ -217,6 +217,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming soon'**
   String get comingSoon;
+
+  /// No description provided for @profilePersonalData.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal data'**
+  String get profilePersonalData;
+
+  /// No description provided for @profileAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Addresses'**
+  String get profileAddresses;
+
+  /// No description provided for @profilePaymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment methods'**
+  String get profilePaymentMethods;
+
+  /// No description provided for @profileDependents.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage dependents'**
+  String get profileDependents;
+
+  /// No description provided for @profileVans.
+  ///
+  /// In en, this message translates to:
+  /// **'Vans'**
+  String get profileVans;
+
+  /// No description provided for @profileContracts.
+  ///
+  /// In en, this message translates to:
+  /// **'Contracts'**
+  String get profileContracts;
+
+  /// No description provided for @profileProfessionalData.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional data'**
+  String get profileProfessionalData;
+
+  /// No description provided for @profileAssistantInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver invite'**
+  String get profileAssistantInvite;
+
+  /// No description provided for @profileSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get profileSettings;
+
+  /// No description provided for @profilePrivacySecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy and security'**
+  String get profilePrivacySecurity;
+
+  /// No description provided for @profileSignOutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of your account?'**
+  String get profileSignOutTitle;
+
+  /// No description provided for @profileSignOutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be signed out on this device. You can sign in again anytime.'**
+  String get profileSignOutMessage;
+
+  /// No description provided for @profileSignOutCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get profileSignOutCancel;
+
+  /// No description provided for @profileFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get profileFieldName;
+
+  /// No description provided for @profileFieldEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get profileFieldEmail;
+
+  /// No description provided for @profileFieldPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get profileFieldPhone;
+
+  /// No description provided for @profileFieldDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Document'**
+  String get profileFieldDocument;
+
+  /// No description provided for @profileFieldBirthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get profileFieldBirthDate;
+
+  /// No description provided for @profileFieldGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get profileFieldGender;
+
+  /// No description provided for @profileGenderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get profileGenderMale;
+
+  /// No description provided for @profileGenderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get profileGenderFemale;
+
+  /// No description provided for @profileGenderOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get profileGenderOther;
+
+  /// No description provided for @profileFieldEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'—'**
+  String get profileFieldEmpty;
+
+  /// No description provided for @profileSectionAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get profileSectionAccount;
+
+  /// No description provided for @profileSectionServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get profileSectionServices;
+
+  /// No description provided for @profileSectionPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get profileSectionPreferences;
 }
 
 class _AppLocalizationsDelegate
