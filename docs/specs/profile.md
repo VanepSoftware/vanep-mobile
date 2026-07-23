@@ -139,7 +139,7 @@ Endpoints via `Environment` (`clientsMeEndpoint`, `driversMeEndpoint`,
 
 ## Phase 3 (branch name: feat/n-17-profile-ui-menus)
 
-- [ ] 3.1 Profile UI + role menus; only Dados pessoais + Sair enabled
-- [ ] 3.2 Header light client-home style; camera badge disabled visual; localization
-- [ ] 3.3 Lazy load summary when Profile tab opens; pass `photoUrl` into header
-- [ ] 3.4 Lint, test, device sign-off, PR
+- [x] 3.1 Profile UI + role menus; only Dados pessoais + Sair enabled
+- [x] 3.2 Header light client-home style; camera badge disabled visual; localization
+- [x] 3.3 Lazy load summary when Profile tab opens; pass `photoUrl` into header
+- [x] 3.4 Lint, test, device sign-off, PR
