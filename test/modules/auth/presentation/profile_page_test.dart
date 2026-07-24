@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
@@ -10,6 +11,7 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/profile_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/profile_header.dart';
 
 import '../auth_fixtures.dart';
 import 'auth_presentation_mocks.dart';
@@ -42,7 +44,15 @@ class ClientProfile implements UserProfile {
   UserType? get type => UserType.client;
 }
 
-Widget profileHarness(AuthCubit cubit, UserProfile profile) {
+Widget profileHarness(
+  AuthCubit cubit,
+  UserProfile profile, {
+  String? photoUrl,
+  double? rating,
+  String? city,
+  String? statusLabel,
+  Color? statusColor,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -54,7 +64,16 @@ Widget profileHarness(AuthCubit cubit, UserProfile profile) {
     locale: const Locale('pt'),
     home: BlocProvider<AuthCubit>.value(
       value: cubit,
-      child: Scaffold(body: ProfilePage(profile: profile)),
+      child: Scaffold(
+        body: ProfilePage(
+          profile: profile,
+          photoUrl: photoUrl,
+          rating: rating,
+          city: city,
+          statusLabel: statusLabel,
+          statusColor: statusColor,
+        ),
+      ),
     ),
   );
 }
@@ -152,5 +171,62 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyNever(() => cubit.signOut());
+  });
+
+  testWidgets('driver header shows rating and city under email', (tester) async {
+    await tester.pumpWidget(
+      profileHarness(
+        cubit,
+        const FakeUserProfile(),
+        rating: 4.8,
+        city: 'São Paulo',
+      ),
+    );
+
+    expect(find.text('Ana Motorista'), findsOneWidget);
+    expect(find.text('ana@vanep.com.br'), findsOneWidget);
+    expect(find.text('4.8'), findsOneWidget);
+    expect(find.text('São Paulo'), findsOneWidget);
+    expect(find.byIcon(Icons.star), findsOneWidget);
+  });
+
+  testWidgets('assistant header shows status chip under email', (tester) async {
+    await tester.pumpWidget(
+      profileHarness(
+        cubit,
+        const FakeUserProfile(
+          name: 'Assistente',
+          email: 'assistente@vanep.com.br',
+          type: UserType.assistant,
+        ),
+        statusLabel: 'Convite pendente',
+        statusColor: VanepColors.ratingStar,
+      ),
+    );
+
+    expect(find.text('Assistente'), findsOneWidget);
+    expect(find.text('assistente@vanep.com.br'), findsOneWidget);
+    expect(find.byType(ProfileAssistantStatusChip), findsOneWidget);
+    expect(find.text('Convite pendente'), findsOneWidget);
+    expect(find.byIcon(Icons.star), findsNothing);
+
+    final label = tester.widget<Text>(find.text('Convite pendente'));
+    expect(label.style?.color, VanepColors.ratingStar);
+  });
+
+  testWidgets('client header shows rating when provided', (tester) async {
+    await tester.pumpWidget(
+      profileHarness(cubit, const ClientProfile(), rating: 4.5),
+    );
+
+    expect(find.text('4.5'), findsOneWidget);
+    expect(find.byIcon(Icons.star), findsOneWidget);
+  });
+
+  testWidgets('client header does not show rating when omitted', (tester) async {
+    await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
+
+    expect(find.byIcon(Icons.star), findsNothing);
+    expect(find.text('4.5'), findsNothing);
   });
 }

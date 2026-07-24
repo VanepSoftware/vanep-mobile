@@ -66,5 +66,9 @@
   "profileFieldEmpty": "—",
   "profileSectionAccount": "Account",
   "profileSectionServices": "Services",
-  "profileSectionPreferences": "Preferences"
+  "profileSectionPreferences": "Preferences",
+  "profileAssistantStatusUnlinked": "Unlinked",
+  "profileAssistantStatusPending": "Pending invite",
+  "profileAssistantStatusActive": "Active",
+  "profileAssistantStatusInactive": "Inactive"
 }

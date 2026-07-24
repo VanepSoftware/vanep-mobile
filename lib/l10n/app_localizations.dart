@@ -373,6 +373,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preferences'**
   String get profileSectionPreferences;
+
+  /// No description provided for @profileAssistantStatusUnlinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlinked'**
+  String get profileAssistantStatusUnlinked;
+
+  /// No description provided for @profileAssistantStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending invite'**
+  String get profileAssistantStatusPending;
+
+  /// No description provided for @profileAssistantStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get profileAssistantStatusActive;
+
+  /// No description provided for @profileAssistantStatusInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get profileAssistantStatusInactive;
 }
 
 class _AppLocalizationsDelegate

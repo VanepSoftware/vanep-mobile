@@ -45,5 +45,9 @@
   "profileFieldEmpty": "—",
   "profileSectionAccount": "Conta",
   "profileSectionServices": "Serviços",
-  "profileSectionPreferences": "Preferências"
+  "profileSectionPreferences": "Preferências",
+  "profileAssistantStatusUnlinked": "Sem vínculo",
+  "profileAssistantStatusPending": "Convite pendente",
+  "profileAssistantStatusActive": "Ativo",
+  "profileAssistantStatusInactive": "Inativo"
 }

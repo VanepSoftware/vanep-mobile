@@ -159,4 +159,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get profileSectionPreferences => 'Preferências';
+
+  @override
+  String get profileAssistantStatusUnlinked => 'Sem vínculo';
+
+  @override
+  String get profileAssistantStatusPending => 'Convite pendente';
+
+  @override
+  String get profileAssistantStatusActive => 'Ativo';
+
+  @override
+  String get profileAssistantStatusInactive => 'Inativo';
 }

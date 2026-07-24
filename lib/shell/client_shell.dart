@@ -8,6 +8,7 @@ import '../modules/auth/domain/entities/user_profile.dart';
 import '../modules/auth/presentation/pages/profile_page.dart';
 import '../modules/drivers/presentation/pages/drivers_home_tab.dart';
 import '../modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import '../modules/profile/presentation/formatters/assistant_status_label.dart';
 import 'client_bottom_nav.dart';
 
 const clientShellProfileTabIndex = 3;
@@ -45,6 +46,13 @@ class ClientShellState extends State<ClientShell> {
               return ProfilePage(
                 profile: widget.profile,
                 photoUrl: summaryState.photoUrl,
+                rating: summaryState.rating,
+                city: summaryState.city,
+                statusLabel: assistantStatusLabel(
+                  l10n,
+                  summaryState.assistantStatus,
+                ),
+                statusColor: assistantStatusColor(summaryState.assistantStatus),
               );
             },
           ),

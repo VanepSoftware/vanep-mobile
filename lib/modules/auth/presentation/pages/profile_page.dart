@@ -13,10 +13,22 @@ import '../widgets/profile_menu_card.dart';
 import 'personal_data_page.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({required this.profile, this.photoUrl, super.key});
+  const ProfilePage({
+    required this.profile,
+    this.photoUrl,
+    this.rating,
+    this.city,
+    this.statusLabel,
+    this.statusColor,
+    super.key,
+  });
 
   final UserProfile profile;
   final String? photoUrl;
+  final double? rating;
+  final String? city;
+  final String? statusLabel;
+  final Color? statusColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +47,10 @@ class ProfilePage extends StatelessWidget {
             name: displayName,
             email: profile.email,
             photoUrl: photoUrl,
+            rating: rating,
+            city: city,
+            statusLabel: statusLabel,
+            statusColor: statusColor,
           ),
           const SizedBox(height: 24),
           for (var index = 0; index < sections.length; index++) ...[

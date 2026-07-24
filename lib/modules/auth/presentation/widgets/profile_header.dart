@@ -8,15 +8,27 @@ class ProfileHeader extends StatelessWidget {
     required this.name,
     required this.email,
     this.photoUrl,
+    this.rating,
+    this.city,
+    this.statusLabel,
+    this.statusColor,
     super.key,
   });
 
   final String name;
   final String? email;
   final String? photoUrl;
+  final double? rating;
+  final String? city;
+  final String? statusLabel;
+  final Color? statusColor;
 
   @override
   Widget build(BuildContext context) {
+    final hasRatingOrCity =
+        rating != null || (city != null && city!.isNotEmpty);
+    final hasStatus = statusLabel != null && statusLabel!.isNotEmpty;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -41,10 +53,82 @@ class ProfileHeader extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
+              if (hasRatingOrCity) ...[
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    if (rating != null) ...[
+                      const Icon(
+                        Icons.star,
+                        size: 15,
+                        color: VanepColors.ratingStar,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        rating!.toStringAsFixed(1),
+                        style: VanepTypography.ratingLabel,
+                      ),
+                    ],
+                    if (rating != null && city != null)
+                      const Text(
+                        ' · ',
+                        style: TextStyle(color: VanepColors.textMuted),
+                      ),
+                    if (city != null)
+                      Flexible(
+                        child: Text(
+                          city!,
+                          style: VanepTypography.cardSubtitle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                  ],
+                ),
+              ] else if (hasStatus) ...[
+                const SizedBox(height: 6),
+                ProfileAssistantStatusChip(
+                  label: statusLabel!,
+                  color: statusColor ?? VanepColors.textSecondary,
+                ),
+              ],
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class ProfileAssistantStatusChip extends StatelessWidget {
+  const ProfileAssistantStatusChip({
+    required this.label,
+    required this.color,
+    super.key,
+  });
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          label,
+          style: VanepTypography.cardSubtitle.copyWith(
+            color: color,
+            fontSize: 12,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
     );
   }
 }

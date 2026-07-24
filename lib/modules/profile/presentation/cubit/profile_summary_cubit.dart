@@ -6,6 +6,7 @@ import '../../domain/entities/profile_summary.dart';
 import '../../domain/failures/profile_summary_failure.dart';
 import '../../domain/profile_summary_support.dart';
 import '../../domain/usecases/get_profile_summary.dart';
+import '../../domain/value_objects/assistant_status.dart';
 
 enum ProfileSummaryStatus { initial, loading, loaded }
 
@@ -21,6 +22,22 @@ class ProfileSummaryState extends Equatable {
   final ProfileSummaryFailure? failure;
 
   String? get photoUrl => summary?.photoUrl;
+
+  double? get rating => switch (summary) {
+    final ClientProfileSummary client => client.rating,
+    final DriverProfileSummary driver => driver.rating,
+    _ => null,
+  };
+
+  String? get city => switch (summary) {
+    final DriverProfileSummary driver => driver.city,
+    _ => null,
+  };
+
+  AssistantStatus? get assistantStatus => switch (summary) {
+    final AssistantProfileSummary assistant => assistant.status,
+    _ => null,
+  };
 
   @override
   List<Object?> get props => [status, summary, failure];
