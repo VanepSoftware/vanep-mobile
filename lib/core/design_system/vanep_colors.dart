@@ -25,4 +25,5 @@ class VanepColors {
   static const Color ratingStar = Color(0xFFF5A623);
   static const Color avatarPlaceholder = Color(0xFFD8E0E8);
   static const Color navSelectedSurface = Color(0xFFDDE8F2);
+  static const Color danger = Color(0xFFC4564A);
 }
