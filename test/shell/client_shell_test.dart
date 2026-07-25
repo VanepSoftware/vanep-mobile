@@ -96,7 +96,7 @@ void main() {
       _harness(driversCubit, authCubit, profileSummaryCubit),
     );
 
-    await tester.tap(find.text('Vans'));
+    await tester.tap(find.bySemanticsLabel('Vans'));
     await tester.pumpAndSettle();
 
     expect(find.text('Em breve'), findsOneWidget);
@@ -109,7 +109,7 @@ void main() {
       _harness(driversCubit, authCubit, profileSummaryCubit),
     );
 
-    await tester.tap(find.text('Perfil'));
+    await tester.tap(find.bySemanticsLabel('Perfil'));
     await tester.pumpAndSettle();
 
     expect(find.text('Ana Motorista'), findsOneWidget);

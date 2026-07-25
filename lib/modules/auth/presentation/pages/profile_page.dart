@@ -39,7 +39,7 @@ class ProfilePage extends StatelessWidget {
     return SafeArea(
       bottom: false,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 124),
         children: [
           Text(l10n.navProfile, style: VanepTypography.pageTitle),
           const SizedBox(height: 20),
