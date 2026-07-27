@@ -20,7 +20,7 @@ class DriversHomeTab extends StatelessWidget {
     return SafeArea(
       bottom: false,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
         children: [
           ClientGreetingHeader(displayName: displayName),
           const SizedBox(height: 20),
