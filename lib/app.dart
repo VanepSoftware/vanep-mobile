@@ -11,6 +11,7 @@ import 'modules/auth/presentation/cubit/auth_cubit.dart';
 import 'modules/auth/presentation/cubit/auth_state.dart';
 import 'modules/auth/presentation/pages/welcome_page.dart';
 import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'shell/client_shell.dart';
 
 class VanepApp extends StatelessWidget {
@@ -46,8 +47,15 @@ class AuthGate extends StatelessWidget {
       builder: (context, state) {
         return switch (state) {
           AuthUnknown() => const SplashScreen(),
-          AuthAuthenticated(:final session) => BlocProvider<DriversCubit>(
-            create: (_) => getIt<DriversCubit>()..loadRecentDrivers(),
+          AuthAuthenticated(:final session) => MultiBlocProvider(
+            providers: [
+              BlocProvider<DriversCubit>(
+                create: (_) => getIt<DriversCubit>()..loadRecentDrivers(),
+              ),
+              BlocProvider<ProfileSummaryCubit>(
+                create: (_) => getIt<ProfileSummaryCubit>(),
+              ),
+            ],
             child: ClientShell(profile: session.profile),
           ),
           _ => const WelcomePage(),

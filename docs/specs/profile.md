@@ -61,9 +61,18 @@ shape but is **not** the source of truth for account UI in the app.
 | `GET /api/drivers/me` | `token`, `photo`, `rating`, `city`, `approvalStatus`, `available`, `active`, `user` |
 | `GET /api/assistants/me` | `token`, `photo`, `status`, `pendingInvite`, `user` |
 
-Mobile maps the full summary into sealed domain types. **Profile header UI shows
-photo only** (Phase 3); rating / status / invite remain unused in presentation
-until a later phase.
+Mobile maps the full summary into sealed domain types. **Profile header UI
+(Phase 3):**
+
+| Role | Header from summary |
+|------|---------------------|
+| CLIENT | `photo`, `rating` |
+| DRIVER | `photo`, `rating`, `city` |
+| ASSISTANT | `photo`, `status` (chip; no invite UI yet) |
+| ADMIN | no summary — session name/email only |
+
+Driver `approvalStatus` / `available` / `active` and assistant `pendingInvite`
+remain unused in presentation until a later phase.
 
 Enums:
 
@@ -78,7 +87,8 @@ Enums:
 - Fat profile DTOs previously used only on `/me`
 - CRUD by `{token}` for client/driver
 - Assistant self-flows (`/me/invite/**`, `/me/revoke`)
-- Header extras beyond photo (rating, city, approval, assistant status / invite)
+- Header extras beyond Phase 3 (driver approval / available / active, assistant
+  pendingInvite)
 
 ## Product decisions (locked)
 
@@ -86,9 +96,11 @@ Enums:
 |-------|----------|
 | Header photo | CLIENT / DRIVER / ASSISTANT via summary (wired in Phase 3) |
 | ADMIN | Session `user/me` only — no summary `/me` fetch |
-| Rating / status / city / invite in header | Later phase |
+| Driver header extras | `rating` + `city` (quiet row under email; Phase 3) |
+| Assistant header extras | Localized `status` chip under email (Phase 3); invite later |
+| Client header extras | `rating` under email (Phase 3; no city) |
 | Dados pessoais | Always from session (`user/me` at login) — not nested `user` |
-| Name / email in header | From session; summary only adds photo (+ later extras) |
+| Name / email in header | From session; summary adds photo (+ role extras above) |
 | When to fetch summary | Lazy: when opening the Profile tab (not at auth boot) |
 | Failure loading summary | Soft-fail: keep header without photo; do not block Profile / menus |
 | Camera badge | Still visual-only / disabled |
@@ -105,7 +117,8 @@ Phase 2 adds `lib/modules/profile/`:
 - Does **not** yet wire the Profile tab UI (Phase 3)
 
 Phase 3 adds Profile UI in auth presentation and composes summary at the
-shell/Profile boundary (lazy load + `photoUrl` on header).
+shell/Profile boundary (lazy load + `photoUrl` on header; driver rating/city;
+assistant status label).
 
 Endpoints via `Environment` (`clientsMeEndpoint`, `driversMeEndpoint`,
 `assistantsMeEndpoint`).
@@ -116,7 +129,7 @@ Endpoints via `Environment` (`clientsMeEndpoint`, `driversMeEndpoint`,
 |-------|----------|------------|---------------|
 | 1 | Migrate `/api/user/me`; expose `UserType` + account fields (`phone`, `document`, `birthDate`, `Gender`) on `UserProfile`; DTO mapping; tests | — | — |
 | 2 | Typed summary `/me` module (clients / drivers / assistants); DI; cubit; tests — no Profile UI wiring | Phase 1 | — |
-| 3 | Profile UI (header, menus, Sair confirm); lazy load summary on Profile tab; header photo; soft-fail | Phase 2 | — |
+| 3 | Profile UI (header, menus, Sair confirm); lazy load summary; header photo + driver rating/city + assistant status; soft-fail | Phase 2 | — |
 
 ## Tasks
 
@@ -139,7 +152,8 @@ Endpoints via `Environment` (`clientsMeEndpoint`, `driversMeEndpoint`,
 
 ## Phase 3 (branch name: feat/n-17-profile-ui-menus)
 
-- [ ] 3.1 Profile UI + role menus; only Dados pessoais + Sair enabled
-- [ ] 3.2 Header light client-home style; camera badge disabled visual; localization
-- [ ] 3.3 Lazy load summary when Profile tab opens; pass `photoUrl` into header
-- [ ] 3.4 Lint, test, device sign-off, PR
+- [x] 3.1 Profile UI + role menus; only Dados pessoais + Sair enabled
+- [x] 3.2 Header light client-home style; camera badge disabled visual; localization
+- [x] 3.3 Lazy load summary when Profile tab opens; pass `photoUrl` into header
+- [x] 3.4 Header extras: client/driver `rating` (+ driver `city`); assistant localized `status` chip
+- [x] 3.5 Lint, test, device sign-off, PR

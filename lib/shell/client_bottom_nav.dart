@@ -17,19 +17,19 @@ class ClientBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    final items = <_NavItem>[
-      _NavItem(Icons.home_outlined, Icons.home, l10n.navHome),
-      _NavItem(
+    final items = <NavItem>[
+      NavItem(Icons.home_outlined, Icons.home, l10n.navHome),
+      NavItem(
         Icons.airport_shuttle_outlined,
         Icons.airport_shuttle,
         l10n.navVans,
       ),
-      _NavItem(
+      NavItem(
         Icons.notifications_outlined,
         Icons.notifications,
         l10n.navNotifications,
       ),
-      _NavItem(Icons.person_outline, Icons.person, l10n.navProfile),
+      NavItem(Icons.person_outline, Icons.person, l10n.navProfile),
     ];
 
     return SafeArea(
@@ -48,7 +48,7 @@ class ClientBottomNav extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 for (var i = 0; i < items.length; i++)
-                  _NavButton(
+                  NavButton(
                     item: items[i],
                     selected: i == currentIndex,
                     onTap: () => onDestinationSelected(i),
@@ -62,22 +62,23 @@ class ClientBottomNav extends StatelessWidget {
   }
 }
 
-class _NavItem {
-  const _NavItem(this.icon, this.selectedIcon, this.label);
+class NavItem {
+  const NavItem(this.icon, this.selectedIcon, this.label);
 
   final IconData icon;
   final IconData selectedIcon;
   final String label;
 }
 
-class _NavButton extends StatelessWidget {
-  const _NavButton({
+class NavButton extends StatelessWidget {
+  const NavButton({
     required this.item,
     required this.selected,
     required this.onTap,
+    super.key,
   });
 
-  final _NavItem item;
+  final NavItem item;
   final bool selected;
   final VoidCallback onTap;
 
@@ -87,39 +88,30 @@ class _NavButton extends StatelessWidget {
         ? VanepColors.textPrimary
         : VanepColors.textSecondary;
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: selected
-                    ? VanepColors.navSelectedSurface
-                    : Colors.transparent,
-              ),
-              child: Icon(
-                selected ? item.selectedIcon : item.icon,
-                color: color,
-              ),
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: item.label,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: selected
+                  ? VanepColors.navSelectedSurface
+                  : Colors.transparent,
             ),
-            const SizedBox(height: 4),
-            Text(
-              item.label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                color: color,
-              ),
+            child: Icon(
+              selected ? item.selectedIcon : item.icon,
+              color: color,
             ),
-          ],
+          ),
         ),
       ),
     );
