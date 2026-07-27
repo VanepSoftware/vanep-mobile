@@ -11,11 +11,13 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 
 import 'modules/auth/auth_fixtures.dart';
 import 'modules/auth/presentation/auth_presentation_mocks.dart';
 import 'modules/drivers/drivers_fixtures.dart';
 import 'modules/drivers/presentation/drivers_presentation_mocks.dart';
+import 'modules/profile/profile_mocks.dart';
 
 Widget _harness(AuthCubit cubit) {
   return MaterialApp(
@@ -67,6 +69,7 @@ void main() {
     tester,
   ) async {
     final driversCubit = MockDriversCubit();
+    final profileSummaryCubit = MockProfileSummaryCubit();
     whenListen(
       driversCubit,
       const Stream<DriversState>.empty(),
@@ -75,8 +78,15 @@ void main() {
         drivers: testRecentDrivers,
       ),
     );
+    whenListen(
+      profileSummaryCubit,
+      const Stream<ProfileSummaryState>.empty(),
+      initialState: const ProfileSummaryState(),
+    );
     when(() => driversCubit.loadRecentDrivers()).thenAnswer((_) async {});
-    getIt.registerFactory<DriversCubit>(() => driversCubit);
+    getIt
+      ..registerFactory<DriversCubit>(() => driversCubit)
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(FakeAuthSession());
