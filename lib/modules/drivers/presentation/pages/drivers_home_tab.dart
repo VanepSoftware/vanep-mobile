@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_typography.dart';
+import '../../../../core/ui/vanep_greeting_header.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../cubit/drivers_cubit.dart';
-import '../widgets/client_greeting_header.dart';
 import '../widgets/drivers_home_body.dart';
 import '../widgets/drivers_search_field.dart';
 
@@ -22,7 +22,7 @@ class DriversHomeTab extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
-          ClientGreetingHeader(displayName: displayName),
+          VanepGreetingHeader(displayName: displayName),
           const SizedBox(height: 20),
           DriversSearchField(
             hint: l10n.driversSearchHint,

@@ -80,4 +80,42 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get comingSoon => 'Em breve';
+
+  @override
+  String driverShiftStartsAt(String time) {
+    return 'Seu expediente começa às $time';
+  }
+
+  @override
+  String get driverShiftOff => 'Fora do expediente';
+
+  @override
+  String get driverShiftOn => 'Em expediente';
+
+  @override
+  String driverStudentsOnRouteToday(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count alunos na rota de hoje',
+      one: '1 aluno na rota de hoje',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get driverStartRoute => 'Iniciar rota';
+
+  @override
+  String get driverEndRoute => 'Encerrar rota';
+
+  @override
+  String get driverShareLiveLocation =>
+      'Compartilhar localização em tempo real';
+
+  @override
+  String get navProposals => 'Propostas';
+
+  @override
+  String get navStudents => 'Alunos';
 }

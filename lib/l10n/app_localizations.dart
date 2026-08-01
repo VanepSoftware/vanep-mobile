@@ -217,6 +217,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming soon'**
   String get comingSoon;
+
+  /// No description provided for @driverShiftStartsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Your shift starts at {time}'**
+  String driverShiftStartsAt(String time);
+
+  /// No description provided for @driverShiftOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off shift'**
+  String get driverShiftOff;
+
+  /// No description provided for @driverShiftOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On shift'**
+  String get driverShiftOn;
+
+  /// No description provided for @driverStudentsOnRouteToday.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 student on today\'s route} other{{count} students on today\'s route}}'**
+  String driverStudentsOnRouteToday(int count);
+
+  /// No description provided for @driverStartRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Start route'**
+  String get driverStartRoute;
+
+  /// No description provided for @driverEndRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'End route'**
+  String get driverEndRoute;
+
+  /// No description provided for @driverShareLiveLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Share live location'**
+  String get driverShareLiveLocation;
+
+  /// No description provided for @navProposals.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposals'**
+  String get navProposals;
+
+  /// No description provided for @navStudents.
+  ///
+  /// In en, this message translates to:
+  /// **'Students'**
+  String get navStudents;
 }
 
 class _AppLocalizationsDelegate

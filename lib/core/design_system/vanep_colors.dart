@@ -25,4 +25,9 @@ class VanepColors {
   static const Color ratingStar = Color(0xFFF5A623);
   static const Color avatarPlaceholder = Color(0xFFD8E0E8);
   static const Color navSelectedSurface = Color(0xFFDDE8F2);
+
+  static const Color surfaceGradientTop = Color(0xFFF6FAFD);
+  static const Color surfaceGradientBottom = Color(0xFFD7E7F5);
+  static const Color glassBorder = Color(0xFFFFFFFF);
+  static const Color glassTint = Color(0xFFCFE1F2);
 }

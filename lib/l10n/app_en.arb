@@ -40,5 +40,28 @@
   "navVans": "Vans",
   "navNotifications": "Notifications",
   "navProfile": "Profile",
-  "comingSoon": "Coming soon"
+  "comingSoon": "Coming soon",
+  "driverShiftStartsAt": "Your shift starts at {time}",
+  "@driverShiftStartsAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "driverShiftOff": "Off shift",
+  "driverShiftOn": "On shift",
+  "driverStudentsOnRouteToday": "{count, plural, =1{1 student on today's route} other{{count} students on today's route}}",
+  "@driverStudentsOnRouteToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverStartRoute": "Start route",
+  "driverEndRoute": "End route",
+  "driverShareLiveLocation": "Share live location",
+  "navProposals": "Proposals",
+  "navStudents": "Students"
 }
