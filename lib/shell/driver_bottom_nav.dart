@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../core/ui/vanep_bottom_nav.dart';
 import '../l10n/app_localizations.dart';
 
-class ClientBottomNav extends StatelessWidget {
-  const ClientBottomNav({
+class DriverBottomNav extends StatelessWidget {
+  const DriverBottomNav({
     required this.currentIndex,
     required this.onDestinationSelected,
     super.key,
@@ -27,14 +27,14 @@ class ClientBottomNav extends StatelessWidget {
           label: l10n.navHome,
         ),
         VanepNavItem(
-          icon: Icons.airport_shuttle_outlined,
-          selectedIcon: Icons.airport_shuttle,
-          label: l10n.navVans,
+          icon: Icons.assignment_outlined,
+          selectedIcon: Icons.assignment,
+          label: l10n.navProposals,
         ),
         VanepNavItem(
-          icon: Icons.notifications_outlined,
-          selectedIcon: Icons.notifications,
-          label: l10n.navNotifications,
+          icon: Icons.groups_outlined,
+          selectedIcon: Icons.groups,
+          label: l10n.navStudents,
         ),
         VanepNavItem(
           icon: Icons.person_outline,
