@@ -30,4 +30,5 @@ class VanepColors {
   static const Color surfaceGradientBottom = Color(0xFFD7E7F5);
   static const Color glassBorder = Color(0xFFFFFFFF);
   static const Color glassTint = Color(0xFFCFE1F2);
+  static const Color danger = Color(0xFFC4564A);
 }

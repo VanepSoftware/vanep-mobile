@@ -9,6 +9,7 @@ import 'modules/auth/auth_container.dart';
 import 'modules/auth/data/datasources/auth_local_datasource.dart';
 import 'modules/driver/driver_container.dart';
 import 'modules/drivers/drivers_container.dart';
+import 'modules/profile/profile_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ Future<void> main() async {
   registerAuthDependencies(getIt, authBox: authBox);
   registerDriverDependencies(getIt);
   registerDriverHomeDependencies(getIt);
+  registerProfileDependencies(getIt);
 
   runApp(const VanepApp());
 }

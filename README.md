@@ -86,7 +86,7 @@ Login uses the Vanep backend (Spring Authorization Server) via the
    custom-scheme navigation (no Android/iOS deep link needed) and extracts the
    authorization `code`.
 4. The app exchanges the code at `/oauth2/token` (with the PKCE `code_verifier`),
-   fetches the profile from `/api/user/profile`, and stores the session in
+   fetches the profile from `/api/user/me`, and stores the session in
    **Hive** — so the user stays signed in across app launches.
 5. **Sair** revokes the tokens (`/oauth2/revoke`) and clears the local session.
 
@@ -102,9 +102,11 @@ Use the `Makefile` as the primary way to run Flutter tasks.
 
 | Command | Description |
 | --- | --- |
-| `make install` | Clean + `flutter pub get` |
+| `make install` | Clean + `pub_get` + `translate` + `build` (full post-clone setup) |
 | `make clean` | `flutter clean` |
 | `make pub_get` | `flutter pub get` |
+| `make translate` | `flutter gen-l10n` (regenerate localizations from ARBs) |
+| `make build` | `dart run build_runner build` (regenerate freezed / json_serializable code) |
 | `make lint` | `flutter analyze --fatal-infos` |
 | `make lint_fix` | `dart fix --apply` |
 | `make test` | `flutter test` |

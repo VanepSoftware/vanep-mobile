@@ -4,7 +4,6 @@ import '../core/ui/vanep_coming_soon.dart';
 import '../core/ui/vanep_screen_background.dart';
 import '../l10n/app_localizations.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
-import '../modules/auth/presentation/pages/home_page.dart';
 import '../modules/driver/presentation/pages/driver_home_tab.dart';
 import 'driver_bottom_nav.dart';
 
@@ -34,7 +33,7 @@ class DriverShellState extends State<DriverShell> {
             DriverHomeTab(displayName: displayName),
             VanepComingSoon(title: l10n.navProposals, message: l10n.comingSoon),
             VanepComingSoon(title: l10n.navStudents, message: l10n.comingSoon),
-            HomePage(profile: widget.profile),
+            VanepComingSoon(title: l10n.navProfile, message: l10n.comingSoon),
           ],
         ),
         bottomNavigationBar: DriverBottomNav(

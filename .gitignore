@@ -49,3 +49,8 @@ app.*.map.json
 # --- Env (flutter_dotenv) ---
 # Real .env is per-developer (holds AUTH_URL etc.); commit only .env.example.
 .env
+
+# Generated files (build_runner: freezed / json_serializable)
+**/generated/
+*.freezed.dart
+*.g.dart
