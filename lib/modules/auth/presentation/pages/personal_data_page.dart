@@ -354,9 +354,6 @@ class PendingEmailBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: VanepColors.warningSurface,
         borderRadius: BorderRadius.circular(16),
-        border: const Border(
-          left: BorderSide(color: VanepColors.warning, width: 3),
-        ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       child: Row(
