@@ -45,7 +45,6 @@ class PersonalDataState extends Equatable {
     this.draftPhone = '',
     this.draftGender,
     this.fieldErrors = const {},
-    this.loadFailure,
     this.feedback,
   });
 
@@ -55,7 +54,6 @@ class PersonalDataState extends Equatable {
   final String draftPhone;
   final Gender? draftGender;
   final Map<String, ProfileErrorCode> fieldErrors;
-  final ProfileEditFailure? loadFailure;
   final PersonalDataFeedback? feedback;
 
   bool get isDirty {
@@ -82,9 +80,7 @@ class PersonalDataState extends Equatable {
     String? draftPhone,
     Gender? draftGender,
     Map<String, ProfileErrorCode>? fieldErrors,
-    ProfileEditFailure? loadFailure,
     PersonalDataFeedback? feedback,
-    bool clearLoadFailure = false,
     bool clearFeedback = false,
     bool clearFieldErrors = false,
   }) {
@@ -97,7 +93,6 @@ class PersonalDataState extends Equatable {
       fieldErrors: clearFieldErrors
           ? const {}
           : (fieldErrors ?? this.fieldErrors),
-      loadFailure: clearLoadFailure ? null : (loadFailure ?? this.loadFailure),
       feedback: clearFeedback ? null : (feedback ?? this.feedback),
     );
   }
@@ -110,7 +105,6 @@ class PersonalDataState extends Equatable {
     draftPhone,
     draftGender,
     fieldErrors,
-    loadFailure,
     feedback,
   ];
 }

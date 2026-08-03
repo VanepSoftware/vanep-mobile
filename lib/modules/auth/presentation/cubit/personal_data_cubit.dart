@@ -31,18 +31,12 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     emit(
       state.copyWith(
         status: PersonalDataStatus.loading,
-        clearLoadFailure: true,
         clearFeedback: true,
       ),
     );
     final result = await _refreshUserProfile();
     result.fold(
-      (failure) => emit(
-        state.copyWith(
-          status: PersonalDataStatus.loadFailed,
-          loadFailure: failure,
-        ),
-      ),
+      (_) => emit(state.copyWith(status: PersonalDataStatus.loadFailed)),
       applyLoadedProfile,
     );
   }

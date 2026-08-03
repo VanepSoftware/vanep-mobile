@@ -66,10 +66,7 @@ void main() {
       act: (cubit) => cubit.load(),
       expect: () => [
         const PersonalDataState(status: PersonalDataStatus.loading),
-        const PersonalDataState(
-          status: PersonalDataStatus.loadFailed,
-          loadFailure: NetworkProfileEditFailure(),
-        ),
+        const PersonalDataState(status: PersonalDataStatus.loadFailed),
       ],
     );
   });
