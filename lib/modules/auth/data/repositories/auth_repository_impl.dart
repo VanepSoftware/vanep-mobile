@@ -3,20 +3,26 @@ import 'package:dio/dio.dart';
 import '../../../../core/environment/environment.dart';
 import '../../../../core/result/result.dart';
 import '../../domain/entities/auth_session.dart';
+import '../../domain/entities/user_profile.dart';
 import '../../domain/failures/auth_failure.dart';
+import '../../domain/failures/profile_edit_failure.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/value_objects/authorization_request.dart';
+import '../../domain/value_objects/profile_patch_request.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/oauth_remote_datasource.dart';
+import '../datasources/user_profile_remote_datasource.dart';
 import '../datasources/web_session_cleaner.dart';
 import '../dtos/auth_session_dto.dart';
 import '../dtos/token_response_dto.dart';
 import '../dtos/user_profile_dto.dart';
+import '../mappers/profile_edit_failure_mapper.dart';
 import '../pkce/pkce_generator.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this.remote,
+    required this.profileRemote,
     required this.local,
     required this.pkce,
     required this.environment,
@@ -25,6 +31,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }) : _now = clock;
 
   final OAuthRemoteDataSource remote;
+  final UserProfileRemoteDataSource profileRemote;
   final AuthLocalDataSource local;
   final PkceGenerator pkce;
   final Environment environment;
@@ -69,7 +76,11 @@ class AuthRepositoryImpl implements AuthRepository {
         redirectUri: request.redirectUri,
       );
       final profile = await remote.fetchProfile(token.accessToken);
-      final session = _sessionFrom(token, profile);
+      final session = sessionFromTokenResponse(
+        token: token,
+        profile: profile,
+        now: _now(),
+      );
       await local.saveSession(session);
       return Ok(session);
     } on DioException catch (error) {
@@ -87,43 +98,29 @@ class AuthRepositoryImpl implements AuthRepository {
 
     try {
       final token = await remote.refresh(stored.refreshToken);
-      final refreshed = _sessionFrom(
-        token,
-        stored.profile,
+      final refreshed = sessionFromTokenResponse(
+        token: token,
+        profile: stored.profile,
+        now: _now(),
         fallbackRefreshToken: stored.refreshToken,
       );
       await local.saveSession(refreshed);
       return Ok(refreshed);
     } on DioException catch (error) {
-      if (_isDefinitiveAuthRejection(error)) {
-        // The refresh token is invalid/expired/revoked: the session is dead.
+      if (isDefinitiveAuthRejection(error)) {
         await local.clearSession();
         return const Ok(null);
       }
-      // Transient failure (offline, timeout, 5xx, server restarting): keep the
-      // stored session so the user isn't logged out. The token endpoint will be
-      // retried on the next request/app start.
       return Ok(stored);
     }
-  }
-
-  /// Whether the token endpoint definitively rejected the refresh token.
-  ///
-  /// OAuth 2.0 returns HTTP 400 `invalid_grant` for an invalid/expired/revoked
-  /// refresh token and 401 for client-auth problems. Anything else (no
-  /// response, timeout, 5xx) is treated as transient so we don't log the user
-  /// out over a flaky network or a backend restart.
-  bool _isDefinitiveAuthRejection(DioException error) {
-    final status = error.response?.statusCode;
-    return status == 400 || status == 401;
   }
 
   @override
   Future<Result<AuthFailure, void>> signOut() async {
     final stored = local.readSession();
     if (stored != null) {
-      await _revokeQuietly(stored.refreshToken, 'refresh_token');
-      await _revokeQuietly(stored.accessToken, 'access_token');
+      await revokeQuietly(remote, stored.refreshToken, 'refresh_token');
+      await revokeQuietly(remote, stored.accessToken, 'access_token');
     }
     await local.clearSession();
 
@@ -131,23 +128,83 @@ class AuthRepositoryImpl implements AuthRepository {
     return const Ok(null);
   }
 
-  AuthSessionDto _sessionFrom(
-    TokenResponseDto token,
-    UserProfileDto profile, {
-    String? fallbackRefreshToken,
-  }) {
-    return AuthSessionDto(
-      accessToken: token.accessToken,
-      refreshToken: token.refreshToken ?? fallbackRefreshToken ?? '',
-      expiresAt: _now().add(Duration(seconds: token.expiresInSeconds)),
-      profile: profile,
+  @override
+  Future<Result<ProfileEditFailure, UserProfile>> refreshUserProfile() {
+    return replaceStoredUserProfile(
+      local: local,
+      loadProfile: profileRemote.fetchMe,
     );
   }
 
-  Future<void> _revokeQuietly(String token, String hint) async {
-    if (token.isEmpty) return;
-    await remote
-        .revoke(token, hint)
-        .catchError((Object _) {}, test: (e) => e is DioException);
+  @override
+  Future<Result<ProfileEditFailure, UserProfile>> patchUserProfile(
+    ProfilePatchRequest request,
+  ) {
+    return replaceStoredUserProfile(
+      local: local,
+      loadProfile: () => profileRemote.patchMe(request.toJsonMap()),
+    );
+  }
+
+  @override
+  Future<Result<ProfileEditFailure, UserProfile>> requestEmailChange(
+    String email,
+  ) {
+    return replaceStoredUserProfile(
+      local: local,
+      loadProfile: () async {
+        await profileRemote.requestEmailChange(email);
+        return profileRemote.fetchMe();
+      },
+    );
+  }
+}
+
+bool isDefinitiveAuthRejection(DioException error) {
+  final status = error.response?.statusCode;
+  return status == 400 || status == 401;
+}
+
+AuthSessionDto sessionFromTokenResponse({
+  required TokenResponseDto token,
+  required UserProfileDto profile,
+  required DateTime now,
+  String? fallbackRefreshToken,
+}) {
+  return AuthSessionDto(
+    accessToken: token.accessToken,
+    refreshToken: token.refreshToken ?? fallbackRefreshToken ?? '',
+    expiresAt: now.add(Duration(seconds: token.expiresInSeconds)),
+    profile: profile,
+  );
+}
+
+Future<void> revokeQuietly(
+  OAuthRemoteDataSource remote,
+  String token,
+  String hint,
+) async {
+  if (token.isEmpty) return;
+  await remote
+      .revoke(token, hint)
+      .catchError((Object _) {}, test: (e) => e is DioException);
+}
+
+Future<Result<ProfileEditFailure, UserProfile>> replaceStoredUserProfile({
+  required AuthLocalDataSource local,
+  required Future<UserProfileDto> Function() loadProfile,
+}) async {
+  final stored = local.readSession();
+  if (stored == null) {
+    return const Err(UnexpectedProfileEditFailure('no_session'));
+  }
+  try {
+    final profile = await loadProfile();
+    await local.saveSession(stored.copyWith(profile: profile));
+    return Ok(profile);
+  } on DioException catch (error) {
+    return Err(mapProfileEditDioException(error));
+  } on Object catch (error) {
+    return Err(UnexpectedProfileEditFailure(error.toString()));
   }
 }
