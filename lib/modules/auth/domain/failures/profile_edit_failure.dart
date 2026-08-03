@@ -7,7 +7,10 @@ enum ProfileErrorCode {
   phoneBlank,
   emailSame,
   emailInvalid,
-  emailRequired;
+  emailRequired,
+  nameTooLong,
+  phoneTooLong,
+  emailTooLong;
 
   static ProfileErrorCode? fromApi(Object? raw) {
     if (raw is! String) return null;
@@ -21,6 +24,9 @@ enum ProfileErrorCode {
       'email_same' => ProfileErrorCode.emailSame,
       'email_invalid' => ProfileErrorCode.emailInvalid,
       'email_required' => ProfileErrorCode.emailRequired,
+      'name_too_long' => ProfileErrorCode.nameTooLong,
+      'phone_too_long' => ProfileErrorCode.phoneTooLong,
+      'email_too_long' => ProfileErrorCode.emailTooLong,
       _ => null,
     };
   }
