@@ -44,16 +44,14 @@ class StructuredProfileEditFailure extends ProfileEditFailure {
     required this.code,
     this.field,
     this.retryAfter,
-    this.serverMessage,
   });
 
   final ProfileErrorCode code;
   final String? field;
   final DateTime? retryAfter;
-  final String? serverMessage;
 
   @override
-  List<Object?> get props => [code, field, retryAfter, serverMessage];
+  List<Object?> get props => [code, field, retryAfter];
 }
 
 class NetworkProfileEditFailure extends ProfileEditFailure {
