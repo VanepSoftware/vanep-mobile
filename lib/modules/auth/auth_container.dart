@@ -22,6 +22,7 @@ import 'domain/usecases/refresh_user_profile.dart';
 import 'domain/usecases/request_email_change.dart';
 import 'domain/usecases/sign_out.dart';
 import 'presentation/cubit/auth_cubit.dart';
+import 'presentation/cubit/personal_data_cubit.dart';
 
 void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
   final environment = getIt<Environment>();
@@ -77,6 +78,14 @@ void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
     )
     ..registerFactory<RequestEmailChange>(
       () => RequestEmailChange(getIt<AuthRepository>()),
+    )
+    ..registerFactoryParam<PersonalDataCubit, SyncProfile, void>(
+      (syncProfile, _) => PersonalDataCubit(
+        refreshUserProfile: getIt<RefreshUserProfile>(),
+        patchUserProfile: getIt<PatchUserProfile>(),
+        requestEmailChange: getIt<RequestEmailChange>(),
+        syncProfile: syncProfile,
+      ),
     )
     ..registerFactory<AuthCubit>(
       () => AuthCubit(

@@ -58,5 +58,77 @@
   "profileAssistantStatusUnlinked": "Sem vínculo",
   "profileAssistantStatusPending": "Convite pendente",
   "profileAssistantStatusActive": "Ativo",
-  "profileAssistantStatusInactive": "Inativo"
+  "profileAssistantStatusInactive": "Inativo",
+  "profileSave": "Salvar",
+  "profileChange": "Alterar",
+  "profileChangeEmailTitle": "Alterar e-mail",
+  "profileChangeEmailSubmit": "Alterar e-mail",
+  "profileEmailChangeConfirmationTitle": "Verifique seu e-mail",
+  "profileEmailChangeConfirmationMessage": "Enviamos um link de confirmação para {email}. Abra-o para concluir a alteração do seu e-mail.",
+  "@profileEmailChangeConfirmationMessage": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "profilePendingEmailBanner": "Confirme o novo e-mail enviado para {email}.",
+  "@profilePendingEmailBanner": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "profileCooldownDaysRemaining": "{days, plural, =1{1 dia} other{{days} dias}}",
+  "@profileCooldownDaysRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditSaveSuccess": "Dados pessoais salvos.",
+  "profileEditErrorCooldown": "Você poderá alterar de novo em {date}.",
+  "@profileEditErrorCooldown": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "profileEditErrorEmailDuplicate": "Este e-mail já está em uso.",
+  "profileEditErrorFieldNull": "Este campo é obrigatório.",
+  "profileEditErrorPhoneBlank": "Informe um telefone válido.",
+  "profileEditErrorEmailSame": "Esse já é o seu e-mail atual.",
+  "profileEditErrorEmailInvalid": "Informe um e-mail válido.",
+  "profileEditErrorEmailRequired": "O e-mail é obrigatório.",
+  "profileEditErrorNameTooLong": "O nome deve ter no máximo {max} caracteres.",
+  "@profileEditErrorNameTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditErrorPhoneTooLong": "O telefone deve ter no máximo {max} caracteres.",
+  "@profileEditErrorPhoneTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditErrorEmailTooLong": "O e-mail deve ter no máximo {max} caracteres.",
+  "@profileEditErrorEmailTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditErrorNetwork": "Não foi possível atualizar o perfil. Verifique a conexão e tente novamente.",
+  "profileEditErrorUnexpected": "Algo deu errado. Tente novamente.",
+  "profileEditLoadError": "Não foi possível carregar seus dados pessoais. Puxe para tentar novamente.",
+  "profileEditRetry": "Tentar novamente"
 }

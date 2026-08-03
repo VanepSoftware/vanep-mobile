@@ -93,5 +93,77 @@
   "profileAssistantStatusUnlinked": "Unlinked",
   "profileAssistantStatusPending": "Pending invite",
   "profileAssistantStatusActive": "Active",
-  "profileAssistantStatusInactive": "Inactive"
+  "profileAssistantStatusInactive": "Inactive",
+  "profileSave": "Save",
+  "profileChange": "Change",
+  "profileChangeEmailTitle": "Change email",
+  "profileChangeEmailSubmit": "Change email",
+  "profileEmailChangeConfirmationTitle": "Check your email",
+  "profileEmailChangeConfirmationMessage": "We sent a confirmation link to {email}. Open it to finish changing your email.",
+  "@profileEmailChangeConfirmationMessage": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "profilePendingEmailBanner": "Confirm the new email sent to {email}.",
+  "@profilePendingEmailBanner": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "profileCooldownDaysRemaining": "{days, plural, =1{1 day} other{{days} days}}",
+  "@profileCooldownDaysRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditSaveSuccess": "Personal data saved.",
+  "profileEditErrorCooldown": "You can change this again on {date}.",
+  "@profileEditErrorCooldown": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "profileEditErrorEmailDuplicate": "This email is already in use.",
+  "profileEditErrorFieldNull": "This field is required.",
+  "profileEditErrorPhoneBlank": "Enter a valid phone number.",
+  "profileEditErrorEmailSame": "That is already your current email.",
+  "profileEditErrorEmailInvalid": "Enter a valid email address.",
+  "profileEditErrorEmailRequired": "Email is required.",
+  "profileEditErrorNameTooLong": "Name must be at most {max} characters.",
+  "@profileEditErrorNameTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditErrorPhoneTooLong": "Phone number must be at most {max} characters.",
+  "@profileEditErrorPhoneTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditErrorEmailTooLong": "Email must be at most {max} characters.",
+  "@profileEditErrorEmailTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditErrorNetwork": "Could not update your profile. Check your connection and try again.",
+  "profileEditErrorUnexpected": "Something went wrong. Please try again.",
+  "profileEditLoadError": "Could not load your personal data. Pull to try again.",
+  "profileEditRetry": "Try again"
 }

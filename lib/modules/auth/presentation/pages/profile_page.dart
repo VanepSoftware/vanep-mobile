@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_typography.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/ui/vanep_confirm_dialog.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/builders/profile_menu_builder.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/value_objects/profile_menu_id.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/personal_data_cubit.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_menu_card.dart';
 import 'personal_data_page.dart';
@@ -74,9 +76,14 @@ Future<void> handleProfileMenuSelection(
 ) async {
   switch (id) {
     case ProfileMenuId.personalData:
+      final syncProfile = context.read<AuthCubit>().syncProfile;
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => PersonalDataPage(profile: profile),
+          builder: (_) => BlocProvider(
+            create: (_) =>
+                getIt<PersonalDataCubit>(param1: syncProfile)..load(),
+            child: const PersonalDataPage(),
+          ),
         ),
       );
     case ProfileMenuId.signOut:

@@ -4,16 +4,21 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/profile_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/profile_header.dart';
 
 import '../auth_fixtures.dart';
+import '../auth_mocks.dart';
 import 'auth_presentation_mocks.dart';
 
 class ClientProfile implements UserProfile {
@@ -95,6 +100,10 @@ void main() {
 
   setUp(() => cubit = MockAuthCubit());
 
+  tearDown(() async {
+    await getIt.reset();
+  });
+
   testWidgets('shows light profile header and role menu for client', (
     tester,
   ) async {
@@ -126,7 +135,26 @@ void main() {
     expect(find.byType(PersonalDataPage), findsNothing);
   });
 
-  testWidgets('personal data shows formatted account fields', (tester) async {
+  testWidgets('personal data opens editable page with account fields', (
+    tester,
+  ) async {
+    registerAuthFallbacks();
+    final refreshUserProfile = MockRefreshUserProfile();
+    final patchUserProfile = MockPatchUserProfile();
+    final requestEmailChange = MockRequestEmailChange();
+    when(refreshUserProfile.call).thenAnswer(
+      (_) async => const Ok<ProfileEditFailure, UserProfile>(ClientProfile()),
+    );
+    getIt.registerFactoryParam<PersonalDataCubit, SyncProfile, void>(
+      (syncProfile, _) => PersonalDataCubit(
+        refreshUserProfile: refreshUserProfile,
+        patchUserProfile: patchUserProfile,
+        requestEmailChange: requestEmailChange,
+        syncProfile: syncProfile,
+      ),
+    );
+    when(() => cubit.syncProfile(any())).thenReturn(null);
+
     await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
 
     await tester.tap(find.text('Dados pessoais'));
@@ -141,8 +169,14 @@ void main() {
     expect(find.text('123.456.789-01'), findsOneWidget);
     expect(find.text('Data de nascimento'), findsOneWidget);
     expect(find.text('15/05/1990'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Gênero'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Gênero'), findsOneWidget);
     expect(find.text('Masculino'), findsOneWidget);
+    expect(find.text('Salvar'), findsOneWidget);
   });
 
   testWidgets('sign out asks for confirmation before signing out', (
