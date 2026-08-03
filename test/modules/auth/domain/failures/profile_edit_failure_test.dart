@@ -19,6 +19,18 @@ void main() {
       ProfileErrorCode.fromApi('email_required'),
       ProfileErrorCode.emailRequired,
     );
+    expect(
+      ProfileErrorCode.fromApi('name_too_long'),
+      ProfileErrorCode.nameTooLong,
+    );
+    expect(
+      ProfileErrorCode.fromApi('phone_too_long'),
+      ProfileErrorCode.phoneTooLong,
+    );
+    expect(
+      ProfileErrorCode.fromApi('email_too_long'),
+      ProfileErrorCode.emailTooLong,
+    );
   });
 
   test('fromApi returns null for unknown codes', () {
