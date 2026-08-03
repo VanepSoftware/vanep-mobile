@@ -124,4 +124,33 @@ void main() {
     act: (cubit) => cubit.signOut(),
     expect: () => [const AuthUnauthenticated()],
   );
+
+  blocTest<AuthCubit, AuthState>(
+    'syncProfile replaces profile on authenticated session',
+    build: buildCubit,
+    seed: () => AuthAuthenticated(session),
+    act: (cubit) => cubit.syncProfile(
+      const FakeUserProfile(name: 'Maria Silva', pendingEmail: 'n@vanep.com'),
+    ),
+    expect: () => [
+      isA<AuthAuthenticated>().having(
+        (state) => state.session.profile.name,
+        'name',
+        'Maria Silva',
+      ),
+    ],
+    verify: (cubit) {
+      final state = cubit.state as AuthAuthenticated;
+      expect(state.session.accessToken, session.accessToken);
+      expect(state.session.profile.pendingEmail, 'n@vanep.com');
+    },
+  );
+
+  blocTest<AuthCubit, AuthState>(
+    'syncProfile is a no-op when unauthenticated',
+    build: buildCubit,
+    seed: () => const AuthUnauthenticated(),
+    act: (cubit) => cubit.syncProfile(const FakeUserProfile(name: 'X')),
+    expect: () => <AuthState>[],
+  );
 }

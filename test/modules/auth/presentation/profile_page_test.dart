@@ -42,6 +42,18 @@ class ClientProfile implements UserProfile {
 
   @override
   UserType? get type => UserType.client;
+
+  @override
+  String? get pendingEmail => null;
+
+  @override
+  DateTime? get nameChangeAvailableAt => null;
+
+  @override
+  DateTime? get phoneChangeAvailableAt => null;
+
+  @override
+  DateTime? get emailChangeAvailableAt => null;
 }
 
 Widget profileHarness(

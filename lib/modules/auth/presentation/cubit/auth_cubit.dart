@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../domain/entities/auth_session.dart';
+import '../../domain/entities/user_profile.dart';
 import '../../domain/failures/auth_failure.dart';
 import '../../domain/usecases/build_authorization_request.dart';
 import '../../domain/usecases/exchange_authorization_code.dart';
@@ -47,17 +49,25 @@ class AuthCubit extends Cubit<AuthState> {
       code: code,
       request: request,
     );
-    result.fold(_emitFailure, (session) => emit(AuthAuthenticated(session)));
+    result.fold(emitAuthFailure, (session) => emit(AuthAuthenticated(session)));
   }
 
-  void cancelLogin() => _emitFailure(const CancelledAuthFailure());
+  void cancelLogin() => emitAuthFailure(const CancelledAuthFailure());
 
   Future<void> signOut() async {
     await _signOut();
     emit(const AuthUnauthenticated());
   }
 
-  void _emitFailure(AuthFailure failure) {
+  void syncProfile(UserProfile profile) {
+    final current = state;
+    if (current is! AuthAuthenticated) return;
+    emit(
+      AuthAuthenticated(AuthSessionReplacingProfile(current.session, profile)),
+    );
+  }
+
+  void emitAuthFailure(AuthFailure failure) {
     emit(AuthFailureState(failure));
     emit(const AuthUnauthenticated());
   }
