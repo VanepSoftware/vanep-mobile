@@ -25,7 +25,6 @@ void main() {
       const StructuredProfileEditFailure(
         code: ProfileErrorCode.phoneBlank,
         field: 'phone',
-        serverMessage: 'blank',
       ),
     );
   });

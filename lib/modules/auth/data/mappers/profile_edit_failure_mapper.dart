@@ -15,7 +15,6 @@ ProfileEditFailure mapProfileEditDioException(DioException error) {
           code: code,
           field: dto.field,
           retryAfter: dto.retryAfter,
-          serverMessage: dto.message,
         );
       }
     }
