@@ -114,6 +114,8 @@
       }
     }
   },
+  "profilePendingEmailMenuSubtitle": "Confirm your new email",
+  "@profilePendingEmailMenuSubtitle": {},
   "profileCooldownDaysRemaining": "{days, plural, =1{1 day} other{{days} days}}",
   "@profileCooldownDaysRemaining": {
     "placeholders": {

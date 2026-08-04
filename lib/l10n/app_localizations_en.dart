@@ -231,6 +231,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get profilePendingEmailMenuSubtitle => 'Confirm your new email';
+
+  @override
   String profileCooldownDaysRemaining(int days) {
     String _temp0 = intl.Intl.pluralLogic(
       days,

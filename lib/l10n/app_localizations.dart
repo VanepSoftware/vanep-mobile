@@ -488,6 +488,12 @@ abstract class AppLocalizations {
   /// **'Confirm the new email sent to {email}.'**
   String profilePendingEmailBanner(String email);
 
+  /// No description provided for @profilePendingEmailMenuSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your new email'**
+  String get profilePendingEmailMenuSubtitle;
+
   /// No description provided for @profileCooldownDaysRemaining.
   ///
   /// In en, this message translates to:

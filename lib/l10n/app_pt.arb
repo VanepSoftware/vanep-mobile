@@ -79,6 +79,8 @@
       }
     }
   },
+  "profilePendingEmailMenuSubtitle": "Confirme seu novo e-mail",
+  "@profilePendingEmailMenuSubtitle": {},
   "profileCooldownDaysRemaining": "{days, plural, =1{1 dia} other{{days} dias}}",
   "@profileCooldownDaysRemaining": {
     "placeholders": {

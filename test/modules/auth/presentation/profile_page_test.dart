@@ -275,4 +275,27 @@ void main() {
     expect(find.byIcon(Icons.star), findsNothing);
     expect(find.text('4.5'), findsNothing);
   });
+
+  testWidgets(
+    'shows pending email confirmation hint on personal data menu item',
+    (tester) async {
+      await tester.pumpWidget(
+        profileHarness(
+          cubit,
+          const FakeUserProfile(pendingEmail: 'novo@vanep.com.br'),
+        ),
+      );
+
+      expect(find.text('Confirme seu novo e-mail'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'does not show pending email confirmation hint without a pending email',
+    (tester) async {
+      await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
+
+      expect(find.text('Confirme seu novo e-mail'), findsNothing);
+    },
+  );
 }

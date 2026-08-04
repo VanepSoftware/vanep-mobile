@@ -37,6 +37,7 @@ class ProfilePage extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final sections = buildProfileMenu(profile.type);
     final displayName = profile.name ?? profile.email ?? '';
+    final hasPendingEmailConfirmation = profile.pendingEmail != null;
 
     return SafeArea(
       bottom: false,
@@ -61,6 +62,7 @@ class ProfilePage extends StatelessWidget {
               section: sections[index],
               onItemSelected: (id) =>
                   handleProfileMenuSelection(context, profile, id),
+              pendingEmailConfirmation: hasPendingEmailConfirmation,
             ),
           ],
         ],
