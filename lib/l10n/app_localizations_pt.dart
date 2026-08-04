@@ -214,9 +214,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get profileSave => 'Salvar';
 
   @override
-  String get profileChange => 'Alterar';
-
-  @override
   String get profileChangeEmailTitle => 'Alterar e-mail';
 
   @override

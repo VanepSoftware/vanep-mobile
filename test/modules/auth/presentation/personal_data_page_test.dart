@@ -86,7 +86,9 @@ void main() {
     expect(saveButton.onPressed, isNull);
   });
 
-  testWidgets('shows pending email banner and disables change', (tester) async {
+  testWidgets('shows pending email banner and blocks email tap', (
+    tester,
+  ) async {
     when(() => cubit.state).thenReturn(
       readyState(
         profile: const FakeUserProfile(pendingEmail: 'novo@vanep.com.br'),
@@ -101,10 +103,10 @@ void main() {
       findsOneWidget,
     );
 
-    final changeButton = tester.widget<TextButton>(
-      find.widgetWithText(TextButton, 'Alterar'),
-    );
-    expect(changeButton.onPressed, isNull);
+    await tester.tap(find.text('ana@vanep.com.br'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(EmailChangeSheet), findsNothing);
   });
 
   testWidgets('disables name field when cooldown is active', (tester) async {
@@ -160,13 +162,15 @@ void main() {
     expect(saveButton.onPressed, isNotNull);
   });
 
-  testWidgets('opens email change sheet from Alterar', (tester) async {
+  testWidgets('opens email change sheet when email value is tapped', (
+    tester,
+  ) async {
     when(() => cubit.state).thenReturn(readyState());
 
     await tester.pumpWidget(personalDataHarness(cubit));
     await tester.pump();
 
-    await tester.tap(find.text('Alterar'));
+    await tester.tap(find.text('ana@vanep.com.br'));
     await tester.pumpAndSettle();
 
     expect(find.byType(EmailChangeSheet), findsOneWidget);

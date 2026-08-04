@@ -212,9 +212,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSave => 'Save';
 
   @override
-  String get profileChange => 'Change';
-
-  @override
   String get profileChangeEmailTitle => 'Change email';
 
   @override

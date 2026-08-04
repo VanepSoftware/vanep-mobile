@@ -204,25 +204,6 @@ Widget buildPersonalDataBody({
                   const PersonalDataRowDivider(),
                   PersonalDataRow(
                     label: l10n.profileFieldEmail,
-                    trailing: TextButton(
-                      onPressed: canChangeEmail
-                          ? () => showEmailChangeSheet(context)
-                          : null,
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        l10n.profileChange,
-                        style: VanepTypography.cardSubtitle.copyWith(
-                          color: canChangeEmail
-                              ? VanepColors.brand
-                              : VanepColors.textMuted,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
                     cooldownText: emailCooldown == null
                         ? null
                         : l10n.profileCooldownDaysRemaining(
@@ -230,6 +211,10 @@ Widget buildPersonalDataBody({
                           ),
                     child: PersonalDataStaticValue(
                       value: profileDisplayOrEmpty(profile.email, empty),
+                      muted: !canChangeEmail,
+                      onTap: canChangeEmail
+                          ? () => showEmailChangeSheet(context)
+                          : null,
                     ),
                   ),
                   const PersonalDataRowDivider(),
@@ -384,7 +369,6 @@ class PersonalDataRow extends StatelessWidget {
   const PersonalDataRow({
     required this.label,
     required this.child,
-    this.trailing,
     this.cooldownText,
     this.isFirst = false,
     this.isLast = false,
@@ -393,7 +377,6 @@ class PersonalDataRow extends StatelessWidget {
 
   final String label;
   final Widget child;
-  final Widget? trailing;
   final String? cooldownText;
   final bool isFirst;
   final bool isLast;
@@ -408,12 +391,8 @@ class PersonalDataRow extends StatelessWidget {
           Row(
             children: [
               Text(label, style: VanepTypography.cardSubtitle),
-              if (cooldownText != null) ...[
-                const SizedBox(width: 8),
-                CooldownBadge(text: cooldownText!),
-              ],
               const Spacer(),
-              ?trailing,
+              if (cooldownText != null) CooldownBadge(text: cooldownText!),
             ],
           ),
           const SizedBox(height: 6),
@@ -443,19 +422,27 @@ class PersonalDataStaticValue extends StatelessWidget {
   const PersonalDataStaticValue({
     required this.value,
     this.muted = false,
+    this.onTap,
     super.key,
   });
 
   final String value;
   final bool muted;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    final text = Text(
       value,
       style: VanepTypography.cardTitle.copyWith(
         color: muted ? VanepColors.textMuted : VanepColors.textPrimary,
       ),
+    );
+    if (onTap == null) return text;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4),
+      child: text,
     );
   }
 }

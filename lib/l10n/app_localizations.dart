@@ -458,12 +458,6 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get profileSave;
 
-  /// No description provided for @profileChange.
-  ///
-  /// In en, this message translates to:
-  /// **'Change'**
-  String get profileChange;
-
   /// No description provided for @profileChangeEmailTitle.
   ///
   /// In en, this message translates to:
