@@ -69,6 +69,7 @@ Widget profileHarness(
   String? city,
   String? statusLabel,
   Color? statusColor,
+  Future<void> Function()? onRefresh,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -89,6 +90,7 @@ Widget profileHarness(
           city: city,
           statusLabel: statusLabel,
           statusColor: statusColor,
+          onRefresh: onRefresh,
         ),
       ),
     ),
@@ -298,4 +300,24 @@ void main() {
       expect(find.text('Confirme seu novo e-mail'), findsNothing);
     },
   );
+
+  testWidgets('pull-to-refresh invokes onRefresh', (tester) async {
+    var refreshed = false;
+    await tester.pumpWidget(
+      profileHarness(
+        cubit,
+        const ClientProfile(),
+        onRefresh: () async {
+          refreshed = true;
+        },
+      ),
+    );
+
+    await tester.fling(find.text('Perfil'), const Offset(0, 300), 1000);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    expect(refreshed, isTrue);
+  });
 }

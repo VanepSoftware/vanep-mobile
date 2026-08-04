@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/ui/vanep_confirm_dialog.dart';
@@ -22,6 +23,7 @@ class ProfilePage extends StatelessWidget {
     this.city,
     this.statusLabel,
     this.statusColor,
+    this.onRefresh,
     super.key,
   });
 
@@ -31,6 +33,7 @@ class ProfilePage extends StatelessWidget {
   final String? city;
   final String? statusLabel;
   final Color? statusColor;
+  final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -38,35 +41,47 @@ class ProfilePage extends StatelessWidget {
     final sections = buildProfileMenu(profile.type);
     final displayName = profile.name ?? profile.email ?? '';
     final hasPendingEmailConfirmation = profile.pendingEmail != null;
+    final refresh = onRefresh;
+    final listView = ListView(
+      physics: refresh == null
+          ? null
+          : const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 124),
+      children: [
+        Text(l10n.navProfile, style: VanepTypography.pageTitle),
+        const SizedBox(height: 20),
+        ProfileHeader(
+          name: displayName,
+          email: profile.email,
+          photoUrl: photoUrl,
+          rating: rating,
+          city: city,
+          statusLabel: statusLabel,
+          statusColor: statusColor,
+        ),
+        const SizedBox(height: 24),
+        for (var index = 0; index < sections.length; index++) ...[
+          if (index > 0) const SizedBox(height: 16),
+          ProfileMenuSectionView(
+            section: sections[index],
+            onItemSelected: (id) =>
+                handleProfileMenuSelection(context, profile, id),
+            pendingEmailConfirmation: hasPendingEmailConfirmation,
+          ),
+        ],
+      ],
+    );
 
     return SafeArea(
       bottom: false,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 124),
-        children: [
-          Text(l10n.navProfile, style: VanepTypography.pageTitle),
-          const SizedBox(height: 20),
-          ProfileHeader(
-            name: displayName,
-            email: profile.email,
-            photoUrl: photoUrl,
-            rating: rating,
-            city: city,
-            statusLabel: statusLabel,
-            statusColor: statusColor,
-          ),
-          const SizedBox(height: 24),
-          for (var index = 0; index < sections.length; index++) ...[
-            if (index > 0) const SizedBox(height: 16),
-            ProfileMenuSectionView(
-              section: sections[index],
-              onItemSelected: (id) =>
-                  handleProfileMenuSelection(context, profile, id),
-              pendingEmailConfirmation: hasPendingEmailConfirmation,
+      child: refresh == null
+          ? listView
+          : RefreshIndicator(
+              onRefresh: refresh,
+              backgroundColor: VanepColors.card,
+              color: VanepColors.brand,
+              child: listView,
             ),
-          ],
-        ],
-      ),
     );
   }
 }
