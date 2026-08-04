@@ -3,12 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/auth/data/pkce/pkce_generator.dart';
 import 'package:vanep_mobile/modules/auth/data/repositories/auth_repository_impl.dart';
-import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
-import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_request.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 import '../auth_data_mocks.dart';
 
@@ -28,7 +24,6 @@ DioException _invalidGrantError() => DioException(
 
 void main() {
   late MockOAuthRemoteDataSource remote;
-  late MockUserProfileRemoteDataSource profileRemote;
   late MockAuthLocalDataSource local;
   late MockWebSessionCleaner webSession;
   late AuthRepositoryImpl repository;
@@ -39,12 +34,10 @@ void main() {
 
   setUp(() {
     remote = MockOAuthRemoteDataSource();
-    profileRemote = MockUserProfileRemoteDataSource();
     local = MockAuthLocalDataSource();
     webSession = MockWebSessionCleaner();
     repository = AuthRepositoryImpl(
       remote: remote,
-      profileRemote: profileRemote,
       local: local,
       pkce: PkceGenerator(),
       environment: testEnvironment,
@@ -228,145 +221,6 @@ void main() {
       expect(result.isOk, isTrue);
       verifyNever(() => remote.revoke(any(), any()));
       verify(webSession.clear).called(1);
-    });
-  });
-
-  group('refreshUserProfile', () {
-    test('fetches me, persists profile and returns it', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
-      const updated = UserProfileDto(
-        token: 'user-token-1',
-        name: 'Ana Atualizada',
-        email: 'ana@vanep.com.br',
-        type: UserType.driver,
-        pendingEmail: 'novo@vanep.com.br',
-      );
-      when(profileRemote.fetchMe).thenAnswer((_) async => updated);
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
-
-      final result = await repository.refreshUserProfile();
-
-      expect(result.valueOrNull, updated);
-      verify(() => local.saveSession(any())).called(1);
-    });
-
-    test('returns unexpected when there is no session', () async {
-      when(local.readSession).thenReturn(null);
-
-      final result = await repository.refreshUserProfile();
-
-      expect(result.errorOrNull, isA<UnexpectedProfileEditFailure>());
-      verifyNever(profileRemote.fetchMe);
-    });
-  });
-
-  group('patchUserProfile', () {
-    test('patches with touched fields only and persists body profile', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
-      const updated = UserProfileDto(
-        token: 'user-token-1',
-        name: 'Maria Silva',
-        email: 'ana@vanep.com.br',
-        type: UserType.driver,
-      );
-      when(
-        () => profileRemote.patchMe(any()),
-      ).thenAnswer((_) async => updated);
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
-
-      final builder = ProfilePatchRequestBuilder()..setName('Maria Silva');
-      final result = await repository.patchUserProfile(builder.build());
-
-      expect(result.valueOrNull, updated);
-      final body =
-          verify(() => profileRemote.patchMe(captureAny())).captured.single
-              as Map<String, Object?>;
-      expect(body, {'name': 'Maria Silva'});
-      verifyNever(profileRemote.fetchMe);
-    });
-
-    test('maps structured 409 cooldown from dio', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
-      when(() => profileRemote.patchMe(any())).thenThrow(
-        DioException(
-          requestOptions: RequestOptions(path: '/api/user/me'),
-          response: Response<Map<String, dynamic>>(
-            requestOptions: RequestOptions(path: '/api/user/me'),
-            statusCode: 409,
-            data: {
-              'message': 'cooldown',
-              'code': 'cooldown',
-              'field': 'name',
-              'retryAfter': '2026-09-01T12:00:00.000Z',
-            },
-          ),
-        ),
-      );
-
-      final result = await repository.patchUserProfile(
-        (ProfilePatchRequestBuilder()..setName('X')).build(),
-      );
-
-      final failure = result.errorOrNull! as StructuredProfileEditFailure;
-      expect(failure.code, ProfileErrorCode.cooldown);
-      expect(failure.field, 'name');
-      expect(failure.retryAfter, DateTime.parse('2026-09-01T12:00:00.000Z'));
-    });
-  });
-
-  group('requestEmailChange', () {
-    test('posts email change then fetches me once', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
-      when(
-        () => profileRemote.requestEmailChange(any()),
-      ).thenAnswer((_) => Future<void>.value());
-      const updated = UserProfileDto(
-        token: 'user-token-1',
-        email: 'ana@vanep.com.br',
-        pendingEmail: 'novo@vanep.com.br',
-        type: UserType.driver,
-      );
-      when(profileRemote.fetchMe).thenAnswer((_) async => updated);
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
-
-      final result = await repository.requestEmailChange('novo@vanep.com.br');
-
-      expect(result.valueOrNull?.pendingEmail, 'novo@vanep.com.br');
-      verify(
-        () => profileRemote.requestEmailChange('novo@vanep.com.br'),
-      ).called(1);
-      verify(profileRemote.fetchMe).called(1);
-    });
-
-    test('maps email_duplicate 409', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
-      when(() => profileRemote.requestEmailChange(any())).thenThrow(
-        DioException(
-          requestOptions: RequestOptions(path: '/api/user/me/email-change'),
-          response: Response<Map<String, dynamic>>(
-            requestOptions: RequestOptions(path: '/api/user/me/email-change'),
-            statusCode: 409,
-            data: {
-              'message': 'taken',
-              'code': 'email_duplicate',
-              'field': 'email',
-            },
-          ),
-        ),
-      );
-
-      final result = await repository.requestEmailChange('taken@vanep.com.br');
-
-      final failure = result.errorOrNull! as StructuredProfileEditFailure;
-      expect(failure.code, ProfileErrorCode.emailDuplicate);
-      expect(failure.field, 'email');
-      verifyNever(profileRemote.fetchMe);
     });
   });
 }
