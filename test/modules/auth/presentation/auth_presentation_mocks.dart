@@ -22,9 +22,9 @@ class MockExchangeAuthorizationCode extends Mock
 
 class MockSignOut extends Mock implements SignOut {}
 
-class MockAuthCubit extends MockCubit<AuthState> implements AuthCubit {}
-
 class MockRefreshUserProfile extends Mock implements RefreshUserProfile {}
+
+class MockAuthCubit extends MockCubit<AuthState> implements AuthCubit {}
 
 class MockPatchUserProfile extends Mock implements PatchUserProfile {}
 

@@ -51,19 +51,28 @@ class ProfileSummaryCubit extends Cubit<ProfileSummaryState> {
 
   Future<void> loadSummaryIfNeeded(UserType? type) async {
     if (state.status != ProfileSummaryStatus.initial) return;
+    await refresh(type);
+  }
 
+  Future<void> refresh(UserType? type) async {
     final summaryType = profileSummaryUserType(type);
     if (summaryType == null) {
       emit(const ProfileSummaryState(status: ProfileSummaryStatus.loaded));
       return;
     }
 
-    emit(const ProfileSummaryState(status: ProfileSummaryStatus.loading));
+    emit(
+      ProfileSummaryState(
+        status: ProfileSummaryStatus.loading,
+        summary: state.summary,
+      ),
+    );
     final result = await getProfileSummary(summaryType);
     result.fold(
       (failure) => emit(
         ProfileSummaryState(
           status: ProfileSummaryStatus.loaded,
+          summary: state.summary,
           failure: failure,
         ),
       ),

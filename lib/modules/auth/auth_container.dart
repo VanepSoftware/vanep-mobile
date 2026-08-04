@@ -93,6 +93,7 @@ void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
         buildAuthorizationRequest: getIt<BuildAuthorizationRequest>(),
         exchangeAuthorizationCode: getIt<ExchangeAuthorizationCode>(),
         signOut: getIt<SignOut>(),
+        refreshUserProfile: getIt<RefreshUserProfile>(),
       ),
     );
 }
