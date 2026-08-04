@@ -99,10 +99,12 @@ Enums:
 | Driver header extras | `rating` + `city` (quiet row under email; Phase 3) |
 | Assistant header extras | Localized `status` chip under email (Phase 3); invite later |
 | Client header extras | `rating` under email (Phase 3; no city) |
-| Dados pessoais | Always from session (`user/me` at login) — not nested `user` |
+| Dados pessoais | Session `user/me` is the account source of truth (not nested summary `user`); refresh on Profile tab select/pull and when opening Dados pessoais |
 | Name / email in header | From session; summary adds photo (+ role extras above) |
-| When to fetch summary | Lazy: when opening the Profile tab (not at auth boot) |
-| Failure loading summary | Soft-fail: keep header without photo; do not block Profile / menus |
+| When to fetch session profile | On Profile tab select and pull-to-refresh (`GET /api/user/me`); login snapshot is initial cache only |
+| When to fetch summary | On Profile tab select and pull-to-refresh (not at auth boot); may refetch every visit |
+| Failure loading session profile | Soft-fail: keep last session profile; do not logout or block Profile / menus |
+| Failure loading summary | Soft-fail: keep previous summary extras when present; otherwise header without photo; do not block Profile / menus |
 | Camera badge | Still visual-only / disabled |
 
 ## Architecture (R01–R09)
@@ -117,8 +119,9 @@ Phase 2 adds `lib/modules/profile/`:
 - Does **not** yet wire the Profile tab UI (Phase 3)
 
 Phase 3 adds Profile UI in auth presentation and composes summary at the
-shell/Profile boundary (lazy load + `photoUrl` on header; driver rating/city;
-assistant status label).
+shell/Profile boundary (`photoUrl` on header; driver rating/city; assistant
+status label). Profile tab select and pull-to-refresh re-fetch session
+`user/me` and the role summary (soft-fail).
 
 Endpoints via `Environment` (`clientsMeEndpoint`, `driversMeEndpoint`,
 `assistantsMeEndpoint`).

@@ -6,6 +6,7 @@ import '../../domain/failures/auth_failure.dart';
 import '../../domain/usecases/build_authorization_request.dart';
 import '../../domain/usecases/exchange_authorization_code.dart';
 import '../../domain/usecases/get_current_session.dart';
+import '../../domain/usecases/refresh_user_profile.dart';
 import '../../domain/usecases/sign_out.dart';
 import '../../domain/value_objects/authorization_request.dart';
 import 'auth_state.dart';
@@ -16,12 +17,14 @@ class AuthCubit extends Cubit<AuthState> {
     required this._buildAuthorizationRequest,
     required this._exchangeAuthorizationCode,
     required this._signOut,
+    required this._refreshUserProfile,
   }) : super(const AuthUnknown());
 
   final GetCurrentSession _getCurrentSession;
   final BuildAuthorizationRequest _buildAuthorizationRequest;
   final ExchangeAuthorizationCode _exchangeAuthorizationCode;
   final SignOut _signOut;
+  final RefreshUserProfile _refreshUserProfile;
 
   Future<void> checkSession() async {
     emit(const AuthUnknown());
@@ -65,6 +68,12 @@ class AuthCubit extends Cubit<AuthState> {
     emit(
       AuthAuthenticated(AuthSessionReplacingProfile(current.session, profile)),
     );
+  }
+
+  Future<void> refreshSessionProfile() async {
+    if (state is! AuthAuthenticated) return;
+    final result = await _refreshUserProfile();
+    result.fold((_) {}, syncProfile);
   }
 
   void emitAuthFailure(AuthFailure failure) {
