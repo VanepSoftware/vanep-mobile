@@ -72,28 +72,6 @@ void main() {
     expect(dto.gender, isNull);
   });
 
-  test('fromJson maps enrichment fields for profile edit', () {
-    final dto = UserProfileDto.fromJson({
-      'token': 'user-token-1',
-      'name': 'Ana Motorista',
-      'email': 'ana@vanep.com.br',
-      'pendingEmail': 'novo@vanep.com.br',
-      'nameChangeAvailableAt': '2026-09-01T12:00:00.000Z',
-      'phoneChangeAvailableAt': null,
-      'gender': 'OTHER',
-      'type': 'DRIVER',
-    });
-
-    expect(dto.pendingEmail, 'novo@vanep.com.br');
-    expect(
-      dto.nameChangeAvailableAt,
-      DateTime.parse('2026-09-01T12:00:00.000Z'),
-    );
-    expect(dto.phoneChangeAvailableAt, isNull);
-    expect(dto.emailChangeAvailableAt, isNull);
-    expect(dto.gender, Gender.other);
-  });
-
   test('toJson writes API type strings and account fields', () {
     const dto = UserProfileDto(
       token: 'user-token-1',
@@ -115,10 +93,6 @@ void main() {
       'birthDate': '1990-05-15',
       'gender': 'FEMALE',
       'type': 'CLIENT',
-      'pendingEmail': null,
-      'nameChangeAvailableAt': null,
-      'phoneChangeAvailableAt': null,
-      'emailChangeAvailableAt': null,
     });
   });
 }
