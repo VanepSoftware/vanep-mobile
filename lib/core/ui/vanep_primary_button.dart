@@ -25,6 +25,8 @@ class VanepPrimaryButton extends StatelessWidget {
         style: FilledButton.styleFrom(
           backgroundColor: VanepColors.brand,
           foregroundColor: VanepColors.backgroundDeep,
+          disabledBackgroundColor: VanepColors.divider,
+          disabledForegroundColor: VanepColors.textMuted,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
