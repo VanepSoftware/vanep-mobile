@@ -451,6 +451,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Inactive'**
   String get profileAssistantStatusInactive;
+
+  /// No description provided for @profileSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get profileSave;
+
+  /// No description provided for @profileChangeEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change email'**
+  String get profileChangeEmailTitle;
+
+  /// No description provided for @profileChangeEmailSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Change email'**
+  String get profileChangeEmailSubmit;
+
+  /// No description provided for @profileEmailChangeConfirmationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email'**
+  String get profileEmailChangeConfirmationTitle;
+
+  /// No description provided for @profileEmailChangeConfirmationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a confirmation link to {email}. Open it to finish changing your email.'**
+  String profileEmailChangeConfirmationMessage(String email);
+
+  /// No description provided for @profilePendingEmailBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm the new email sent to {email}.'**
+  String profilePendingEmailBanner(String email);
+
+  /// No description provided for @profilePendingEmailMenuSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your new email'**
+  String get profilePendingEmailMenuSubtitle;
+
+  /// No description provided for @profileCooldownDaysRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day} other{{days} days}}'**
+  String profileCooldownDaysRemaining(int days);
+
+  /// No description provided for @profileEditSaveSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal data saved.'**
+  String get profileEditSaveSuccess;
+
+  /// No description provided for @profileEditErrorCooldown.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this again on {date}.'**
+  String profileEditErrorCooldown(String date);
+
+  /// No description provided for @profileEditErrorEmailDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already in use.'**
+  String get profileEditErrorEmailDuplicate;
+
+  /// No description provided for @profileEditErrorFieldNull.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required.'**
+  String get profileEditErrorFieldNull;
+
+  /// No description provided for @profileEditErrorPhoneBlank.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid phone number.'**
+  String get profileEditErrorPhoneBlank;
+
+  /// No description provided for @profileEditErrorEmailSame.
+  ///
+  /// In en, this message translates to:
+  /// **'That is already your current email.'**
+  String get profileEditErrorEmailSame;
+
+  /// No description provided for @profileEditErrorEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address.'**
+  String get profileEditErrorEmailInvalid;
+
+  /// No description provided for @profileEditErrorEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required.'**
+  String get profileEditErrorEmailRequired;
+
+  /// No description provided for @profileEditErrorNameTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at most {max} characters.'**
+  String profileEditErrorNameTooLong(int max);
+
+  /// No description provided for @profileEditErrorPhoneTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number must be at most {max} characters.'**
+  String profileEditErrorPhoneTooLong(int max);
+
+  /// No description provided for @profileEditErrorEmailTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Email must be at most {max} characters.'**
+  String profileEditErrorEmailTooLong(int max);
+
+  /// No description provided for @profileEditErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update your profile. Check your connection and try again.'**
+  String get profileEditErrorNetwork;
+
+  /// No description provided for @profileEditErrorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get profileEditErrorUnexpected;
+
+  /// No description provided for @profileEditLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your personal data. Pull to try again.'**
+  String get profileEditLoadError;
+
+  /// No description provided for @profileEditRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get profileEditRetry;
 }
 
 class _AppLocalizationsDelegate

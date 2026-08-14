@@ -207,4 +207,96 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileAssistantStatusInactive => 'Inactive';
+
+  @override
+  String get profileSave => 'Save';
+
+  @override
+  String get profileChangeEmailTitle => 'Change email';
+
+  @override
+  String get profileChangeEmailSubmit => 'Change email';
+
+  @override
+  String get profileEmailChangeConfirmationTitle => 'Check your email';
+
+  @override
+  String profileEmailChangeConfirmationMessage(String email) {
+    return 'We sent a confirmation link to $email. Open it to finish changing your email.';
+  }
+
+  @override
+  String profilePendingEmailBanner(String email) {
+    return 'Confirm the new email sent to $email.';
+  }
+
+  @override
+  String get profilePendingEmailMenuSubtitle => 'Confirm your new email';
+
+  @override
+  String profileCooldownDaysRemaining(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get profileEditSaveSuccess => 'Personal data saved.';
+
+  @override
+  String profileEditErrorCooldown(String date) {
+    return 'You can change this again on $date.';
+  }
+
+  @override
+  String get profileEditErrorEmailDuplicate => 'This email is already in use.';
+
+  @override
+  String get profileEditErrorFieldNull => 'This field is required.';
+
+  @override
+  String get profileEditErrorPhoneBlank => 'Enter a valid phone number.';
+
+  @override
+  String get profileEditErrorEmailSame => 'That is already your current email.';
+
+  @override
+  String get profileEditErrorEmailInvalid => 'Enter a valid email address.';
+
+  @override
+  String get profileEditErrorEmailRequired => 'Email is required.';
+
+  @override
+  String profileEditErrorNameTooLong(int max) {
+    return 'Name must be at most $max characters.';
+  }
+
+  @override
+  String profileEditErrorPhoneTooLong(int max) {
+    return 'Phone number must be at most $max characters.';
+  }
+
+  @override
+  String profileEditErrorEmailTooLong(int max) {
+    return 'Email must be at most $max characters.';
+  }
+
+  @override
+  String get profileEditErrorNetwork =>
+      'Could not update your profile. Check your connection and try again.';
+
+  @override
+  String get profileEditErrorUnexpected =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get profileEditLoadError =>
+      'Could not load your personal data. Pull to try again.';
+
+  @override
+  String get profileEditRetry => 'Try again';
 }

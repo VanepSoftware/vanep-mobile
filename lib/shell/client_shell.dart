@@ -5,6 +5,7 @@ import '../core/design_system/vanep_colors.dart';
 import '../core/ui/vanep_coming_soon.dart';
 import '../l10n/app_localizations.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
+import '../modules/auth/presentation/cubit/auth_cubit.dart';
 import '../modules/auth/presentation/pages/profile_page.dart';
 import '../modules/drivers/presentation/pages/drivers_home_tab.dart';
 import '../modules/profile/presentation/cubit/profile_summary_cubit.dart';
@@ -54,6 +55,7 @@ class ClientShellState extends State<ClientShell> {
                   summaryState.assistantStatus,
                 ),
                 statusColor: assistantStatusColor(summaryState.assistantStatus),
+                onRefresh: refreshProfileTab,
               );
             },
           ),
@@ -72,8 +74,13 @@ class ClientShellState extends State<ClientShell> {
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);
     if (index != clientShellProfileTabIndex) return;
-    context.read<ProfileSummaryCubit>().loadSummaryIfNeeded(
-      widget.profile.type,
-    );
+    refreshProfileTab();
+  }
+
+  Future<void> refreshProfileTab() {
+    return Future.wait<void>([
+      context.read<AuthCubit>().refreshSessionProfile(),
+      context.read<ProfileSummaryCubit>().refresh(widget.profile.type),
+    ]);
   }
 }

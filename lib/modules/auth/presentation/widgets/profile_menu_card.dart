@@ -10,11 +10,13 @@ class ProfileMenuSectionView extends StatelessWidget {
   const ProfileMenuSectionView({
     required this.section,
     required this.onItemSelected,
+    this.pendingEmailConfirmation = false,
     super.key,
   });
 
   final ProfileMenuSection section;
   final ValueChanged<ProfileMenuId> onItemSelected;
+  final bool pendingEmailConfirmation;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,11 @@ class ProfileMenuSectionView extends StatelessWidget {
             ),
           ),
         ],
-        ProfileMenuCard(section: section, onItemSelected: onItemSelected),
+        ProfileMenuCard(
+          section: section,
+          onItemSelected: onItemSelected,
+          pendingEmailConfirmation: pendingEmailConfirmation,
+        ),
       ],
     );
   }
@@ -45,11 +51,13 @@ class ProfileMenuCard extends StatelessWidget {
   const ProfileMenuCard({
     required this.section,
     required this.onItemSelected,
+    this.pendingEmailConfirmation = false,
     super.key,
   });
 
   final ProfileMenuSection section;
   final ValueChanged<ProfileMenuId> onItemSelected;
+  final bool pendingEmailConfirmation;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +83,11 @@ class ProfileMenuCard extends StatelessWidget {
               entry: section.entries[index],
               label: profileMenuLabel(section.entries[index].id, l10n),
               icon: profileMenuIcon(section.entries[index].id),
+              subtitle:
+                  pendingEmailConfirmation &&
+                      section.entries[index].id == ProfileMenuId.personalData
+                  ? l10n.profilePendingEmailMenuSubtitle
+                  : null,
               onTap: section.entries[index].enabled
                   ? () => onItemSelected(section.entries[index].id)
                   : null,
@@ -91,6 +104,7 @@ class ProfileMenuTile extends StatelessWidget {
     required this.entry,
     required this.label,
     required this.icon,
+    this.subtitle,
     this.onTap,
     super.key,
   });
@@ -98,6 +112,7 @@ class ProfileMenuTile extends StatelessWidget {
   final ProfileMenuEntry entry;
   final String label;
   final IconData icon;
+  final String? subtitle;
   final VoidCallback? onTap;
 
   @override
@@ -138,9 +153,42 @@ class ProfileMenuTile extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(
-                  label,
-                  style: VanepTypography.cardTitle.copyWith(color: foreground),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      label,
+                      style: VanepTypography.cardTitle.copyWith(
+                        color: foreground,
+                      ),
+                    ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 3),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            size: 13,
+                            color: VanepColors.warning,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              subtitle!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: VanepTypography.cardSubtitle.copyWith(
+                                color: VanepColors.warning,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
                 ),
               ),
               if (!isSignOut)

@@ -17,4 +17,12 @@ abstract class UserProfile {
   Gender? get gender;
 
   UserType? get type;
+
+  String? get pendingEmail;
+
+  DateTime? get nameChangeAvailableAt;
+
+  DateTime? get phoneChangeAvailableAt;
+
+  DateTime? get emailChangeAvailableAt;
 }

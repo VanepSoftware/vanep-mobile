@@ -1,9 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../domain/entities/auth_session.dart';
+import '../../domain/entities/user_profile.dart';
 import '../../domain/failures/auth_failure.dart';
 import '../../domain/usecases/build_authorization_request.dart';
 import '../../domain/usecases/exchange_authorization_code.dart';
 import '../../domain/usecases/get_current_session.dart';
+import '../../domain/usecases/refresh_user_profile.dart';
 import '../../domain/usecases/sign_out.dart';
 import '../../domain/value_objects/authorization_request.dart';
 import 'auth_state.dart';
@@ -14,12 +17,14 @@ class AuthCubit extends Cubit<AuthState> {
     required this._buildAuthorizationRequest,
     required this._exchangeAuthorizationCode,
     required this._signOut,
+    required this._refreshUserProfile,
   }) : super(const AuthUnknown());
 
   final GetCurrentSession _getCurrentSession;
   final BuildAuthorizationRequest _buildAuthorizationRequest;
   final ExchangeAuthorizationCode _exchangeAuthorizationCode;
   final SignOut _signOut;
+  final RefreshUserProfile _refreshUserProfile;
 
   Future<void> checkSession() async {
     emit(const AuthUnknown());
@@ -47,17 +52,31 @@ class AuthCubit extends Cubit<AuthState> {
       code: code,
       request: request,
     );
-    result.fold(_emitFailure, (session) => emit(AuthAuthenticated(session)));
+    result.fold(emitAuthFailure, (session) => emit(AuthAuthenticated(session)));
   }
 
-  void cancelLogin() => _emitFailure(const CancelledAuthFailure());
+  void cancelLogin() => emitAuthFailure(const CancelledAuthFailure());
 
   Future<void> signOut() async {
     await _signOut();
     emit(const AuthUnauthenticated());
   }
 
-  void _emitFailure(AuthFailure failure) {
+  void syncProfile(UserProfile profile) {
+    final current = state;
+    if (current is! AuthAuthenticated) return;
+    emit(
+      AuthAuthenticated(AuthSessionReplacingProfile(current.session, profile)),
+    );
+  }
+
+  Future<void> refreshSessionProfile() async {
+    if (state is! AuthAuthenticated) return;
+    final result = await _refreshUserProfile();
+    result.fold((_) {}, syncProfile);
+  }
+
+  void emitAuthFailure(AuthFailure failure) {
     emit(AuthFailureState(failure));
     emit(const AuthUnauthenticated());
   }

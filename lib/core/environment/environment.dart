@@ -33,6 +33,9 @@ class Environment {
 
   String get userProfileEndpoint => '$authBaseUrl/api/user/me';
 
+  String get userProfileEmailChangeEndpoint =>
+      '$authBaseUrl/api/user/me/email-change';
+
   String get driversEndpoint => '$authBaseUrl/api/drivers';
 
   String get clientsMeEndpoint => '$authBaseUrl/api/clients/me';

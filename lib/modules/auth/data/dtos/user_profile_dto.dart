@@ -18,6 +18,10 @@ abstract class UserProfileDto with _$UserProfileDto implements UserProfile {
     String? birthDate,
     @JsonKey(fromJson: Gender.fromApi, toJson: Gender.toApi) Gender? gender,
     @JsonKey(fromJson: UserType.fromApi, toJson: UserType.toApi) UserType? type,
+    String? pendingEmail,
+    DateTime? nameChangeAvailableAt,
+    DateTime? phoneChangeAvailableAt,
+    DateTime? emailChangeAvailableAt,
   }) = _UserProfileDto;
 
   factory UserProfileDto.fromJson(Map<String, Object?> json) =>
