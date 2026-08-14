@@ -75,8 +75,9 @@ void main() {
       const Stream<ProfileSummaryState>.empty(),
       initialState: const ProfileSummaryState(),
     );
+    when(authCubit.refreshSessionProfile).thenAnswer((_) async {});
     when(
-      () => profileSummaryCubit.loadSummaryIfNeeded(any()),
+      () => profileSummaryCubit.refresh(any()),
     ).thenAnswer((_) async {});
   });
 
@@ -86,7 +87,8 @@ void main() {
     );
 
     expect(find.text('Olá, Ana!'), findsOneWidget);
-    verifyNever(() => profileSummaryCubit.loadSummaryIfNeeded(any()));
+    verifyNever(() => profileSummaryCubit.refresh(any()));
+    verifyNever(authCubit.refreshSessionProfile);
   });
 
   testWidgets('switches to the Vans tab showing the coming soon view', (
@@ -102,7 +104,7 @@ void main() {
     expect(find.text('Em breve'), findsOneWidget);
   });
 
-  testWidgets('loads profile summary when opening the profile tab', (
+  testWidgets('refreshes session profile and summary when opening profile tab', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -114,10 +116,34 @@ void main() {
 
     expect(find.text('Ana Motorista'), findsOneWidget);
     expect(find.text('Dados pessoais'), findsOneWidget);
-    verify(
-      () => profileSummaryCubit.loadSummaryIfNeeded(UserType.driver),
-    ).called(1);
+    verify(authCubit.refreshSessionProfile).called(1);
+    verify(() => profileSummaryCubit.refresh(UserType.driver)).called(1);
     await tester.scrollUntilVisible(find.text('Sair'), 200);
     expect(find.text('Sair'), findsOneWidget);
+  });
+
+  testWidgets('pull-to-refresh on profile tab refreshes session and summary', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _harness(driversCubit, authCubit, profileSummaryCubit),
+    );
+
+    await tester.tap(find.bySemanticsLabel('Perfil'));
+    await tester.pumpAndSettle();
+    clearInteractions(authCubit);
+    clearInteractions(profileSummaryCubit);
+    when(authCubit.refreshSessionProfile).thenAnswer((_) async {});
+    when(
+      () => profileSummaryCubit.refresh(any()),
+    ).thenAnswer((_) async {});
+
+    await tester.fling(find.text('Perfil').first, const Offset(0, 300), 1000);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    verify(authCubit.refreshSessionProfile).called(1);
+    verify(() => profileSummaryCubit.refresh(UserType.driver)).called(1);
   });
 }

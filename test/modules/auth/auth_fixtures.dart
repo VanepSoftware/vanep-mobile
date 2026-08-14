@@ -14,6 +14,10 @@ class FakeUserProfile implements UserProfile {
     this.birthDate = '1990-05-15',
     this.gender = Gender.female,
     this.type = UserType.driver,
+    this.pendingEmail,
+    this.nameChangeAvailableAt,
+    this.phoneChangeAvailableAt,
+    this.emailChangeAvailableAt,
   });
 
   @override
@@ -32,6 +36,14 @@ class FakeUserProfile implements UserProfile {
   final Gender? gender;
   @override
   final UserType? type;
+  @override
+  final String? pendingEmail;
+  @override
+  final DateTime? nameChangeAvailableAt;
+  @override
+  final DateTime? phoneChangeAvailableAt;
+  @override
+  final DateTime? emailChangeAvailableAt;
 }
 
 class FakeAuthSession implements AuthSession {
