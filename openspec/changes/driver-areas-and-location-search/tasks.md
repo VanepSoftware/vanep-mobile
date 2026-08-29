@@ -64,23 +64,23 @@
 
 > Se passar de 10 arquivos novos ou ~600 linhas (R23), quebrar em `3a` (domínio + dados) e `3b` (cubit + tela).
 
-- [ ] 3.1 Testes das entidades e do contrato: `ServiceArea` (token, nome, se cobre a cidade inteira) e `DriverServiceAreaRepository`
-- [ ] 3.2 Entidades, contrato de repositório e falhas do domínio
-- [ ] 3.3 Testes dos use cases `FindMyServiceAreas` e `ReplaceMyServiceAreas`
-- [ ] 3.4 Implementar os dois use cases
-- [ ] 3.5 Teste do DTO de request afirmando que o corpo carrega **somente** `placeId` e `sessionToken` por item — nenhum campo de cidade, estado, bairro ou rua (requisito da spec)
-- [ ] 3.6 DTOs (`freezed` + `json_annotation`) e `dart run build_runner build --delete-conflicting-outputs` (R15)
-- [ ] 3.7 Datasource e repositório contra `GET` e `PUT /api/drivers/me/service-areas`, traduzindo `400` de distrito obrigatório e de limite excedido em falhas de domínio distintas
-- [ ] 3.8 Testes de cubit com `bloc_test`: adicionar área, remover área, salvar com sucesso, salvar rejeitado pelo backend mantendo as edições na tela
-- [ ] 3.9 Teste de cubit do limite: com 10 áreas, adicionar fica indisponível (D6)
-- [ ] 3.10 Implementar o cubit com a constante do limite declarada uma vez no módulo
-- [ ] 3.11 Tela usando os widgets de `lib/core/ui/` (R10b) — buscar antes por padrão existente em `core/ui` e `core/design_system` (R10a); toda a copy em ARB (R10)
-- [ ] 3.12 Marcar a sugestão de nível cidade como menos precisa, **sem bloquear** o salvamento — a autoridade é o backend (D5)
-- [ ] 3.13 Teste de widget: mensagem pt-BR do backend aparece quando a cidade exige bairro, e a seleção continua na tela
+- [x] 3.1 Testes das entidades e do contrato: `ServiceArea` (token, nome, se cobre a cidade inteira) e `DriverServiceAreaRepository`
+- [x] 3.2 Entidades, contrato de repositório e falhas do domínio
+- [x] 3.3 Testes dos use cases `FindMyServiceAreas` e `ReplaceMyServiceAreas`
+- [x] 3.4 Implementar os dois use cases
+- [x] 3.5 Teste do DTO de request afirmando que o corpo carrega **somente** `placeId` e `sessionToken` por item — nenhum campo de cidade, estado, bairro ou rua (requisito da spec)
+- [x] 3.6 DTOs (`freezed` + `json_annotation`) e `dart run build_runner build --delete-conflicting-outputs` (R15)
+- [x] 3.7 Datasource e repositório contra `GET` e `PUT /api/drivers/me/service-areas`, traduzindo `400` de distrito obrigatório e de limite excedido em falhas de domínio distintas
+- [x] 3.8 Testes de cubit com `bloc_test`: adicionar área, remover área, salvar com sucesso, salvar rejeitado pelo backend mantendo as edições na tela
+- [x] 3.9 Teste de cubit do limite: com 10 áreas, adicionar fica indisponível (D6)
+- [x] 3.10 Implementar o cubit com a constante do limite declarada uma vez no módulo
+- [x] 3.11 Tela usando os widgets de `lib/core/ui/` (R10b) — buscar antes por padrão existente em `core/ui` e `core/design_system` (R10a); toda a copy em ARB (R10)
+- [x] 3.12 Marcar a sugestão de nível cidade como menos precisa, **sem bloquear** o salvamento — a autoridade é o backend (D5)
+- [x] 3.13 Teste de widget: mensagem pt-BR do backend aparece quando a cidade exige bairro, e a seleção continua na tela
 - [ ] 3.14 Ler `onboarding.pendingSteps` do `GET /api/user/me` para oferecer a tela após o primeiro login; **nunca** inferir o passo consultando as áreas (D7)
 - [ ] 3.15 Testes: passo pendente oferece a tela; recusar leva ao home do motorista com acesso completo; a tela abre pelo perfil a qualquer momento
-- [ ] 3.16 Entrada permanente pelo perfil do motorista
-- [ ] 3.17 Rodar `make lint` e `make test`
+- [x] 3.16 Entrada permanente pelo perfil do motorista
+- [x] 3.17 Rodar `make lint` e `make test`
 - [ ] 3.18 **Parar e aguardar sua validação**; só então commitar e abrir PR
 
 ## 4. Fase 4 — Domínio e dados da busca do cliente (branch: `feat/4-driver-search-domain`)

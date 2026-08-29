@@ -189,6 +189,8 @@ void main() {
     await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
 
     await tester.scrollUntilVisible(find.text('Sair'), 200);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Sair'));
     await tester.tap(find.text('Sair'));
     await tester.pumpAndSettle();
 
@@ -213,6 +215,8 @@ void main() {
     await tester.pumpWidget(profileHarness(cubit, const FakeUserProfile()));
 
     await tester.scrollUntilVisible(find.text('Sair'), 200);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Sair'));
     await tester.tap(find.text('Sair'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Cancelar'));

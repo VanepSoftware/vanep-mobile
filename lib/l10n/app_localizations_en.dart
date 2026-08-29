@@ -299,4 +299,115 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileEditRetry => 'Try again';
+
+  @override
+  String get serviceAreasTitle => 'Where you operate';
+
+  @override
+  String get serviceAreasSubtitle =>
+      'Register up to 10 regions. The more specific, the easier a client finds you.';
+
+  @override
+  String get serviceAreasSearchHint =>
+      'Search a neighbourhood, block or region';
+
+  @override
+  String get serviceAreasEmpty => 'No region registered yet.';
+
+  @override
+  String get serviceAreasMaxReached => 'You reached the maximum of 10 regions.';
+
+  @override
+  String get serviceAreasSave => 'Save regions';
+
+  @override
+  String get serviceAreasSaved => 'Regions saved.';
+
+  @override
+  String get serviceAreasRemove => 'Remove region';
+
+  @override
+  String get serviceAreasCityWideHint => 'Whole city — not very specific';
+
+  @override
+  String get serviceAreasOnboardingTitle => 'Tell us where you operate';
+
+  @override
+  String get serviceAreasOnboardingBody =>
+      'Without it, no client finds you in search. It takes less than a minute.';
+
+  @override
+  String get serviceAreasOnboardingStart => 'Set it up now';
+
+  @override
+  String get serviceAreasOnboardingSkip => 'Later';
+
+  @override
+  String get serviceAreaFailureDistrictRequired =>
+      'This city requires choosing a neighbourhood or region, not the whole city.';
+
+  @override
+  String get serviceAreaFailureTooMany =>
+      'You can register at most 10 regions.';
+
+  @override
+  String get serviceAreaFailurePlaceNotResolved =>
+      'This place could not be interpreted. Please choose another suggestion.';
+
+  @override
+  String get serviceAreaFailureRateLimited =>
+      'Too many lookups. Please wait a moment and try again.';
+
+  @override
+  String get serviceAreaFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get serviceAreaFailureUnexpected =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get placeAutocompleteNoResults => 'No place found.';
+
+  @override
+  String get placeAutocompleteNetworkError =>
+      'Could not search places. Please try again.';
+
+  @override
+  String get placeAutocompleteKeyError =>
+      'Place search is unavailable right now.';
+
+  @override
+  String get placeAutocompleteRetry => 'Try again';
+
+  @override
+  String get driverSearchTitle => 'Find a driver';
+
+  @override
+  String get driverSearchHint => 'Address or school';
+
+  @override
+  String get driverSearchEmpty => 'No driver covers this place yet.';
+
+  @override
+  String get driverSearchPlaceNotResolved =>
+      'This place could not be interpreted. Please choose another suggestion.';
+
+  @override
+  String get driverSearchRateLimited =>
+      'Too many searches. Please wait a moment and try again.';
+
+  @override
+  String get driverSearchNetworkError =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get driverSearchUnexpectedError =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get driverSearchCoversWholeCity => 'Covers the whole city';
+
+  @override
+  String get profileServiceAreas => 'Where you operate';
 }

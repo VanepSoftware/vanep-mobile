@@ -9,6 +9,7 @@ import 'core/places/places_container.dart';
 import 'modules/auth/auth_container.dart';
 import 'modules/auth/data/datasources/auth_local_datasource.dart';
 import 'modules/driver/driver_container.dart';
+import 'modules/driverserviceareas/driver_service_areas_container.dart';
 import 'modules/drivers/drivers_container.dart';
 import 'modules/profile/profile_container.dart';
 
@@ -25,6 +26,7 @@ Future<void> main() async {
   registerDriverHomeDependencies(getIt);
   registerProfileDependencies(getIt);
   registerPlacesDependencies(getIt);
+  registerDriverServiceAreasDependencies(getIt);
 
   runApp(const VanepApp());
 }
