@@ -7,6 +7,7 @@ import 'data/datasources/driver_search_remote_datasource.dart';
 import 'data/repositories/driver_search_repository_impl.dart';
 import 'domain/repositories/driver_search_repository.dart';
 import 'domain/usecases/search_drivers_by_place.dart';
+import 'presentation/cubit/driver_search_cubit.dart';
 
 void registerDriverSearchDependencies(GetIt getIt) {
   final environment = getIt<Environment>();
@@ -26,5 +27,10 @@ void registerDriverSearchDependencies(GetIt getIt) {
     )
     ..registerFactory<SearchDriversByPlace>(
       () => SearchDriversByPlace(getIt<DriverSearchRepository>()),
+    )
+    ..registerFactory<DriverSearchCubit>(
+      () => DriverSearchCubit(
+        searchDriversByPlace: getIt<SearchDriversByPlace>(),
+      ),
     );
 }

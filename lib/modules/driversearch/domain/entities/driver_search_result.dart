@@ -1,35 +1,45 @@
 import 'package:equatable/equatable.dart';
 
-class DriverSearchResult extends Equatable {
+import '../../../drivers/domain/entities/driver.dart';
+
+class DriverSearchResult extends Equatable implements Driver {
   const DriverSearchResult({
     required this.token,
     required this.name,
-    this.photo,
+    this.photoUrl,
     this.rating,
     this.basePrice,
     this.experienceYears,
     this.available = false,
   });
 
+  @override
   final String token;
 
+  @override
   final String name;
 
-  final String? photo;
+  @override
+  final String? photoUrl;
 
+  @override
   final double? rating;
+
+  @override
+  final int? experienceYears;
 
   final double? basePrice;
 
-  final int? experienceYears;
-
   final bool available;
+
+  @override
+  String? get city => null;
 
   @override
   List<Object?> get props => [
     token,
     name,
-    photo,
+    photoUrl,
     rating,
     basePrice,
     experienceYears,

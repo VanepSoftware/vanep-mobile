@@ -100,14 +100,14 @@
 
 ## 5. Fase 5 — Tela de busca do cliente (branch: `feat/5-client-location-search`)
 
-- [ ] 5.1 Testes de cubit: busca com resultados, nenhum motorista cobre o lugar, place não resolvido, rate limit — quatro estados distintos
-- [ ] 5.2 Implementar o cubit
-- [ ] 5.3 Tela com **uma** caixa de busca aceitando endereço ou escola, reusando o autocomplete da fase 2 e o `DriversSearchField` existente se ele servir; extrair para `core/ui` antes de duplicar (R6, R10a)
-- [ ] 5.4 Lista de resultados reusando o `DriverCard` do módulo `drivers` (R06 — não criar um card paralelo)
-- [ ] 5.5 Teste de widget: quatro motoristas em níveis diferentes aparecem exatamente na ordem devolvida pela API
-- [ ] 5.6 Estados vazio, de erro e de rate limit distintos entre si, todos em ARB (R10)
-- [ ] 5.7 Ligar a tela ao `ClientShell`
-- [ ] 5.8 Rodar `make lint` e `make test`
+- [x] 5.1 Testes de cubit: busca com resultados, nenhum motorista cobre o lugar, place não resolvido, rate limit — quatro estados distintos
+- [x] 5.2 Implementar o cubit
+- [x] 5.3 Tela com **uma** caixa de busca aceitando endereço ou escola, reusando o autocomplete da fase 2 e o `DriversSearchField` existente se ele servir; extrair para `core/ui` antes de duplicar (R6, R10a)
+- [x] 5.4 Lista de resultados reusando o `DriverCard` do módulo `drivers` (R06 — não criar um card paralelo)
+- [x] 5.5 Teste de widget: quatro motoristas em níveis diferentes aparecem exatamente na ordem devolvida pela API
+- [x] 5.6 Estados vazio, de erro e de rate limit distintos entre si, todos em ARB (R10)
+- [x] 5.7 Ligar a tela ao `ClientShell`
+- [x] 5.8 Rodar `make lint` e `make test`
 - [ ] 5.9 **Parar e aguardar sua validação**; só então commitar e abrir PR
 
 ## 6. Encerramento

@@ -11,6 +11,12 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_state.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/pages/driver_search_page.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';
@@ -19,10 +25,25 @@ import '../modules/drivers/drivers_fixtures.dart';
 import '../modules/drivers/presentation/drivers_presentation_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 
+class MockDriverSearchCubit extends MockCubit<DriverSearchState>
+    implements DriverSearchCubit {}
+
+class MockPlaceAutocompleteDataSource extends Mock
+    implements PlaceAutocompleteDataSource {}
+
+PlaceAutocompleteController buildAutocomplete() {
+  final datasource = MockPlaceAutocompleteDataSource();
+  when(() => datasource.findSuggestions(any(), any()))
+      .thenAnswer((_) async => const Ok([]));
+  return PlaceAutocompleteController(datasource: datasource);
+}
+
 Widget _harness(
   DriversCubit driversCubit,
   AuthCubit authCubit,
   ProfileSummaryCubit profileSummaryCubit,
+  DriverSearchCubit searchCubit,
+  PlaceAutocompleteController autocomplete,
 ) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -38,8 +59,12 @@ Widget _harness(
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<DriversCubit>.value(value: driversCubit),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
+        BlocProvider<DriverSearchCubit>.value(value: searchCubit),
       ],
-      child: const ClientShell(profile: FakeUserProfile()),
+      child: ClientShell(
+        profile: const FakeUserProfile(),
+        placeAutocomplete: autocomplete,
+      ),
     ),
   );
 }
@@ -53,7 +78,17 @@ void main() {
     registerFallbackValue(UserType.client);
   });
 
+  late MockDriverSearchCubit searchCubit;
+  late PlaceAutocompleteController autocomplete;
+
   setUp(() {
+    searchCubit = MockDriverSearchCubit();
+    whenListen(
+      searchCubit,
+      const Stream<DriverSearchState>.empty(),
+      initialState: const DriverSearchState(),
+    );
+    autocomplete = buildAutocomplete();
     driversCubit = MockDriversCubit();
     authCubit = MockAuthCubit();
     profileSummaryCubit = MockProfileSummaryCubit();
@@ -83,7 +118,7 @@ void main() {
 
   testWidgets('starts on the home tab with the greeting', (tester) async {
     await tester.pumpWidget(
-      _harness(driversCubit, authCubit, profileSummaryCubit),
+      _harness(driversCubit, authCubit, profileSummaryCubit, searchCubit, autocomplete),
     );
 
     expect(find.text('Olá, Ana!'), findsOneWidget);
@@ -91,24 +126,25 @@ void main() {
     verifyNever(authCubit.refreshSessionProfile);
   });
 
-  testWidgets('switches to the Vans tab showing the coming soon view', (
+  testWidgets('switches to the Vans tab showing the driver search', (
     tester,
   ) async {
     await tester.pumpWidget(
-      _harness(driversCubit, authCubit, profileSummaryCubit),
+      _harness(driversCubit, authCubit, profileSummaryCubit, searchCubit, autocomplete),
     );
 
     await tester.tap(find.bySemanticsLabel('Vans'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Em breve'), findsOneWidget);
+    expect(find.byType(DriverSearchPage), findsOneWidget);
+    expect(find.text('Em breve'), findsNothing);
   });
 
   testWidgets('refreshes session profile and summary when opening profile tab', (
     tester,
   ) async {
     await tester.pumpWidget(
-      _harness(driversCubit, authCubit, profileSummaryCubit),
+      _harness(driversCubit, authCubit, profileSummaryCubit, searchCubit, autocomplete),
     );
 
     await tester.tap(find.bySemanticsLabel('Perfil'));
@@ -126,7 +162,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      _harness(driversCubit, authCubit, profileSummaryCubit),
+      _harness(driversCubit, authCubit, profileSummaryCubit, searchCubit, autocomplete),
     );
 
     await tester.tap(find.bySemanticsLabel('Perfil'));

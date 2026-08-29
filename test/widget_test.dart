@@ -13,6 +13,11 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
@@ -36,6 +41,12 @@ Widget _harness(AuthCubit cubit) {
     home: BlocProvider<AuthCubit>.value(value: cubit, child: const AuthGate()),
   );
 }
+
+class MockDriverSearchCubit extends MockCubit<DriverSearchState>
+    implements DriverSearchCubit {}
+
+class MockPlaceAutocompleteDataSource extends Mock
+    implements PlaceAutocompleteDataSource {}
 
 void main() {
   late MockAuthCubit cubit;
@@ -86,9 +97,22 @@ void main() {
       initialState: const ProfileSummaryState(),
     );
     when(() => driversCubit.loadRecentDrivers()).thenAnswer((_) async {});
+    final searchCubit = MockDriverSearchCubit();
+    whenListen(
+      searchCubit,
+      const Stream<DriverSearchState>.empty(),
+      initialState: const DriverSearchState(),
+    );
+    final autocompleteDatasource = MockPlaceAutocompleteDataSource();
+    when(() => autocompleteDatasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<DriversCubit>(() => driversCubit)
-      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
+      ..registerFactory<DriverSearchCubit>(() => searchCubit)
+      ..registerFactory<PlaceAutocompleteController>(
+        () => PlaceAutocompleteController(datasource: autocompleteDatasource),
+      );
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(

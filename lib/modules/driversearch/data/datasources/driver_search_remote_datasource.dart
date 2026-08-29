@@ -7,7 +7,7 @@ DriverSearchResult driverSearchResultFromJson(Map<String, Object?> json) {
   return DriverSearchResult(
     token: json['token'] as String? ?? '',
     name: json['name'] as String? ?? '',
-    photo: json['photo'] as String?,
+    photoUrl: json['photo'] as String?,
     rating: (json['rating'] as num?)?.toDouble(),
     basePrice: (json['basePrice'] as num?)?.toDouble(),
     experienceYears: (json['experienceYears'] as num?)?.toInt(),
