@@ -2,6 +2,7 @@ import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 class FakeUserProfile implements UserProfile {
@@ -18,6 +19,7 @@ class FakeUserProfile implements UserProfile {
     this.nameChangeAvailableAt,
     this.phoneChangeAvailableAt,
     this.emailChangeAvailableAt,
+    this.pendingOnboardingSteps = const [],
   });
 
   @override
@@ -44,6 +46,9 @@ class FakeUserProfile implements UserProfile {
   final DateTime? phoneChangeAvailableAt;
   @override
   final DateTime? emailChangeAvailableAt;
+
+  @override
+  final List<OnboardingStep> pendingOnboardingSteps;
 }
 
 class FakeAuthSession implements AuthSession {

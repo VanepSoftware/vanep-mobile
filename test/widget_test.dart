@@ -137,9 +137,15 @@ void main() {
       const Stream<ProfileSummaryState>.empty(),
       initialState: const ProfileSummaryState(),
     );
+    final autocompleteDatasource = MockPlaceAutocompleteDataSource();
+    when(() => autocompleteDatasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
-      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
+      ..registerFactory<PlaceAutocompleteController>(
+        () => PlaceAutocompleteController(datasource: autocompleteDatasource),
+      );
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(

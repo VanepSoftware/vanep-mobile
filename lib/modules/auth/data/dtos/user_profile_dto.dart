@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/entities/user_profile.dart';
 import '../../domain/value_objects/gender.dart';
+import '../../domain/value_objects/onboarding_step.dart';
 import '../../domain/value_objects/user_type.dart';
 
 part 'user_profile_dto.freezed.dart';
@@ -22,6 +23,13 @@ abstract class UserProfileDto with _$UserProfileDto implements UserProfile {
     DateTime? nameChangeAvailableAt,
     DateTime? phoneChangeAvailableAt,
     DateTime? emailChangeAvailableAt,
+    @JsonKey(
+      name: 'onboarding',
+      fromJson: OnboardingStep.listFromApi,
+      includeToJson: false,
+    )
+    @Default(<OnboardingStep>[])
+    List<OnboardingStep> pendingOnboardingSteps,
   }) = _UserProfileDto;
 
   factory UserProfileDto.fromJson(Map<String, Object?> json) =>
