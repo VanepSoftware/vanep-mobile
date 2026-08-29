@@ -7,6 +7,9 @@ const testEnvironment = Environment(
   oauthScopes: 'read write',
   placesApiKeyAndroid: 'android-key',
   placesApiKeyIos: 'ios-key',
+  placesAndroidPackage: 'com.vanep.vanep_mobile',
+  placesAndroidCertSha1: 'ab:cd:ef:12',
+  placesIosBundleId: 'com.vanep.vanepMobile',
 );
 
 const testEnvironmentWithoutPlacesKeys = Environment(
