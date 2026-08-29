@@ -21,7 +21,11 @@ class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
 
 const rankedResults = [
-  DriverSearchResult(token: 'd1', name: 'Exato QNL 5'),
+  DriverSearchResult(
+    token: 'd1',
+    name: 'Exato QNL 5',
+    serviceAreas: ['Brasília', 'Taguatinga Norte', 'QNL 5'],
+  ),
   DriverSearchResult(token: 'd2', name: 'Setor L Norte'),
   DriverSearchResult(token: 'd3', name: 'Taguatinga'),
   DriverSearchResult(token: 'd4', name: 'Cidade inteira'),
@@ -159,5 +163,20 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
+  /// Só a primeira palavra de cada região, separadas por ponto — o card é
+  /// estreito e o nome completo estouraria a linha.
+  testWidgets('shows where the driver operates under the name', (tester) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: rankedResults,
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(find.text('Brasília · Taguatinga · QNL'), findsOneWidget);
   });
 }

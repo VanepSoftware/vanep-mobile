@@ -11,6 +11,7 @@ class DriverSearchResult extends Equatable implements Driver {
     this.basePrice,
     this.experienceYears,
     this.available = false,
+    this.serviceAreas = const [],
   });
 
   @override
@@ -32,6 +33,8 @@ class DriverSearchResult extends Equatable implements Driver {
 
   final bool available;
 
+  final List<String> serviceAreas;
+
   @override
   String? get city => null;
 
@@ -44,5 +47,6 @@ class DriverSearchResult extends Equatable implements Driver {
     basePrice,
     experienceYears,
     available,
+    serviceAreas,
   ];
 }

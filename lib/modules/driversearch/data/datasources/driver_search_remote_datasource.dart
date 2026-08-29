@@ -3,6 +3,11 @@ import 'package:dio/dio.dart';
 import '../../../../core/environment/environment.dart';
 import '../../domain/entities/driver_search_result.dart';
 
+List<String> readServiceAreaNames(Object? raw) {
+  if (raw is! List) return const [];
+  return raw.whereType<String>().where((name) => name.isNotEmpty).toList();
+}
+
 DriverSearchResult driverSearchResultFromJson(Map<String, Object?> json) {
   return DriverSearchResult(
     token: json['token'] as String? ?? '',
@@ -12,6 +17,7 @@ DriverSearchResult driverSearchResultFromJson(Map<String, Object?> json) {
     basePrice: (json['basePrice'] as num?)?.toDouble(),
     experienceYears: (json['experienceYears'] as num?)?.toInt(),
     available: json['available'] as bool? ?? false,
+    serviceAreas: readServiceAreaNames(json['serviceAreas']),
   );
 }
 

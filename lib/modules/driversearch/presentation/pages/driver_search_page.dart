@@ -64,7 +64,7 @@ class DriverSearchPage extends StatelessWidget {
                 for (final driver in state.results)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: DriverCard(driver: driver),
+                    child: DriverCard(driver: driver, coverage: driver.serviceAreas),
                   ),
               ],
             );

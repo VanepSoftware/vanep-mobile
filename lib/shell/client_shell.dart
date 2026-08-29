@@ -14,6 +14,7 @@ import '../modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import '../modules/profile/presentation/formatters/assistant_status_label.dart';
 import 'client_bottom_nav.dart';
 
+const clientShellSearchTabIndex = 1;
 const clientShellProfileTabIndex = 3;
 
 class ClientShell extends StatefulWidget {
@@ -59,7 +60,10 @@ class ClientShellState extends State<ClientShell> {
       body: IndexedStack(
         index: selectedIndex,
         children: [
-          DriversHomeTab(displayName: displayName),
+          DriversHomeTab(
+            displayName: displayName,
+            onSearchTapped: openSearchTab,
+          ),
           DriverSearchPage(autocomplete: placeAutocomplete),
           VanepComingSoon(
             title: l10n.navNotifications,
@@ -92,6 +96,8 @@ class ClientShellState extends State<ClientShell> {
       ),
     );
   }
+
+  void openSearchTab() => selectShellTab(clientShellSearchTabIndex);
 
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);

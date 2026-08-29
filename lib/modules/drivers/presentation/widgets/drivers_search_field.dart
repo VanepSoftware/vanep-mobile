@@ -4,19 +4,16 @@ import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 
 class DriversSearchField extends StatelessWidget {
-  const DriversSearchField({
-    required this.hint,
-    required this.onChanged,
-    super.key,
-  });
+  const DriversSearchField({required this.hint, required this.onTap, super.key});
 
   final String hint;
-  final ValueChanged<String> onChanged;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged: onChanged,
+      readOnly: true,
+      onTap: onTap,
       textInputAction: TextInputAction.search,
       style: VanepTypography.cardSubtitle.copyWith(
         color: VanepColors.textPrimary,

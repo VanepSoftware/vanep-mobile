@@ -12,7 +12,11 @@ import 'package:vanep_mobile/modules/drivers/presentation/pages/drivers_home_tab
 import '../drivers_fixtures.dart';
 import 'drivers_presentation_mocks.dart';
 
-Widget _harness(DriversCubit cubit, String displayName) {
+Widget _harness(
+  DriversCubit cubit,
+  String displayName, {
+  VoidCallback? onSearchTapped,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -25,7 +29,10 @@ Widget _harness(DriversCubit cubit, String displayName) {
     home: Scaffold(
       body: BlocProvider<DriversCubit>.value(
         value: cubit,
-        child: DriversHomeTab(displayName: displayName),
+        child: DriversHomeTab(
+          displayName: displayName,
+          onSearchTapped: onSearchTapped ?? () {},
+        ),
       ),
     ),
   );
@@ -53,10 +60,28 @@ void main() {
     expect(find.text('Sugestões perto de você'), findsOneWidget);
   });
 
-  testWidgets('typing in the search field forwards the query', (tester) async {
-    await tester.pumpWidget(_harness(cubit, 'Maria Silva'));
-    await tester.enterText(find.byType(TextField), 'carlos');
+  /// A caixa da home é gatilho, não filtro: filtrar aqui procuraria por NOME de
+  /// motorista, enquanto o usuário digita um lugar. Tocar leva para a busca real.
+  testWidgets('tapping the search field opens the search screen', (
+    tester,
+  ) async {
+    var opened = false;
+    await tester.pumpWidget(
+      _harness(cubit, 'Maria Silva', onSearchTapped: () => opened = true),
+    );
 
-    verify(() => cubit.search('carlos')).called(1);
+    await tester.tap(find.byType(TextField));
+    await tester.pumpAndSettle();
+
+    expect(opened, isTrue);
+  });
+
+  testWidgets('the search field never filters locally', (tester) async {
+    await tester.pumpWidget(_harness(cubit, 'Maria Silva'));
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+
+    expect(field.readOnly, isTrue);
+    verifyNever(() => cubit.search(any()));
   });
 }
