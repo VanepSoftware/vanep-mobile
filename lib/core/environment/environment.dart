@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Environment {
@@ -6,6 +7,8 @@ class Environment {
     required this.oauthClientId,
     required this.oauthRedirectUri,
     required this.oauthScopes,
+    this.placesApiKeyAndroid = '',
+    this.placesApiKeyIos = '',
   });
 
   factory Environment.fromDotEnv(DotEnv env) {
@@ -14,6 +17,8 @@ class Environment {
       oauthClientId: _require(env, 'OAUTH_CLIENT_ID'),
       oauthRedirectUri: _require(env, 'OAUTH_REDIRECT_URI'),
       oauthScopes: _require(env, 'OAUTH_SCOPES'),
+      placesApiKeyAndroid: env.maybeGet('GOOGLE_PLACES_API_KEY_ANDROID') ?? '',
+      placesApiKeyIos: env.maybeGet('GOOGLE_PLACES_API_KEY_IOS') ?? '',
     );
   }
 
@@ -24,6 +29,10 @@ class Environment {
   final String oauthRedirectUri;
 
   final String oauthScopes;
+
+  final String placesApiKeyAndroid;
+
+  final String placesApiKeyIos;
 
   String get authorizationEndpoint => '$authBaseUrl/oauth2/authorize';
 
@@ -43,6 +52,24 @@ class Environment {
   String get driversMeEndpoint => '$authBaseUrl/api/drivers/me';
 
   String get assistantsMeEndpoint => '$authBaseUrl/api/assistants/me';
+
+  String get placesAutocompleteEndpoint =>
+      'https://places.googleapis.com/v1/places:autocomplete';
+
+  String placesApiKeyFor(TargetPlatform platform) {
+    final key = switch (platform) {
+      TargetPlatform.android => placesApiKeyAndroid,
+      TargetPlatform.iOS => placesApiKeyIos,
+      _ => '',
+    };
+    if (key.isEmpty) {
+      throw StateError(
+        'Missing Google Places key for $platform. '
+        'Fill GOOGLE_PLACES_API_KEY_ANDROID / GOOGLE_PLACES_API_KEY_IOS in .env.',
+      );
+    }
+    return key;
+  }
 
   static String _require(DotEnv env, String key) {
     final value = env.maybeGet(key);
