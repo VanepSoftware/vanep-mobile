@@ -37,6 +37,7 @@ class DriverSearchPage extends StatelessWidget {
               children: [
                 VanepPlaceAutocompleteField(
                   controller: autocomplete,
+                  clearOnSelect: false,
                   hint: l10n.driverSearchHint,
                   emptyLabel: l10n.placeAutocompleteNoResults,
                   networkErrorLabel: l10n.placeAutocompleteNetworkError,

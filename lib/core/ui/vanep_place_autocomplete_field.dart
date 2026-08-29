@@ -25,6 +25,7 @@ class VanepPlaceAutocompleteField extends StatefulWidget {
     required this.keyErrorLabel,
     required this.retryLabel,
     this.enabled = true,
+    this.clearOnSelect = true,
     super.key,
   });
 
@@ -36,6 +37,11 @@ class VanepPlaceAutocompleteField extends StatefulWidget {
   final String keyErrorLabel;
   final String retryLabel;
   final bool enabled;
+
+  /// Limpar faz sentido quando a seleção vira um item numa lista e o campo é
+  /// reaproveitado para o próximo. Numa busca, apagar o que a pessoa acabou de
+  /// escolher esconde o que ela pesquisou e faz a tela parecer quebrada.
+  final bool clearOnSelect;
 
   @override
   State<VanepPlaceAutocompleteField> createState() =>
@@ -73,7 +79,7 @@ class VanepPlaceAutocompleteFieldState
 
   void selectSuggestion(PlaceSuggestion suggestion) {
     final sessionToken = widget.controller.handOverSelection();
-    textController.clear();
+    textController.text = widget.clearOnSelect ? '' : suggestion.primaryText;
     setState(() {
       suggestions = const [];
       searched = false;
