@@ -88,14 +88,14 @@
 > ⛔ Depende da **fase 0 deployada**. Antes disso o endpoint recusa a requisição de um único `placeId`.
 
 - [ ] 4.1 Confirmar que a fase 0 está no ar chamando o endpoint com um `placeId` só
-- [ ] 4.2 Testes da entidade `DriverSearchResult` e do contrato do repositório
-- [ ] 4.3 Entidade e contrato, **sem** nenhum campo de endereço residencial (requisito de privacidade da spec do backend)
-- [ ] 4.4 Testes do use case `SearchDriversByPlace`
-- [ ] 4.5 Implementar o use case
-- [ ] 4.6 DTOs + `build_runner` (R15)
-- [ ] 4.7 Datasource e repositório, traduzindo `400` de place não resolvido e `429` de rate limit em falhas distintas
-- [ ] 4.8 Teste afirmando que a app **preserva a ordem** devolvida pela API e não reordena localmente (R5 do design)
-- [ ] 4.9 Rodar `make lint` e `make test`
+- [x] 4.2 Testes da entidade `DriverSearchResult` e do contrato do repositório
+- [x] 4.3 Entidade e contrato, **sem** nenhum campo de endereço residencial (requisito de privacidade da spec do backend)
+- [x] 4.4 Testes do use case `SearchDriversByPlace`
+- [x] 4.5 Implementar o use case
+- [x] 4.6 DTOs + `build_runner` (R15)
+- [x] 4.7 Datasource e repositório, traduzindo `400` de place não resolvido e `429` de rate limit em falhas distintas
+- [x] 4.8 Teste afirmando que a app **preserva a ordem** devolvida pela API e não reordena localmente (R5 do design)
+- [x] 4.9 Rodar `make lint` e `make test`
 - [ ] 4.10 **Parar e aguardar sua validação**; só então commitar e abrir PR
 
 ## 5. Fase 5 — Tela de busca do cliente (branch: `feat/5-client-location-search`)
