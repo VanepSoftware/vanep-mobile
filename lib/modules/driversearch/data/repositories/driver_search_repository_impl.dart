@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/result/result.dart';
-import '../../domain/entities/driver_search_result.dart';
+import '../../domain/entities/driver_search_page.dart';
 import '../../domain/failures/driver_search_failure.dart';
 import '../../domain/repositories/driver_search_repository.dart';
 import '../datasources/driver_search_remote_datasource.dart';
@@ -22,12 +22,13 @@ class DriverSearchRepositoryImpl implements DriverSearchRepository {
   final DriverSearchRemoteDataSource remote;
 
   @override
-  Future<Result<DriverSearchFailure, List<DriverSearchResult>>> searchByPlace(
+  Future<Result<DriverSearchFailure, DriverSearchPage>> searchByPlace(
     String placeId,
-    String? sessionToken,
-  ) async {
+    String? sessionToken, {
+    int page = 0,
+  }) async {
     try {
-      return Ok(await remote.searchByPlace(placeId, sessionToken));
+      return Ok(await remote.searchByPlace(placeId, sessionToken, page: page));
     } on DioException catch (exception) {
       return Err(driverSearchFailureFrom(exception));
     }

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/environment/environment.dart';
+import '../../domain/entities/driver_search_page.dart';
 import '../../domain/entities/driver_search_result.dart';
 
 List<String> readServiceAreaNames(Object? raw) {
@@ -21,13 +22,18 @@ DriverSearchResult driverSearchResultFromJson(Map<String, Object?> json) {
   );
 }
 
-List<DriverSearchResult> readSearchPage(Map<String, dynamic>? body) {
+DriverSearchPage readSearchPage(Map<String, dynamic>? body) {
   final content = body?['content'];
-  if (content is! List) return const [];
-  return content
-      .whereType<Map<String, dynamic>>()
-      .map((entry) => driverSearchResultFromJson(Map<String, Object?>.from(entry)))
-      .toList();
+  if (content is! List) {
+    return const DriverSearchPage(drivers: [], isLast: true);
+  }
+  return DriverSearchPage(
+    drivers: content
+        .whereType<Map<String, dynamic>>()
+        .map((entry) => driverSearchResultFromJson(Map<String, Object?>.from(entry)))
+        .toList(),
+    isLast: body?['last'] as bool? ?? true,
+  );
 }
 
 class DriverSearchRemoteDataSource {
@@ -38,14 +44,16 @@ class DriverSearchRemoteDataSource {
 
   String get endpoint => '${environment.driversEndpoint}/search';
 
-  Future<List<DriverSearchResult>> searchByPlace(
+  Future<DriverSearchPage> searchByPlace(
     String placeId,
-    String? sessionToken,
-  ) async {
+    String? sessionToken, {
+    int page = 0,
+  }) async {
     final response = await dio.get<Map<String, dynamic>>(
       endpoint,
       queryParameters: {
         'placeId': placeId,
+        'page': page,
         if (sessionToken != null && sessionToken.isNotEmpty)
           'sessionToken': sessionToken,
       },
