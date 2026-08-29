@@ -29,6 +29,11 @@ const testAguasClarasDraft = ServiceAreaDraft(
   sessionToken: 'session-2',
 );
 
+const testSavedQnl5Draft = ServiceAreaDraft(
+  areaToken: 'area-qnl5',
+  label: 'QNL 5',
+);
+
 List<ServiceAreaDraft> draftsOfSize(int size) {
   return List.generate(
     size,

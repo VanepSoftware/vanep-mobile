@@ -1,4 +1,5 @@
 import '../../domain/entities/service_area.dart';
+import '../../domain/entities/service_area_draft.dart';
 
 ServiceArea serviceAreaFromJson(Map<String, Object?> json) {
   return ServiceArea(
@@ -10,10 +11,13 @@ ServiceArea serviceAreaFromJson(Map<String, Object?> json) {
   );
 }
 
-Map<String, Object?> serviceAreaDraftToJson(String placeId, String? sessionToken) {
+Map<String, Object?> serviceAreaDraftToJson(ServiceAreaDraft draft) {
+  if (draft.isAlreadySaved) {
+    return {'areaToken': draft.areaToken};
+  }
   return {
-    'placeId': placeId,
-    if (sessionToken != null && sessionToken.isNotEmpty)
-      'sessionToken': sessionToken,
+    'placeId': draft.placeId,
+    if (draft.sessionToken != null && draft.sessionToken!.isNotEmpty)
+      'sessionToken': draft.sessionToken,
   };
 }

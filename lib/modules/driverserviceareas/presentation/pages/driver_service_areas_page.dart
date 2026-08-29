@@ -103,7 +103,7 @@ class DriverServiceAreasPage extends StatelessWidget {
                                 Icons.close,
                                 color: VanepColors.textSecondary,
                               ),
-                              onPressed: () => cubit.removeDraft(draft.placeId),
+                              onPressed: () => cubit.removeDraft(draft.identity),
                             ),
                           ],
                         ),

@@ -25,9 +25,7 @@ class DriverServiceAreaRemoteDataSource {
     final response = await dio.put<List<dynamic>>(
       endpoint,
       data: {
-        'areas': drafts
-            .map((draft) => serviceAreaDraftToJson(draft.placeId, draft.sessionToken))
-            .toList(),
+        'areas': drafts.map(serviceAreaDraftToJson).toList(),
       },
     );
     return readServiceAreas(response.data);

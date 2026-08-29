@@ -44,6 +44,49 @@ void main() {
     ],
   );
 
+  /// O token da região é da Vanep. Reenviá-lo como placeId faz o backend
+  /// perguntar ao Google por um id que ele nunca emitiu, e a tela responde
+  /// "não foi possível interpretar este local" ao salvar.
+  blocTest<DriverServiceAreasCubit, DriverServiceAreasState>(
+    'a saved area comes back identified by its token, never as a placeId',
+    setUp: () => when(findMyServiceAreas.call).thenAnswer(
+      (_) async => const Ok([testQnl5Area]),
+    ),
+    build: buildCubit,
+    act: (cubit) => cubit.loadMyAreas(),
+    verify: (cubit) {
+      final draft = cubit.state.drafts.single;
+      expect(draft.areaToken, 'area-qnl5');
+      expect(draft.placeId, isNull);
+    },
+  );
+
+  /// Regiões já salvas não têm placeId: sem identidade própria, todas colidiriam
+  /// entre si e a lista carregada viria com um item só.
+  blocTest<DriverServiceAreasCubit, DriverServiceAreasState>(
+    'keeps distinct saved areas apart',
+    setUp: () => when(findMyServiceAreas.call).thenAnswer(
+      (_) async => const Ok([testQnl5Area, testAguasClarasArea]),
+    ),
+    build: buildCubit,
+    act: (cubit) => cubit.loadMyAreas(),
+    verify: (cubit) => expect(cubit.state.drafts, hasLength(2)),
+  );
+
+  /// O caso do bug: abrir a tela com uma região salva e acrescentar outra.
+  blocTest<DriverServiceAreasCubit, DriverServiceAreasState>(
+    'adding a new place next to a saved one keeps both',
+    setUp: () => when(findMyServiceAreas.call).thenAnswer(
+      (_) async => const Ok([testQnl5Area]),
+    ),
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.loadMyAreas();
+      cubit.addDraft(testAguasClarasDraft);
+    },
+    verify: (cubit) => expect(cubit.state.drafts, hasLength(2)),
+  );
+
   blocTest<DriverServiceAreasCubit, DriverServiceAreasState>(
     'adds a draft',
     build: buildCubit,
@@ -74,7 +117,7 @@ void main() {
     seed: () => const DriverServiceAreasState(
       drafts: [testQnl5Draft, testAguasClarasDraft],
     ),
-    act: (cubit) => cubit.removeDraft('place-qnl5'),
+    act: (cubit) => cubit.removeDraft(testQnl5Draft.identity),
     expect: () => [
       isA<DriverServiceAreasState>().having(
         (s) => s.drafts,
