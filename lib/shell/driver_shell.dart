@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/ui/vanep_coming_soon.dart';
 import '../core/ui/vanep_screen_background.dart';
 import '../l10n/app_localizations.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
+import '../modules/auth/presentation/cubit/auth_cubit.dart';
+import '../modules/auth/presentation/pages/profile_page.dart';
 import '../modules/driver/presentation/pages/driver_home_tab.dart';
+import '../modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import '../modules/profile/presentation/formatters/assistant_status_label.dart';
 import 'driver_bottom_nav.dart';
+
+const driverShellProfileTabIndex = 3;
 
 class DriverShell extends StatefulWidget {
   const DriverShell({required this.profile, super.key});
@@ -33,15 +40,44 @@ class DriverShellState extends State<DriverShell> {
             DriverHomeTab(displayName: displayName),
             VanepComingSoon(title: l10n.navProposals, message: l10n.comingSoon),
             VanepComingSoon(title: l10n.navStudents, message: l10n.comingSoon),
-            VanepComingSoon(title: l10n.navProfile, message: l10n.comingSoon),
+            BlocBuilder<ProfileSummaryCubit, ProfileSummaryState>(
+              builder: (context, summaryState) {
+                return ProfilePage(
+                  profile: widget.profile,
+                  photoUrl: summaryState.photoUrl,
+                  rating: summaryState.rating,
+                  city: summaryState.city,
+                  statusLabel: assistantStatusLabel(
+                    l10n,
+                    summaryState.assistantStatus,
+                  ),
+                  statusColor: assistantStatusColor(
+                    summaryState.assistantStatus,
+                  ),
+                  onRefresh: refreshProfileTab,
+                );
+              },
+            ),
           ],
         ),
         bottomNavigationBar: DriverBottomNav(
           currentIndex: selectedIndex,
-          onDestinationSelected: (index) =>
-              setState(() => selectedIndex = index),
+          onDestinationSelected: selectShellTab,
         ),
       ),
     );
+  }
+
+  void selectShellTab(int index) {
+    setState(() => selectedIndex = index);
+    if (index != driverShellProfileTabIndex) return;
+    refreshProfileTab();
+  }
+
+  Future<void> refreshProfileTab() {
+    return Future.wait<void>([
+      context.read<AuthCubit>().refreshSessionProfile(),
+      context.read<ProfileSummaryCubit>().refresh(widget.profile.type),
+    ]);
   }
 }

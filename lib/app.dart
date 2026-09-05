@@ -10,9 +10,12 @@ import 'l10n/app_localizations.dart';
 import 'modules/auth/presentation/cubit/auth_cubit.dart';
 import 'modules/auth/presentation/cubit/auth_state.dart';
 import 'modules/auth/presentation/pages/welcome_page.dart';
+import 'modules/auth/domain/value_objects/user_type.dart';
+import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'shell/client_shell.dart';
+import 'shell/driver_shell.dart';
 
 class VanepApp extends StatelessWidget {
   const VanepApp({super.key});
@@ -47,17 +50,30 @@ class AuthGate extends StatelessWidget {
       builder: (context, state) {
         return switch (state) {
           AuthUnknown() => const SplashScreen(),
-          AuthAuthenticated(:final session) => MultiBlocProvider(
-            providers: [
-              BlocProvider<DriversCubit>(
-                create: (_) => getIt<DriversCubit>()..loadRecentDrivers(),
-              ),
-              BlocProvider<ProfileSummaryCubit>(
-                create: (_) => getIt<ProfileSummaryCubit>(),
-              ),
-            ],
-            child: ClientShell(profile: session.profile),
-          ),
+          AuthAuthenticated(:final session) => switch (session.profile.type) {
+            UserType.driver => MultiBlocProvider(
+              providers: [
+                BlocProvider<DriverHomeCubit>(
+                  create: (_) => getIt<DriverHomeCubit>(),
+                ),
+                BlocProvider<ProfileSummaryCubit>(
+                  create: (_) => getIt<ProfileSummaryCubit>(),
+                ),
+              ],
+              child: DriverShell(profile: session.profile),
+            ),
+            _ => MultiBlocProvider(
+              providers: [
+                BlocProvider<DriversCubit>(
+                  create: (_) => getIt<DriversCubit>()..loadRecentDrivers(),
+                ),
+                BlocProvider<ProfileSummaryCubit>(
+                  create: (_) => getIt<ProfileSummaryCubit>(),
+                ),
+              ],
+              child: ClientShell(profile: session.profile),
+            ),
+          },
           _ => const WelcomePage(),
         };
       },
