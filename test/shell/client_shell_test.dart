@@ -126,7 +126,6 @@ void main() {
     expect(find.text('Em breve'), findsOneWidget);
   });
 
-  /// A busca é página empilhada, não aba: a aba 2 fica livre para outra coisa.
   testWidgets('tapping the home search field opens the search page', (
     tester,
   ) async {

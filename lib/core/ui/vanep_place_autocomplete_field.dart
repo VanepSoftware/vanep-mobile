@@ -38,9 +38,6 @@ class VanepPlaceAutocompleteField extends StatefulWidget {
   final String retryLabel;
   final bool enabled;
 
-  /// Limpar faz sentido quando a seleção vira um item numa lista e o campo é
-  /// reaproveitado para o próximo. Numa busca, apagar o que a pessoa acabou de
-  /// escolher esconde o que ela pesquisou e faz a tela parecer quebrada.
   final bool clearOnSelect;
 
   @override

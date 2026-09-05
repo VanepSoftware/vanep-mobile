@@ -35,8 +35,6 @@ void main() {
     repository = DriverSearchRepositoryImpl(remote: remote);
   });
 
-  /// O ranking é do backend. Reordenar aqui desfaria a ordem por especificidade
-  /// e faria a lista mentir sobre quem atende mais de perto.
   test('preserves the order returned by the API', () async {
     when(() => remote.searchByPlace(any(), any())).thenAnswer(
       (_) async => readSearchPage(rankedPage),
@@ -121,8 +119,6 @@ void main() {
     expect(driver.available, isTrue);
   });
 
-  /// Privacidade: a resposta da busca não carrega endereço residencial, e a
-  /// entidade não tem onde guardar caso o backend um dia mande.
   test('the entity has no residential address field', () {
     final drivers = readSearchPage(const {
       'content': [

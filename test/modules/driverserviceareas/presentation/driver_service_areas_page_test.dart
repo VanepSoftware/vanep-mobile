@@ -91,8 +91,6 @@ void main() {
     expect(field.enabled, isFalse);
   });
 
-  /// A recusa do backend precisa chegar ao motorista sem apagar o que ele
-  /// escolheu — a seleção continua na tela para ele trocar.
   testWidgets('shows the backend message and keeps the selection', (
     tester,
   ) async {

@@ -11,8 +11,6 @@ void main() {
     });
   });
 
-  /// O backend cobra placeId XOR areaToken: mandar os dois, ou mandar o token
-  /// no campo do place, derruba o save inteiro.
   test('an already saved area travels as areaToken alone', () {
     expect(serviceAreaDraftToJson(testSavedQnl5Draft), {
       'areaToken': 'area-qnl5',

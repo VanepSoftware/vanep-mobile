@@ -59,8 +59,6 @@ void main() {
     await tester.pump();
   }
 
-  /// Numa busca, apagar o que a pessoa escolheu esconde o que ela pesquisou e
-  /// faz a tela parecer quebrada.
   testWidgets('keeps the chosen place in the field when asked to', (
     tester,
   ) async {
@@ -72,7 +70,6 @@ void main() {
     expect(field.controller?.text, 'Setor L Norte QNL 5');
   });
 
-  /// Na tela de áreas o campo é reaproveitado para a próxima região.
   testWidgets('clears the field when asked to', (tester) async {
     await tester.pumpWidget(harness(clearOnSelect: true));
 

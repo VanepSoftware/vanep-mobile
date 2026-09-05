@@ -140,7 +140,6 @@ void main() {
     expect(find.byType(ServiceAreasOnboardingBanner), findsNothing);
   });
 
-  /// Recusar é permitido: o onboarding é convite, não porteira.
   testWidgets('skipping keeps full access to the app', (tester) async {
     await tester.pumpWidget(
       harness(

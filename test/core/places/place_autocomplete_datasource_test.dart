@@ -124,8 +124,6 @@ void main() {
     expect(options.headers?['X-Goog-Api-Key'], 'android-key');
   });
 
-  /// Uma chave restrita por aplicação recusa a chamada sem estes headers: o SDK
-  /// nativo os anexa sozinho, a chamada HTTP direta precisa mandá-los.
   test('identifies the Android app to Google', () async {
     stubResponse(autocompleteResponseFixture);
 

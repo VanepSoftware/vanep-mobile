@@ -60,8 +60,6 @@ void main() {
     expect(find.text('Sugestões perto de você'), findsOneWidget);
   });
 
-  /// A caixa da home é gatilho, não filtro: filtrar aqui procuraria por NOME de
-  /// motorista, enquanto o usuário digita um lugar. Tocar leva para a busca real.
   testWidgets('tapping the search field opens the search screen', (
     tester,
   ) async {

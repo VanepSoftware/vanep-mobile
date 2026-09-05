@@ -78,7 +78,6 @@ void main() {
     expect(find.byType(TextField), findsOneWidget);
   });
 
-  /// A ordem é do backend: a tela renderiza como veio, sem reordenar.
   testWidgets('renders results in the order the API returned', (tester) async {
     seed(
       const DriverSearchState(
@@ -165,8 +164,6 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  /// Só a primeira palavra de cada região, separadas por ponto — o card é
-  /// estreito e o nome completo estouraria a linha.
   testWidgets('shows where the driver operates under the name', (tester) async {
     seed(
       const DriverSearchState(

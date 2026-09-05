@@ -25,8 +25,6 @@ void main() {
     );
   });
 
-  /// Um passo novo no backend não pode derrubar o app: ele é ignorado até a
-  /// versão que o entende chegar.
   test('an unknown step is ignored instead of breaking', () {
     final steps = OnboardingStep.listFromApi(const {
       'pendingSteps': ['SERVICE_AREA', 'SOMETHING_NEW'],

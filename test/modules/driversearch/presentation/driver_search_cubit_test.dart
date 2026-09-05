@@ -94,7 +94,6 @@ void main() {
     ),
   );
 
-  /// Falhar ao paginar não pode apagar o que já está na tela.
   blocTest<DriverSearchCubit, DriverSearchState>(
     'a failed page keeps the results already loaded',
     setUp: () {
