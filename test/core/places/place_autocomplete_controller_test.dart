@@ -85,6 +85,46 @@ void main() {
     ]);
   });
 
+  test('discards a response that lands after the query got too short', () async {
+    when(() => datasource.findSuggestions('qnl 5', any())).thenAnswer(
+      (_) async {
+        await Future<void>.delayed(const Duration(milliseconds: 60));
+        return const Ok([suggestion]);
+      },
+    );
+
+    final received = <List<PlaceSuggestion>>[];
+    void collect(Result<PlaceAutocompleteFailure, List<PlaceSuggestion>> result) {
+      final value = result.valueOrNull;
+      if (value != null) received.add(value);
+    }
+
+    controller.search('qnl 5', collect);
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+    controller.search('qn', collect);
+    await Future<void>.delayed(const Duration(milliseconds: 120));
+
+    expect(received, [const <PlaceSuggestion>[]]);
+  });
+
+  test('discards a response that lands after dispose', () async {
+    when(() => datasource.findSuggestions(any(), any())).thenAnswer(
+      (_) async {
+        await Future<void>.delayed(const Duration(milliseconds: 60));
+        return const Ok([suggestion]);
+      },
+    );
+
+    var answered = false;
+
+    controller.search('qnl 5', (_) => answered = true);
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+    controller.dispose();
+    await Future<void>.delayed(const Duration(milliseconds: 120));
+
+    expect(answered, isFalse);
+  });
+
   test('uses the same session token across a search', () async {
     when(() => datasource.findSuggestions(any(), any()))
         .thenAnswer((_) async => const Ok([suggestion]));

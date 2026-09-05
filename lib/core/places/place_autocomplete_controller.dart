@@ -31,11 +31,14 @@ class PlaceAutocompleteController {
   ) {
     _pending?.cancel();
     if (input.trim().length < minimumCharacters) {
+      _abandonRequestsInFlight();
       onResult(const Ok(<PlaceSuggestion>[]));
       return;
     }
     _pending = Timer(debounce, () => _dispatch(input.trim(), onResult));
   }
+
+  void _abandonRequestsInFlight() => _requestSequence++;
 
   Future<void> _dispatch(
     String input,
@@ -53,5 +56,8 @@ class PlaceAutocompleteController {
     return token;
   }
 
-  void dispose() => _pending?.cancel();
+  void dispose() {
+    _pending?.cancel();
+    _abandonRequestsInFlight();
+  }
 }
