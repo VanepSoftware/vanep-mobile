@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/ui/vanep_coming_soon.dart';
 import '../core/ui/vanep_screen_background.dart';
 import '../l10n/app_localizations.dart';
-import '../core/places/place_autocomplete_controller.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
 import '../modules/auth/domain/value_objects/onboarding_step.dart';
 import '../modules/auth/presentation/cubit/auth_cubit.dart';
@@ -20,14 +19,11 @@ const driverShellProfileTabIndex = 3;
 class DriverShell extends StatefulWidget {
   const DriverShell({
     required this.profile,
-    required this.placeAutocomplete,
     required this.openServiceAreas,
     super.key,
   });
 
   final UserProfile profile;
-
-  final PlaceAutocompleteController placeAutocomplete;
 
   final Future<void> Function(BuildContext context) openServiceAreas;
 

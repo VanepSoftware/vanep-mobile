@@ -5,9 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
-import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
-import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/driverserviceareas/presentation/widgets/service_areas_onboarding_banner.dart';
@@ -20,16 +17,6 @@ import 'package:vanep_mobile/shell/driver_shell.dart';
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
-
-class MockPlaceAutocompleteDataSource extends Mock
-    implements PlaceAutocompleteDataSource {}
-
-PlaceAutocompleteController buildAutocomplete() {
-  final datasource = MockPlaceAutocompleteDataSource();
-  when(() => datasource.findSuggestions(any(), any()))
-      .thenAnswer((_) async => const Ok([]));
-  return PlaceAutocompleteController(datasource: datasource);
-}
 
 Widget harness(
   DriverHomeCubit cubit,
@@ -55,7 +42,6 @@ Widget harness(
       ],
       child: DriverShell(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
-        placeAutocomplete: buildAutocomplete(),
         openServiceAreas:
             openServiceAreas ?? (_) async {},
       ),

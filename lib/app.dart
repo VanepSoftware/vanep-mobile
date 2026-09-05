@@ -67,7 +67,6 @@ class AuthGate extends StatelessWidget {
               ],
               child: DriverShell(
                 profile: session.profile,
-                placeAutocomplete: getIt<PlaceAutocompleteController>(),
                 openServiceAreas: openDriverServiceAreas,
               ),
             ),
@@ -109,17 +108,17 @@ Future<void> openDriverSearch(BuildContext context) async {
   autocomplete.dispose();
 }
 
-Future<void> openDriverServiceAreas(BuildContext context) {
-  return Navigator.of(context).push(
+Future<void> openDriverServiceAreas(BuildContext context) async {
+  final autocomplete = getIt<PlaceAutocompleteController>();
+  await Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => BlocProvider<DriverServiceAreasCubit>(
         create: (_) => getIt<DriverServiceAreasCubit>()..loadMyAreas(),
-        child: DriverServiceAreasPage(
-          autocomplete: getIt<PlaceAutocompleteController>(),
-        ),
+        child: DriverServiceAreasPage(autocomplete: autocomplete),
       ),
     ),
   );
+  autocomplete.dispose();
 }
 
 class SplashScreen extends StatelessWidget {
