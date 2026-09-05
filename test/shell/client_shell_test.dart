@@ -31,11 +31,23 @@ class MockDriverSearchCubit extends MockCubit<DriverSearchState>
 class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
 
-PlaceAutocompleteController buildAutocomplete() {
+class RecordingPlaceAutocompleteController extends PlaceAutocompleteController {
+  RecordingPlaceAutocompleteController({required super.datasource});
+
+  int disposals = 0;
+
+  @override
+  void dispose() {
+    disposals++;
+    super.dispose();
+  }
+}
+
+RecordingPlaceAutocompleteController buildAutocomplete() {
   final datasource = MockPlaceAutocompleteDataSource();
   when(() => datasource.findSuggestions(any(), any()))
       .thenAnswer((_) async => const Ok([]));
-  return PlaceAutocompleteController(datasource: datasource);
+  return RecordingPlaceAutocompleteController(datasource: datasource);
 }
 
 Widget _harness(
@@ -43,8 +55,9 @@ Widget _harness(
   AuthCubit authCubit,
   ProfileSummaryCubit profileSummaryCubit,
   DriverSearchCubit searchCubit,
-  PlaceAutocompleteController autocomplete,
-) {
+  PlaceAutocompleteController autocomplete, {
+  void Function()? onAutocompleteCreated,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -63,7 +76,10 @@ Widget _harness(
       ],
       child: ClientShell(
         profile: const FakeUserProfile(),
-        placeAutocomplete: autocomplete,
+        createPlaceAutocomplete: () {
+          onAutocompleteCreated?.call();
+          return autocomplete;
+        },
       ),
     ),
   );
@@ -79,7 +95,7 @@ void main() {
   });
 
   late MockDriverSearchCubit searchCubit;
-  late PlaceAutocompleteController autocomplete;
+  late RecordingPlaceAutocompleteController autocomplete;
 
   setUp(() {
     searchCubit = MockDriverSearchCubit();
@@ -181,5 +197,37 @@ void main() {
 
     verify(authCubit.refreshSessionProfile).called(1);
     verify(() => profileSummaryCubit.refresh(UserType.driver)).called(1);
+  });
+
+  testWidgets('keeps a single autocomplete across rebuilds', (tester) async {
+    var created = 0;
+
+    for (var rebuild = 0; rebuild < 3; rebuild++) {
+      await tester.pumpWidget(
+        _harness(
+          driversCubit,
+          authCubit,
+          profileSummaryCubit,
+          searchCubit,
+          autocomplete,
+          onAutocompleteCreated: () => created++,
+        ),
+      );
+    }
+
+    expect(created, 1);
+  });
+
+  testWidgets('disposes the autocomplete it owns when it leaves', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _harness(driversCubit, authCubit, profileSummaryCubit, searchCubit, autocomplete),
+    );
+    expect(autocomplete.disposals, 0);
+
+    await tester.pumpWidget(const SizedBox());
+
+    expect(autocomplete.disposals, 1);
   });
 }

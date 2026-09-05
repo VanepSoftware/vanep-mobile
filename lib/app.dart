@@ -78,7 +78,7 @@ class AuthGate extends StatelessWidget {
               ],
               child: ClientShell(
                 profile: session.profile,
-                placeAutocomplete: getIt<PlaceAutocompleteController>(),
+                createPlaceAutocomplete: () => getIt<PlaceAutocompleteController>(),
               ),
             ),
           },

@@ -19,13 +19,13 @@ const clientShellProfileTabIndex = 3;
 class ClientShell extends StatefulWidget {
   const ClientShell({
     required this.profile,
-    required this.placeAutocomplete,
+    required this.createPlaceAutocomplete,
     super.key,
   });
 
   final UserProfile profile;
 
-  final PlaceAutocompleteController placeAutocomplete;
+  final PlaceAutocompleteController Function() createPlaceAutocomplete;
 
   @override
   State<ClientShell> createState() => ClientShellState();
@@ -33,6 +33,20 @@ class ClientShell extends StatefulWidget {
 
 class ClientShellState extends State<ClientShell> {
   int selectedIndex = 0;
+
+  late final PlaceAutocompleteController placeAutocomplete;
+
+  @override
+  void initState() {
+    super.initState();
+    placeAutocomplete = widget.createPlaceAutocomplete();
+  }
+
+  @override
+  void dispose() {
+    placeAutocomplete.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +60,7 @@ class ClientShellState extends State<ClientShell> {
         index: selectedIndex,
         children: [
           DriversHomeTab(displayName: displayName),
-          DriverSearchPage(autocomplete: widget.placeAutocomplete),
+          DriverSearchPage(autocomplete: placeAutocomplete),
           VanepComingSoon(
             title: l10n.navNotifications,
             message: l10n.comingSoon,
