@@ -57,7 +57,7 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
     emit(
       result.fold(
         (failure) => loading.copyWith(
-          status: DriverSearchStatus.loaded,
+          status: DriverSearchStatus.loadMoreFailed,
           failure: failure,
         ),
         (page) => loading.copyWith(
@@ -68,5 +68,11 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
         ),
       ),
     );
+  }
+
+  Future<void> retryLoadMore() async {
+    if (state.status != DriverSearchStatus.loadMoreFailed) return;
+    emit(state.copyWith(status: DriverSearchStatus.loaded));
+    await loadMore();
   }
 }

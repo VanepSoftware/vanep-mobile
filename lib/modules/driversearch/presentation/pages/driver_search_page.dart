@@ -84,7 +84,8 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                 const SizedBox(height: 16),
                 if (state.status == DriverSearchStatus.searching)
                   const Center(child: CircularProgressIndicator()),
-                if (failure != null)
+                if (failure != null &&
+                    state.status == DriverSearchStatus.failed)
                   Text(
                     driverSearchFailureLabel(l10n, failure),
                     style: VanepTypography.cardSubtitle,
@@ -106,6 +107,25 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
                     child: Center(child: CircularProgressIndicator()),
+                  ),
+                if (failure != null &&
+                    state.status == DriverSearchStatus.loadMoreFailed)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Column(
+                      children: [
+                        Text(
+                          driverSearchFailureLabel(l10n, failure),
+                          style: VanepTypography.cardSubtitle,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        TextButton(
+                          onPressed: cubit.retryLoadMore,
+                          child: Text(l10n.driversRetryButton),
+                        ),
+                      ],
+                    ),
                   ),
               ],
             );

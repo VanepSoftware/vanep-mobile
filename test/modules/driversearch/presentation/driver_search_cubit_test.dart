@@ -115,8 +115,71 @@ void main() {
     expect: () => [
       isA<DriverSearchState>()
           .having((s) => s.results, 'results', hasLength(1))
-          .having((s) => s.failure, 'failure', DriverSearchFailure.network),
+          .having((s) => s.failure, 'failure', DriverSearchFailure.network)
+          .having((s) => s.canLoadMore, 'canLoadMore', isFalse),
     ],
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'a failed page is not re-requested by the next scroll',
+    setUp: () {
+      stubPage(0, firstPage);
+      when(
+        () => searchDriversByPlace(
+          any(),
+          sessionToken: any(named: 'sessionToken'),
+          page: 1,
+        ),
+      ).thenAnswer((_) async => const Err(DriverSearchFailure.network));
+    },
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.searchPlace('place-1', label: 'QNL 5');
+      await cubit.loadMore();
+      await cubit.loadMore();
+      await cubit.loadMore();
+    },
+    verify: (_) => verify(
+      () => searchDriversByPlace(
+        any(),
+        sessionToken: any(named: 'sessionToken'),
+        page: 1,
+      ),
+    ).called(1),
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'an explicit retry resumes the pagination that failed',
+    setUp: () {
+      stubPage(0, firstPage);
+      var attempts = 0;
+      when(
+        () => searchDriversByPlace(
+          any(),
+          sessionToken: any(named: 'sessionToken'),
+          page: 1,
+        ),
+      ).thenAnswer((_) async {
+        attempts += 1;
+        if (attempts == 1) {
+          return const Err<DriverSearchFailure, DriverSearchPage>(
+            DriverSearchFailure.network,
+          );
+        }
+        return const Ok<DriverSearchFailure, DriverSearchPage>(lastPage);
+      });
+    },
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.searchPlace('place-1', label: 'QNL 5');
+      await cubit.loadMore();
+      await cubit.retryLoadMore();
+    },
+    verify: (cubit) {
+      expect(cubit.state.status, DriverSearchStatus.loaded);
+      expect(cubit.state.results, hasLength(2));
+      expect(cubit.state.failure, isNull);
+    },
   );
 
   blocTest<DriverSearchCubit, DriverSearchState>(
