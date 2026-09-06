@@ -12,7 +12,9 @@ import 'modules/auth/presentation/cubit/auth_state.dart';
 import 'modules/auth/presentation/pages/welcome_page.dart';
 import 'modules/auth/domain/value_objects/user_type.dart';
 import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'core/places/place_autocomplete_controller.dart';
 import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'modules/driversearch/presentation/cubit/driver_search_cubit.dart';
 import 'modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'shell/client_shell.dart';
 import 'shell/driver_shell.dart';
@@ -70,8 +72,14 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<ProfileSummaryCubit>(
                   create: (_) => getIt<ProfileSummaryCubit>(),
                 ),
+                BlocProvider<DriverSearchCubit>(
+                  create: (_) => getIt<DriverSearchCubit>(),
+                ),
               ],
-              child: ClientShell(profile: session.profile),
+              child: ClientShell(
+                profile: session.profile,
+                createPlaceAutocomplete: () => getIt<PlaceAutocompleteController>(),
+              ),
             ),
           },
           _ => const WelcomePage(),

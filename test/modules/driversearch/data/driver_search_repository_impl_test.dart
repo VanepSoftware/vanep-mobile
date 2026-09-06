@@ -108,6 +108,7 @@ void main() {
 
     final driver = drivers.single;
     expect(driver.name, 'Fabio');
+    expect(driver.photoUrl, 'photo.png');
     expect(driver.rating, 4.5);
     expect(driver.basePrice, 75.0);
     expect(driver.experienceYears, 8);
