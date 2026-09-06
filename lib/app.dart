@@ -15,6 +15,9 @@ import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'core/places/place_autocomplete_controller.dart';
 import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'modules/driversearch/presentation/cubit/driver_search_cubit.dart';
+import 'modules/driversearch/presentation/pages/driver_search_page.dart';
+import 'modules/driverserviceareas/presentation/cubit/driver_service_areas_cubit.dart';
+import 'modules/driverserviceareas/presentation/pages/driver_service_areas_page.dart';
 import 'modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'shell/client_shell.dart';
 import 'shell/driver_shell.dart';
@@ -62,7 +65,10 @@ class AuthGate extends StatelessWidget {
                   create: (_) => getIt<ProfileSummaryCubit>(),
                 ),
               ],
-              child: DriverShell(profile: session.profile),
+              child: DriverShell(
+                profile: session.profile,
+                openServiceAreas: openDriverServiceAreas,
+              ),
             ),
             _ => MultiBlocProvider(
               providers: [
@@ -78,7 +84,7 @@ class AuthGate extends StatelessWidget {
               ],
               child: ClientShell(
                 profile: session.profile,
-                createPlaceAutocomplete: () => getIt<PlaceAutocompleteController>(),
+                openDriverSearch: openDriverSearch,
               ),
             ),
           },
@@ -87,6 +93,32 @@ class AuthGate extends StatelessWidget {
       },
     );
   }
+}
+
+Future<void> openDriverSearch(BuildContext context) async {
+  final autocomplete = getIt<PlaceAutocompleteController>();
+  await Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverSearchCubit>(
+        create: (_) => getIt<DriverSearchCubit>(),
+        child: DriverSearchPage(autocomplete: autocomplete),
+      ),
+    ),
+  );
+  autocomplete.dispose();
+}
+
+Future<void> openDriverServiceAreas(BuildContext context) async {
+  final autocomplete = getIt<PlaceAutocompleteController>();
+  await Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverServiceAreasCubit>(
+        create: (_) => getIt<DriverServiceAreasCubit>()..loadMyAreas(),
+        child: DriverServiceAreasPage(autocomplete: autocomplete),
+      ),
+    ),
+  );
+  autocomplete.dispose();
 }
 
 class SplashScreen extends StatelessWidget {

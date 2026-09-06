@@ -17,11 +17,11 @@
 
 > Não é executável neste repositório. Registrado aqui para o plano ficar completo; vira uma change própria em `vanep-api-java`.
 
-- [ ] 0.1 Propor a change no `vanep-api-java` com estas três mudanças
-- [ ] 0.2 `GET /api/drivers/search` aceita **um** `placeId` (+ `sessionToken` opcional) em vez de origem e destino
-- [ ] 0.3 Ordenar o resultado pela posição do `district_id` do motorista na lista de ancestrais do ponto; área de cidade inteira ordena por último; motorista com várias áreas casando fica com o **melhor** rank
-- [ ] 0.4 Teste de ordenação construindo os quatro níveis (`Conjunto J` → `QNL 5` → `Taguatinga` → cidade) e afirmando a ordem exata — sem isso a regressão passa despercebida com árvore rasa (R5 do design)
-- [ ] 0.5 `@Size(max = 10)` em `DriverServiceAreaRequestDTO.areas`, com mensagem em `messages_pt_BR.properties`
+- [x] 0.1 Propor a change no `vanep-api-java` com estas três mudanças
+- [x] 0.2 `GET /api/drivers/search` aceita **um** `placeId` (+ `sessionToken` opcional) em vez de origem e destino
+- [x] 0.3 Ordenar o resultado pela posição do `district_id` do motorista na lista de ancestrais do ponto; área de cidade inteira ordena por último; motorista com várias áreas casando fica com o **melhor** rank
+- [x] 0.4 Teste de ordenação construindo os quatro níveis (`Conjunto J` → `QNL 5` → `Taguatinga` → cidade) e afirmando a ordem exata — sem isso a regressão passa despercebida com árvore rasa (R5 do design)
+- [x] 0.5 `@Size(max = 10)` em `DriverServiceAreaRequestDTO.areas`, com mensagem em `messages_pt_BR.properties`
 - [ ] 0.6 Avisar aqui quando estiver deployado, para desbloquear as fases 4 e 5
 
 ## 1. Fase 1 — Shell do motorista e nav só com ícone (branch: `feat/1-driver-shell-icon-only-nav`)
@@ -77,8 +77,8 @@
 - [x] 3.11 Tela usando os widgets de `lib/core/ui/` (R10b) — buscar antes por padrão existente em `core/ui` e `core/design_system` (R10a); toda a copy em ARB (R10)
 - [x] 3.12 Marcar a sugestão de nível cidade como menos precisa, **sem bloquear** o salvamento — a autoridade é o backend (D5)
 - [x] 3.13 Teste de widget: mensagem pt-BR do backend aparece quando a cidade exige bairro, e a seleção continua na tela
-- [ ] 3.14 Ler `onboarding.pendingSteps` do `GET /api/user/me` para oferecer a tela após o primeiro login; **nunca** inferir o passo consultando as áreas (D7)
-- [ ] 3.15 Testes: passo pendente oferece a tela; recusar leva ao home do motorista com acesso completo; a tela abre pelo perfil a qualquer momento
+- [x] 3.14 Ler `onboarding.pendingSteps` do `GET /api/user/me` para oferecer a tela após o primeiro login; **nunca** inferir o passo consultando as áreas (D7)
+- [x] 3.15 Testes: passo pendente oferece a tela; recusar leva ao home do motorista com acesso completo; a tela abre pelo perfil a qualquer momento
 - [x] 3.16 Entrada permanente pelo perfil do motorista
 - [x] 3.17 Rodar `make lint` e `make test`
 - [ ] 3.18 **Parar e aguardar sua validação**; só então commitar e abrir PR
@@ -112,7 +112,7 @@
 
 ## 6. Encerramento
 
-- [ ] 6.1 Conferir que as 3 specs desta change foram cobertas pelas fases entregues
+- [x] 6.1 Conferir que as 3 specs desta change foram cobertas pelas fases entregues
 - [ ] 6.2 Rodar `make coverage` e conferir o mínimo do projeto
 - [ ] 6.3 Registrar na Q1 o que o relatório de billing mostrou depois do autocomplete real entrar no ar — procurar `Autocomplete Session Usage` a US$ 0; se aparecer só `Autocomplete Requests`, a sessão quebrou na fronteira entre chaves
 - [ ] 6.4 Anotar no checklist de release que o SHA-1 do keystore de **release** precisa entrar na chave Android antes de publicar, senão o autocomplete morre em produção com `403` (R4 do design)

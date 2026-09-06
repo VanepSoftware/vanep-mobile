@@ -21,7 +21,11 @@ class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
 
 const rankedResults = [
-  DriverSearchResult(token: 'd1', name: 'Exato QNL 5'),
+  DriverSearchResult(
+    token: 'd1',
+    name: 'Exato QNL 5',
+    serviceAreas: ['Brasília', 'Taguatinga Norte', 'QNL 5'],
+  ),
   DriverSearchResult(token: 'd2', name: 'Setor L Norte'),
   DriverSearchResult(token: 'd3', name: 'Taguatinga'),
   DriverSearchResult(token: 'd4', name: 'Cidade inteira'),
@@ -74,7 +78,6 @@ void main() {
     expect(find.byType(TextField), findsOneWidget);
   });
 
-  /// A ordem é do backend: a tela renderiza como veio, sem reordenar.
   testWidgets('renders results in the order the API returned', (tester) async {
     seed(
       const DriverSearchState(
@@ -159,5 +162,41 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
+  testWidgets('a failed page keeps the results and offers a retry', (
+    tester,
+  ) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loadMoreFailed,
+        results: rankedResults,
+        failure: DriverSearchFailure.network,
+      ),
+    );
+    when(() => cubit.retryLoadMore()).thenAnswer((_) async {});
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(find.text('Exato QNL 5'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+
+    await tester.tap(find.text('Tentar novamente'));
+    await tester.pumpAndSettle();
+
+    verify(() => cubit.retryLoadMore()).called(1);
+  });
+
+  testWidgets('shows where the driver operates under the name', (tester) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: rankedResults,
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(find.text('Brasília · Taguatinga · QNL'), findsOneWidget);
   });
 }

@@ -1,5 +1,5 @@
 import '../../../../core/result/result.dart';
-import '../entities/driver_search_result.dart';
+import '../entities/driver_search_page.dart';
 import '../failures/driver_search_failure.dart';
 import '../repositories/driver_search_repository.dart';
 
@@ -8,10 +8,11 @@ class SearchDriversByPlace {
 
   final DriverSearchRepository repository;
 
-  Future<Result<DriverSearchFailure, List<DriverSearchResult>>> call(
+  Future<Result<DriverSearchFailure, DriverSearchPage>> call(
     String placeId, {
     String? sessionToken,
+    int page = 0,
   }) {
-    return repository.searchByPlace(placeId, sessionToken);
+    return repository.searchByPlace(placeId, sessionToken, page: page);
   }
 }

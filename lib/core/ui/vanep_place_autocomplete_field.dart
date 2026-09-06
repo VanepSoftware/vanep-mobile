@@ -25,6 +25,7 @@ class VanepPlaceAutocompleteField extends StatefulWidget {
     required this.keyErrorLabel,
     required this.retryLabel,
     this.enabled = true,
+    this.clearOnSelect = true,
     super.key,
   });
 
@@ -36,6 +37,8 @@ class VanepPlaceAutocompleteField extends StatefulWidget {
   final String keyErrorLabel;
   final String retryLabel;
   final bool enabled;
+
+  final bool clearOnSelect;
 
   @override
   State<VanepPlaceAutocompleteField> createState() =>
@@ -73,7 +76,7 @@ class VanepPlaceAutocompleteFieldState
 
   void selectSuggestion(PlaceSuggestion suggestion) {
     final sessionToken = widget.controller.handOverSelection();
-    textController.clear();
+    textController.text = widget.clearOnSelect ? '' : suggestion.primaryText;
     setState(() {
       suggestions = const [];
       searched = false;

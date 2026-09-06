@@ -67,7 +67,10 @@ class PlaceAutocompleteDataSource {
           'includedRegionCodes': [placesRegionCode],
         },
         options: Options(
-          headers: {'X-Goog-Api-Key': environment.placesApiKeyFor(platform)},
+          headers: {
+            'X-Goog-Api-Key': environment.placesApiKeyFor(platform),
+            ...environment.placesAppHeadersFor(platform),
+          },
         ),
       );
       final body = response.data;

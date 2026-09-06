@@ -18,22 +18,61 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
       DriverSearchState(
         status: DriverSearchStatus.searching,
         searchedLabel: label,
+        placeId: placeId,
       ),
     );
-    final result = await searchDriversByPlace(placeId, sessionToken: sessionToken);
+    final result = await searchDriversByPlace(
+      placeId,
+      sessionToken: sessionToken,
+    );
     emit(
       result.fold(
         (failure) => DriverSearchState(
           status: DriverSearchStatus.failed,
           failure: failure,
           searchedLabel: label,
+          placeId: placeId,
         ),
-        (drivers) => DriverSearchState(
+        (page) => DriverSearchState(
           status: DriverSearchStatus.loaded,
-          results: drivers,
+          results: page.drivers,
           searchedLabel: label,
+          placeId: placeId,
+          nextPage: 1,
+          hasMore: !page.isLast,
         ),
       ),
     );
+  }
+
+  Future<void> loadMore() async {
+    if (!state.canLoadMore) return;
+    final placeId = state.placeId;
+    if (placeId == null) return;
+
+    final loading = state.copyWith(status: DriverSearchStatus.loadingMore);
+    emit(loading);
+
+    final result = await searchDriversByPlace(placeId, page: loading.nextPage);
+    emit(
+      result.fold(
+        (failure) => loading.copyWith(
+          status: DriverSearchStatus.loadMoreFailed,
+          failure: failure,
+        ),
+        (page) => loading.copyWith(
+          status: DriverSearchStatus.loaded,
+          results: [...loading.results, ...page.drivers],
+          nextPage: loading.nextPage + 1,
+          hasMore: !page.isLast,
+        ),
+      ),
+    );
+  }
+
+  Future<void> retryLoadMore() async {
+    if (state.status != DriverSearchStatus.loadMoreFailed) return;
+    emit(state.copyWith(status: DriverSearchStatus.loaded));
+    await loadMore();
   }
 }

@@ -1,4 +1,5 @@
 import '../value_objects/gender.dart';
+import '../value_objects/onboarding_step.dart';
 import '../value_objects/user_type.dart';
 
 abstract class UserProfile {
@@ -25,4 +26,6 @@ abstract class UserProfile {
   DateTime? get phoneChangeAvailableAt;
 
   DateTime? get emailChangeAvailableAt;
+
+  List<OnboardingStep> get pendingOnboardingSteps;
 }

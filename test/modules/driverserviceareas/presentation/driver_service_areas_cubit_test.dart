@@ -44,9 +44,6 @@ void main() {
     ],
   );
 
-  /// O token da região é da Vanep. Reenviá-lo como placeId faz o backend
-  /// perguntar ao Google por um id que ele nunca emitiu, e a tela responde
-  /// "não foi possível interpretar este local" ao salvar.
   blocTest<DriverServiceAreasCubit, DriverServiceAreasState>(
     'a saved area comes back identified by its token, never as a placeId',
     setUp: () => when(findMyServiceAreas.call).thenAnswer(
@@ -61,8 +58,6 @@ void main() {
     },
   );
 
-  /// Regiões já salvas não têm placeId: sem identidade própria, todas colidiriam
-  /// entre si e a lista carregada viria com um item só.
   blocTest<DriverServiceAreasCubit, DriverServiceAreasState>(
     'keeps distinct saved areas apart',
     setUp: () => when(findMyServiceAreas.call).thenAnswer(
@@ -73,7 +68,6 @@ void main() {
     verify: (cubit) => expect(cubit.state.drafts, hasLength(2)),
   );
 
-  /// O caso do bug: abrir a tela com uma região salva e acrescentar outra.
   blocTest<DriverServiceAreasCubit, DriverServiceAreasState>(
     'adding a new place next to a saved one keeps both',
     setUp: () => when(findMyServiceAreas.call).thenAnswer(
@@ -164,7 +158,6 @@ void main() {
     ],
   );
 
-  /// A tela não pode perder o que o motorista digitou por causa de uma recusa.
   blocTest<DriverServiceAreasCubit, DriverServiceAreasState>(
     'a rejected save keeps the drafts on screen',
     setUp: () => when(() => replaceMyServiceAreas.call(any())).thenAnswer(

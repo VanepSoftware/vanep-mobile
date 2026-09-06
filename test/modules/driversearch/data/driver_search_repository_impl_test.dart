@@ -18,6 +18,7 @@ DioException dioFailure(int? statusCode) {
 }
 
 const rankedPage = <String, dynamic>{
+  'last': true,
   'content': [
     {'token': 'driver-qnl5', 'name': 'Mais específico'},
     {'token': 'driver-taguatinga', 'name': 'Intermediário'},
@@ -34,8 +35,6 @@ void main() {
     repository = DriverSearchRepositoryImpl(remote: remote);
   });
 
-  /// O ranking é do backend. Reordenar aqui desfaria a ordem por especificidade
-  /// e faria a lista mentir sobre quem atende mais de perto.
   test('preserves the order returned by the API', () async {
     when(() => remote.searchByPlace(any(), any())).thenAnswer(
       (_) async => readSearchPage(rankedPage),
@@ -44,9 +43,14 @@ void main() {
     final result = await repository.searchByPlace('place-qnl5', null);
 
     expect(
-      result.valueOrNull?.map((driver) => driver.token).toList(),
+      result.valueOrNull?.drivers.map((driver) => driver.token).toList(),
       ['driver-qnl5', 'driver-taguatinga', 'driver-cidade'],
     );
+  });
+
+  test('reports whether there are more pages to load', () {
+    expect(readSearchPage(const {'content': <Object?>[], 'last': false}).isLast, isFalse);
+    expect(readSearchPage(const {'content': <Object?>[], 'last': true}).isLast, isTrue);
   });
 
   test('an empty page is an empty result, not a failure', () async {
@@ -56,7 +60,7 @@ void main() {
     final result = await repository.searchByPlace('place-qnl5', null);
 
     expect(result.isOk, isTrue);
-    expect(result.valueOrNull, isEmpty);
+    expect(result.valueOrNull?.drivers, isEmpty);
   });
 
   test('a rejected place is distinct from a rate limit', () async {
@@ -106,7 +110,7 @@ void main() {
       ],
     });
 
-    final driver = drivers.single;
+    final driver = drivers.drivers.single;
     expect(driver.name, 'Fabio');
     expect(driver.photoUrl, 'photo.png');
     expect(driver.rating, 4.5);
@@ -115,8 +119,6 @@ void main() {
     expect(driver.available, isTrue);
   });
 
-  /// Privacidade: a resposta da busca não carrega endereço residencial, e a
-  /// entidade não tem onde guardar caso o backend um dia mande.
   test('the entity has no residential address field', () {
     final drivers = readSearchPage(const {
       'content': [
@@ -124,7 +126,7 @@ void main() {
       ],
     });
 
-    expect(drivers.single.props, isNot(contains('Rua X')));
-    expect(drivers.single.props, isNot(contains('70000000')));
+    expect(drivers.drivers.single.props, isNot(contains('Rua X')));
+    expect(drivers.drivers.single.props, isNot(contains('70000000')));
   });
 }

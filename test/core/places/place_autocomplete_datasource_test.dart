@@ -124,6 +124,48 @@ void main() {
     expect(options.headers?['X-Goog-Api-Key'], 'android-key');
   });
 
+  test('identifies the Android app to Google', () async {
+    stubResponse(autocompleteResponseFixture);
+
+    await datasource.findSuggestions('qnl 5', 'session-1');
+
+    final options = verify(
+      () => dio.post<Map<String, dynamic>>(
+        any(),
+        data: any(named: 'data'),
+        options: captureAny(named: 'options'),
+      ),
+    ).captured.single as Options;
+
+    expect(options.headers?['X-Android-Package'], 'com.vanep.vanep_mobile');
+    expect(options.headers?['X-Android-Cert'], 'ABCDEF12');
+  });
+
+  test('identifies the iOS app to Google', () async {
+    final iosDatasource = PlaceAutocompleteDataSource(
+      dio: dio,
+      environment: testEnvironment,
+      platform: TargetPlatform.iOS,
+    );
+    stubResponse(autocompleteResponseFixture);
+
+    await iosDatasource.findSuggestions('qnl 5', 'session-1');
+
+    final options = verify(
+      () => dio.post<Map<String, dynamic>>(
+        any(),
+        data: any(named: 'data'),
+        options: captureAny(named: 'options'),
+      ),
+    ).captured.single as Options;
+
+    expect(
+      options.headers?['X-Ios-Bundle-Identifier'],
+      'com.vanep.vanepMobile',
+    );
+    expect(options.headers?['X-Android-Package'], isNull);
+  });
+
   test('a rejected key is distinct from a network failure', () async {
     stubFailure(403);
 
