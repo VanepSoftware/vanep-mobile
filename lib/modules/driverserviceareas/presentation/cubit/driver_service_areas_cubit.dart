@@ -6,9 +6,6 @@ import '../../domain/usecases/find_my_service_areas.dart';
 import '../../domain/usecases/replace_my_service_areas.dart';
 import 'driver_service_areas_state.dart';
 
-/// Região já salva volta identificada pelo token dela, não por um placeId: o
-/// token é da Vanep, e mandá-lo como place faria o backend perguntar ao Google
-/// por um id que o Google nunca emitiu.
 ServiceAreaDraft draftFromSavedArea(ServiceArea area) {
   return ServiceAreaDraft(
     areaToken: area.token,
