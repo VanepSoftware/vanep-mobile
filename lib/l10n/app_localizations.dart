@@ -589,6 +589,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get profileEditRetry;
+
+  /// No description provided for @serviceAreasTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where you operate'**
+  String get serviceAreasTitle;
+
+  /// No description provided for @serviceAreasSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Register up to 10 regions. The more specific, the easier a client finds you.'**
+  String get serviceAreasSubtitle;
+
+  /// No description provided for @serviceAreasSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a neighbourhood, block or region'**
+  String get serviceAreasSearchHint;
+
+  /// No description provided for @serviceAreasEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No region registered yet.'**
+  String get serviceAreasEmpty;
+
+  /// No description provided for @serviceAreasMaxReached.
+  ///
+  /// In en, this message translates to:
+  /// **'You reached the maximum of 10 regions.'**
+  String get serviceAreasMaxReached;
+
+  /// No description provided for @serviceAreasSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save regions'**
+  String get serviceAreasSave;
+
+  /// No description provided for @serviceAreasSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Regions saved.'**
+  String get serviceAreasSaved;
+
+  /// No description provided for @serviceAreasRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove region'**
+  String get serviceAreasRemove;
+
+  /// No description provided for @serviceAreasCityWideHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole city — not very specific'**
+  String get serviceAreasCityWideHint;
+
+  /// No description provided for @serviceAreasOnboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us where you operate'**
+  String get serviceAreasOnboardingTitle;
+
+  /// No description provided for @serviceAreasOnboardingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Without it, no client finds you in search. It takes less than a minute.'**
+  String get serviceAreasOnboardingBody;
+
+  /// No description provided for @serviceAreasOnboardingStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Set it up now'**
+  String get serviceAreasOnboardingStart;
+
+  /// No description provided for @serviceAreasOnboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get serviceAreasOnboardingSkip;
+
+  /// No description provided for @serviceAreaFailureDistrictRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This city requires choosing a neighbourhood or region, not the whole city.'**
+  String get serviceAreaFailureDistrictRequired;
+
+  /// No description provided for @serviceAreaFailureTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'You can register at most 10 regions.'**
+  String get serviceAreaFailureTooMany;
+
+  /// No description provided for @serviceAreaFailurePlaceNotResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'This place could not be interpreted. Please choose another suggestion.'**
+  String get serviceAreaFailurePlaceNotResolved;
+
+  /// No description provided for @serviceAreaFailureRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many lookups. Please wait a moment and try again.'**
+  String get serviceAreaFailureRateLimited;
+
+  /// No description provided for @serviceAreaFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get serviceAreaFailureNetwork;
+
+  /// No description provided for @serviceAreaFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get serviceAreaFailureUnexpected;
+
+  /// No description provided for @placeAutocompleteNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No place found.'**
+  String get placeAutocompleteNoResults;
+
+  /// No description provided for @placeAutocompleteNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not search places. Please try again.'**
+  String get placeAutocompleteNetworkError;
+
+  /// No description provided for @placeAutocompleteKeyError.
+  ///
+  /// In en, this message translates to:
+  /// **'Place search is unavailable right now.'**
+  String get placeAutocompleteKeyError;
+
+  /// No description provided for @placeAutocompleteRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get placeAutocompleteRetry;
+
+  /// No description provided for @driverSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a driver'**
+  String get driverSearchTitle;
+
+  /// No description provided for @driverSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Address or school'**
+  String get driverSearchHint;
+
+  /// No description provided for @driverSearchEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No driver covers this place yet.'**
+  String get driverSearchEmpty;
+
+  /// No description provided for @driverSearchPlaceNotResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'This place could not be interpreted. Please choose another suggestion.'**
+  String get driverSearchPlaceNotResolved;
+
+  /// No description provided for @driverSearchRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many searches. Please wait a moment and try again.'**
+  String get driverSearchRateLimited;
+
+  /// No description provided for @driverSearchNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get driverSearchNetworkError;
+
+  /// No description provided for @driverSearchUnexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get driverSearchUnexpectedError;
+
+  /// No description provided for @driverSearchCoversWholeCity.
+  ///
+  /// In en, this message translates to:
+  /// **'Covers the whole city'**
+  String get driverSearchCoversWholeCity;
+
+  /// No description provided for @profileServiceAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'Where you operate'**
+  String get profileServiceAreas;
 }
 
 class _AppLocalizationsDelegate

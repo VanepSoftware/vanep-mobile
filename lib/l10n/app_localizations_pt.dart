@@ -300,4 +300,114 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get profileEditRetry => 'Tentar novamente';
+
+  @override
+  String get serviceAreasTitle => 'Onde você atende';
+
+  @override
+  String get serviceAreasSubtitle =>
+      'Cadastre até 10 regiões. Quanto mais específico, mais fácil um cliente te encontrar.';
+
+  @override
+  String get serviceAreasSearchHint => 'Buscar bairro, quadra ou região';
+
+  @override
+  String get serviceAreasEmpty => 'Nenhuma região cadastrada ainda.';
+
+  @override
+  String get serviceAreasMaxReached => 'Você atingiu o máximo de 10 regiões.';
+
+  @override
+  String get serviceAreasSave => 'Salvar regiões';
+
+  @override
+  String get serviceAreasSaved => 'Regiões salvas.';
+
+  @override
+  String get serviceAreasRemove => 'Remover região';
+
+  @override
+  String get serviceAreasCityWideHint => 'Cidade inteira — pouco específico';
+
+  @override
+  String get serviceAreasOnboardingTitle => 'Falta dizer onde você atende';
+
+  @override
+  String get serviceAreasOnboardingBody =>
+      'Sem isso, nenhum cliente encontra você na busca. Leva menos de um minuto.';
+
+  @override
+  String get serviceAreasOnboardingStart => 'Cadastrar agora';
+
+  @override
+  String get serviceAreasOnboardingSkip => 'Depois';
+
+  @override
+  String get serviceAreaFailureDistrictRequired =>
+      'Esta cidade exige escolher um bairro ou região, não a cidade inteira.';
+
+  @override
+  String get serviceAreaFailureTooMany =>
+      'Você pode cadastrar no máximo 10 regiões.';
+
+  @override
+  String get serviceAreaFailurePlaceNotResolved =>
+      'Não foi possível interpretar este local. Escolha outra sugestão.';
+
+  @override
+  String get serviceAreaFailureRateLimited =>
+      'Muitas consultas. Aguarde um momento e tente novamente.';
+
+  @override
+  String get serviceAreaFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get serviceAreaFailureUnexpected =>
+      'Algo deu errado. Tente novamente.';
+
+  @override
+  String get placeAutocompleteNoResults => 'Nenhum lugar encontrado.';
+
+  @override
+  String get placeAutocompleteNetworkError =>
+      'Não foi possível buscar lugares. Tente novamente.';
+
+  @override
+  String get placeAutocompleteKeyError =>
+      'A busca de lugares está indisponível no momento.';
+
+  @override
+  String get placeAutocompleteRetry => 'Tentar novamente';
+
+  @override
+  String get driverSearchTitle => 'Buscar motorista';
+
+  @override
+  String get driverSearchHint => 'Endereço ou escola';
+
+  @override
+  String get driverSearchEmpty => 'Nenhum motorista atende este local ainda.';
+
+  @override
+  String get driverSearchPlaceNotResolved =>
+      'Não foi possível interpretar este local. Escolha outra sugestão.';
+
+  @override
+  String get driverSearchRateLimited =>
+      'Muitas buscas. Aguarde um momento e tente novamente.';
+
+  @override
+  String get driverSearchNetworkError =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get driverSearchUnexpectedError =>
+      'Algo deu errado na busca. Tente novamente.';
+
+  @override
+  String get driverSearchCoversWholeCity => 'Atende a cidade inteira';
+
+  @override
+  String get profileServiceAreas => 'Onde você atende';
 }

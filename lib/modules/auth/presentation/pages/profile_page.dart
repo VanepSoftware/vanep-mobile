@@ -7,6 +7,9 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/ui/vanep_confirm_dialog.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/builders/profile_menu_builder.dart';
+import '../../../../core/places/place_autocomplete_controller.dart';
+import '../../../driverserviceareas/presentation/cubit/driver_service_areas_cubit.dart';
+import '../../../driverserviceareas/presentation/pages/driver_service_areas_page.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/value_objects/profile_menu_id.dart';
 import '../cubit/auth_cubit.dart';
@@ -103,6 +106,17 @@ Future<void> handleProfileMenuSelection(
           ),
         ),
       );
+    case ProfileMenuId.serviceAreas:
+      final autocomplete = getIt<PlaceAutocompleteController>();
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<DriverServiceAreasCubit>()..loadMyAreas(),
+            child: DriverServiceAreasPage(autocomplete: autocomplete),
+          ),
+        ),
+      );
+      autocomplete.dispose();
     case ProfileMenuId.signOut:
       await confirmAndSignOut(context);
     case ProfileMenuId.addresses:
