@@ -54,7 +54,7 @@ class DriverShellState extends State<DriverShell> {
           children: [
             if (shouldOfferServiceAreas)
               ServiceAreasOnboardingBanner(
-                onStart: () => widget.openServiceAreas(context),
+                onStart: () => startServiceAreasOnboarding(context),
                 onSkip: () => setState(() => onboardingDismissed = true),
               ),
             Expanded(
@@ -99,6 +99,12 @@ class DriverShellState extends State<DriverShell> {
         ),
       ),
     );
+  }
+
+  Future<void> startServiceAreasOnboarding(BuildContext context) async {
+    await widget.openServiceAreas(context);
+    if (!mounted) return;
+    await this.context.read<AuthCubit>().refreshSessionProfile();
   }
 
   void selectShellTab(int index) {

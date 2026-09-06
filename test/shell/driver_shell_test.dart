@@ -174,4 +174,23 @@ void main() {
 
     expect(opened, isTrue);
   });
+
+  testWidgets('rereads the pending steps after the areas screen closes', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      harness(
+        cubit,
+        authCubit,
+        profileSummaryCubit,
+        pendingSteps: const [OnboardingStep.serviceArea],
+        openServiceAreas: (_) async {},
+      ),
+    );
+
+    await tester.tap(find.text('Cadastrar agora'));
+    await tester.pumpAndSettle();
+
+    verify(() => authCubit.refreshSessionProfile()).called(1);
+  });
 }
