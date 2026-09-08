@@ -8,10 +8,19 @@ import 'package:vanep_mobile/app.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
+import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/shell/client_shell.dart';
+import 'package:vanep_mobile/shell/driver_shell.dart';
 
 import 'modules/auth/auth_fixtures.dart';
 import 'modules/auth/presentation/auth_presentation_mocks.dart';
@@ -32,6 +41,12 @@ Widget _harness(AuthCubit cubit) {
     home: BlocProvider<AuthCubit>.value(value: cubit, child: const AuthGate()),
   );
 }
+
+class MockDriverSearchCubit extends MockCubit<DriverSearchState>
+    implements DriverSearchCubit {}
+
+class MockPlaceAutocompleteDataSource extends Mock
+    implements PlaceAutocompleteDataSource {}
 
 void main() {
   late MockAuthCubit cubit;
@@ -65,9 +80,7 @@ void main() {
     expect(find.text('Continuar'), findsOneWidget);
   });
 
-  testWidgets('shows the client home shell when authenticated', (
-    tester,
-  ) async {
+  testWidgets('routes a client session to the client shell', (tester) async {
     final driversCubit = MockDriversCubit();
     final profileSummaryCubit = MockProfileSummaryCubit();
     whenListen(
@@ -84,18 +97,68 @@ void main() {
       initialState: const ProfileSummaryState(),
     );
     when(() => driversCubit.loadRecentDrivers()).thenAnswer((_) async {});
+    final searchCubit = MockDriverSearchCubit();
+    whenListen(
+      searchCubit,
+      const Stream<DriverSearchState>.empty(),
+      initialState: const DriverSearchState(),
+    );
+    final autocompleteDatasource = MockPlaceAutocompleteDataSource();
+    when(() => autocompleteDatasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<DriversCubit>(() => driversCubit)
-      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
+      ..registerFactory<DriverSearchCubit>(() => searchCubit)
+      ..registerFactory<PlaceAutocompleteController>(
+        () => PlaceAutocompleteController(datasource: autocompleteDatasource),
+      );
     addTearDown(getIt.reset);
 
-    final state = AuthAuthenticated(FakeAuthSession());
+    final state = AuthAuthenticated(
+      FakeAuthSession(
+        profile: const FakeUserProfile(type: UserType.client),
+      ),
+    );
     when(() => cubit.state).thenReturn(state);
     whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);
 
     await tester.pumpWidget(_harness(cubit));
 
-    expect(find.text('Olá, Ana!'), findsOneWidget);
+    expect(find.byType(ClientShell), findsOneWidget);
+    expect(find.byType(DriverShell), findsNothing);
     expect(find.text('Sugestões perto de você'), findsOneWidget);
+  });
+
+  testWidgets('routes a driver session to the driver shell', (tester) async {
+    final profileSummaryCubit = MockProfileSummaryCubit();
+    whenListen(
+      profileSummaryCubit,
+      const Stream<ProfileSummaryState>.empty(),
+      initialState: const ProfileSummaryState(),
+    );
+    final autocompleteDatasource = MockPlaceAutocompleteDataSource();
+    when(() => autocompleteDatasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
+    getIt
+      ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
+      ..registerFactory<PlaceAutocompleteController>(
+        () => PlaceAutocompleteController(datasource: autocompleteDatasource),
+      );
+    addTearDown(getIt.reset);
+
+    final state = AuthAuthenticated(
+      FakeAuthSession(
+        profile: const FakeUserProfile(type: UserType.driver),
+      ),
+    );
+    when(() => cubit.state).thenReturn(state);
+    whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);
+
+    await tester.pumpWidget(_harness(cubit));
+
+    expect(find.byType(DriverShell), findsOneWidget);
+    expect(find.byType(ClientShell), findsNothing);
   });
 }

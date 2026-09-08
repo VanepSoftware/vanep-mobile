@@ -113,7 +113,7 @@ void main() {
     when(() => cubit.state).thenReturn(
       readyState(
         profile: FakeUserProfile(
-          nameChangeAvailableAt: DateTime(2026, 9, 1, 10),
+          nameChangeAvailableAt: DateTime.now().add(const Duration(days: 30)),
         ),
       ),
     );

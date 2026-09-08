@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/ui/vanep_greeting_header.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../cubit/drivers_cubit.dart';
 import '../widgets/drivers_home_body.dart';
 import '../widgets/drivers_search_field.dart';
 
 class DriversHomeTab extends StatelessWidget {
-  const DriversHomeTab({required this.displayName, super.key});
+  const DriversHomeTab({
+    required this.displayName,
+    required this.onSearchTapped,
+    super.key,
+  });
 
   final String displayName;
+
+  final VoidCallback onSearchTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +29,8 @@ class DriversHomeTab extends StatelessWidget {
           VanepGreetingHeader(displayName: displayName),
           const SizedBox(height: 20),
           DriversSearchField(
-            hint: l10n.driversSearchHint,
-            onChanged: (query) => context.read<DriversCubit>().search(query),
+            hint: l10n.driverSearchHint,
+            onTap: onSearchTapped,
           ),
           const SizedBox(height: 24),
           Text(

@@ -11,6 +11,11 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';
@@ -19,10 +24,24 @@ import '../modules/drivers/drivers_fixtures.dart';
 import '../modules/drivers/presentation/drivers_presentation_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 
+class MockDriverSearchCubit extends MockCubit<DriverSearchState>
+    implements DriverSearchCubit {}
+
+class MockPlaceAutocompleteDataSource extends Mock
+    implements PlaceAutocompleteDataSource {}
+
+PlaceAutocompleteController buildAutocomplete() {
+  final datasource = MockPlaceAutocompleteDataSource();
+  when(() => datasource.findSuggestions(any(), any()))
+      .thenAnswer((_) async => const Ok([]));
+  return PlaceAutocompleteController(datasource: datasource);
+}
+
 Widget _harness(
   DriversCubit driversCubit,
   AuthCubit authCubit,
   ProfileSummaryCubit profileSummaryCubit,
+  Future<void> Function(BuildContext)? openDriverSearch,
 ) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -39,7 +58,10 @@ Widget _harness(
         BlocProvider<DriversCubit>.value(value: driversCubit),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
       ],
-      child: const ClientShell(profile: FakeUserProfile()),
+      child: ClientShell(
+        profile: const FakeUserProfile(),
+        openDriverSearch: openDriverSearch ?? (_) async {},
+      ),
     ),
   );
 }
@@ -83,7 +105,7 @@ void main() {
 
   testWidgets('starts on the home tab with the greeting', (tester) async {
     await tester.pumpWidget(
-      _harness(driversCubit, authCubit, profileSummaryCubit),
+      _harness(driversCubit, authCubit, profileSummaryCubit, null),
     );
 
     expect(find.text('Olá, Ana!'), findsOneWidget);
@@ -95,7 +117,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      _harness(driversCubit, authCubit, profileSummaryCubit),
+      _harness(driversCubit, authCubit, profileSummaryCubit, null),
     );
 
     await tester.tap(find.bySemanticsLabel('Vans'));
@@ -104,11 +126,30 @@ void main() {
     expect(find.text('Em breve'), findsOneWidget);
   });
 
+  testWidgets('tapping the home search field opens the search page', (
+    tester,
+  ) async {
+    var opened = false;
+    await tester.pumpWidget(
+      _harness(
+        driversCubit,
+        authCubit,
+        profileSummaryCubit,
+        (_) async => opened = true,
+      ),
+    );
+
+    await tester.tap(find.byType(TextField));
+    await tester.pumpAndSettle();
+
+    expect(opened, isTrue);
+  });
+
   testWidgets('refreshes session profile and summary when opening profile tab', (
     tester,
   ) async {
     await tester.pumpWidget(
-      _harness(driversCubit, authCubit, profileSummaryCubit),
+      _harness(driversCubit, authCubit, profileSummaryCubit, null),
     );
 
     await tester.tap(find.bySemanticsLabel('Perfil'));
@@ -126,7 +167,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      _harness(driversCubit, authCubit, profileSummaryCubit),
+      _harness(driversCubit, authCubit, profileSummaryCubit, null),
     );
 
     await tester.tap(find.bySemanticsLabel('Perfil'));

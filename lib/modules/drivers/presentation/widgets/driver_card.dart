@@ -7,10 +7,17 @@ import '../../domain/entities/driver.dart';
 import 'driver_avatar.dart';
 
 class DriverCard extends StatelessWidget {
-  const DriverCard({required this.driver, this.onTap, super.key});
+  const DriverCard({
+    required this.driver,
+    this.onTap,
+    this.coverage = const [],
+    super.key,
+  });
 
   final Driver driver;
   final VoidCallback? onTap;
+
+  final List<String> coverage;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +40,15 @@ class DriverCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(driver.name, style: VanepTypography.cardTitle),
+                    if (coverage.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        formatDriverCoverage(coverage),
+                        style: VanepTypography.cardSubtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                     if (driver.experienceYears != null) ...[
                       const SizedBox(height: 4),
                       Text(
@@ -55,6 +71,17 @@ class DriverCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String formatDriverCoverage(List<String> coverage) {
+  return coverage.map(firstWordOf).where((word) => word.isNotEmpty).join(' · ');
+}
+
+String firstWordOf(String region) {
+  final trimmed = region.trim();
+  if (trimmed.isEmpty) return '';
+  final separator = trimmed.indexOf(' ');
+  return separator == -1 ? trimmed : trimmed.substring(0, separator);
 }
 
 class DriverRatingRow extends StatelessWidget {

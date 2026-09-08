@@ -10,9 +10,17 @@ import 'l10n/app_localizations.dart';
 import 'modules/auth/presentation/cubit/auth_cubit.dart';
 import 'modules/auth/presentation/cubit/auth_state.dart';
 import 'modules/auth/presentation/pages/welcome_page.dart';
+import 'modules/auth/domain/value_objects/user_type.dart';
+import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'core/places/place_autocomplete_controller.dart';
 import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'modules/driversearch/presentation/cubit/driver_search_cubit.dart';
+import 'modules/driversearch/presentation/pages/driver_search_page.dart';
+import 'modules/driverserviceareas/presentation/cubit/driver_service_areas_cubit.dart';
+import 'modules/driverserviceareas/presentation/pages/driver_service_areas_page.dart';
 import 'modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'shell/client_shell.dart';
+import 'shell/driver_shell.dart';
 
 class VanepApp extends StatelessWidget {
   const VanepApp({super.key});
@@ -47,22 +55,70 @@ class AuthGate extends StatelessWidget {
       builder: (context, state) {
         return switch (state) {
           AuthUnknown() => const SplashScreen(),
-          AuthAuthenticated(:final session) => MultiBlocProvider(
-            providers: [
-              BlocProvider<DriversCubit>(
-                create: (_) => getIt<DriversCubit>()..loadRecentDrivers(),
+          AuthAuthenticated(:final session) => switch (session.profile.type) {
+            UserType.driver => MultiBlocProvider(
+              providers: [
+                BlocProvider<DriverHomeCubit>(
+                  create: (_) => getIt<DriverHomeCubit>(),
+                ),
+                BlocProvider<ProfileSummaryCubit>(
+                  create: (_) => getIt<ProfileSummaryCubit>(),
+                ),
+              ],
+              child: DriverShell(
+                profile: session.profile,
+                openServiceAreas: openDriverServiceAreas,
               ),
-              BlocProvider<ProfileSummaryCubit>(
-                create: (_) => getIt<ProfileSummaryCubit>(),
+            ),
+            _ => MultiBlocProvider(
+              providers: [
+                BlocProvider<DriversCubit>(
+                  create: (_) => getIt<DriversCubit>()..loadRecentDrivers(),
+                ),
+                BlocProvider<ProfileSummaryCubit>(
+                  create: (_) => getIt<ProfileSummaryCubit>(),
+                ),
+                BlocProvider<DriverSearchCubit>(
+                  create: (_) => getIt<DriverSearchCubit>(),
+                ),
+              ],
+              child: ClientShell(
+                profile: session.profile,
+                openDriverSearch: openDriverSearch,
               ),
-            ],
-            child: ClientShell(profile: session.profile),
-          ),
+            ),
+          },
           _ => const WelcomePage(),
         };
       },
     );
   }
+}
+
+Future<void> openDriverSearch(BuildContext context) async {
+  final autocomplete = getIt<PlaceAutocompleteController>();
+  await Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverSearchCubit>(
+        create: (_) => getIt<DriverSearchCubit>(),
+        child: DriverSearchPage(autocomplete: autocomplete),
+      ),
+    ),
+  );
+  autocomplete.dispose();
+}
+
+Future<void> openDriverServiceAreas(BuildContext context) async {
+  final autocomplete = getIt<PlaceAutocompleteController>();
+  await Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverServiceAreasCubit>(
+        create: (_) => getIt<DriverServiceAreasCubit>()..loadMyAreas(),
+        child: DriverServiceAreasPage(autocomplete: autocomplete),
+      ),
+    ),
+  );
+  autocomplete.dispose();
 }
 
 class SplashScreen extends StatelessWidget {

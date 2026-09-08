@@ -5,10 +5,13 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'app.dart';
 import 'core/di/service_locator.dart';
 import 'core/environment/environment.dart';
+import 'core/places/places_container.dart';
 import 'modules/auth/auth_container.dart';
 import 'modules/auth/data/datasources/auth_local_datasource.dart';
 import 'modules/driver/driver_container.dart';
+import 'modules/driverserviceareas/driver_service_areas_container.dart';
 import 'modules/drivers/drivers_container.dart';
+import 'modules/driversearch/driver_search_container.dart';
 import 'modules/profile/profile_container.dart';
 
 Future<void> main() async {
@@ -23,6 +26,9 @@ Future<void> main() async {
   registerDriverDependencies(getIt);
   registerDriverHomeDependencies(getIt);
   registerProfileDependencies(getIt);
+  registerPlacesDependencies(getIt);
+  registerDriverServiceAreasDependencies(getIt);
+  registerDriverSearchDependencies(getIt);
 
   runApp(const VanepApp());
 }

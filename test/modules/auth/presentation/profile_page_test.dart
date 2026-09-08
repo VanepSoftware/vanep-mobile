@@ -10,6 +10,7 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
@@ -23,6 +24,9 @@ import 'auth_presentation_mocks.dart';
 
 class ClientProfile implements UserProfile {
   const ClientProfile();
+
+  @override
+  List<OnboardingStep> get pendingOnboardingSteps => const [];
 
   @override
   String get token => 'client-token';
@@ -189,6 +193,8 @@ void main() {
     await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
 
     await tester.scrollUntilVisible(find.text('Sair'), 200);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Sair'));
     await tester.tap(find.text('Sair'));
     await tester.pumpAndSettle();
 
@@ -213,6 +219,8 @@ void main() {
     await tester.pumpWidget(profileHarness(cubit, const FakeUserProfile()));
 
     await tester.scrollUntilVisible(find.text('Sair'), 200);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Sair'));
     await tester.tap(find.text('Sair'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Cancelar'));

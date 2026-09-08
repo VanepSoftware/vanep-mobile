@@ -213,6 +213,7 @@ String profileMenuLabel(ProfileMenuId id, AppLocalizations l10n) {
     ProfileMenuId.vans => l10n.profileVans,
     ProfileMenuId.contracts => l10n.profileContracts,
     ProfileMenuId.professionalData => l10n.profileProfessionalData,
+    ProfileMenuId.serviceAreas => l10n.profileServiceAreas,
     ProfileMenuId.assistantInvite => l10n.profileAssistantInvite,
     ProfileMenuId.settings => l10n.profileSettings,
     ProfileMenuId.privacySecurity => l10n.profilePrivacySecurity,
@@ -222,6 +223,7 @@ String profileMenuLabel(ProfileMenuId id, AppLocalizations l10n) {
 
 IconData profileMenuIcon(ProfileMenuId id) {
   return switch (id) {
+    ProfileMenuId.serviceAreas => Icons.map_outlined,
     ProfileMenuId.personalData => Icons.person_outline,
     ProfileMenuId.addresses => Icons.location_on_outlined,
     ProfileMenuId.paymentMethods => Icons.credit_card_outlined,

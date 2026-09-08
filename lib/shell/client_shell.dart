@@ -15,9 +15,15 @@ import 'client_bottom_nav.dart';
 const clientShellProfileTabIndex = 3;
 
 class ClientShell extends StatefulWidget {
-  const ClientShell({required this.profile, super.key});
+  const ClientShell({
+    required this.profile,
+    required this.openDriverSearch,
+    super.key,
+  });
 
   final UserProfile profile;
+
+  final Future<void> Function(BuildContext context) openDriverSearch;
 
   @override
   State<ClientShell> createState() => ClientShellState();
@@ -37,7 +43,10 @@ class ClientShellState extends State<ClientShell> {
       body: IndexedStack(
         index: selectedIndex,
         children: [
-          DriversHomeTab(displayName: displayName),
+          DriversHomeTab(
+            displayName: displayName,
+            onSearchTapped: () => widget.openDriverSearch(context),
+          ),
           VanepComingSoon(title: l10n.navVans, message: l10n.comingSoon),
           VanepComingSoon(
             title: l10n.navNotifications,

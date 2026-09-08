@@ -79,39 +79,26 @@ class VanepNavButton extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
+      label: item.label,
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: selected
-                      ? VanepColors.navSelectedSurface
-                      : Colors.transparent,
-                ),
-                child: Icon(
-                  selected ? item.selectedIcon : item.icon,
-                  color: color,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                item.label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                  color: color,
-                ),
-              ),
-            ],
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: selected
+                  ? VanepColors.navSelectedSurface
+                  : Colors.transparent,
+            ),
+            child: Icon(
+              selected ? item.selectedIcon : item.icon,
+              color: color,
+            ),
           ),
         ),
       ),

@@ -6,6 +6,7 @@ enum ProfileMenuId {
   vans,
   contracts,
   professionalData,
+  serviceAreas,
   assistantInvite,
   settings,
   privacySecurity,

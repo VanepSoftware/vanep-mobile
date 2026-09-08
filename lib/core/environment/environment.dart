@@ -1,4 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+String normalizeCertFingerprint(String sha1) {
+  return sha1.replaceAll(':', '').replaceAll(' ', '').toUpperCase();
+}
 
 class Environment {
   const Environment({
@@ -6,6 +11,11 @@ class Environment {
     required this.oauthClientId,
     required this.oauthRedirectUri,
     required this.oauthScopes,
+    this.placesApiKeyAndroid = '',
+    this.placesApiKeyIos = '',
+    this.placesAndroidPackage = '',
+    this.placesAndroidCertSha1 = '',
+    this.placesIosBundleId = '',
   });
 
   factory Environment.fromDotEnv(DotEnv env) {
@@ -14,6 +24,12 @@ class Environment {
       oauthClientId: _require(env, 'OAUTH_CLIENT_ID'),
       oauthRedirectUri: _require(env, 'OAUTH_REDIRECT_URI'),
       oauthScopes: _require(env, 'OAUTH_SCOPES'),
+      placesApiKeyAndroid: env.maybeGet('GOOGLE_PLACES_API_KEY_ANDROID') ?? '',
+      placesApiKeyIos: env.maybeGet('GOOGLE_PLACES_API_KEY_IOS') ?? '',
+      placesAndroidPackage: env.maybeGet('GOOGLE_PLACES_ANDROID_PACKAGE') ?? '',
+      placesAndroidCertSha1:
+          env.maybeGet('GOOGLE_PLACES_ANDROID_CERT_SHA1') ?? '',
+      placesIosBundleId: env.maybeGet('GOOGLE_PLACES_IOS_BUNDLE_ID') ?? '',
     );
   }
 
@@ -24,6 +40,16 @@ class Environment {
   final String oauthRedirectUri;
 
   final String oauthScopes;
+
+  final String placesApiKeyAndroid;
+
+  final String placesApiKeyIos;
+
+  final String placesAndroidPackage;
+
+  final String placesAndroidCertSha1;
+
+  final String placesIosBundleId;
 
   String get authorizationEndpoint => '$authBaseUrl/oauth2/authorize';
 
@@ -43,6 +69,35 @@ class Environment {
   String get driversMeEndpoint => '$authBaseUrl/api/drivers/me';
 
   String get assistantsMeEndpoint => '$authBaseUrl/api/assistants/me';
+
+  String get placesAutocompleteEndpoint =>
+      'https://places.googleapis.com/v1/places:autocomplete';
+
+  Map<String, String> placesAppHeadersFor(TargetPlatform platform) {
+    return switch (platform) {
+      TargetPlatform.android => {
+        'X-Android-Package': placesAndroidPackage,
+        'X-Android-Cert': normalizeCertFingerprint(placesAndroidCertSha1),
+      },
+      TargetPlatform.iOS => {'X-Ios-Bundle-Identifier': placesIosBundleId},
+      _ => const {},
+    };
+  }
+
+  String placesApiKeyFor(TargetPlatform platform) {
+    final key = switch (platform) {
+      TargetPlatform.android => placesApiKeyAndroid,
+      TargetPlatform.iOS => placesApiKeyIos,
+      _ => '',
+    };
+    if (key.isEmpty) {
+      throw StateError(
+        'Missing Google Places key for $platform. '
+        'Fill GOOGLE_PLACES_API_KEY_ANDROID / GOOGLE_PLACES_API_KEY_IOS in .env.',
+      );
+    }
+    return key;
+  }
 
   static String _require(DotEnv env, String key) {
     final value = env.maybeGet(key);

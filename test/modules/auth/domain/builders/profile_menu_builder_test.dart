@@ -64,6 +64,7 @@ void main() {
         ProfileMenuId.vans,
         ProfileMenuId.contracts,
         ProfileMenuId.professionalData,
+        ProfileMenuId.serviceAreas,
         ProfileMenuId.settings,
         ProfileMenuId.privacySecurity,
         ProfileMenuId.signOut,
@@ -73,7 +74,19 @@ void main() {
     expect(ids, isNot(contains(ProfileMenuId.dependents)));
     expect(enabled[ProfileMenuId.personalData], isTrue);
     expect(enabled[ProfileMenuId.professionalData], isFalse);
+    expect(enabled[ProfileMenuId.serviceAreas], isTrue);
     expect(enabled[ProfileMenuId.signOut], isTrue);
+  });
+
+  test('only the driver menu offers service areas', () {
+    expect(
+      menuIds(buildProfileMenu(UserType.client)),
+      isNot(contains(ProfileMenuId.serviceAreas)),
+    );
+    expect(
+      menuIds(buildProfileMenu(UserType.assistant)),
+      isNot(contains(ProfileMenuId.serviceAreas)),
+    );
   });
 
   test('assistant menu includes invite item', () {

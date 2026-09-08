@@ -90,6 +90,7 @@ const _driverMenu = [
       ProfileMenuEntry(id: ProfileMenuId.vans, enabled: false),
       ProfileMenuEntry(id: ProfileMenuId.contracts, enabled: false),
       ProfileMenuEntry(id: ProfileMenuId.professionalData, enabled: false),
+      ProfileMenuEntry(id: ProfileMenuId.serviceAreas, enabled: true),
     ],
     title: ProfileMenuSectionTitle.services,
   ),
