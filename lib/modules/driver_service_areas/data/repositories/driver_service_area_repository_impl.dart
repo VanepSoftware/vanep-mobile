@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/network/problem_detail.dart';
 import '../../../../core/result/result.dart';
 import '../../domain/entities/service_area.dart';
 import '../../domain/entities/service_area_draft.dart';
@@ -21,12 +22,6 @@ ServiceAreaFailure serviceAreaFailureFrom(DioException exception) {
     return ServiceAreaFailure.districtRequired;
   }
   return ServiceAreaFailure.placeNotResolved;
-}
-
-String readProblemDetail(Object? body) {
-  if (body is! Map) return '';
-  final detail = body['detail'] ?? body['message'];
-  return detail is String ? detail : '';
 }
 
 class DriverServiceAreaRepositoryImpl implements DriverServiceAreaRepository {
