@@ -48,7 +48,9 @@ Rejected alternative: `dependents` importing from `lib/modules/auth/domain/`. R0
 
 `PATCH /api/dependent/{token}` merges by presence: an absent key is untouched, an explicit null erases. The form therefore cannot send its whole draft. It diffs the draft against the dependent it was opened with and emits three states per field — absent, a value, or an explicit null — following `buildProfilePatchFromDrafts` in `auth`.
 
-`JsonNullable` on the backend means null and absent are genuinely different, so the DTO cannot model an optional field as a plain nullable. The request is built as a `Map<String, Object?>` by a named domain function, with the keys the client actually changed, rather than a freezed DTO whose `toJson` cannot express absence.
+`JsonNullable` on the backend means null and absent are genuinely different, so a DTO cannot model an optional field as a plain nullable. The domain expresses the difference as `DependentChanges` — a draft plus the `Set<DependentField>` the client actually touched — and the data layer turns that into the request body. An untouched field is absent from the body; a touched field carrying null is sent as an explicit null.
+
+Rejected alternative: the domain emitting the `Map<String, Object?>` body directly. It is shorter, but it puts API field names in the domain layer, which R01 keeps free of external concerns, and it would make the patch builder untestable without asserting on wire strings.
 
 Response DTOs stay freezed + `json_serializable`, as in `profile_summary_dto.dart`. Codegen runs per R15.
 

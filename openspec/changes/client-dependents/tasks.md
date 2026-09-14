@@ -10,16 +10,16 @@
 
 ## 2. Phase 2 — dependents domain (branch name: feat/8-dependents-domain)
 
-- [ ] 2.1 Write tests for `Dependent` and `DependentAddress` entities and for `buildDependentPatch`, covering absent / value / explicit-null per field and the "nothing changed" case
-- [ ] 2.2 Write tests for `FindMyDependents`, `CreateDependent`, `UpdateDependent` and `SetDefaultDependent` against a mocked `DependentRepository`
-- [ ] 2.3 Add `domain/entities/dependent.dart` and `domain/entities/dependent_address.dart` as abstract entities with value equality
-- [ ] 2.4 Add `domain/value_objects/dependent_draft.dart` holding the editable fields of one dependent
-- [ ] 2.5 Add `domain/failures/dependent_failure.dart` covering validation with a field map, not found, network and unexpected
-- [ ] 2.6 Add `domain/repositories/dependent_repository.dart` returning `Result<DependentFailure, T>`
-- [ ] 2.7 Add `domain/usecases/find_my_dependents.dart`, `create_dependent.dart`, `update_dependent.dart` and `set_default_dependent.dart`
-- [ ] 2.8 Add `domain/dependent_patch_builder.dart` producing the `Map<String, Object?>` body from a draft and a snapshot, per the diff decision in design.md
-- [ ] 2.9 Run `make lint` and `make test`
-- [ ] 2.10 Open PR
+- [x] 2.1 Write tests for the draft and for `buildDependentChangesForCreate` / `buildDependentChangesForUpdate`, covering untouched / value / explicit-null per field and the "nothing changed" case
+- [x] 2.2 Write tests for `FindMyDependents`, `CreateDependent`, `UpdateDependent` and `SetDefaultDependent` against a mocked `DependentRepository`
+- [x] 2.3 Add `domain/entities/dependent.dart` with `Dependent` and `DependentAddress` as abstract entities, implemented by the DTOs in phase 3
+- [x] 2.4 Add `domain/value_objects/dependent_draft.dart` holding the editable fields, the `DependentField` identity and `validateDependentDraft`
+- [x] 2.5 Add `domain/failures/dependent_failure.dart` as a sealed type covering validation with a field map, not found, network and unexpected
+- [x] 2.6 Add `domain/repositories/dependent_repository.dart` returning `Result<DependentFailure, T>`
+- [x] 2.7 Add `domain/usecases/find_my_dependents.dart`, `create_dependent.dart`, `update_dependent.dart` and `set_default_dependent.dart`
+- [x] 2.8 Add `domain/value_objects/dependent_changes.dart` carrying the draft plus the touched-field set, instead of the `Map<String, Object?>` first sketched: API field names belong to the data layer, not the domain (R01). design.md updated
+- [x] 2.9 Run `make lint` and `make test`
+- [ ] 2.10 Open PR — deferred by developer request; branch is committed and pushed
 
 ## 3. Phase 3 — dependents data (branch name: feat/8-dependents-data)
 
