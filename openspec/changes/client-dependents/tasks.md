@@ -23,16 +23,16 @@
 
 ## 3. Phase 3 — dependents data (branch name: feat/8-dependents-data)
 
-- [ ] 3.1 Write tests for `DependentDto.fromJson` against a fixture matching `DependentResponseDTO`, including a dependent with null `birthDate`, null `gender` and null `address`
-- [ ] 3.2 Write tests for `DependentRepositoryImpl` mapping `DioException` to each `DependentFailure`, including a 400 carrying field errors
-- [ ] 3.3 Add `data/dtos/dependent_dto.dart` and `data/dtos/dependent_address_dto.dart` with freezed + `json_annotation`, implementing the domain entities
-- [ ] 3.4 Add `dependentsEndpoint` to `Environment`
-- [ ] 3.5 Add `data/datasources/dependent_remote_datasource.dart` calling `GET`, `POST` and `PATCH` on `/api/dependent` through the authenticated Dio instance
-- [ ] 3.6 Add `data/repositories/dependent_repository_impl.dart` with the `DioException` to `DependentFailure` mapping
-- [ ] 3.7 Add `dependents_container.dart` registering the datasource, repository and use cases, and call `registerDependentsDependencies` from `lib/main.dart`
-- [ ] 3.8 Run `dart run build_runner build --delete-conflicting-outputs`
-- [ ] 3.9 Run `make lint` and `make test`
-- [ ] 3.10 Open PR
+- [x] 3.1 Write tests for `DependentDto.fromJson` against a fixture matching `DependentResponseDTO`, including a dependent with null `birthDate`, null `gender` and null `address`
+- [x] 3.2 Write tests for `DependentRepositoryImpl` mapping `DioException` to each `DependentFailure`, including a 400 carrying the backend detail
+- [x] 3.3 Add `data/dtos/dependent_dto.dart` with freezed + `json_annotation`, holding `DependentDto` and `DependentAddressDto` implementing the domain entities
+- [x] 3.4 Add `dependentsEndpoint` to `Environment`
+- [x] 3.5 Add `data/datasources/dependent_remote_datasource.dart` calling `GET`, `POST` and `PATCH` on `/api/dependent` through the authenticated Dio instance
+- [x] 3.6 Add `data/repositories/dependent_repository_impl.dart` with the `DioException` to `DependentFailure` mapping, and `data/dtos/dependent_request_body.dart` turning `DependentChanges` into the wire body
+- [x] 3.7 Add `dependents_container.dart` registering the datasource, repository and use cases, and call `registerDependentsDependencies` from `lib/main.dart`
+- [x] 3.8 Run `dart run build_runner build --delete-conflicting-outputs`
+- [x] 3.9 Run `make lint` and `make test`
+- [ ] 3.10 Open PR — deferred by developer request; branch is committed and pushed
 
 ## 4. Phase 4 — dependents screens (branch name: feat/8-dependents-screens)
 
