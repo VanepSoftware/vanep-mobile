@@ -10,12 +10,19 @@ sealed class DependentFailure extends Equatable {
 }
 
 final class DependentValidationFailure extends DependentFailure {
-  const DependentValidationFailure(this.messagesByField);
+  const DependentValidationFailure({
+    this.detail,
+    this.messagesByField = const {},
+  });
+
+  final String? detail;
 
   final Map<DependentField, String> messagesByField;
 
+  bool get isAttributedToAField => messagesByField.isNotEmpty;
+
   @override
-  List<Object?> get props => [messagesByField];
+  List<Object?> get props => [detail, messagesByField];
 }
 
 final class DependentNotFoundFailure extends DependentFailure {
