@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/user_profile.dart';
 import '../../domain/failures/profile_edit_failure.dart';
-import '../../domain/value_objects/gender.dart';
+import '../../../../core/domain/gender.dart';
 
 enum PersonalDataStatus {
   initial,

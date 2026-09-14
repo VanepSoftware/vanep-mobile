@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/presentation/formatters/profile_field_formatters.dart';
 
 TextEditingValue textEditingValueAt(String text) {
@@ -29,19 +29,6 @@ void main() {
     expect(profileGenderLabel(Gender.male, l10nEn), 'Male');
     expect(profileGenderLabel(Gender.female, l10nEn), 'Female');
     expect(profileGenderLabel(Gender.other, l10nEn), 'Other');
-  });
-
-  test('formatProfileBirthDate formats for locale', () {
-    expect(
-      formatProfileBirthDate('1990-05-15', const Locale('pt'), '—'),
-      '15/05/1990',
-    );
-    expect(
-      formatProfileBirthDate('1990-05-15', const Locale('en'), '—'),
-      '5/15/1990',
-    );
-    expect(formatProfileBirthDate(null, const Locale('pt'), '—'), '—');
-    expect(formatProfileBirthDate('not-a-date', const Locale('pt'), '—'), 'not-a-date');
   });
 
   test('formatProfilePhone masks Brazilian mobile and landline', () {

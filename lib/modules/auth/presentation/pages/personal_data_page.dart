@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
+import '../../../../core/formatters/birth_date_formatter.dart';
 import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -258,7 +259,7 @@ Widget buildPersonalDataBody({
                   PersonalDataRow(
                     label: l10n.profileFieldBirthDate,
                     child: PersonalDataStaticValue(
-                      value: formatProfileBirthDate(
+                      value: formatBirthDate(
                         profile.birthDate,
                         locale,
                         empty,
