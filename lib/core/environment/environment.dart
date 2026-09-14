@@ -66,6 +66,8 @@ class Environment {
 
   String get clientsMeEndpoint => '$authBaseUrl/api/clients/me';
 
+  String get dependentsEndpoint => '$authBaseUrl/api/dependent';
+
   String get driversMeEndpoint => '$authBaseUrl/api/drivers/me';
 
   String get assistantsMeEndpoint => '$authBaseUrl/api/assistants/me';
