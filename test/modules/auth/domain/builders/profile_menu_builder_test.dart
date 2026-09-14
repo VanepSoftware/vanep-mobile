@@ -40,7 +40,7 @@ void main() {
     expect(enabled[ProfileMenuId.personalData], isTrue);
     expect(enabled[ProfileMenuId.signOut], isTrue);
     expect(enabled[ProfileMenuId.addresses], isFalse);
-    expect(enabled[ProfileMenuId.dependents], isFalse);
+    expect(enabled[ProfileMenuId.dependents], isTrue);
     expect(
       menu.map((section) => section.title).toList(),
       [

@@ -70,7 +70,7 @@ const _clientMenu = [
   ),
   ProfileMenuSection(
     [
-      ProfileMenuEntry(id: ProfileMenuId.dependents, enabled: false),
+      ProfileMenuEntry(id: ProfileMenuId.dependents, enabled: true),
       ProfileMenuEntry(id: ProfileMenuId.vans, enabled: false),
       ProfileMenuEntry(id: ProfileMenuId.contracts, enabled: false),
     ],

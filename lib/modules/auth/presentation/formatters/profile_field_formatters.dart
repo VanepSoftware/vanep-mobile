@@ -3,15 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/domain/gender.dart';
+import '../../../../core/formatters/gender_label.dart';
 import '../../../../l10n/app_localizations.dart';
 
 String profileGenderLabel(Gender? gender, AppLocalizations l10n) {
-  return switch (gender) {
-    Gender.male => l10n.profileGenderMale,
-    Gender.female => l10n.profileGenderFemale,
-    Gender.other => l10n.profileGenderOther,
-    null => l10n.profileFieldEmpty,
-  };
+  if (gender == null) return l10n.profileFieldEmpty;
+  return genderLabel(gender, l10n);
 }
 
 const int maxBrazilianPhoneDigits = 11;

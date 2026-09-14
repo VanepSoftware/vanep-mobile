@@ -781,6 +781,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Where you operate'**
   String get profileServiceAreas;
+
+  /// No description provided for @dependentsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who rides the van. Each contract binds one dependent.'**
+  String get dependentsSubtitle;
+
+  /// No description provided for @dependentsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not added any dependents yet.'**
+  String get dependentsEmpty;
+
+  /// No description provided for @dependentsAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add dependent'**
+  String get dependentsAdd;
+
+  /// No description provided for @dependentsRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get dependentsRetry;
+
+  /// No description provided for @dependentsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your dependents.'**
+  String get dependentsLoadError;
+
+  /// No description provided for @dependentsDefaultBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get dependentsDefaultBadge;
+
+  /// No description provided for @dependentsSetDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as default'**
+  String get dependentsSetDefault;
+
+  /// No description provided for @dependentsDefaultUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Default dependent updated.'**
+  String get dependentsDefaultUpdated;
+
+  /// No description provided for @dependentsAgeYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{under 1 year} =1{1 year} other{{count} years}}'**
+  String dependentsAgeYears(num count);
+
+  /// No description provided for @dependentFormNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New dependent'**
+  String get dependentFormNewTitle;
+
+  /// No description provided for @dependentFormEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit dependent'**
+  String get dependentFormEditTitle;
+
+  /// No description provided for @dependentFormSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get dependentFormSave;
+
+  /// No description provided for @dependentFormSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Dependent saved.'**
+  String get dependentFormSaved;
+
+  /// No description provided for @dependentFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get dependentFieldName;
+
+  /// No description provided for @dependentFieldBirthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get dependentFieldBirthDate;
+
+  /// No description provided for @dependentFieldBirthDateEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a date'**
+  String get dependentFieldBirthDateEmpty;
+
+  /// No description provided for @dependentFieldBirthDateClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear date'**
+  String get dependentFieldBirthDateClear;
+
+  /// No description provided for @dependentFieldGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get dependentFieldGender;
+
+  /// No description provided for @dependentFieldGenderClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get dependentFieldGenderClear;
+
+  /// No description provided for @dependentErrorNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the dependent\'s name.'**
+  String get dependentErrorNameRequired;
+
+  /// No description provided for @dependentErrorBirthDateFuture.
+  ///
+  /// In en, this message translates to:
+  /// **'The date of birth cannot be in the future.'**
+  String get dependentErrorBirthDateFuture;
+
+  /// No description provided for @dependentErrorBirthDateInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid date of birth.'**
+  String get dependentErrorBirthDateInvalid;
+
+  /// No description provided for @dependentFailureValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save. Review the data and try again.'**
+  String get dependentFailureValidation;
+
+  /// No description provided for @dependentFailureNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This dependent no longer exists.'**
+  String get dependentFailureNotFound;
+
+  /// No description provided for @dependentFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get dependentFailureNetwork;
+
+  /// No description provided for @dependentFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get dependentFailureUnexpected;
 }
 
 class _AppLocalizationsDelegate
