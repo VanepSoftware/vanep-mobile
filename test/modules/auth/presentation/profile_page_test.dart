@@ -9,7 +9,7 @@ import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';

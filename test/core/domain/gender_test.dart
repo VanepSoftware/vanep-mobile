@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 
 void main() {
   group('Gender.fromApi', () {

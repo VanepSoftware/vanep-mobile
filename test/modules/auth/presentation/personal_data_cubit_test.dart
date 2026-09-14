@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';

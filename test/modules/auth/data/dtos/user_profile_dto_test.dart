@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 void main() {

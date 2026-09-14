@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../domain/value_objects/gender.dart';
+import '../../../../core/domain/gender.dart';
 import '../formatters/profile_field_formatters.dart';
 
 class PersonalDataGenderChips extends StatelessWidget {
