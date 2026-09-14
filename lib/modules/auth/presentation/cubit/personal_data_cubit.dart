@@ -5,7 +5,7 @@ import '../../domain/failures/profile_edit_failure.dart';
 import '../../domain/usecases/patch_user_profile.dart';
 import '../../domain/usecases/refresh_user_profile.dart';
 import '../../domain/usecases/request_email_change.dart';
-import '../../domain/value_objects/gender.dart';
+import '../../../../core/domain/gender.dart';
 import '../../domain/value_objects/profile_patch_request.dart';
 import '../formatters/profile_field_formatters.dart';
 import 'personal_data_state.dart';

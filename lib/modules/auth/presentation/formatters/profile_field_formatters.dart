@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/domain/gender.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../domain/value_objects/gender.dart';
 
 String profileGenderLabel(Gender? gender, AppLocalizations l10n) {
   return switch (gender) {
@@ -12,14 +12,6 @@ String profileGenderLabel(Gender? gender, AppLocalizations l10n) {
     Gender.other => l10n.profileGenderOther,
     null => l10n.profileFieldEmpty,
   };
-}
-
-String formatProfileBirthDate(String? raw, Locale locale, String emptyLabel) {
-  if (raw == null || raw.trim().isEmpty) return emptyLabel;
-  final parsed = DateTime.tryParse(raw.trim());
-  if (parsed == null) return raw;
-  final pattern = locale.languageCode == 'pt' ? 'dd/MM/yyyy' : 'M/d/yyyy';
-  return DateFormat(pattern).format(parsed);
 }
 
 const int maxBrazilianPhoneDigits = 11;

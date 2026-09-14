@@ -1,4 +1,4 @@
-import '../value_objects/gender.dart';
+import '../../../../core/domain/gender.dart';
 import '../value_objects/onboarding_step.dart';
 import '../value_objects/user_type.dart';
 
