@@ -54,12 +54,12 @@
 
 ## 5. Phase 5 — dependent address (branch name: feat/8-dependent-address)
 
-- [ ] 5.1 Confirm the backend change accepting `placeId` + `sessionToken` on `POST/PATCH /api/dependent` is merged; do not open this PR before it is
-- [ ] 5.2 Write tests asserting the save body carries `placeId`, `sessionToken`, `number` and `complement` and no city, state, district, zip code or street
-- [ ] 5.3 Write tests for saving without an address, for replacing an existing address, and for a place the backend cannot resolve landing on the address field
-- [ ] 5.4 Add the address fields to `DependentDraft` and to `buildDependentPatch`
-- [ ] 5.5 Add the Places field to the form using `VanepPlaceAutocompleteField` and a `PlaceAutocompleteController` resolved from the container, disposed when the form closes
-- [ ] 5.6 Render the resolved address on the form and on the card from `AddressResponseDTO`, with a localized "no address" state
-- [ ] 5.7 Add the address strings to both ARB files
-- [ ] 5.8 Run `make lint` and `make test`
-- [ ] 5.9 Open PR
+- [ ] 5.1 Confirm the backend change accepting `placeId` + `sessionToken` on `POST/PATCH /api/dependent` is merged — **NOT merged**. Built against the agreed contract under R21; this branch must not open a PR until the backend lands
+- [x] 5.2 Write tests asserting the save body carries `placeId`, `sessionToken`, `number` and `complement` and no city, state, district, zip code or street
+- [x] 5.3 Write tests for saving without an address, for replacing an existing address, for amending only the number, and for a place the backend cannot resolve landing on the address field
+- [x] 5.4 Add `DependentAddressDraft`, the `address` field on `DependentDraft`, and the address diff in `buildDependentChangesForUpdate`
+- [x] 5.5 Add the Places field to the form using `VanepPlaceAutocompleteField` and a `PlaceAutocompleteController` resolved from the container, disposed when the form closes
+- [x] 5.6 Render the resolved address on the form and on the card from `AddressResponseDTO`, with a localized "no address" state
+- [x] 5.7 Add the address strings to both ARB files
+- [x] 5.8 Run `make lint` and `make test`
+- [ ] 5.9 Open PR — blocked on the backend change, and deferred by developer request; branch is committed and pushed

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/places/place_autocomplete_controller.dart';
 import '../../../../core/formatters/birth_date_formatter.dart';
 import '../../../../core/formatters/gender_label.dart';
 import '../../../../core/ui/vanep_feedback.dart';
@@ -17,6 +18,7 @@ import '../../domain/value_objects/dependent_draft.dart';
 import '../cubit/dependent_form_cubit.dart';
 import '../cubit/dependent_form_state.dart';
 import '../formatters/dependent_labels.dart';
+import '../widgets/dependent_address_field.dart';
 
 const int maxDependentNameLength = 255;
 
@@ -43,16 +45,26 @@ class DependentFormView extends StatefulWidget {
 
 class DependentFormViewState extends State<DependentFormView> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController numberController = TextEditingController();
+  final TextEditingController complementController = TextEditingController();
+  final PlaceAutocompleteController autocomplete =
+      getIt<PlaceAutocompleteController>();
 
   @override
   void initState() {
     super.initState();
-    nameController.text = context.read<DependentFormCubit>().state.draft.name;
+    final draft = context.read<DependentFormCubit>().state.draft;
+    nameController.text = draft.name;
+    numberController.text = draft.address?.number ?? '';
+    complementController.text = draft.address?.complement ?? '';
   }
 
   @override
   void dispose() {
     nameController.dispose();
+    numberController.dispose();
+    complementController.dispose();
+    autocomplete.dispose();
     super.dispose();
   }
 
@@ -130,6 +142,13 @@ class DependentFormViewState extends State<DependentFormView> {
                         child: Text(l10n.dependentFieldGenderClear),
                       ),
                     ),
+                  const SizedBox(height: 20),
+                  DependentAddressField(
+                    state: state,
+                    autocomplete: autocomplete,
+                    numberController: numberController,
+                    complementController: complementController,
+                  ),
                   const SizedBox(height: 28),
                   VanepPrimaryButton(
                     label: l10n.dependentFormSave,

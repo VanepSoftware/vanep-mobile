@@ -507,4 +507,26 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dependentFailureUnexpected => 'Algo deu errado. Tente novamente.';
+
+  @override
+  String get dependentFieldAddress => 'Endereço';
+
+  @override
+  String get dependentFieldAddressEmpty => 'Nenhum endereço informado.';
+
+  @override
+  String get dependentFieldAddressSearchHint => 'Buscar endereço';
+
+  @override
+  String get dependentFieldAddressNumber => 'Número';
+
+  @override
+  String get dependentFieldAddressComplement => 'Complemento';
+
+  @override
+  String get dependentFieldAddressRemove => 'Remover endereço';
+
+  @override
+  String get dependentAddressNotResolved =>
+      'Não foi possível interpretar este endereço. Escolha outra sugestão.';
 }

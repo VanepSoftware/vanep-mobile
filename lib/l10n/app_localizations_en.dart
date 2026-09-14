@@ -507,4 +507,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get dependentFailureUnexpected =>
       'Something went wrong. Please try again.';
+
+  @override
+  String get dependentFieldAddress => 'Address';
+
+  @override
+  String get dependentFieldAddressEmpty => 'No address set.';
+
+  @override
+  String get dependentFieldAddressSearchHint => 'Search address';
+
+  @override
+  String get dependentFieldAddressNumber => 'Number';
+
+  @override
+  String get dependentFieldAddressComplement => 'Complement';
+
+  @override
+  String get dependentFieldAddressRemove => 'Remove address';
+
+  @override
+  String get dependentAddressNotResolved =>
+      'Could not resolve this address. Pick another suggestion.';
 }

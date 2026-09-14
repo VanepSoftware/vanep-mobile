@@ -232,5 +232,12 @@
   "dependentFailureValidation": "Could not save. Review the data and try again.",
   "dependentFailureNotFound": "This dependent no longer exists.",
   "dependentFailureNetwork": "No connection to the server. Please try again.",
-  "dependentFailureUnexpected": "Something went wrong. Please try again."
+  "dependentFailureUnexpected": "Something went wrong. Please try again.",
+  "dependentFieldAddress": "Address",
+  "dependentFieldAddressEmpty": "No address set.",
+  "dependentFieldAddressSearchHint": "Search address",
+  "dependentFieldAddressNumber": "Number",
+  "dependentFieldAddressComplement": "Complement",
+  "dependentFieldAddressRemove": "Remove address",
+  "dependentAddressNotResolved": "Could not resolve this address. Pick another suggestion."
 }

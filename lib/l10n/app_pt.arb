@@ -197,5 +197,12 @@
   "dependentFailureValidation": "Não foi possível salvar. Revise os dados e tente novamente.",
   "dependentFailureNotFound": "Este dependente não existe mais.",
   "dependentFailureNetwork": "Sem conexão com o servidor. Tente novamente.",
-  "dependentFailureUnexpected": "Algo deu errado. Tente novamente."
+  "dependentFailureUnexpected": "Algo deu errado. Tente novamente.",
+  "dependentFieldAddress": "Endereço",
+  "dependentFieldAddressEmpty": "Nenhum endereço informado.",
+  "dependentFieldAddressSearchHint": "Buscar endereço",
+  "dependentFieldAddressNumber": "Número",
+  "dependentFieldAddressComplement": "Complemento",
+  "dependentFieldAddressRemove": "Remover endereço",
+  "dependentAddressNotResolved": "Não foi possível interpretar este endereço. Escolha outra sugestão."
 }

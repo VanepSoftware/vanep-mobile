@@ -35,7 +35,8 @@ None. `openspec/specs/` in this repo is still empty, so every capability above i
 **Backend prerequisite — blocks `dependent-address` only.** `vanep-api-java` needs its own change before the address part of this one can ship:
 
 1. `DependentCreateDTO.address` and `DependentUpdateDTO.address` accept `placeId` + optional `sessionToken`, `number`, `complement` — matching `PersonalAddressRequestDTO` — and resolve the place server-side through the existing geography tree, instead of requiring a client-supplied `cityToken`.
-2. The response keeps returning the resolved `AddressResponseDTO`, so nothing changes on the read side.
+2. On create, `placeId` is required whenever `address` is present. On update it is optional: an `address` carrying only `number` and `complement` amends the address the dependent already has. Without this, correcting an apartment number would force the client to search for the street again.
+3. The response keeps returning the resolved `AddressResponseDTO`, so nothing changes on the read side.
 
 This mirrors the decision already recorded in the `location-system` specs: the backend re-resolves every place and does not trust address components sent by a client. The dependent endpoint is the one place that still does.
 
