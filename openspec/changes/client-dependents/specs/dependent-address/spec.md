@@ -56,6 +56,17 @@ Picking a new place for a dependent that already has an address MUST replace it,
 - **THEN** the app sends the new `placeId` in `address`
 - **AND** the dependent afterwards carries only the new address
 
+#### Scenario: Number amended without reselecting the place
+
+- **WHEN** a client changes only the number or complement of an address the dependent already has
+- **THEN** the app sends `address` carrying the new `number` and `complement` and no `placeId`
+- **AND** the street the backend already resolved is kept
+
+#### Scenario: Number survives picking a different place
+
+- **WHEN** a client has typed a number and then picks a different suggestion
+- **THEN** the typed number is kept alongside the new `placeId`
+
 ### Requirement: Place resolution failures are surfaced, not swallowed
 
 The app SHALL show a localized message when the backend cannot resolve the selected place, and MUST keep the client on the form with their other input intact so the address can be reselected without retyping the rest.

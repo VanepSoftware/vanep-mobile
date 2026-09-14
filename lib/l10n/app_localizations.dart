@@ -937,6 +937,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Please try again.'**
   String get dependentFailureUnexpected;
+
+  /// No description provided for @dependentFieldAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get dependentFieldAddress;
+
+  /// No description provided for @dependentFieldAddressEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No address set.'**
+  String get dependentFieldAddressEmpty;
+
+  /// No description provided for @dependentFieldAddressSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search address'**
+  String get dependentFieldAddressSearchHint;
+
+  /// No description provided for @dependentFieldAddressNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get dependentFieldAddressNumber;
+
+  /// No description provided for @dependentFieldAddressComplement.
+  ///
+  /// In en, this message translates to:
+  /// **'Complement'**
+  String get dependentFieldAddressComplement;
+
+  /// No description provided for @dependentFieldAddressRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove address'**
+  String get dependentFieldAddressRemove;
+
+  /// No description provided for @dependentAddressNotResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not resolve this address. Pick another suggestion.'**
+  String get dependentAddressNotResolved;
 }
 
 class _AppLocalizationsDelegate

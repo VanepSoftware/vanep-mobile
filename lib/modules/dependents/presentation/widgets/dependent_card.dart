@@ -39,6 +39,10 @@ class DependentCard extends StatelessWidget {
                     Text(dependent.name, style: VanepTypography.cardTitle),
                     if (age != null)
                       Text(age, style: VanepTypography.cardSubtitle),
+                    Text(
+                      dependentAddressLabel(l10n, dependent.address),
+                      style: VanepTypography.cardSubtitle,
+                    ),
                   ],
                 ),
               ),

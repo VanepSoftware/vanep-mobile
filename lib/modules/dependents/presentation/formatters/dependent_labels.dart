@@ -1,5 +1,7 @@
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/entities/dependent.dart';
 import '../../domain/failures/dependent_failure.dart';
+import '../../domain/value_objects/dependent_changes.dart';
 import '../../domain/value_objects/dependent_draft.dart';
 import '../cubit/dependent_form_state.dart';
 
@@ -38,6 +40,23 @@ String? dependentFieldErrorLabel(
     BackendDependentFieldError(:final message) => message,
     null => null,
   };
+}
+
+String dependentAddressLabel(
+  AppLocalizations l10n,
+  DependentAddress? address,
+) {
+  if (address == null) return l10n.dependentFieldAddressEmpty;
+  final parts = <String>[
+    if (hasText(address.number))
+      '${address.street}, ${address.number}'
+    else
+      address.street,
+    if (hasText(address.complement)) address.complement!,
+    if (hasText(address.district)) address.district!,
+    '${address.cityName} - ${address.stateUf}',
+  ];
+  return parts.join(' · ');
 }
 
 int? findAgeInYears(String? birthDate, {DateTime? today}) {

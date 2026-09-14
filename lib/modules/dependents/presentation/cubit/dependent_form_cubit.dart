@@ -6,6 +6,7 @@ import '../../domain/entities/dependent.dart';
 import '../../domain/failures/dependent_failure.dart';
 import '../../domain/usecases/create_dependent.dart';
 import '../../domain/usecases/update_dependent.dart';
+import '../../domain/value_objects/dependent_address_draft.dart';
 import '../../domain/value_objects/dependent_draft.dart';
 import 'dependent_form_state.dart';
 
@@ -53,6 +54,75 @@ class DependentFormCubit extends Cubit<DependentFormState> {
         fieldErrors: fieldErrorsWithout(
           state.fieldErrors,
           DependentField.gender,
+        ),
+        clearFailure: true,
+      ),
+    );
+  }
+
+  void choosePlace({
+    required String placeId,
+    required String sessionToken,
+    required String label,
+  }) {
+    final current = state.draft.address;
+    emit(
+      state.copyWith(
+        draft: state.draft.withAddress(
+          DependentAddressDraft(
+            placeId: placeId,
+            sessionToken: sessionToken,
+            label: label,
+            number: current?.number,
+            complement: current?.complement,
+          ),
+        ),
+        fieldErrors: fieldErrorsWithout(
+          state.fieldErrors,
+          DependentField.address,
+        ),
+        clearFailure: true,
+      ),
+    );
+  }
+
+  void changeAddressNumber(String value) {
+    final current = state.draft.address;
+    if (current == null) return;
+    emit(
+      state.copyWith(
+        draft: state.draft.withAddress(current.withNumber(value)),
+        fieldErrors: fieldErrorsWithout(
+          state.fieldErrors,
+          DependentField.address,
+        ),
+        clearFailure: true,
+      ),
+    );
+  }
+
+  void changeAddressComplement(String value) {
+    final current = state.draft.address;
+    if (current == null) return;
+    emit(
+      state.copyWith(
+        draft: state.draft.withAddress(current.withComplement(value)),
+        fieldErrors: fieldErrorsWithout(
+          state.fieldErrors,
+          DependentField.address,
+        ),
+        clearFailure: true,
+      ),
+    );
+  }
+
+  void removeAddress() {
+    emit(
+      state.copyWith(
+        draft: state.draft.withAddress(null),
+        fieldErrors: fieldErrorsWithout(
+          state.fieldErrors,
+          DependentField.address,
         ),
         clearFailure: true,
       ),

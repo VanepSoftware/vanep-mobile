@@ -13,6 +13,8 @@ const Map<String, DependentField> dependentFieldsByApiName = {
   'name': DependentField.name,
   'birthDate': DependentField.birthDate,
   'gender': DependentField.gender,
+  'address': DependentField.address,
+  'placeId': DependentField.address,
 };
 
 DependentFailure dependentFailureFrom(DioException exception) {
