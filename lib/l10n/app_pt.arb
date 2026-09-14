@@ -163,5 +163,39 @@
   "driverSearchNetworkError": "Sem conexão com o servidor. Tente novamente.",
   "driverSearchUnexpectedError": "Algo deu errado na busca. Tente novamente.",
   "driverSearchCoversWholeCity": "Atende a cidade inteira",
-  "profileServiceAreas": "Onde você atende"
+  "profileServiceAreas": "Onde você atende",
+  "dependentsSubtitle": "Quem viaja na van. Cada contrato vincula um dependente.",
+  "dependentsEmpty": "Você ainda não cadastrou nenhum dependente.",
+  "dependentsAdd": "Adicionar dependente",
+  "dependentsRetry": "Tentar novamente",
+  "dependentsLoadError": "Não foi possível carregar seus dependentes.",
+  "dependentsDefaultBadge": "Padrão",
+  "dependentsSetDefault": "Definir como padrão",
+  "dependentsDefaultUpdated": "Dependente padrão atualizado.",
+  "dependentsAgeYears": "{count, plural, =0{menos de 1 ano} =1{1 ano} other{{count} anos}}",
+  "@dependentsAgeYears": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "dependentFormNewTitle": "Novo dependente",
+  "dependentFormEditTitle": "Editar dependente",
+  "dependentFormSave": "Salvar",
+  "dependentFormSaved": "Dependente salvo.",
+  "dependentFieldName": "Nome",
+  "dependentFieldBirthDate": "Data de nascimento",
+  "dependentFieldBirthDateEmpty": "Selecionar data",
+  "dependentFieldBirthDateClear": "Limpar data",
+  "dependentFieldGender": "Sexo",
+  "dependentFieldGenderClear": "Não informar",
+  "dependentErrorNameRequired": "Informe o nome do dependente.",
+  "dependentErrorBirthDateFuture": "A data de nascimento não pode ser no futuro.",
+  "dependentErrorBirthDateInvalid": "Data de nascimento inválida.",
+  "dependentFailureValidation": "Não foi possível salvar. Revise os dados e tente novamente.",
+  "dependentFailureNotFound": "Este dependente não existe mais.",
+  "dependentFailureNetwork": "Sem conexão com o servidor. Tente novamente.",
+  "dependentFailureUnexpected": "Algo deu errado. Tente novamente."
 }

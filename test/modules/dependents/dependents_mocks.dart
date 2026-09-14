@@ -8,6 +8,8 @@ import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 
+import 'dependents_fixtures.dart';
+
 class MockDependentRemoteDataSource extends Mock
     implements DependentRemoteDataSource {}
 
@@ -26,4 +28,5 @@ void registerDependentFallbackValues() {
     const DependentChanges(draft: DependentDraft(), touchedFields: {}),
   );
   registerFallbackValue(const DependentDraft());
+  registerFallbackValue(testHelenaDependent);
 }

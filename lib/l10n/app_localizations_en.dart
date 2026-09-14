@@ -410,4 +410,101 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileServiceAreas => 'Where you operate';
+
+  @override
+  String get dependentsSubtitle =>
+      'Who rides the van. Each contract binds one dependent.';
+
+  @override
+  String get dependentsEmpty => 'You have not added any dependents yet.';
+
+  @override
+  String get dependentsAdd => 'Add dependent';
+
+  @override
+  String get dependentsRetry => 'Try again';
+
+  @override
+  String get dependentsLoadError => 'Could not load your dependents.';
+
+  @override
+  String get dependentsDefaultBadge => 'Default';
+
+  @override
+  String get dependentsSetDefault => 'Set as default';
+
+  @override
+  String get dependentsDefaultUpdated => 'Default dependent updated.';
+
+  @override
+  String dependentsAgeYears(num count) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString years',
+      one: '1 year',
+      zero: 'under 1 year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dependentFormNewTitle => 'New dependent';
+
+  @override
+  String get dependentFormEditTitle => 'Edit dependent';
+
+  @override
+  String get dependentFormSave => 'Save';
+
+  @override
+  String get dependentFormSaved => 'Dependent saved.';
+
+  @override
+  String get dependentFieldName => 'Name';
+
+  @override
+  String get dependentFieldBirthDate => 'Date of birth';
+
+  @override
+  String get dependentFieldBirthDateEmpty => 'Pick a date';
+
+  @override
+  String get dependentFieldBirthDateClear => 'Clear date';
+
+  @override
+  String get dependentFieldGender => 'Gender';
+
+  @override
+  String get dependentFieldGenderClear => 'Prefer not to say';
+
+  @override
+  String get dependentErrorNameRequired => 'Enter the dependent\'s name.';
+
+  @override
+  String get dependentErrorBirthDateFuture =>
+      'The date of birth cannot be in the future.';
+
+  @override
+  String get dependentErrorBirthDateInvalid => 'Invalid date of birth.';
+
+  @override
+  String get dependentFailureValidation =>
+      'Could not save. Review the data and try again.';
+
+  @override
+  String get dependentFailureNotFound => 'This dependent no longer exists.';
+
+  @override
+  String get dependentFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get dependentFailureUnexpected =>
+      'Something went wrong. Please try again.';
 }

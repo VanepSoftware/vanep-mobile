@@ -36,21 +36,21 @@
 
 ## 4. Phase 4 — dependents screens (branch name: feat/8-dependents-screens)
 
-- [ ] 4.1 Write `bloc_test` cases for `DependentsCubit`: load success, load failure leaving a retryable state, empty list, reload after a write, and setting the default
-- [ ] 4.2 Write `bloc_test` cases for `DependentFormCubit`: blank name blocked before any request, future birth date blocked, save sending only changed fields, clearing a field sending explicit null, and backend field errors landing on the matching field
-- [ ] 4.3 Write widget tests for the list page covering the empty state, a card with and without an age, and the default mark
-- [ ] 4.4 Add `presentation/cubit/dependents_cubit.dart` and `dependents_state.dart`
-- [ ] 4.5 Add `presentation/cubit/dependent_form_cubit.dart` and `dependent_form_state.dart`
-- [ ] 4.6 Add `presentation/formatters/dependent_failure_label.dart` and an age formatter derived from `birthDate`
-- [ ] 4.7 Add `presentation/widgets/dependent_card.dart` using existing design-system tokens and `lib/core/ui/` widgets, with no one-off chrome
-- [ ] 4.8 Add `presentation/pages/dependents_page.dart` with the list, the empty state, the retry state and the add control
-- [ ] 4.9 Add `presentation/pages/dependent_form_page.dart` for create and edit, built from `VanepTextField`, the gender chips pattern and a birth date picker
-- [ ] 4.10 Render the default as visible on the card, and offer the choice control only when there are two or more dependents
-- [ ] 4.11 Flip the `dependents` entry to `enabled: true` in `profile_menu_builder.dart` and push the page from the `ProfileMenuId.dependents` case in `profile_page.dart`
-- [ ] 4.12 Add every new string to `lib/l10n/app_pt.arb` and `lib/l10n/app_en.arb`, reusing the existing `profileDependents` key as the screen title
-- [ ] 4.13 Confirm the S14 layout against the Figma file and settle how the default is presented
-- [ ] 4.14 Run `make lint` and `make test`
-- [ ] 4.15 Open PR
+- [x] 4.1 Write `bloc_test` cases for `DependentsCubit`: load success, load failure leaving a retryable state, empty list, reload after a write, and setting the default
+- [x] 4.2 Write `bloc_test` cases for `DependentFormCubit`: blank name blocked before any request, future birth date blocked, save sending only changed fields, clearing a field sending explicit null, and backend field errors landing on the matching field
+- [x] 4.3 Write widget tests for the list page covering the empty state, a card with and without an age, and the default mark
+- [x] 4.4 Add `presentation/cubit/dependents_cubit.dart` and `dependents_state.dart`
+- [x] 4.5 Add `presentation/cubit/dependent_form_cubit.dart` and `dependent_form_state.dart`
+- [x] 4.6 Add `presentation/formatters/dependent_labels.dart` with the failure labels and the age derived from `birthDate`
+- [x] 4.7 Add `presentation/widgets/dependent_card.dart` using existing design-system tokens and `lib/core/ui/` widgets, with no one-off chrome
+- [x] 4.8 Add `presentation/pages/dependents_page.dart` with the list, the empty state, the retry state and the add control
+- [x] 4.9 Add `presentation/pages/dependent_form_page.dart` for create and edit, built from `VanepTextField`, `VanepGenderChips` and a birth date picker. The gender chips move from `auth` to `lib/core/ui/vanep_gender_chips.dart` and the gender label to `lib/core/formatters/gender_label.dart`, so the two modules share one owner (R06a)
+- [x] 4.10 Render the default as visible on the card, and offer the choice control only when there are two or more dependents
+- [x] 4.11 Flip the `dependents` entry to `enabled: true` in `profile_menu_builder.dart` and push the page from the `ProfileMenuId.dependents` case in `profile_page.dart`
+- [x] 4.12 Add every new string to `lib/l10n/app_pt.arb` and `lib/l10n/app_en.arb`, reusing the existing `profileDependents` key as the screen title
+- [ ] 4.13 Confirm the S14 layout against the Figma file and settle how the default is presented — still open; built from the design system with the default as a badge plus a "set as default" action, pending the Figma frame
+- [x] 4.14 Run `make lint` and `make test`
+- [ ] 4.15 Open PR — deferred by developer request; branch is committed and pushed
 
 ## 5. Phase 5 — dependent address (branch name: feat/8-dependent-address)
 
