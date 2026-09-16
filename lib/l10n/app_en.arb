@@ -4,6 +4,13 @@
   "welcomeTagline": "School transport, simplified.",
   "continueButton": "Continue",
   "loginTitle": "Sign in",
+  "loginHeading": "Welcome back",
+  "loginSubtitle": "Sign in with your email and password to continue",
+  "loginEmailHint": "you@email.com",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "loginOrDivider": "or",
+  "loginNoAccount": "Don't have an account?",
   "loginFailed": "Could not sign in. Please try again.",
   "loginEmailLabel": "Email",
   "loginPasswordLabel": "Password",
@@ -20,6 +27,53 @@
   "signupTypeClient": "I'm a client (guardian)",
   "signupTypeDriver": "I'm a driver",
   "signupTypeAssistant": "I'm an assistant",
+  "signupChooseTypeSubtitle": "Pick the account type that fits you.",
+  "signupTypeClientDescription": "Find and hire school transport for your dependents.",
+  "signupTypeDriverDescription": "Offer school transport with your van.",
+  "signupTypeAssistantDescription": "Look after the students on a driver's routes.",
+  "signupAlreadyHaveAccount": "Already have an account?",
+  "signupSectionAccess": "Sign-in details",
+  "signupSectionPersonal": "Personal details",
+  "signupSectionProfessional": "Professional details",
+  "signupContinue": "Continue",
+  "signupStepProgress": "Step {current} of {total}",
+  "@signupStepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "signupStepAccessSubtitle": "You will use this email and password to sign in.",
+  "signupStepPersonalSubtitle": "We need these details to identify your account.",
+  "signupStepProfessionalSubtitle": "Tell us a little about your transport service.",
+  "signupStepConfirmationTitle": "Review and confirm",
+  "signupStepConfirmationSubtitle": "Check your account details and accept the terms to finish.",
+  "signupNameHint": "Your full name",
+  "signupPasswordHint": "Create a password",
+  "signupFieldPasswordConfirmation": "Confirm password",
+  "signupPasswordConfirmationHint": "Repeat the password",
+  "passwordRequirementMinLength": "At least {min} characters",
+  "@passwordRequirementMinLength": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "passwordRequirementUppercase": "One uppercase letter",
+  "passwordRequirementSpecial": "One special character (e.g. ! @ # $)",
+  "accountIssuePasswordWeak": "The password does not meet every requirement.",
+  "accountIssuePasswordMismatch": "The passwords do not match.",
+  "signupDocumentHint": "000.000.000-00",
+  "signupPhoneHint": "(00) 00000-0000",
+  "signupBirthDateHint": "mm/dd/yyyy",
+  "signupBasePriceHint": "0.00",
+  "signupExperienceYearsHint": "0",
+  "signupCnpjHint": "00.000.000/0000-00",
   "signupTitleClient": "Client sign-up",
   "signupTitleDriver": "Driver sign-up",
   "signupTitleAssistant": "Assistant sign-up",
@@ -42,6 +96,7 @@
   },
   "emailVerificationTitle": "Confirm your email",
   "verificationCodeLabel": "Code",
+  "verificationCodeHint": "000000",
   "emailVerificationSubmit": "Confirm",
   "resendCode": "Resend code",
   "resendCodeIn": "Resend code in {seconds}s",
@@ -67,6 +122,8 @@
       }
     }
   },
+  "passwordResetCodeTitle": "Create a new password",
+  "passwordResetNewPasswordHint": "At least 8 characters",
   "passwordResetNewPasswordLabel": "New password",
   "passwordResetSubmit": "Reset password",
   "passwordResetDone": "Password reset! Sign in with your new password.",

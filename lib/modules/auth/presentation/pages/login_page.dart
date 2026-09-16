@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_glass_card.dart';
-import '../../../../core/ui/vanep_gradient_background.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
 import '../../../../core/ui/vanep_secondary_button.dart';
 import '../../../../core/ui/vanep_text_field.dart';
@@ -48,9 +47,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: VanepGradientBackground(
-        child: SafeArea(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        backgroundColor: VanepColors.card,
+        body: SafeArea(
           child: BlocConsumer<LoginCubit, LoginState>(
             listenWhen: (previous, current) =>
                 previous.failure != current.failure && current.failure != null,
@@ -110,34 +111,46 @@ class LoginForm extends StatelessWidget {
     final cubit = context.read<LoginCubit>();
     final editable = !state.isSubmitting;
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 72, 24, 32),
-      children: [
-        const Center(child: VanepWordmark()),
-        const SizedBox(height: 16),
-        Text(
-          l10n.welcomeTagline,
-          textAlign: TextAlign.center,
-          style: VanepTypography.tagline.copyWith(
-            color: VanepColors.foreground.withValues(alpha: 0.8),
-          ),
-        ),
-        const SizedBox(height: 40),
-        VanepGlassCard(
-          padding: const EdgeInsets.all(20),
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 440),
           child: AutofillGroup(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const Center(
+                  child: VanepWordmark(
+                    color: VanepColors.textPrimary,
+                    fontSize: 44,
+                  ),
+                ),
+                const SizedBox(height: 40),
+                Text(
+                  l10n.loginHeading,
+                  textAlign: TextAlign.center,
+                  style: VanepTypography.loginTitle,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.loginSubtitle,
+                  textAlign: TextAlign.center,
+                  style: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
+                ),
+                const SizedBox(height: 36),
                 VanepTextField(
                   label: l10n.loginEmailLabel,
                   controller: emailController,
                   onChanged: cubit.updateEmail,
                   enabled: editable,
+                  hintText: l10n.loginEmailHint,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.email],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 VanepTextField(
                   label: l10n.loginPasswordLabel,
                   controller: passwordController,
@@ -146,10 +159,16 @@ class LoginForm extends StatelessWidget {
                   obscureText: true,
                   textInputAction: TextInputAction.done,
                   autofillHints: const [AutofillHints.password],
+                  onSubmitted: (_) => cubit.submitPassword(),
                 ),
-                const SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerRight,
+                const SizedBox(height: 28),
+                VanepPrimaryButton(
+                  label: l10n.loginTitle,
+                  isLoading: state.isSubmittingPassword,
+                  onPressed: state.canSubmit ? cubit.submitPassword : null,
+                ),
+                const SizedBox(height: 8),
+                Center(
                   child: TextButton(
                     onPressed: editable
                         ? () => openPasswordReset(
@@ -158,34 +177,76 @@ class LoginForm extends StatelessWidget {
                           )
                         : null,
                     style: TextButton.styleFrom(
-                      foregroundColor: VanepColors.textSecondary,
+                      foregroundColor: VanepColors.action,
                     ),
-                    child: Text(l10n.loginForgotPassword),
+                    child: Text(
+                      l10n.loginForgotPassword,
+                      style: const TextStyle(fontSize: 15),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                VanepPrimaryButton(
-                  label: l10n.loginTitle,
-                  isLoading: state.isSubmittingPassword,
-                  onPressed: state.canSubmit ? cubit.submitPassword : null,
-                ),
                 const SizedBox(height: 12),
+                LoginDivider(label: l10n.loginOrDivider),
+                const SizedBox(height: 20),
                 VanepSecondaryButton(
                   label: l10n.loginWithGoogle,
                   icon: Icons.account_circle_outlined,
                   isLoading: state.isSubmittingGoogle,
                   onPressed: editable ? cubit.signInWithGoogle : null,
                 ),
+                const SizedBox(height: 28),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      l10n.loginNoAccount,
+                      style: VanepTypography.cardSubtitle.copyWith(
+                        fontSize: 15,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: editable
+                          ? () => openAccountTypeChoice(context)
+                          : null,
+                      style: TextButton.styleFrom(
+                        foregroundColor: VanepColors.action,
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                      ),
+                      child: Text(
+                        l10n.signupCreateAccount,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 16),
-        TextButton(
-          onPressed: editable ? () => openAccountTypeChoice(context) : null,
-          style: TextButton.styleFrom(foregroundColor: VanepColors.foreground),
-          child: Text(l10n.signupCreateAccount),
+      ),
+    );
+  }
+}
+
+class LoginDivider extends StatelessWidget {
+  const LoginDivider({required this.label, super.key});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Expanded(child: Divider(color: VanepColors.inputBorder)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Text(label, style: VanepTypography.cardSubtitle),
         ),
+        const Expanded(child: Divider(color: VanepColors.inputBorder)),
       ],
     );
   }

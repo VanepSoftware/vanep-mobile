@@ -50,19 +50,23 @@ class GenderChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? VanepColors.brand : VanepColors.surface,
-      borderRadius: BorderRadius.circular(20),
+      color: selected ? VanepColors.action : VanepColors.card,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(
+          color: selected ? VanepColors.action : VanepColors.inputBorder,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
           child: Text(
             label,
-            style: VanepTypography.cardSubtitle.copyWith(
-              color: selected
-                  ? VanepColors.backgroundDeep
-                  : VanepColors.textPrimary,
+            style: VanepTypography.fieldValue.copyWith(
+              fontSize: 15,
+              color: selected ? VanepColors.card : VanepColors.textPrimary,
               fontWeight: FontWeight.w600,
             ),
           ),

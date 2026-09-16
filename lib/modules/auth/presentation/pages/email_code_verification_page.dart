@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
@@ -11,6 +10,7 @@ import '../cubit/auth_cubit.dart';
 import '../cubit/email_code_verification_cubit.dart';
 import '../cubit/email_code_verification_state.dart';
 import '../mappers/account_failure_l10n.dart';
+import '../widgets/auth_page_chrome.dart';
 import '../widgets/verification_code_field.dart';
 
 Future<void> openEmailCodeVerification(
@@ -57,40 +57,34 @@ class EmailCodeVerificationPage extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<EmailCodeVerificationCubit>();
         return Scaffold(
-          backgroundColor: VanepColors.surface,
-          appBar: AppBar(
-            backgroundColor: VanepColors.surface,
-            foregroundColor: VanepColors.textPrimary,
-            elevation: 0,
-            title: Text(
-              l10n.emailVerificationTitle,
-              style: VanepTypography.cardTitle,
-            ),
-          ),
+          backgroundColor: VanepColors.card,
+          appBar: const AuthAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
-              Text(
-                l10n.emailCodeSentTo(state.email),
-                style: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
+              AuthPageHeader(
+                icon: Icons.mark_email_unread_outlined,
+                title: l10n.emailVerificationTitle,
+                subtitle: l10n.emailCodeSentTo(state.email),
               ),
-              const SizedBox(height: 20),
               VerificationCodeField(
                 label: l10n.verificationCodeLabel,
                 initialValue: state.code,
                 onChanged: cubit.updateCode,
                 enabled: state.isEditing,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               VanepPrimaryButton(
                 label: l10n.emailVerificationSubmit,
                 isLoading: !state.isEditing,
                 onPressed: state.canVerify ? cubit.verify : null,
               ),
               const SizedBox(height: 8),
-              ResendCodeButton(
-                secondsLeft: state.resendSecondsLeft,
-                onPressed: state.canResend ? cubit.resend : null,
+              Center(
+                child: ResendCodeButton(
+                  secondsLeft: state.resendSecondsLeft,
+                  onPressed: state.canResend ? cubit.resend : null,
+                ),
               ),
             ],
           ),
@@ -136,9 +130,13 @@ class ResendCodeButton extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return TextButton(
       onPressed: onPressed,
-      style: TextButton.styleFrom(foregroundColor: VanepColors.textPrimary),
+      style: TextButton.styleFrom(
+        foregroundColor: VanepColors.action,
+        disabledForegroundColor: VanepColors.textMuted,
+      ),
       child: Text(
         secondsLeft > 0 ? l10n.resendCodeIn(secondsLeft) : l10n.resendCode,
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     );
   }

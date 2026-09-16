@@ -23,21 +23,24 @@ class VanepPrimaryButton extends StatelessWidget {
       child: FilledButton(
         onPressed: isLoading ? null : onPressed,
         style: FilledButton.styleFrom(
-          backgroundColor: VanepColors.brand,
-          foregroundColor: VanepColors.backgroundDeep,
-          disabledBackgroundColor: VanepColors.divider,
-          disabledForegroundColor: VanepColors.textMuted,
+          backgroundColor: VanepColors.action,
+          foregroundColor: VanepColors.card,
+          disabledBackgroundColor: VanepColors.action.withValues(
+            alpha: isLoading ? 0.75 : 0.45,
+          ),
+          disabledForegroundColor: VanepColors.card,
+          elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: isLoading
             ? const SizedBox(
-                height: 22,
-                width: 22,
+                height: 20,
+                width: 20,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2.4,
-                  color: VanepColors.backgroundDeep,
+                  strokeWidth: 2.2,
+                  color: VanepColors.card,
                 ),
               )
             : Text(label, style: VanepTypography.button),
