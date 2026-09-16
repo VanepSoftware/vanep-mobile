@@ -8,12 +8,15 @@ import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.d
 import 'package:vanep_mobile/modules/auth/domain/usecases/request_email_change.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_up.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_state.dart';
 
 class MockGetCurrentSession extends Mock implements GetCurrentSession {}
 
@@ -39,3 +42,7 @@ class MockPersonalDataCubit extends MockCubit<PersonalDataState>
 class MockSignInWithPassword extends Mock implements SignInWithPassword {}
 
 class MockLoginCubit extends MockCubit<LoginState> implements LoginCubit {}
+
+class MockSignUp extends Mock implements SignUp {}
+
+class MockSignupCubit extends MockCubit<SignupState> implements SignupCubit {}

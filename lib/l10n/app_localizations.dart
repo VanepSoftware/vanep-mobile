@@ -176,6 +176,204 @@ abstract class AppLocalizations {
   /// **'Too many requests. Wait a moment and try again.'**
   String get authErrorTooManyRequests;
 
+  /// No description provided for @signupCreateAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get signupCreateAccount;
+
+  /// No description provided for @signupChooseTypeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you want to use Vanep?'**
+  String get signupChooseTypeTitle;
+
+  /// No description provided for @signupTypeClient.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m a client (guardian)'**
+  String get signupTypeClient;
+
+  /// No description provided for @signupTypeDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m a driver'**
+  String get signupTypeDriver;
+
+  /// No description provided for @signupTypeAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m an assistant'**
+  String get signupTypeAssistant;
+
+  /// No description provided for @signupTitleClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Client sign-up'**
+  String get signupTitleClient;
+
+  /// No description provided for @signupTitleDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver sign-up'**
+  String get signupTitleDriver;
+
+  /// No description provided for @signupTitleAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant sign-up'**
+  String get signupTitleAssistant;
+
+  /// No description provided for @signupFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get signupFieldName;
+
+  /// No description provided for @signupFieldDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'CPF'**
+  String get signupFieldDocument;
+
+  /// No description provided for @signupFieldPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get signupFieldPhone;
+
+  /// No description provided for @signupFieldBirthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth date'**
+  String get signupFieldBirthDate;
+
+  /// No description provided for @signupFieldGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get signupFieldGender;
+
+  /// No description provided for @signupFieldCnpj.
+  ///
+  /// In en, this message translates to:
+  /// **'CNPJ (yours or your company\'s)'**
+  String get signupFieldCnpj;
+
+  /// No description provided for @signupFieldExperienceYears.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of experience'**
+  String get signupFieldExperienceYears;
+
+  /// No description provided for @signupFieldBasePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Base price (R\$)'**
+  String get signupFieldBasePrice;
+
+  /// No description provided for @signupAcceptTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'I accept the terms of use'**
+  String get signupAcceptTerms;
+
+  /// No description provided for @emailCodeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {email}.'**
+  String emailCodeSentTo(String email);
+
+  /// No description provided for @accountIssueRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in this field.'**
+  String get accountIssueRequired;
+
+  /// No description provided for @accountIssueEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email.'**
+  String get accountIssueEmailInvalid;
+
+  /// No description provided for @accountIssueDocumentInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid CPF. Check the numbers entered.'**
+  String get accountIssueDocumentInvalid;
+
+  /// No description provided for @accountIssueNumberInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number.'**
+  String get accountIssueNumberInvalid;
+
+  /// No description provided for @accountIssuePasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'The password must be at least {min} characters long.'**
+  String accountIssuePasswordTooShort(int min);
+
+  /// No description provided for @accountIssueTermsNotAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the terms of use.'**
+  String get accountIssueTermsNotAccepted;
+
+  /// No description provided for @accountIssueBasePriceNotPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'The base price must be greater than zero.'**
+  String get accountIssueBasePriceNotPositive;
+
+  /// No description provided for @accountIssueEmailDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists.'**
+  String get accountIssueEmailDuplicate;
+
+  /// No description provided for @accountIssueDocumentDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this CPF already exists.'**
+  String get accountIssueDocumentDuplicate;
+
+  /// No description provided for @accountIssueRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Check this field.'**
+  String get accountIssueRejected;
+
+  /// No description provided for @accountErrorCheckFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the highlighted fields.'**
+  String get accountErrorCheckFields;
+
+  /// No description provided for @accountErrorInvalidCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired code.'**
+  String get accountErrorInvalidCode;
+
+  /// No description provided for @accountErrorInvalidSignupTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Google sign-up expired. Sign in with Google again.'**
+  String get accountErrorInvalidSignupTicket;
+
+  /// No description provided for @accountErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the server. Try again.'**
+  String get accountErrorNetwork;
+
+  /// No description provided for @accountErrorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get accountErrorUnexpected;
+
   /// No description provided for @homeGreeting.
   ///
   /// In en, this message translates to:
