@@ -1,6 +1,5 @@
 import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_request.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
@@ -68,11 +67,3 @@ class FakeAuthSession implements AuthSession {
   @override
   final UserProfile profile;
 }
-
-const fakeAuthorizationRequest = AuthorizationRequest(
-  authorizationUrl:
-      'http://10.0.2.2:8080/oauth2/authorize?response_type=code&client_id=vanep-mobile',
-  redirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-  state: 'state-123',
-  codeVerifier: 'verifier-123',
-);

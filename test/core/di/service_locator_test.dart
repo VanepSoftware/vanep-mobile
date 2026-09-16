@@ -5,8 +5,6 @@ import 'package:vanep_mobile/core/environment/environment.dart';
 const _env = Environment(
   authBaseUrl: 'http://10.0.2.2:8080',
   oauthClientId: 'vanep-mobile',
-  oauthRedirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-  oauthScopes: 'read write',
 );
 
 void main() {
@@ -21,12 +19,7 @@ void main() {
   test('is idempotent — a second call keeps the first registration', () {
     configureCoreDependencies(_env);
     configureCoreDependencies(
-      const Environment(
-        authBaseUrl: 'other',
-        oauthClientId: 'other',
-        oauthRedirectUri: 'other',
-        oauthScopes: 'other',
-      ),
+      const Environment(authBaseUrl: 'other', oauthClientId: 'other'),
     );
 
     expect(getIt<Environment>(), same(_env));

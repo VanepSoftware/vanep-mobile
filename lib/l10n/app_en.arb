@@ -4,7 +4,6 @@
   "welcomeTagline": "School transport, simplified.",
   "continueButton": "Continue",
   "loginTitle": "Sign in",
-  "loginCancelled": "Sign-in was cancelled.",
   "loginFailed": "Could not sign in. Please try again.",
   "loginEmailLabel": "Email",
   "loginPasswordLabel": "Password",

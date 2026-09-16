@@ -122,12 +122,6 @@ abstract class AppLocalizations {
   /// **'Sign in'**
   String get loginTitle;
 
-  /// No description provided for @loginCancelled.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign-in was cancelled.'**
-  String get loginCancelled;
-
   /// No description provided for @loginFailed.
   ///
   /// In en, this message translates to:

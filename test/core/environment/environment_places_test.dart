@@ -2,12 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 
-Environment environmentWith({String android = 'android-key', String ios = 'ios-key'}) {
+Environment environmentWith({
+  String android = 'android-key',
+  String ios = 'ios-key',
+}) {
   return Environment(
     authBaseUrl: 'http://localhost:8080',
     oauthClientId: 'vanep-mobile',
-    oauthRedirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-    oauthScopes: 'read write',
     placesApiKeyAndroid: android,
     placesApiKeyIos: ios,
   );
@@ -17,10 +18,7 @@ void main() {
   test('uses the Android key on Android', () {
     final environment = environmentWith();
 
-    expect(
-      environment.placesApiKeyFor(TargetPlatform.android),
-      'android-key',
-    );
+    expect(environment.placesApiKeyFor(TargetPlatform.android), 'android-key');
   });
 
   test('uses the iOS key on iOS', () {

@@ -7,7 +7,6 @@ import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource
 import 'package:vanep_mobile/modules/auth/data/datasources/google_id_token_source.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/oauth_remote_datasource.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/user_profile_remote_datasource.dart';
-import 'package:vanep_mobile/modules/auth/data/datasources/web_session_cleaner.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/auth_session_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/token_response_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
@@ -27,8 +26,6 @@ class MockAuthLocalDataSource extends Mock implements AuthLocalDataSource {}
 class MockAccountRemoteDataSource extends Mock
     implements AccountRemoteDataSource {}
 
-class MockWebSessionCleaner extends Mock implements WebSessionCleaner {}
-
 class MockGoogleIdTokenSource extends Mock implements GoogleIdTokenSource {}
 
 class MockSecureStorage extends Mock implements FlutterSecureStorage {}
@@ -38,8 +35,6 @@ class MockDio extends Mock implements Dio {}
 const testEnvironment = Environment(
   authBaseUrl: 'http://10.0.2.2:8080',
   oauthClientId: 'vanep-mobile',
-  oauthRedirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-  oauthScopes: 'read write',
 );
 
 const testUserProfileDto = UserProfileDto(
