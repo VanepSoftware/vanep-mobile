@@ -55,11 +55,11 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 
 ## 4. Phase 4 — Sign-up screens (branch: `feat/N-177-native-signup-screens`)
 
-- [ ] 4.1 Tests: `SignupCubit` (field updates clear issues, local validation blocks submit, server field errors, duplicates, success outcome)
-- [ ] 4.2 Tests: `AccountTypePage` and `SignupPage` widgets (driver fields only for driver)
-- [ ] 4.3 `SignupCubit` + `SignupState`, `AccountTypePage`, `SignupPage`, "Create account" on the login screen
-- [ ] 4.4 Localized labels and field issue messages
-- [ ] 4.5 Run `make lint` and `make test`
+- [x] 4.1 Tests: `SignupCubit` (field updates clear issues, local validation blocks submit, server field errors, duplicates, success outcome)
+- [x] 4.2 Tests: `AccountTypePage` and `SignupPage` widgets (driver fields only for driver)
+- [x] 4.3 `SignupCubit` + `SignupState`, `AccountTypePage`, `SignupPage`, "Create account" on the login screen
+- [x] 4.4 Localized labels and field issue messages
+- [x] 4.5 Run `make lint` and `make test`
 
 ## 5. Phase 5 — E-mail code verification (branch: `feat/N-177-email-code-verification`)
 

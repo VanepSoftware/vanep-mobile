@@ -26,9 +26,11 @@ import 'domain/usecases/request_email_change.dart';
 import 'domain/usecases/sign_in_with_password.dart';
 import 'domain/usecases/sign_out.dart';
 import 'domain/usecases/sign_up.dart';
+import 'domain/value_objects/user_type.dart';
 import 'presentation/cubit/auth_cubit.dart';
 import 'presentation/cubit/login_cubit.dart';
 import 'presentation/cubit/personal_data_cubit.dart';
+import 'presentation/cubit/signup_cubit.dart';
 import 'presentation/cubit/start_session.dart';
 
 void registerAuthDependencies(
@@ -52,6 +54,9 @@ void registerAuthDependencies(
       ),
     )
     ..registerFactory<SignUp>(() => SignUp(getIt<AccountRepository>()))
+    ..registerFactoryParam<SignupCubit, UserType, void>(
+      (type, _) => SignupCubit(signUp: getIt<SignUp>(), type: type),
+    )
     ..registerSingleton<PkceGenerator>(PkceGenerator())
     ..registerSingleton<WebSessionCleaner>(
       WebViewWebSessionCleaner(WebViewCookieManager()),

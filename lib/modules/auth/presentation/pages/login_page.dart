@@ -13,6 +13,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
 import '../mappers/auth_failure_l10n.dart';
+import 'account_type_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -133,6 +134,12 @@ class LoginForm extends StatelessWidget {
               ],
             ),
           ),
+        ),
+        const SizedBox(height: 16),
+        TextButton(
+          onPressed: editable ? () => openAccountTypeChoice(context) : null,
+          style: TextButton.styleFrom(foregroundColor: VanepColors.foreground),
+          child: Text(l10n.signupCreateAccount),
         ),
       ],
     );

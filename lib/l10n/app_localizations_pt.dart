@@ -50,6 +50,116 @@ class AppLocalizationsPt extends AppLocalizations {
       'Muitas requisições. Aguarde um instante e tente de novo.';
 
   @override
+  String get signupCreateAccount => 'Criar conta';
+
+  @override
+  String get signupChooseTypeTitle => 'Como você quer usar a Vanep?';
+
+  @override
+  String get signupTypeClient => 'Sou cliente (responsável)';
+
+  @override
+  String get signupTypeDriver => 'Sou motorista';
+
+  @override
+  String get signupTypeAssistant => 'Sou assistente';
+
+  @override
+  String get signupTitleClient => 'Cadastro de cliente';
+
+  @override
+  String get signupTitleDriver => 'Cadastro de motorista';
+
+  @override
+  String get signupTitleAssistant => 'Cadastro de assistente';
+
+  @override
+  String get signupFieldName => 'Nome';
+
+  @override
+  String get signupFieldDocument => 'CPF';
+
+  @override
+  String get signupFieldPhone => 'Telefone';
+
+  @override
+  String get signupFieldBirthDate => 'Data de nascimento';
+
+  @override
+  String get signupFieldGender => 'Sexo';
+
+  @override
+  String get signupFieldCnpj => 'CNPJ (próprio ou da empresa)';
+
+  @override
+  String get signupFieldExperienceYears => 'Anos de experiência';
+
+  @override
+  String get signupFieldBasePrice => 'Valor base (R\$)';
+
+  @override
+  String get signupAcceptTerms => 'Aceito os termos de uso';
+
+  @override
+  String emailCodeSentTo(String email) {
+    return 'Enviamos um código de 6 dígitos para $email.';
+  }
+
+  @override
+  String get accountIssueRequired => 'Preencha este campo.';
+
+  @override
+  String get accountIssueEmailInvalid => 'E-mail inválido.';
+
+  @override
+  String get accountIssueDocumentInvalid =>
+      'CPF inválido. Verifique os números informados.';
+
+  @override
+  String get accountIssueNumberInvalid => 'Informe um número válido.';
+
+  @override
+  String accountIssuePasswordTooShort(int min) {
+    return 'A senha deve ter ao menos $min caracteres.';
+  }
+
+  @override
+  String get accountIssueTermsNotAccepted =>
+      'É necessário aceitar os termos de uso.';
+
+  @override
+  String get accountIssueBasePriceNotPositive =>
+      'O valor base deve ser maior que zero.';
+
+  @override
+  String get accountIssueEmailDuplicate =>
+      'Já existe uma conta com este e-mail.';
+
+  @override
+  String get accountIssueDocumentDuplicate =>
+      'Já existe uma conta com este CPF.';
+
+  @override
+  String get accountIssueRejected => 'Confira este campo.';
+
+  @override
+  String get accountErrorCheckFields => 'Confira os campos destacados.';
+
+  @override
+  String get accountErrorInvalidCode => 'Código inválido ou expirado.';
+
+  @override
+  String get accountErrorInvalidSignupTicket =>
+      'Seu cadastro com o Google expirou. Entre com o Google novamente.';
+
+  @override
+  String get accountErrorNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get accountErrorUnexpected => 'Algo deu errado. Tente novamente.';
+
+  @override
   String homeGreeting(String name) {
     return 'Olá, $name!';
   }

@@ -8,6 +8,7 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 
 import 'auth_presentation_mocks.dart';
@@ -110,4 +111,14 @@ void main() {
       verify(() => cubit.clearFailure()).called(1);
     });
   }
+
+  testWidgets('Criar conta opens the account type choice', (tester) async {
+    givenState(const LoginState());
+
+    await tester.pumpWidget(loginHarness(cubit));
+    await tester.tap(find.text('Criar conta'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AccountTypePage), findsOneWidget);
+  });
 }

@@ -13,6 +13,53 @@
   "loginErrorAccountLocked": "Too many failed attempts. Try again in a few minutes.",
   "loginErrorAccountDisabled": "This account has been deactivated.",
   "authErrorTooManyRequests": "Too many requests. Wait a moment and try again.",
+  "signupCreateAccount": "Create account",
+  "signupChooseTypeTitle": "How do you want to use Vanep?",
+  "signupTypeClient": "I'm a client (guardian)",
+  "signupTypeDriver": "I'm a driver",
+  "signupTypeAssistant": "I'm an assistant",
+  "signupTitleClient": "Client sign-up",
+  "signupTitleDriver": "Driver sign-up",
+  "signupTitleAssistant": "Assistant sign-up",
+  "signupFieldName": "Name",
+  "signupFieldDocument": "CPF",
+  "signupFieldPhone": "Phone",
+  "signupFieldBirthDate": "Birth date",
+  "signupFieldGender": "Sex",
+  "signupFieldCnpj": "CNPJ (yours or your company's)",
+  "signupFieldExperienceYears": "Years of experience",
+  "signupFieldBasePrice": "Base price (R$)",
+  "signupAcceptTerms": "I accept the terms of use",
+  "emailCodeSentTo": "We sent a 6-digit code to {email}.",
+  "@emailCodeSentTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountIssueRequired": "Fill in this field.",
+  "accountIssueEmailInvalid": "Invalid email.",
+  "accountIssueDocumentInvalid": "Invalid CPF. Check the numbers entered.",
+  "accountIssueNumberInvalid": "Enter a valid number.",
+  "accountIssuePasswordTooShort": "The password must be at least {min} characters long.",
+  "@accountIssuePasswordTooShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "accountIssueTermsNotAccepted": "You must accept the terms of use.",
+  "accountIssueBasePriceNotPositive": "The base price must be greater than zero.",
+  "accountIssueEmailDuplicate": "An account with this email already exists.",
+  "accountIssueDocumentDuplicate": "An account with this CPF already exists.",
+  "accountIssueRejected": "Check this field.",
+  "accountErrorCheckFields": "Check the highlighted fields.",
+  "accountErrorInvalidCode": "Invalid or expired code.",
+  "accountErrorInvalidSignupTicket": "Your Google sign-up expired. Sign in with Google again.",
+  "accountErrorNetwork": "Could not reach the server. Try again.",
+  "accountErrorUnexpected": "Something went wrong. Try again.",
   "homeGreeting": "Hello, {name}!",
   "@homeGreeting": {
     "placeholders": {
