@@ -2,12 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/google_id_token_source.dart';
-import 'package:vanep_mobile/modules/auth/data/pkce/pkce_generator.dart';
 import 'package:vanep_mobile/modules/auth/data/repositories/auth_repository_impl.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
@@ -31,7 +29,6 @@ void main() {
   late MockOAuthRemoteDataSource remote;
   late MockUserProfileRemoteDataSource profileRemote;
   late MockAuthLocalDataSource local;
-  late MockWebSessionCleaner webSession;
   late MockGoogleIdTokenSource googleIdTokens;
   late AuthRepositoryImpl repository;
 
@@ -43,92 +40,14 @@ void main() {
     remote = MockOAuthRemoteDataSource();
     profileRemote = MockUserProfileRemoteDataSource();
     local = MockAuthLocalDataSource();
-    webSession = MockWebSessionCleaner();
     googleIdTokens = MockGoogleIdTokenSource();
     repository = AuthRepositoryImpl(
       remote: remote,
       profileRemote: profileRemote,
       local: local,
-      pkce: PkceGenerator(),
-      environment: testEnvironment,
-      webSession: webSession,
       googleIdTokens: googleIdTokens,
       clock: () => fixedNow,
     );
-  });
-
-  group('buildAuthorizationRequest', () {
-    test('builds a PKCE authorize URL with the configured client/redirect', () {
-      final request = repository.buildAuthorizationRequest();
-      final uri = Uri.parse(request.authorizationUrl);
-
-      expect(uri.path, '/oauth2/authorize');
-      expect(uri.queryParameters['response_type'], 'code');
-      expect(uri.queryParameters['client_id'], 'vanep-mobile');
-      expect(
-        uri.queryParameters['redirect_uri'],
-        'com.vanep.vanepmobile://oauth2redirect',
-      );
-      expect(uri.queryParameters['scope'], 'read write');
-      expect(uri.queryParameters['code_challenge_method'], 'S256');
-      expect(uri.queryParameters['code_challenge'], isNotEmpty);
-      expect(uri.queryParameters['state'], request.state);
-      expect(request.codeVerifier, isNotEmpty);
-    });
-  });
-
-  group('exchangeCode', () {
-    const request = AuthorizationRequest(
-      authorizationUrl: 'http://10.0.2.2:8080/oauth2/authorize',
-      redirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-      state: 'state-1',
-      codeVerifier: 'verifier-1',
-    );
-
-    test(
-      'exchanges, fetches profile, persists and returns the session',
-      () async {
-        when(
-          () => remote.exchangeCode(
-            code: any(named: 'code'),
-            codeVerifier: any(named: 'codeVerifier'),
-            redirectUri: any(named: 'redirectUri'),
-          ),
-        ).thenAnswer((_) async => testTokenResponseDto);
-        when(
-          () => remote.fetchProfile(any()),
-        ).thenAnswer((_) async => testUserProfileDto);
-        when(
-          () => local.saveSession(any()),
-        ).thenAnswer((_) => Future<void>.value());
-
-        final result = await repository.exchangeCode(
-          code: 'the-code',
-          request: request,
-        );
-
-        final session = result.valueOrNull!;
-        expect(session.accessToken, 'access-1');
-        expect(session.refreshToken, 'refresh-1');
-        expect(session.profile.token, 'user-token-1');
-        expect(session.expiresAt, fixedNow.add(const Duration(seconds: 900)));
-        verify(() => local.saveSession(any())).called(1);
-      },
-    );
-
-    test('maps a Dio error to NetworkAuthFailure', () async {
-      when(
-        () => remote.exchangeCode(
-          code: any(named: 'code'),
-          codeVerifier: any(named: 'codeVerifier'),
-          redirectUri: any(named: 'redirectUri'),
-        ),
-      ).thenThrow(_dioError());
-
-      final result = await repository.exchangeCode(code: 'x', request: request);
-
-      expect(result.errorOrNull, isA<NetworkAuthFailure>());
-    });
   });
 
   group('signInWithPassword', () {
@@ -339,14 +258,13 @@ void main() {
 
   group('signOut', () {
     test(
-      'revokes both tokens, clears the local session and web cookies',
+      'revokes both tokens, clears the local session and signs out of Google',
       () async {
         when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
         when(
           () => remote.revoke(any(), any()),
         ).thenAnswer((_) => Future<void>.value());
         when(local.clearSession).thenAnswer((_) => Future<void>.value());
-        when(webSession.clear).thenAnswer((_) => Future<void>.value());
         when(googleIdTokens.signOut).thenAnswer((_) => Future<void>.value());
 
         final result = await repository.signOut();
@@ -355,22 +273,20 @@ void main() {
         verify(() => remote.revoke('refresh-1', 'refresh_token')).called(1);
         verify(() => remote.revoke('access-1', 'access_token')).called(1);
         verify(local.clearSession).called(1);
-        verify(webSession.clear).called(1);
         verify(googleIdTokens.signOut).called(1);
       },
     );
 
-    test('clears web cookies even when there is no stored session', () async {
+    test('signs out of Google even when there is no stored session', () async {
       when(local.readSession).thenAnswer((_) async => null);
       when(local.clearSession).thenAnswer((_) => Future<void>.value());
-      when(webSession.clear).thenAnswer((_) => Future<void>.value());
       when(googleIdTokens.signOut).thenAnswer((_) => Future<void>.value());
 
       final result = await repository.signOut();
 
       expect(result.isOk, isTrue);
       verifyNever(() => remote.revoke(any(), any()));
-      verify(webSession.clear).called(1);
+      verify(googleIdTokens.signOut).called(1);
     });
   });
 

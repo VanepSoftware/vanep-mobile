@@ -1,34 +1,27 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
 import '../../../../core/result/result.dart';
 import '../../domain/entities/auth_session.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/failures/auth_failure.dart';
 import '../../domain/failures/profile_edit_failure.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../domain/value_objects/authorization_request.dart';
 import '../../domain/value_objects/profile_patch_request.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/google_id_token_source.dart';
 import '../datasources/oauth_remote_datasource.dart';
 import '../datasources/user_profile_remote_datasource.dart';
-import '../datasources/web_session_cleaner.dart';
 import '../dtos/auth_session_dto.dart';
 import '../dtos/token_response_dto.dart';
 import '../dtos/user_profile_dto.dart';
 import '../mappers/profile_edit_failure_mapper.dart';
 import '../mappers/token_endpoint_failure_mapper.dart';
-import '../pkce/pkce_generator.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this.remote,
     required this.profileRemote,
     required this.local,
-    required this.pkce,
-    required this.environment,
-    required this.webSession,
     required this.googleIdTokens,
     DateTime Function() clock = DateTime.now,
   }) : _now = clock;
@@ -36,56 +29,8 @@ class AuthRepositoryImpl implements AuthRepository {
   final OAuthRemoteDataSource remote;
   final UserProfileRemoteDataSource profileRemote;
   final AuthLocalDataSource local;
-  final PkceGenerator pkce;
-  final Environment environment;
-  final WebSessionCleaner webSession;
   final GoogleIdTokenSource googleIdTokens;
   final DateTime Function() _now;
-
-  @override
-  AuthorizationRequest buildAuthorizationRequest() {
-    final verifier = pkce.createCodeVerifier();
-    final challenge = pkce.createCodeChallenge(verifier);
-    final state = pkce.createState();
-
-    final url = Uri.parse(environment.authorizationEndpoint).replace(
-      queryParameters: {
-        'response_type': 'code',
-        'client_id': environment.oauthClientId,
-        'redirect_uri': environment.oauthRedirectUri,
-        'scope': environment.oauthScopes,
-        'code_challenge': challenge,
-        'code_challenge_method': 'S256',
-        'state': state,
-      },
-    );
-
-    return AuthorizationRequest(
-      authorizationUrl: url.toString(),
-      redirectUri: environment.oauthRedirectUri,
-      state: state,
-      codeVerifier: verifier,
-    );
-  }
-
-  @override
-  Future<Result<AuthFailure, AuthSession>> exchangeCode({
-    required String code,
-    required AuthorizationRequest request,
-  }) async {
-    try {
-      final token = await remote.exchangeCode(
-        code: code,
-        codeVerifier: request.codeVerifier,
-        redirectUri: request.redirectUri,
-      );
-      return Ok(await startSessionFromToken(token));
-    } on DioException catch (error) {
-      return Err(NetworkAuthFailure(error.message));
-    } on Object catch (error) {
-      return Err(UnexpectedAuthFailure(error.toString()));
-    }
-  }
 
   @override
   Future<Result<AuthFailure, AuthSession>> signInWithPassword({
@@ -177,8 +122,6 @@ class AuthRepositoryImpl implements AuthRepository {
       await revokeQuietly(remote, stored.accessToken, 'access_token');
     }
     await local.clearSession();
-
-    await webSession.clear();
     await googleIdTokens.signOut();
     return const Ok(null);
   }

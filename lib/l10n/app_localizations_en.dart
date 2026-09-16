@@ -21,9 +21,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginTitle => 'Sign in';
 
   @override
-  String get loginCancelled => 'Sign-in was cancelled.';
-
-  @override
   String get loginFailed => 'Could not sign in. Please try again.';
 
   @override

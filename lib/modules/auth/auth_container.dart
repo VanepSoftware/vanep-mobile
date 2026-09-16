@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../core/environment/environment.dart';
 import '../../core/network/auth_interceptor.dart';
@@ -13,15 +12,11 @@ import 'data/datasources/auth_local_datasource.dart';
 import 'data/datasources/google_id_token_source.dart';
 import 'data/datasources/oauth_remote_datasource.dart';
 import 'data/datasources/user_profile_remote_datasource.dart';
-import 'data/datasources/web_session_cleaner.dart';
-import 'data/pkce/pkce_generator.dart';
 import 'data/repositories/account_repository_impl.dart';
 import 'data/repositories/auth_repository_impl.dart';
 import 'domain/repositories/account_repository.dart';
 import 'domain/repositories/auth_repository.dart';
-import 'domain/usecases/build_authorization_request.dart';
 import 'domain/usecases/complete_google_signup.dart';
-import 'domain/usecases/exchange_authorization_code.dart';
 import 'domain/usecases/get_current_session.dart';
 import 'domain/usecases/patch_user_profile.dart';
 import 'domain/usecases/refresh_user_profile.dart';
@@ -112,10 +107,6 @@ void registerAuthDependencies(
         startSession: startSession,
         entry: entry,
       ),
-    )
-    ..registerSingleton<PkceGenerator>(PkceGenerator())
-    ..registerSingleton<WebSessionCleaner>(
-      WebViewWebSessionCleaner(WebViewCookieManager()),
     );
 
   getIt.registerSingleton<Dio>(
@@ -135,9 +126,6 @@ void registerAuthDependencies(
         remote: getIt<OAuthRemoteDataSource>(),
         profileRemote: getIt<UserProfileRemoteDataSource>(),
         local: getIt<AuthLocalDataSource>(),
-        pkce: getIt<PkceGenerator>(),
-        environment: environment,
-        webSession: getIt<WebSessionCleaner>(),
         googleIdTokens: GoogleSignInIdTokenSource(
           googleSignIn: GoogleSignIn.instance,
           serverClientId: environment.googleServerClientId,
@@ -146,12 +134,6 @@ void registerAuthDependencies(
     )
     ..registerFactory<GetCurrentSession>(
       () => GetCurrentSession(getIt<AuthRepository>()),
-    )
-    ..registerFactory<BuildAuthorizationRequest>(
-      () => BuildAuthorizationRequest(getIt<AuthRepository>()),
-    )
-    ..registerFactory<ExchangeAuthorizationCode>(
-      () => ExchangeAuthorizationCode(getIt<AuthRepository>()),
     )
     ..registerFactory<SignInWithPassword>(
       () => SignInWithPassword(getIt<AuthRepository>()),
@@ -187,8 +169,6 @@ void registerAuthDependencies(
     ..registerFactory<AuthCubit>(
       () => AuthCubit(
         getCurrentSession: getIt<GetCurrentSession>(),
-        buildAuthorizationRequest: getIt<BuildAuthorizationRequest>(),
-        exchangeAuthorizationCode: getIt<ExchangeAuthorizationCode>(),
         signOut: getIt<SignOut>(),
         refreshUserProfile: getIt<RefreshUserProfile>(),
       ),

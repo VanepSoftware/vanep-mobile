@@ -13,10 +13,6 @@ class CancelledAuthFailure extends AuthFailure {
   const CancelledAuthFailure();
 }
 
-class InvalidStateAuthFailure extends AuthFailure {
-  const InvalidStateAuthFailure();
-}
-
 class InvalidCredentialsAuthFailure extends AuthFailure {
   const InvalidCredentialsAuthFailure();
 }
