@@ -17,6 +17,7 @@ import '../dtos/auth_session_dto.dart';
 import '../dtos/token_response_dto.dart';
 import '../dtos/user_profile_dto.dart';
 import '../mappers/profile_edit_failure_mapper.dart';
+import '../mappers/token_endpoint_failure_mapper.dart';
 import '../pkce/pkce_generator.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -75,19 +76,50 @@ class AuthRepositoryImpl implements AuthRepository {
         codeVerifier: request.codeVerifier,
         redirectUri: request.redirectUri,
       );
-      final profile = await remote.fetchProfile(token.accessToken);
-      final session = sessionFromTokenResponse(
-        token: token,
-        profile: profile,
-        now: _now(),
-      );
-      await local.saveSession(session);
-      return Ok(session);
+      return Ok(await startSessionFromToken(token));
     } on DioException catch (error) {
       return Err(NetworkAuthFailure(error.message));
     } on Object catch (error) {
       return Err(UnexpectedAuthFailure(error.toString()));
     }
+  }
+
+  @override
+  Future<Result<AuthFailure, AuthSession>> signInWithPassword({
+    required String email,
+    required String password,
+  }) async {
+    final TokenResponseDto token;
+    try {
+      token = await remote.requestPasswordGrant(
+        email: email,
+        password: password,
+      );
+    } on DioException catch (error) {
+      return Err(mapTokenEndpointFailure(error));
+    }
+    return startSessionOrFailure(token);
+  }
+
+  Future<Result<AuthFailure, AuthSession>> startSessionOrFailure(
+    TokenResponseDto token,
+  ) async {
+    try {
+      return Ok(await startSessionFromToken(token));
+    } on DioException catch (error) {
+      return Err(NetworkAuthFailure(error.message));
+    }
+  }
+
+  Future<AuthSessionDto> startSessionFromToken(TokenResponseDto token) async {
+    final profile = await remote.fetchProfile(token.accessToken);
+    final session = sessionFromTokenResponse(
+      token: token,
+      profile: profile,
+      now: _now(),
+    );
+    await local.saveSession(session);
+    return session;
   }
 
   @override

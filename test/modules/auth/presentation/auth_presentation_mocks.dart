@@ -6,9 +6,12 @@ import 'package:vanep_mobile/modules/auth/domain/usecases/get_current_session.da
 import 'package:vanep_mobile/modules/auth/domain/usecases/patch_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/request_email_change.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';
 
@@ -32,3 +35,7 @@ class MockRequestEmailChange extends Mock implements RequestEmailChange {}
 
 class MockPersonalDataCubit extends MockCubit<PersonalDataState>
     implements PersonalDataCubit {}
+
+class MockSignInWithPassword extends Mock implements SignInWithPassword {}
+
+class MockLoginCubit extends MockCubit<LoginState> implements LoginCubit {}

@@ -10,6 +10,10 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
@@ -66,8 +70,17 @@ void main() {
     expect(find.byType(SplashScreen), findsOneWidget);
   });
 
-  testWidgets('shows the welcome screen with the Continue button when '
-      'unauthenticated', (tester) async {
+  testWidgets('shows the login screen when unauthenticated', (tester) async {
+    final loginCubit = MockLoginCubit();
+    whenListen(
+      loginCubit,
+      const Stream<LoginState>.empty(),
+      initialState: const LoginState(),
+    );
+    getIt.registerFactoryParam<LoginCubit, StartSession, void>(
+      (_, _) => loginCubit,
+    );
+    addTearDown(getIt.reset);
     when(() => cubit.state).thenReturn(const AuthUnauthenticated());
     whenListen(
       cubit,
@@ -77,7 +90,7 @@ void main() {
 
     await tester.pumpWidget(_harness(cubit));
 
-    expect(find.text('Continuar'), findsOneWidget);
+    expect(find.byType(LoginPage), findsOneWidget);
   });
 
   testWidgets('routes a client session to the client shell', (tester) async {
@@ -104,8 +117,9 @@ void main() {
       initialState: const DriverSearchState(),
     );
     final autocompleteDatasource = MockPlaceAutocompleteDataSource();
-    when(() => autocompleteDatasource.findSuggestions(any(), any()))
-        .thenAnswer((_) async => const Ok([]));
+    when(
+      () => autocompleteDatasource.findSuggestions(any(), any()),
+    ).thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<DriversCubit>(() => driversCubit)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
@@ -116,9 +130,7 @@ void main() {
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(
-      FakeAuthSession(
-        profile: const FakeUserProfile(type: UserType.client),
-      ),
+      FakeAuthSession(profile: const FakeUserProfile(type: UserType.client)),
     );
     when(() => cubit.state).thenReturn(state);
     whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);
@@ -138,8 +150,9 @@ void main() {
       initialState: const ProfileSummaryState(),
     );
     final autocompleteDatasource = MockPlaceAutocompleteDataSource();
-    when(() => autocompleteDatasource.findSuggestions(any(), any()))
-        .thenAnswer((_) async => const Ok([]));
+    when(
+      () => autocompleteDatasource.findSuggestions(any(), any()),
+    ).thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
@@ -149,9 +162,7 @@ void main() {
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(
-      FakeAuthSession(
-        profile: const FakeUserProfile(type: UserType.driver),
-      ),
+      FakeAuthSession(profile: const FakeUserProfile(type: UserType.driver)),
     );
     when(() => cubit.state).thenReturn(state);
     whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);

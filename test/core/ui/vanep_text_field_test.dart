@@ -46,4 +46,25 @@ void main() {
     final field = tester.widget<TextField>(find.byType(TextField));
     expect(field.maxLength, isNull);
   });
+
+  testWidgets('hides the text when obscureText is set', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'Senha',
+            controller: controller,
+            onChanged: (_) {},
+            obscureText: true,
+          ),
+        ),
+      ),
+    );
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.obscureText, isTrue);
+  });
 }

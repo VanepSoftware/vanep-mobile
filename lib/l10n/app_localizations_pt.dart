@@ -27,6 +27,29 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loginFailed => 'Não foi possível entrar. Tente novamente.';
 
   @override
+  String get loginEmailLabel => 'E-mail';
+
+  @override
+  String get loginPasswordLabel => 'Senha';
+
+  @override
+  String get loginErrorInvalidCredentials => 'E-mail ou senha incorretos.';
+
+  @override
+  String get loginErrorEmailNotVerified => 'Confirme seu e-mail para entrar.';
+
+  @override
+  String get loginErrorAccountLocked =>
+      'Muitas tentativas sem sucesso. Tente de novo em alguns minutos.';
+
+  @override
+  String get loginErrorAccountDisabled => 'Esta conta foi desativada.';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Muitas requisições. Aguarde um instante e tente de novo.';
+
+  @override
   String homeGreeting(String name) {
     return 'Olá, $name!';
   }
