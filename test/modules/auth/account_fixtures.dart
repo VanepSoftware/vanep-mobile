@@ -1,4 +1,5 @@
 import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
@@ -21,4 +22,10 @@ final validDriverSignupForm = validClientSignupForm.copyWith(
   basePrice: '1.250,50',
   cnpj: '11.222.333/0001-81',
   experienceYears: '7',
+);
+
+const googleTicket = GoogleSignupTicket(
+  ticket: 'ticket-1',
+  email: 'novo@gmail.com',
+  name: 'Novo Usuário',
 );

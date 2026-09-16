@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../value_objects/google_signup_ticket.dart';
+
 sealed class AuthFailure extends Equatable {
   const AuthFailure();
 
@@ -33,6 +35,24 @@ class AccountDisabledAuthFailure extends AuthFailure {
 
 class TooManyRequestsAuthFailure extends AuthFailure {
   const TooManyRequestsAuthFailure();
+}
+
+class GoogleSignInAuthFailure extends AuthFailure {
+  const GoogleSignInAuthFailure([this.detail]);
+
+  final String? detail;
+
+  @override
+  List<Object?> get props => [detail];
+}
+
+class RegistrationRequiredAuthFailure extends AuthFailure {
+  const RegistrationRequiredAuthFailure(this.ticket);
+
+  final GoogleSignupTicket ticket;
+
+  @override
+  List<Object?> get props => [ticket];
 }
 
 class NetworkAuthFailure extends AuthFailure {

@@ -71,12 +71,12 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 
 ## 6. Phase 6 — Native Google login (branch: `feat/N-177-native-google-login`)
 
-- [ ] 6.1 Tests: `requestGoogleGrant`; `registration_required` parsing; `signInWithGoogle` (cancel, success, registration required); sign-out signs out of Google
-- [ ] 6.2 Tests: `completeGoogleSignup` request body and failures; `SignupCubit` Google flow repeats the grant; login Google button
-- [ ] 6.3 Add `google_sign_in`; `GOOGLE_SERVER_CLIENT_ID` in `Environment`, `.env.example` and README
-- [ ] 6.4 `GoogleIdTokenSource`, `requestGoogleGrant`, `signInWithGoogle`, `SignInWithGoogle`, `CompleteGoogleSignup`
-- [ ] 6.5 `VanepSecondaryButton` in core UI; Google button on login; Google mode in `AccountTypePage` / `SignupPage`
-- [ ] 6.6 Run `make lint` and `make test`
+- [x] 6.1 Tests: `requestGoogleGrant`; `registration_required` parsing; `signInWithGoogle` (cancel, success, registration required); sign-out signs out of Google
+- [x] 6.2 Tests: `completeGoogleSignup` request body and failures; `SignupCubit` Google flow repeats the grant; login Google button
+- [x] 6.3 Add `google_sign_in`; `GOOGLE_SERVER_CLIENT_ID` in `Environment`, `.env.example` and README
+- [x] 6.4 `GoogleIdTokenSource`, `requestGoogleGrant`, `signInWithGoogle`, `SignInWithGoogle`, `CompleteGoogleSignup`
+- [x] 6.5 `VanepSecondaryButton` in core UI; Google button on login; Google mode in `AccountTypePage` / `SignupPage`
+- [x] 6.6 Run `make lint` and `make test`
 - [ ] 6.7 Test Google login on a real Android device (acceptance of issue M6)
 
 ## 7. Phase 7 — Password reset by code (branch: `feat/N-177-native-password-reset`)

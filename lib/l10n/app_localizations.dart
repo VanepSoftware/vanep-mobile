@@ -176,6 +176,24 @@ abstract class AppLocalizations {
   /// **'Too many requests. Wait a moment and try again.'**
   String get authErrorTooManyRequests;
 
+  /// No description provided for @loginWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
+  String get loginWithGoogle;
+
+  /// No description provided for @loginErrorGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not sign in with Google. Try again.'**
+  String get loginErrorGoogle;
+
+  /// No description provided for @signupGoogleRegisteredSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-up complete! Sign in with Google to continue.'**
+  String get signupGoogleRegisteredSignIn;
+
   /// No description provided for @signupCreateAccount.
   ///
   /// In en, this message translates to:

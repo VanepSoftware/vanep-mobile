@@ -7,6 +7,7 @@ import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_glass_card.dart';
 import '../../../../core/ui/vanep_gradient_background.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
+import '../../../../core/ui/vanep_secondary_button.dart';
 import '../../../../core/ui/vanep_text_field.dart';
 import '../../../../core/ui/vanep_wordmark.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -16,6 +17,7 @@ import '../cubit/login_state.dart';
 import '../mappers/auth_failure_l10n.dart';
 import 'account_type_page.dart';
 import 'email_code_verification_page.dart';
+import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -68,6 +70,14 @@ void presentLoginFailure(BuildContext context, LoginState state) {
   final failure = state.failure;
   if (failure == null) return;
   context.read<LoginCubit>().clearFailure();
+  if (failure is RegistrationRequiredAuthFailure) {
+    openAccountTypeChoice(
+      context,
+      onTypeSelected: (context, type) =>
+          openSignup(context, type, googleTicket: failure.ticket),
+    );
+    return;
+  }
   if (failure is EmailNotVerifiedAuthFailure) {
     openEmailCodeVerification(
       context,
@@ -139,8 +149,15 @@ class LoginForm extends StatelessWidget {
                 const SizedBox(height: 24),
                 VanepPrimaryButton(
                   label: l10n.loginTitle,
-                  isLoading: state.isSubmitting,
+                  isLoading: state.isSubmittingPassword,
                   onPressed: state.canSubmit ? cubit.submitPassword : null,
+                ),
+                const SizedBox(height: 12),
+                VanepSecondaryButton(
+                  label: l10n.loginWithGoogle,
+                  icon: Icons.account_circle_outlined,
+                  isLoading: state.isSubmittingGoogle,
+                  onPressed: editable ? cubit.signInWithGoogle : null,
                 ),
               ],
             ),

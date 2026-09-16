@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../domain/failures/auth_failure.dart';
 
-enum LoginStatus { editing, submitting }
+enum LoginStatus { editing, submitting, googleSubmitting }
 
 class LoginState extends Equatable {
   const LoginState({
@@ -17,7 +17,11 @@ class LoginState extends Equatable {
   final LoginStatus status;
   final AuthFailure? failure;
 
-  bool get isSubmitting => status == LoginStatus.submitting;
+  bool get isSubmitting => status != LoginStatus.editing;
+
+  bool get isSubmittingPassword => status == LoginStatus.submitting;
+
+  bool get isSubmittingGoogle => status == LoginStatus.googleSubmitting;
 
   bool get canSubmit =>
       email.trim().isNotEmpty && password.isNotEmpty && !isSubmitting;

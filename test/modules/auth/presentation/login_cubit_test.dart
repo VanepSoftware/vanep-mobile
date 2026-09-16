@@ -7,11 +7,13 @@ import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
 
+import '../account_fixtures.dart';
 import '../auth_fixtures.dart';
 import 'auth_presentation_mocks.dart';
 
 void main() {
   late MockSignInWithPassword signInWithPassword;
+  late MockSignInWithGoogle signInWithGoogle;
   late List<AuthSession> startedSessions;
 
   final session = FakeAuthSession();
@@ -19,11 +21,13 @@ void main() {
 
   setUp(() {
     signInWithPassword = MockSignInWithPassword();
+    signInWithGoogle = MockSignInWithGoogle();
     startedSessions = [];
   });
 
   LoginCubit buildCubit() => LoginCubit(
     signInWithPassword: signInWithPassword,
+    signInWithGoogle: signInWithGoogle,
     startSession: startedSessions.add,
   );
 
@@ -102,4 +106,51 @@ void main() {
     act: (cubit) => cubit.clearFailure(),
     expect: () => [filled],
   );
+
+  group('signInWithGoogle', () {
+    blocTest<LoginCubit, LoginState>(
+      'hands the session to the app on success',
+      setUp: () => when(
+        signInWithGoogle.call,
+      ).thenAnswer((_) async => Ok<AuthFailure, AuthSession>(session)),
+      build: buildCubit,
+      act: (cubit) => cubit.signInWithGoogle(),
+      expect: () => [
+        const LoginState(status: LoginStatus.googleSubmitting),
+        const LoginState(),
+      ],
+      verify: (_) => expect(startedSessions, [session]),
+    );
+
+    blocTest<LoginCubit, LoginState>(
+      'a dismissed chooser shows nothing',
+      setUp: () => when(signInWithGoogle.call).thenAnswer(
+        (_) async =>
+            const Err<AuthFailure, AuthSession>(CancelledAuthFailure()),
+      ),
+      build: buildCubit,
+      act: (cubit) => cubit.signInWithGoogle(),
+      expect: () => [
+        const LoginState(status: LoginStatus.googleSubmitting),
+        const LoginState(),
+      ],
+    );
+
+    blocTest<LoginCubit, LoginState>(
+      'registration required is exposed for the page to continue',
+      setUp: () => when(signInWithGoogle.call).thenAnswer(
+        (_) async => const Err<AuthFailure, AuthSession>(
+          RegistrationRequiredAuthFailure(googleTicket),
+        ),
+      ),
+      build: buildCubit,
+      act: (cubit) => cubit.signInWithGoogle(),
+      expect: () => [
+        const LoginState(status: LoginStatus.googleSubmitting),
+        const LoginState(
+          failure: RegistrationRequiredAuthFailure(googleTicket),
+        ),
+      ],
+    );
+  });
 }
