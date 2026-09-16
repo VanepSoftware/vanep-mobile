@@ -57,6 +57,13 @@ class Environment {
 
   String get revocationEndpoint => '$authBaseUrl/oauth2/revoke';
 
+  String get signupClientEndpoint => '$authBaseUrl/api/auth/signup/client';
+
+  String get signupDriverEndpoint => '$authBaseUrl/api/auth/signup/driver';
+
+  String get signupAssistantEndpoint =>
+      '$authBaseUrl/api/auth/signup/assistant';
+
   String get userProfileEndpoint => '$authBaseUrl/api/user/me';
 
   String get userProfileEmailChangeEndpoint =>

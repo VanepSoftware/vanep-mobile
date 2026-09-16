@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/account_remote_datasource.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/oauth_remote_datasource.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/user_profile_remote_datasource.dart';
@@ -13,12 +14,17 @@ import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
+import '../account_fixtures.dart';
+
 class MockOAuthRemoteDataSource extends Mock implements OAuthRemoteDataSource {}
 
 class MockUserProfileRemoteDataSource extends Mock
     implements UserProfileRemoteDataSource {}
 
 class MockAuthLocalDataSource extends Mock implements AuthLocalDataSource {}
+
+class MockAccountRemoteDataSource extends Mock
+    implements AccountRemoteDataSource {}
 
 class MockWebSessionCleaner extends Mock implements WebSessionCleaner {}
 
@@ -64,4 +70,5 @@ void registerAuthDataFallbacks() {
   registerFallbackValue(RequestOptions());
   registerFallbackValue(const ProfilePatchRequest());
   registerFallbackValue(<String, Object?>{});
+  registerFallbackValue(validClientSignupForm);
 }
