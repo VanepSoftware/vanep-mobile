@@ -11,9 +11,9 @@ Backend prerequisite: `vanep-api-java` PRs #183–#194 (change `native-mobile-au
 | 0 | OpenSpec change | — | — |
 | 1 | Session in `flutter_secure_storage`, async token read, legacy Hive box purge (issue M5) | Phase 0 | — |
 | 2 | Password grant, token endpoint failure mapping, native login screen (M5) | Phase 1; backend 2b | — |
-| 3 | `AccountRepository`: sign-up and e-mail code endpoints, error envelope, sign-up validation (M7) | Phase 2; backend 4a, 4b | — |
+| 3 | `AccountRepository`: sign-up endpoints, error envelope, sign-up validation (M7) | Phase 2; backend 4a | — |
 | 4 | Account type choice and sign-up form (M7) | Phase 3 | — |
-| 5 | E-mail code verification, resend cooldown, automatic login, `email_not_verified` from login (M7) | Phase 4 | — |
+| 5 | E-mail code endpoints and screen, resend cooldown, automatic login, `email_not_verified` from login (M7) | Phase 4; backend 4b | — |
 | 6 | Google SDK, Google grant, `registration_required` → Google sign-up completion (M6) | Phase 5; backend 3b, 4c | — |
 | 7 | Forgot password and reset by code (M8) | Phase 5 | — |
 | 8 | Remove the WebView flow, PKCE, redirect config and dependencies (M8) | Phases 6 and 7 | — |
@@ -46,12 +46,12 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 
 ## 3. Phase 3 — Account API (branch: `feat/N-177-account-api`)
 
-- [ ] 3.1 Tests: `isValidCpf`, `validateSignupForm`, `SignupField.fromApi`
-- [ ] 3.2 Tests: `AccountRemoteDataSource` request bodies; `mapAccountFailure` for each envelope code, `429` and network; `AccountRepositoryImpl`
-- [ ] 3.3 Domain: `SignupForm`, `SignupField`, `SignupFieldIssue`, `AccountFailure`, `AccountRepository`, use cases `SignUp`, `VerifyEmailCode`, `ResendEmailVerificationCode`
-- [ ] 3.4 Data: `AuthApiErrorDto`, `AccountRemoteDataSource`, `AccountRepositoryImpl`, endpoints in `Environment`
-- [ ] 3.5 Register in `auth_container.dart`
-- [ ] 3.6 Run `make lint` and `make test`
+- [x] 3.1 Tests: `isValidCpf`, `SignupForm.validate`, `AccountField.fromApi`
+- [x] 3.2 Tests: `AccountRemoteDataSource` sign-up bodies; `mapAccountFailure` for each envelope code, `429` and network; `AccountRepositoryImpl`
+- [x] 3.3 Domain: `SignupForm` (with validation), `AccountField`, `AccountFieldIssue`, `AccountFailure`, `AccountRepository`, `SignUp` use case
+- [x] 3.4 Data: `AuthApiErrorDto`, `AccountRemoteDataSource`, `AccountRepositoryImpl`, sign-up endpoints in `Environment`
+- [x] 3.5 Register in `auth_container.dart`
+- [x] 3.6 Run `make lint` and `make test`
 
 ## 4. Phase 4 — Sign-up screens (branch: `feat/N-177-native-signup-screens`)
 
@@ -63,9 +63,9 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 
 ## 5. Phase 5 — E-mail code verification (branch: `feat/N-177-email-code-verification`)
 
-- [ ] 5.1 Tests: `CodeResendCooldown`; `EmailCodeVerificationCubit` (invalid code, success with and without password, resend starts cooldown)
+- [ ] 5.1 Tests: `verifyEmail` / `resendEmailVerification` bodies and failures; `CodeResendCooldown`; `EmailCodeVerificationCubit` (invalid code, success with and without password, resend starts cooldown)
 - [ ] 5.2 Tests: verification page widget; login `email_not_verified` opens verification; `AuthGate` pops pushed pages on authentication
-- [ ] 5.3 `CodeResendCooldown`, `EmailCodeVerificationCubit`, `EmailCodeVerificationPage`, shared `VerificationCodeField`
+- [ ] 5.3 Use cases `VerifyEmailCode`, `ResendEmailVerificationCode`; `CodeResendCooldown`, `EmailCodeVerificationCubit`, `EmailCodeVerificationPage`, shared `VerificationCodeField`
 - [ ] 5.4 Sign-up success and login `email_not_verified` open the verification screen
 - [ ] 5.5 Run `make lint` and `make test`
 

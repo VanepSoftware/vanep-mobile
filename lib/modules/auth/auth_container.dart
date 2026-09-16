@@ -7,12 +7,15 @@ import '../../core/environment/environment.dart';
 import '../../core/network/auth_interceptor.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/result/result.dart';
+import 'data/datasources/account_remote_datasource.dart';
 import 'data/datasources/auth_local_datasource.dart';
 import 'data/datasources/oauth_remote_datasource.dart';
 import 'data/datasources/user_profile_remote_datasource.dart';
 import 'data/datasources/web_session_cleaner.dart';
 import 'data/pkce/pkce_generator.dart';
+import 'data/repositories/account_repository_impl.dart';
 import 'data/repositories/auth_repository_impl.dart';
+import 'domain/repositories/account_repository.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/usecases/build_authorization_request.dart';
 import 'domain/usecases/exchange_authorization_code.dart';
@@ -22,6 +25,7 @@ import 'domain/usecases/refresh_user_profile.dart';
 import 'domain/usecases/request_email_change.dart';
 import 'domain/usecases/sign_in_with_password.dart';
 import 'domain/usecases/sign_out.dart';
+import 'domain/usecases/sign_up.dart';
 import 'presentation/cubit/auth_cubit.dart';
 import 'presentation/cubit/login_cubit.dart';
 import 'presentation/cubit/personal_data_cubit.dart';
@@ -39,6 +43,15 @@ void registerAuthDependencies(
       OAuthRemoteDataSource(dio: oauthDio, environment: environment),
     )
     ..registerSingleton<AuthLocalDataSource>(AuthLocalDataSource(secureStorage))
+    ..registerSingleton<AccountRepository>(
+      AccountRepositoryImpl(
+        remote: AccountRemoteDataSource(
+          dio: oauthDio,
+          environment: environment,
+        ),
+      ),
+    )
+    ..registerFactory<SignUp>(() => SignUp(getIt<AccountRepository>()))
     ..registerSingleton<PkceGenerator>(PkceGenerator())
     ..registerSingleton<WebSessionCleaner>(
       WebViewWebSessionCleaner(WebViewCookieManager()),

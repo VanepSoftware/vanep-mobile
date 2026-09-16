@@ -58,11 +58,11 @@ Constraints: mobile constitution — Clean Architecture with `Result` (R01, R04)
 
 ### D3: Account endpoints get their own repository
 
-`/api/auth/**` is not a session concern, so it gets `AccountRepository` + `AccountRemoteDataSource`, using the unauthenticated Dio (a stale bearer must never reach these routes). Failures are `AccountFailure`s mapped from the `{code, message, errors}` envelope. Server messages are **not** shown: copy comes from l10n (R10). Field errors map the API field name to `SignupField` (`driverFieldsComplete` → `basePrice`).
+`/api/auth/**` is not a session concern, so it gets `AccountRepository` + `AccountRemoteDataSource`, using the unauthenticated Dio (a stale bearer must never reach these routes). Failures are `AccountFailure`s mapped from the `{code, message, errors}` envelope. Server messages are **not** shown: copy comes from l10n (R10). Field errors map the API field name to `AccountField` (`driverFieldsComplete` → `basePrice`, `newPassword` → `password`).
 
 ### D4: Sign-up validation runs in the domain first
 
-`validateSignupForm` (pure Dart) mirrors the backend rules — required name/e-mail/password/CPF, e-mail format, password ≥ 6, CPF check digits, terms accepted, driver base price > 0 — and returns `Map<SignupField, SignupFieldIssue>`. The server stays authoritative: a `validation_error` it returns marks the listed fields as `SignupFieldIssue.rejected`, shown with a generic localized message.
+`SignupForm.validate` (pure Dart) mirrors the backend rules — required name/e-mail/password/CPF, e-mail format, password ≥ 6, CPF check digits, terms accepted, driver base price > 0 — and returns `Map<AccountField, AccountFieldIssue>`. The server stays authoritative: a `validation_error` it returns marks the listed fields as `AccountFieldIssue.rejected`, shown with a generic localized message.
 
 ### D5: One sign-up form for both entry points
 
