@@ -2,29 +2,46 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_state.dart';
 
 import '../account_fixtures.dart';
+import '../auth_fixtures.dart';
 import '../auth_mocks.dart';
 import 'auth_presentation_mocks.dart';
 
 void main() {
   late MockSignUp signUp;
+  late MockCompleteGoogleSignup completeGoogleSignup;
+  late MockSignInWithGoogle signInWithGoogle;
+  late List<AuthSession> startedSessions;
 
   final filled = SignupState(form: validClientSignupForm);
 
   setUpAll(registerAuthFallbacks);
 
-  setUp(() => signUp = MockSignUp());
+  setUp(() {
+    signUp = MockSignUp();
+    completeGoogleSignup = MockCompleteGoogleSignup();
+    signInWithGoogle = MockSignInWithGoogle();
+    startedSessions = [];
+  });
 
-  SignupCubit buildCubit() =>
-      SignupCubit(signUp: signUp, type: UserType.client);
+  SignupCubit buildCubit({GoogleSignupTicket? googleTicket}) => SignupCubit(
+    signUp: signUp,
+    completeGoogleSignup: completeGoogleSignup,
+    signInWithGoogle: signInWithGoogle,
+    startSession: startedSessions.add,
+    entry: SignupEntry(type: UserType.client, googleTicket: googleTicket),
+  );
 
   void stubSignUp(Result<AccountFailure, void> result) {
     when(() => signUp(any())).thenAnswer((_) async => result);
@@ -160,4 +177,82 @@ void main() {
     act: (cubit) => cubit.clearFailure(),
     expect: () => [filled],
   );
+
+  group('Google sign-up', () {
+    final googleFilled = SignupState(
+      form: validClientSignupForm,
+      googleTicket: googleTicket,
+    );
+    final session = FakeAuthSession();
+
+    void stubCompletion(Result<AccountFailure, void> result) {
+      when(
+        () => completeGoogleSignup(
+          ticket: any(named: 'ticket'),
+          form: any(named: 'form'),
+        ),
+      ).thenAnswer((_) async => result);
+    }
+
+    blocTest<SignupCubit, SignupState>(
+      'completes with the ticket and repeats the Google grant',
+      setUp: () {
+        stubCompletion(const Ok(null));
+        when(
+          signInWithGoogle.call,
+        ).thenAnswer((_) async => Ok<AuthFailure, AuthSession>(session));
+      },
+      build: () => buildCubit(googleTicket: googleTicket),
+      seed: () => googleFilled,
+      act: (cubit) => cubit.submit(),
+      expect: () => [
+        googleFilled.copyWith(status: SignupStatus.submitting),
+        googleFilled.copyWith(status: SignupStatus.signedIn),
+      ],
+      verify: (_) {
+        verify(
+          () => completeGoogleSignup(
+            ticket: 'ticket-1',
+            form: validClientSignupForm,
+          ),
+        ).called(1);
+        verifyNever(() => signUp(any()));
+        expect(startedSessions, [session]);
+      },
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'a completed account whose grant fails goes back to login',
+      setUp: () {
+        stubCompletion(const Ok(null));
+        when(signInWithGoogle.call).thenAnswer(
+          (_) async =>
+              const Err<AuthFailure, AuthSession>(CancelledAuthFailure()),
+        );
+      },
+      build: () => buildCubit(googleTicket: googleTicket),
+      seed: () => googleFilled,
+      act: (cubit) => cubit.submit(),
+      expect: () => [
+        googleFilled.copyWith(status: SignupStatus.submitting),
+        googleFilled.copyWith(status: SignupStatus.registeredWithoutSession),
+      ],
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'an expired ticket becomes feedback',
+      setUp: () =>
+          stubCompletion(const Err(InvalidSignupTicketAccountFailure())),
+      build: () => buildCubit(googleTicket: googleTicket),
+      seed: () => googleFilled,
+      act: (cubit) => cubit.submit(),
+      expect: () => [
+        googleFilled.copyWith(status: SignupStatus.submitting),
+        googleFilled.copyWith(
+          failure: const InvalidSignupTicketAccountFailure(),
+        ),
+      ],
+      verify: (_) => verifyNever(signInWithGoogle.call),
+    );
+  });
 }

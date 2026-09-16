@@ -50,6 +50,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Too many requests. Wait a moment and try again.';
 
   @override
+  String get loginWithGoogle => 'Sign in with Google';
+
+  @override
+  String get loginErrorGoogle => 'Could not sign in with Google. Try again.';
+
+  @override
+  String get signupGoogleRegisteredSignIn =>
+      'Sign-up complete! Sign in with Google to continue.';
+
+  @override
   String get signupCreateAccount => 'Create account';
 
   @override

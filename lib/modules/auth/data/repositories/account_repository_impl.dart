@@ -18,6 +18,16 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
+  Future<Result<AccountFailure, void>> completeGoogleSignup({
+    required String ticket,
+    required SignupForm form,
+  }) {
+    return runAccountRequest(
+      () => remote.completeGoogleSignup(ticket: ticket, form: form),
+    );
+  }
+
+  @override
   Future<Result<AccountFailure, void>> verifyEmail({
     required String email,
     required String code,

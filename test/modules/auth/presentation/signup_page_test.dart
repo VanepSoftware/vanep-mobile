@@ -178,4 +178,61 @@ void main() {
     ]);
     verify(() => verificationCubit.startResendCooldown()).called(1);
   });
+
+  testWidgets(
+    'Google sign-up shows the Google account instead of credentials',
+    (tester) async {
+      givenState(
+        const SignupState(
+          form: SignupForm(type: UserType.assistant),
+          googleTicket: googleTicket,
+        ),
+      );
+
+      await tester.pumpWidget(authTestApp(signupPage()));
+
+      expect(find.text('Novo Usuário'), findsOneWidget);
+      expect(find.text('novo@gmail.com'), findsOneWidget);
+      expect(find.text('Senha'), findsNothing);
+      expect(find.text('Cadastro de assistente'), findsOneWidget);
+    },
+  );
+
+  testWidgets('an expired Google ticket returns to login', (tester) async {
+    final state = SignupState(
+      form: validClientSignupForm,
+      googleTicket: googleTicket,
+    );
+    givenState(
+      state,
+      changes: Stream.value(
+        state.copyWith(failure: const InvalidSignupTicketAccountFailure()),
+      ),
+    );
+
+    await tester.pumpWidget(
+      authTestApp(
+        Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute<void>(builder: (_) => signupPage())),
+              child: const Text('abrir'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('abrir'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('abrir'), findsOneWidget);
+    expect(
+      find.text(
+        'Seu cadastro com o Google expirou. Entre com o Google novamente.',
+      ),
+      findsOneWidget,
+    );
+  });
 }

@@ -46,6 +46,7 @@ cp .env.example .env
 | `OAUTH_CLIENT_ID` | Public OAuth client id (PKCE, no secret). Must match `VANEP_OAUTH_MOBILE_CLIENT_ID` in `vanep-api-java`. Default: `vanep-mobile`. |
 | `OAUTH_REDIRECT_URI` | Custom-scheme redirect. Must match `VANEP_OAUTH_MOBILE_REDIRECT_URIS` in the backend. Default: `com.vanep.vanepmobile://oauth2redirect`. |
 | `OAUTH_SCOPES` | Space-separated scopes requested at `/oauth2/authorize`. Default: `read write`. |
+| `GOOGLE_SERVER_CLIENT_ID` | Google **Web** client ID used as `serverClientId` by native Google sign-in. Must be the same value as `GOOGLE_CLIENT_ID` in `vanep-api-java`; the Android OAuth client (package + SHA-1) must also exist in the same Google Cloud project. |
 
 #### Where the OAuth values come from (backend)
 
