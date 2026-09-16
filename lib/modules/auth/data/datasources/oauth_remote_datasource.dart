@@ -31,25 +31,6 @@ class OAuthRemoteDataSource {
     });
   }
 
-  Future<TokenResponseDto> exchangeCode({
-    required String code,
-    required String codeVerifier,
-    required String redirectUri,
-  }) async {
-    final response = await dio.post<Map<String, dynamic>>(
-      environment.tokenEndpoint,
-      data: {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': redirectUri,
-        'client_id': environment.oauthClientId,
-        'code_verifier': codeVerifier,
-      },
-      options: _formOptions,
-    );
-    return TokenResponseDto.fromJson(response.data!);
-  }
-
   Future<TokenResponseDto> requestGoogleGrant(String idToken) {
     return requestToken({'grant_type': googleGrantType, 'id_token': idToken});
   }

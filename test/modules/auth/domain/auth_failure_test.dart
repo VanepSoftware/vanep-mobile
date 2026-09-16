@@ -4,7 +4,6 @@ import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 void main() {
   test('failures use value equality including their detail', () {
     expect(const CancelledAuthFailure(), const CancelledAuthFailure());
-    expect(const InvalidStateAuthFailure(), const InvalidStateAuthFailure());
     expect(const NetworkAuthFailure('x'), const NetworkAuthFailure('x'));
     expect(const NetworkAuthFailure('x'), isNot(const NetworkAuthFailure('y')));
     expect(

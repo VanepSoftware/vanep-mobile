@@ -28,45 +28,6 @@ void main() {
     remote = OAuthRemoteDataSource(dio: dio, environment: testEnvironment);
   });
 
-  test('exchangeCode posts the authorization_code grant with PKCE', () async {
-    when(
-      () => dio.post<Map<String, dynamic>>(
-        any(),
-        data: any(named: 'data'),
-        options: any(named: 'options'),
-      ),
-    ).thenAnswer(
-      (_) async => _ok({
-        'access_token': 'access-1',
-        'token_type': 'Bearer',
-        'expires_in': 900,
-        'refresh_token': 'refresh-1',
-      }),
-    );
-
-    final token = await remote.exchangeCode(
-      code: 'the-code',
-      codeVerifier: 'verifier-1',
-      redirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-    );
-
-    expect(token.accessToken, 'access-1');
-    expect(token.expiresInSeconds, 900);
-    final captured =
-        verify(
-              () => dio.post<Map<String, dynamic>>(
-                testEnvironment.tokenEndpoint,
-                data: captureAny(named: 'data'),
-                options: any(named: 'options'),
-              ),
-            ).captured.single
-            as Map<String, dynamic>;
-    expect(captured['grant_type'], 'authorization_code');
-    expect(captured['code'], 'the-code');
-    expect(captured['code_verifier'], 'verifier-1');
-    expect(captured['client_id'], 'vanep-mobile');
-  });
-
   test('requestPasswordGrant posts the mobile password grant', () async {
     when(
       () => dio.post<Map<String, dynamic>>(

@@ -3,8 +3,6 @@ import 'package:vanep_mobile/core/environment/environment.dart';
 const testEnvironment = Environment(
   authBaseUrl: 'http://localhost:8080',
   oauthClientId: 'vanep-mobile',
-  oauthRedirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-  oauthScopes: 'read write',
   placesApiKeyAndroid: 'android-key',
   placesApiKeyIos: 'ios-key',
   placesAndroidPackage: 'com.vanep.vanep_mobile',
@@ -15,8 +13,6 @@ const testEnvironment = Environment(
 const testEnvironmentWithoutPlacesKeys = Environment(
   authBaseUrl: 'http://localhost:8080',
   oauthClientId: 'vanep-mobile',
-  oauthRedirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-  oauthScopes: 'read write',
 );
 
 const autocompleteResponseFixture = <String, dynamic>{

@@ -11,7 +11,6 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 class MockAccountRepository extends Mock implements AccountRepository {}
 
 void registerAuthFallbacks() {
-  registerFallbackValue(fakeAuthorizationRequest);
   registerFallbackValue(const ProfilePatchRequest());
   registerFallbackValue(const FakeUserProfile());
   registerFallbackValue(validClientSignupForm);

@@ -1,8 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/modules/auth/domain/usecases/build_authorization_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/complete_google_signup.dart';
-import 'package:vanep_mobile/modules/auth/domain/usecases/exchange_authorization_code.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/get_current_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/patch_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.dart';
@@ -29,12 +27,6 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_state.dart';
 
 class MockGetCurrentSession extends Mock implements GetCurrentSession {}
-
-class MockBuildAuthorizationRequest extends Mock
-    implements BuildAuthorizationRequest {}
-
-class MockExchangeAuthorizationCode extends Mock
-    implements ExchangeAuthorizationCode {}
 
 class MockSignOut extends Mock implements SignOut {}
 
