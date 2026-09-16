@@ -92,7 +92,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Result<AuthFailure, AuthSession?>> currentSession() async {
-    final stored = local.readSession();
+    final stored = await local.readSession();
     if (stored == null) return const Ok(null);
     if (!stored.isExpired(_now())) return Ok(stored);
 
@@ -117,7 +117,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Result<AuthFailure, void>> signOut() async {
-    final stored = local.readSession();
+    final stored = await local.readSession();
     if (stored != null) {
       await revokeQuietly(remote, stored.refreshToken, 'refresh_token');
       await revokeQuietly(remote, stored.accessToken, 'access_token');
@@ -194,7 +194,7 @@ Future<Result<ProfileEditFailure, UserProfile>> replaceStoredUserProfile({
   required AuthLocalDataSource local,
   required Future<UserProfileDto> Function() loadProfile,
 }) async {
-  final stored = local.readSession();
+  final stored = await local.readSession();
   if (stored == null) {
     return const Err(UnexpectedProfileEditFailure('no_session'));
   }

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:hive_ce/hive.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
@@ -22,7 +22,7 @@ class MockAuthLocalDataSource extends Mock implements AuthLocalDataSource {}
 
 class MockWebSessionCleaner extends Mock implements WebSessionCleaner {}
 
-class MockBox extends Mock implements Box<String> {}
+class MockSecureStorage extends Mock implements FlutterSecureStorage {}
 
 class MockDio extends Mock implements Dio {}
 
