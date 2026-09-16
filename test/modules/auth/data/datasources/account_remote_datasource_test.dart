@@ -96,4 +96,26 @@ void main() {
       expect(body.containsKey('email'), isFalse);
     },
   );
+
+  test('requestPasswordReset posts the e-mail', () async {
+    await remote.requestPasswordReset('ana@vanep.com.br');
+
+    expect(capturedBody('http://10.0.2.2:8080/api/auth/password/forgot'), {
+      'email': 'ana@vanep.com.br',
+    });
+  });
+
+  test('resetPassword posts e-mail, code and new password', () async {
+    await remote.resetPassword(
+      email: 'ana@vanep.com.br',
+      code: '123456',
+      newPassword: 'nova-senha',
+    );
+
+    expect(capturedBody('http://10.0.2.2:8080/api/auth/password/reset'), {
+      'email': 'ana@vanep.com.br',
+      'code': '123456',
+      'newPassword': 'nova-senha',
+    });
+  });
 }

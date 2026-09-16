@@ -143,6 +143,33 @@ class AppLocalizationsPt extends AppLocalizations {
   String get accountIssueCodeInvalid => 'Informe os 6 dígitos do código.';
 
   @override
+  String get loginForgotPassword => 'Esqueci minha senha';
+
+  @override
+  String get passwordResetTitle => 'Recuperar senha';
+
+  @override
+  String get passwordResetEmailHint =>
+      'Informe o e-mail da sua conta. Se ela existir, enviaremos um código para você criar uma nova senha.';
+
+  @override
+  String get passwordResetSendCode => 'Enviar código';
+
+  @override
+  String passwordResetCodeSentTo(String email) {
+    return 'Se houver uma conta com $email, enviamos um código de 6 dígitos.';
+  }
+
+  @override
+  String get passwordResetNewPasswordLabel => 'Nova senha';
+
+  @override
+  String get passwordResetSubmit => 'Redefinir senha';
+
+  @override
+  String get passwordResetDone => 'Senha redefinida! Entre com a nova senha.';
+
+  @override
   String get accountIssueRequired => 'Preencha este campo.';
 
   @override

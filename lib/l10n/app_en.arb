@@ -56,6 +56,21 @@
   "codeResent": "We sent a new code.",
   "emailVerifiedSignIn": "Email confirmed! Sign in with your password.",
   "accountIssueCodeInvalid": "Enter the 6 digits of the code.",
+  "loginForgotPassword": "Forgot my password",
+  "passwordResetTitle": "Recover password",
+  "passwordResetEmailHint": "Enter your account email. If it exists, we will send a code so you can create a new password.",
+  "passwordResetSendCode": "Send code",
+  "passwordResetCodeSentTo": "If there is an account for {email}, we sent a 6-digit code.",
+  "@passwordResetCodeSentTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "passwordResetNewPasswordLabel": "New password",
+  "passwordResetSubmit": "Reset password",
+  "passwordResetDone": "Password reset! Sign in with your new password.",
   "accountIssueRequired": "Fill in this field.",
   "accountIssueEmailInvalid": "Invalid email.",
   "accountIssueDocumentInvalid": "Invalid CPF. Check the numbers entered.",

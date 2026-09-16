@@ -17,6 +17,7 @@ import '../cubit/login_state.dart';
 import '../mappers/auth_failure_l10n.dart';
 import 'account_type_page.dart';
 import 'email_code_verification_page.dart';
+import 'password_reset_page.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -147,6 +148,22 @@ class LoginForm extends StatelessWidget {
                   autofillHints: const [AutofillHints.password],
                 ),
                 const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: editable
+                        ? () => openPasswordReset(
+                            context,
+                            initialEmail: state.email,
+                          )
+                        : null,
+                    style: TextButton.styleFrom(
+                      foregroundColor: VanepColors.textSecondary,
+                    ),
+                    child: Text(l10n.loginForgotPassword),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 VanepPrimaryButton(
                   label: l10n.loginTitle,
                   isLoading: state.isSubmittingPassword,

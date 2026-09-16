@@ -26,7 +26,9 @@ import 'domain/usecases/get_current_session.dart';
 import 'domain/usecases/patch_user_profile.dart';
 import 'domain/usecases/refresh_user_profile.dart';
 import 'domain/usecases/request_email_change.dart';
+import 'domain/usecases/request_password_reset.dart';
 import 'domain/usecases/resend_email_verification_code.dart';
+import 'domain/usecases/reset_password_with_code.dart';
 import 'domain/usecases/sign_in_with_google.dart';
 import 'domain/usecases/sign_in_with_password.dart';
 import 'domain/usecases/sign_out.dart';
@@ -37,6 +39,7 @@ import 'presentation/cubit/code_resend_cooldown.dart';
 import 'presentation/cubit/email_code_verification_cubit.dart';
 import 'presentation/cubit/email_code_verification_state.dart';
 import 'presentation/cubit/login_cubit.dart';
+import 'presentation/cubit/password_reset_cubit.dart';
 import 'presentation/cubit/personal_data_cubit.dart';
 import 'presentation/cubit/signup_cubit.dart';
 import 'presentation/cubit/signup_state.dart';
@@ -82,6 +85,20 @@ void registerAuthDependencies(
         cooldown: CodeResendCooldown(),
         email: request.email,
         password: request.password,
+      ),
+    )
+    ..registerFactory<RequestPasswordReset>(
+      () => RequestPasswordReset(getIt<AccountRepository>()),
+    )
+    ..registerFactory<ResetPasswordWithCode>(
+      () => ResetPasswordWithCode(getIt<AccountRepository>()),
+    )
+    ..registerFactoryParam<PasswordResetCubit, String, void>(
+      (initialEmail, _) => PasswordResetCubit(
+        requestPasswordReset: getIt<RequestPasswordReset>(),
+        resetPasswordWithCode: getIt<ResetPasswordWithCode>(),
+        cooldown: CodeResendCooldown(),
+        initialEmail: initialEmail,
       ),
     )
     ..registerFactory<CompleteGoogleSignup>(

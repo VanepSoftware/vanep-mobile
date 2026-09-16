@@ -49,6 +49,24 @@ class AccountRemoteDataSource {
     );
   }
 
+  Future<void> requestPasswordReset(String email) async {
+    await dio.post<void>(
+      environment.passwordForgotEndpoint,
+      data: {'email': email},
+    );
+  }
+
+  Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    await dio.post<void>(
+      environment.passwordResetEndpoint,
+      data: {'email': email, 'code': code, 'newPassword': newPassword},
+    );
+  }
+
   String signupEndpointFor(UserType type) {
     return switch (type) {
       UserType.client => environment.signupClientEndpoint,

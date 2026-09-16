@@ -81,10 +81,10 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 
 ## 7. Phase 7 — Password reset by code (branch: `feat/N-177-native-password-reset`)
 
-- [ ] 7.1 Tests: `requestPasswordReset` / `resetPassword` bodies and failures; `PasswordResetCubit` (email step, code step, short password, invalid code, success)
-- [ ] 7.2 Tests: `PasswordResetPage` widget
-- [ ] 7.3 Use cases `RequestPasswordReset`, `ResetPasswordWithCode`; `PasswordResetCubit`; `PasswordResetPage`; "Forgot password" on login
-- [ ] 7.4 Run `make lint` and `make test`
+- [x] 7.1 Tests: `requestPasswordReset` / `resetPassword` bodies and failures; `PasswordResetCubit` (email step, code step, short password, invalid code, success)
+- [x] 7.2 Tests: `PasswordResetPage` widget
+- [x] 7.3 Use cases `RequestPasswordReset`, `ResetPasswordWithCode`; `PasswordResetCubit`; `PasswordResetPage`; "Forgot password" on login
+- [x] 7.4 Run `make lint` and `make test`
 
 ## 8. Phase 8 — Remove the WebView flow (branch: `chore/N-177-remove-webview-oauth`)
 
