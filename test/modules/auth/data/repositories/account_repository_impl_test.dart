@@ -109,4 +109,40 @@ void main() {
 
     expect(result.errorOrNull, const InvalidSignupTicketAccountFailure());
   });
+
+  test('requestPasswordReset succeeds on 202', () async {
+    when(() => remote.requestPasswordReset(any())).thenAnswer((_) async {});
+
+    final result = await repository.requestPasswordReset('ana@vanep.com.br');
+
+    expect(result.isOk, isTrue);
+  });
+
+  test('resetPassword maps invalid_code', () async {
+    final options = RequestOptions(path: '/api/auth/password/reset');
+    when(
+      () => remote.resetPassword(
+        email: any(named: 'email'),
+        code: any(named: 'code'),
+        newPassword: any(named: 'newPassword'),
+      ),
+    ).thenThrow(
+      DioException(
+        requestOptions: options,
+        response: Response<Object?>(
+          requestOptions: options,
+          statusCode: 400,
+          data: {'code': 'invalid_code', 'message': 'x', 'errors': []},
+        ),
+      ),
+    );
+
+    final result = await repository.resetPassword(
+      email: 'ana@vanep.com.br',
+      code: '000000',
+      newPassword: 'nova-senha',
+    );
+
+    expect(result.errorOrNull, const InvalidCodeAccountFailure());
+  });
 }

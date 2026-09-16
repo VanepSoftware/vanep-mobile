@@ -16,4 +16,12 @@ abstract class AccountRepository {
   });
 
   Future<Result<AccountFailure, void>> resendEmailVerification(String email);
+
+  Future<Result<AccountFailure, void>> requestPasswordReset(String email);
+
+  Future<Result<AccountFailure, void>> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  });
 }
