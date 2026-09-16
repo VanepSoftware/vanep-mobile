@@ -7,7 +7,7 @@ class AuthInterceptor extends Interceptor {
     required this.retryClient,
   });
 
-  final String? Function() readAccessToken;
+  final Future<String?> Function() readAccessToken;
 
   final Future<String?> Function() refreshAccessToken;
 
@@ -16,8 +16,11 @@ class AuthInterceptor extends Interceptor {
   static const _retriedFlag = 'auth_retried';
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final token = readAccessToken();
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    final token = await readAccessToken();
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }

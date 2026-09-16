@@ -26,12 +26,12 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 
 ## 1. Phase 1 — Secure session storage (branch: `feat/N-177-secure-session-storage`)
 
-- [ ] 1.1 Tests: `AuthLocalDataSource` saves, reads, clears the session in secure storage and returns `null` for missing or corrupt data
-- [ ] 1.2 Tests: `AuthInterceptor` awaits the async token reader
-- [ ] 1.3 Add `flutter_secure_storage`; `AuthLocalDataSource` backed by `FlutterSecureStorage` with async `readSession`
-- [ ] 1.4 `AuthInterceptor.readAccessToken` becomes async; repository and container await reads
-- [ ] 1.5 `main.dart` deletes the legacy Hive `auth` box
-- [ ] 1.6 Run `make lint` and `make test`
+- [x] 1.1 Tests: `AuthLocalDataSource` saves, reads, clears the session in secure storage and returns `null` for missing or corrupt data
+- [x] 1.2 Tests: `AuthInterceptor` awaits the async token reader
+- [x] 1.3 Add `flutter_secure_storage`; `AuthLocalDataSource` backed by `FlutterSecureStorage` with async `readSession`
+- [x] 1.4 `AuthInterceptor.readAccessToken` becomes async; repository and container await reads
+- [x] 1.5 `main.dart` deletes the legacy Hive `auth` box
+- [x] 1.6 Run `make lint` and `make test`
 
 ## 2. Phase 2 — Native password login (branch: `feat/N-177-native-password-login`)
 

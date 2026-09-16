@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import 'app.dart';
@@ -21,8 +22,8 @@ Future<void> main() async {
   configureCoreDependencies(Environment.fromDotEnv(dotenv));
 
   await Hive.initFlutter();
-  final authBox = await Hive.openBox<String>(AuthLocalDataSource.boxName);
-  registerAuthDependencies(getIt, authBox: authBox);
+  await Hive.deleteBoxFromDisk(AuthLocalDataSource.legacyHiveBoxName);
+  registerAuthDependencies(getIt, secureStorage: const FlutterSecureStorage());
   registerDriverDependencies(getIt);
   registerDriverHomeDependencies(getIt);
   registerProfileDependencies(getIt);

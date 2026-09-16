@@ -1,31 +1,34 @@
 import 'dart:convert';
 
-import 'package:hive_ce/hive.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../dtos/auth_session_dto.dart';
 
 class AuthLocalDataSource {
-  AuthLocalDataSource(this._box);
+  AuthLocalDataSource(this._storage);
 
-  final Box<String> _box;
+  final FlutterSecureStorage _storage;
 
-  static const String boxName = 'auth';
-  static const String _sessionKey = 'session';
+  static const String sessionKey = 'auth_session';
+  static const String legacyHiveBoxName = 'auth';
 
   Future<void> saveSession(AuthSessionDto session) {
-    return _box.put(_sessionKey, jsonEncode(session.toJson()));
+    return _storage.write(key: sessionKey, value: jsonEncode(session.toJson()));
   }
 
-  AuthSessionDto? readSession() {
-    final raw = _box.get(_sessionKey);
-    if (raw == null) return null;
+  Future<AuthSessionDto?> readSession() async {
     try {
+      final raw = await _storage.read(key: sessionKey);
+      if (raw == null) return null;
       final json = jsonDecode(raw) as Map<String, dynamic>;
       return AuthSessionDto.fromJson(json);
     } on FormatException {
       return null;
+    } on PlatformException {
+      return null;
     }
   }
 
-  Future<void> clearSession() => _box.delete(_sessionKey);
+  Future<void> clearSession() => _storage.delete(key: sessionKey);
 }
