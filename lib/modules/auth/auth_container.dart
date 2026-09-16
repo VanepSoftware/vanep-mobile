@@ -20,9 +20,12 @@ import 'domain/usecases/get_current_session.dart';
 import 'domain/usecases/patch_user_profile.dart';
 import 'domain/usecases/refresh_user_profile.dart';
 import 'domain/usecases/request_email_change.dart';
+import 'domain/usecases/sign_in_with_password.dart';
 import 'domain/usecases/sign_out.dart';
 import 'presentation/cubit/auth_cubit.dart';
+import 'presentation/cubit/login_cubit.dart';
 import 'presentation/cubit/personal_data_cubit.dart';
+import 'presentation/cubit/start_session.dart';
 
 void registerAuthDependencies(
   GetIt getIt, {
@@ -71,6 +74,15 @@ void registerAuthDependencies(
     )
     ..registerFactory<ExchangeAuthorizationCode>(
       () => ExchangeAuthorizationCode(getIt<AuthRepository>()),
+    )
+    ..registerFactory<SignInWithPassword>(
+      () => SignInWithPassword(getIt<AuthRepository>()),
+    )
+    ..registerFactoryParam<LoginCubit, StartSession, void>(
+      (startSession, _) => LoginCubit(
+        signInWithPassword: getIt<SignInWithPassword>(),
+        startSession: startSession,
+      ),
     )
     ..registerFactory<SignOut>(() => SignOut(getIt<AuthRepository>()))
     ..registerFactory<RefreshUserProfile>(

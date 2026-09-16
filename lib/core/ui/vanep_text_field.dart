@@ -16,6 +16,7 @@ class VanepTextField extends StatelessWidget {
     this.autofillHints,
     this.inputFormatters,
     this.maxLength,
+    this.obscureText = false,
     super.key,
   });
 
@@ -29,6 +30,7 @@ class VanepTextField extends StatelessWidget {
   final Iterable<String>? autofillHints;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,7 @@ class VanepTextField extends StatelessWidget {
           autofillHints: autofillHints,
           inputFormatters: inputFormatters,
           maxLength: maxLength,
+          obscureText: obscureText,
           onChanged: onChanged,
           style: VanepTypography.cardTitle.copyWith(
             color: enabled ? VanepColors.textPrimary : VanepColors.textMuted,
@@ -77,15 +80,24 @@ class VanepTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: VanepColors.brand, width: 1.5),
+              borderSide: const BorderSide(
+                color: VanepColors.brand,
+                width: 1.5,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: VanepColors.danger, width: 1.5),
+              borderSide: const BorderSide(
+                color: VanepColors.danger,
+                width: 1.5,
+              ),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: VanepColors.danger, width: 1.5),
+              borderSide: const BorderSide(
+                color: VanepColors.danger,
+                width: 1.5,
+              ),
             ),
           ),
         ),

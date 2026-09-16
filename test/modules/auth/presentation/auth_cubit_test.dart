@@ -121,6 +121,14 @@ void main() {
   );
 
   blocTest<AuthCubit, AuthState>(
+    'startSession emits authenticated with the given session',
+    build: buildCubit,
+    seed: () => const AuthUnauthenticated(),
+    act: (cubit) => cubit.startSession(session),
+    expect: () => [AuthAuthenticated(session)],
+  );
+
+  blocTest<AuthCubit, AuthState>(
     'signOut emits unauthenticated',
     setUp: () => when(
       signOut.call,

@@ -9,7 +9,8 @@ import 'core/ui/vanep_wordmark.dart';
 import 'l10n/app_localizations.dart';
 import 'modules/auth/presentation/cubit/auth_cubit.dart';
 import 'modules/auth/presentation/cubit/auth_state.dart';
-import 'modules/auth/presentation/pages/welcome_page.dart';
+import 'modules/auth/presentation/cubit/login_cubit.dart';
+import 'modules/auth/presentation/pages/login_page.dart';
 import 'modules/auth/domain/value_objects/user_type.dart';
 import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'core/places/place_autocomplete_controller.dart';
@@ -88,7 +89,12 @@ class AuthGate extends StatelessWidget {
               ),
             ),
           },
-          _ => const WelcomePage(),
+          _ => BlocProvider<LoginCubit>(
+            create: (context) => getIt<LoginCubit>(
+              param1: context.read<AuthCubit>().startSession,
+            ),
+            child: const LoginPage(),
+          ),
         };
       },
     );

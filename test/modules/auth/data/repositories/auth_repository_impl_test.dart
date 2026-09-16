@@ -127,6 +127,71 @@ void main() {
     });
   });
 
+  group('signInWithPassword', () {
+    void stubPasswordGrant() {
+      when(
+        () => remote.requestPasswordGrant(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) async => testTokenResponseDto);
+    }
+
+    test(
+      'requests the grant, fetches the profile and saves the session',
+      () async {
+        stubPasswordGrant();
+        when(
+          () => remote.fetchProfile(any()),
+        ).thenAnswer((_) async => testUserProfileDto);
+        when(
+          () => local.saveSession(any()),
+        ).thenAnswer((_) => Future<void>.value());
+
+        final result = await repository.signInWithPassword(
+          email: 'ana@vanep.com.br',
+          password: 'secret1',
+        );
+
+        final session = result.valueOrNull!;
+        expect(session.refreshToken, 'refresh-1');
+        expect(session.expiresAt, fixedNow.add(const Duration(seconds: 900)));
+        verify(() => remote.fetchProfile('access-1')).called(1);
+        verify(() => local.saveSession(any())).called(1);
+      },
+    );
+
+    test('maps an OAuth error body to a typed failure', () async {
+      when(
+        () => remote.requestPasswordGrant(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenThrow(_invalidGrantError());
+
+      final result = await repository.signInWithPassword(
+        email: 'ana@vanep.com.br',
+        password: 'wrong',
+      );
+
+      expect(result.errorOrNull, const InvalidCredentialsAuthFailure());
+      verifyNever(() => local.saveSession(any()));
+    });
+
+    test('a failing profile fetch is a network failure', () async {
+      stubPasswordGrant();
+      when(() => remote.fetchProfile(any())).thenThrow(_dioError());
+
+      final result = await repository.signInWithPassword(
+        email: 'ana@vanep.com.br',
+        password: 'secret1',
+      );
+
+      expect(result.errorOrNull, const NetworkAuthFailure('boom'));
+      verifyNever(() => local.saveSession(any()));
+    });
+  });
+
   group('currentSession', () {
     test('returns null when nothing is stored', () async {
       when(local.readSession).thenAnswer((_) async => null);
