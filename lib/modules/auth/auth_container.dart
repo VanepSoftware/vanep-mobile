@@ -23,11 +23,16 @@ import 'domain/usecases/get_current_session.dart';
 import 'domain/usecases/patch_user_profile.dart';
 import 'domain/usecases/refresh_user_profile.dart';
 import 'domain/usecases/request_email_change.dart';
+import 'domain/usecases/resend_email_verification_code.dart';
 import 'domain/usecases/sign_in_with_password.dart';
 import 'domain/usecases/sign_out.dart';
 import 'domain/usecases/sign_up.dart';
+import 'domain/usecases/verify_email_code.dart';
 import 'domain/value_objects/user_type.dart';
 import 'presentation/cubit/auth_cubit.dart';
+import 'presentation/cubit/code_resend_cooldown.dart';
+import 'presentation/cubit/email_code_verification_cubit.dart';
+import 'presentation/cubit/email_code_verification_state.dart';
 import 'presentation/cubit/login_cubit.dart';
 import 'presentation/cubit/personal_data_cubit.dart';
 import 'presentation/cubit/signup_cubit.dart';
@@ -54,6 +59,27 @@ void registerAuthDependencies(
       ),
     )
     ..registerFactory<SignUp>(() => SignUp(getIt<AccountRepository>()))
+    ..registerFactory<VerifyEmailCode>(
+      () => VerifyEmailCode(getIt<AccountRepository>()),
+    )
+    ..registerFactory<ResendEmailVerificationCode>(
+      () => ResendEmailVerificationCode(getIt<AccountRepository>()),
+    )
+    ..registerFactoryParam<
+      EmailCodeVerificationCubit,
+      EmailCodeVerificationRequest,
+      StartSession
+    >(
+      (request, startSession) => EmailCodeVerificationCubit(
+        verifyEmailCode: getIt<VerifyEmailCode>(),
+        resendCode: getIt<ResendEmailVerificationCode>(),
+        signInWithPassword: getIt<SignInWithPassword>(),
+        startSession: startSession,
+        cooldown: CodeResendCooldown(),
+        email: request.email,
+        password: request.password,
+      ),
+    )
     ..registerFactoryParam<SignupCubit, UserType, void>(
       (type, _) => SignupCubit(signUp: getIt<SignUp>(), type: type),
     )

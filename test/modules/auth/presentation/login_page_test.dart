@@ -6,26 +6,36 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 
 import 'auth_presentation_mocks.dart';
 
-Widget loginHarness(LoginCubit cubit) {
-  return MaterialApp(
-    localizationsDelegates: const [
-      AppLocalizations.delegate,
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ],
-    supportedLocales: AppLocalizations.supportedLocales,
-    locale: const Locale('pt'),
-    home: BlocProvider<LoginCubit>.value(
-      value: cubit,
-      child: const LoginPage(),
+Widget loginHarness(LoginCubit cubit, {AuthCubit? authCubit}) {
+  return BlocProvider<AuthCubit>.value(
+    value: authCubit ?? MockAuthCubit(),
+    child: MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('pt'),
+      home: BlocProvider<LoginCubit>.value(
+        value: cubit,
+        child: const LoginPage(),
+      ),
     ),
   );
 }
@@ -120,5 +130,52 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AccountTypePage), findsOneWidget);
+  });
+
+  testWidgets('an unverified account opens code verification', (tester) async {
+    final verificationCubit = MockEmailCodeVerificationCubit();
+    const verificationState = EmailCodeVerificationState(
+      email: 'ana@vanep.com.br',
+      password: 'secret1',
+    );
+    whenListen(
+      verificationCubit,
+      const Stream<EmailCodeVerificationState>.empty(),
+      initialState: verificationState,
+    );
+    final requests = <EmailCodeVerificationRequest>[];
+    getIt.registerFactoryParam<
+      EmailCodeVerificationCubit,
+      EmailCodeVerificationRequest,
+      StartSession
+    >((request, _) {
+      requests.add(request);
+      return verificationCubit;
+    });
+    addTearDown(getIt.reset);
+    final authCubit = MockAuthCubit();
+    whenListen(
+      authCubit,
+      const Stream<AuthState>.empty(),
+      initialState: const AuthUnauthenticated(),
+    );
+    givenState(
+      filled,
+      changes: Stream.value(
+        filled.copyWith(failure: const EmailNotVerifiedAuthFailure()),
+      ),
+    );
+
+    await tester.pumpWidget(loginHarness(cubit, authCubit: authCubit));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(EmailCodeVerificationPage), findsOneWidget);
+    expect(requests, [
+      const EmailCodeVerificationRequest(
+        email: 'ana@vanep.com.br',
+        password: 'secret1',
+      ),
+    ]);
+    verifyNever(() => verificationCubit.startResendCooldown());
   });
 }

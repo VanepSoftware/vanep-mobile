@@ -42,6 +42,8 @@ String accountFieldIssueMessage(
       l10n.accountIssueEmailInvalid,
     (AccountField.document, AccountFieldIssue.invalid) =>
       l10n.accountIssueDocumentInvalid,
+    (AccountField.code, AccountFieldIssue.invalid) =>
+      l10n.accountIssueCodeInvalid,
     (_, AccountFieldIssue.invalid) => l10n.accountIssueNumberInvalid,
     (_, AccountFieldIssue.tooShort) => l10n.accountIssuePasswordTooShort(
       passwordMinLength,

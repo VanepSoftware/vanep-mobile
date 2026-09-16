@@ -64,6 +64,11 @@ class Environment {
   String get signupAssistantEndpoint =>
       '$authBaseUrl/api/auth/signup/assistant';
 
+  String get emailVerifyEndpoint => '$authBaseUrl/api/auth/email/verify';
+
+  String get emailVerifyResendEndpoint =>
+      '$authBaseUrl/api/auth/email/verify/resend';
+
   String get userProfileEndpoint => '$authBaseUrl/api/user/me';
 
   String get userProfileEmailChangeEndpoint =>
