@@ -50,6 +50,17 @@ class AppLocalizationsPt extends AppLocalizations {
       'Muitas requisições. Aguarde um instante e tente de novo.';
 
   @override
+  String get loginWithGoogle => 'Entrar com Google';
+
+  @override
+  String get loginErrorGoogle =>
+      'Não foi possível entrar com o Google. Tente novamente.';
+
+  @override
+  String get signupGoogleRegisteredSignIn =>
+      'Cadastro concluído! Entre com o Google para continuar.';
+
+  @override
   String get signupCreateAccount => 'Criar conta';
 
   @override

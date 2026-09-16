@@ -13,7 +13,7 @@ typedef AccountTypeSelected =
 
 Future<void> openAccountTypeChoice(
   BuildContext context, {
-  AccountTypeSelected onTypeSelected = openSignup,
+  AccountTypeSelected onTypeSelected = openPasswordSignup,
 }) {
   return Navigator.of(context).push(
     MaterialPageRoute<void>(

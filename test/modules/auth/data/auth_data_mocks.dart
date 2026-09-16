@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/account_remote_datasource.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/google_id_token_source.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/oauth_remote_datasource.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/user_profile_remote_datasource.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/web_session_cleaner.dart';
@@ -27,6 +28,8 @@ class MockAccountRemoteDataSource extends Mock
     implements AccountRemoteDataSource {}
 
 class MockWebSessionCleaner extends Mock implements WebSessionCleaner {}
+
+class MockGoogleIdTokenSource extends Mock implements GoogleIdTokenSource {}
 
 class MockSecureStorage extends Mock implements FlutterSecureStorage {}
 

@@ -66,7 +66,7 @@ Constraints: mobile constitution — Clean Architecture with `Result` (R01, R04)
 
 ### D5: One sign-up form for both entry points
 
-`SignupFlow` is sealed: `PasswordSignupFlow(type)` and `GoogleSignupFlow(ticket, type)`. Both go through `AccountTypePage` → `SignupPage`. The page renders name/e-mail/password only for the password flow; the Google flow shows the ticket's name and e-mail read-only. `SignupCubit` submits to `signUp` or `completeGoogleSignup` accordingly. After a Google completion the cubit repeats the Google grant to obtain tokens.
+`SignupState` carries an optional `GoogleSignupTicket`: absent for the password flow, present for a new Google user. Both flows go through `AccountTypePage` → `SignupPage`, and the account type lives only in `SignupForm`. The page renders name/e-mail/password only without a ticket; with a ticket it shows the ticket's name and e-mail read-only. `SignupCubit` submits to `SignUp` or `CompleteGoogleSignup` accordingly. After a Google completion the cubit repeats the Google grant to obtain tokens.
 
 ### D6: Screens push above `AuthGate`; authentication pops them
 

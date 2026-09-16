@@ -10,6 +10,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../domain/value_objects/authorization_request.dart';
 import '../../domain/value_objects/profile_patch_request.dart';
 import '../datasources/auth_local_datasource.dart';
+import '../datasources/google_id_token_source.dart';
 import '../datasources/oauth_remote_datasource.dart';
 import '../datasources/user_profile_remote_datasource.dart';
 import '../datasources/web_session_cleaner.dart';
@@ -28,6 +29,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required this.pkce,
     required this.environment,
     required this.webSession,
+    required this.googleIdTokens,
     DateTime Function() clock = DateTime.now,
   }) : _now = clock;
 
@@ -37,6 +39,7 @@ class AuthRepositoryImpl implements AuthRepository {
   final PkceGenerator pkce;
   final Environment environment;
   final WebSessionCleaner webSession;
+  final GoogleIdTokenSource googleIdTokens;
   final DateTime Function() _now;
 
   @override
@@ -101,6 +104,25 @@ class AuthRepositoryImpl implements AuthRepository {
     return startSessionOrFailure(token);
   }
 
+  @override
+  Future<Result<AuthFailure, AuthSession>> signInWithGoogle() async {
+    final String? idToken;
+    try {
+      idToken = await googleIdTokens.requestIdToken();
+    } on GoogleIdTokenException catch (error) {
+      return Err(GoogleSignInAuthFailure(error.reason));
+    }
+    if (idToken == null) return const Err(CancelledAuthFailure());
+
+    final TokenResponseDto token;
+    try {
+      token = await remote.requestGoogleGrant(idToken);
+    } on DioException catch (error) {
+      return Err(mapTokenEndpointFailure(error));
+    }
+    return startSessionOrFailure(token);
+  }
+
   Future<Result<AuthFailure, AuthSession>> startSessionOrFailure(
     TokenResponseDto token,
   ) async {
@@ -157,6 +179,7 @@ class AuthRepositoryImpl implements AuthRepository {
     await local.clearSession();
 
     await webSession.clear();
+    await googleIdTokens.signOut();
     return const Ok(null);
   }
 

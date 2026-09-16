@@ -1,12 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/build_authorization_request.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/complete_google_signup.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/exchange_authorization_code.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/get_current_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/patch_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/request_email_change.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/resend_email_verification_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_google.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_up.dart';
@@ -59,3 +61,7 @@ class MockResendEmailVerificationCode extends Mock
 class MockEmailCodeVerificationCubit
     extends MockCubit<EmailCodeVerificationState>
     implements EmailCodeVerificationCubit {}
+
+class MockSignInWithGoogle extends Mock implements SignInWithGoogle {}
+
+class MockCompleteGoogleSignup extends Mock implements CompleteGoogleSignup {}
