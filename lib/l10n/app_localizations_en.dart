@@ -106,6 +106,33 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get emailVerificationTitle => 'Confirm your email';
+
+  @override
+  String get verificationCodeLabel => 'Code';
+
+  @override
+  String get emailVerificationSubmit => 'Confirm';
+
+  @override
+  String get resendCode => 'Resend code';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return 'Resend code in ${seconds}s';
+  }
+
+  @override
+  String get codeResent => 'We sent a new code.';
+
+  @override
+  String get emailVerifiedSignIn =>
+      'Email confirmed! Sign in with your password.';
+
+  @override
+  String get accountIssueCodeInvalid => 'Enter the 6 digits of the code.';
+
+  @override
   String get accountIssueRequired => 'Fill in this field.';
 
   @override

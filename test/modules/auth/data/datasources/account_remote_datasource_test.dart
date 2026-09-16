@@ -59,4 +59,21 @@ void main() {
     expect(body.containsKey('phone'), isFalse);
     expect(body.containsKey('birthDate'), isFalse);
   });
+
+  test('verifyEmail posts the e-mail and the code', () async {
+    await remote.verifyEmail(email: 'ana@vanep.com.br', code: '012345');
+
+    expect(capturedBody('http://10.0.2.2:8080/api/auth/email/verify'), {
+      'email': 'ana@vanep.com.br',
+      'code': '012345',
+    });
+  });
+
+  test('resendEmailVerification posts the e-mail', () async {
+    await remote.resendEmailVerification('ana@vanep.com.br');
+
+    expect(capturedBody('http://10.0.2.2:8080/api/auth/email/verify/resend'), {
+      'email': 'ana@vanep.com.br',
+    });
+  });
 }
