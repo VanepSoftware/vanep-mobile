@@ -39,52 +39,148 @@ void main() {
     );
   }
 
+  void useTallScreen(WidgetTester tester) {
+    tester.view.physicalSize = const Size(800, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+  }
+
   Widget signupPage() =>
       BlocProvider<SignupCubit>.value(value: cubit, child: const SignupPage());
 
+  testWidgets('the first step asks only for the access details', (
+    tester,
+  ) async {
+    givenState(const SignupState(form: SignupForm(type: UserType.client)));
+
+    await tester.pumpWidget(authTestApp(signupPage()));
+
+    expect(find.text('Etapa 1 de 3'), findsOneWidget);
+    expect(find.text('Dados de acesso'), findsOneWidget);
+    expect(find.text('Senha'), findsOneWidget);
+    expect(find.text('CPF'), findsNothing);
+    expect(find.widgetWithText(FilledButton, 'Continuar'), findsOneWidget);
+  });
+
+  testWidgets('the password checklist and confirmation follow the typing', (
+    tester,
+  ) async {
+    givenState(
+      const SignupState(
+        form: SignupForm(
+          type: UserType.client,
+          password: 'secret1',
+          passwordConfirmation: 'secret2',
+        ),
+        issues: {
+          AccountField.password: AccountFieldIssue.missingUppercase,
+          AccountField.passwordConfirmation: AccountFieldIssue.mismatch,
+        },
+      ),
+    );
+    useTallScreen(tester);
+
+    await tester.pumpWidget(authTestApp(signupPage()));
+
+    expect(find.text('Confirmar senha'), findsOneWidget);
+    expect(find.text('Mínimo de 6 caracteres'), findsOneWidget);
+    expect(find.text('Uma letra maiúscula'), findsOneWidget);
+    expect(find.text('Um caractere especial (ex.: ! @ # \$)'), findsOneWidget);
+    expect(find.byIcon(Icons.check_circle), findsOneWidget);
+    expect(
+      find.text('A senha não atende a todos os requisitos.'),
+      findsOneWidget,
+    );
+    expect(find.text('As senhas não coincidem.'), findsOneWidget);
+  });
+
+  testWidgets('Continuar asks the cubit for the next step', (tester) async {
+    givenState(const SignupState(form: SignupForm(type: UserType.client)));
+    when(() => cubit.nextStep()).thenReturn(null);
+
+    await tester.pumpWidget(authTestApp(signupPage()));
+    await tester.tap(find.widgetWithText(FilledButton, 'Continuar'));
+
+    verify(() => cubit.nextStep()).called(1);
+  });
+
+  testWidgets('back on a later step returns to the previous step', (
+    tester,
+  ) async {
+    givenState(
+      const SignupState(form: SignupForm(type: UserType.client), stepIndex: 1),
+    );
+    when(() => cubit.previousStep()).thenReturn(null);
+
+    await tester.pumpWidget(authTestApp(signupPage()));
+    final dismissed = await tester.binding.handlePopRoute();
+    await tester.pump();
+
+    expect(dismissed, isTrue);
+    verify(() => cubit.previousStep()).called(1);
+    expect(find.byType(SignupPage), findsOneWidget);
+  });
+
   testWidgets('driver form asks for the driver fields', (tester) async {
-    givenState(const SignupState(form: SignupForm(type: UserType.driver)));
+    givenState(
+      const SignupState(form: SignupForm(type: UserType.driver), stepIndex: 2),
+    );
+
+    useTallScreen(tester);
 
     await tester.pumpWidget(authTestApp(signupPage()));
 
     expect(find.text('Cadastro de motorista'), findsOneWidget);
+    expect(find.text('Etapa 3 de 4'), findsOneWidget);
     expect(find.text('Valor base (R\$)'), findsOneWidget);
     expect(find.text('CNPJ (próprio ou da empresa)'), findsOneWidget);
   });
 
   testWidgets('client form has no driver fields', (tester) async {
-    givenState(const SignupState(form: SignupForm(type: UserType.client)));
+    givenState(
+      const SignupState(form: SignupForm(type: UserType.client), stepIndex: 1),
+    );
 
     await tester.pumpWidget(authTestApp(signupPage()));
 
     expect(find.text('Cadastro de cliente'), findsOneWidget);
+    expect(find.text('Etapa 2 de 3'), findsOneWidget);
     expect(find.text('Valor base (R\$)'), findsNothing);
   });
 
-  testWidgets('typing and accepting the terms reach the cubit', (tester) async {
+  testWidgets('typing the name reaches the cubit', (tester) async {
     givenState(const SignupState(form: SignupForm(type: UserType.client)));
     when(() => cubit.updateName(any())).thenReturn(null);
-    when(() => cubit.updateAcceptTerms(any())).thenReturn(null);
-    tester.view.physicalSize = const Size(800, 2000);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
 
     await tester.pumpWidget(authTestApp(signupPage()));
     await tester.enterText(find.byType(TextField).first, 'Ana');
-    await tester.tap(find.byType(Checkbox));
 
     verify(() => cubit.updateName('Ana')).called(1);
-    verify(() => cubit.updateAcceptTerms(true)).called(1);
+  });
+
+  testWidgets('the last step shows the summary and the terms', (tester) async {
+    givenState(SignupState(form: validClientSignupForm, stepIndex: 2));
+    when(() => cubit.updateAcceptTerms(any())).thenReturn(null);
+    useTallScreen(tester);
+
+    await tester.pumpWidget(authTestApp(signupPage()));
+    await tester.tap(find.byType(Checkbox));
+
+    expect(find.text('Revise e confirme'), findsOneWidget);
+    expect(find.text('Ana Cliente'), findsOneWidget);
+    expect(find.text('Sou cliente (responsável)'), findsOneWidget);
+    verify(() => cubit.updateAcceptTerms(false)).called(1);
   });
 
   testWidgets('field issues are shown under their fields', (tester) async {
+    const issues = {
+      AccountField.email: AccountFieldIssue.duplicate,
+      AccountField.document: AccountFieldIssue.invalid,
+    };
     givenState(
       const SignupState(
         form: SignupForm(type: UserType.client),
-        issues: {
-          AccountField.email: AccountFieldIssue.duplicate,
-          AccountField.document: AccountFieldIssue.invalid,
-        },
+        issues: issues,
       ),
     );
 
@@ -93,12 +189,12 @@ void main() {
     expect(find.text('Já existe uma conta com este e-mail.'), findsOneWidget);
     expect(
       find.text('CPF inválido. Verifique os números informados.'),
-      findsOneWidget,
+      findsNothing,
     );
   });
 
-  testWidgets('tapping Criar conta submits', (tester) async {
-    givenState(SignupState(form: validClientSignupForm));
+  testWidgets('tapping Criar conta on the last step submits', (tester) async {
+    givenState(SignupState(form: validClientSignupForm, stepIndex: 2));
     when(() => cubit.submit()).thenAnswer((_) async {});
 
     await tester.pumpWidget(authTestApp(signupPage()));
@@ -173,30 +269,46 @@ void main() {
     expect(requests, [
       const EmailCodeVerificationRequest(
         email: 'ana@vanep.com.br',
-        password: 'secret1',
+        password: 'Secret@1',
       ),
     ]);
     verify(() => verificationCubit.startResendCooldown()).called(1);
   });
 
-  testWidgets(
-    'Google sign-up shows the Google account instead of credentials',
-    (tester) async {
-      givenState(
-        const SignupState(
-          form: SignupForm(type: UserType.assistant),
-          googleTicket: googleTicket,
-        ),
-      );
+  testWidgets('Google sign-up starts with the personal details', (
+    tester,
+  ) async {
+    givenState(
+      const SignupState(
+        form: SignupForm(type: UserType.assistant),
+        googleTicket: googleTicket,
+      ),
+    );
 
-      await tester.pumpWidget(authTestApp(signupPage()));
+    await tester.pumpWidget(authTestApp(signupPage()));
 
-      expect(find.text('Novo Usuário'), findsOneWidget);
-      expect(find.text('novo@gmail.com'), findsOneWidget);
-      expect(find.text('Senha'), findsNothing);
-      expect(find.text('Cadastro de assistente'), findsOneWidget);
-    },
-  );
+    expect(find.text('Etapa 1 de 2'), findsOneWidget);
+    expect(find.text('Senha'), findsNothing);
+    expect(find.text('CPF'), findsOneWidget);
+  });
+
+  testWidgets('Google sign-up summarizes the Google account at the end', (
+    tester,
+  ) async {
+    givenState(
+      const SignupState(
+        form: SignupForm(type: UserType.assistant),
+        googleTicket: googleTicket,
+        stepIndex: 1,
+      ),
+    );
+
+    await tester.pumpWidget(authTestApp(signupPage()));
+
+    expect(find.text('Novo Usuário'), findsOneWidget);
+    expect(find.text('novo@gmail.com'), findsOneWidget);
+    expect(find.text('Cadastro de assistente'), findsOneWidget);
+  });
 
   testWidgets('an expired Google ticket returns to login', (tester) async {
     final state = SignupState(

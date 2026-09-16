@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../domain/usecases/verify_email_code.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'account_text_field.dart';
 
 class VerificationCodeField extends StatelessWidget {
@@ -28,6 +29,8 @@ class VerificationCodeField extends StatelessWidget {
       onChanged: onChanged,
       enabled: enabled,
       errorText: errorText,
+      hintText: AppLocalizations.of(context)!.verificationCodeHint,
+      prefixIcon: Icons.pin_outlined,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
       autofillHints: const [AutofillHints.oneTimeCode],

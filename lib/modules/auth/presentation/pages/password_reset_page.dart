@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
@@ -14,6 +13,7 @@ import '../cubit/password_reset_cubit.dart';
 import '../cubit/password_reset_state.dart';
 import '../mappers/account_failure_l10n.dart';
 import '../widgets/account_text_field.dart';
+import '../widgets/auth_page_chrome.dart';
 import '../widgets/verification_code_field.dart';
 import 'email_code_verification_page.dart';
 
@@ -36,7 +36,6 @@ class PasswordResetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return BlocConsumer<PasswordResetCubit, PasswordResetState>(
       listenWhen: (previous, current) =>
           previous.feedback != current.feedback ||
@@ -44,16 +43,8 @@ class PasswordResetPage extends StatelessWidget {
       listener: presentPasswordResetOutcome,
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: VanepColors.surface,
-          appBar: AppBar(
-            backgroundColor: VanepColors.surface,
-            foregroundColor: VanepColors.textPrimary,
-            elevation: 0,
-            title: Text(
-              l10n.passwordResetTitle,
-              style: VanepTypography.cardTitle,
-            ),
-          ),
+          backgroundColor: VanepColors.card,
+          appBar: const AuthAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
@@ -102,11 +93,11 @@ class PasswordResetEmailStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.passwordResetEmailHint,
-          style: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
+        AuthPageHeader(
+          icon: Icons.lock_reset_outlined,
+          title: l10n.passwordResetTitle,
+          subtitle: l10n.passwordResetEmailHint,
         ),
-        const SizedBox(height: 20),
         AccountTextField(
           label: l10n.loginEmailLabel,
           initialValue: state.email,
@@ -117,11 +108,13 @@ class PasswordResetEmailStep extends StatelessWidget {
             state.issues,
             AccountField.email,
           ),
+          hintText: l10n.loginEmailHint,
+          prefixIcon: Icons.mail_outline,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.done,
           autofillHints: const [AutofillHints.email],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 28),
         VanepPrimaryButton(
           label: l10n.passwordResetSendCode,
           isLoading: state.isSubmitting,
@@ -150,11 +143,11 @@ class PasswordResetCodeStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.passwordResetCodeSentTo(state.email.trim()),
-          style: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
+        AuthPageHeader(
+          icon: Icons.mark_email_read_outlined,
+          title: l10n.passwordResetCodeTitle,
+          subtitle: l10n.passwordResetCodeSentTo(state.email.trim()),
         ),
-        const SizedBox(height: 20),
         VerificationCodeField(
           label: l10n.verificationCodeLabel,
           initialValue: state.code,
@@ -162,18 +155,20 @@ class PasswordResetCodeStep extends StatelessWidget {
           enabled: !state.isSubmitting,
           errorText: issueOf(AccountField.code),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         AccountTextField(
           label: l10n.passwordResetNewPasswordLabel,
           initialValue: state.newPassword,
           onChanged: cubit.updateNewPassword,
           enabled: !state.isSubmitting,
           errorText: issueOf(AccountField.password),
+          hintText: l10n.passwordResetNewPasswordHint,
+          prefixIcon: Icons.lock_outline,
           obscureText: true,
           textInputAction: TextInputAction.done,
           autofillHints: const [AutofillHints.newPassword],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 28),
         VanepPrimaryButton(
           label: l10n.passwordResetSubmit,
           isLoading: state.isSubmitting,

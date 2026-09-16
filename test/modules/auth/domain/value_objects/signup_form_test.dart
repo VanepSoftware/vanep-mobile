@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/password_policy.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
@@ -64,6 +65,7 @@ void main() {
         AccountField.name: AccountFieldIssue.required,
         AccountField.email: AccountFieldIssue.required,
         AccountField.password: AccountFieldIssue.required,
+        AccountField.passwordConfirmation: AccountFieldIssue.required,
         AccountField.document: AccountFieldIssue.required,
         AccountField.acceptTerms: AccountFieldIssue.notAccepted,
         AccountField.basePrice: AccountFieldIssue.required,
@@ -74,6 +76,7 @@ void main() {
       final form = validDriverSignupForm.copyWith(
         email: 'ana@',
         password: '12345',
+        passwordConfirmation: '12345',
         document: '52998224726',
         basePrice: '0',
         experienceYears: 'dez',
@@ -115,6 +118,45 @@ void main() {
       );
       expect(AccountField.fromApi('unknown'), isNull);
       expect(AccountField.fromApi(null), isNull);
+    });
+  });
+
+  group('password policy', () {
+    test('each requirement is checked on its own', () {
+      expect(PasswordRequirement.minLength.isMetBy('Ab@12'), isFalse);
+      expect(PasswordRequirement.minLength.isMetBy('Ab@123'), isTrue);
+      expect(PasswordRequirement.uppercaseLetter.isMetBy('secret@1'), isFalse);
+      expect(PasswordRequirement.uppercaseLetter.isMetBy('Ásecret'), isTrue);
+      expect(PasswordRequirement.specialCharacter.isMetBy('Secret12'), isFalse);
+      expect(
+        PasswordRequirement.specialCharacter.isMetBy('Senha com espaco'),
+        isFalse,
+      );
+      expect(PasswordRequirement.specialCharacter.isMetBy('Secret.1'), isTrue);
+    });
+
+    test('a password without uppercase or special character is rejected', () {
+      expect(
+        validClientSignupForm
+            .copyWith(password: 'secret@1', passwordConfirmation: 'secret@1')
+            .validate()[AccountField.password],
+        AccountFieldIssue.missingUppercase,
+      );
+      expect(
+        validClientSignupForm
+            .copyWith(password: 'Secret12', passwordConfirmation: 'Secret12')
+            .validate()[AccountField.password],
+        AccountFieldIssue.missingSpecialCharacter,
+      );
+    });
+
+    test('the confirmation must match the password', () {
+      expect(
+        validClientSignupForm
+            .copyWith(passwordConfirmation: 'Secret@2')
+            .validate(),
+        {AccountField.passwordConfirmation: AccountFieldIssue.mismatch},
+      );
     });
   });
 }

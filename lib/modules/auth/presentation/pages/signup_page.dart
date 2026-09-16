@@ -6,7 +6,6 @@ import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_glass_card.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
 import '../../../../core/ui/vanep_text_field.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -17,11 +16,15 @@ import '../../domain/value_objects/user_type.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/signup_cubit.dart';
 import '../cubit/signup_state.dart';
+import '../cubit/signup_steps.dart';
 import '../formatters/profile_field_formatters.dart';
 import '../formatters/signup_input_formatters.dart';
 import '../mappers/account_failure_l10n.dart';
 import '../widgets/account_text_field.dart';
+import '../widgets/auth_page_chrome.dart';
+import '../widgets/password_requirements_checklist.dart';
 import '../widgets/personal_data_gender_chips.dart';
+import 'account_type_page.dart';
 import 'email_code_verification_page.dart';
 
 Future<void> openPasswordSignup(BuildContext context, UserType type) {
@@ -59,43 +62,38 @@ class SignupPage extends StatelessWidget {
           previous.status != current.status,
       listener: presentSignupOutcome,
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: VanepColors.surface,
-          appBar: AppBar(
-            backgroundColor: VanepColors.surface,
-            foregroundColor: VanepColors.textPrimary,
-            elevation: 0,
-            title: Text(
-              signupTitle(l10n, state.form.type),
-              style: VanepTypography.cardTitle,
-            ),
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-                  children: [
-                    if (state.googleTicket case final googleTicket?)
-                      GoogleAccountSummary(ticket: googleTicket)
-                    else
-                      SignupCredentialFields(state: state),
-                    SignupProfileFields(state: state),
-                  ],
-                ),
-              ),
-              SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                  child: VanepPrimaryButton(
-                    label: l10n.signupCreateAccount,
-                    isLoading: state.isSubmitting,
-                    onPressed: context.read<SignupCubit>().submit,
+        final cubit = context.read<SignupCubit>();
+        return PopScope(
+          canPop: state.isFirstStep,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) cubit.previousStep();
+          },
+          child: Scaffold(
+            backgroundColor: VanepColors.card,
+            appBar: const AuthAppBar(),
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    key: ValueKey(state.currentStep),
+                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+                    children: [
+                      SignupStepHeader(state: state),
+                      SignupStepFields(state: state),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                AuthBottomBar(
+                  child: VanepPrimaryButton(
+                    label: state.isLastStep
+                        ? l10n.signupCreateAccount
+                        : l10n.signupContinue,
+                    isLoading: state.isSubmitting,
+                    onPressed: state.isLastStep ? cubit.submit : cubit.nextStep,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -138,6 +136,117 @@ String signupTitle(AppLocalizations l10n, UserType type) {
   };
 }
 
+String signupStepTitle(AppLocalizations l10n, SignupStep step) {
+  return switch (step) {
+    SignupStep.access => l10n.signupSectionAccess,
+    SignupStep.personal => l10n.signupSectionPersonal,
+    SignupStep.professional => l10n.signupSectionProfessional,
+    SignupStep.confirmation => l10n.signupStepConfirmationTitle,
+  };
+}
+
+String signupStepSubtitle(AppLocalizations l10n, SignupStep step) {
+  return switch (step) {
+    SignupStep.access => l10n.signupStepAccessSubtitle,
+    SignupStep.personal => l10n.signupStepPersonalSubtitle,
+    SignupStep.professional => l10n.signupStepProfessionalSubtitle,
+    SignupStep.confirmation => l10n.signupStepConfirmationSubtitle,
+  };
+}
+
+class SignupStepHeader extends StatelessWidget {
+  const SignupStepHeader({required this.state, super.key});
+
+  final SignupState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final totalSteps = state.steps.length;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                signupTitle(l10n, state.form.type),
+                style: VanepTypography.fieldLabel.copyWith(
+                  color: VanepColors.action,
+                ),
+              ),
+            ),
+            Text(
+              l10n.signupStepProgress(state.stepIndex + 1, totalSteps),
+              style: VanepTypography.cardSubtitle,
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SignupStepProgressBar(
+          completedSteps: state.stepIndex + 1,
+          totalSteps: totalSteps,
+        ),
+        const SizedBox(height: 28),
+        AuthPageHeader(
+          title: signupStepTitle(l10n, state.currentStep),
+          subtitle: signupStepSubtitle(l10n, state.currentStep),
+        ),
+      ],
+    );
+  }
+}
+
+class SignupStepProgressBar extends StatelessWidget {
+  const SignupStepProgressBar({
+    required this.completedSteps,
+    required this.totalSteps,
+    super.key,
+  });
+
+  final int completedSteps;
+  final int totalSteps;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        for (var stepIndex = 0; stepIndex < totalSteps; stepIndex++) ...[
+          if (stepIndex > 0) const SizedBox(width: 6),
+          Expanded(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              height: 4,
+              decoration: BoxDecoration(
+                color: stepIndex < completedSteps
+                    ? VanepColors.action
+                    : VanepColors.cardBorder,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class SignupStepFields extends StatelessWidget {
+  const SignupStepFields({required this.state, super.key});
+
+  final SignupState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (state.currentStep) {
+      SignupStep.access => SignupCredentialFields(state: state),
+      SignupStep.personal => SignupPersonalFields(state: state),
+      SignupStep.professional => SignupProfessionalFields(state: state),
+      SignupStep.confirmation => SignupConfirmation(state: state),
+    };
+  }
+}
+
 class SignupCredentialFields extends StatelessWidget {
   const SignupCredentialFields({required this.state, super.key});
 
@@ -152,42 +261,125 @@ class SignupCredentialFields extends StatelessWidget {
 
     return AutofillGroup(
       child: Column(
-        children: [
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: withSpacing([
           AccountTextField(
             label: l10n.signupFieldName,
             initialValue: state.form.name,
             onChanged: cubit.updateName,
             errorText: issueOf(AccountField.name),
+            hintText: l10n.signupNameHint,
+            prefixIcon: Icons.person_outline,
             keyboardType: TextInputType.name,
             autofillHints: const [AutofillHints.name],
           ),
-          const SizedBox(height: 16),
           AccountTextField(
             label: l10n.loginEmailLabel,
             initialValue: state.form.email,
             onChanged: cubit.updateEmail,
             errorText: issueOf(AccountField.email),
+            hintText: l10n.loginEmailHint,
+            prefixIcon: Icons.mail_outline,
             keyboardType: TextInputType.emailAddress,
             autofillHints: const [AutofillHints.email],
           ),
-          const SizedBox(height: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AccountTextField(
+                label: l10n.loginPasswordLabel,
+                initialValue: state.form.password,
+                onChanged: cubit.updatePassword,
+                errorText: issueOf(AccountField.password),
+                hintText: l10n.signupPasswordHint,
+                prefixIcon: Icons.lock_outline,
+                obscureText: true,
+                autofillHints: const [AutofillHints.newPassword],
+              ),
+              const SizedBox(height: 4),
+              PasswordRequirementsChecklist(
+                password: state.form.password,
+                highlightUnmet: state.issues.containsKey(AccountField.password),
+              ),
+            ],
+          ),
           AccountTextField(
-            label: l10n.loginPasswordLabel,
-            initialValue: state.form.password,
-            onChanged: cubit.updatePassword,
-            errorText: issueOf(AccountField.password),
+            label: l10n.signupFieldPasswordConfirmation,
+            initialValue: state.form.passwordConfirmation,
+            onChanged: cubit.updatePasswordConfirmation,
+            errorText: issueOf(AccountField.passwordConfirmation),
+            hintText: l10n.signupPasswordConfirmationHint,
+            prefixIcon: Icons.lock_outline,
             obscureText: true,
+            textInputAction: TextInputAction.done,
             autofillHints: const [AutofillHints.newPassword],
           ),
-          const SizedBox(height: 16),
-        ],
+        ], 20),
       ),
     );
   }
 }
 
-class SignupProfileFields extends StatelessWidget {
-  const SignupProfileFields({required this.state, super.key});
+class SignupPersonalFields extends StatelessWidget {
+  const SignupPersonalFields({required this.state, super.key});
+
+  final SignupState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final cubit = context.read<SignupCubit>();
+    final form = state.form;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: withSpacing([
+        AccountTextField(
+          label: l10n.signupFieldDocument,
+          initialValue: form.document,
+          onChanged: cubit.updateDocument,
+          errorText: accountFieldIssueMessageOrNull(
+            l10n,
+            state.issues,
+            AccountField.document,
+          ),
+          hintText: l10n.signupDocumentHint,
+          prefixIcon: Icons.badge_outlined,
+          keyboardType: TextInputType.number,
+          inputFormatters: const [CpfInputFormatter()],
+        ),
+        AccountTextField(
+          label: l10n.signupFieldPhone,
+          initialValue: form.phone,
+          onChanged: cubit.updatePhone,
+          hintText: l10n.signupPhoneHint,
+          prefixIcon: Icons.phone_outlined,
+          keyboardType: TextInputType.phone,
+          autofillHints: const [AutofillHints.telephoneNumber],
+          inputFormatters: const [ProfilePhoneInputFormatter()],
+        ),
+        SignupBirthDateField(
+          value: form.birthDate,
+          onChanged: cubit.updateBirthDate,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.signupFieldGender, style: VanepTypography.fieldLabel),
+            const SizedBox(height: 8),
+            PersonalDataGenderChips(
+              value: form.gender,
+              onChanged: cubit.updateGender,
+            ),
+          ],
+        ),
+      ], 20),
+    );
+  }
+}
+
+class SignupProfessionalFields extends StatelessWidget {
+  const SignupProfessionalFields({required this.state, super.key});
 
   final SignupState state;
 
@@ -200,71 +392,120 @@ class SignupProfileFields extends StatelessWidget {
         accountFieldIssueMessageOrNull(l10n, state.issues, field);
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: withSpacing([
+        AuthFieldRow(
+          children: [
+            AccountTextField(
+              label: l10n.signupFieldBasePrice,
+              initialValue: form.basePrice,
+              onChanged: cubit.updateBasePrice,
+              errorText: issueOf(AccountField.basePrice),
+              hintText: l10n.signupBasePriceHint,
+              prefixIcon: Icons.payments_outlined,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              inputFormatters: decimalInputFormatters,
+            ),
+            AccountTextField(
+              label: l10n.signupFieldExperienceYears,
+              initialValue: form.experienceYears,
+              onChanged: cubit.updateExperienceYears,
+              errorText: issueOf(AccountField.experienceYears),
+              hintText: l10n.signupExperienceYearsHint,
+              prefixIcon: Icons.work_history_outlined,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+          ],
+        ),
         AccountTextField(
-          label: l10n.signupFieldDocument,
-          initialValue: form.document,
-          onChanged: cubit.updateDocument,
-          errorText: issueOf(AccountField.document),
+          label: l10n.signupFieldCnpj,
+          initialValue: form.cnpj,
+          onChanged: cubit.updateCnpj,
+          hintText: l10n.signupCnpjHint,
+          prefixIcon: Icons.business_outlined,
           keyboardType: TextInputType.number,
-          inputFormatters: const [CpfInputFormatter()],
+          textInputAction: TextInputAction.done,
         ),
-        if (form.isDriver) ...[
-          const SizedBox(height: 16),
-          AccountTextField(
-            label: l10n.signupFieldBasePrice,
-            initialValue: form.basePrice,
-            onChanged: cubit.updateBasePrice,
-            errorText: issueOf(AccountField.basePrice),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: decimalInputFormatters,
-          ),
-          const SizedBox(height: 16),
-          AccountTextField(
-            label: l10n.signupFieldCnpj,
-            initialValue: form.cnpj,
-            onChanged: cubit.updateCnpj,
-            keyboardType: TextInputType.number,
-          ),
-          const SizedBox(height: 16),
-          AccountTextField(
-            label: l10n.signupFieldExperienceYears,
-            initialValue: form.experienceYears,
-            onChanged: cubit.updateExperienceYears,
-            errorText: issueOf(AccountField.experienceYears),
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-        ],
-        const SizedBox(height: 16),
-        AccountTextField(
-          label: l10n.signupFieldPhone,
-          initialValue: form.phone,
-          onChanged: cubit.updatePhone,
-          keyboardType: TextInputType.phone,
-          autofillHints: const [AutofillHints.telephoneNumber],
-          inputFormatters: const [ProfilePhoneInputFormatter()],
+      ], 20),
+    );
+  }
+}
+
+class SignupConfirmation extends StatelessWidget {
+  const SignupConfirmation({required this.state, super.key});
+
+  final SignupState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final googleTicket = state.googleTicket;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SignupAccountSummary(
+          name: googleTicket?.name ?? state.form.name.trim(),
+          email: googleTicket?.email ?? state.form.email.trim(),
+          type: state.form.type,
         ),
         const SizedBox(height: 16),
-        SignupBirthDateField(
-          value: form.birthDate,
-          onChanged: cubit.updateBirthDate,
-        ),
-        const SizedBox(height: 16),
-        Text(l10n.signupFieldGender, style: VanepTypography.cardSubtitle),
-        const SizedBox(height: 8),
-        PersonalDataGenderChips(
-          value: form.gender,
-          onChanged: cubit.updateGender,
-        ),
-        const SizedBox(height: 12),
         SignupTermsField(
-          accepted: form.acceptTerms,
-          onChanged: cubit.updateAcceptTerms,
-          errorText: issueOf(AccountField.acceptTerms),
+          accepted: state.form.acceptTerms,
+          onChanged: context.read<SignupCubit>().updateAcceptTerms,
+          errorText: accountFieldIssueMessageOrNull(
+            l10n,
+            state.issues,
+            AccountField.acceptTerms,
+          ),
         ),
       ],
+    );
+  }
+}
+
+class SignupAccountSummary extends StatelessWidget {
+  const SignupAccountSummary({
+    required this.name,
+    required this.email,
+    required this.type,
+    super.key,
+  });
+
+  final String name;
+  final String email;
+  final UserType type;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AuthOutlinedPanel(
+      child: Row(
+        children: [
+          AuthIconBadge(icon: accountTypeIcon(type)),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name, style: VanepTypography.cardTitle),
+                const SizedBox(height: 2),
+                Text(email, style: VanepTypography.cardSubtitle),
+                const SizedBox(height: 6),
+                Text(
+                  accountTypeLabel(l10n, type),
+                  style: VanepTypography.cardSubtitle.copyWith(
+                    color: VanepColors.action,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -324,10 +565,13 @@ class _SignupBirthDateFieldState extends State<SignupBirthDateField> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return VanepTextField(
-      label: AppLocalizations.of(context)!.signupFieldBirthDate,
+      label: l10n.signupFieldBirthDate,
       controller: _controller,
       onChanged: (_) {},
+      hintText: l10n.signupBirthDateHint,
+      prefixIcon: Icons.calendar_today_outlined,
       readOnly: true,
       onTap: pickDate,
     );
@@ -349,26 +593,35 @@ class SignupTermsField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final errorText = this.errorText;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InkWell(
+        AuthOutlinedPanel(
+          highlighted: accepted,
           onTap: () => onChanged(!accepted),
           child: Row(
             children: [
-              Checkbox(
-                value: accepted,
-                onChanged: (value) => onChanged(value ?? false),
-                activeColor: VanepColors.brand,
-                checkColor: VanepColors.backgroundDeep,
-                side: const BorderSide(color: VanepColors.textSecondary),
+              SizedBox(
+                width: 24,
+                height: 24,
+                child: Checkbox(
+                  value: accepted,
+                  onChanged: (value) => onChanged(value ?? false),
+                  activeColor: VanepColors.action,
+                  checkColor: VanepColors.card,
+                  side: BorderSide(
+                    color: errorText == null
+                        ? VanepColors.textSecondary
+                        : VanepColors.danger,
+                  ),
+                ),
               ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   l10n.signupAcceptTerms,
-                  style: VanepTypography.cardTitle.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: VanepTypography.fieldValue,
                 ),
               ),
             ],
@@ -376,9 +629,9 @@ class SignupTermsField extends StatelessWidget {
         ),
         if (errorText != null)
           Padding(
-            padding: const EdgeInsets.only(left: 12),
+            padding: const EdgeInsets.only(left: 4, top: 6),
             child: Text(
-              errorText!,
+              errorText,
               style: VanepTypography.cardSubtitle.copyWith(
                 color: VanepColors.danger,
                 fontSize: 12,
@@ -386,37 +639,6 @@ class SignupTermsField extends StatelessWidget {
             ),
           ),
       ],
-    );
-  }
-}
-
-class GoogleAccountSummary extends StatelessWidget {
-  const GoogleAccountSummary({required this.ticket, super.key});
-
-  final GoogleSignupTicket ticket;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: VanepGlassCard(
-        child: Row(
-          children: [
-            const Icon(Icons.account_circle_outlined, color: VanepColors.brand),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(ticket.name, style: VanepTypography.cardTitle),
-                  const SizedBox(height: 2),
-                  Text(ticket.email, style: VanepTypography.cardSubtitle),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/failures/account_failure.dart';
 import '../../domain/value_objects/account_field.dart';
-import '../../domain/value_objects/signup_form.dart';
+import '../../domain/value_objects/password_policy.dart';
 
 String accountFailureMessage(AppLocalizations l10n, AccountFailure failure) {
   return switch (failure) {
@@ -18,7 +18,7 @@ String? accountFieldIssueMessageOrNull(
   AppLocalizations l10n,
   Map<AccountField, AccountFieldIssue> issues,
   AccountField field, {
-  int passwordMinLength = SignupRules.passwordMinLength,
+  int passwordMinLength = PasswordPolicy.minLength,
 }) {
   final issue = issues[field];
   if (issue == null) return null;
@@ -34,7 +34,7 @@ String accountFieldIssueMessage(
   AppLocalizations l10n,
   AccountField field,
   AccountFieldIssue issue, {
-  int passwordMinLength = SignupRules.passwordMinLength,
+  int passwordMinLength = PasswordPolicy.minLength,
 }) {
   return switch ((field, issue)) {
     (_, AccountFieldIssue.required) => l10n.accountIssueRequired,
@@ -48,6 +48,12 @@ String accountFieldIssueMessage(
     (_, AccountFieldIssue.tooShort) => l10n.accountIssuePasswordTooShort(
       passwordMinLength,
     ),
+    (_, AccountFieldIssue.missingUppercase) ||
+    (
+      _,
+      AccountFieldIssue.missingSpecialCharacter,
+    ) => l10n.accountIssuePasswordWeak,
+    (_, AccountFieldIssue.mismatch) => l10n.accountIssuePasswordMismatch,
     (_, AccountFieldIssue.notAccepted) => l10n.accountIssueTermsNotAccepted,
     (_, AccountFieldIssue.notPositive) => l10n.accountIssueBasePriceNotPositive,
     (AccountField.document, AccountFieldIssue.duplicate) =>

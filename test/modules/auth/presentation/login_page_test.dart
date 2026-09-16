@@ -194,6 +194,8 @@ void main() {
     when(() => cubit.signInWithGoogle()).thenAnswer((_) async {});
 
     await tester.pumpWidget(loginHarness(cubit));
+    await tester.ensureVisible(find.text('Entrar com Google'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Entrar com Google'));
 
     verify(() => cubit.signInWithGoogle()).called(1);

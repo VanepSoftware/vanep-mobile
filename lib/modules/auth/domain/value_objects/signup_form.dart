@@ -2,11 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import 'account_field.dart';
 import 'gender.dart';
+import 'password_policy.dart';
 import 'user_type.dart';
-
-abstract final class SignupRules {
-  static const int passwordMinLength = 6;
-}
 
 class SignupForm extends Equatable {
   const SignupForm({
@@ -14,6 +11,7 @@ class SignupForm extends Equatable {
     this.name = '',
     this.email = '',
     this.password = '',
+    this.passwordConfirmation = '',
     this.document = '',
     this.phone = '',
     this.birthDate,
@@ -28,6 +26,7 @@ class SignupForm extends Equatable {
   final String name;
   final String email;
   final String password;
+  final String passwordConfirmation;
   final String document;
   final String phone;
   final DateTime? birthDate;
@@ -64,6 +63,7 @@ class SignupForm extends Equatable {
     String? name,
     String? email,
     String? password,
+    String? passwordConfirmation,
     String? document,
     String? phone,
     DateTime? birthDate,
@@ -79,6 +79,7 @@ class SignupForm extends Equatable {
       name: name ?? this.name,
       email: email ?? this.email,
       password: password ?? this.password,
+      passwordConfirmation: passwordConfirmation ?? this.passwordConfirmation,
       document: document ?? this.document,
       phone: phone ?? this.phone,
       birthDate: clearBirthDate ? null : (birthDate ?? this.birthDate),
@@ -96,6 +97,7 @@ class SignupForm extends Equatable {
     name,
     email,
     password,
+    passwordConfirmation,
     document,
     phone,
     birthDate,
@@ -115,10 +117,11 @@ Map<AccountField, AccountFieldIssue> credentialIssuesOf(SignupForm form) {
       AccountField.email: AccountFieldIssue.required
     else if (!isValidEmail(email))
       AccountField.email: AccountFieldIssue.invalid,
-    if (form.password.isEmpty)
-      AccountField.password: AccountFieldIssue.required
-    else if (form.password.length < SignupRules.passwordMinLength)
-      AccountField.password: AccountFieldIssue.tooShort,
+    AccountField.password: ?passwordIssueOf(form.password),
+    AccountField.passwordConfirmation: ?passwordConfirmationIssueOf(
+      password: form.password,
+      confirmation: form.passwordConfirmation,
+    ),
   };
 }
 

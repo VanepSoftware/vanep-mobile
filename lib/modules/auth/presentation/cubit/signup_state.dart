@@ -5,6 +5,7 @@ import '../../domain/value_objects/account_field.dart';
 import '../../domain/value_objects/google_signup_ticket.dart';
 import '../../domain/value_objects/signup_form.dart';
 import '../../domain/value_objects/user_type.dart';
+import 'signup_steps.dart';
 
 enum SignupStatus {
   editing,
@@ -28,6 +29,7 @@ class SignupState extends Equatable {
   const SignupState({
     required this.form,
     this.googleTicket,
+    this.stepIndex = 0,
     this.status = SignupStatus.editing,
     this.issues = const {},
     this.failure,
@@ -35,6 +37,7 @@ class SignupState extends Equatable {
 
   final SignupForm form;
   final GoogleSignupTicket? googleTicket;
+  final int stepIndex;
   final SignupStatus status;
   final Map<AccountField, AccountFieldIssue> issues;
   final AccountFailure? failure;
@@ -45,8 +48,18 @@ class SignupState extends Equatable {
 
   bool get isGoogleSignup => googleTicket != null;
 
+  List<SignupStep> get steps =>
+      signupStepsFor(isDriver: form.isDriver, isGoogleSignup: isGoogleSignup);
+
+  SignupStep get currentStep => steps[stepIndex];
+
+  bool get isFirstStep => stepIndex == 0;
+
+  bool get isLastStep => stepIndex == steps.length - 1;
+
   SignupState copyWith({
     SignupForm? form,
+    int? stepIndex,
     SignupStatus? status,
     Map<AccountField, AccountFieldIssue>? issues,
     AccountFailure? failure,
@@ -55,6 +68,7 @@ class SignupState extends Equatable {
     return SignupState(
       form: form ?? this.form,
       googleTicket: googleTicket,
+      stepIndex: stepIndex ?? this.stepIndex,
       status: status ?? this.status,
       issues: issues ?? this.issues,
       failure: clearFailure ? null : (failure ?? this.failure),
@@ -62,5 +76,12 @@ class SignupState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [form, googleTicket, status, issues, failure];
+  List<Object?> get props => [
+    form,
+    googleTicket,
+    stepIndex,
+    status,
+    issues,
+    failure,
+  ];
 }

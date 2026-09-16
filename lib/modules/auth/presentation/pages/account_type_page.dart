@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_glass_card.dart';
-import '../../../../core/ui/vanep_screen_background.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/value_objects/user_type.dart';
+import '../widgets/auth_page_chrome.dart';
 import 'signup_page.dart';
 
 typedef AccountTypeSelected =
@@ -31,28 +30,51 @@ class AccountTypePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: VanepColors.surfaceGradientTop,
-        foregroundColor: VanepColors.textPrimary,
-        elevation: 0,
-        title: Text(l10n.signupCreateAccount, style: VanepTypography.cardTitle),
-      ),
-      body: VanepScreenBackground(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-          children: [
-            Text(l10n.signupChooseTypeTitle, style: VanepTypography.pageTitle),
-            const SizedBox(height: 20),
-            for (final type in UserType.signupTypes) ...[
-              AccountTypeOption(
-                label: accountTypeLabel(l10n, type),
-                icon: accountTypeIcon(type),
-                onTap: () => onTypeSelected(context, type),
-              ),
-              const SizedBox(height: 12),
-            ],
+      backgroundColor: VanepColors.card,
+      appBar: const AuthAppBar(),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        children: [
+          AuthPageHeader(
+            title: l10n.signupChooseTypeTitle,
+            subtitle: l10n.signupChooseTypeSubtitle,
+          ),
+          for (final type in UserType.signupTypes) ...[
+            AccountTypeOption(
+              label: accountTypeLabel(l10n, type),
+              description: accountTypeDescription(l10n, type),
+              icon: accountTypeIcon(type),
+              onTap: () => onTypeSelected(context, type),
+            ),
+            const SizedBox(height: 12),
           ],
-        ),
+          const SizedBox(height: 12),
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(
+                l10n.signupAlreadyHaveAccount,
+                style: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
+              ),
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context).popUntil((route) => route.isFirst),
+                style: TextButton.styleFrom(
+                  foregroundColor: VanepColors.action,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                ),
+                child: Text(
+                  l10n.loginTitle,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -63,6 +85,14 @@ String accountTypeLabel(AppLocalizations l10n, UserType type) {
     UserType.driver => l10n.signupTypeDriver,
     UserType.assistant => l10n.signupTypeAssistant,
     UserType.client || UserType.admin => l10n.signupTypeClient,
+  };
+}
+
+String accountTypeDescription(AppLocalizations l10n, UserType type) {
+  return switch (type) {
+    UserType.driver => l10n.signupTypeDriverDescription,
+    UserType.assistant => l10n.signupTypeAssistantDescription,
+    UserType.client || UserType.admin => l10n.signupTypeClientDescription,
   };
 }
 
@@ -77,29 +107,44 @@ IconData accountTypeIcon(UserType type) {
 class AccountTypeOption extends StatelessWidget {
   const AccountTypeOption({
     required this.label,
+    required this.description,
     required this.icon,
     required this.onTap,
     super.key,
   });
 
   final String label;
+  final String description;
   final IconData icon;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AuthOutlinedPanel(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: VanepGlassCard(
-        child: Row(
-          children: [
-            Icon(icon, color: VanepColors.brand),
-            const SizedBox(width: 14),
-            Expanded(child: Text(label, style: VanepTypography.cardTitle)),
-            const Icon(Icons.chevron_right, color: VanepColors.textMuted),
-          ],
-        ),
+      child: Row(
+        children: [
+          AuthIconBadge(icon: icon),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: VanepTypography.cardTitle),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: VanepTypography.cardSubtitle.copyWith(
+                    fontSize: 14,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Icon(Icons.chevron_right, color: VanepColors.textMuted),
+        ],
       ),
     );
   }
