@@ -21,6 +21,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginTitle => 'Sign in';
 
   @override
+  String get loginHeading => 'Welcome back';
+
+  @override
+  String get loginSubtitle =>
+      'Sign in with your email and password to continue';
+
+  @override
+  String get loginEmailHint => 'you@email.com';
+
+  @override
+  String get showPassword => 'Show password';
+
+  @override
+  String get hidePassword => 'Hide password';
+
+  @override
+  String get loginOrDivider => 'or';
+
+  @override
+  String get loginNoAccount => 'Don\'t have an account?';
+
+  @override
   String get loginFailed => 'Could not sign in. Please try again.';
 
   @override
@@ -72,6 +94,109 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signupTypeAssistant => 'I\'m an assistant';
 
   @override
+  String get signupChooseTypeSubtitle => 'Pick the account type that fits you.';
+
+  @override
+  String get signupTypeClientDescription =>
+      'Find and hire school transport for your dependents.';
+
+  @override
+  String get signupTypeDriverDescription =>
+      'Offer school transport with your van.';
+
+  @override
+  String get signupTypeAssistantDescription =>
+      'Look after the students on a driver\'s routes.';
+
+  @override
+  String get signupAlreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get signupSectionAccess => 'Sign-in details';
+
+  @override
+  String get signupSectionPersonal => 'Personal details';
+
+  @override
+  String get signupSectionProfessional => 'Professional details';
+
+  @override
+  String get signupContinue => 'Continue';
+
+  @override
+  String signupStepProgress(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get signupStepAccessSubtitle =>
+      'You will use this email and password to sign in.';
+
+  @override
+  String get signupStepPersonalSubtitle =>
+      'We need these details to identify your account.';
+
+  @override
+  String get signupStepProfessionalSubtitle =>
+      'Tell us a little about your transport service.';
+
+  @override
+  String get signupStepConfirmationTitle => 'Review and confirm';
+
+  @override
+  String get signupStepConfirmationSubtitle =>
+      'Check your account details and accept the terms to finish.';
+
+  @override
+  String get signupNameHint => 'Your full name';
+
+  @override
+  String get signupPasswordHint => 'Create a password';
+
+  @override
+  String get signupFieldPasswordConfirmation => 'Confirm password';
+
+  @override
+  String get signupPasswordConfirmationHint => 'Repeat the password';
+
+  @override
+  String passwordRequirementMinLength(int min) {
+    return 'At least $min characters';
+  }
+
+  @override
+  String get passwordRequirementUppercase => 'One uppercase letter';
+
+  @override
+  String get passwordRequirementSpecial =>
+      'One special character (e.g. ! @ # \$)';
+
+  @override
+  String get accountIssuePasswordWeak =>
+      'The password does not meet every requirement.';
+
+  @override
+  String get accountIssuePasswordMismatch => 'The passwords do not match.';
+
+  @override
+  String get signupDocumentHint => '000.000.000-00';
+
+  @override
+  String get signupPhoneHint => '(00) 00000-0000';
+
+  @override
+  String get signupBirthDateHint => 'mm/dd/yyyy';
+
+  @override
+  String get signupBasePriceHint => '0.00';
+
+  @override
+  String get signupExperienceYearsHint => '0';
+
+  @override
+  String get signupCnpjHint => '00.000.000/0000-00';
+
+  @override
   String get signupTitleClient => 'Client sign-up';
 
   @override
@@ -119,6 +244,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verificationCodeLabel => 'Code';
 
   @override
+  String get verificationCodeHint => '000000';
+
+  @override
   String get emailVerificationSubmit => 'Confirm';
 
   @override
@@ -156,6 +284,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String passwordResetCodeSentTo(String email) {
     return 'If there is an account for $email, we sent a 6-digit code.';
   }
+
+  @override
+  String get passwordResetCodeTitle => 'Create a new password';
+
+  @override
+  String get passwordResetNewPasswordHint => 'At least 8 characters';
 
   @override
   String get passwordResetNewPasswordLabel => 'New password';

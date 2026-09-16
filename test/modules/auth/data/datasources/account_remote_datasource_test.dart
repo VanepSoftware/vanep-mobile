@@ -32,7 +32,7 @@ void main() {
     expect(capturedBody('http://10.0.2.2:8080/api/auth/signup/client'), {
       'name': 'Ana Cliente',
       'email': 'ana@vanep.com.br',
-      'password': 'secret1',
+      'password': 'Secret@1',
       'document': '52998224725',
       'phone': '11999990000',
       'birthDate': '1990-05-15',

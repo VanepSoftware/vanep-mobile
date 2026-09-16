@@ -3,7 +3,7 @@
 Backend prerequisite: `vanep-api-java` PRs #183–#194 (change `native-mobile-auth`, phases 0a–4c).
 
 ```
-0 ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 7 ─▶ 8
+0 ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 7 ─▶ 8 ─▶ 9
 ```
 
 | Phase | Contents | Depends on | Parallel with |
@@ -17,6 +17,7 @@ Backend prerequisite: `vanep-api-java` PRs #183–#194 (change `native-mobile-au
 | 6 | Google SDK, Google grant, `registration_required` → Google sign-up completion (M6) | Phase 5; backend 3b, 4c | — |
 | 7 | Forgot password and reset by code (M8) | Phase 5 | — |
 | 8 | Remove the WebView flow, PKCE, redirect config and dependencies (M8) | Phases 6 and 7 | — |
+| 9 | Auth screens polish: simpler white layout, core inputs/buttons, sign-up in steps, password rules and confirmation | Phase 8; backend #194 (password rule) | — |
 
 Phases are stacked because each one edits `auth_container.dart`, the ARB files and the login screen.
 
@@ -93,3 +94,16 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 - [x] 8.3 Remove `webview_flutter` and `crypto`; `OAUTH_REDIRECT_URI` / `OAUTH_SCOPES` from `Environment`, `.env.example`, README and the Makefile coverage filter
 - [x] 8.4 Run `make lint`, `make test` and `make coverage`
 - [ ] 8.5 Manual test of every flow on a device (R27a)
+
+## 9. Phase 9 — Auth screens polish (branch: `feat/N-177-auth-screens-polish`)
+
+- [x] 9.1 Core UI: white bordered inputs with hint, prefix icon and password visibility toggle; 52 px buttons; stronger `action` blue
+- [x] 9.2 Login on a white background: logo, heading, fields, centered "Forgot password", Google and "Create account"
+- [x] 9.3 Account type choice with icon, title and description per type
+- [x] 9.4 Tests: `SignupCubit` steps (advance only with a valid step, back keeps values, rejected field returns to its step); sign-up page per step
+- [x] 9.5 Sign-up in steps (access, personal, professional for drivers, confirmation) with progress indicator
+- [x] 9.6 Tests: `PasswordRequirement`, password and confirmation validation; checklist on the page
+- [x] 9.7 Password rules (6 characters, uppercase, special character) with live checklist and password confirmation; backend #194 enforces the same rules
+- [x] 9.8 Code verification and password reset screens with the same header and field style
+- [x] 9.9 Run `make lint` and `make test`
+

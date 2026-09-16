@@ -9,6 +9,7 @@ import '../../domain/value_objects/account_field.dart';
 import '../../domain/value_objects/signup_form.dart';
 import '../../domain/value_objects/google_signup_ticket.dart';
 import 'signup_state.dart';
+import 'signup_steps.dart';
 import 'start_session.dart';
 
 class SignupCubit extends Cubit<SignupState> {
@@ -38,6 +39,11 @@ class SignupCubit extends Cubit<SignupState> {
 
   void updatePassword(String value) =>
       updateForm(state.form.copyWith(password: value), AccountField.password);
+
+  void updatePasswordConfirmation(String value) => updateForm(
+    state.form.copyWith(passwordConfirmation: value),
+    AccountField.passwordConfirmation,
+  );
 
   void updateDocument(String value) =>
       updateForm(state.form.copyWith(document: value), AccountField.document);
@@ -74,6 +80,29 @@ class SignupCubit extends Cubit<SignupState> {
         issues: accountIssuesWithout(state.issues, editedField),
       ),
     );
+  }
+
+  void nextStep() {
+    final allIssues = state.form.validate(
+      includeCredentials: !state.isGoogleSignup,
+    );
+    final stepIssues = issuesOfStep(allIssues, state.currentStep);
+    if (stepIssues.isNotEmpty) {
+      emit(state.copyWith(issues: {...state.issues, ...stepIssues}));
+      return;
+    }
+    if (state.isLastStep) return;
+    emit(
+      state.copyWith(
+        stepIndex: state.stepIndex + 1,
+        issues: issuesOutsideStep(state.issues, state.currentStep),
+      ),
+    );
+  }
+
+  void previousStep() {
+    if (state.isFirstStep) return;
+    emit(state.copyWith(stepIndex: state.stepIndex - 1));
   }
 
   Future<void> submit() async {
@@ -121,7 +150,13 @@ class SignupCubit extends Cubit<SignupState> {
   void showFailure(AccountFailure failure) {
     if (failure is AccountValidationFailure && failure.issues.isNotEmpty) {
       emit(
-        state.copyWith(status: SignupStatus.editing, issues: failure.issues),
+        state.copyWith(
+          status: SignupStatus.editing,
+          issues: failure.issues,
+          stepIndex:
+              firstStepIndexWithIssues(state.steps, failure.issues) ??
+              state.stepIndex,
+        ),
       );
       return;
     }

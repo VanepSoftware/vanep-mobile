@@ -27,10 +27,10 @@ class VanepSecondaryButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: VanepColors.textPrimary,
           disabledForegroundColor: VanepColors.textMuted,
-          side: const BorderSide(color: VanepColors.divider),
+          side: const BorderSide(color: VanepColors.inputBorder),
           backgroundColor: VanepColors.card,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: isLoading
@@ -38,8 +38,8 @@ class VanepSecondaryButton extends StatelessWidget {
                 height: 22,
                 width: 22,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2.4,
-                  color: VanepColors.brand,
+                  strokeWidth: 2.2,
+                  color: VanepColors.action,
                 ),
               )
             : Row(

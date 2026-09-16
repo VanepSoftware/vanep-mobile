@@ -12,6 +12,7 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart'
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_steps.dart';
 
 import '../account_fixtures.dart';
 import '../auth_fixtures.dart';
@@ -78,7 +79,8 @@ void main() {
     build: buildCubit,
     act: (cubit) => cubit
       ..updateEmail('ana@vanep.com.br')
-      ..updatePassword('secret1')
+      ..updatePassword('Secret@1')
+      ..updatePasswordConfirmation('Secret@1')
       ..updateDocument(validCpf)
       ..updatePhone('(11) 99999-0000')
       ..updateBirthDate(DateTime(1990, 5, 15))
@@ -92,7 +94,8 @@ void main() {
       SignupForm(
         type: UserType.client,
         email: 'ana@vanep.com.br',
-        password: 'secret1',
+        password: 'Secret@1',
+        passwordConfirmation: 'Secret@1',
         document: validCpf,
         phone: '(11) 99999-0000',
         birthDate: DateTime(1990, 5, 15),
@@ -253,6 +256,103 @@ void main() {
         ),
       ],
       verify: (_) => verifyNever(signInWithGoogle.call),
+    );
+  });
+
+  group('steps', () {
+    test('password sign-up has access, personal and confirmation steps', () {
+      expect(const SignupState(form: SignupForm(type: UserType.client)).steps, [
+        SignupStep.access,
+        SignupStep.personal,
+        SignupStep.confirmation,
+      ]);
+    });
+
+    test('drivers get a professional step and Google skips access', () {
+      expect(
+        const SignupState(
+          form: SignupForm(type: UserType.driver),
+          googleTicket: googleTicket,
+        ).steps,
+        [SignupStep.personal, SignupStep.professional, SignupStep.confirmation],
+      );
+    });
+
+    blocTest<SignupCubit, SignupState>(
+      'nextStep shows only the issues of the current step',
+      build: buildCubit,
+      act: (cubit) => cubit
+        ..updateName('Ana')
+        ..nextStep(),
+      verify: (cubit) {
+        expect(cubit.state.stepIndex, 0);
+        expect(cubit.state.issues, {
+          AccountField.email: AccountFieldIssue.required,
+          AccountField.password: AccountFieldIssue.required,
+          AccountField.passwordConfirmation: AccountFieldIssue.required,
+        });
+      },
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'nextStep advances when the step is valid',
+      build: buildCubit,
+      seed: () => SignupState(form: validClientSignupForm),
+      act: (cubit) => cubit.nextStep(),
+      expect: () => [SignupState(form: validClientSignupForm, stepIndex: 1)],
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'nextStep keeps issues that belong to other steps',
+      build: buildCubit,
+      seed: () => SignupState(
+        form: validClientSignupForm,
+        issues: const {AccountField.document: AccountFieldIssue.duplicate},
+      ),
+      act: (cubit) => cubit.nextStep(),
+      expect: () => [
+        SignupState(
+          form: validClientSignupForm,
+          stepIndex: 1,
+          issues: const {AccountField.document: AccountFieldIssue.duplicate},
+        ),
+      ],
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'previousStep goes back and stops at the first step',
+      build: buildCubit,
+      seed: () => SignupState(form: validClientSignupForm, stepIndex: 1),
+      act: (cubit) => cubit
+        ..previousStep()
+        ..previousStep(),
+      expect: () => [SignupState(form: validClientSignupForm)],
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'a rejected field sends the user back to its step',
+      setUp: () => stubSignUp(
+        const Err(
+          AccountValidationFailure({
+            AccountField.document: AccountFieldIssue.duplicate,
+          }),
+        ),
+      ),
+      build: buildCubit,
+      seed: () => SignupState(form: validClientSignupForm, stepIndex: 2),
+      act: (cubit) => cubit.submit(),
+      expect: () => [
+        SignupState(
+          form: validClientSignupForm,
+          stepIndex: 2,
+          status: SignupStatus.submitting,
+        ),
+        SignupState(
+          form: validClientSignupForm,
+          stepIndex: 1,
+          issues: const {AccountField.document: AccountFieldIssue.duplicate},
+        ),
+      ],
     );
   });
 }

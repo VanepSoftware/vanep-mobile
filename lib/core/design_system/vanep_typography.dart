@@ -64,4 +64,23 @@ class VanepTypography {
     fontWeight: FontWeight.w700,
     color: VanepColors.brand,
   );
+
+  static const TextStyle fieldLabel = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+    color: VanepColors.textPrimary,
+  );
+
+  static const TextStyle fieldValue = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: VanepColors.textPrimary,
+  );
+
+  static const TextStyle loginTitle = TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.w600,
+    letterSpacing: -0.3,
+    color: VanepColors.textPrimary,
+  );
 }

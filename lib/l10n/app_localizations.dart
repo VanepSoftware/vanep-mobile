@@ -122,6 +122,48 @@ abstract class AppLocalizations {
   /// **'Sign in'**
   String get loginTitle;
 
+  /// No description provided for @loginHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get loginHeading;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your email and password to continue'**
+  String get loginSubtitle;
+
+  /// No description provided for @loginEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'you@email.com'**
+  String get loginEmailHint;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get hidePassword;
+
+  /// No description provided for @loginOrDivider.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get loginOrDivider;
+
+  /// No description provided for @loginNoAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get loginNoAccount;
+
   /// No description provided for @loginFailed.
   ///
   /// In en, this message translates to:
@@ -218,6 +260,186 @@ abstract class AppLocalizations {
   /// **'I\'m an assistant'**
   String get signupTypeAssistant;
 
+  /// No description provided for @signupChooseTypeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the account type that fits you.'**
+  String get signupChooseTypeSubtitle;
+
+  /// No description provided for @signupTypeClientDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Find and hire school transport for your dependents.'**
+  String get signupTypeClientDescription;
+
+  /// No description provided for @signupTypeDriverDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer school transport with your van.'**
+  String get signupTypeDriverDescription;
+
+  /// No description provided for @signupTypeAssistantDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Look after the students on a driver\'s routes.'**
+  String get signupTypeAssistantDescription;
+
+  /// No description provided for @signupAlreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get signupAlreadyHaveAccount;
+
+  /// No description provided for @signupSectionAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in details'**
+  String get signupSectionAccess;
+
+  /// No description provided for @signupSectionPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal details'**
+  String get signupSectionPersonal;
+
+  /// No description provided for @signupSectionProfessional.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional details'**
+  String get signupSectionProfessional;
+
+  /// No description provided for @signupContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get signupContinue;
+
+  /// No description provided for @signupStepProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String signupStepProgress(int current, int total);
+
+  /// No description provided for @signupStepAccessSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You will use this email and password to sign in.'**
+  String get signupStepAccessSubtitle;
+
+  /// No description provided for @signupStepPersonalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We need these details to identify your account.'**
+  String get signupStepPersonalSubtitle;
+
+  /// No description provided for @signupStepProfessionalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us a little about your transport service.'**
+  String get signupStepProfessionalSubtitle;
+
+  /// No description provided for @signupStepConfirmationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review and confirm'**
+  String get signupStepConfirmationTitle;
+
+  /// No description provided for @signupStepConfirmationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your account details and accept the terms to finish.'**
+  String get signupStepConfirmationSubtitle;
+
+  /// No description provided for @signupNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your full name'**
+  String get signupNameHint;
+
+  /// No description provided for @signupPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a password'**
+  String get signupPasswordHint;
+
+  /// No description provided for @signupFieldPasswordConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get signupFieldPasswordConfirmation;
+
+  /// No description provided for @signupPasswordConfirmationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat the password'**
+  String get signupPasswordConfirmationHint;
+
+  /// No description provided for @passwordRequirementMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'At least {min} characters'**
+  String passwordRequirementMinLength(int min);
+
+  /// No description provided for @passwordRequirementUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'One uppercase letter'**
+  String get passwordRequirementUppercase;
+
+  /// No description provided for @passwordRequirementSpecial.
+  ///
+  /// In en, this message translates to:
+  /// **'One special character (e.g. ! @ # \$)'**
+  String get passwordRequirementSpecial;
+
+  /// No description provided for @accountIssuePasswordWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'The password does not meet every requirement.'**
+  String get accountIssuePasswordWeak;
+
+  /// No description provided for @accountIssuePasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The passwords do not match.'**
+  String get accountIssuePasswordMismatch;
+
+  /// No description provided for @signupDocumentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'000.000.000-00'**
+  String get signupDocumentHint;
+
+  /// No description provided for @signupPhoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'(00) 00000-0000'**
+  String get signupPhoneHint;
+
+  /// No description provided for @signupBirthDateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'mm/dd/yyyy'**
+  String get signupBirthDateHint;
+
+  /// No description provided for @signupBasePriceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0.00'**
+  String get signupBasePriceHint;
+
+  /// No description provided for @signupExperienceYearsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0'**
+  String get signupExperienceYearsHint;
+
+  /// No description provided for @signupCnpjHint.
+  ///
+  /// In en, this message translates to:
+  /// **'00.000.000/0000-00'**
+  String get signupCnpjHint;
+
   /// No description provided for @signupTitleClient.
   ///
   /// In en, this message translates to:
@@ -308,6 +530,12 @@ abstract class AppLocalizations {
   /// **'Code'**
   String get verificationCodeLabel;
 
+  /// No description provided for @verificationCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'000000'**
+  String get verificationCodeHint;
+
   /// No description provided for @emailVerificationSubmit.
   ///
   /// In en, this message translates to:
@@ -373,6 +601,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'If there is an account for {email}, we sent a 6-digit code.'**
   String passwordResetCodeSentTo(String email);
+
+  /// No description provided for @passwordResetCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new password'**
+  String get passwordResetCodeTitle;
+
+  /// No description provided for @passwordResetNewPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters'**
+  String get passwordResetNewPasswordHint;
 
   /// No description provided for @passwordResetNewPasswordLabel.
   ///

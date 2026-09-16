@@ -9,6 +9,8 @@ class AccountTextField extends StatefulWidget {
     required this.initialValue,
     required this.onChanged,
     this.errorText,
+    this.hintText,
+    this.prefixIcon,
     this.enabled = true,
     this.obscureText = false,
     this.keyboardType,
@@ -22,6 +24,8 @@ class AccountTextField extends StatefulWidget {
   final String initialValue;
   final ValueChanged<String> onChanged;
   final String? errorText;
+  final String? hintText;
+  final IconData? prefixIcon;
   final bool enabled;
   final bool obscureText;
   final TextInputType? keyboardType;
@@ -51,6 +55,8 @@ class _AccountTextFieldState extends State<AccountTextField> {
       controller: _controller,
       onChanged: widget.onChanged,
       errorText: widget.errorText,
+      hintText: widget.hintText,
+      prefixIcon: widget.prefixIcon,
       enabled: widget.enabled,
       obscureText: widget.obscureText,
       keyboardType: widget.keyboardType,
