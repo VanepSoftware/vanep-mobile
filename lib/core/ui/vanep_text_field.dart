@@ -17,6 +17,8 @@ class VanepTextField extends StatelessWidget {
     this.inputFormatters,
     this.maxLength,
     this.obscureText = false,
+    this.readOnly = false,
+    this.onTap,
     super.key,
   });
 
@@ -31,6 +33,8 @@ class VanepTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
   final bool obscureText;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,8 @@ class VanepTextField extends StatelessWidget {
           inputFormatters: inputFormatters,
           maxLength: maxLength,
           obscureText: obscureText,
+          readOnly: readOnly,
+          onTap: onTap,
           onChanged: onChanged,
           style: VanepTypography.cardTitle.copyWith(
             color: enabled ? VanepColors.textPrimary : VanepColors.textMuted,

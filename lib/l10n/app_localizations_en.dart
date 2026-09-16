@@ -50,6 +50,115 @@ class AppLocalizationsEn extends AppLocalizations {
       'Too many requests. Wait a moment and try again.';
 
   @override
+  String get signupCreateAccount => 'Create account';
+
+  @override
+  String get signupChooseTypeTitle => 'How do you want to use Vanep?';
+
+  @override
+  String get signupTypeClient => 'I\'m a client (guardian)';
+
+  @override
+  String get signupTypeDriver => 'I\'m a driver';
+
+  @override
+  String get signupTypeAssistant => 'I\'m an assistant';
+
+  @override
+  String get signupTitleClient => 'Client sign-up';
+
+  @override
+  String get signupTitleDriver => 'Driver sign-up';
+
+  @override
+  String get signupTitleAssistant => 'Assistant sign-up';
+
+  @override
+  String get signupFieldName => 'Name';
+
+  @override
+  String get signupFieldDocument => 'CPF';
+
+  @override
+  String get signupFieldPhone => 'Phone';
+
+  @override
+  String get signupFieldBirthDate => 'Birth date';
+
+  @override
+  String get signupFieldGender => 'Sex';
+
+  @override
+  String get signupFieldCnpj => 'CNPJ (yours or your company\'s)';
+
+  @override
+  String get signupFieldExperienceYears => 'Years of experience';
+
+  @override
+  String get signupFieldBasePrice => 'Base price (R\$)';
+
+  @override
+  String get signupAcceptTerms => 'I accept the terms of use';
+
+  @override
+  String emailCodeSentTo(String email) {
+    return 'We sent a 6-digit code to $email.';
+  }
+
+  @override
+  String get accountIssueRequired => 'Fill in this field.';
+
+  @override
+  String get accountIssueEmailInvalid => 'Invalid email.';
+
+  @override
+  String get accountIssueDocumentInvalid =>
+      'Invalid CPF. Check the numbers entered.';
+
+  @override
+  String get accountIssueNumberInvalid => 'Enter a valid number.';
+
+  @override
+  String accountIssuePasswordTooShort(int min) {
+    return 'The password must be at least $min characters long.';
+  }
+
+  @override
+  String get accountIssueTermsNotAccepted =>
+      'You must accept the terms of use.';
+
+  @override
+  String get accountIssueBasePriceNotPositive =>
+      'The base price must be greater than zero.';
+
+  @override
+  String get accountIssueEmailDuplicate =>
+      'An account with this email already exists.';
+
+  @override
+  String get accountIssueDocumentDuplicate =>
+      'An account with this CPF already exists.';
+
+  @override
+  String get accountIssueRejected => 'Check this field.';
+
+  @override
+  String get accountErrorCheckFields => 'Check the highlighted fields.';
+
+  @override
+  String get accountErrorInvalidCode => 'Invalid or expired code.';
+
+  @override
+  String get accountErrorInvalidSignupTicket =>
+      'Your Google sign-up expired. Sign in with Google again.';
+
+  @override
+  String get accountErrorNetwork => 'Could not reach the server. Try again.';
+
+  @override
+  String get accountErrorUnexpected => 'Something went wrong. Try again.';
+
+  @override
   String homeGreeting(String name) {
     return 'Hello, $name!';
   }
