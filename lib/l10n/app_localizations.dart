@@ -134,6 +134,48 @@ abstract class AppLocalizations {
   /// **'Could not sign in. Please try again.'**
   String get loginFailed;
 
+  /// No description provided for @loginEmailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get loginEmailLabel;
+
+  /// No description provided for @loginPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get loginPasswordLabel;
+
+  /// No description provided for @loginErrorInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password.'**
+  String get loginErrorInvalidCredentials;
+
+  /// No description provided for @loginErrorEmailNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your email to sign in.'**
+  String get loginErrorEmailNotVerified;
+
+  /// No description provided for @loginErrorAccountLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many failed attempts. Try again in a few minutes.'**
+  String get loginErrorAccountLocked;
+
+  /// No description provided for @loginErrorAccountDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been deactivated.'**
+  String get loginErrorAccountDisabled;
+
+  /// No description provided for @authErrorTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Wait a moment and try again.'**
+  String get authErrorTooManyRequests;
+
   /// No description provided for @homeGreeting.
   ///
   /// In en, this message translates to:

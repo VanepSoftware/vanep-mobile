@@ -15,6 +15,26 @@ class InvalidStateAuthFailure extends AuthFailure {
   const InvalidStateAuthFailure();
 }
 
+class InvalidCredentialsAuthFailure extends AuthFailure {
+  const InvalidCredentialsAuthFailure();
+}
+
+class EmailNotVerifiedAuthFailure extends AuthFailure {
+  const EmailNotVerifiedAuthFailure();
+}
+
+class AccountLockedAuthFailure extends AuthFailure {
+  const AccountLockedAuthFailure();
+}
+
+class AccountDisabledAuthFailure extends AuthFailure {
+  const AccountDisabledAuthFailure();
+}
+
+class TooManyRequestsAuthFailure extends AuthFailure {
+  const TooManyRequestsAuthFailure();
+}
+
 class NetworkAuthFailure extends AuthFailure {
   const NetworkAuthFailure([this.detail]);
 

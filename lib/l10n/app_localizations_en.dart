@@ -27,6 +27,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginFailed => 'Could not sign in. Please try again.';
 
   @override
+  String get loginEmailLabel => 'Email';
+
+  @override
+  String get loginPasswordLabel => 'Password';
+
+  @override
+  String get loginErrorInvalidCredentials => 'Incorrect email or password.';
+
+  @override
+  String get loginErrorEmailNotVerified => 'Confirm your email to sign in.';
+
+  @override
+  String get loginErrorAccountLocked =>
+      'Too many failed attempts. Try again in a few minutes.';
+
+  @override
+  String get loginErrorAccountDisabled => 'This account has been deactivated.';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Too many requests. Wait a moment and try again.';
+
+  @override
   String homeGreeting(String name) {
     return 'Hello, $name!';
   }

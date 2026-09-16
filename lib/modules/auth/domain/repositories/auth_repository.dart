@@ -14,6 +14,11 @@ abstract class AuthRepository {
     required AuthorizationRequest request,
   });
 
+  Future<Result<AuthFailure, AuthSession>> signInWithPassword({
+    required String email,
+    required String password,
+  });
+
   Future<Result<AuthFailure, AuthSession?>> currentSession();
 
   Future<Result<AuthFailure, void>> signOut();

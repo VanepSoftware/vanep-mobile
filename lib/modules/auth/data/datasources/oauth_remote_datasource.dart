@@ -10,9 +10,23 @@ class OAuthRemoteDataSource {
   final Dio dio;
   final Environment environment;
 
+  static const String passwordGrantType =
+      'urn:vanep:params:oauth:grant-type:password';
+
   static final _formOptions = Options(
     contentType: Headers.formUrlEncodedContentType,
   );
+
+  Future<TokenResponseDto> requestPasswordGrant({
+    required String email,
+    required String password,
+  }) {
+    return requestToken({
+      'grant_type': passwordGrantType,
+      'username': email,
+      'password': password,
+    });
+  }
 
   Future<TokenResponseDto> exchangeCode({
     required String code,
@@ -33,14 +47,17 @@ class OAuthRemoteDataSource {
     return TokenResponseDto.fromJson(response.data!);
   }
 
-  Future<TokenResponseDto> refresh(String refreshToken) async {
+  Future<TokenResponseDto> refresh(String refreshToken) {
+    return requestToken({
+      'grant_type': 'refresh_token',
+      'refresh_token': refreshToken,
+    });
+  }
+
+  Future<TokenResponseDto> requestToken(Map<String, String> grant) async {
     final response = await dio.post<Map<String, dynamic>>(
       environment.tokenEndpoint,
-      data: {
-        'grant_type': 'refresh_token',
-        'refresh_token': refreshToken,
-        'client_id': environment.oauthClientId,
-      },
+      data: {...grant, 'client_id': environment.oauthClientId},
       options: _formOptions,
     );
     return TokenResponseDto.fromJson(response.data!);
