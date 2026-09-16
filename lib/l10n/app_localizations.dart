@@ -350,6 +350,54 @@ abstract class AppLocalizations {
   /// **'Enter the 6 digits of the code.'**
   String get accountIssueCodeInvalid;
 
+  /// No description provided for @loginForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot my password'**
+  String get loginForgotPassword;
+
+  /// No description provided for @passwordResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover password'**
+  String get passwordResetTitle;
+
+  /// No description provided for @passwordResetEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your account email. If it exists, we will send a code so you can create a new password.'**
+  String get passwordResetEmailHint;
+
+  /// No description provided for @passwordResetSendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get passwordResetSendCode;
+
+  /// No description provided for @passwordResetCodeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'If there is an account for {email}, we sent a 6-digit code.'**
+  String passwordResetCodeSentTo(String email);
+
+  /// No description provided for @passwordResetNewPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get passwordResetNewPasswordLabel;
+
+  /// No description provided for @passwordResetSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get passwordResetSubmit;
+
+  /// No description provided for @passwordResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset! Sign in with your new password.'**
+  String get passwordResetDone;
+
   /// No description provided for @accountIssueRequired.
   ///
   /// In en, this message translates to:

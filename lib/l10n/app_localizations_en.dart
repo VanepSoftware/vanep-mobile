@@ -143,6 +143,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountIssueCodeInvalid => 'Enter the 6 digits of the code.';
 
   @override
+  String get loginForgotPassword => 'Forgot my password';
+
+  @override
+  String get passwordResetTitle => 'Recover password';
+
+  @override
+  String get passwordResetEmailHint =>
+      'Enter your account email. If it exists, we will send a code so you can create a new password.';
+
+  @override
+  String get passwordResetSendCode => 'Send code';
+
+  @override
+  String passwordResetCodeSentTo(String email) {
+    return 'If there is an account for $email, we sent a 6-digit code.';
+  }
+
+  @override
+  String get passwordResetNewPasswordLabel => 'New password';
+
+  @override
+  String get passwordResetSubmit => 'Reset password';
+
+  @override
+  String get passwordResetDone =>
+      'Password reset! Sign in with your new password.';
+
+  @override
   String get accountIssueRequired => 'Fill in this field.';
 
   @override

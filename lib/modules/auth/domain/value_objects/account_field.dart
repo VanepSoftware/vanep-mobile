@@ -40,3 +40,11 @@ enum AccountFieldIssue {
   duplicate,
   rejected,
 }
+
+Map<AccountField, AccountFieldIssue> accountIssuesWithout(
+  Map<AccountField, AccountFieldIssue> issues,
+  AccountField field,
+) {
+  if (!issues.containsKey(field)) return issues;
+  return Map<AccountField, AccountFieldIssue>.from(issues)..remove(field);
+}

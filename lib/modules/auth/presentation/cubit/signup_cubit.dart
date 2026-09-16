@@ -71,7 +71,7 @@ class SignupCubit extends Cubit<SignupState> {
     emit(
       state.copyWith(
         form: form,
-        issues: issuesWithout(state.issues, editedField),
+        issues: accountIssuesWithout(state.issues, editedField),
       ),
     );
   }
@@ -132,12 +132,4 @@ class SignupCubit extends Cubit<SignupState> {
     if (state.failure == null) return;
     emit(state.copyWith(clearFailure: true));
   }
-}
-
-Map<AccountField, AccountFieldIssue> issuesWithout(
-  Map<AccountField, AccountFieldIssue> issues,
-  AccountField field,
-) {
-  if (!issues.containsKey(field)) return issues;
-  return Map<AccountField, AccountFieldIssue>.from(issues)..remove(field);
 }
