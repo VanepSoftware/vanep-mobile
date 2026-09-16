@@ -10,10 +10,12 @@ import '../../../../core/ui/vanep_primary_button.dart';
 import '../../../../core/ui/vanep_text_field.dart';
 import '../../../../core/ui/vanep_wordmark.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/failures/auth_failure.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
 import '../mappers/auth_failure_l10n.dart';
 import 'account_type_page.dart';
+import 'email_code_verification_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -65,9 +67,18 @@ class _LoginPageState extends State<LoginPage> {
 void presentLoginFailure(BuildContext context, LoginState state) {
   final failure = state.failure;
   if (failure == null) return;
+  context.read<LoginCubit>().clearFailure();
+  if (failure is EmailNotVerifiedAuthFailure) {
+    openEmailCodeVerification(
+      context,
+      email: state.email,
+      password: state.password,
+      codeAlreadySent: false,
+    );
+    return;
+  }
   final l10n = AppLocalizations.of(context)!;
   VanepFeedback.showError(context, authFailureMessage(l10n, failure));
-  context.read<LoginCubit>().clearFailure();
 }
 
 class LoginForm extends StatelessWidget {

@@ -18,6 +18,7 @@ import '../formatters/signup_input_formatters.dart';
 import '../mappers/account_failure_l10n.dart';
 import '../widgets/account_text_field.dart';
 import '../widgets/personal_data_gender_chips.dart';
+import 'email_code_verification_page.dart';
 
 Future<void> openSignup(BuildContext context, UserType type) {
   return Navigator.of(context).push(
@@ -92,8 +93,13 @@ void presentSignupOutcome(BuildContext context, SignupState state) {
     return;
   }
   if (state.isCompleted) {
-    VanepFeedback.showInfo(context, l10n.emailCodeSentTo(state.form.email));
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    openEmailCodeVerification(
+      context,
+      email: state.form.email,
+      password: state.form.password,
+      codeAlreadySent: true,
+      replaceCurrent: true,
+    );
   }
 }
 

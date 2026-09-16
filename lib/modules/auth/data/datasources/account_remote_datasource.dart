@@ -18,6 +18,23 @@ class AccountRemoteDataSource {
     );
   }
 
+  Future<void> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
+    await dio.post<void>(
+      environment.emailVerifyEndpoint,
+      data: {'email': email, 'code': code},
+    );
+  }
+
+  Future<void> resendEmailVerification(String email) async {
+    await dio.post<void>(
+      environment.emailVerifyResendEndpoint,
+      data: {'email': email},
+    );
+  }
+
   String signupEndpointFor(UserType type) {
     return switch (type) {
       UserType.client => environment.signupClientEndpoint,
