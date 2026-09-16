@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../core/environment/environment.dart';
@@ -24,7 +24,10 @@ import 'domain/usecases/sign_out.dart';
 import 'presentation/cubit/auth_cubit.dart';
 import 'presentation/cubit/personal_data_cubit.dart';
 
-void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
+void registerAuthDependencies(
+  GetIt getIt, {
+  required FlutterSecureStorage secureStorage,
+}) {
   final environment = getIt<Environment>();
   final oauthDio = DioClient.create(environment.authBaseUrl);
 
@@ -32,7 +35,7 @@ void registerAuthDependencies(GetIt getIt, {required Box<String> authBox}) {
     ..registerSingleton<OAuthRemoteDataSource>(
       OAuthRemoteDataSource(dio: oauthDio, environment: environment),
     )
-    ..registerSingleton<AuthLocalDataSource>(AuthLocalDataSource(authBox))
+    ..registerSingleton<AuthLocalDataSource>(AuthLocalDataSource(secureStorage))
     ..registerSingleton<PkceGenerator>(PkceGenerator())
     ..registerSingleton<WebSessionCleaner>(
       WebViewWebSessionCleaner(WebViewCookieManager()),
@@ -102,8 +105,8 @@ Dio _buildAuthenticatedDio(GetIt getIt, Environment environment) {
   final dio = DioClient.create(environment.authBaseUrl);
   dio.interceptors.add(
     AuthInterceptor(
-      readAccessToken: () =>
-          getIt<AuthLocalDataSource>().readSession()?.accessToken,
+      readAccessToken: () async =>
+          (await getIt<AuthLocalDataSource>().readSession())?.accessToken,
       refreshAccessToken: () async {
         final result = await getIt<AuthRepository>().currentSession();
         return switch (result) {

@@ -36,19 +36,19 @@ void main() {
     Future<String?> Function()? refresher,
   }) {
     return AuthInterceptor(
-      readAccessToken: () => token,
+      readAccessToken: () async => token,
       refreshAccessToken: refresher ?? () async => null,
       retryClient: retryClient,
     );
   }
 
-  test('onRequest injects the bearer token when present', () {
+  test('onRequest injects the bearer token when present', () async {
     final interceptor = buildInterceptor(token: 'access-1');
     final handler = MockRequestHandler();
     final options = RequestOptions(path: '/api/user/me');
     when(() => handler.next(any())).thenReturn(null);
 
-    interceptor.onRequest(options, handler);
+    await interceptor.onRequest(options, handler);
 
     final forwarded =
         verify(() => handler.next(captureAny())).captured.single
@@ -56,13 +56,13 @@ void main() {
     expect(forwarded.headers['Authorization'], 'Bearer access-1');
   });
 
-  test('onRequest leaves the request untouched when unauthenticated', () {
+  test('onRequest leaves the request untouched when unauthenticated', () async {
     final interceptor = buildInterceptor(token: null);
     final handler = MockRequestHandler();
     final options = RequestOptions(path: '/api/user/me');
     when(() => handler.next(any())).thenReturn(null);
 
-    interceptor.onRequest(options, handler);
+    await interceptor.onRequest(options, handler);
 
     final forwarded =
         verify(() => handler.next(captureAny())).captured.single
