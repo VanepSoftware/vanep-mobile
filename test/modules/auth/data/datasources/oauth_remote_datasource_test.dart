@@ -67,6 +67,45 @@ void main() {
     expect(captured['client_id'], 'vanep-mobile');
   });
 
+  test('requestPasswordGrant posts the mobile password grant', () async {
+    when(
+      () => dio.post<Map<String, dynamic>>(
+        any(),
+        data: any(named: 'data'),
+        options: any(named: 'options'),
+      ),
+    ).thenAnswer(
+      (_) async => _ok({
+        'access_token': 'access-1',
+        'token_type': 'Bearer',
+        'expires_in': 900,
+        'refresh_token': 'refresh-1',
+      }),
+    );
+
+    final token = await remote.requestPasswordGrant(
+      email: 'ana@vanep.com.br',
+      password: 'secret1',
+    );
+
+    expect(token.refreshToken, 'refresh-1');
+    final captured =
+        verify(
+              () => dio.post<Map<String, dynamic>>(
+                testEnvironment.tokenEndpoint,
+                data: captureAny(named: 'data'),
+                options: any(named: 'options'),
+              ),
+            ).captured.single
+            as Map<String, dynamic>;
+    expect(captured, {
+      'grant_type': 'urn:vanep:params:oauth:grant-type:password',
+      'username': 'ana@vanep.com.br',
+      'password': 'secret1',
+      'client_id': 'vanep-mobile',
+    });
+  });
+
   test('refresh posts the refresh_token grant', () async {
     when(
       () => dio.post<Map<String, dynamic>>(

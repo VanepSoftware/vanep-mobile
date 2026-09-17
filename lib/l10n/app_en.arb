@@ -6,6 +6,13 @@
   "loginTitle": "Sign in",
   "loginCancelled": "Sign-in was cancelled.",
   "loginFailed": "Could not sign in. Please try again.",
+  "loginEmailLabel": "Email",
+  "loginPasswordLabel": "Password",
+  "loginErrorInvalidCredentials": "Incorrect email or password.",
+  "loginErrorEmailNotVerified": "Confirm your email to sign in.",
+  "loginErrorAccountLocked": "Too many failed attempts. Try again in a few minutes.",
+  "loginErrorAccountDisabled": "This account has been deactivated.",
+  "authErrorTooManyRequests": "Too many requests. Wait a moment and try again.",
   "homeGreeting": "Hello, {name}!",
   "@homeGreeting": {
     "placeholders": {

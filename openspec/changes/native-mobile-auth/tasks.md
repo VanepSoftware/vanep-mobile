@@ -35,14 +35,14 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 
 ## 2. Phase 2 — Native password login (branch: `feat/N-177-native-password-login`)
 
-- [ ] 2.1 Tests: `requestPasswordGrant` form body; `mapTokenEndpointFailure` for every row of design D2; `signInWithPassword` success and failures
-- [ ] 2.2 Tests: `LoginCubit` (typing, submit, failure, success hands the session to `AuthCubit`); `LoginPage` widget
-- [ ] 2.3 New `AuthFailure` types and `mapTokenEndpointFailure`
-- [ ] 2.4 `OAuthRemoteDataSource.requestPasswordGrant`, `AuthRepository.signInWithPassword`, `SignInWithPassword` use case
-- [ ] 2.5 `AuthCubit.startSession`; `LoginCubit` + `LoginState`
-- [ ] 2.6 `VanepTextField` gains `obscureText`; `LoginPage` replaces `WelcomePage` in `AuthGate`
-- [ ] 2.7 Localized messages for every login failure
-- [ ] 2.8 Run `make lint` and `make test`
+- [x] 2.1 Tests: `requestPasswordGrant` form body; `mapTokenEndpointFailure` for every row of design D2; `signInWithPassword` success and failures
+- [x] 2.2 Tests: `LoginCubit` (typing, submit, failure, success hands the session to `AuthCubit`); `LoginPage` widget
+- [x] 2.3 New `AuthFailure` types and `mapTokenEndpointFailure`
+- [x] 2.4 `OAuthRemoteDataSource.requestPasswordGrant`, `AuthRepository.signInWithPassword`, `SignInWithPassword` use case
+- [x] 2.5 `AuthCubit.startSession`; `LoginCubit` + `LoginState`
+- [x] 2.6 `VanepTextField` gains `obscureText`; `LoginPage` replaces `WelcomePage` in `AuthGate`
+- [x] 2.7 Localized messages for every login failure
+- [x] 2.8 Run `make lint` and `make test`
 
 ## 3. Phase 3 — Account API (branch: `feat/N-177-account-api`)
 

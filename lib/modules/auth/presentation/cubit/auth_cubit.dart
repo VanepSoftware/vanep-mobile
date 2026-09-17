@@ -57,6 +57,8 @@ class AuthCubit extends Cubit<AuthState> {
 
   void cancelLogin() => emitAuthFailure(const CancelledAuthFailure());
 
+  void startSession(AuthSession session) => emit(AuthAuthenticated(session));
+
   Future<void> signOut() async {
     await _signOut();
     emit(const AuthUnauthenticated());
