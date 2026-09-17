@@ -14,8 +14,8 @@ import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/result/result.dart';
-import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_cubit.dart';
-import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_state.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';

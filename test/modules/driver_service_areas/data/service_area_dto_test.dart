@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/modules/driverserviceareas/data/dtos/service_area_dto.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/data/dtos/service_area_dto.dart';
 
 import '../driver_service_areas_fixtures.dart';
 

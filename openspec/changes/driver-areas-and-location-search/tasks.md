@@ -5,8 +5,8 @@
 | 0 | **Outro repo (`vanep-api-java`).** Busca por um único `placeId` com ordenação por especificidade + `@Size(max = 10)` nas áreas | — | 1, 2, 3 |
 | 1 | Shell do motorista e bottom nav só com ícone: adota o que já está no working tree, testa e commita | — | 0 |
 | 2 | `lib/core/places/`: contrato de autocomplete, sessão, chave por plataforma, debounce | — | 0, 1 |
-| 3 | Módulo `driverserviceareas`: domínio, dados, cubit, tela, entradas pelo onboarding e pelo perfil | Fase 2 mergeada | 0 |
-| 4 | Módulo `driversearch`: domínio, dados, cubit | Fase 2 mergeada **e** fase 0 deployada | — |
+| 3 | Módulo `driver_service_areas`: domínio, dados, cubit, tela, entradas pelo onboarding e pelo perfil | Fase 2 mergeada | 0 |
+| 4 | Módulo `driver_search`: domínio, dados, cubit | Fase 2 mergeada **e** fase 0 deployada | — |
 | 5 | Tela de busca do cliente e resultado ordenado | Fase 4 mergeada | — |
 
 > ⛔ **A fase 0 é em outro repositório e bloqueia só as fases 4 e 5.** O endpoint atual exige origem **e** destino e não ordena nada — nenhuma das duas coisas serve. As fases 1 a 3 não dependem dela e podem começar imediatamente.

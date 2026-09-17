@@ -2,12 +2,12 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
-import 'package:vanep_mobile/modules/driversearch/domain/entities/driver_search_page.dart';
-import 'package:vanep_mobile/modules/driversearch/domain/entities/driver_search_result.dart';
-import 'package:vanep_mobile/modules/driversearch/domain/failures/driver_search_failure.dart';
-import 'package:vanep_mobile/modules/driversearch/domain/usecases/search_drivers_by_place.dart';
-import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_cubit.dart';
-import 'package:vanep_mobile/modules/driversearch/presentation/cubit/driver_search_state.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_page.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_result.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search_failure.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/usecases/search_drivers_by_place.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 
 class MockSearchDriversByPlace extends Mock implements SearchDriversByPlace {}
 

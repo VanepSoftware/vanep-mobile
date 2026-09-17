@@ -2,10 +2,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
-import 'package:vanep_mobile/modules/driverserviceareas/domain/entities/service_area_draft.dart';
-import 'package:vanep_mobile/modules/driverserviceareas/domain/failures/service_area_failure.dart';
-import 'package:vanep_mobile/modules/driverserviceareas/presentation/cubit/driver_service_areas_cubit.dart';
-import 'package:vanep_mobile/modules/driverserviceareas/presentation/cubit/driver_service_areas_state.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/failures/service_area_failure.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_state.dart';
 
 import '../driver_service_areas_fixtures.dart';
 import '../driver_service_areas_mocks.dart';
