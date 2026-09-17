@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/domain/iso_calendar_date.dart';
 import '../../../../core/formatters/birth_date_formatter.dart';
 import '../../../../core/formatters/gender_label.dart';
 import '../../../../core/ui/vanep_feedback.dart';
@@ -76,17 +77,18 @@ class DependentFormViewState extends State<DependentFormView> {
           ),
         ),
         body: BlocConsumer<DependentFormCubit, DependentFormState>(
+          listenWhen: (previous, current) =>
+              current.status == DependentFormStatus.saved ||
+              current.failure != previous.failure,
           listener: (context, state) {
             if (state.status == DependentFormStatus.saved) {
-              VanepFeedback.showInfo(context, l10n.dependentFormSaved);
               Navigator.of(context).pop(true);
               return;
             }
-            final failure = state.failure;
-            if (failure == null) return;
+            if (!shouldShowDependentFailureFeedback(state.failure)) return;
             VanepFeedback.showError(
               context,
-              dependentFailureLabel(l10n, failure),
+              dependentFailureLabel(l10n, state.failure!),
             );
           },
           builder: (context, state) {
@@ -214,19 +216,19 @@ Future<void> pickBirthDate(
 ) async {
   final cubit = context.read<DependentFormCubit>();
   final today = DateTime.now();
-  final current = DateTime.tryParse(state.draft.birthDate ?? '') ?? today;
+  final current = initialBirthDatePickerDay(state.draft.birthDate, today);
   final picked = await showDatePicker(
     context: context,
-    initialDate: current.isAfter(today) ? today : current,
+    initialDate: current,
     firstDate: DateTime(today.year - 120),
     lastDate: today,
   );
   if (picked == null) return;
-  cubit.changeBirthDate(asIsoDate(picked));
+  cubit.changeBirthDate(formatIsoCalendarDate(picked));
 }
 
-String asIsoDate(DateTime value) {
-  final month = value.month.toString().padLeft(2, '0');
-  final day = value.day.toString().padLeft(2, '0');
-  return '${value.year}-$month-$day';
+DateTime initialBirthDatePickerDay(String? isoBirthDate, DateTime today) {
+  final current = parseIsoCalendarDate(isoBirthDate) ?? today;
+  if (current.isAfter(today)) return today;
+  return current;
 }

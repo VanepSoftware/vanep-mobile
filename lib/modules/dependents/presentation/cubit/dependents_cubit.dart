@@ -14,7 +14,9 @@ class DependentsCubit extends Cubit<DependentsState> {
   final SetDefaultDependent setDefaultDependent;
 
   Future<void> loadDependents() async {
-    emit(state.copyWith(status: DependentsStatus.loading, clearFailure: true));
+    if (!state.keepsListVisibleWhileReloading) {
+      emit(state.copyWith(status: DependentsStatus.loading, clearFailure: true));
+    }
     final result = await findMyDependents();
     emit(
       result.fold(
@@ -34,6 +36,7 @@ class DependentsCubit extends Cubit<DependentsState> {
   Future<void> chooseDefault(String token) async {
     if (!state.canChooseDefault) return;
     if (state.defaultToken == token) return;
+    if (state.isChangingDefault) return;
 
     emit(
       state.copyWith(

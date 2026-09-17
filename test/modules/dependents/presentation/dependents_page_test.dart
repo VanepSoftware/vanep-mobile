@@ -105,6 +105,43 @@ void main() {
     expect(find.textContaining('ano'), findsNothing);
   });
 
+  testWidgets('a dependent with a birth date shows an age', (tester) async {
+    seed(
+      const DependentsState(
+        status: DependentsStatus.ready,
+        dependents: [testHelenaDependent],
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit));
+
+    expect(find.text('Helena Souza'), findsOneWidget);
+    expect(find.textContaining('ano'), findsOneWidget);
+  });
+
+  testWidgets('the first load shows a spinner', (tester) async {
+    seed(const DependentsState(status: DependentsStatus.loading));
+
+    await tester.pumpWidget(harness(cubit));
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(DependentCard), findsNothing);
+  });
+
+  testWidgets('a loading refresh keeps the cards on screen', (tester) async {
+    seed(
+      const DependentsState(
+        status: DependentsStatus.loading,
+        dependents: [testHelenaDependent, testMiguelDependent],
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit));
+
+    expect(find.byType(DependentCard), findsNWidgets(2));
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
   testWidgets('a single dependent offers no default control', (tester) async {
     seed(
       const DependentsState(

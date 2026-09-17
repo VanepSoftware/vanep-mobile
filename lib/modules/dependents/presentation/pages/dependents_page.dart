@@ -38,7 +38,7 @@ class DependentsPage extends StatelessWidget {
             );
           },
           builder: (context, state) {
-            if (state.isLoading) {
+            if (state.isLoading && state.dependents.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
             if (state.hasLoadFailed) {
@@ -132,10 +132,15 @@ Future<void> openDependentForm(
   Dependent? dependent,
 }) async {
   final cubit = context.read<DependentsCubit>();
+  final l10n = AppLocalizations.of(context)!;
   final saved = await Navigator.of(context).push<bool>(
     MaterialPageRoute<bool>(
       builder: (_) => DependentFormPage(dependent: dependent),
     ),
   );
-  if (saved ?? false) await cubit.loadDependents();
+  if (!context.mounted) return;
+  if (saved ?? false) {
+    VanepFeedback.showInfo(context, l10n.dependentFormSaved);
+    await cubit.loadDependents();
+  }
 }
