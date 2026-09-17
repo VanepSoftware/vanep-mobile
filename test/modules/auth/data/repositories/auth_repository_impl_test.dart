@@ -129,7 +129,7 @@ void main() {
 
   group('currentSession', () {
     test('returns null when nothing is stored', () async {
-      when(local.readSession).thenReturn(null);
+      when(local.readSession).thenAnswer((_) async => null);
 
       final result = await repository.currentSession();
 
@@ -140,7 +140,7 @@ void main() {
       final valid = testAuthSessionDto(
         expiresAt: fixedNow.add(const Duration(minutes: 10)),
       );
-      when(local.readSession).thenReturn(valid);
+      when(local.readSession).thenAnswer((_) async => valid);
 
       final result = await repository.currentSession();
 
@@ -152,7 +152,7 @@ void main() {
       final expired = testAuthSessionDto(
         expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
       );
-      when(local.readSession).thenReturn(expired);
+      when(local.readSession).thenAnswer((_) async => expired);
       when(() => remote.refresh(any())).thenAnswer(
         (_) async => testTokenResponseDto.copyWith(accessToken: 'access-2'),
       );
@@ -171,7 +171,7 @@ void main() {
       final expired = testAuthSessionDto(
         expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
       );
-      when(local.readSession).thenReturn(expired);
+      when(local.readSession).thenAnswer((_) async => expired);
       when(() => remote.refresh(any())).thenThrow(_invalidGrantError());
       when(local.clearSession).thenAnswer((_) => Future<void>.value());
 
@@ -186,7 +186,7 @@ void main() {
       final expired = testAuthSessionDto(
         expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
       );
-      when(local.readSession).thenReturn(expired);
+      when(local.readSession).thenAnswer((_) async => expired);
       when(() => remote.refresh(any())).thenThrow(_dioError());
 
       final result = await repository.currentSession();
@@ -201,7 +201,7 @@ void main() {
     test(
       'revokes both tokens, clears the local session and web cookies',
       () async {
-        when(local.readSession).thenReturn(testAuthSessionDto());
+        when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
         when(
           () => remote.revoke(any(), any()),
         ).thenAnswer((_) => Future<void>.value());
@@ -219,7 +219,7 @@ void main() {
     );
 
     test('clears web cookies even when there is no stored session', () async {
-      when(local.readSession).thenReturn(null);
+      when(local.readSession).thenAnswer((_) async => null);
       when(local.clearSession).thenAnswer((_) => Future<void>.value());
       when(webSession.clear).thenAnswer((_) => Future<void>.value());
 
@@ -233,7 +233,7 @@ void main() {
 
   group('refreshUserProfile', () {
     test('fetches me, persists profile and returns it', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
+      when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       const updated = UserProfileDto(
         token: 'user-token-1',
         name: 'Ana Atualizada',
@@ -253,7 +253,7 @@ void main() {
     });
 
     test('returns unexpected when there is no session', () async {
-      when(local.readSession).thenReturn(null);
+      when(local.readSession).thenAnswer((_) async => null);
 
       final result = await repository.refreshUserProfile();
 
@@ -263,34 +263,37 @@ void main() {
   });
 
   group('patchUserProfile', () {
-    test('patches with touched fields only and persists body profile', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
-      const updated = UserProfileDto(
-        token: 'user-token-1',
-        name: 'Maria Silva',
-        email: 'ana@vanep.com.br',
-        type: UserType.driver,
-      );
-      when(
-        () => profileRemote.patchMe(any()),
-      ).thenAnswer((_) async => updated);
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+    test(
+      'patches with touched fields only and persists body profile',
+      () async {
+        when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
+        const updated = UserProfileDto(
+          token: 'user-token-1',
+          name: 'Maria Silva',
+          email: 'ana@vanep.com.br',
+          type: UserType.driver,
+        );
+        when(
+          () => profileRemote.patchMe(any()),
+        ).thenAnswer((_) async => updated);
+        when(
+          () => local.saveSession(any()),
+        ).thenAnswer((_) => Future<void>.value());
 
-      final builder = ProfilePatchRequestBuilder()..setName('Maria Silva');
-      final result = await repository.patchUserProfile(builder.build());
+        final builder = ProfilePatchRequestBuilder()..setName('Maria Silva');
+        final result = await repository.patchUserProfile(builder.build());
 
-      expect(result.valueOrNull, updated);
-      final body =
-          verify(() => profileRemote.patchMe(captureAny())).captured.single
-              as Map<String, Object?>;
-      expect(body, {'name': 'Maria Silva'});
-      verifyNever(profileRemote.fetchMe);
-    });
+        expect(result.valueOrNull, updated);
+        final body =
+            verify(() => profileRemote.patchMe(captureAny())).captured.single
+                as Map<String, Object?>;
+        expect(body, {'name': 'Maria Silva'});
+        verifyNever(profileRemote.fetchMe);
+      },
+    );
 
     test('maps structured 409 cooldown from dio', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
+      when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       when(() => profileRemote.patchMe(any())).thenThrow(
         DioException(
           requestOptions: RequestOptions(path: '/api/user/me'),
@@ -320,7 +323,7 @@ void main() {
 
   group('requestEmailChange', () {
     test('posts email change then fetches me once', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
+      when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       when(
         () => profileRemote.requestEmailChange(any()),
       ).thenAnswer((_) => Future<void>.value());
@@ -345,7 +348,7 @@ void main() {
     });
 
     test('maps email_duplicate 409', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
+      when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       when(() => profileRemote.requestEmailChange(any())).thenThrow(
         DioException(
           requestOptions: RequestOptions(path: '/api/user/me/email-change'),
