@@ -9,7 +9,7 @@ import '../modules/auth/domain/value_objects/onboarding_step.dart';
 import '../modules/auth/presentation/cubit/auth_cubit.dart';
 import '../modules/auth/presentation/pages/profile_page.dart';
 import '../modules/driver/presentation/pages/driver_home_tab.dart';
-import '../modules/driverserviceareas/presentation/widgets/service_areas_onboarding_banner.dart';
+import '../modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import '../modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import '../modules/profile/presentation/formatters/assistant_status_label.dart';
 import 'driver_bottom_nav.dart';

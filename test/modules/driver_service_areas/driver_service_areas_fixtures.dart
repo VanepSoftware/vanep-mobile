@@ -1,5 +1,5 @@
-import 'package:vanep_mobile/modules/driverserviceareas/domain/entities/service_area.dart';
-import 'package:vanep_mobile/modules/driverserviceareas/domain/entities/service_area_draft.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
 
 const testQnl5Area = ServiceArea(
   token: 'area-qnl5',

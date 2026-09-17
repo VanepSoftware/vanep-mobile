@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/modules/driversearch/data/datasources/driver_search_remote_datasource.dart';
-import 'package:vanep_mobile/modules/driversearch/data/repositories/driver_search_repository_impl.dart';
-import 'package:vanep_mobile/modules/driversearch/domain/failures/driver_search_failure.dart';
+import 'package:vanep_mobile/modules/driver_search/data/datasources/driver_search_remote_datasource.dart';
+import 'package:vanep_mobile/modules/driver_search/data/repositories/driver_search_repository_impl.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search_failure.dart';
 
 class MockDriverSearchRemoteDataSource extends Mock
     implements DriverSearchRemoteDataSource {}
