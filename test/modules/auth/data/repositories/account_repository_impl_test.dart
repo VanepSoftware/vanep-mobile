@@ -83,4 +83,30 @@ void main() {
 
     expect(result.isOk, isTrue);
   });
+
+  test('completeGoogleSignup maps an expired ticket', () async {
+    final options = RequestOptions(path: '/api/auth/signup/complete');
+    when(
+      () => remote.completeGoogleSignup(
+        ticket: any(named: 'ticket'),
+        form: any(named: 'form'),
+      ),
+    ).thenThrow(
+      DioException(
+        requestOptions: options,
+        response: Response<Object?>(
+          requestOptions: options,
+          statusCode: 400,
+          data: {'code': 'invalid_signup_ticket', 'message': 'x', 'errors': []},
+        ),
+      ),
+    );
+
+    final result = await repository.completeGoogleSignup(
+      ticket: 'ticket-1',
+      form: validClientSignupForm,
+    );
+
+    expect(result.errorOrNull, const InvalidSignupTicketAccountFailure());
+  });
 }

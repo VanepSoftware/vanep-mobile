@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../core/environment/environment.dart';
@@ -9,6 +10,7 @@ import '../../core/network/dio_client.dart';
 import '../../core/result/result.dart';
 import 'data/datasources/account_remote_datasource.dart';
 import 'data/datasources/auth_local_datasource.dart';
+import 'data/datasources/google_id_token_source.dart';
 import 'data/datasources/oauth_remote_datasource.dart';
 import 'data/datasources/user_profile_remote_datasource.dart';
 import 'data/datasources/web_session_cleaner.dart';
@@ -18,17 +20,18 @@ import 'data/repositories/auth_repository_impl.dart';
 import 'domain/repositories/account_repository.dart';
 import 'domain/repositories/auth_repository.dart';
 import 'domain/usecases/build_authorization_request.dart';
+import 'domain/usecases/complete_google_signup.dart';
 import 'domain/usecases/exchange_authorization_code.dart';
 import 'domain/usecases/get_current_session.dart';
 import 'domain/usecases/patch_user_profile.dart';
 import 'domain/usecases/refresh_user_profile.dart';
 import 'domain/usecases/request_email_change.dart';
 import 'domain/usecases/resend_email_verification_code.dart';
+import 'domain/usecases/sign_in_with_google.dart';
 import 'domain/usecases/sign_in_with_password.dart';
 import 'domain/usecases/sign_out.dart';
 import 'domain/usecases/sign_up.dart';
 import 'domain/usecases/verify_email_code.dart';
-import 'domain/value_objects/user_type.dart';
 import 'presentation/cubit/auth_cubit.dart';
 import 'presentation/cubit/code_resend_cooldown.dart';
 import 'presentation/cubit/email_code_verification_cubit.dart';
@@ -36,6 +39,7 @@ import 'presentation/cubit/email_code_verification_state.dart';
 import 'presentation/cubit/login_cubit.dart';
 import 'presentation/cubit/personal_data_cubit.dart';
 import 'presentation/cubit/signup_cubit.dart';
+import 'presentation/cubit/signup_state.dart';
 import 'presentation/cubit/start_session.dart';
 
 void registerAuthDependencies(
@@ -80,8 +84,17 @@ void registerAuthDependencies(
         password: request.password,
       ),
     )
-    ..registerFactoryParam<SignupCubit, UserType, void>(
-      (type, _) => SignupCubit(signUp: getIt<SignUp>(), type: type),
+    ..registerFactory<CompleteGoogleSignup>(
+      () => CompleteGoogleSignup(getIt<AccountRepository>()),
+    )
+    ..registerFactoryParam<SignupCubit, SignupEntry, StartSession>(
+      (entry, startSession) => SignupCubit(
+        signUp: getIt<SignUp>(),
+        completeGoogleSignup: getIt<CompleteGoogleSignup>(),
+        signInWithGoogle: getIt<SignInWithGoogle>(),
+        startSession: startSession,
+        entry: entry,
+      ),
     )
     ..registerSingleton<PkceGenerator>(PkceGenerator())
     ..registerSingleton<WebSessionCleaner>(
@@ -108,6 +121,10 @@ void registerAuthDependencies(
         pkce: getIt<PkceGenerator>(),
         environment: environment,
         webSession: getIt<WebSessionCleaner>(),
+        googleIdTokens: GoogleSignInIdTokenSource(
+          googleSignIn: GoogleSignIn.instance,
+          serverClientId: environment.googleServerClientId,
+        ),
       ),
     )
     ..registerFactory<GetCurrentSession>(
@@ -122,9 +139,13 @@ void registerAuthDependencies(
     ..registerFactory<SignInWithPassword>(
       () => SignInWithPassword(getIt<AuthRepository>()),
     )
+    ..registerFactory<SignInWithGoogle>(
+      () => SignInWithGoogle(getIt<AuthRepository>()),
+    )
     ..registerFactoryParam<LoginCubit, StartSession, void>(
       (startSession, _) => LoginCubit(
         signInWithPassword: getIt<SignInWithPassword>(),
+        signInWithGoogle: getIt<SignInWithGoogle>(),
         startSession: startSession,
       ),
     )

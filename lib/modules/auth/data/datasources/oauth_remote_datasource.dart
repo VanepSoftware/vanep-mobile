@@ -13,6 +13,9 @@ class OAuthRemoteDataSource {
   static const String passwordGrantType =
       'urn:vanep:params:oauth:grant-type:password';
 
+  static const String googleGrantType =
+      'urn:vanep:params:oauth:grant-type:google';
+
   static final _formOptions = Options(
     contentType: Headers.formUrlEncodedContentType,
   );
@@ -45,6 +48,10 @@ class OAuthRemoteDataSource {
       options: _formOptions,
     );
     return TokenResponseDto.fromJson(response.data!);
+  }
+
+  Future<TokenResponseDto> requestGoogleGrant(String idToken) {
+    return requestToken({'grant_type': googleGrantType, 'id_token': idToken});
   }
 
   Future<TokenResponseDto> refresh(String refreshToken) {

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/modules/auth/data/mappers/token_endpoint_failure_mapper.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
 
 DioException tokenEndpointError(int status, Object? body) {
   final options = RequestOptions(path: '/oauth2/token');
@@ -63,5 +64,35 @@ void main() {
     final error = tokenEndpointError(500, 'boom');
 
     expect(mapTokenEndpointFailure(error), isA<UnexpectedAuthFailure>());
+  });
+
+  test('registration_required carries the Google sign-up ticket', () {
+    final error = tokenEndpointError(400, {
+      'error': 'registration_required',
+      'error_description': 'Conclua o cadastro.',
+      'signup_ticket': 'ticket-1',
+      'email': 'novo@gmail.com',
+      'name': 'Novo Usuário',
+    });
+
+    expect(
+      mapTokenEndpointFailure(error),
+      const RegistrationRequiredAuthFailure(
+        GoogleSignupTicket(
+          ticket: 'ticket-1',
+          email: 'novo@gmail.com',
+          name: 'Novo Usuário',
+        ),
+      ),
+    );
+  });
+
+  test('registration_required without a ticket is unexpected', () {
+    final error = tokenEndpointError(400, {'error': 'registration_required'});
+
+    expect(
+      mapTokenEndpointFailure(error),
+      const UnexpectedAuthFailure('registration_required'),
+    );
   });
 }

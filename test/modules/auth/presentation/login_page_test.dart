@@ -18,6 +18,7 @@ import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.d
 import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 
+import '../account_fixtures.dart';
 import 'auth_presentation_mocks.dart';
 
 Widget loginHarness(LoginCubit cubit, {AuthCubit? authCubit}) {
@@ -126,6 +127,8 @@ void main() {
     givenState(const LoginState());
 
     await tester.pumpWidget(loginHarness(cubit));
+    await tester.ensureVisible(find.text('Criar conta'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Criar conta'));
     await tester.pumpAndSettle();
 
@@ -177,5 +180,33 @@ void main() {
       ),
     ]);
     verifyNever(() => verificationCubit.startResendCooldown());
+  });
+
+  testWidgets('the Google button starts Google sign-in', (tester) async {
+    givenState(const LoginState());
+    when(() => cubit.signInWithGoogle()).thenAnswer((_) async {});
+
+    await tester.pumpWidget(loginHarness(cubit));
+    await tester.tap(find.text('Entrar com Google'));
+
+    verify(() => cubit.signInWithGoogle()).called(1);
+  });
+
+  testWidgets('a new Google user continues to the account type choice', (
+    tester,
+  ) async {
+    givenState(
+      const LoginState(),
+      changes: Stream.value(
+        const LoginState(
+          failure: RegistrationRequiredAuthFailure(googleTicket),
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(loginHarness(cubit));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AccountTypePage), findsOneWidget);
   });
 }

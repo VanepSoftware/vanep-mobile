@@ -1,15 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/failures/auth_failure.dart';
+import '../../domain/usecases/sign_in_with_google.dart';
 import '../../domain/usecases/sign_in_with_password.dart';
 import 'login_state.dart';
 import 'start_session.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit({required this._signInWithPassword, required this._startSession})
-    : super(const LoginState());
+  LoginCubit({
+    required this._signInWithPassword,
+    required this._signInWithGoogle,
+    required this._startSession,
+  }) : super(const LoginState());
 
   final SignInWithPassword _signInWithPassword;
+  final SignInWithGoogle _signInWithGoogle;
   final StartSession _startSession;
 
   void updateEmail(String value) {
@@ -33,7 +38,23 @@ class LoginCubit extends Cubit<LoginState> {
     });
   }
 
+  Future<void> signInWithGoogle() async {
+    if (state.isSubmitting) return;
+    emit(
+      state.copyWith(status: LoginStatus.googleSubmitting, clearFailure: true),
+    );
+    final result = await _signInWithGoogle();
+    result.fold(showFailure, (session) {
+      emit(state.copyWith(status: LoginStatus.editing));
+      _startSession(session);
+    });
+  }
+
   void showFailure(AuthFailure failure) {
+    if (failure is CancelledAuthFailure) {
+      emit(state.copyWith(status: LoginStatus.editing));
+      return;
+    }
     emit(state.copyWith(status: LoginStatus.editing, failure: failure));
   }
 

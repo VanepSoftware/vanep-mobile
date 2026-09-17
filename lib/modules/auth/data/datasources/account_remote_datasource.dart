@@ -18,6 +18,20 @@ class AccountRemoteDataSource {
     );
   }
 
+  Future<void> completeGoogleSignup({
+    required String ticket,
+    required SignupForm form,
+  }) async {
+    await dio.post<void>(
+      environment.signupCompleteEndpoint,
+      data: {
+        'signupTicket': ticket,
+        'type': UserType.toApi(form.type),
+        ...profileJsonOf(form),
+      },
+    );
+  }
+
   Future<void> verifyEmail({
     required String email,
     required String code,

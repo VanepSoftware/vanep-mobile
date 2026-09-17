@@ -76,4 +76,24 @@ void main() {
       'email': 'ana@vanep.com.br',
     });
   });
+
+  test(
+    'completeGoogleSignup posts the ticket, the type and the profile',
+    () async {
+      await remote.completeGoogleSignup(
+        ticket: 'ticket-1',
+        form: validDriverSignupForm,
+      );
+
+      final body = capturedBody(
+        'http://10.0.2.2:8080/api/auth/signup/complete',
+      );
+      expect(body['signupTicket'], 'ticket-1');
+      expect(body['type'], 'DRIVER');
+      expect(body['document'], '52998224725');
+      expect(body['basePrice'], 1250.5);
+      expect(body.containsKey('password'), isFalse);
+      expect(body.containsKey('email'), isFalse);
+    },
+  );
 }

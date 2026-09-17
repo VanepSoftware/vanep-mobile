@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/google_id_token_source.dart';
 import 'package:vanep_mobile/modules/auth/data/pkce/pkce_generator.dart';
 import 'package:vanep_mobile/modules/auth/data/repositories/auth_repository_impl.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
@@ -31,6 +32,7 @@ void main() {
   late MockUserProfileRemoteDataSource profileRemote;
   late MockAuthLocalDataSource local;
   late MockWebSessionCleaner webSession;
+  late MockGoogleIdTokenSource googleIdTokens;
   late AuthRepositoryImpl repository;
 
   final fixedNow = DateTime.utc(2026, 7, 11, 12);
@@ -42,6 +44,7 @@ void main() {
     profileRemote = MockUserProfileRemoteDataSource();
     local = MockAuthLocalDataSource();
     webSession = MockWebSessionCleaner();
+    googleIdTokens = MockGoogleIdTokenSource();
     repository = AuthRepositoryImpl(
       remote: remote,
       profileRemote: profileRemote,
@@ -49,6 +52,7 @@ void main() {
       pkce: PkceGenerator(),
       environment: testEnvironment,
       webSession: webSession,
+      googleIdTokens: googleIdTokens,
       clock: () => fixedNow,
     );
   });
@@ -192,6 +196,77 @@ void main() {
     });
   });
 
+  group('signInWithGoogle', () {
+    test('sends the Google ID token and starts the session', () async {
+      when(
+        googleIdTokens.requestIdToken,
+      ).thenAnswer((_) async => 'google-id-token');
+      when(
+        () => remote.requestGoogleGrant(any()),
+      ).thenAnswer((_) async => testTokenResponseDto);
+      when(
+        () => remote.fetchProfile(any()),
+      ).thenAnswer((_) async => testUserProfileDto);
+      when(
+        () => local.saveSession(any()),
+      ).thenAnswer((_) => Future<void>.value());
+
+      final result = await repository.signInWithGoogle();
+
+      expect(result.valueOrNull?.accessToken, 'access-1');
+      verify(() => remote.requestGoogleGrant('google-id-token')).called(1);
+    });
+
+    test('a dismissed chooser is a cancelled failure', () async {
+      when(googleIdTokens.requestIdToken).thenAnswer((_) async => null);
+
+      final result = await repository.signInWithGoogle();
+
+      expect(result.errorOrNull, const CancelledAuthFailure());
+      verifyNever(() => remote.requestGoogleGrant(any()));
+    });
+
+    test('an SDK error is a Google sign-in failure', () async {
+      when(
+        googleIdTokens.requestIdToken,
+      ).thenThrow(const GoogleIdTokenException('clientConfigurationError'));
+
+      final result = await repository.signInWithGoogle();
+
+      expect(
+        result.errorOrNull,
+        const GoogleSignInAuthFailure('clientConfigurationError'),
+      );
+    });
+
+    test('a new Google user gets the registration ticket', () async {
+      when(
+        googleIdTokens.requestIdToken,
+      ).thenAnswer((_) async => 'google-id-token');
+      final options = RequestOptions(path: '/oauth2/token');
+      when(() => remote.requestGoogleGrant(any())).thenThrow(
+        DioException(
+          requestOptions: options,
+          response: Response<Map<String, dynamic>>(
+            requestOptions: options,
+            statusCode: 400,
+            data: const {
+              'error': 'registration_required',
+              'signup_ticket': 'ticket-1',
+              'email': 'novo@gmail.com',
+              'name': 'Novo',
+            },
+          ),
+        ),
+      );
+
+      final result = await repository.signInWithGoogle();
+
+      expect(result.errorOrNull, isA<RegistrationRequiredAuthFailure>());
+      verifyNever(() => local.saveSession(any()));
+    });
+  });
+
   group('currentSession', () {
     test('returns null when nothing is stored', () async {
       when(local.readSession).thenAnswer((_) async => null);
@@ -272,6 +347,7 @@ void main() {
         ).thenAnswer((_) => Future<void>.value());
         when(local.clearSession).thenAnswer((_) => Future<void>.value());
         when(webSession.clear).thenAnswer((_) => Future<void>.value());
+        when(googleIdTokens.signOut).thenAnswer((_) => Future<void>.value());
 
         final result = await repository.signOut();
 
@@ -280,6 +356,7 @@ void main() {
         verify(() => remote.revoke('access-1', 'access_token')).called(1);
         verify(local.clearSession).called(1);
         verify(webSession.clear).called(1);
+        verify(googleIdTokens.signOut).called(1);
       },
     );
 
@@ -287,6 +364,7 @@ void main() {
       when(local.readSession).thenAnswer((_) async => null);
       when(local.clearSession).thenAnswer((_) => Future<void>.value());
       when(webSession.clear).thenAnswer((_) => Future<void>.value());
+      when(googleIdTokens.signOut).thenAnswer((_) => Future<void>.value());
 
       final result = await repository.signOut();
 

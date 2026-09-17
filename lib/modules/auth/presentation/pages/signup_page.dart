@@ -6,11 +6,15 @@ import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/ui/vanep_feedback.dart';
+import '../../../../core/ui/vanep_glass_card.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
 import '../../../../core/ui/vanep_text_field.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/failures/account_failure.dart';
 import '../../domain/value_objects/account_field.dart';
+import '../../domain/value_objects/google_signup_ticket.dart';
 import '../../domain/value_objects/user_type.dart';
+import '../cubit/auth_cubit.dart';
 import '../cubit/signup_cubit.dart';
 import '../cubit/signup_state.dart';
 import '../formatters/profile_field_formatters.dart';
@@ -20,11 +24,23 @@ import '../widgets/account_text_field.dart';
 import '../widgets/personal_data_gender_chips.dart';
 import 'email_code_verification_page.dart';
 
-Future<void> openSignup(BuildContext context, UserType type) {
+Future<void> openPasswordSignup(BuildContext context, UserType type) {
+  return openSignup(context, type);
+}
+
+Future<void> openSignup(
+  BuildContext context,
+  UserType type, {
+  GoogleSignupTicket? googleTicket,
+}) {
+  final startSession = context.read<AuthCubit>().startSession;
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => BlocProvider(
-        create: (_) => getIt<SignupCubit>(param1: type),
+        create: (_) => getIt<SignupCubit>(
+          param1: SignupEntry(type: type, googleTicket: googleTicket),
+          param2: startSession,
+        ),
         child: const SignupPage(),
       ),
     ),
@@ -60,7 +76,10 @@ class SignupPage extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
                   children: [
-                    SignupCredentialFields(state: state),
+                    if (state.googleTicket case final googleTicket?)
+                      GoogleAccountSummary(ticket: googleTicket)
+                    else
+                      SignupCredentialFields(state: state),
                     SignupProfileFields(state: state),
                   ],
                 ),
@@ -90,6 +109,14 @@ void presentSignupOutcome(BuildContext context, SignupState state) {
   if (failure != null) {
     VanepFeedback.showError(context, accountFailureMessage(l10n, failure));
     context.read<SignupCubit>().clearFailure();
+    if (failure is InvalidSignupTicketAccountFailure) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+    return;
+  }
+  if (state.status == SignupStatus.registeredWithoutSession) {
+    VanepFeedback.showInfo(context, l10n.signupGoogleRegisteredSignIn);
+    Navigator.of(context).popUntil((route) => route.isFirst);
     return;
   }
   if (state.isCompleted) {
@@ -359,6 +386,37 @@ class SignupTermsField extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class GoogleAccountSummary extends StatelessWidget {
+  const GoogleAccountSummary({required this.ticket, super.key});
+
+  final GoogleSignupTicket ticket;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: VanepGlassCard(
+        child: Row(
+          children: [
+            const Icon(Icons.account_circle_outlined, color: VanepColors.brand),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(ticket.name, style: VanepTypography.cardTitle),
+                  const SizedBox(height: 2),
+                  Text(ticket.email, style: VanepTypography.cardSubtitle),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
