@@ -1,4 +1,4 @@
-import 'gender.dart';
+import '../../../../core/domain/gender.dart';
 
 class ProfilePatchRequest {
   const ProfilePatchRequest({

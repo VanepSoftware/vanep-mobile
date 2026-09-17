@@ -8,6 +8,8 @@ import '../../../../core/ui/vanep_confirm_dialog.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/builders/profile_menu_builder.dart';
 import '../../../../core/places/place_autocomplete_controller.dart';
+import '../../../dependents/presentation/cubit/dependents_cubit.dart';
+import '../../../dependents/presentation/pages/dependents_page.dart';
 import '../../../driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
 import '../../../driver_service_areas/presentation/pages/driver_service_areas_page.dart';
 import '../../domain/entities/user_profile.dart';
@@ -117,11 +119,19 @@ Future<void> handleProfileMenuSelection(
         ),
       );
       autocomplete.dispose();
+    case ProfileMenuId.dependents:
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<DependentsCubit>()..loadDependents(),
+            child: const DependentsPage(),
+          ),
+        ),
+      );
     case ProfileMenuId.signOut:
       await confirmAndSignOut(context);
     case ProfileMenuId.addresses:
     case ProfileMenuId.paymentMethods:
-    case ProfileMenuId.dependents:
     case ProfileMenuId.vans:
     case ProfileMenuId.contracts:
     case ProfileMenuId.professionalData:

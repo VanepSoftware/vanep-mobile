@@ -410,4 +410,123 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get profileServiceAreas => 'Onde você atende';
+
+  @override
+  String get dependentsSubtitle =>
+      'Quem viaja na van. Cada contrato vincula um dependente.';
+
+  @override
+  String get dependentsEmpty => 'Você ainda não cadastrou nenhum dependente.';
+
+  @override
+  String get dependentsAdd => 'Adicionar dependente';
+
+  @override
+  String get dependentsRetry => 'Tentar novamente';
+
+  @override
+  String get dependentsLoadError =>
+      'Não foi possível carregar seus dependentes.';
+
+  @override
+  String get dependentsDefaultBadge => 'Padrão';
+
+  @override
+  String get dependentsSetDefault => 'Definir como padrão';
+
+  @override
+  String get dependentsDefaultUpdated => 'Dependente padrão atualizado.';
+
+  @override
+  String dependentsAgeYears(num count) {
+    final intl.NumberFormat countNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString anos',
+      one: '1 ano',
+      zero: 'menos de 1 ano',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dependentFormNewTitle => 'Novo dependente';
+
+  @override
+  String get dependentFormEditTitle => 'Editar dependente';
+
+  @override
+  String get dependentFormSave => 'Salvar';
+
+  @override
+  String get dependentFormSaved => 'Dependente salvo.';
+
+  @override
+  String get dependentFieldName => 'Nome';
+
+  @override
+  String get dependentFieldBirthDate => 'Data de nascimento';
+
+  @override
+  String get dependentFieldBirthDateEmpty => 'Selecionar data';
+
+  @override
+  String get dependentFieldBirthDateClear => 'Limpar data';
+
+  @override
+  String get dependentFieldGender => 'Sexo';
+
+  @override
+  String get dependentFieldGenderClear => 'Não informar';
+
+  @override
+  String get dependentErrorNameRequired => 'Informe o nome do dependente.';
+
+  @override
+  String get dependentErrorBirthDateFuture =>
+      'A data de nascimento não pode ser no futuro.';
+
+  @override
+  String get dependentErrorBirthDateInvalid => 'Data de nascimento inválida.';
+
+  @override
+  String get dependentFailureValidation =>
+      'Não foi possível salvar. Revise os dados e tente novamente.';
+
+  @override
+  String get dependentFailureNotFound => 'Este dependente não existe mais.';
+
+  @override
+  String get dependentFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get dependentFailureUnexpected => 'Algo deu errado. Tente novamente.';
+
+  @override
+  String get dependentFieldAddress => 'Endereço';
+
+  @override
+  String get dependentFieldAddressEmpty => 'Nenhum endereço informado.';
+
+  @override
+  String get dependentFieldAddressSearchHint => 'Buscar endereço';
+
+  @override
+  String get dependentFieldAddressNumber => 'Número';
+
+  @override
+  String get dependentFieldAddressComplement => 'Complemento';
+
+  @override
+  String get dependentFieldAddressRemove => 'Remover endereço';
+
+  @override
+  String get dependentAddressNotResolved =>
+      'Não foi possível interpretar este endereço. Escolha outra sugestão.';
 }

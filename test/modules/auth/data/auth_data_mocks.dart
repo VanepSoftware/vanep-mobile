@@ -9,7 +9,7 @@ import 'package:vanep_mobile/modules/auth/data/datasources/web_session_cleaner.d
 import 'package:vanep_mobile/modules/auth/data/dtos/auth_session_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/token_response_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 

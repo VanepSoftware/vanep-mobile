@@ -2,24 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/domain/gender.dart';
+import '../../../../core/formatters/gender_label.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../domain/value_objects/gender.dart';
 
 String profileGenderLabel(Gender? gender, AppLocalizations l10n) {
-  return switch (gender) {
-    Gender.male => l10n.profileGenderMale,
-    Gender.female => l10n.profileGenderFemale,
-    Gender.other => l10n.profileGenderOther,
-    null => l10n.profileFieldEmpty,
-  };
-}
-
-String formatProfileBirthDate(String? raw, Locale locale, String emptyLabel) {
-  if (raw == null || raw.trim().isEmpty) return emptyLabel;
-  final parsed = DateTime.tryParse(raw.trim());
-  if (parsed == null) return raw;
-  final pattern = locale.languageCode == 'pt' ? 'dd/MM/yyyy' : 'M/d/yyyy';
-  return DateFormat(pattern).format(parsed);
+  if (gender == null) return l10n.profileFieldEmpty;
+  return genderLabel(gender, l10n);
 }
 
 const int maxBrazilianPhoneDigits = 11;
