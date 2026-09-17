@@ -284,6 +284,54 @@ abstract class AppLocalizations {
   /// **'We sent a 6-digit code to {email}.'**
   String emailCodeSentTo(String email);
 
+  /// No description provided for @emailVerificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your email'**
+  String get emailVerificationTitle;
+
+  /// No description provided for @verificationCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get verificationCodeLabel;
+
+  /// No description provided for @emailVerificationSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get emailVerificationSubmit;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resendCode;
+
+  /// No description provided for @resendCodeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in {seconds}s'**
+  String resendCodeIn(int seconds);
+
+  /// No description provided for @codeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a new code.'**
+  String get codeResent;
+
+  /// No description provided for @emailVerifiedSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Email confirmed! Sign in with your password.'**
+  String get emailVerifiedSignIn;
+
+  /// No description provided for @accountIssueCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6 digits of the code.'**
+  String get accountIssueCodeInvalid;
+
   /// No description provided for @accountIssueRequired.
   ///
   /// In en, this message translates to:

@@ -28,20 +28,20 @@ class VanepApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      debugShowCheckedModeBanner: false,
-      theme: VanepTheme.dark(),
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: BlocProvider<AuthCubit>(
-        create: (_) => getIt<AuthCubit>()..checkSession(),
-        child: const AuthGate(),
+    return BlocProvider<AuthCubit>(
+      create: (_) => getIt<AuthCubit>()..checkSession(),
+      child: MaterialApp(
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        debugShowCheckedModeBanner: false,
+        theme: VanepTheme.dark(),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const AuthGate(),
       ),
     );
   }
@@ -52,7 +52,11 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
+    return BlocConsumer<AuthCubit, AuthState>(
+      listenWhen: (previous, current) =>
+          current is AuthAuthenticated && previous is! AuthAuthenticated,
+      listener: (context, _) =>
+          Navigator.of(context).popUntil((route) => route.isFirst),
       builder: (context, state) {
         return switch (state) {
           AuthUnknown() => const SplashScreen(),

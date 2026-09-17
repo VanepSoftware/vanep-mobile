@@ -49,4 +49,38 @@ void main() {
       }),
     );
   });
+
+  test('verifyEmail maps invalid_code', () async {
+    final options = RequestOptions(path: '/api/auth/email/verify');
+    when(
+      () => remote.verifyEmail(
+        email: any(named: 'email'),
+        code: any(named: 'code'),
+      ),
+    ).thenThrow(
+      DioException(
+        requestOptions: options,
+        response: Response<Object?>(
+          requestOptions: options,
+          statusCode: 400,
+          data: {'code': 'invalid_code', 'message': 'x', 'errors': []},
+        ),
+      ),
+    );
+
+    final result = await repository.verifyEmail(
+      email: 'ana@vanep.com.br',
+      code: '000000',
+    );
+
+    expect(result.errorOrNull, const InvalidCodeAccountFailure());
+  });
+
+  test('resendEmailVerification succeeds on 202', () async {
+    when(() => remote.resendEmailVerification(any())).thenAnswer((_) async {});
+
+    final result = await repository.resendEmailVerification('ana@vanep.com.br');
+
+    expect(result.isOk, isTrue);
+  });
 }

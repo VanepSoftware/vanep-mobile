@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -171,5 +173,54 @@ void main() {
 
     expect(find.byType(DriverShell), findsOneWidget);
     expect(find.byType(ClientShell), findsNothing);
+  });
+
+  testWidgets('starting a session closes the pages pushed over the login', (
+    tester,
+  ) async {
+    final loginCubit = MockLoginCubit();
+    whenListen(
+      loginCubit,
+      const Stream<LoginState>.empty(),
+      initialState: const LoginState(),
+    );
+    final profileSummaryCubit = MockProfileSummaryCubit();
+    whenListen(
+      profileSummaryCubit,
+      const Stream<ProfileSummaryState>.empty(),
+      initialState: const ProfileSummaryState(),
+    );
+    getIt
+      ..registerFactoryParam<LoginCubit, StartSession, void>(
+        (_, _) => loginCubit,
+      )
+      ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
+    addTearDown(getIt.reset);
+    final authenticated = AuthAuthenticated(
+      FakeAuthSession(profile: const FakeUserProfile(type: UserType.driver)),
+    );
+    final states = StreamController<AuthState>();
+    addTearDown(states.close);
+    when(() => cubit.state).thenReturn(const AuthUnauthenticated());
+    whenListen(cubit, states.stream, initialState: const AuthUnauthenticated());
+
+    await tester.pumpWidget(_harness(cubit));
+    tester
+        .state<NavigatorState>(find.byType(Navigator))
+        .push(
+          MaterialPageRoute<void>(
+            builder: (_) => const Scaffold(body: Text('código')),
+          ),
+        );
+    await tester.pumpAndSettle();
+    expect(find.text('código'), findsOneWidget);
+
+    when(() => cubit.state).thenReturn(authenticated);
+    states.add(authenticated);
+    await tester.pumpAndSettle();
+
+    expect(find.text('código'), findsNothing);
+    expect(find.byType(DriverShell), findsOneWidget);
   });
 }

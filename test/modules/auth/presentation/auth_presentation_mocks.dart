@@ -6,11 +6,15 @@ import 'package:vanep_mobile/modules/auth/domain/usecases/get_current_session.da
 import 'package:vanep_mobile/modules/auth/domain/usecases/patch_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/request_email_change.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/resend_email_verification_code.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_up.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/verify_email_code.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
@@ -46,3 +50,12 @@ class MockLoginCubit extends MockCubit<LoginState> implements LoginCubit {}
 class MockSignUp extends Mock implements SignUp {}
 
 class MockSignupCubit extends MockCubit<SignupState> implements SignupCubit {}
+
+class MockVerifyEmailCode extends Mock implements VerifyEmailCode {}
+
+class MockResendEmailVerificationCode extends Mock
+    implements ResendEmailVerificationCode {}
+
+class MockEmailCodeVerificationCubit
+    extends MockCubit<EmailCodeVerificationState>
+    implements EmailCodeVerificationCubit {}

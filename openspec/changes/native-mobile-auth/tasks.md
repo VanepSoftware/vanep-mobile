@@ -63,11 +63,11 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 
 ## 5. Phase 5 — E-mail code verification (branch: `feat/N-177-email-code-verification`)
 
-- [ ] 5.1 Tests: `verifyEmail` / `resendEmailVerification` bodies and failures; `CodeResendCooldown`; `EmailCodeVerificationCubit` (invalid code, success with and without password, resend starts cooldown)
-- [ ] 5.2 Tests: verification page widget; login `email_not_verified` opens verification; `AuthGate` pops pushed pages on authentication
-- [ ] 5.3 Use cases `VerifyEmailCode`, `ResendEmailVerificationCode`; `CodeResendCooldown`, `EmailCodeVerificationCubit`, `EmailCodeVerificationPage`, shared `VerificationCodeField`
-- [ ] 5.4 Sign-up success and login `email_not_verified` open the verification screen
-- [ ] 5.5 Run `make lint` and `make test`
+- [x] 5.1 Tests: `verifyEmail` / `resendEmailVerification` bodies and failures; `CodeResendCooldown`; `EmailCodeVerificationCubit` (invalid code, success with and without password, resend starts cooldown)
+- [x] 5.2 Tests: verification page widget; login `email_not_verified` opens verification; `AuthGate` pops pushed pages on authentication
+- [x] 5.3 Use cases `VerifyEmailCode`, `ResendEmailVerificationCode`; `CodeResendCooldown`, `EmailCodeVerificationCubit`, `EmailCodeVerificationPage`, shared `VerificationCodeField`
+- [x] 5.4 Sign-up success and login `email_not_verified` open the verification screen
+- [x] 5.5 Run `make lint` and `make test`
 
 ## 6. Phase 6 — Native Google login (branch: `feat/N-177-native-google-login`)
 
