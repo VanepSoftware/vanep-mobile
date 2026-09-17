@@ -1,3 +1,4 @@
+import '../../../../core/domain/iso_calendar_date.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/dependent.dart';
 import '../../domain/failures/dependent_failure.dart';
@@ -60,18 +61,26 @@ String dependentAddressLabel(
 }
 
 int? findAgeInYears(String? birthDate, {DateTime? today}) {
-  if (birthDate == null || birthDate.trim().isEmpty) return null;
-  final parsed = DateTime.tryParse(birthDate.trim());
+  final parsed = parseIsoCalendarDate(birthDate);
   if (parsed == null) return null;
   final reference = today ?? DateTime.now();
-  if (parsed.isAfter(reference)) return null;
+  final todayDate = DateTime(reference.year, reference.month, reference.day);
+  if (parsed.isAfter(todayDate)) return null;
 
-  var years = reference.year - parsed.year;
+  var years = todayDate.year - parsed.year;
   final hadBirthdayThisYear =
-      reference.month > parsed.month ||
-      (reference.month == parsed.month && reference.day >= parsed.day);
+      todayDate.month > parsed.month ||
+      (todayDate.month == parsed.month && todayDate.day >= parsed.day);
   if (!hadBirthdayThisYear) years -= 1;
   return years;
+}
+
+bool shouldShowDependentFailureFeedback(DependentFailure? failure) {
+  if (failure == null) return false;
+  if (failure is DependentValidationFailure && failure.isAttributedToAField) {
+    return false;
+  }
+  return true;
 }
 
 String? dependentAgeLabel(

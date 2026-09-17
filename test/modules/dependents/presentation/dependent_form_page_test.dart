@@ -247,7 +247,7 @@ void main() {
     expect(draft.address!.number, '340');
     expect(draft.address!.complement, 'Bloco B');
     expect(find.byType(DependentFormView), findsNothing);
-    expect(find.text('Dependente salvo.'), findsOneWidget);
+    expect(find.text('abrir'), findsOneWidget);
   });
 
   testWidgets('a backend address error is shown under the address field', (
@@ -277,7 +277,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Endereço não reconhecido.'), findsOneWidget);
-    expect(find.text('Revise o endereço.'), findsOneWidget);
+    expect(find.text('Revise o endereço.'), findsNothing);
     expect(find.byType(DependentFormView), findsOneWidget);
     final draft =
         verify(
@@ -290,7 +290,18 @@ void main() {
     expect(draft.address!.number, '99');
   });
 
-  test('asIsoDate pads month and day', () {
-    expect(asIsoDate(DateTime(2015, 3, 2)), '2015-03-02');
+  test('opening the picker on 2015-03-22 keeps 22 March, not 21', () {
+    final today = DateTime(2026, 9, 17);
+    final initial = initialBirthDatePickerDay('2015-03-22', today);
+
+    expect(initial.year, 2015);
+    expect(initial.month, 3);
+    expect(initial.day, 22);
+  });
+
+  test('a missing birth date opens the picker on today', () {
+    final today = DateTime(2026, 9, 17);
+
+    expect(initialBirthDatePickerDay(null, today), today);
   });
 }

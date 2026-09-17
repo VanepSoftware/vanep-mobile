@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -13,6 +15,7 @@ import '../dependents_mocks.dart';
 void main() {
   late MockFindMyDependents findMyDependents;
   late MockSetDefaultDependent setDefaultDependent;
+  late Completer<Result<DependentFailure, Dependent>> defaultChangeInFlight;
 
   setUpAll(registerDependentFallbackValues);
 
@@ -126,6 +129,49 @@ void main() {
       expect(cubit.state.defaultToken, 'dep-helena');
       expect(cubit.state.failure, const DependentNetworkFailure());
       verify(findMyDependents.call).called(1);
+    },
+  );
+
+  blocTest<DependentsCubit, DependentsState>(
+    'reloading a ready list does not go back to a full-page loading',
+    setUp: () => listReturns([testHelenaDependent, testMiguelDependent]),
+    seed: () => const DependentsState(
+      status: DependentsStatus.ready,
+      dependents: [testHelenaDependent, testMiguelDependent],
+    ),
+    build: buildCubit,
+    act: (cubit) => cubit.loadDependents(),
+    expect: () => <DependentsState>[],
+    verify: (cubit) {
+      expect(cubit.state.status, DependentsStatus.ready);
+      expect(cubit.state.isLoading, isFalse);
+    },
+  );
+
+  blocTest<DependentsCubit, DependentsState>(
+    'a second default choice while one is in flight is ignored',
+    setUp: () {
+      defaultChangeInFlight = Completer<Result<DependentFailure, Dependent>>();
+      listReturns([testHelenaDependent, testMiguelDependent]);
+      when(
+        () => setDefaultDependent(any()),
+      ).thenAnswer((_) => defaultChangeInFlight.future);
+    },
+    seed: () => const DependentsState(
+      status: DependentsStatus.ready,
+      dependents: [testHelenaDependent, testMiguelDependent],
+    ),
+    build: buildCubit,
+    act: (cubit) async {
+      final first = cubit.chooseDefault('dep-miguel');
+      await cubit.chooseDefault('dep-miguel');
+      defaultChangeInFlight.complete(
+        const Ok<DependentFailure, Dependent>(testMiguelDependent),
+      );
+      await first;
+    },
+    verify: (_) {
+      verify(() => setDefaultDependent('dep-miguel')).called(1);
     },
   );
 }

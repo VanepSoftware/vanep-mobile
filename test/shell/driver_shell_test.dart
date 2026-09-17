@@ -7,7 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
-import 'package:vanep_mobile/modules/driverserviceareas/presentation/widgets/service_areas_onboarding_banner.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/profile_page.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';

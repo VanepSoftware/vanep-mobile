@@ -20,6 +20,11 @@ class DependentsState extends Equatable {
 
   bool get isLoading => status == DependentsStatus.loading;
 
+  bool get isChangingDefault => status == DependentsStatus.changingDefault;
+
+  bool get keepsListVisibleWhileReloading =>
+      status == DependentsStatus.ready || isChangingDefault;
+
   bool get hasLoadFailed => status == DependentsStatus.loadFailed;
 
   bool get isEmpty =>

@@ -27,7 +27,7 @@ None. The mobile repo has no specs under `openspec/specs/` yet, so every capabil
 
 ## Impact
 
-**New modules** under `lib/modules/`: `driverserviceareas`, `driversearch`. **New shared code** under `lib/core/places/` for the autocomplete client, per R02 (used by two modules, so it cannot live inside either).
+**New modules** under `lib/modules/`: `driver_service_areas`, `driver_search`. **New shared code** under `lib/core/places/` for the autocomplete client, per R02 (used by two modules, so it cannot live inside either).
 
 **Configuration.** `.env` already carries `GOOGLE_PLACES_API_KEY_ANDROID` and `GOOGLE_PLACES_API_KEY_IOS`, but `.env.example` does not document them and `Environment` does not read them. Both need the placeholders, and `Environment` needs a platform-aware accessor.
 

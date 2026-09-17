@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/l10n/app_localizations_pt.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
 
 import '../dependents_fixtures.dart';
@@ -42,6 +43,33 @@ void main() {
     });
   });
 
+  group('shouldShowDependentFailureFeedback', () {
+    test('keeps a field-attributed validation failure off the snackbar', () {
+      expect(
+        shouldShowDependentFailureFeedback(
+          const DependentValidationFailure(
+            messagesByField: {DependentField.name: 'Nome muito longo.'},
+          ),
+        ),
+        isFalse,
+      );
+    });
+
+    test('sends a failure without a field to the snackbar', () {
+      expect(
+        shouldShowDependentFailureFeedback(const DependentNetworkFailure()),
+        isTrue,
+      );
+      expect(
+        shouldShowDependentFailureFeedback(
+          const DependentValidationFailure(detail: 'Nome muito longo.'),
+        ),
+        isTrue,
+      );
+      expect(shouldShowDependentFailureFeedback(null), isFalse);
+    });
+  });
+
   group('dependentAddressLabel', () {
     test('reads as empty when there is no address', () {
       expect(
@@ -80,6 +108,11 @@ void main() {
 
     test('does not count a birthday later this year', () {
       expect(findAgeInYears('2015-03-23', today: today), 10);
+    });
+
+    test('uses the calendar day, not UTC midnight', () {
+      expect(findAgeInYears('2015-03-22', today: DateTime(2015, 3, 22)), 0);
+      expect(findAgeInYears('2015-03-22', today: DateTime(2026, 3, 21)), 10);
     });
 
     test('has no age for missing, invalid or future dates', () {

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/domain/gender.dart';
+import '../../../../core/domain/iso_calendar_date.dart';
 import '../entities/dependent.dart';
 import 'dependent_address_draft.dart';
 
@@ -93,7 +94,7 @@ Map<DependentField, DependentDraftError> validateDependentDraft(
 
 DependentDraftError? findBirthDateError(String? birthDate, {DateTime? today}) {
   if (birthDate == null || birthDate.trim().isEmpty) return null;
-  final parsed = DateTime.tryParse(birthDate.trim());
+  final parsed = parseIsoCalendarDate(birthDate);
   if (parsed == null) return DependentDraftError.birthDateInvalid;
   final reference = today ?? DateTime.now();
   final endOfToday = DateTime(reference.year, reference.month, reference.day);
