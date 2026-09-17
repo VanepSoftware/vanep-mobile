@@ -41,6 +41,26 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<Result<AccountFailure, void>> resendEmailVerification(String email) {
     return runAccountRequest(() => remote.resendEmailVerification(email));
   }
+
+  @override
+  Future<Result<AccountFailure, void>> requestPasswordReset(String email) {
+    return runAccountRequest(() => remote.requestPasswordReset(email));
+  }
+
+  @override
+  Future<Result<AccountFailure, void>> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) {
+    return runAccountRequest(
+      () => remote.resetPassword(
+        email: email,
+        code: code,
+        newPassword: newPassword,
+      ),
+    );
+  }
 }
 
 Future<Result<AccountFailure, void>> runAccountRequest(

@@ -12,10 +12,13 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/password_reset_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/password_reset_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/password_reset_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 
 import '../account_fixtures.dart';
@@ -127,7 +130,11 @@ void main() {
     givenState(const LoginState());
 
     await tester.pumpWidget(loginHarness(cubit));
-    await tester.ensureVisible(find.text('Criar conta'));
+    await tester.scrollUntilVisible(
+      find.text('Criar conta'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Criar conta'));
     await tester.pumpAndSettle();
@@ -208,5 +215,32 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AccountTypePage), findsOneWidget);
+  });
+
+  testWidgets('Esqueci minha senha opens the reset with the typed e-mail', (
+    tester,
+  ) async {
+    final resetCubit = MockPasswordResetCubit();
+    whenListen(
+      resetCubit,
+      const Stream<PasswordResetState>.empty(),
+      initialState: const PasswordResetState(email: 'ana@vanep.com.br'),
+    );
+    final initialEmails = <String>[];
+    getIt.registerFactoryParam<PasswordResetCubit, String, void>((email, _) {
+      initialEmails.add(email);
+      return resetCubit;
+    });
+    addTearDown(getIt.reset);
+    givenState(filled);
+
+    await tester.pumpWidget(loginHarness(cubit));
+    await tester.ensureVisible(find.text('Esqueci minha senha'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Esqueci minha senha'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PasswordResetPage), findsOneWidget);
+    expect(initialEmails, ['ana@vanep.com.br']);
   });
 }

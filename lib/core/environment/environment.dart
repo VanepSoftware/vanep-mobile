@@ -75,6 +75,10 @@ class Environment {
   String get emailVerifyResendEndpoint =>
       '$authBaseUrl/api/auth/email/verify/resend';
 
+  String get passwordForgotEndpoint => '$authBaseUrl/api/auth/password/forgot';
+
+  String get passwordResetEndpoint => '$authBaseUrl/api/auth/password/reset';
+
   String get userProfileEndpoint => '$authBaseUrl/api/user/me';
 
   String get userProfileEmailChangeEndpoint =>

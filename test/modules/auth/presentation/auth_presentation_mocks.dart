@@ -7,7 +7,9 @@ import 'package:vanep_mobile/modules/auth/domain/usecases/get_current_session.da
 import 'package:vanep_mobile/modules/auth/domain/usecases/patch_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/request_email_change.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/request_password_reset.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/resend_email_verification_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/reset_password_with_code.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_google.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
@@ -20,6 +22,8 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verifica
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/password_reset_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/password_reset_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_state.dart';
@@ -65,3 +69,10 @@ class MockEmailCodeVerificationCubit
 class MockSignInWithGoogle extends Mock implements SignInWithGoogle {}
 
 class MockCompleteGoogleSignup extends Mock implements CompleteGoogleSignup {}
+
+class MockRequestPasswordReset extends Mock implements RequestPasswordReset {}
+
+class MockResetPasswordWithCode extends Mock implements ResetPasswordWithCode {}
+
+class MockPasswordResetCubit extends MockCubit<PasswordResetState>
+    implements PasswordResetCubit {}
