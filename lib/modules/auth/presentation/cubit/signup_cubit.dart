@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/domain/gender.dart';
 import '../../domain/failures/account_failure.dart';
 import '../../domain/usecases/complete_google_signup.dart';
 import '../../domain/usecases/sign_in_with_google.dart';
 import '../../domain/usecases/sign_up.dart';
 import '../../domain/value_objects/account_field.dart';
-import '../../domain/value_objects/gender.dart';
 import '../../domain/value_objects/signup_form.dart';
 import '../../domain/value_objects/google_signup_ticket.dart';
 import 'signup_state.dart';
