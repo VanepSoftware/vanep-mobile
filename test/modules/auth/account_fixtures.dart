@@ -1,4 +1,4 @@
-import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
