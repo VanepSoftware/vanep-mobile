@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_cubit.dart';
