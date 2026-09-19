@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/domain/gender.dart';
 import 'account_field.dart';
-import 'gender.dart';
 import 'user_type.dart';
 
 abstract final class SignupRules {

@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/domain/gender.dart';
 import '../../domain/failures/account_failure.dart';
 import '../../domain/usecases/sign_up.dart';
 import '../../domain/value_objects/account_field.dart';
-import '../../domain/value_objects/gender.dart';
 import '../../domain/value_objects/signup_form.dart';
 import '../../domain/value_objects/user_type.dart';
 import 'signup_state.dart';
