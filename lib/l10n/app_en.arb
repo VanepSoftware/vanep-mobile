@@ -41,6 +41,14 @@
       }
     }
   },
+  "emailCodeEnterFor": "Enter the 6-digit code that was sent to {email}. If it expired or never arrived, ask for a new one below.",
+  "@emailCodeEnterFor": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "emailVerificationTitle": "Confirm your email",
   "verificationCodeLabel": "Code",
   "emailVerificationSubmit": "Confirm",
@@ -54,7 +62,7 @@
     }
   },
   "codeResent": "We sent a new code.",
-  "emailVerifiedSignIn": "Email confirmed! Sign in with your password.",
+  "emailVerifiedSignIn": "Email confirmed! Sign in to continue.",
   "accountIssueCodeInvalid": "Enter the 6 digits of the code.",
   "accountIssueRequired": "Fill in this field.",
   "accountIssueEmailInvalid": "Invalid email.",

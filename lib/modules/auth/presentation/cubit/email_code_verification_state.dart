@@ -35,19 +35,22 @@ class EmailCodeVerificationRequest extends Equatable {
   const EmailCodeVerificationRequest({
     required this.email,
     required this.password,
+    required this.codeAlreadySent,
   });
 
   final String email;
   final String password;
+  final bool codeAlreadySent;
 
   @override
-  List<Object?> get props => [email, password];
+  List<Object?> get props => [email, password, codeAlreadySent];
 }
 
 class EmailCodeVerificationState extends Equatable {
   const EmailCodeVerificationState({
     required this.email,
     required this.password,
+    this.codeAlreadySent = true,
     this.code = '',
     this.status = EmailCodeVerificationStatus.editing,
     this.resendSecondsLeft = 0,
@@ -56,6 +59,7 @@ class EmailCodeVerificationState extends Equatable {
 
   final String email;
   final String password;
+  final bool codeAlreadySent;
   final String code;
   final EmailCodeVerificationStatus status;
   final int resendSecondsLeft;
@@ -79,6 +83,7 @@ class EmailCodeVerificationState extends Equatable {
     return EmailCodeVerificationState(
       email: email,
       password: password,
+      codeAlreadySent: codeAlreadySent,
       code: code ?? this.code,
       status: status ?? this.status,
       resendSecondsLeft: resendSecondsLeft ?? this.resendSecondsLeft,
@@ -90,6 +95,7 @@ class EmailCodeVerificationState extends Equatable {
   List<Object?> get props => [
     email,
     password,
+    codeAlreadySent,
     code,
     status,
     resendSecondsLeft,
