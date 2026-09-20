@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -169,4 +171,60 @@ void main() {
     act: (cubit) => cubit.clearFeedback(),
     expect: () => [codeStep],
   );
+
+  group('leaving the screen while a request is in flight', () {
+    late Completer<Result<AccountFailure, void>> answer;
+
+    setUp(() {
+      answer = Completer();
+      when(() => requestPasswordReset(any())).thenAnswer((_) => answer.future);
+      when(
+        () => resetPasswordWithCode(
+          email: any(named: 'email'),
+          code: any(named: 'code'),
+          newPassword: any(named: 'newPassword'),
+        ),
+      ).thenAnswer((_) => answer.future);
+    });
+
+    blocTest<PasswordResetCubit, PasswordResetState>(
+      'a requested code that arrives after leaving is ignored',
+      build: buildCubit,
+      act: (cubit) async {
+        final pending = cubit.requestCode();
+        await cubit.close();
+        answer.complete(const Ok(null));
+        await pending;
+      },
+      expect: () => [
+        emailStep.copyWith(status: PasswordResetStatus.submitting),
+      ],
+    );
+
+    blocTest<PasswordResetCubit, PasswordResetState>(
+      'a resent code that arrives after leaving is ignored',
+      build: buildCubit,
+      seed: () => codeStep,
+      act: (cubit) async {
+        final pending = cubit.resend();
+        await cubit.close();
+        answer.complete(const Ok(null));
+        await pending;
+      },
+      expect: () => [codeStep.copyWith(status: PasswordResetStatus.submitting)],
+    );
+
+    blocTest<PasswordResetCubit, PasswordResetState>(
+      'a reset that ends after leaving is ignored',
+      build: buildCubit,
+      seed: () => codeStep,
+      act: (cubit) async {
+        final pending = cubit.resetPassword();
+        await cubit.close();
+        answer.complete(const Err(InvalidCodeAccountFailure()));
+        await pending;
+      },
+      expect: () => [codeStep.copyWith(status: PasswordResetStatus.submitting)],
+    );
+  });
 }

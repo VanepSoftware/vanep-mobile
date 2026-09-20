@@ -93,7 +93,7 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 - [x] 8.2 Remove `AuthAuthenticating`, `AuthExchanging`, `InvalidStateAuthFailure`, `startLogin`, `submitAuthorizationCode`, `cancelLogin`
 - [x] 8.3 Remove `webview_flutter` and `crypto`; `OAUTH_REDIRECT_URI` / `OAUTH_SCOPES` from `Environment`, `.env.example`, README and the Makefile coverage filter
 - [x] 8.4 Run `make lint`, `make test` and `make coverage`
-- [ ] 8.5 Manual test of every flow on a device (R27a)
+- [x] 8.5 Manual test of every flow on a device (R27a)
 
 ## 9. Phase 9 — Auth screens polish (branch: `feat/N-177-auth-screens-polish`)
 
@@ -106,4 +106,3 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 - [x] 9.7 Password rules (6 characters, uppercase, special character) with live checklist and password confirmation; backend #194 enforces the same rules
 - [x] 9.8 Code verification and password reset screens with the same header and field style
 - [x] 9.9 Run `make lint` and `make test`
-

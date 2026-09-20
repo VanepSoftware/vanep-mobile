@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -40,6 +42,7 @@ void main() {
     cooldown: CodeResendCooldown(seconds: 30),
     email: 'ana@vanep.com.br',
     password: 'secret1',
+    codeAlreadySent: true,
   );
 
   void stubVerify(Result<AccountFailure, void> result) {
@@ -167,4 +170,101 @@ void main() {
     act: (cubit) => cubit.clearFeedback(),
     expect: () => [initial],
   );
+
+  group('leaving the screen while a request is in flight', () {
+    late Completer<Result<AccountFailure, void>> verifyAnswer;
+    late Completer<Result<AuthFailure, AuthSession>> signInAnswer;
+    late Completer<Result<AccountFailure, void>> resendAnswer;
+
+    setUp(() {
+      verifyAnswer = Completer();
+      signInAnswer = Completer();
+      resendAnswer = Completer();
+      when(
+        () => verifyEmailCode(
+          email: any(named: 'email'),
+          code: any(named: 'code'),
+        ),
+      ).thenAnswer((_) => verifyAnswer.future);
+      when(
+        () => signInWithPassword(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) => signInAnswer.future);
+      when(() => resendCode(any())).thenAnswer((_) => resendAnswer.future);
+    });
+
+    EmailCodeVerificationCubit typedCubit() =>
+        buildCubit()..updateCode('123456');
+
+    test('a rejected code that arrives after leaving is ignored', () async {
+      final cubit = typedCubit();
+
+      final pending = cubit.verify();
+      await cubit.close();
+      verifyAnswer.complete(const Err(InvalidCodeAccountFailure()));
+
+      await expectLater(pending, completes);
+    });
+
+    test(
+      'a verified code that arrives after leaving does not sign in',
+      () async {
+        final cubit = typedCubit();
+
+        final pending = cubit.verify();
+        await cubit.close();
+        verifyAnswer.complete(const Ok(null));
+        await pending;
+
+        verifyNever(
+          () => signInWithPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        );
+        expect(startedSessions, isEmpty);
+      },
+    );
+
+    test(
+      'a sign-in that ends after leaving still starts the session',
+      () async {
+        final cubit = typedCubit();
+
+        final pending = cubit.verify();
+        verifyAnswer.complete(const Ok(null));
+        await Future<void>.delayed(Duration.zero);
+        await cubit.close();
+        signInAnswer.complete(Ok(session));
+        await pending;
+
+        expect(startedSessions, [session]);
+      },
+    );
+
+    test('a failed sign-in that ends after leaving is ignored', () async {
+      final cubit = typedCubit();
+
+      final pending = cubit.verify();
+      verifyAnswer.complete(const Ok(null));
+      await Future<void>.delayed(Duration.zero);
+      await cubit.close();
+      signInAnswer.complete(const Err(NetworkAuthFailure()));
+
+      await expectLater(pending, completes);
+      expect(startedSessions, isEmpty);
+    });
+
+    test('a resend that ends after leaving is ignored', () async {
+      final cubit = buildCubit();
+
+      final pending = cubit.resend();
+      await cubit.close();
+      resendAnswer.complete(const Ok(null));
+
+      await expectLater(pending, completes);
+    });
+  });
 }

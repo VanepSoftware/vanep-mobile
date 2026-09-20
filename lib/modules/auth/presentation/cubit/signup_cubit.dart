@@ -118,6 +118,7 @@ class SignupCubit extends Cubit<SignupState> {
 
   Future<void> submitPasswordSignup() async {
     final result = await _signUp(state.form);
+    if (isClosed) return;
     result.fold(
       showFailure,
       (_) => emit(state.copyWith(status: SignupStatus.completed)),
@@ -129,6 +130,7 @@ class SignupCubit extends Cubit<SignupState> {
       ticket: googleTicket.ticket,
       form: state.form,
     );
+    if (isClosed) return;
     await result.fold<Future<void>>(
       (failure) async => showFailure(failure),
       (_) => signInWithGoogleAfterSignup(),
@@ -138,10 +140,15 @@ class SignupCubit extends Cubit<SignupState> {
   Future<void> signInWithGoogleAfterSignup() async {
     final result = await _signInWithGoogle();
     result.fold(
-      (_) =>
-          emit(state.copyWith(status: SignupStatus.registeredWithoutSession)),
+      (_) {
+        if (!isClosed) {
+          emit(state.copyWith(status: SignupStatus.registeredWithoutSession));
+        }
+      },
       (session) {
-        emit(state.copyWith(status: SignupStatus.signedIn));
+        if (!isClosed) emit(state.copyWith(status: SignupStatus.signedIn));
+        // The session is already saved by now, so the app must be told even
+        // if the user left this screen while the Google sign-in was open.
         _startSession(session);
       },
     );

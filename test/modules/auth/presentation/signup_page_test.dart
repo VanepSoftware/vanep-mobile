@@ -270,6 +270,7 @@ void main() {
       const EmailCodeVerificationRequest(
         email: 'ana@vanep.com.br',
         password: 'Secret@1',
+        codeAlreadySent: true,
       ),
     ]);
     verify(() => verificationCubit.startResendCooldown()).called(1);
