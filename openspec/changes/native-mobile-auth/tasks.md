@@ -92,4 +92,4 @@ Phases are stacked because each one edits `auth_container.dart`, the ARB files a
 - [x] 8.2 Remove `AuthAuthenticating`, `AuthExchanging`, `InvalidStateAuthFailure`, `startLogin`, `submitAuthorizationCode`, `cancelLogin`
 - [x] 8.3 Remove `webview_flutter` and `crypto`; `OAUTH_REDIRECT_URI` / `OAUTH_SCOPES` from `Environment`, `.env.example`, README and the Makefile coverage filter
 - [x] 8.4 Run `make lint`, `make test` and `make coverage`
-- [ ] 8.5 Manual test of every flow on a device (R27a)
+- [x] 8.5 Manual test of every flow on a device (R27a)
