@@ -16,10 +16,9 @@ enum PasswordRequirement {
   uppercaseLetter,
   specialCharacter;
 
-  bool isMetBy(String password) {
+  bool isMetBy(String password, {int minLength = PasswordPolicy.minLength}) {
     return switch (this) {
-      PasswordRequirement.minLength =>
-        password.length >= PasswordPolicy.minLength,
+      PasswordRequirement.minLength => password.length >= minLength,
       PasswordRequirement.uppercaseLetter => uppercaseLetterPattern.hasMatch(
         password,
       ),
@@ -30,9 +29,12 @@ enum PasswordRequirement {
   }
 }
 
-AccountFieldIssue? passwordIssueOf(String password) {
+AccountFieldIssue? passwordIssueOf(
+  String password, {
+  int minLength = PasswordPolicy.minLength,
+}) {
   if (password.isEmpty) return AccountFieldIssue.required;
-  if (!PasswordRequirement.minLength.isMetBy(password)) {
+  if (!PasswordRequirement.minLength.isMetBy(password, minLength: minLength)) {
     return AccountFieldIssue.tooShort;
   }
   if (!PasswordRequirement.uppercaseLetter.isMetBy(password)) {

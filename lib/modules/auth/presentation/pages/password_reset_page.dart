@@ -14,6 +14,7 @@ import '../cubit/password_reset_state.dart';
 import '../mappers/account_failure_l10n.dart';
 import '../widgets/account_text_field.dart';
 import '../widgets/auth_page_chrome.dart';
+import '../widgets/password_requirements_checklist.dart';
 import '../widgets/verification_code_field.dart';
 import 'email_code_verification_page.dart';
 
@@ -167,6 +168,12 @@ class PasswordResetCodeStep extends StatelessWidget {
           obscureText: true,
           textInputAction: TextInputAction.done,
           autofillHints: const [AutofillHints.newPassword],
+        ),
+        const SizedBox(height: 4),
+        PasswordRequirementsChecklist(
+          password: state.newPassword,
+          minLength: PasswordResetRules.newPasswordMinLength,
+          highlightUnmet: state.issues.containsKey(AccountField.password),
         ),
         const SizedBox(height: 28),
         VanepPrimaryButton(

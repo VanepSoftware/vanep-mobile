@@ -99,12 +99,17 @@ In Google mode the form SHALL ask for CPF, optional phone, birth date and gender
 
 ### Requirement: Reset password by code
 
-"Forgot password" SHALL ask for the e-mail and post it to `/api/auth/password/forgot`, then ask for the code and a new password of at least 8 characters and post them to `/api/auth/password/reset`. On `204` the app MUST return to the login screen with a success message. `400 invalid_code` MUST show the localized invalid code message.
+"Forgot password" SHALL ask for the e-mail and post it to `/api/auth/password/forgot`, then ask for the code and a new password of at least 8 characters with one uppercase letter and one special character (the same character rules as sign-up, which the backend enforces) and post them to `/api/auth/password/reset`. While typing the new password, the app MUST show each requirement and whether it is met. On `204` the app MUST return to the login screen with a success message. `400 invalid_code` MUST show the localized invalid code message.
 
 #### Scenario: Successful reset
 
-- **WHEN** the correct code and an 8-character password are submitted
+- **WHEN** the correct code and a valid password (8 characters or more, with an uppercase letter and a special character) are submitted
 - **THEN** the app returns to the login screen with the localized success message
+
+#### Scenario: Weak new password
+
+- **WHEN** a password without an uppercase letter or without a special character is submitted
+- **THEN** the unmet requirement is highlighted and nothing is sent
 
 #### Scenario: Short new password
 

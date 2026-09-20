@@ -2,6 +2,7 @@ import '../../../../core/result/result.dart';
 import '../failures/account_failure.dart';
 import '../repositories/account_repository.dart';
 import '../value_objects/account_field.dart';
+import '../value_objects/password_policy.dart';
 import '../value_objects/signup_form.dart';
 import 'verify_email_code.dart';
 
@@ -23,10 +24,10 @@ class ResetPasswordWithCode {
     final issues = {
       if (digits.length != verificationCodeLength)
         AccountField.code: AccountFieldIssue.invalid,
-      if (newPassword.isEmpty)
-        AccountField.password: AccountFieldIssue.required
-      else if (newPassword.length < PasswordResetRules.newPasswordMinLength)
-        AccountField.password: AccountFieldIssue.tooShort,
+      AccountField.password: ?passwordIssueOf(
+        newPassword,
+        minLength: PasswordResetRules.newPasswordMinLength,
+      ),
     };
     if (issues.isNotEmpty) return Err(AccountValidationFailure(issues));
     return _repository.resetPassword(

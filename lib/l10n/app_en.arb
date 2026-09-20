@@ -131,7 +131,7 @@
     }
   },
   "passwordResetCodeTitle": "Create a new password",
-  "passwordResetNewPasswordHint": "At least 8 characters",
+  "passwordResetNewPasswordHint": "Enter the new password",
   "passwordResetNewPasswordLabel": "New password",
   "passwordResetSubmit": "Reset password",
   "passwordResetDone": "Password reset! Sign in with your new password.",

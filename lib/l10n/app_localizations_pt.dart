@@ -294,7 +294,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get passwordResetCodeTitle => 'Crie uma nova senha';
 
   @override
-  String get passwordResetNewPasswordHint => 'Mínimo de 8 caracteres';
+  String get passwordResetNewPasswordHint => 'Digite a nova senha';
 
   @override
   String get passwordResetNewPasswordLabel => 'Nova senha';

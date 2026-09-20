@@ -86,7 +86,7 @@
   "passwordResetSendCode": "Enviar código",
   "passwordResetCodeSentTo": "Se houver uma conta com {email}, enviamos um código de 6 dígitos.",
   "passwordResetCodeTitle": "Crie uma nova senha",
-  "passwordResetNewPasswordHint": "Mínimo de 8 caracteres",
+  "passwordResetNewPasswordHint": "Digite a nova senha",
   "passwordResetNewPasswordLabel": "Nova senha",
   "passwordResetSubmit": "Redefinir senha",
   "passwordResetDone": "Senha redefinida! Entre com a nova senha.",

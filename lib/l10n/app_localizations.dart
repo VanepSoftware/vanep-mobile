@@ -617,7 +617,7 @@ abstract class AppLocalizations {
   /// No description provided for @passwordResetNewPasswordHint.
   ///
   /// In en, this message translates to:
-  /// **'At least 8 characters'**
+  /// **'Enter the new password'**
   String get passwordResetNewPasswordHint;
 
   /// No description provided for @passwordResetNewPasswordLabel.

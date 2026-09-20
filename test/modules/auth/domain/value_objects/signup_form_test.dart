@@ -135,6 +135,31 @@ void main() {
       expect(PasswordRequirement.specialCharacter.isMetBy('Secret.1'), isTrue);
     });
 
+    test('the minimum length can be raised, as the reset does', () {
+      expect(
+        PasswordRequirement.minLength.isMetBy('Ab@1234', minLength: 8),
+        isFalse,
+      );
+      expect(
+        PasswordRequirement.minLength.isMetBy('Ab@12345', minLength: 8),
+        isTrue,
+      );
+      expect(
+        passwordIssueOf('Ab@1234', minLength: 8),
+        AccountFieldIssue.tooShort,
+      );
+      expect(
+        passwordIssueOf('abcdefgh', minLength: 8),
+        AccountFieldIssue.missingUppercase,
+      );
+      expect(
+        passwordIssueOf('Abcdefgh', minLength: 8),
+        AccountFieldIssue.missingSpecialCharacter,
+      );
+      expect(passwordIssueOf('Abcdef@h', minLength: 8), isNull);
+      expect(passwordIssueOf('Ab@123'), isNull);
+    });
+
     test('a password without uppercase or special character is rejected', () {
       expect(
         validClientSignupForm

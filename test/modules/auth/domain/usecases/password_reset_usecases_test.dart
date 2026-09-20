@@ -59,7 +59,7 @@ void main() {
       final result = await ResetPasswordWithCode(repository)(
         email: 'ana@vanep.com.br',
         code: '123 456',
-        newPassword: '12345678',
+        newPassword: 'Nova@1234',
       );
 
       expect(result.isOk, isTrue);
@@ -67,9 +67,43 @@ void main() {
         () => repository.resetPassword(
           email: 'ana@vanep.com.br',
           code: '123456',
-          newPassword: '12345678',
+          newPassword: 'Nova@1234',
         ),
       ).called(1);
+    });
+
+    test('a password without uppercase or special character is rejected '
+        'before calling the API', () async {
+      final noUppercase = await ResetPasswordWithCode(repository)(
+        email: 'ana@vanep.com.br',
+        code: '123456',
+        newPassword: 'nova@1234',
+      );
+      final noSpecial = await ResetPasswordWithCode(repository)(
+        email: 'ana@vanep.com.br',
+        code: '123456',
+        newPassword: 'Nova12345',
+      );
+
+      expect(
+        noUppercase.errorOrNull,
+        const AccountValidationFailure({
+          AccountField.password: AccountFieldIssue.missingUppercase,
+        }),
+      );
+      expect(
+        noSpecial.errorOrNull,
+        const AccountValidationFailure({
+          AccountField.password: AccountFieldIssue.missingSpecialCharacter,
+        }),
+      );
+      verifyNever(
+        () => repository.resetPassword(
+          email: any(named: 'email'),
+          code: any(named: 'code'),
+          newPassword: any(named: 'newPassword'),
+        ),
+      );
     });
 
     test(

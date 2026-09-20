@@ -293,7 +293,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordResetCodeTitle => 'Create a new password';
 
   @override
-  String get passwordResetNewPasswordHint => 'At least 8 characters';
+  String get passwordResetNewPasswordHint => 'Enter the new password';
 
   @override
   String get passwordResetNewPasswordLabel => 'New password';

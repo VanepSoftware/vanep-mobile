@@ -9,11 +9,13 @@ class PasswordRequirementsChecklist extends StatelessWidget {
   const PasswordRequirementsChecklist({
     required this.password,
     required this.highlightUnmet,
+    this.minLength = PasswordPolicy.minLength,
     super.key,
   });
 
   final String password;
   final bool highlightUnmet;
+  final int minLength;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +25,12 @@ class PasswordRequirementsChecklist extends StatelessWidget {
       children: [
         for (final requirement in PasswordRequirement.values)
           PasswordRequirementRow(
-            label: passwordRequirementLabel(l10n, requirement),
-            met: requirement.isMetBy(password),
+            label: passwordRequirementLabel(
+              l10n,
+              requirement,
+              minLength: minLength,
+            ),
+            met: requirement.isMetBy(password, minLength: minLength),
             highlightUnmet: highlightUnmet,
           ),
       ],
@@ -34,11 +40,12 @@ class PasswordRequirementsChecklist extends StatelessWidget {
 
 String passwordRequirementLabel(
   AppLocalizations l10n,
-  PasswordRequirement requirement,
-) {
+  PasswordRequirement requirement, {
+  int minLength = PasswordPolicy.minLength,
+}) {
   return switch (requirement) {
     PasswordRequirement.minLength => l10n.passwordRequirementMinLength(
-      PasswordPolicy.minLength,
+      minLength,
     ),
     PasswordRequirement.uppercaseLetter => l10n.passwordRequirementUppercase,
     PasswordRequirement.specialCharacter => l10n.passwordRequirementSpecial,

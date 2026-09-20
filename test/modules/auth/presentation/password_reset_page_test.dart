@@ -77,6 +77,18 @@ void main() {
     verify(() => cubit.resetPassword()).called(1);
   });
 
+  testWidgets('the code step lists the password requirements with the reset '
+      'minimum', (tester) async {
+    givenState(codeStep);
+
+    await tester.pumpWidget(authTestApp(page()));
+
+    expect(find.text('Mínimo de 8 caracteres'), findsOneWidget);
+    expect(find.text('Uma letra maiúscula'), findsOneWidget);
+    expect(find.text('Um caractere especial (ex.: ! @ # \$)'), findsOneWidget);
+    expect(find.text('Digite a nova senha'), findsOneWidget);
+  });
+
   testWidgets('a completed reset returns to login with a notice', (
     tester,
   ) async {
