@@ -18,7 +18,14 @@ class EmailCodeVerificationCubit extends Cubit<EmailCodeVerificationState> {
     required this._cooldown,
     required String email,
     required String password,
-  }) : super(EmailCodeVerificationState(email: email, password: password));
+    required bool codeAlreadySent,
+  }) : super(
+         EmailCodeVerificationState(
+           email: email,
+           password: password,
+           codeAlreadySent: codeAlreadySent,
+         ),
+       );
 
   final VerifyEmailCode _verifyEmailCode;
   final ResendEmailVerificationCode _resendCode;
@@ -43,6 +50,7 @@ class EmailCodeVerificationCubit extends Cubit<EmailCodeVerificationState> {
       ),
     );
     final result = await _verifyEmailCode(email: state.email, code: state.code);
+    if (isClosed) return;
     await result.fold<Future<void>>(
       (failure) async => showFailure(failure),
       (_) => signInAfterVerification(),
@@ -55,9 +63,17 @@ class EmailCodeVerificationCubit extends Cubit<EmailCodeVerificationState> {
       password: state.password,
     );
     result.fold(
-      (_) => emit(state.copyWith(status: EmailCodeVerificationStatus.verified)),
+      (_) {
+        if (!isClosed) {
+          emit(state.copyWith(status: EmailCodeVerificationStatus.verified));
+        }
+      },
       (session) {
-        emit(state.copyWith(status: EmailCodeVerificationStatus.signedIn));
+        if (!isClosed) {
+          emit(state.copyWith(status: EmailCodeVerificationStatus.signedIn));
+        }
+        // The session is already saved by now, so the app must be told even
+        // if the user left this screen while the sign-in was in flight.
         _startSession(session);
       },
     );
@@ -72,6 +88,7 @@ class EmailCodeVerificationCubit extends Cubit<EmailCodeVerificationState> {
       ),
     );
     final result = await _resendCode(state.email);
+    if (isClosed) return;
     result.fold(showFailure, (_) {
       emit(
         state.copyWith(

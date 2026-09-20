@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
@@ -62,6 +63,53 @@ void main() {
       buildSource().requestIdToken(),
       throwsA(const GoogleIdTokenException('clientConfigurationError')),
     );
+  });
+
+  void failInitializationWith(Object error) {
+    when(
+      () =>
+          googleSignIn.initialize(serverClientId: any(named: 'serverClientId')),
+    ).thenAnswer((_) => Future<void>.error(error));
+  }
+
+  test('an SDK error while initializing becomes GoogleIdTokenException', () {
+    failInitializationWith(
+      const GoogleSignInException(
+        code: GoogleSignInExceptionCode.clientConfigurationError,
+      ),
+    );
+
+    expect(
+      buildSource().requestIdToken(),
+      throwsA(const GoogleIdTokenException('clientConfigurationError')),
+    );
+    verifyNever(() => googleSignIn.authenticate());
+  });
+
+  test('a platform error while initializing becomes '
+      'GoogleIdTokenException', () {
+    failInitializationWith(PlatformException(code: 'no-client-id'));
+
+    expect(
+      buildSource().requestIdToken(),
+      throwsA(const GoogleIdTokenException('no-client-id')),
+    );
+  });
+
+  test('a failed initialization is not attempted again', () async {
+    failInitializationWith(PlatformException(code: 'no-client-id'));
+    final source = buildSource();
+
+    await expectLater(
+      source.requestIdToken(),
+      throwsA(isA<GoogleIdTokenException>()),
+    );
+    await expectLater(
+      source.requestIdToken(),
+      throwsA(isA<GoogleIdTokenException>()),
+    );
+
+    verify(() => googleSignIn.initialize(serverClientId: 'web-id')).called(1);
   });
 
   test('an account without ID token is an error', () async {

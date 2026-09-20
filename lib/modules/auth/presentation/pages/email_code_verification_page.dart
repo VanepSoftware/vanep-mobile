@@ -28,6 +28,7 @@ Future<void> openEmailCodeVerification(
           param1: EmailCodeVerificationRequest(
             email: email.trim(),
             password: password,
+            codeAlreadySent: codeAlreadySent,
           ),
           param2: startSession,
         );
@@ -71,7 +72,9 @@ class EmailCodeVerificationPage extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
               Text(
-                l10n.emailCodeSentTo(state.email),
+                state.codeAlreadySent
+                    ? l10n.emailCodeSentTo(state.email)
+                    : l10n.emailCodeEnterFor(state.email),
                 style: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
               ),
               const SizedBox(height: 20),
