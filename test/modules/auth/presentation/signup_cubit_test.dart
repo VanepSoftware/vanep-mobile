@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -254,5 +256,105 @@ void main() {
       ],
       verify: (_) => verifyNever(signInWithGoogle.call),
     );
+  });
+
+  group('leaving the screen during Google sign-up', () {
+    final session = FakeAuthSession();
+    late Completer<Result<AccountFailure, void>> completionAnswer;
+    late Completer<Result<AuthFailure, AuthSession>> googleAnswer;
+
+    setUp(() {
+      completionAnswer = Completer();
+      googleAnswer = Completer();
+      when(
+        () => completeGoogleSignup(
+          ticket: any(named: 'ticket'),
+          form: any(named: 'form'),
+        ),
+      ).thenAnswer((_) => completionAnswer.future);
+      when(() => signInWithGoogle()).thenAnswer((_) => googleAnswer.future);
+    });
+
+    test('a rejection that arrives after leaving is ignored', () async {
+      final cubit = buildCubit(googleTicket: googleTicket);
+
+      final pending = cubit.submit();
+      await cubit.close();
+      completionAnswer.complete(const Err(InvalidSignupTicketAccountFailure()));
+
+      await expectLater(pending, completes);
+    });
+
+    test('a completion that arrives after leaving does not reopen '
+        'Google', () async {
+      final cubit = buildCubit(googleTicket: googleTicket);
+
+      final pending = cubit.submit();
+      await cubit.close();
+      completionAnswer.complete(const Ok(null));
+      await pending;
+
+      verifyNever(() => signInWithGoogle());
+      expect(startedSessions, isEmpty);
+    });
+
+    test('a Google sign-in that ends after leaving still starts the '
+        'session', () async {
+      final cubit = buildCubit(googleTicket: googleTicket);
+
+      final pending = cubit.submit();
+      completionAnswer.complete(const Ok(null));
+      await Future<void>.delayed(Duration.zero);
+      await cubit.close();
+      googleAnswer.complete(Ok(session));
+      await pending;
+
+      expect(startedSessions, [session]);
+    });
+
+    test(
+      'a failed Google sign-in that ends after leaving is ignored',
+      () async {
+        final cubit = buildCubit(googleTicket: googleTicket);
+
+        final pending = cubit.submit();
+        completionAnswer.complete(const Ok(null));
+        await Future<void>.delayed(Duration.zero);
+        await cubit.close();
+        googleAnswer.complete(const Err(NetworkAuthFailure()));
+
+        await expectLater(pending, completes);
+        expect(startedSessions, isEmpty);
+      },
+    );
+  });
+
+  group('leaving the screen during password sign-up', () {
+    late Completer<Result<AccountFailure, void>> answer;
+
+    setUp(() {
+      answer = Completer();
+      when(() => signUp(any())).thenAnswer((_) => answer.future);
+    });
+
+    test('a failure that arrives after leaving is ignored', () async {
+      final cubit = buildCubit();
+
+      final pending = cubit.submit();
+      await cubit.close();
+      answer.complete(const Err(NetworkAccountFailure()));
+
+      await expectLater(pending, completes);
+    });
+
+    test('a success that arrives after leaving is ignored', () async {
+      final cubit = buildCubit();
+
+      final pending = cubit.submit();
+      await cubit.close();
+      answer.complete(const Ok(null));
+
+      await expectLater(pending, completes);
+    });
   });
 }
