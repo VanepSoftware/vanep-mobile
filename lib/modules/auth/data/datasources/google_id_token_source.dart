@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class GoogleIdTokenSource {
@@ -31,8 +32,8 @@ class GoogleSignInIdTokenSource implements GoogleIdTokenSource {
     if (serverClientId.isEmpty) {
       throw const GoogleIdTokenException('missing_server_client_id');
     }
-    await initializeOnce();
     try {
+      await initializeOnce();
       final account = await googleSignIn.authenticate();
       final idToken = account.authentication.idToken;
       if (idToken == null) {
@@ -42,6 +43,8 @@ class GoogleSignInIdTokenSource implements GoogleIdTokenSource {
     } on GoogleSignInException catch (error) {
       if (error.code == GoogleSignInExceptionCode.canceled) return null;
       throw GoogleIdTokenException(error.code.name);
+    } on PlatformException catch (error) {
+      throw GoogleIdTokenException(error.code);
     }
   }
 

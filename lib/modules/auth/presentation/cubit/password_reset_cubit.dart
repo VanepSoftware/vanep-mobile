@@ -59,6 +59,7 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
     if (state.isSubmitting) return;
     emitSubmitting();
     final result = await _requestPasswordReset(state.email);
+    if (isClosed) return;
     result.fold(showFailure, (_) {
       emit(
         state.copyWith(
@@ -74,6 +75,7 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
     if (!state.canResend) return;
     emitSubmitting();
     final result = await _requestPasswordReset(state.email);
+    if (isClosed) return;
     result.fold(showFailure, (_) {
       emit(
         state.copyWith(
@@ -93,6 +95,7 @@ class PasswordResetCubit extends Cubit<PasswordResetState> {
       code: state.code,
       newPassword: state.newPassword,
     );
+    if (isClosed) return;
     result.fold(
       showFailure,
       (_) => emit(state.copyWith(status: PasswordResetStatus.completed)),

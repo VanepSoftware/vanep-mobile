@@ -55,6 +55,27 @@ void main() {
     verify(() => cubit.updateCode('123456')).called(1);
   });
 
+  testWidgets('does not claim a code was sent when none was', (tester) async {
+    givenState(
+      const EmailCodeVerificationState(
+        email: 'ana@vanep.com.br',
+        password: 'secret1',
+        codeAlreadySent: false,
+      ),
+    );
+
+    await tester.pumpWidget(authTestApp(page()));
+
+    expect(
+      find.text(
+        'Digite o código de 6 dígitos que foi enviado para ana@vanep.com.br. '
+        'Se ele expirou ou não chegou, peça um novo abaixo.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Enviamos um código'), findsNothing);
+  });
+
   testWidgets('Confirmar verifies once six digits are typed', (tester) async {
     givenState(initial.copyWith(code: '123456'));
     when(() => cubit.verify()).thenAnswer((_) async {});
@@ -134,7 +155,7 @@ void main() {
 
     expect(find.text('abrir'), findsOneWidget);
     expect(
-      find.text('E-mail confirmado! Entre com sua senha.'),
+      find.text('E-mail confirmado! Entre para continuar.'),
       findsOneWidget,
     );
   });

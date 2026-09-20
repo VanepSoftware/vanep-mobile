@@ -80,6 +80,7 @@ void registerAuthDependencies(
         cooldown: CodeResendCooldown(),
         email: request.email,
         password: request.password,
+        codeAlreadySent: request.codeAlreadySent,
       ),
     )
     ..registerFactory<RequestPasswordReset>(
