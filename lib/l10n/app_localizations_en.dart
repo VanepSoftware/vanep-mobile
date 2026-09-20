@@ -106,6 +106,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String emailCodeEnterFor(String email) {
+    return 'Enter the 6-digit code that was sent to $email. If it expired or never arrived, ask for a new one below.';
+  }
+
+  @override
   String get emailVerificationTitle => 'Confirm your email';
 
   @override
@@ -126,8 +131,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get codeResent => 'We sent a new code.';
 
   @override
-  String get emailVerifiedSignIn =>
-      'Email confirmed! Sign in with your password.';
+  String get emailVerifiedSignIn => 'Email confirmed! Sign in to continue.';
 
   @override
   String get accountIssueCodeInvalid => 'Enter the 6 digits of the code.';

@@ -284,6 +284,12 @@ abstract class AppLocalizations {
   /// **'We sent a 6-digit code to {email}.'**
   String emailCodeSentTo(String email);
 
+  /// No description provided for @emailCodeEnterFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code that was sent to {email}. If it expired or never arrived, ask for a new one below.'**
+  String emailCodeEnterFor(String email);
+
   /// No description provided for @emailVerificationTitle.
   ///
   /// In en, this message translates to:
@@ -323,7 +329,7 @@ abstract class AppLocalizations {
   /// No description provided for @emailVerifiedSignIn.
   ///
   /// In en, this message translates to:
-  /// **'Email confirmed! Sign in with your password.'**
+  /// **'Email confirmed! Sign in to continue.'**
   String get emailVerifiedSignIn;
 
   /// No description provided for @accountIssueCodeInvalid.
