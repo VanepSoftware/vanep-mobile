@@ -11,6 +11,4 @@ class MockDriverRemoteDataSource extends Mock
 const testEnvironment = Environment(
   authBaseUrl: 'http://10.0.2.2:8080',
   oauthClientId: 'vanep-mobile',
-  oauthRedirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-  oauthScopes: 'read write',
 );

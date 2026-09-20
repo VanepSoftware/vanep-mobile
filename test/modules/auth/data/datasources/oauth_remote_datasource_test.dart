@@ -28,7 +28,7 @@ void main() {
     remote = OAuthRemoteDataSource(dio: dio, environment: testEnvironment);
   });
 
-  test('exchangeCode posts the authorization_code grant with PKCE', () async {
+  test('requestPasswordGrant posts the mobile password grant', () async {
     when(
       () => dio.post<Map<String, dynamic>>(
         any(),
@@ -44,14 +44,12 @@ void main() {
       }),
     );
 
-    final token = await remote.exchangeCode(
-      code: 'the-code',
-      codeVerifier: 'verifier-1',
-      redirectUri: 'com.vanep.vanepmobile://oauth2redirect',
+    final token = await remote.requestPasswordGrant(
+      email: 'ana@vanep.com.br',
+      password: 'secret1',
     );
 
-    expect(token.accessToken, 'access-1');
-    expect(token.expiresInSeconds, 900);
+    expect(token.refreshToken, 'refresh-1');
     final captured =
         verify(
               () => dio.post<Map<String, dynamic>>(
@@ -61,10 +59,46 @@ void main() {
               ),
             ).captured.single
             as Map<String, dynamic>;
-    expect(captured['grant_type'], 'authorization_code');
-    expect(captured['code'], 'the-code');
-    expect(captured['code_verifier'], 'verifier-1');
-    expect(captured['client_id'], 'vanep-mobile');
+    expect(captured, {
+      'grant_type': 'urn:vanep:params:oauth:grant-type:password',
+      'username': 'ana@vanep.com.br',
+      'password': 'secret1',
+      'client_id': 'vanep-mobile',
+    });
+  });
+
+  test('requestGoogleGrant posts the Google ID token grant', () async {
+    when(
+      () => dio.post<Map<String, dynamic>>(
+        any(),
+        data: any(named: 'data'),
+        options: any(named: 'options'),
+      ),
+    ).thenAnswer(
+      (_) async => _ok({
+        'access_token': 'access-1',
+        'token_type': 'Bearer',
+        'expires_in': 900,
+        'refresh_token': 'refresh-1',
+      }),
+    );
+
+    await remote.requestGoogleGrant('google-id-token');
+
+    final captured =
+        verify(
+              () => dio.post<Map<String, dynamic>>(
+                testEnvironment.tokenEndpoint,
+                data: captureAny(named: 'data'),
+                options: any(named: 'options'),
+              ),
+            ).captured.single
+            as Map<String, dynamic>;
+    expect(captured, {
+      'grant_type': 'urn:vanep:params:oauth:grant-type:google',
+      'id_token': 'google-id-token',
+      'client_id': 'vanep-mobile',
+    });
   });
 
   test('refresh posts the refresh_token grant', () async {

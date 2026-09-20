@@ -46,4 +46,49 @@ void main() {
     final field = tester.widget<TextField>(find.byType(TextField));
     expect(field.maxLength, isNull);
   });
+
+  testWidgets('hides the text when obscureText is set', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'Senha',
+            controller: controller,
+            onChanged: (_) {},
+            obscureText: true,
+          ),
+        ),
+      ),
+    );
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.obscureText, isTrue);
+  });
+
+  testWidgets('a read-only field reports taps', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    var taps = 0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'Data',
+            controller: controller,
+            onChanged: (_) {},
+            readOnly: true,
+            onTap: () => taps++,
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TextField));
+
+    expect(tester.widget<TextField>(find.byType(TextField)).readOnly, isTrue);
+    expect(taps, 1);
+  });
 }

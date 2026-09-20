@@ -9,8 +9,7 @@ class Environment {
   const Environment({
     required this.authBaseUrl,
     required this.oauthClientId,
-    required this.oauthRedirectUri,
-    required this.oauthScopes,
+    this.googleServerClientId = '',
     this.placesApiKeyAndroid = '',
     this.placesApiKeyIos = '',
     this.placesAndroidPackage = '',
@@ -22,8 +21,7 @@ class Environment {
     return Environment(
       authBaseUrl: _require(env, 'AUTH_URL'),
       oauthClientId: _require(env, 'OAUTH_CLIENT_ID'),
-      oauthRedirectUri: _require(env, 'OAUTH_REDIRECT_URI'),
-      oauthScopes: _require(env, 'OAUTH_SCOPES'),
+      googleServerClientId: env.maybeGet('GOOGLE_SERVER_CLIENT_ID') ?? '',
       placesApiKeyAndroid: env.maybeGet('GOOGLE_PLACES_API_KEY_ANDROID') ?? '',
       placesApiKeyIos: env.maybeGet('GOOGLE_PLACES_API_KEY_IOS') ?? '',
       placesAndroidPackage: env.maybeGet('GOOGLE_PLACES_ANDROID_PACKAGE') ?? '',
@@ -37,9 +35,7 @@ class Environment {
 
   final String oauthClientId;
 
-  final String oauthRedirectUri;
-
-  final String oauthScopes;
+  final String googleServerClientId;
 
   final String placesApiKeyAndroid;
 
@@ -51,11 +47,27 @@ class Environment {
 
   final String placesIosBundleId;
 
-  String get authorizationEndpoint => '$authBaseUrl/oauth2/authorize';
-
   String get tokenEndpoint => '$authBaseUrl/oauth2/token';
 
   String get revocationEndpoint => '$authBaseUrl/oauth2/revoke';
+
+  String get signupClientEndpoint => '$authBaseUrl/api/auth/signup/client';
+
+  String get signupDriverEndpoint => '$authBaseUrl/api/auth/signup/driver';
+
+  String get signupAssistantEndpoint =>
+      '$authBaseUrl/api/auth/signup/assistant';
+
+  String get signupCompleteEndpoint => '$authBaseUrl/api/auth/signup/complete';
+
+  String get emailVerifyEndpoint => '$authBaseUrl/api/auth/email/verify';
+
+  String get emailVerifyResendEndpoint =>
+      '$authBaseUrl/api/auth/email/verify/resend';
+
+  String get passwordForgotEndpoint => '$authBaseUrl/api/auth/password/forgot';
+
+  String get passwordResetEndpoint => '$authBaseUrl/api/auth/password/reset';
 
   String get userProfileEndpoint => '$authBaseUrl/api/user/me';
 

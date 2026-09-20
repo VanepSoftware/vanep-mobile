@@ -122,17 +122,611 @@ abstract class AppLocalizations {
   /// **'Sign in'**
   String get loginTitle;
 
-  /// No description provided for @loginCancelled.
+  /// No description provided for @loginHeading.
   ///
   /// In en, this message translates to:
-  /// **'Sign-in was cancelled.'**
-  String get loginCancelled;
+  /// **'Welcome back'**
+  String get loginHeading;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your email and password to continue'**
+  String get loginSubtitle;
+
+  /// No description provided for @loginEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'you@email.com'**
+  String get loginEmailHint;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get hidePassword;
+
+  /// No description provided for @loginOrDivider.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get loginOrDivider;
+
+  /// No description provided for @loginNoAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account?'**
+  String get loginNoAccount;
 
   /// No description provided for @loginFailed.
   ///
   /// In en, this message translates to:
   /// **'Could not sign in. Please try again.'**
   String get loginFailed;
+
+  /// No description provided for @loginEmailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get loginEmailLabel;
+
+  /// No description provided for @loginPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get loginPasswordLabel;
+
+  /// No description provided for @loginErrorInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password.'**
+  String get loginErrorInvalidCredentials;
+
+  /// No description provided for @loginErrorEmailNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your email to sign in.'**
+  String get loginErrorEmailNotVerified;
+
+  /// No description provided for @loginErrorAccountLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many failed attempts. Try again in a few minutes.'**
+  String get loginErrorAccountLocked;
+
+  /// No description provided for @loginErrorAccountDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been deactivated.'**
+  String get loginErrorAccountDisabled;
+
+  /// No description provided for @authErrorTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Wait a moment and try again.'**
+  String get authErrorTooManyRequests;
+
+  /// No description provided for @loginWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
+  String get loginWithGoogle;
+
+  /// No description provided for @loginErrorGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not sign in with Google. Try again.'**
+  String get loginErrorGoogle;
+
+  /// No description provided for @signupGoogleRegisteredSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-up complete! Sign in with Google to continue.'**
+  String get signupGoogleRegisteredSignIn;
+
+  /// No description provided for @signupCreateAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get signupCreateAccount;
+
+  /// No description provided for @signupChooseTypeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you want to use Vanep?'**
+  String get signupChooseTypeTitle;
+
+  /// No description provided for @signupTypeClient.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m a client (guardian)'**
+  String get signupTypeClient;
+
+  /// No description provided for @signupTypeDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m a driver'**
+  String get signupTypeDriver;
+
+  /// No description provided for @signupTypeAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m an assistant'**
+  String get signupTypeAssistant;
+
+  /// No description provided for @signupChooseTypeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the account type that fits you.'**
+  String get signupChooseTypeSubtitle;
+
+  /// No description provided for @signupTypeClientDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Find and hire school transport for your dependents.'**
+  String get signupTypeClientDescription;
+
+  /// No description provided for @signupTypeDriverDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer school transport with your van.'**
+  String get signupTypeDriverDescription;
+
+  /// No description provided for @signupTypeAssistantDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Look after the students on a driver\'s routes.'**
+  String get signupTypeAssistantDescription;
+
+  /// No description provided for @signupAlreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get signupAlreadyHaveAccount;
+
+  /// No description provided for @signupSectionAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in details'**
+  String get signupSectionAccess;
+
+  /// No description provided for @signupSectionPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal details'**
+  String get signupSectionPersonal;
+
+  /// No description provided for @signupSectionProfessional.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional details'**
+  String get signupSectionProfessional;
+
+  /// No description provided for @signupContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get signupContinue;
+
+  /// No description provided for @signupStepProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String signupStepProgress(int current, int total);
+
+  /// No description provided for @signupStepAccessSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You will use this email and password to sign in.'**
+  String get signupStepAccessSubtitle;
+
+  /// No description provided for @signupStepPersonalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We need these details to identify your account.'**
+  String get signupStepPersonalSubtitle;
+
+  /// No description provided for @signupStepProfessionalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us a little about your transport service.'**
+  String get signupStepProfessionalSubtitle;
+
+  /// No description provided for @signupStepConfirmationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review and confirm'**
+  String get signupStepConfirmationTitle;
+
+  /// No description provided for @signupStepConfirmationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your account details and accept the terms to finish.'**
+  String get signupStepConfirmationSubtitle;
+
+  /// No description provided for @signupNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your full name'**
+  String get signupNameHint;
+
+  /// No description provided for @signupPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a password'**
+  String get signupPasswordHint;
+
+  /// No description provided for @signupFieldPasswordConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get signupFieldPasswordConfirmation;
+
+  /// No description provided for @signupPasswordConfirmationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat the password'**
+  String get signupPasswordConfirmationHint;
+
+  /// No description provided for @passwordRequirementMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'At least {min} characters'**
+  String passwordRequirementMinLength(int min);
+
+  /// No description provided for @passwordRequirementUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'One uppercase letter'**
+  String get passwordRequirementUppercase;
+
+  /// No description provided for @passwordRequirementSpecial.
+  ///
+  /// In en, this message translates to:
+  /// **'One special character (e.g. ! @ # \$)'**
+  String get passwordRequirementSpecial;
+
+  /// No description provided for @accountIssuePasswordWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'The password does not meet every requirement.'**
+  String get accountIssuePasswordWeak;
+
+  /// No description provided for @accountIssuePasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The passwords do not match.'**
+  String get accountIssuePasswordMismatch;
+
+  /// No description provided for @signupDocumentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'000.000.000-00'**
+  String get signupDocumentHint;
+
+  /// No description provided for @signupPhoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'(00) 00000-0000'**
+  String get signupPhoneHint;
+
+  /// No description provided for @signupBirthDateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'mm/dd/yyyy'**
+  String get signupBirthDateHint;
+
+  /// No description provided for @signupBasePriceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0.00'**
+  String get signupBasePriceHint;
+
+  /// No description provided for @signupExperienceYearsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0'**
+  String get signupExperienceYearsHint;
+
+  /// No description provided for @signupCnpjHint.
+  ///
+  /// In en, this message translates to:
+  /// **'00.000.000/0000-00'**
+  String get signupCnpjHint;
+
+  /// No description provided for @signupTitleClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Client sign-up'**
+  String get signupTitleClient;
+
+  /// No description provided for @signupTitleDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver sign-up'**
+  String get signupTitleDriver;
+
+  /// No description provided for @signupTitleAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant sign-up'**
+  String get signupTitleAssistant;
+
+  /// No description provided for @signupFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get signupFieldName;
+
+  /// No description provided for @signupFieldDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'CPF'**
+  String get signupFieldDocument;
+
+  /// No description provided for @signupFieldPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get signupFieldPhone;
+
+  /// No description provided for @signupFieldBirthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth date'**
+  String get signupFieldBirthDate;
+
+  /// No description provided for @signupFieldGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Sex'**
+  String get signupFieldGender;
+
+  /// No description provided for @signupFieldCnpj.
+  ///
+  /// In en, this message translates to:
+  /// **'CNPJ (yours or your company\'s)'**
+  String get signupFieldCnpj;
+
+  /// No description provided for @signupFieldExperienceYears.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of experience'**
+  String get signupFieldExperienceYears;
+
+  /// No description provided for @signupFieldBasePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Base price (R\$)'**
+  String get signupFieldBasePrice;
+
+  /// No description provided for @signupAcceptTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'I accept the terms of use'**
+  String get signupAcceptTerms;
+
+  /// No description provided for @emailCodeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {email}.'**
+  String emailCodeSentTo(String email);
+
+  /// No description provided for @emailCodeEnterFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code that was sent to {email}. If it expired or never arrived, ask for a new one below.'**
+  String emailCodeEnterFor(String email);
+
+  /// No description provided for @emailVerificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your email'**
+  String get emailVerificationTitle;
+
+  /// No description provided for @verificationCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get verificationCodeLabel;
+
+  /// No description provided for @verificationCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'000000'**
+  String get verificationCodeHint;
+
+  /// No description provided for @emailVerificationSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get emailVerificationSubmit;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resendCode;
+
+  /// No description provided for @resendCodeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in {seconds}s'**
+  String resendCodeIn(int seconds);
+
+  /// No description provided for @codeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a new code.'**
+  String get codeResent;
+
+  /// No description provided for @emailVerifiedSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Email confirmed! Sign in to continue.'**
+  String get emailVerifiedSignIn;
+
+  /// No description provided for @accountIssueCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6 digits of the code.'**
+  String get accountIssueCodeInvalid;
+
+  /// No description provided for @loginForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot my password'**
+  String get loginForgotPassword;
+
+  /// No description provided for @passwordResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recover password'**
+  String get passwordResetTitle;
+
+  /// No description provided for @passwordResetEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your account email. If it exists, we will send a code so you can create a new password.'**
+  String get passwordResetEmailHint;
+
+  /// No description provided for @passwordResetSendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get passwordResetSendCode;
+
+  /// No description provided for @passwordResetCodeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'If there is an account for {email}, we sent a 6-digit code.'**
+  String passwordResetCodeSentTo(String email);
+
+  /// No description provided for @passwordResetCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new password'**
+  String get passwordResetCodeTitle;
+
+  /// No description provided for @passwordResetNewPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the new password'**
+  String get passwordResetNewPasswordHint;
+
+  /// No description provided for @passwordResetNewPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get passwordResetNewPasswordLabel;
+
+  /// No description provided for @passwordResetSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get passwordResetSubmit;
+
+  /// No description provided for @passwordResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset! Sign in with your new password.'**
+  String get passwordResetDone;
+
+  /// No description provided for @accountIssueRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in this field.'**
+  String get accountIssueRequired;
+
+  /// No description provided for @accountIssueEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email.'**
+  String get accountIssueEmailInvalid;
+
+  /// No description provided for @accountIssueDocumentInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid CPF. Check the numbers entered.'**
+  String get accountIssueDocumentInvalid;
+
+  /// No description provided for @accountIssueNumberInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number.'**
+  String get accountIssueNumberInvalid;
+
+  /// No description provided for @accountIssuePasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'The password must be at least {min} characters long.'**
+  String accountIssuePasswordTooShort(int min);
+
+  /// No description provided for @accountIssueTermsNotAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the terms of use.'**
+  String get accountIssueTermsNotAccepted;
+
+  /// No description provided for @accountIssueBasePriceNotPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'The base price must be greater than zero.'**
+  String get accountIssueBasePriceNotPositive;
+
+  /// No description provided for @accountIssueEmailDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists.'**
+  String get accountIssueEmailDuplicate;
+
+  /// No description provided for @accountIssueDocumentDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this CPF already exists.'**
+  String get accountIssueDocumentDuplicate;
+
+  /// No description provided for @accountIssueRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Check this field.'**
+  String get accountIssueRejected;
+
+  /// No description provided for @accountErrorCheckFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the highlighted fields.'**
+  String get accountErrorCheckFields;
+
+  /// No description provided for @accountErrorInvalidCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired code.'**
+  String get accountErrorInvalidCode;
+
+  /// No description provided for @accountErrorInvalidSignupTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Google sign-up expired. Sign in with Google again.'**
+  String get accountErrorInvalidSignupTicket;
+
+  /// No description provided for @accountErrorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the server. Try again.'**
+  String get accountErrorNetwork;
+
+  /// No description provided for @accountErrorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get accountErrorUnexpected;
 
   /// No description provided for @homeGreeting.
   ///

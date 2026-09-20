@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/modules/auth/data/pkce/pkce_generator.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/google_id_token_source.dart';
 import 'package:vanep_mobile/modules/auth/data/repositories/auth_repository_impl.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
-import 'package:vanep_mobile/modules/auth/domain/value_objects/authorization_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
@@ -30,7 +29,7 @@ void main() {
   late MockOAuthRemoteDataSource remote;
   late MockUserProfileRemoteDataSource profileRemote;
   late MockAuthLocalDataSource local;
-  late MockWebSessionCleaner webSession;
+  late MockGoogleIdTokenSource googleIdTokens;
   late AuthRepositoryImpl repository;
 
   final fixedNow = DateTime.utc(2026, 7, 11, 12);
@@ -41,56 +40,30 @@ void main() {
     remote = MockOAuthRemoteDataSource();
     profileRemote = MockUserProfileRemoteDataSource();
     local = MockAuthLocalDataSource();
-    webSession = MockWebSessionCleaner();
+    googleIdTokens = MockGoogleIdTokenSource();
     repository = AuthRepositoryImpl(
       remote: remote,
       profileRemote: profileRemote,
       local: local,
-      pkce: PkceGenerator(),
-      environment: testEnvironment,
-      webSession: webSession,
+      googleIdTokens: googleIdTokens,
       clock: () => fixedNow,
     );
   });
 
-  group('buildAuthorizationRequest', () {
-    test('builds a PKCE authorize URL with the configured client/redirect', () {
-      final request = repository.buildAuthorizationRequest();
-      final uri = Uri.parse(request.authorizationUrl);
-
-      expect(uri.path, '/oauth2/authorize');
-      expect(uri.queryParameters['response_type'], 'code');
-      expect(uri.queryParameters['client_id'], 'vanep-mobile');
-      expect(
-        uri.queryParameters['redirect_uri'],
-        'com.vanep.vanepmobile://oauth2redirect',
-      );
-      expect(uri.queryParameters['scope'], 'read write');
-      expect(uri.queryParameters['code_challenge_method'], 'S256');
-      expect(uri.queryParameters['code_challenge'], isNotEmpty);
-      expect(uri.queryParameters['state'], request.state);
-      expect(request.codeVerifier, isNotEmpty);
-    });
-  });
-
-  group('exchangeCode', () {
-    const request = AuthorizationRequest(
-      authorizationUrl: 'http://10.0.2.2:8080/oauth2/authorize',
-      redirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-      state: 'state-1',
-      codeVerifier: 'verifier-1',
-    );
+  group('signInWithPassword', () {
+    void stubPasswordGrant() {
+      when(
+        () => remote.requestPasswordGrant(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) async => testTokenResponseDto);
+    }
 
     test(
-      'exchanges, fetches profile, persists and returns the session',
+      'requests the grant, fetches the profile and saves the session',
       () async {
-        when(
-          () => remote.exchangeCode(
-            code: any(named: 'code'),
-            codeVerifier: any(named: 'codeVerifier'),
-            redirectUri: any(named: 'redirectUri'),
-          ),
-        ).thenAnswer((_) async => testTokenResponseDto);
+        stubPasswordGrant();
         when(
           () => remote.fetchProfile(any()),
         ).thenAnswer((_) async => testUserProfileDto);
@@ -98,38 +71,124 @@ void main() {
           () => local.saveSession(any()),
         ).thenAnswer((_) => Future<void>.value());
 
-        final result = await repository.exchangeCode(
-          code: 'the-code',
-          request: request,
+        final result = await repository.signInWithPassword(
+          email: 'ana@vanep.com.br',
+          password: 'secret1',
         );
 
         final session = result.valueOrNull!;
-        expect(session.accessToken, 'access-1');
         expect(session.refreshToken, 'refresh-1');
-        expect(session.profile.token, 'user-token-1');
         expect(session.expiresAt, fixedNow.add(const Duration(seconds: 900)));
+        verify(() => remote.fetchProfile('access-1')).called(1);
         verify(() => local.saveSession(any())).called(1);
       },
     );
 
-    test('maps a Dio error to NetworkAuthFailure', () async {
+    test('maps an OAuth error body to a typed failure', () async {
       when(
-        () => remote.exchangeCode(
-          code: any(named: 'code'),
-          codeVerifier: any(named: 'codeVerifier'),
-          redirectUri: any(named: 'redirectUri'),
+        () => remote.requestPasswordGrant(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
         ),
-      ).thenThrow(_dioError());
+      ).thenThrow(_invalidGrantError());
 
-      final result = await repository.exchangeCode(code: 'x', request: request);
+      final result = await repository.signInWithPassword(
+        email: 'ana@vanep.com.br',
+        password: 'wrong',
+      );
 
-      expect(result.errorOrNull, isA<NetworkAuthFailure>());
+      expect(result.errorOrNull, const InvalidCredentialsAuthFailure());
+      verifyNever(() => local.saveSession(any()));
+    });
+
+    test('a failing profile fetch is a network failure', () async {
+      stubPasswordGrant();
+      when(() => remote.fetchProfile(any())).thenThrow(_dioError());
+
+      final result = await repository.signInWithPassword(
+        email: 'ana@vanep.com.br',
+        password: 'secret1',
+      );
+
+      expect(result.errorOrNull, const NetworkAuthFailure('boom'));
+      verifyNever(() => local.saveSession(any()));
+    });
+  });
+
+  group('signInWithGoogle', () {
+    test('sends the Google ID token and starts the session', () async {
+      when(
+        googleIdTokens.requestIdToken,
+      ).thenAnswer((_) async => 'google-id-token');
+      when(
+        () => remote.requestGoogleGrant(any()),
+      ).thenAnswer((_) async => testTokenResponseDto);
+      when(
+        () => remote.fetchProfile(any()),
+      ).thenAnswer((_) async => testUserProfileDto);
+      when(
+        () => local.saveSession(any()),
+      ).thenAnswer((_) => Future<void>.value());
+
+      final result = await repository.signInWithGoogle();
+
+      expect(result.valueOrNull?.accessToken, 'access-1');
+      verify(() => remote.requestGoogleGrant('google-id-token')).called(1);
+    });
+
+    test('a dismissed chooser is a cancelled failure', () async {
+      when(googleIdTokens.requestIdToken).thenAnswer((_) async => null);
+
+      final result = await repository.signInWithGoogle();
+
+      expect(result.errorOrNull, const CancelledAuthFailure());
+      verifyNever(() => remote.requestGoogleGrant(any()));
+    });
+
+    test('an SDK error is a Google sign-in failure', () async {
+      when(
+        googleIdTokens.requestIdToken,
+      ).thenThrow(const GoogleIdTokenException('clientConfigurationError'));
+
+      final result = await repository.signInWithGoogle();
+
+      expect(
+        result.errorOrNull,
+        const GoogleSignInAuthFailure('clientConfigurationError'),
+      );
+    });
+
+    test('a new Google user gets the registration ticket', () async {
+      when(
+        googleIdTokens.requestIdToken,
+      ).thenAnswer((_) async => 'google-id-token');
+      final options = RequestOptions(path: '/oauth2/token');
+      when(() => remote.requestGoogleGrant(any())).thenThrow(
+        DioException(
+          requestOptions: options,
+          response: Response<Map<String, dynamic>>(
+            requestOptions: options,
+            statusCode: 400,
+            data: const {
+              'error': 'registration_required',
+              'signup_ticket': 'ticket-1',
+              'email': 'novo@gmail.com',
+              'name': 'Novo',
+            },
+          ),
+        ),
+      );
+
+      final result = await repository.signInWithGoogle();
+
+      expect(result.errorOrNull, isA<RegistrationRequiredAuthFailure>());
+      verifyNever(() => local.saveSession(any()));
     });
   });
 
   group('currentSession', () {
     test('returns null when nothing is stored', () async {
-      when(local.readSession).thenReturn(null);
+      when(local.readSession).thenAnswer((_) async => null);
 
       final result = await repository.currentSession();
 
@@ -140,7 +199,7 @@ void main() {
       final valid = testAuthSessionDto(
         expiresAt: fixedNow.add(const Duration(minutes: 10)),
       );
-      when(local.readSession).thenReturn(valid);
+      when(local.readSession).thenAnswer((_) async => valid);
 
       final result = await repository.currentSession();
 
@@ -152,7 +211,7 @@ void main() {
       final expired = testAuthSessionDto(
         expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
       );
-      when(local.readSession).thenReturn(expired);
+      when(local.readSession).thenAnswer((_) async => expired);
       when(() => remote.refresh(any())).thenAnswer(
         (_) async => testTokenResponseDto.copyWith(accessToken: 'access-2'),
       );
@@ -171,7 +230,7 @@ void main() {
       final expired = testAuthSessionDto(
         expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
       );
-      when(local.readSession).thenReturn(expired);
+      when(local.readSession).thenAnswer((_) async => expired);
       when(() => remote.refresh(any())).thenThrow(_invalidGrantError());
       when(local.clearSession).thenAnswer((_) => Future<void>.value());
 
@@ -186,7 +245,7 @@ void main() {
       final expired = testAuthSessionDto(
         expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
       );
-      when(local.readSession).thenReturn(expired);
+      when(local.readSession).thenAnswer((_) async => expired);
       when(() => remote.refresh(any())).thenThrow(_dioError());
 
       final result = await repository.currentSession();
@@ -199,14 +258,14 @@ void main() {
 
   group('signOut', () {
     test(
-      'revokes both tokens, clears the local session and web cookies',
+      'revokes both tokens, clears the local session and signs out of Google',
       () async {
-        when(local.readSession).thenReturn(testAuthSessionDto());
+        when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
         when(
           () => remote.revoke(any(), any()),
         ).thenAnswer((_) => Future<void>.value());
         when(local.clearSession).thenAnswer((_) => Future<void>.value());
-        when(webSession.clear).thenAnswer((_) => Future<void>.value());
+        when(googleIdTokens.signOut).thenAnswer((_) => Future<void>.value());
 
         final result = await repository.signOut();
 
@@ -214,26 +273,26 @@ void main() {
         verify(() => remote.revoke('refresh-1', 'refresh_token')).called(1);
         verify(() => remote.revoke('access-1', 'access_token')).called(1);
         verify(local.clearSession).called(1);
-        verify(webSession.clear).called(1);
+        verify(googleIdTokens.signOut).called(1);
       },
     );
 
-    test('clears web cookies even when there is no stored session', () async {
-      when(local.readSession).thenReturn(null);
+    test('signs out of Google even when there is no stored session', () async {
+      when(local.readSession).thenAnswer((_) async => null);
       when(local.clearSession).thenAnswer((_) => Future<void>.value());
-      when(webSession.clear).thenAnswer((_) => Future<void>.value());
+      when(googleIdTokens.signOut).thenAnswer((_) => Future<void>.value());
 
       final result = await repository.signOut();
 
       expect(result.isOk, isTrue);
       verifyNever(() => remote.revoke(any(), any()));
-      verify(webSession.clear).called(1);
+      verify(googleIdTokens.signOut).called(1);
     });
   });
 
   group('refreshUserProfile', () {
     test('fetches me, persists profile and returns it', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
+      when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       const updated = UserProfileDto(
         token: 'user-token-1',
         name: 'Ana Atualizada',
@@ -253,7 +312,7 @@ void main() {
     });
 
     test('returns unexpected when there is no session', () async {
-      when(local.readSession).thenReturn(null);
+      when(local.readSession).thenAnswer((_) async => null);
 
       final result = await repository.refreshUserProfile();
 
@@ -263,34 +322,37 @@ void main() {
   });
 
   group('patchUserProfile', () {
-    test('patches with touched fields only and persists body profile', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
-      const updated = UserProfileDto(
-        token: 'user-token-1',
-        name: 'Maria Silva',
-        email: 'ana@vanep.com.br',
-        type: UserType.driver,
-      );
-      when(
-        () => profileRemote.patchMe(any()),
-      ).thenAnswer((_) async => updated);
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+    test(
+      'patches with touched fields only and persists body profile',
+      () async {
+        when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
+        const updated = UserProfileDto(
+          token: 'user-token-1',
+          name: 'Maria Silva',
+          email: 'ana@vanep.com.br',
+          type: UserType.driver,
+        );
+        when(
+          () => profileRemote.patchMe(any()),
+        ).thenAnswer((_) async => updated);
+        when(
+          () => local.saveSession(any()),
+        ).thenAnswer((_) => Future<void>.value());
 
-      final builder = ProfilePatchRequestBuilder()..setName('Maria Silva');
-      final result = await repository.patchUserProfile(builder.build());
+        final builder = ProfilePatchRequestBuilder()..setName('Maria Silva');
+        final result = await repository.patchUserProfile(builder.build());
 
-      expect(result.valueOrNull, updated);
-      final body =
-          verify(() => profileRemote.patchMe(captureAny())).captured.single
-              as Map<String, Object?>;
-      expect(body, {'name': 'Maria Silva'});
-      verifyNever(profileRemote.fetchMe);
-    });
+        expect(result.valueOrNull, updated);
+        final body =
+            verify(() => profileRemote.patchMe(captureAny())).captured.single
+                as Map<String, Object?>;
+        expect(body, {'name': 'Maria Silva'});
+        verifyNever(profileRemote.fetchMe);
+      },
+    );
 
     test('maps structured 409 cooldown from dio', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
+      when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       when(() => profileRemote.patchMe(any())).thenThrow(
         DioException(
           requestOptions: RequestOptions(path: '/api/user/me'),
@@ -320,7 +382,7 @@ void main() {
 
   group('requestEmailChange', () {
     test('posts email change then fetches me once', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
+      when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       when(
         () => profileRemote.requestEmailChange(any()),
       ).thenAnswer((_) => Future<void>.value());
@@ -345,7 +407,7 @@ void main() {
     });
 
     test('maps email_duplicate 409', () async {
-      when(local.readSession).thenReturn(testAuthSessionDto());
+      when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       when(() => profileRemote.requestEmailChange(any())).thenThrow(
         DioException(
           requestOptions: RequestOptions(path: '/api/user/me/email-change'),

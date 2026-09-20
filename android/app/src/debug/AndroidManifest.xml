@@ -4,7 +4,7 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- Debug-only: allow cleartext HTTP so the login WebView / API can reach a
+    <!-- Debug-only: allow cleartext HTTP so the API calls can reach a
          local backend (e.g. http://10.0.2.2:8080 from the Android emulator).
          Release builds stay HTTPS-only. -->
     <application android:usesCleartextTraffic="true" />

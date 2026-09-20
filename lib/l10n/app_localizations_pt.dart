@@ -21,10 +21,343 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loginTitle => 'Entrar';
 
   @override
-  String get loginCancelled => 'O login foi cancelado.';
+  String get loginHeading => 'Bem-vindo de volta';
+
+  @override
+  String get loginSubtitle => 'Entre com seu e-mail e senha para continuar';
+
+  @override
+  String get loginEmailHint => 'seu@email.com';
+
+  @override
+  String get showPassword => 'Mostrar senha';
+
+  @override
+  String get hidePassword => 'Ocultar senha';
+
+  @override
+  String get loginOrDivider => 'ou';
+
+  @override
+  String get loginNoAccount => 'Não tem uma conta?';
 
   @override
   String get loginFailed => 'Não foi possível entrar. Tente novamente.';
+
+  @override
+  String get loginEmailLabel => 'E-mail';
+
+  @override
+  String get loginPasswordLabel => 'Senha';
+
+  @override
+  String get loginErrorInvalidCredentials => 'E-mail ou senha incorretos.';
+
+  @override
+  String get loginErrorEmailNotVerified => 'Confirme seu e-mail para entrar.';
+
+  @override
+  String get loginErrorAccountLocked =>
+      'Muitas tentativas sem sucesso. Tente de novo em alguns minutos.';
+
+  @override
+  String get loginErrorAccountDisabled => 'Esta conta foi desativada.';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Muitas requisições. Aguarde um instante e tente de novo.';
+
+  @override
+  String get loginWithGoogle => 'Entrar com Google';
+
+  @override
+  String get loginErrorGoogle =>
+      'Não foi possível entrar com o Google. Tente novamente.';
+
+  @override
+  String get signupGoogleRegisteredSignIn =>
+      'Cadastro concluído! Entre com o Google para continuar.';
+
+  @override
+  String get signupCreateAccount => 'Criar conta';
+
+  @override
+  String get signupChooseTypeTitle => 'Como você quer usar a Vanep?';
+
+  @override
+  String get signupTypeClient => 'Sou cliente (responsável)';
+
+  @override
+  String get signupTypeDriver => 'Sou motorista';
+
+  @override
+  String get signupTypeAssistant => 'Sou assistente';
+
+  @override
+  String get signupChooseTypeSubtitle =>
+      'Escolha o tipo de conta que combina com você.';
+
+  @override
+  String get signupTypeClientDescription =>
+      'Encontre e contrate transporte escolar para seus dependentes.';
+
+  @override
+  String get signupTypeDriverDescription =>
+      'Ofereça transporte escolar com a sua van.';
+
+  @override
+  String get signupTypeAssistantDescription =>
+      'Acompanhe os alunos durante as rotas de um motorista.';
+
+  @override
+  String get signupAlreadyHaveAccount => 'Já tem uma conta?';
+
+  @override
+  String get signupSectionAccess => 'Dados de acesso';
+
+  @override
+  String get signupSectionPersonal => 'Dados pessoais';
+
+  @override
+  String get signupSectionProfessional => 'Dados profissionais';
+
+  @override
+  String get signupContinue => 'Continuar';
+
+  @override
+  String signupStepProgress(int current, int total) {
+    return 'Etapa $current de $total';
+  }
+
+  @override
+  String get signupStepAccessSubtitle =>
+      'Você vai usar o e-mail e a senha para entrar no app.';
+
+  @override
+  String get signupStepPersonalSubtitle =>
+      'Precisamos desses dados para identificar a sua conta.';
+
+  @override
+  String get signupStepProfessionalSubtitle =>
+      'Conte um pouco sobre o seu serviço de transporte.';
+
+  @override
+  String get signupStepConfirmationTitle => 'Revise e confirme';
+
+  @override
+  String get signupStepConfirmationSubtitle =>
+      'Confira os dados da conta e aceite os termos para concluir.';
+
+  @override
+  String get signupNameHint => 'Seu nome completo';
+
+  @override
+  String get signupPasswordHint => 'Crie uma senha';
+
+  @override
+  String get signupFieldPasswordConfirmation => 'Confirmar senha';
+
+  @override
+  String get signupPasswordConfirmationHint => 'Repita a senha';
+
+  @override
+  String passwordRequirementMinLength(int min) {
+    return 'Mínimo de $min caracteres';
+  }
+
+  @override
+  String get passwordRequirementUppercase => 'Uma letra maiúscula';
+
+  @override
+  String get passwordRequirementSpecial =>
+      'Um caractere especial (ex.: ! @ # \$)';
+
+  @override
+  String get accountIssuePasswordWeak =>
+      'A senha não atende a todos os requisitos.';
+
+  @override
+  String get accountIssuePasswordMismatch => 'As senhas não coincidem.';
+
+  @override
+  String get signupDocumentHint => '000.000.000-00';
+
+  @override
+  String get signupPhoneHint => '(00) 00000-0000';
+
+  @override
+  String get signupBirthDateHint => 'dd/mm/aaaa';
+
+  @override
+  String get signupBasePriceHint => '0,00';
+
+  @override
+  String get signupExperienceYearsHint => '0';
+
+  @override
+  String get signupCnpjHint => '00.000.000/0000-00';
+
+  @override
+  String get signupTitleClient => 'Cadastro de cliente';
+
+  @override
+  String get signupTitleDriver => 'Cadastro de motorista';
+
+  @override
+  String get signupTitleAssistant => 'Cadastro de assistente';
+
+  @override
+  String get signupFieldName => 'Nome';
+
+  @override
+  String get signupFieldDocument => 'CPF';
+
+  @override
+  String get signupFieldPhone => 'Telefone';
+
+  @override
+  String get signupFieldBirthDate => 'Data de nascimento';
+
+  @override
+  String get signupFieldGender => 'Sexo';
+
+  @override
+  String get signupFieldCnpj => 'CNPJ (próprio ou da empresa)';
+
+  @override
+  String get signupFieldExperienceYears => 'Anos de experiência';
+
+  @override
+  String get signupFieldBasePrice => 'Valor base (R\$)';
+
+  @override
+  String get signupAcceptTerms => 'Aceito os termos de uso';
+
+  @override
+  String emailCodeSentTo(String email) {
+    return 'Enviamos um código de 6 dígitos para $email.';
+  }
+
+  @override
+  String emailCodeEnterFor(String email) {
+    return 'Digite o código de 6 dígitos que foi enviado para $email. Se ele expirou ou não chegou, peça um novo abaixo.';
+  }
+
+  @override
+  String get emailVerificationTitle => 'Confirme seu e-mail';
+
+  @override
+  String get verificationCodeLabel => 'Código';
+
+  @override
+  String get verificationCodeHint => '000000';
+
+  @override
+  String get emailVerificationSubmit => 'Confirmar';
+
+  @override
+  String get resendCode => 'Reenviar código';
+
+  @override
+  String resendCodeIn(int seconds) {
+    return 'Reenviar código em ${seconds}s';
+  }
+
+  @override
+  String get codeResent => 'Enviamos um novo código.';
+
+  @override
+  String get emailVerifiedSignIn => 'E-mail confirmado! Entre para continuar.';
+
+  @override
+  String get accountIssueCodeInvalid => 'Informe os 6 dígitos do código.';
+
+  @override
+  String get loginForgotPassword => 'Esqueci minha senha';
+
+  @override
+  String get passwordResetTitle => 'Recuperar senha';
+
+  @override
+  String get passwordResetEmailHint =>
+      'Informe o e-mail da sua conta. Se ela existir, enviaremos um código para você criar uma nova senha.';
+
+  @override
+  String get passwordResetSendCode => 'Enviar código';
+
+  @override
+  String passwordResetCodeSentTo(String email) {
+    return 'Se houver uma conta com $email, enviamos um código de 6 dígitos.';
+  }
+
+  @override
+  String get passwordResetCodeTitle => 'Crie uma nova senha';
+
+  @override
+  String get passwordResetNewPasswordHint => 'Digite a nova senha';
+
+  @override
+  String get passwordResetNewPasswordLabel => 'Nova senha';
+
+  @override
+  String get passwordResetSubmit => 'Redefinir senha';
+
+  @override
+  String get passwordResetDone => 'Senha redefinida! Entre com a nova senha.';
+
+  @override
+  String get accountIssueRequired => 'Preencha este campo.';
+
+  @override
+  String get accountIssueEmailInvalid => 'E-mail inválido.';
+
+  @override
+  String get accountIssueDocumentInvalid =>
+      'CPF inválido. Verifique os números informados.';
+
+  @override
+  String get accountIssueNumberInvalid => 'Informe um número válido.';
+
+  @override
+  String accountIssuePasswordTooShort(int min) {
+    return 'A senha deve ter ao menos $min caracteres.';
+  }
+
+  @override
+  String get accountIssueTermsNotAccepted =>
+      'É necessário aceitar os termos de uso.';
+
+  @override
+  String get accountIssueBasePriceNotPositive =>
+      'O valor base deve ser maior que zero.';
+
+  @override
+  String get accountIssueEmailDuplicate =>
+      'Já existe uma conta com este e-mail.';
+
+  @override
+  String get accountIssueDocumentDuplicate =>
+      'Já existe uma conta com este CPF.';
+
+  @override
+  String get accountIssueRejected => 'Confira este campo.';
+
+  @override
+  String get accountErrorCheckFields => 'Confira os campos destacados.';
+
+  @override
+  String get accountErrorInvalidCode => 'Código inválido ou expirado.';
+
+  @override
+  String get accountErrorInvalidSignupTicket =>
+      'Seu cadastro com o Google expirou. Entre com o Google novamente.';
+
+  @override
+  String get accountErrorNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get accountErrorUnexpected => 'Algo deu errado. Tente novamente.';
 
   @override
   String homeGreeting(String name) {

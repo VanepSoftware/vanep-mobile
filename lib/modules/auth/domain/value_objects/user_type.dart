@@ -4,6 +4,12 @@ enum UserType {
   assistant,
   admin;
 
+  static const List<UserType> signupTypes = [
+    UserType.client,
+    UserType.driver,
+    UserType.assistant,
+  ];
+
   static UserType? fromApi(Object? raw) {
     if (raw is! String) return null;
     final normalized = raw.trim().toUpperCase();

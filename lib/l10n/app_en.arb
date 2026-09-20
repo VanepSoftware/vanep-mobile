@@ -4,8 +4,159 @@
   "welcomeTagline": "School transport, simplified.",
   "continueButton": "Continue",
   "loginTitle": "Sign in",
-  "loginCancelled": "Sign-in was cancelled.",
+  "loginHeading": "Welcome back",
+  "loginSubtitle": "Sign in with your email and password to continue",
+  "loginEmailHint": "you@email.com",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "loginOrDivider": "or",
+  "loginNoAccount": "Don't have an account?",
   "loginFailed": "Could not sign in. Please try again.",
+  "loginEmailLabel": "Email",
+  "loginPasswordLabel": "Password",
+  "loginErrorInvalidCredentials": "Incorrect email or password.",
+  "loginErrorEmailNotVerified": "Confirm your email to sign in.",
+  "loginErrorAccountLocked": "Too many failed attempts. Try again in a few minutes.",
+  "loginErrorAccountDisabled": "This account has been deactivated.",
+  "authErrorTooManyRequests": "Too many requests. Wait a moment and try again.",
+  "loginWithGoogle": "Sign in with Google",
+  "loginErrorGoogle": "Could not sign in with Google. Try again.",
+  "signupGoogleRegisteredSignIn": "Sign-up complete! Sign in with Google to continue.",
+  "signupCreateAccount": "Create account",
+  "signupChooseTypeTitle": "How do you want to use Vanep?",
+  "signupTypeClient": "I'm a client (guardian)",
+  "signupTypeDriver": "I'm a driver",
+  "signupTypeAssistant": "I'm an assistant",
+  "signupChooseTypeSubtitle": "Pick the account type that fits you.",
+  "signupTypeClientDescription": "Find and hire school transport for your dependents.",
+  "signupTypeDriverDescription": "Offer school transport with your van.",
+  "signupTypeAssistantDescription": "Look after the students on a driver's routes.",
+  "signupAlreadyHaveAccount": "Already have an account?",
+  "signupSectionAccess": "Sign-in details",
+  "signupSectionPersonal": "Personal details",
+  "signupSectionProfessional": "Professional details",
+  "signupContinue": "Continue",
+  "signupStepProgress": "Step {current} of {total}",
+  "@signupStepProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "signupStepAccessSubtitle": "You will use this email and password to sign in.",
+  "signupStepPersonalSubtitle": "We need these details to identify your account.",
+  "signupStepProfessionalSubtitle": "Tell us a little about your transport service.",
+  "signupStepConfirmationTitle": "Review and confirm",
+  "signupStepConfirmationSubtitle": "Check your account details and accept the terms to finish.",
+  "signupNameHint": "Your full name",
+  "signupPasswordHint": "Create a password",
+  "signupFieldPasswordConfirmation": "Confirm password",
+  "signupPasswordConfirmationHint": "Repeat the password",
+  "passwordRequirementMinLength": "At least {min} characters",
+  "@passwordRequirementMinLength": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "passwordRequirementUppercase": "One uppercase letter",
+  "passwordRequirementSpecial": "One special character (e.g. ! @ # $)",
+  "accountIssuePasswordWeak": "The password does not meet every requirement.",
+  "accountIssuePasswordMismatch": "The passwords do not match.",
+  "signupDocumentHint": "000.000.000-00",
+  "signupPhoneHint": "(00) 00000-0000",
+  "signupBirthDateHint": "mm/dd/yyyy",
+  "signupBasePriceHint": "0.00",
+  "signupExperienceYearsHint": "0",
+  "signupCnpjHint": "00.000.000/0000-00",
+  "signupTitleClient": "Client sign-up",
+  "signupTitleDriver": "Driver sign-up",
+  "signupTitleAssistant": "Assistant sign-up",
+  "signupFieldName": "Name",
+  "signupFieldDocument": "CPF",
+  "signupFieldPhone": "Phone",
+  "signupFieldBirthDate": "Birth date",
+  "signupFieldGender": "Sex",
+  "signupFieldCnpj": "CNPJ (yours or your company's)",
+  "signupFieldExperienceYears": "Years of experience",
+  "signupFieldBasePrice": "Base price (R$)",
+  "signupAcceptTerms": "I accept the terms of use",
+  "emailCodeSentTo": "We sent a 6-digit code to {email}.",
+  "@emailCodeSentTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "emailCodeEnterFor": "Enter the 6-digit code that was sent to {email}. If it expired or never arrived, ask for a new one below.",
+  "@emailCodeEnterFor": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "emailVerificationTitle": "Confirm your email",
+  "verificationCodeLabel": "Code",
+  "verificationCodeHint": "000000",
+  "emailVerificationSubmit": "Confirm",
+  "resendCode": "Resend code",
+  "resendCodeIn": "Resend code in {seconds}s",
+  "@resendCodeIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "codeResent": "We sent a new code.",
+  "emailVerifiedSignIn": "Email confirmed! Sign in to continue.",
+  "accountIssueCodeInvalid": "Enter the 6 digits of the code.",
+  "loginForgotPassword": "Forgot my password",
+  "passwordResetTitle": "Recover password",
+  "passwordResetEmailHint": "Enter your account email. If it exists, we will send a code so you can create a new password.",
+  "passwordResetSendCode": "Send code",
+  "passwordResetCodeSentTo": "If there is an account for {email}, we sent a 6-digit code.",
+  "@passwordResetCodeSentTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "passwordResetCodeTitle": "Create a new password",
+  "passwordResetNewPasswordHint": "Enter the new password",
+  "passwordResetNewPasswordLabel": "New password",
+  "passwordResetSubmit": "Reset password",
+  "passwordResetDone": "Password reset! Sign in with your new password.",
+  "accountIssueRequired": "Fill in this field.",
+  "accountIssueEmailInvalid": "Invalid email.",
+  "accountIssueDocumentInvalid": "Invalid CPF. Check the numbers entered.",
+  "accountIssueNumberInvalid": "Enter a valid number.",
+  "accountIssuePasswordTooShort": "The password must be at least {min} characters long.",
+  "@accountIssuePasswordTooShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "accountIssueTermsNotAccepted": "You must accept the terms of use.",
+  "accountIssueBasePriceNotPositive": "The base price must be greater than zero.",
+  "accountIssueEmailDuplicate": "An account with this email already exists.",
+  "accountIssueDocumentDuplicate": "An account with this CPF already exists.",
+  "accountIssueRejected": "Check this field.",
+  "accountErrorCheckFields": "Check the highlighted fields.",
+  "accountErrorInvalidCode": "Invalid or expired code.",
+  "accountErrorInvalidSignupTicket": "Your Google sign-up expired. Sign in with Google again.",
+  "accountErrorNetwork": "Could not reach the server. Try again.",
+  "accountErrorUnexpected": "Something went wrong. Try again.",
   "homeGreeting": "Hello, {name}!",
   "@homeGreeting": {
     "placeholders": {

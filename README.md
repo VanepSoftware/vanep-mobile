@@ -43,9 +43,8 @@ cp .env.example .env
 | Variable | Description |
 | --- | --- |
 | `AUTH_URL` | Base URL of the Vanep backend (Spring Authorization Server), **without** `/api`. Android emulator: `http://10.0.2.2:8080` (host's `localhost`). Physical device: your machine's LAN IP (e.g. `http://192.168.0.10:8080`). |
-| `OAUTH_CLIENT_ID` | Public OAuth client id (PKCE, no secret). Must match `VANEP_OAUTH_MOBILE_CLIENT_ID` in `vanep-api-java`. Default: `vanep-mobile`. |
-| `OAUTH_REDIRECT_URI` | Custom-scheme redirect. Must match `VANEP_OAUTH_MOBILE_REDIRECT_URIS` in the backend. Default: `com.vanep.vanepmobile://oauth2redirect`. |
-| `OAUTH_SCOPES` | Space-separated scopes requested at `/oauth2/authorize`. Default: `read write`. |
+| `OAUTH_CLIENT_ID` | Public OAuth client id (no secret). Must match `VANEP_OAUTH_MOBILE_CLIENT_ID` in `vanep-api-java`. Default: `vanep-mobile`. |
+| `GOOGLE_SERVER_CLIENT_ID` | Google **Web** client ID used as `serverClientId` by native Google sign-in. Must be the same value as `GOOGLE_CLIENT_ID` in `vanep-api-java`; the Android OAuth client (package + SHA-1) must also exist in the same Google Cloud project. |
 
 #### Where the OAuth values come from (backend)
 
@@ -64,7 +63,7 @@ the mobile `.env` in sync:
 | Backend (`vanep-api-java`) | Mobile (`vanep-mobile`) |
 | --- | --- |
 | `VANEP_OAUTH_MOBILE_CLIENT_ID` | `OAUTH_CLIENT_ID` |
-| `VANEP_OAUTH_MOBILE_REDIRECT_URIS` | `OAUTH_REDIRECT_URI` |
+| `GOOGLE_CLIENT_ID` (Web client) | `GOOGLE_SERVER_CLIENT_ID` |
 
 ### Run the app
 
@@ -74,21 +73,27 @@ fvm flutter run
 
 ---
 
-## Authentication (OAuth2 + PKCE)
+## Authentication (native)
 
-Login uses the Vanep backend (Spring Authorization Server) via the
-**authorization code + PKCE** flow (public client, no secret):
+Every authentication screen is native Flutter; no WebView or browser is used.
+The backend (Spring Authorization Server) still checks credentials and issues
+the JWTs.
 
-1. On the welcome screen, tap **Continuar**.
-2. An in-app **WebView** opens the backend login page (`/oauth2/authorize`);
-   sign in with e-mail/password or Google.
-3. The backend redirects to `OAUTH_REDIRECT_URI`. The WebView **intercepts** that
-   custom-scheme navigation (no Android/iOS deep link needed) and extracts the
-   authorization `code`.
-4. The app exchanges the code at `/oauth2/token` (with the PKCE `code_verifier`),
-   fetches the profile from `/api/user/me`, and stores the session in
-   **Hive** — so the user stays signed in across app launches.
-5. **Sair** revokes the tokens (`/oauth2/revoke`) and clears the local session.
+1. **Login** posts `grant_type=urn:vanep:params:oauth:grant-type:password` to
+   `/oauth2/token` with `client_id` only (public client).
+2. **Google** uses `google_sign_in` to get an ID token for
+   `GOOGLE_SERVER_CLIENT_ID` and posts
+   `grant_type=urn:vanep:params:oauth:grant-type:google`. A new Google user gets
+   `registration_required` with a `signup_ticket` and completes sign-up in the
+   native form (`/api/auth/signup/complete`).
+3. **Sign-up** posts to `/api/auth/signup/{client|driver|assistant}`, then the
+   user types the 6-digit code from the e-mail (`/api/auth/email/verify`) and is
+   signed in automatically.
+4. **Forgot password** posts to `/api/auth/password/forgot` and
+   `/api/auth/password/reset` with the e-mailed code.
+5. The session (access + rotating refresh token + profile) is stored in
+   **flutter_secure_storage**. `AuthInterceptor` refreshes it with
+   `grant_type=refresh_token`; **Sair** revokes both tokens and clears it.
 
 > Local dev uses cleartext HTTP to reach `10.0.2.2:8080`; this is allowed only in
 > debug builds (`android/app/src/debug/AndroidManifest.xml`). Release builds are

@@ -14,8 +14,6 @@ class MockDio extends Mock implements Dio {}
 const testEnvironment = Environment(
   authBaseUrl: 'http://10.0.2.2:8080',
   oauthClientId: 'vanep-mobile',
-  oauthRedirectUri: 'com.vanep.vanepmobile://oauth2redirect',
-  oauthScopes: 'read write',
 );
 
 void main() {
@@ -40,11 +38,7 @@ void main() {
           'photo': 'https://cdn.example.com/photo.jpg',
           'rating': 4.5,
           'active': true,
-          'user': {
-            'token': 'user-token-1',
-            'name': 'Alex',
-            'type': 'CLIENT',
-          },
+          'user': {'token': 'user-token-1', 'name': 'Alex', 'type': 'CLIENT'},
         },
       ),
     );
@@ -106,13 +100,9 @@ void main() {
     final summary = await remote.fetchSummary(UserType.assistant);
 
     expect(summary, isA<AssistantProfileSummary>());
-    expect(
-      (summary as AssistantProfileSummary).status,
-      AssistantStatus.active,
-    );
+    expect((summary as AssistantProfileSummary).status, AssistantStatus.active);
     verify(
-      () =>
-          dio.get<Map<String, dynamic>>(testEnvironment.assistantsMeEndpoint),
+      () => dio.get<Map<String, dynamic>>(testEnvironment.assistantsMeEndpoint),
     ).called(1);
   });
 

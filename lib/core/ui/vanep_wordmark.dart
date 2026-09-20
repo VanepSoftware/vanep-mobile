@@ -4,23 +4,30 @@ import '../design_system/vanep_colors.dart';
 import '../design_system/vanep_typography.dart';
 
 class VanepWordmark extends StatelessWidget {
-  const VanepWordmark({super.key});
+  const VanepWordmark({
+    this.color = VanepColors.foreground,
+    this.fontSize,
+    super.key,
+  });
+
+  final Color color;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
     return Text.rich(
-      const TextSpan(
+      TextSpan(
         children: [
           TextSpan(
             text: 'vanep',
-            style: TextStyle(color: VanepColors.foreground),
+            style: TextStyle(color: color),
           ),
-          TextSpan(
+          const TextSpan(
             text: '.',
             style: TextStyle(color: VanepColors.brand),
           ),
         ],
-        style: VanepTypography.wordmark,
+        style: VanepTypography.wordmark.copyWith(fontSize: fontSize),
       ),
     );
   }

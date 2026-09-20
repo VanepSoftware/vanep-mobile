@@ -1,98 +1,97 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
 import '../../../../core/result/result.dart';
 import '../../domain/entities/auth_session.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/failures/auth_failure.dart';
 import '../../domain/failures/profile_edit_failure.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../domain/value_objects/authorization_request.dart';
 import '../../domain/value_objects/profile_patch_request.dart';
 import '../datasources/auth_local_datasource.dart';
+import '../datasources/google_id_token_source.dart';
 import '../datasources/oauth_remote_datasource.dart';
 import '../datasources/user_profile_remote_datasource.dart';
-import '../datasources/web_session_cleaner.dart';
 import '../dtos/auth_session_dto.dart';
 import '../dtos/token_response_dto.dart';
 import '../dtos/user_profile_dto.dart';
 import '../mappers/profile_edit_failure_mapper.dart';
-import '../pkce/pkce_generator.dart';
+import '../mappers/token_endpoint_failure_mapper.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this.remote,
     required this.profileRemote,
     required this.local,
-    required this.pkce,
-    required this.environment,
-    required this.webSession,
+    required this.googleIdTokens,
     DateTime Function() clock = DateTime.now,
   }) : _now = clock;
 
   final OAuthRemoteDataSource remote;
   final UserProfileRemoteDataSource profileRemote;
   final AuthLocalDataSource local;
-  final PkceGenerator pkce;
-  final Environment environment;
-  final WebSessionCleaner webSession;
+  final GoogleIdTokenSource googleIdTokens;
   final DateTime Function() _now;
 
   @override
-  AuthorizationRequest buildAuthorizationRequest() {
-    final verifier = pkce.createCodeVerifier();
-    final challenge = pkce.createCodeChallenge(verifier);
-    final state = pkce.createState();
-
-    final url = Uri.parse(environment.authorizationEndpoint).replace(
-      queryParameters: {
-        'response_type': 'code',
-        'client_id': environment.oauthClientId,
-        'redirect_uri': environment.oauthRedirectUri,
-        'scope': environment.oauthScopes,
-        'code_challenge': challenge,
-        'code_challenge_method': 'S256',
-        'state': state,
-      },
-    );
-
-    return AuthorizationRequest(
-      authorizationUrl: url.toString(),
-      redirectUri: environment.oauthRedirectUri,
-      state: state,
-      codeVerifier: verifier,
-    );
+  Future<Result<AuthFailure, AuthSession>> signInWithPassword({
+    required String email,
+    required String password,
+  }) async {
+    final TokenResponseDto token;
+    try {
+      token = await remote.requestPasswordGrant(
+        email: email,
+        password: password,
+      );
+    } on DioException catch (error) {
+      return Err(mapTokenEndpointFailure(error));
+    }
+    return startSessionOrFailure(token);
   }
 
   @override
-  Future<Result<AuthFailure, AuthSession>> exchangeCode({
-    required String code,
-    required AuthorizationRequest request,
-  }) async {
+  Future<Result<AuthFailure, AuthSession>> signInWithGoogle() async {
+    final String? idToken;
     try {
-      final token = await remote.exchangeCode(
-        code: code,
-        codeVerifier: request.codeVerifier,
-        redirectUri: request.redirectUri,
-      );
-      final profile = await remote.fetchProfile(token.accessToken);
-      final session = sessionFromTokenResponse(
-        token: token,
-        profile: profile,
-        now: _now(),
-      );
-      await local.saveSession(session);
-      return Ok(session);
+      idToken = await googleIdTokens.requestIdToken();
+    } on GoogleIdTokenException catch (error) {
+      return Err(GoogleSignInAuthFailure(error.reason));
+    }
+    if (idToken == null) return const Err(CancelledAuthFailure());
+
+    final TokenResponseDto token;
+    try {
+      token = await remote.requestGoogleGrant(idToken);
+    } on DioException catch (error) {
+      return Err(mapTokenEndpointFailure(error));
+    }
+    return startSessionOrFailure(token);
+  }
+
+  Future<Result<AuthFailure, AuthSession>> startSessionOrFailure(
+    TokenResponseDto token,
+  ) async {
+    try {
+      return Ok(await startSessionFromToken(token));
     } on DioException catch (error) {
       return Err(NetworkAuthFailure(error.message));
-    } on Object catch (error) {
-      return Err(UnexpectedAuthFailure(error.toString()));
     }
+  }
+
+  Future<AuthSessionDto> startSessionFromToken(TokenResponseDto token) async {
+    final profile = await remote.fetchProfile(token.accessToken);
+    final session = sessionFromTokenResponse(
+      token: token,
+      profile: profile,
+      now: _now(),
+    );
+    await local.saveSession(session);
+    return session;
   }
 
   @override
   Future<Result<AuthFailure, AuthSession?>> currentSession() async {
-    final stored = local.readSession();
+    final stored = await local.readSession();
     if (stored == null) return const Ok(null);
     if (!stored.isExpired(_now())) return Ok(stored);
 
@@ -117,14 +116,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Result<AuthFailure, void>> signOut() async {
-    final stored = local.readSession();
+    final stored = await local.readSession();
     if (stored != null) {
       await revokeQuietly(remote, stored.refreshToken, 'refresh_token');
       await revokeQuietly(remote, stored.accessToken, 'access_token');
     }
     await local.clearSession();
-
-    await webSession.clear();
+    await googleIdTokens.signOut();
     return const Ok(null);
   }
 
@@ -194,7 +192,7 @@ Future<Result<ProfileEditFailure, UserProfile>> replaceStoredUserProfile({
   required AuthLocalDataSource local,
   required Future<UserProfileDto> Function() loadProfile,
 }) async {
-  final stored = local.readSession();
+  final stored = await local.readSession();
   if (stored == null) {
     return const Err(UnexpectedProfileEditFailure('no_session'));
   }
