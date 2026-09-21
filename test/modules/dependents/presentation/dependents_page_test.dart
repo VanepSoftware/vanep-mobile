@@ -12,9 +12,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_pa
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_card.dart';
 
 import '../dependents_fixtures.dart';
-
-class MockDependentsCubit extends MockCubit<DependentsState>
-    implements DependentsCubit {}
+import '../dependents_mocks.dart';
 
 Widget harness(DependentsCubit cubit) {
   return MaterialApp(
@@ -119,12 +117,12 @@ void main() {
     expect(find.textContaining('ano'), findsOneWidget);
   });
 
-  testWidgets('the first load shows a spinner', (tester) async {
+  testWidgets('the first load shows card skeletons', (tester) async {
     seed(const DependentsState(status: DependentsStatus.loading));
 
     await tester.pumpWidget(harness(cubit));
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(DependentCardSkeleton), findsNWidgets(3));
     expect(find.byType(DependentCard), findsNothing);
   });
 
@@ -139,7 +137,7 @@ void main() {
     await tester.pumpWidget(harness(cubit));
 
     expect(find.byType(DependentCard), findsNWidgets(2));
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(DependentCardSkeleton), findsNothing);
   });
 
   testWidgets('a single dependent offers no default control', (tester) async {
@@ -198,7 +196,10 @@ void main() {
 
     await tester.pumpWidget(harness(cubit));
 
-    expect(find.text('Não foi possível carregar seus dependentes.'), findsOneWidget);
+    expect(
+      find.text('Não foi possível carregar seus dependentes.'),
+      findsOneWidget,
+    );
     expect(find.text('Tentar novamente'), findsOneWidget);
     expect(
       find.text('Você ainda não cadastrou nenhum dependente.'),

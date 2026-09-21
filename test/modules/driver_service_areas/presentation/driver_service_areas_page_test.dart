@@ -7,6 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/domain/failures/service_area_failure.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
@@ -64,11 +65,24 @@ void main() {
   testWidgets('shows the empty state when nothing is registered', (
     tester,
   ) async {
-    seed(const DriverServiceAreasState());
+    seed(const DriverServiceAreasState(status: DriverServiceAreasStatus.ready));
 
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.text('Nenhuma região cadastrada ainda.'), findsOneWidget);
+  });
+
+  testWidgets('shows skeletons instead of the empty state while loading', (
+    tester,
+  ) async {
+    seed(
+      const DriverServiceAreasState(status: DriverServiceAreasStatus.loading),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(find.byType(VanepSkeletonList), findsOneWidget);
+    expect(find.text('Nenhuma região cadastrada ainda.'), findsNothing);
   });
 
   testWidgets('lists the drafts', (tester) async {
