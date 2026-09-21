@@ -607,7 +607,7 @@ void main() {
   });
 
   group('states', () {
-    testWidgets('shows a spinner while loading', (tester) async {
+    testWidgets('shows the field placeholders while loading', (tester) async {
       useTallScreen(tester);
       when(
         () => cubit.state,
@@ -616,7 +616,27 @@ void main() {
       await tester.pumpWidget(personalDataHarness(cubit));
       await tester.pump();
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(PersonalDataSkeleton), findsOneWidget);
+      expect(
+        find.byType(PersonalDataFieldSkeleton),
+        findsNWidgets(personalDataFieldCount),
+      );
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
+
+    testWidgets('the placeholders keep the shape of the real form', (
+      tester,
+    ) async {
+      useTallScreen(tester);
+      when(
+        () => cubit.state,
+      ).thenReturn(const PersonalDataState(status: PersonalDataStatus.loading));
+
+      await tester.pumpWidget(personalDataHarness(cubit));
+      await tester.pump();
+
+      expect(find.byType(VanepPageHeader), findsOneWidget);
+      expect(find.byType(VanepOutlinedPanel), findsNWidgets(2));
     });
 
     testWidgets('a load failure offers a retry', (tester) async {
