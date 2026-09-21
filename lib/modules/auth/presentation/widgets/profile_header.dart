@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
+import '../../../../core/ui/vanep_skeleton.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
@@ -12,6 +14,7 @@ class ProfileHeader extends StatelessWidget {
     this.city,
     this.statusLabel,
     this.statusColor,
+    this.isSummaryLoading = false,
     super.key,
   });
 
@@ -23,16 +26,24 @@ class ProfileHeader extends StatelessWidget {
   final String? statusLabel;
   final Color? statusColor;
 
+  /// True while the profile summary request is in flight; the fields it feeds
+  /// (photo, rating, city, status) render as skeletons until it settles.
+  final bool isSummaryLoading;
+
   @override
   Widget build(BuildContext context) {
     final hasRatingOrCity =
         rating != null || (city != null && city!.isNotEmpty);
     final hasStatus = statusLabel != null && statusLabel!.isNotEmpty;
+    final showMetaSkeleton = isSummaryLoading && !hasRatingOrCity && !hasStatus;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        ProfileAvatar(photoUrl: photoUrl),
+        if (isSummaryLoading && (photoUrl == null || photoUrl!.isEmpty))
+          const VanepSkeleton(child: Bone.circle(size: 72))
+        else
+          ProfileAvatar(photoUrl: photoUrl),
         const SizedBox(width: 16),
         Expanded(
           child: Column(
@@ -53,7 +64,10 @@ class ProfileHeader extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
-              if (hasRatingOrCity) ...[
+              if (showMetaSkeleton) ...[
+                const SizedBox(height: 8),
+                const VanepSkeleton(child: Bone.text(width: 140, fontSize: 13)),
+              ] else if (hasRatingOrCity) ...[
                 const SizedBox(height: 6),
                 Row(
                   children: [
@@ -168,7 +182,7 @@ class ProfileAvatar extends StatelessWidget {
                 width: 26,
                 height: 26,
                 decoration: BoxDecoration(
-                  color: VanepColors.brand.withValues(alpha: 0.45),
+                  color: VanepColors.action,
                   shape: BoxShape.circle,
                   border: Border.all(color: VanepColors.card, width: 2),
                 ),

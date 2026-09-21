@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/result/result.dart';
@@ -17,7 +18,7 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
-import 'package:vanep_mobile/modules/auth/presentation/pages/profile_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/account_drawer.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/profile_header.dart';
 
 import '../../ibge_locations/ibge_locations_mocks.dart';
@@ -68,7 +69,7 @@ class ClientProfile implements UserProfile {
   DateTime? get emailChangeAvailableAt => null;
 }
 
-Widget profileHarness(
+Widget drawerHarness(
   AuthCubit cubit,
   UserProfile profile, {
   String? photoUrl,
@@ -76,7 +77,7 @@ Widget profileHarness(
   String? city,
   String? statusLabel,
   Color? statusColor,
-  Future<void> Function()? onRefresh,
+  bool isSummaryLoading = false,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -90,14 +91,14 @@ Widget profileHarness(
     home: BlocProvider<AuthCubit>.value(
       value: cubit,
       child: Scaffold(
-        body: ProfilePage(
+        body: AccountDrawer(
           profile: profile,
           photoUrl: photoUrl,
           rating: rating,
           city: city,
           statusLabel: statusLabel,
           statusColor: statusColor,
-          onRefresh: onRefresh,
+          isSummaryLoading: isSummaryLoading,
         ),
       ),
     ),
@@ -113,30 +114,76 @@ void main() {
     await getIt.reset();
   });
 
-  testWidgets('shows light profile header and role menu for client', (
+  testWidgets('shows the profile header and account entries for a client', (
     tester,
   ) async {
-    await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
+    await tester.pumpWidget(drawerHarness(cubit, const ClientProfile()));
 
-    expect(find.text('Perfil'), findsWidgets);
+    expect(find.byType(Drawer), findsOneWidget);
     expect(find.text('Alex Morgan'), findsOneWidget);
     expect(find.text('alex.morgan@example.com'), findsOneWidget);
-    expect(find.text('Dados pessoais'), findsOneWidget);
     expect(find.text('Conta'), findsOneWidget);
-    expect(find.text('Serviços'), findsOneWidget);
+    expect(find.text('Dados pessoais'), findsOneWidget);
     expect(find.text('Endereços'), findsNothing);
     expect(find.text('Formas de pagamento'), findsOneWidget);
-    expect(find.text('Gerenciar dependentes'), findsOneWidget);
     expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
+    expect(find.text('Serviços'), findsNothing);
+    expect(find.text('Gerenciar dependentes'), findsNothing);
+    expect(find.text('Contratos'), findsNothing);
 
     await tester.scrollUntilVisible(find.text('Preferências'), 200);
-    expect(find.text('Preferências'), findsOneWidget);
+    expect(find.text('Configurações'), findsOneWidget);
+    expect(find.text('Privacidade e segurança'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Sair'), 200);
     expect(find.text('Sair'), findsOneWidget);
   });
 
+  testWidgets('shows professional data and no service entries for a driver', (
+    tester,
+  ) async {
+    await tester.pumpWidget(drawerHarness(cubit, const FakeUserProfile()));
+
+    expect(find.text('Dados pessoais'), findsOneWidget);
+    expect(find.text('Dados profissionais'), findsOneWidget);
+    expect(find.text('Onde você atende'), findsNothing);
+    expect(find.text('Vans'), findsNothing);
+    expect(find.text('Endereços'), findsNothing);
+  });
+
+  testWidgets('skeletons the summary fields while the summary loads', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      drawerHarness(cubit, const ClientProfile(), isSummaryLoading: true),
+    );
+
+    // Name and e-mail come from the session, so they stay readable.
+    expect(find.text('Alex Morgan'), findsOneWidget);
+    expect(find.text('alex.morgan@example.com'), findsOneWidget);
+    // Photo and rating come from the summary request, so they are shaded.
+    expect(find.byType(VanepSkeleton), findsNWidgets(2));
+    expect(find.byIcon(Icons.photo_camera_outlined), findsNothing);
+  });
+
+  testWidgets('drops the summary skeletons once the rating arrives', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      drawerHarness(
+        cubit,
+        const ClientProfile(),
+        rating: 4.8,
+        isSummaryLoading: false,
+      ),
+    );
+
+    expect(find.byType(VanepSkeleton), findsNothing);
+    expect(find.text('4.8'), findsOneWidget);
+    expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
+  });
+
   testWidgets('disabled menu items do not navigate', (tester) async {
-    await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
+    await tester.pumpWidget(drawerHarness(cubit, const ClientProfile()));
 
     await tester.tap(find.text('Formas de pagamento'));
     await tester.pumpAndSettle();
@@ -174,7 +221,7 @@ void main() {
     );
     when(() => cubit.syncProfile(any())).thenReturn(null);
 
-    await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
+    await tester.pumpWidget(drawerHarness(cubit, const ClientProfile()));
 
     await tester.tap(find.text('Dados pessoais'));
     await tester.pumpAndSettle();
@@ -203,7 +250,7 @@ void main() {
   ) async {
     when(() => cubit.signOut()).thenAnswer((_) async {});
 
-    await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
+    await tester.pumpWidget(drawerHarness(cubit, const ClientProfile()));
 
     await tester.scrollUntilVisible(find.text('Sair'), 200);
     await tester.pumpAndSettle();
@@ -229,7 +276,7 @@ void main() {
   testWidgets('cancelling sign out keeps the session', (tester) async {
     when(() => cubit.signOut()).thenAnswer((_) async {});
 
-    await tester.pumpWidget(profileHarness(cubit, const FakeUserProfile()));
+    await tester.pumpWidget(drawerHarness(cubit, const FakeUserProfile()));
 
     await tester.scrollUntilVisible(find.text('Sair'), 200);
     await tester.pumpAndSettle();
@@ -246,7 +293,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      profileHarness(
+      drawerHarness(
         cubit,
         const FakeUserProfile(),
         rating: 4.8,
@@ -263,7 +310,7 @@ void main() {
 
   testWidgets('assistant header shows status chip under email', (tester) async {
     await tester.pumpWidget(
-      profileHarness(
+      drawerHarness(
         cubit,
         const FakeUserProfile(
           name: 'Assistente',
@@ -287,7 +334,7 @@ void main() {
 
   testWidgets('client header shows rating when provided', (tester) async {
     await tester.pumpWidget(
-      profileHarness(cubit, const ClientProfile(), rating: 4.5),
+      drawerHarness(cubit, const ClientProfile(), rating: 4.5),
     );
 
     expect(find.text('4.5'), findsOneWidget);
@@ -297,7 +344,7 @@ void main() {
   testWidgets('client header does not show rating when omitted', (
     tester,
   ) async {
-    await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
+    await tester.pumpWidget(drawerHarness(cubit, const ClientProfile()));
 
     expect(find.byIcon(Icons.star), findsNothing);
     expect(find.text('4.5'), findsNothing);
@@ -307,7 +354,7 @@ void main() {
     'shows pending email confirmation hint on personal data menu item',
     (tester) async {
       await tester.pumpWidget(
-        profileHarness(
+        drawerHarness(
           cubit,
           const FakeUserProfile(pendingEmail: 'novo@vanep.com.br'),
         ),
@@ -320,29 +367,9 @@ void main() {
   testWidgets(
     'does not show pending email confirmation hint without a pending email',
     (tester) async {
-      await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
+      await tester.pumpWidget(drawerHarness(cubit, const ClientProfile()));
 
       expect(find.text('Confirme seu novo e-mail'), findsNothing);
     },
   );
-
-  testWidgets('pull-to-refresh invokes onRefresh', (tester) async {
-    var refreshed = false;
-    await tester.pumpWidget(
-      profileHarness(
-        cubit,
-        const ClientProfile(),
-        onRefresh: () async {
-          refreshed = true;
-        },
-      ),
-    );
-
-    await tester.fling(find.text('Perfil'), const Offset(0, 300), 1000);
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-    await tester.pumpAndSettle();
-
-    expect(refreshed, isTrue);
-  });
 }

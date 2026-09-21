@@ -18,104 +18,71 @@ Map<ProfileMenuId, bool> enabledById(List<ProfileMenuSection> sections) {
 }
 
 void main() {
-  test('client menu includes account and management items', () {
+  test('client menu keeps only account management items', () {
     final menu = buildProfileMenu(UserType.client);
-    final ids = menuIds(menu);
     final enabled = enabledById(menu);
 
-    expect(
-      ids,
-      [
-        ProfileMenuId.personalData,
-        ProfileMenuId.paymentMethods,
-        ProfileMenuId.dependents,
-        ProfileMenuId.vans,
-        ProfileMenuId.contracts,
-        ProfileMenuId.settings,
-        ProfileMenuId.privacySecurity,
-        ProfileMenuId.signOut,
-      ],
-    );
+    expect(menuIds(menu), [
+      ProfileMenuId.personalData,
+      ProfileMenuId.paymentMethods,
+      ProfileMenuId.settings,
+      ProfileMenuId.privacySecurity,
+      ProfileMenuId.signOut,
+    ]);
     expect(enabled[ProfileMenuId.personalData], isTrue);
     expect(enabled[ProfileMenuId.signOut], isTrue);
     expect(enabled[ProfileMenuId.paymentMethods], isFalse);
-    expect(enabled[ProfileMenuId.dependents], isTrue);
-    expect(
-      menu.map((section) => section.title).toList(),
-      [
-        ProfileMenuSectionTitle.account,
-        ProfileMenuSectionTitle.services,
-        ProfileMenuSectionTitle.preferences,
-        null,
-      ],
-    );
+    expect(menu.map((section) => section.title).toList(), [
+      ProfileMenuSectionTitle.account,
+      ProfileMenuSectionTitle.preferences,
+      null,
+    ]);
   });
 
-  test('driver menu includes professional data and shared items', () {
+  test('driver menu keeps professional data under the account section', () {
     final menu = buildProfileMenu(UserType.driver);
-    final ids = menuIds(menu);
     final enabled = enabledById(menu);
 
-    expect(
-      ids,
-      [
-        ProfileMenuId.personalData,
-        ProfileMenuId.vans,
-        ProfileMenuId.contracts,
-        ProfileMenuId.professionalData,
-        ProfileMenuId.serviceAreas,
-        ProfileMenuId.settings,
-        ProfileMenuId.privacySecurity,
-        ProfileMenuId.signOut,
-      ],
-    );
-    expect(ids, isNot(contains(ProfileMenuId.dependents)));
+    expect(menuIds(menu), [
+      ProfileMenuId.personalData,
+      ProfileMenuId.professionalData,
+      ProfileMenuId.settings,
+      ProfileMenuId.privacySecurity,
+      ProfileMenuId.signOut,
+    ]);
     expect(enabled[ProfileMenuId.personalData], isTrue);
     expect(enabled[ProfileMenuId.professionalData], isFalse);
-    expect(enabled[ProfileMenuId.serviceAreas], isTrue);
     expect(enabled[ProfileMenuId.signOut], isTrue);
-  });
-
-  test('only the driver menu offers service areas', () {
-    expect(
-      menuIds(buildProfileMenu(UserType.client)),
-      isNot(contains(ProfileMenuId.serviceAreas)),
-    );
-    expect(
-      menuIds(buildProfileMenu(UserType.assistant)),
-      isNot(contains(ProfileMenuId.serviceAreas)),
-    );
+    expect(menu.map((section) => section.title).toList(), [
+      ProfileMenuSectionTitle.account,
+      ProfileMenuSectionTitle.preferences,
+      null,
+    ]);
   });
 
   test('assistant menu includes invite item', () {
     final menu = buildProfileMenu(UserType.assistant);
     final ids = menuIds(menu);
 
-    expect(
-      ids,
-      [
-        ProfileMenuId.personalData,
-        ProfileMenuId.assistantInvite,
-        ProfileMenuId.settings,
-        ProfileMenuId.privacySecurity,
-        ProfileMenuId.signOut,
-      ],
-    );
+    expect(ids, [
+      ProfileMenuId.personalData,
+      ProfileMenuId.assistantInvite,
+      ProfileMenuId.settings,
+      ProfileMenuId.privacySecurity,
+      ProfileMenuId.signOut,
+    ]);
     expect(enabledById(menu)[ProfileMenuId.assistantInvite], isFalse);
   });
 
   test('admin and null type get the base menu only', () {
     for (final type in [UserType.admin, null]) {
       final menu = buildProfileMenu(type);
-      expect(
-        menuIds(menu),
-        [
-          ProfileMenuId.personalData,
-          ProfileMenuId.settings,
-          ProfileMenuId.privacySecurity,
-          ProfileMenuId.signOut,
-        ],
-      );
+      expect(menuIds(menu), [
+        ProfileMenuId.personalData,
+        ProfileMenuId.settings,
+        ProfileMenuId.privacySecurity,
+        ProfileMenuId.signOut,
+      ]);
     }
   });
 }

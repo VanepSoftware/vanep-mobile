@@ -40,12 +40,13 @@ void main() {
 
   setUp(() => cubit = MockDriversCubit());
 
-  testWidgets('shows a spinner while loading', (tester) async {
+  testWidgets('shows card skeletons while loading', (tester) async {
     _emit(cubit, const DriversState(status: DriversStatus.loading));
 
     await tester.pumpWidget(_harness(cubit));
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(DriverCardSkeleton), findsNWidgets(3));
+    expect(find.byType(DriverCard), findsNothing);
   });
 
   testWidgets('shows the loaded drivers', (tester) async {

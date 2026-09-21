@@ -800,17 +800,65 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get navNotifications;
 
-  /// No description provided for @navProfile.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile'**
-  String get navProfile;
-
   /// No description provided for @comingSoon.
   ///
   /// In en, this message translates to:
   /// **'Coming soon'**
   String get comingSoon;
+
+  /// No description provided for @navContracts.
+  ///
+  /// In en, this message translates to:
+  /// **'Contracts'**
+  String get navContracts;
+
+  /// No description provided for @navDependents.
+  ///
+  /// In en, this message translates to:
+  /// **'Dependents'**
+  String get navDependents;
+
+  /// No description provided for @navProposals.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposals'**
+  String get navProposals;
+
+  /// No description provided for @navProposalsAndContracts.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposals & contracts'**
+  String get navProposalsAndContracts;
+
+  /// No description provided for @clientHomeNoLinkedVanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No linked van'**
+  String get clientHomeNoLinkedVanTitle;
+
+  /// No description provided for @clientHomeNoLinkedVanMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have a van yet. Find one that serves your area.'**
+  String get clientHomeNoLinkedVanMessage;
+
+  /// No description provided for @clientHomeFindVanButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a van'**
+  String get clientHomeFindVanButton;
+
+  /// No description provided for @driverVansMyVans.
+  ///
+  /// In en, this message translates to:
+  /// **'My vans'**
+  String get driverVansMyVans;
+
+  /// No description provided for @homeMenuTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open menu'**
+  String get homeMenuTooltip;
 
   /// No description provided for @driverShiftStartsAt.
   ///
@@ -854,12 +902,6 @@ abstract class AppLocalizations {
   /// **'Share live location'**
   String get driverShareLiveLocation;
 
-  /// No description provided for @navProposals.
-  ///
-  /// In en, this message translates to:
-  /// **'Proposals'**
-  String get navProposals;
-
   /// No description provided for @navStudents.
   ///
   /// In en, this message translates to:
@@ -889,18 +931,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage dependents'**
   String get profileDependents;
-
-  /// No description provided for @profileVans.
-  ///
-  /// In en, this message translates to:
-  /// **'Vans'**
-  String get profileVans;
-
-  /// No description provided for @profileContracts.
-  ///
-  /// In en, this message translates to:
-  /// **'Contracts'**
-  String get profileContracts;
 
   /// No description provided for @profileProfessionalData.
   ///
@@ -1369,12 +1399,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Covers the whole city'**
   String get driverSearchCoversWholeCity;
-
-  /// No description provided for @profileServiceAreas.
-  ///
-  /// In en, this message translates to:
-  /// **'Where you operate'**
-  String get profileServiceAreas;
 
   /// No description provided for @dependentsSubtitle.
   ///

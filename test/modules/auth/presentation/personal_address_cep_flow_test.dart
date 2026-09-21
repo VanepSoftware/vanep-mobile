@@ -83,7 +83,7 @@ void main() {
     await cubit.load();
     await tester.pumpWidget(
       MaterialApp(
-        theme: VanepTheme.dark(),
+        theme: VanepTheme.light(),
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

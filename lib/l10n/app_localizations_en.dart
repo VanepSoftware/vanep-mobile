@@ -407,10 +407,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navNotifications => 'Notifications';
 
   @override
-  String get navProfile => 'Profile';
+  String get comingSoon => 'Coming soon';
 
   @override
-  String get comingSoon => 'Coming soon';
+  String get navContracts => 'Contracts';
+
+  @override
+  String get navDependents => 'Dependents';
+
+  @override
+  String get navProposals => 'Proposals';
+
+  @override
+  String get navProposalsAndContracts => 'Proposals & contracts';
+
+  @override
+  String get clientHomeNoLinkedVanTitle => 'No linked van';
+
+  @override
+  String get clientHomeNoLinkedVanMessage =>
+      'You don\'t have a van yet. Find one that serves your area.';
+
+  @override
+  String get clientHomeFindVanButton => 'Find a van';
+
+  @override
+  String get driverVansMyVans => 'My vans';
+
+  @override
+  String get homeMenuTooltip => 'Open menu';
 
   @override
   String driverShiftStartsAt(String time) {
@@ -444,9 +469,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverShareLiveLocation => 'Share live location';
 
   @override
-  String get navProposals => 'Proposals';
-
-  @override
   String get navStudents => 'Students';
 
   @override
@@ -461,12 +483,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileDependents => 'Manage dependents';
-
-  @override
-  String get profileVans => 'Vans';
-
-  @override
-  String get profileContracts => 'Contracts';
 
   @override
   String get profileProfessionalData => 'Professional data';
@@ -740,9 +756,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driverSearchCoversWholeCity => 'Covers the whole city';
-
-  @override
-  String get profileServiceAreas => 'Where you operate';
 
   @override
   String get dependentsSubtitle =>

@@ -1,11 +1,7 @@
 import '../value_objects/profile_menu_id.dart';
 import '../value_objects/user_type.dart';
 
-enum ProfileMenuSectionTitle {
-  account,
-  services,
-  preferences,
-}
+enum ProfileMenuSectionTitle { account, services, preferences }
 
 class ProfileMenuEntry {
   const ProfileMenuEntry({required this.id, required this.enabled});
@@ -40,74 +36,46 @@ const _enabledSignOut = ProfileMenuEntry(
   enabled: true,
 );
 
-const _settingsSection = ProfileMenuSection(
-  [
-    ProfileMenuEntry(id: ProfileMenuId.settings, enabled: false),
-    ProfileMenuEntry(id: ProfileMenuId.privacySecurity, enabled: false),
-  ],
-  title: ProfileMenuSectionTitle.preferences,
-);
+const _settingsSection = ProfileMenuSection([
+  ProfileMenuEntry(id: ProfileMenuId.settings, enabled: false),
+  ProfileMenuEntry(id: ProfileMenuId.privacySecurity, enabled: false),
+], title: ProfileMenuSectionTitle.preferences);
 
 const _signOutSection = ProfileMenuSection([_enabledSignOut]);
 
 const _baseMenu = [
-  ProfileMenuSection(
-    [_enabledPersonalData],
-    title: ProfileMenuSectionTitle.account,
-  ),
+  ProfileMenuSection([
+    _enabledPersonalData,
+  ], title: ProfileMenuSectionTitle.account),
   _settingsSection,
   _signOutSection,
 ];
 
 const _clientMenu = [
-  ProfileMenuSection(
-    [
-      _enabledPersonalData,
-      ProfileMenuEntry(id: ProfileMenuId.paymentMethods, enabled: false),
-    ],
-    title: ProfileMenuSectionTitle.account,
-  ),
-  ProfileMenuSection(
-    [
-      ProfileMenuEntry(id: ProfileMenuId.dependents, enabled: true),
-      ProfileMenuEntry(id: ProfileMenuId.vans, enabled: false),
-      ProfileMenuEntry(id: ProfileMenuId.contracts, enabled: false),
-    ],
-    title: ProfileMenuSectionTitle.services,
-  ),
+  ProfileMenuSection([
+    _enabledPersonalData,
+    ProfileMenuEntry(id: ProfileMenuId.paymentMethods, enabled: false),
+  ], title: ProfileMenuSectionTitle.account),
   _settingsSection,
   _signOutSection,
 ];
 
 const _driverMenu = [
-  ProfileMenuSection(
-    [_enabledPersonalData],
-    title: ProfileMenuSectionTitle.account,
-  ),
-  ProfileMenuSection(
-    [
-      ProfileMenuEntry(id: ProfileMenuId.vans, enabled: false),
-      ProfileMenuEntry(id: ProfileMenuId.contracts, enabled: false),
-      ProfileMenuEntry(id: ProfileMenuId.professionalData, enabled: false),
-      ProfileMenuEntry(id: ProfileMenuId.serviceAreas, enabled: true),
-    ],
-    title: ProfileMenuSectionTitle.services,
-  ),
+  ProfileMenuSection([
+    _enabledPersonalData,
+    ProfileMenuEntry(id: ProfileMenuId.professionalData, enabled: false),
+  ], title: ProfileMenuSectionTitle.account),
   _settingsSection,
   _signOutSection,
 ];
 
 const _assistantMenu = [
-  ProfileMenuSection(
-    [_enabledPersonalData],
-    title: ProfileMenuSectionTitle.account,
-  ),
-  ProfileMenuSection(
-    [
-      ProfileMenuEntry(id: ProfileMenuId.assistantInvite, enabled: false),
-    ],
-    title: ProfileMenuSectionTitle.services,
-  ),
+  ProfileMenuSection([
+    _enabledPersonalData,
+  ], title: ProfileMenuSectionTitle.account),
+  ProfileMenuSection([
+    ProfileMenuEntry(id: ProfileMenuId.assistantInvite, enabled: false),
+  ], title: ProfileMenuSectionTitle.services),
   _settingsSection,
   _signOutSection,
 ];
