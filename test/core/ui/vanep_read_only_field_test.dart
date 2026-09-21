@@ -64,4 +64,32 @@ void main() {
     expect(taps, 0);
     expect(tester.widget<TextField>(find.byType(TextField)).enabled, isFalse);
   });
+
+  testWidgets('shows an error below the field', (tester) async {
+    await tester.pumpWidget(
+      host(
+        const VanepReadOnlyField(
+          label: 'Data',
+          value: '01/01/2999',
+          errorText: 'Data no futuro.',
+        ),
+      ),
+    );
+
+    expect(find.text('Data no futuro.'), findsOneWidget);
+  });
+
+  testWidgets('shows the hint while the value is empty', (tester) async {
+    await tester.pumpWidget(
+      host(
+        const VanepReadOnlyField(
+          label: 'Data',
+          value: '',
+          hintText: 'Selecionar data',
+        ),
+      ),
+    );
+
+    expect(find.text('Selecionar data'), findsOneWidget);
+  });
 }

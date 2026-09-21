@@ -23,7 +23,11 @@ abstract class DependentAddress {
 
   String? get complement;
 
-  String? get district;
+  String? get zipCode;
+
+  String? get neighborhood;
+
+  String get cityToken;
 
   String get cityName;
 

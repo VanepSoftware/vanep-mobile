@@ -1379,7 +1379,7 @@ abstract class AppLocalizations {
   /// No description provided for @dependentsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Who rides the van. Each contract binds one dependent.'**
+  /// **'Add and manage the people who ride the van.'**
   String get dependentsSubtitle;
 
   /// No description provided for @dependentsEmpty.
@@ -1484,12 +1484,6 @@ abstract class AppLocalizations {
   /// **'Gender'**
   String get dependentFieldGender;
 
-  /// No description provided for @dependentFieldGenderClear.
-  ///
-  /// In en, this message translates to:
-  /// **'Prefer not to say'**
-  String get dependentFieldGenderClear;
-
   /// No description provided for @dependentErrorNameRequired.
   ///
   /// In en, this message translates to:
@@ -1532,6 +1526,18 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get dependentFailureUnexpected;
 
+  /// No description provided for @dependentFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the details of who rides the van. Only the name is required.'**
+  String get dependentFormSubtitle;
+
+  /// No description provided for @dependentFailureCityNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not find that city. Choose the municipality again.'**
+  String get dependentFailureCityNotFound;
+
   /// No description provided for @dependentFieldAddress.
   ///
   /// In en, this message translates to:
@@ -1544,35 +1550,11 @@ abstract class AppLocalizations {
   /// **'No address set.'**
   String get dependentFieldAddressEmpty;
 
-  /// No description provided for @dependentFieldAddressSearchHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Search address'**
-  String get dependentFieldAddressSearchHint;
-
-  /// No description provided for @dependentFieldAddressNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Number'**
-  String get dependentFieldAddressNumber;
-
-  /// No description provided for @dependentFieldAddressComplement.
-  ///
-  /// In en, this message translates to:
-  /// **'Complement'**
-  String get dependentFieldAddressComplement;
-
   /// No description provided for @dependentFieldAddressRemove.
   ///
   /// In en, this message translates to:
   /// **'Remove address'**
   String get dependentFieldAddressRemove;
-
-  /// No description provided for @dependentAddressNotResolved.
-  ///
-  /// In en, this message translates to:
-  /// **'Could not resolve this address. Pick another suggestion.'**
-  String get dependentAddressNotResolved;
 
   /// No description provided for @profileGenderUnspecified.
   ///

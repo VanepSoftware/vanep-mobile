@@ -9,6 +9,7 @@ import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_d
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
 
+import '../../ibge_locations/ibge_locations_mocks.dart';
 import '../dependents_fixtures.dart';
 import '../dependents_mocks.dart';
 
@@ -26,6 +27,9 @@ void main() {
   DependentFormCubit buildCubit({Dependent? dependent}) => DependentFormCubit(
     createDependent: createDependent,
     updateDependent: updateDependent,
+    lookupCep: MockLookupCep(),
+    listStates: MockListStates(),
+    listCities: MockListCities(),
     dependent: dependent,
   );
 
@@ -151,7 +155,6 @@ void main() {
       when(() => createDependent(any())).thenAnswer(
         (_) async => const Err<DependentFailure, Dependent>(
           DependentValidationFailure(
-            detail: 'Nome muito longo.',
             messagesByField: {DependentField.name: 'Nome muito longo.'},
           ),
         ),

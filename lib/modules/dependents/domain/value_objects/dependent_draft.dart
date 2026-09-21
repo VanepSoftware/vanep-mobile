@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/domain/gender.dart';
 import '../../../../core/domain/iso_calendar_date.dart';
+import '../../../../core/domain/postal_address_draft.dart';
 import '../entities/dependent.dart';
-import 'dependent_address_draft.dart';
 
 enum DependentField { name, birthDate, gender, address }
 
@@ -14,18 +14,15 @@ class DependentDraft extends Equatable {
     this.name = '',
     this.birthDate,
     this.gender,
-    this.address,
+    this.address = const PostalAddressDraft(),
   });
 
   factory DependentDraft.fromDependent(Dependent dependent) {
-    final address = dependent.address;
     return DependentDraft(
       name: dependent.name,
       birthDate: dependent.birthDate,
       gender: dependent.gender,
-      address: address == null
-          ? null
-          : DependentAddressDraft.fromAddress(address),
+      address: dependentAddressDraft(dependent.address),
     );
   }
 
@@ -35,7 +32,7 @@ class DependentDraft extends Equatable {
 
   final Gender? gender;
 
-  final DependentAddressDraft? address;
+  final PostalAddressDraft address;
 
   DependentDraft withName(String value) {
     return DependentDraft(
@@ -64,7 +61,7 @@ class DependentDraft extends Equatable {
     );
   }
 
-  DependentDraft withAddress(DependentAddressDraft? value) {
+  DependentDraft withAddress(PostalAddressDraft value) {
     return DependentDraft(
       name: name,
       birthDate: birthDate,
@@ -75,6 +72,24 @@ class DependentDraft extends Equatable {
 
   @override
   List<Object?> get props => [name, birthDate, gender, address];
+}
+
+PostalAddressDraft dependentAddressDraft(DependentAddress? address) {
+  if (address == null) return const PostalAddressDraft();
+  return PostalAddressDraft.fromParts(
+    zipCode: address.zipCode,
+    cityToken: address.cityToken,
+    cityName: address.cityName,
+    uf: address.stateUf,
+    street: address.street,
+    neighborhood: address.neighborhood,
+    number: address.number,
+    complement: address.complement,
+  );
+}
+
+bool isDependentAddressEdited(DependentDraft draft, Dependent? snapshot) {
+  return !draft.address.sameContentAs(dependentAddressDraft(snapshot?.address));
 }
 
 Map<DependentField, DependentDraftError> validateDependentDraft(
@@ -90,6 +105,16 @@ Map<DependentField, DependentDraftError> validateDependentDraft(
     errors[DependentField.birthDate] = birthDateError;
   }
   return errors;
+}
+
+Set<PostalAddressIssue> findAddressIssues(
+  DependentDraft draft, {
+  Dependent? snapshot,
+}) {
+  if (draft.address.isBlank || !isDependentAddressEdited(draft, snapshot)) {
+    return const {};
+  }
+  return draft.address.issues;
 }
 
 DependentDraftError? findBirthDateError(String? birthDate, {DateTime? today}) {

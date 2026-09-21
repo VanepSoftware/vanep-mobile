@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/domain/iso_calendar_date.dart';
 import '../../../../core/formatters/birth_date_formatter.dart';
-import '../../../../core/formatters/gender_label.dart';
-import '../../../../core/places/place_autocomplete_controller.dart';
+import '../../../../core/ui/vanep_city_picker_sheet.dart';
 import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_gender_chips.dart';
+import '../../../../core/ui/vanep_gender_select.dart';
+import '../../../../core/ui/vanep_page_chrome.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_screen_background.dart';
+import '../../../../core/ui/vanep_read_only_field.dart';
 import '../../../../core/ui/vanep_text_field.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/dependent.dart';
@@ -19,7 +18,8 @@ import '../../domain/value_objects/dependent_draft.dart';
 import '../cubit/dependent_form_cubit.dart';
 import '../cubit/dependent_form_state.dart';
 import '../formatters/dependent_labels.dart';
-import '../widgets/dependent_address_field.dart';
+import '../widgets/dependent_address_section.dart';
+import '../widgets/dependent_city_picker.dart';
 
 const int maxDependentNameLength = 255;
 
@@ -46,123 +46,100 @@ class DependentFormView extends StatefulWidget {
 
 class DependentFormViewState extends State<DependentFormView> {
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController numberController = TextEditingController();
-  final TextEditingController complementController = TextEditingController();
-  final PlaceAutocompleteController autocomplete =
-      getIt<PlaceAutocompleteController>();
 
   @override
   void initState() {
     super.initState();
-    final draft = context.read<DependentFormCubit>().state.draft;
-    nameController.text = draft.name;
-    numberController.text = draft.address?.number ?? '';
-    complementController.text = draft.address?.complement ?? '';
+    nameController.text = context.read<DependentFormCubit>().state.draft.name;
   }
 
   @override
   void dispose() {
     nameController.dispose();
-    numberController.dispose();
-    complementController.dispose();
-    autocomplete.dispose();
     super.dispose();
+  }
+
+  Future<void> openCityPicker() async {
+    final cubit = context.read<DependentFormCubit>();
+    await cubit.refreshCities(cubit.state.draft.address.uf);
+    if (!mounted) return;
+    await showVanepCityPickerSheet(
+      context,
+      builder: (_) =>
+          BlocProvider.value(value: cubit, child: const DependentCityPicker()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return VanepScreenBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: BlocBuilder<DependentFormCubit, DependentFormState>(
-            buildWhen: (previous, current) =>
-                previous.isCreating != current.isCreating,
-            builder: (context, state) => Text(
-              state.isCreating
-                  ? l10n.dependentFormNewTitle
-                  : l10n.dependentFormEditTitle,
+    return BlocConsumer<DependentFormCubit, DependentFormState>(
+      listenWhen: (previous, current) =>
+          current.status == DependentFormStatus.saved ||
+          current.failure != previous.failure,
+      listener: (context, state) {
+        if (state.status == DependentFormStatus.saved) {
+          Navigator.of(context).pop(true);
+          return;
+        }
+        if (!shouldShowDependentFailureFeedback(state.failure)) return;
+        VanepFeedback.showError(
+          context,
+          dependentFailureLabel(l10n, state.failure!),
+        );
+      },
+      builder: (context, state) {
+        final cubit = context.read<DependentFormCubit>();
+
+        return Scaffold(
+          backgroundColor: VanepColors.card,
+          appBar: const VanepAppBar(),
+          body: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            children: [
+              VanepPageHeader(
+                title: state.isCreating
+                    ? l10n.dependentFormNewTitle
+                    : l10n.dependentFormEditTitle,
+                subtitle: l10n.dependentFormSubtitle,
+              ),
+              ...withSpacing([
+                VanepTextField(
+                  label: l10n.dependentFieldName,
+                  controller: nameController,
+                  onChanged: cubit.changeName,
+                  enabled: !state.isSaving,
+                  maxLength: maxDependentNameLength,
+                  textInputAction: TextInputAction.next,
+                  errorText: dependentFieldErrorLabel(
+                    l10n,
+                    state.errorOf(DependentField.name),
+                  ),
+                ),
+                DependentBirthDateField(state: state),
+                VanepGenderSelect(
+                  label: l10n.dependentFieldGender,
+                  value: state.draft.gender,
+                  onChanged: cubit.changeGender,
+                  enabled: !state.isSaving,
+                ),
+                DependentAddressSection(
+                  state: state,
+                  onCityTap: openCityPicker,
+                ),
+              ], 20),
+            ],
+          ),
+          bottomNavigationBar: VanepBottomBar(
+            child: VanepPrimaryButton(
+              label: l10n.dependentFormSave,
+              isLoading: state.isSaving,
+              onPressed: state.isAddressBlockingSave ? null : cubit.save,
             ),
           ),
-        ),
-        body: BlocConsumer<DependentFormCubit, DependentFormState>(
-          listenWhen: (previous, current) =>
-              current.status == DependentFormStatus.saved ||
-              current.failure != previous.failure,
-          listener: (context, state) {
-            if (state.status == DependentFormStatus.saved) {
-              Navigator.of(context).pop(true);
-              return;
-            }
-            if (!shouldShowDependentFailureFeedback(state.failure)) return;
-            VanepFeedback.showError(
-              context,
-              dependentFailureLabel(l10n, state.failure!),
-            );
-          },
-          builder: (context, state) {
-            final cubit = context.read<DependentFormCubit>();
-
-            return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  VanepTextField(
-                    label: l10n.dependentFieldName,
-                    controller: nameController,
-                    onChanged: cubit.changeName,
-                    enabled: !state.isSaving,
-                    maxLength: maxDependentNameLength,
-                    textInputAction: TextInputAction.next,
-                    errorText: dependentFieldErrorLabel(
-                      l10n,
-                      state.errorOf(DependentField.name),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  DependentBirthDateField(state: state),
-                  const SizedBox(height: 20),
-                  Text(
-                    l10n.dependentFieldGender,
-                    style: VanepTypography.cardSubtitle,
-                  ),
-                  const SizedBox(height: 8),
-                  VanepGenderChips(
-                    value: state.draft.gender,
-                    onChanged: cubit.changeGender,
-                    labelOf: (gender) => genderLabel(gender, l10n),
-                  ),
-                  if (state.draft.gender != null)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton(
-                        onPressed: () => cubit.changeGender(null),
-                        child: Text(l10n.dependentFieldGenderClear),
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                  DependentAddressField(
-                    state: state,
-                    autocomplete: autocomplete,
-                    numberController: numberController,
-                    complementController: complementController,
-                  ),
-                  const SizedBox(height: 28),
-                  VanepPrimaryButton(
-                    label: l10n.dependentFormSave,
-                    isLoading: state.isSaving,
-                    onPressed: cubit.save,
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -177,52 +154,33 @@ class DependentBirthDateField extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final cubit = context.read<DependentFormCubit>();
     final locale = Localizations.localeOf(context);
-    final errorText = dependentFieldErrorLabel(
-      l10n,
-      state.errorOf(DependentField.birthDate),
-    );
+    final birthDate = state.draft.birthDate;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(l10n.dependentFieldBirthDate, style: VanepTypography.cardSubtitle),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: state.isSaving
-                    ? null
-                    : () => pickBirthDate(context, state),
-                child: Text(
-                  formatBirthDate(
-                    state.draft.birthDate,
-                    locale,
-                    l10n.dependentFieldBirthDateEmpty,
-                  ),
-                ),
-              ),
+        Expanded(
+          child: VanepReadOnlyField(
+            label: l10n.dependentFieldBirthDate,
+            value: birthDate == null
+                ? ''
+                : formatBirthDate(birthDate, locale, ''),
+            hintText: l10n.dependentFieldBirthDateEmpty,
+            enabled: !state.isSaving,
+            errorText: dependentFieldErrorLabel(
+              l10n,
+              state.errorOf(DependentField.birthDate),
             ),
-            if (state.draft.birthDate != null)
-              IconButton(
-                tooltip: l10n.dependentFieldBirthDateClear,
-                icon: const Icon(
-                  Icons.close,
-                  color: VanepColors.textSecondary,
-                ),
-                onPressed: () => cubit.changeBirthDate(null),
-              ),
-          ],
+            onTap: () => pickBirthDate(context, state),
+          ),
         ),
-        if (errorText != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              errorText,
-              style: VanepTypography.cardSubtitle.copyWith(
-                color: VanepColors.textPrimary,
-              ),
-            ),
+        if (birthDate != null)
+          IconButton(
+            tooltip: l10n.dependentFieldBirthDateClear,
+            icon: const Icon(Icons.close, color: VanepColors.textSecondary),
+            onPressed: state.isSaving
+                ? null
+                : () => cubit.changeBirthDate(null),
           ),
       ],
     );

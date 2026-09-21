@@ -1,17 +1,19 @@
 import '../../../../core/domain/gender.dart';
-import '../../domain/value_objects/dependent_address_draft.dart';
+import '../../../../core/domain/postal_address_draft.dart';
+import '../../../../core/network/postal_address_body.dart';
 import '../../domain/value_objects/dependent_changes.dart';
 import '../../domain/value_objects/dependent_draft.dart';
 
-Map<String, Object?>? dependentAddressToJson(DependentAddressDraft? address) {
-  if (address == null) return null;
-  return {
-    if (address.carriesANewPlace) 'placeId': address.placeId,
-    if (address.carriesANewPlace && hasText(address.sessionToken))
-      'sessionToken': address.sessionToken,
-    'number': normalizeOptional(address.number),
-    'complement': normalizeOptional(address.complement),
-  };
+Map<String, Object?>? dependentAddressToJson(PostalAddressDraft address) {
+  if (address.isBlank) return null;
+  return postalAddressToJson(
+    cityToken: address.cityToken,
+    street: address.street,
+    zipCode: address.zipCode,
+    number: address.number,
+    complement: address.complement,
+    neighborhood: address.neighborhood,
+  );
 }
 
 Map<String, Object?> dependentChangesToJson(DependentChanges changes) {

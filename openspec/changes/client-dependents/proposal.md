@@ -16,7 +16,7 @@ A contract binds exactly one dependent (RN01), and a client cannot send a propos
 ### New Capabilities
 
 - `client-dependents`: a client lists, adds and edits their dependents, and chooses which one is the default; covers the entry point, the list, the form, validation and error handling.
-- `dependent-address`: the address carried by a dependent — selected from Google Places, sent as `placeId` + `sessionToken`, displayed from what the backend resolves.
+- `dependent-address`: the address carried by a dependent — selected from Google Places, sent as `placeId` + `sessionToken`, displayed from what the backend resolves. **Superseded** by `dependent-postal-address` in change `personal-address`: the address is now the shared IBGE postal form and no longer goes through Places.
 
 ### Modified Capabilities
 

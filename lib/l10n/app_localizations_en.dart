@@ -746,7 +746,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dependentsSubtitle =>
-      'Who rides the van. Each contract binds one dependent.';
+      'Add and manage the people who ride the van.';
 
   @override
   String get dependentsEmpty => 'You have not added any dependents yet.';
@@ -814,9 +814,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dependentFieldGender => 'Gender';
 
   @override
-  String get dependentFieldGenderClear => 'Prefer not to say';
-
-  @override
   String get dependentErrorNameRequired => 'Enter the dependent\'s name.';
 
   @override
@@ -842,26 +839,21 @@ class AppLocalizationsEn extends AppLocalizations {
       'Something went wrong. Please try again.';
 
   @override
+  String get dependentFormSubtitle =>
+      'Enter the details of who rides the van. Only the name is required.';
+
+  @override
+  String get dependentFailureCityNotFound =>
+      'We could not find that city. Choose the municipality again.';
+
+  @override
   String get dependentFieldAddress => 'Address';
 
   @override
   String get dependentFieldAddressEmpty => 'No address set.';
 
   @override
-  String get dependentFieldAddressSearchHint => 'Search address';
-
-  @override
-  String get dependentFieldAddressNumber => 'Number';
-
-  @override
-  String get dependentFieldAddressComplement => 'Complement';
-
-  @override
   String get dependentFieldAddressRemove => 'Remove address';
-
-  @override
-  String get dependentAddressNotResolved =>
-      'Could not resolve this address. Pick another suggestion.';
 
   @override
   String get profileGenderUnspecified => 'Prefer not to say';

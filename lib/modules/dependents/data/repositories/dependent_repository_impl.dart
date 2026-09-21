@@ -14,24 +14,34 @@ const Map<String, DependentField> dependentFieldsByApiName = {
   'birthDate': DependentField.birthDate,
   'gender': DependentField.gender,
   'address': DependentField.address,
-  'placeId': DependentField.address,
 };
 
-DependentFailure dependentFailureFrom(DioException exception) {
+const cityNotFoundDetailMarkers = ['cidade', 'city'];
+
+bool isCityNotFoundDetail(String detail) {
+  final normalized = detail.toLowerCase();
+  return cityNotFoundDetailMarkers.any(normalized.contains);
+}
+
+DependentFailure dependentFailureFrom(
+  DioException exception, {
+  bool isCreate = false,
+}) {
   final status = exception.response?.statusCode;
   if (status == null) return const DependentNetworkFailure();
-  if (status == 404) return const DependentNotFoundFailure();
+  final body = exception.response?.data;
+  if (status == 404) {
+    final isCity = isCreate || isCityNotFoundDetail(readProblemDetail(body));
+    return isCity
+        ? const DependentCityNotFoundFailure()
+        : const DependentNotFoundFailure();
+  }
   if (status != 400) return const DependentUnexpectedFailure();
 
-  final body = exception.response?.data;
-  final detail = readProblemDetail(body);
   final field = dependentFieldsByApiName[readProblemField(body)];
-  if (field == null) {
-    return DependentValidationFailure(detail: detail.isEmpty ? null : detail);
-  }
+  if (field == null) return const DependentValidationFailure();
   return DependentValidationFailure(
-    detail: detail.isEmpty ? null : detail,
-    messagesByField: {field: detail},
+    messagesByField: {field: readProblemDetail(body)},
   );
 }
 
@@ -49,7 +59,10 @@ class DependentRepositoryImpl implements DependentRepository {
   Future<Result<DependentFailure, Dependent>> createDependent(
     DependentChanges changes,
   ) {
-    return guardDependentCall(() => remote.createDependent(changes));
+    return guardDependentCall(
+      () => remote.createDependent(changes),
+      isCreate: true,
+    );
   }
 
   @override
@@ -69,12 +82,13 @@ class DependentRepositoryImpl implements DependentRepository {
 }
 
 Future<Result<DependentFailure, T>> guardDependentCall<T>(
-  Future<T> Function() call,
-) async {
+  Future<T> Function() call, {
+  bool isCreate = false,
+}) async {
   try {
     return Ok(await call());
   } on DioException catch (exception) {
-    return Err(dependentFailureFrom(exception));
+    return Err(dependentFailureFrom(exception, isCreate: isCreate));
   } on FormatException {
     return const Err(DependentUnexpectedFailure());
   }

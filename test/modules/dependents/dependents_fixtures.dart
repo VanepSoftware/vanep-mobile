@@ -36,7 +36,9 @@ class TestDependentAddress implements DependentAddress {
     this.street = 'QNL 5 Conjunto A',
     this.number = '12',
     this.complement,
-    this.district = 'Taguatinga',
+    this.zipCode = '72120120',
+    this.neighborhood = 'Taguatinga',
+    this.cityToken = 'city-brasilia',
     this.cityName = 'Brasília',
     this.stateUf = 'DF',
   });
@@ -54,7 +56,13 @@ class TestDependentAddress implements DependentAddress {
   final String? complement;
 
   @override
-  final String? district;
+  final String? zipCode;
+
+  @override
+  final String? neighborhood;
+
+  @override
+  final String cityToken;
 
   @override
   final String cityName;
