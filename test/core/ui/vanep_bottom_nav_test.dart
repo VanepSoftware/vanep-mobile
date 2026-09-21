@@ -16,6 +16,29 @@ const testNavItems = [
   ),
 ];
 
+const crowdedNavItems = [
+  VanepNavItem(
+    icon: Icons.home_outlined,
+    selectedIcon: Icons.home,
+    label: 'Início',
+  ),
+  VanepNavItem(
+    icon: Icons.airport_shuttle_outlined,
+    selectedIcon: Icons.airport_shuttle,
+    label: 'Vans',
+  ),
+  VanepNavItem(
+    icon: Icons.assignment_outlined,
+    selectedIcon: Icons.assignment,
+    label: 'Um rótulo de navegação comprido demais para a barra',
+  ),
+  VanepNavItem(
+    icon: Icons.groups_outlined,
+    selectedIcon: Icons.groups,
+    label: 'Alunos',
+  ),
+];
+
 Widget navHarness({
   required int currentIndex,
   ValueChanged<int>? onDestinationSelected,
@@ -140,5 +163,31 @@ void main() {
     );
 
     handle.dispose();
+  });
+
+  testWidgets('truncates a long selected label instead of overflowing', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 780);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          bottomNavigationBar: VanepBottomNav(
+            items: crowdedNavItems,
+            currentIndex: 2,
+            onDestinationSelected: (_) {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    final label = tester.widget<Text>(find.text(crowdedNavItems[2].label));
+    expect(label.overflow, TextOverflow.ellipsis);
+    expect(label.maxLines, 1);
   });
 }

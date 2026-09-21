@@ -12,6 +12,7 @@ import 'modules/auth/presentation/cubit/auth_state.dart';
 import 'modules/auth/presentation/cubit/login_cubit.dart';
 import 'modules/auth/presentation/pages/login_page.dart';
 import 'modules/auth/domain/value_objects/user_type.dart';
+import 'modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'core/places/place_autocomplete_controller.dart';
 import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
@@ -85,6 +86,9 @@ class AuthGate extends StatelessWidget {
                 ),
                 BlocProvider<DriverSearchCubit>(
                   create: (_) => getIt<DriverSearchCubit>(),
+                ),
+                BlocProvider<DependentsCubit>(
+                  create: (_) => getIt<DependentsCubit>(),
                 ),
               ],
               child: ClientShell(

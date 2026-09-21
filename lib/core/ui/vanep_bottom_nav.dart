@@ -13,6 +13,13 @@ const double _selectedPillOpacity = 0.08;
 /// towards the centre instead of letting them hug the screen edges.
 const EdgeInsets _rowMargin = EdgeInsets.symmetric(horizontal: 24, vertical: 8);
 
+const EdgeInsets _itemPadding = EdgeInsets.symmetric(
+  vertical: 10,
+  horizontal: 16,
+);
+
+const double _navIconSize = 24;
+
 class VanepNavItem {
   const VanepNavItem({
     required this.icon,
@@ -41,30 +48,74 @@ class VanepBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SalomonBottomBar(
-      currentIndex: currentIndex,
-      onTap: onDestinationSelected,
-      backgroundColor: VanepColors.card,
-      selectedItemColor: VanepColors.action,
-      unselectedItemColor: VanepColors.textSecondary,
-      selectedColorOpacity: _selectedPillOpacity,
-      margin: _rowMargin,
-      items: [
-        for (var index = 0; index < items.length; index++)
-          navBarItem(items[index], selected: index == currentIndex),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final labelMaxWidth = measureSelectedLabelMaxWidth(
+          barWidth: constraints.maxWidth,
+          itemCount: items.length,
+        );
+        return SalomonBottomBar(
+          currentIndex: currentIndex,
+          onTap: onDestinationSelected,
+          backgroundColor: VanepColors.card,
+          selectedItemColor: VanepColors.action,
+          unselectedItemColor: VanepColors.textSecondary,
+          selectedColorOpacity: _selectedPillOpacity,
+          margin: _rowMargin,
+          itemPadding: _itemPadding,
+          items: [
+            for (var index = 0; index < items.length; index++)
+              navBarItem(
+                items[index],
+                selected: index == currentIndex,
+                labelMaxWidth: labelMaxWidth,
+              ),
+          ],
+        );
+      },
     );
   }
 }
 
-SalomonBottomBarItem navBarItem(VanepNavItem item, {required bool selected}) {
+double measureSelectedLabelMaxWidth({
+  required double barWidth,
+  required int itemCount,
+}) {
+  final collapsedItemWidth = _navIconSize + _itemPadding.horizontal;
+  final selectedItemChromeWidth =
+      _navIconSize +
+      _itemPadding.left +
+      _itemPadding.left / 2 +
+      _itemPadding.right;
+  final remaining =
+      barWidth -
+      _rowMargin.horizontal -
+      collapsedItemWidth * (itemCount - 1) -
+      selectedItemChromeWidth;
+  return remaining < 0 ? 0 : remaining;
+}
+
+SalomonBottomBarItem navBarItem(
+  VanepNavItem item, {
+  required bool selected,
+  required double labelMaxWidth,
+}) {
   return SalomonBottomBarItem(
     icon: NavItemIcon(item: item, selected: false),
     activeIcon: NavItemIcon(item: item, selected: true),
     // The label is announced by [NavItemIcon] whether or not it is selected;
     // without this the unselected labels would be clipped out of semantics.
     title: ExcludeSemantics(
-      child: Text(item.label, style: VanepTypography.button),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: labelMaxWidth),
+        child: Text(
+          item.label,
+          style: VanepTypography.button,
+          maxLines: 1,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
     ),
   );
 }

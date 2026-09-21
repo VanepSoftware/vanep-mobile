@@ -12,9 +12,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_pa
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_card.dart';
 
 import '../dependents_fixtures.dart';
-
-class MockDependentsCubit extends MockCubit<DependentsState>
-    implements DependentsCubit {}
+import '../dependents_mocks.dart';
 
 Widget harness(DependentsCubit cubit) {
   return MaterialApp(
@@ -198,7 +196,10 @@ void main() {
 
     await tester.pumpWidget(harness(cubit));
 
-    expect(find.text('Não foi possível carregar seus dependentes.'), findsOneWidget);
+    expect(
+      find.text('Não foi possível carregar seus dependentes.'),
+      findsOneWidget,
+    );
     expect(find.text('Tentar novamente'), findsOneWidget);
     expect(
       find.text('Você ainda não cadastrou nenhum dependente.'),

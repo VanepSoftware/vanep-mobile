@@ -27,6 +27,11 @@ class DriverBottomNav extends StatelessWidget {
           label: l10n.navHome,
         ),
         VanepNavItem(
+          icon: Icons.airport_shuttle_outlined,
+          selectedIcon: Icons.airport_shuttle_rounded,
+          label: l10n.navVans,
+        ),
+        VanepNavItem(
           icon: Icons.assignment_outlined,
           selectedIcon: Icons.assignment_rounded,
           label: l10n.navProposals,
@@ -35,11 +40,6 @@ class DriverBottomNav extends StatelessWidget {
           icon: Icons.groups_outlined,
           selectedIcon: Icons.groups_rounded,
           label: l10n.navStudents,
-        ),
-        VanepNavItem(
-          icon: Icons.person_outline,
-          selectedIcon: Icons.person_rounded,
-          label: l10n.navProfile,
         ),
       ],
     );

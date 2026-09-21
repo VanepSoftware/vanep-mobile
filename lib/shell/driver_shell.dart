@@ -7,14 +7,11 @@ import '../l10n/app_localizations.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
 import '../modules/auth/domain/value_objects/onboarding_step.dart';
 import '../modules/auth/presentation/cubit/auth_cubit.dart';
-import '../modules/auth/presentation/pages/profile_page.dart';
 import '../modules/driver/presentation/pages/driver_home_tab.dart';
+import '../modules/driver/presentation/pages/driver_vans_tab.dart';
 import '../modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
-import '../modules/profile/presentation/cubit/profile_summary_cubit.dart';
-import '../modules/profile/presentation/formatters/assistant_status_label.dart';
 import 'driver_bottom_nav.dart';
-
-const driverShellProfileTabIndex = 3;
+import 'shell_account_drawer.dart';
 
 class DriverShell extends StatefulWidget {
   const DriverShell({
@@ -32,6 +29,8 @@ class DriverShell extends StatefulWidget {
 }
 
 class DriverShellState extends State<DriverShell> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   int selectedIndex = 0;
 
   bool onboardingDismissed = false;
@@ -48,46 +47,41 @@ class DriverShellState extends State<DriverShell> {
     final displayName = widget.profile.name ?? widget.profile.email ?? '';
 
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: VanepColors.surface,
+      drawer: ShellAccountDrawer(profile: widget.profile),
+      onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
+        context,
+        widget.profile,
+        isOpened: isOpened,
+      ),
       body: Column(
         children: [
           if (shouldOfferServiceAreas)
             ServiceAreasOnboardingBanner(
-              onStart: () => startServiceAreasOnboarding(context),
+              onStart: () => openServiceAreasAndRefreshProfile(context),
               onSkip: () => setState(() => onboardingDismissed = true),
             ),
           Expanded(
             child: IndexedStack(
               index: selectedIndex,
               children: [
-                DriverHomeTab(displayName: displayName),
+                DriverHomeTab(
+                  displayName: displayName,
+                  onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
+                  onNotificationsTapped: () => openNotifications(context),
+                ),
+                DriverVansTab(
+                  onOpenServiceAreas: () =>
+                      openServiceAreasAndRefreshProfile(context),
+                ),
                 VanepComingSoon(
-                  title: l10n.navProposals,
+                  title: l10n.navProposalsAndContracts,
                   message: l10n.comingSoon,
                 ),
                 VanepComingSoon(
                   title: l10n.navStudents,
                   message: l10n.comingSoon,
-                ),
-                BlocBuilder<ProfileSummaryCubit, ProfileSummaryState>(
-                  builder: (context, summaryState) {
-                    return ProfilePage(
-                      profile: widget.profile,
-                      photoUrl: summaryState.photoUrl,
-                      rating: summaryState.rating,
-                      city: summaryState.city,
-                      statusLabel: assistantStatusLabel(
-                        l10n,
-                        summaryState.assistantStatus,
-                      ),
-                      statusColor: assistantStatusColor(
-                        summaryState.assistantStatus,
-                      ),
-                      isSummaryLoading:
-                          summaryState.status == ProfileSummaryStatus.loading,
-                      onRefresh: refreshProfileTab,
-                    );
-                  },
                 ),
               ],
             ),
@@ -101,7 +95,7 @@ class DriverShellState extends State<DriverShell> {
     );
   }
 
-  Future<void> startServiceAreasOnboarding(BuildContext context) async {
+  Future<void> openServiceAreasAndRefreshProfile(BuildContext context) async {
     await widget.openServiceAreas(context);
     if (!mounted) return;
     await this.context.read<AuthCubit>().refreshSessionProfile();
@@ -109,14 +103,5 @@ class DriverShellState extends State<DriverShell> {
 
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);
-    if (index != driverShellProfileTabIndex) return;
-    refreshProfileTab();
-  }
-
-  Future<void> refreshProfileTab() {
-    return Future.wait<void>([
-      context.read<AuthCubit>().refreshSessionProfile(),
-      context.read<ProfileSummaryCubit>().refresh(widget.profile.type),
-    ]);
   }
 }

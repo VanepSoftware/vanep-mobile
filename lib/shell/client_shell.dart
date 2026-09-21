@@ -5,14 +5,16 @@ import '../core/design_system/vanep_colors.dart';
 import '../core/ui/vanep_coming_soon.dart';
 import '../l10n/app_localizations.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
-import '../modules/auth/presentation/cubit/auth_cubit.dart';
-import '../modules/auth/presentation/pages/profile_page.dart';
-import '../modules/drivers/presentation/pages/drivers_home_tab.dart';
-import '../modules/profile/presentation/cubit/profile_summary_cubit.dart';
-import '../modules/profile/presentation/formatters/assistant_status_label.dart';
+import '../modules/client/presentation/pages/client_home_tab.dart';
+import '../modules/dependents/presentation/cubit/dependents_cubit.dart';
+import '../modules/dependents/presentation/pages/dependents_page.dart';
+import '../modules/drivers/presentation/pages/find_vans_tab.dart';
 import 'client_bottom_nav.dart';
+import 'shell_account_drawer.dart';
 
-const clientShellProfileTabIndex = 3;
+const clientShellVansTabIndex = 1;
+
+const clientShellDependentsTabIndex = 3;
 
 class ClientShell extends StatefulWidget {
   const ClientShell({
@@ -30,6 +32,8 @@ class ClientShell extends StatefulWidget {
 }
 
 class ClientShellState extends State<ClientShell> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   int selectedIndex = 0;
 
   @override
@@ -38,37 +42,26 @@ class ClientShellState extends State<ClientShell> {
     final displayName = widget.profile.name ?? widget.profile.email ?? '';
 
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: VanepColors.surface,
+      drawer: ShellAccountDrawer(profile: widget.profile),
+      onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
+        context,
+        widget.profile,
+        isOpened: isOpened,
+      ),
       body: IndexedStack(
         index: selectedIndex,
         children: [
-          DriversHomeTab(
+          ClientHomeTab(
             displayName: displayName,
-            onSearchTapped: () => widget.openDriverSearch(context),
+            onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
+            onNotificationsTapped: () => openNotifications(context),
+            onFindVanTapped: () => selectShellTab(clientShellVansTabIndex),
           ),
-          VanepComingSoon(title: l10n.navVans, message: l10n.comingSoon),
-          VanepComingSoon(
-            title: l10n.navNotifications,
-            message: l10n.comingSoon,
-          ),
-          BlocBuilder<ProfileSummaryCubit, ProfileSummaryState>(
-            builder: (context, summaryState) {
-              return ProfilePage(
-                profile: widget.profile,
-                photoUrl: summaryState.photoUrl,
-                rating: summaryState.rating,
-                city: summaryState.city,
-                statusLabel: assistantStatusLabel(
-                  l10n,
-                  summaryState.assistantStatus,
-                ),
-                statusColor: assistantStatusColor(summaryState.assistantStatus),
-                isSummaryLoading:
-                    summaryState.status == ProfileSummaryStatus.loading,
-                onRefresh: refreshProfileTab,
-              );
-            },
-          ),
+          FindVansTab(onSearchTapped: () => widget.openDriverSearch(context)),
+          VanepComingSoon(title: l10n.navContracts, message: l10n.comingSoon),
+          const DependentsPage(),
         ],
       ),
       bottomNavigationBar: ClientBottomNav(
@@ -80,14 +73,7 @@ class ClientShellState extends State<ClientShell> {
 
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);
-    if (index != clientShellProfileTabIndex) return;
-    refreshProfileTab();
-  }
-
-  Future<void> refreshProfileTab() {
-    return Future.wait<void>([
-      context.read<AuthCubit>().refreshSessionProfile(),
-      context.read<ProfileSummaryCubit>().refresh(widget.profile.type),
-    ]);
+    if (index != clientShellDependentsTabIndex) return;
+    context.read<DependentsCubit>().loadDependents();
   }
 }
