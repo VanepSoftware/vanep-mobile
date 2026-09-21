@@ -13,13 +13,15 @@ Motivação em `proposal.md`. Contrato em `specs/`: `personal-address`, `postal-
 
 Decisões de comportamento que o código e o stash já têm e que esta change **adota** (não redecide): o endereço é editado numa **página própria** (`PersonalAddressFormPage`), aberta por um cartão com resumo e menu Editar / Limpar endereço, com Salvar próprio; o Salvar da página de dados pessoais só liga com o perfil sujo; o CEP 200 **trava** UF e município (e o bairro, se veio), **substitui** rua e bairro, e uma falha do lookup **destrava** o picker; `CepFailure.notFound` **bloqueia** o Salvar até trocar o CEP. Tudo isso está nas specs.
 
-Estado atual do app (main depois do N-177 e do módulo de dependentes) em que este design se apoia:
+Estado atual do app (main depois do N-177, do módulo de dependentes e do refactor de interface do PR #69) em que este design se apoia:
 
-- Na main, `PersonalDataPage` + `PersonalDataCubit` carregam `GET /api/user/me` e gravam nome/telefone/gênero no `PATCH /api/user/me`. E-mail é um sheet à parte. A página é um único cartão sobre `VanepColors.surface` com campos de sublinhado inline (`PersonalDataInlineField`) e gênero em chips. Não há bloco de endereço nem chamada a `/api/user/me/address`. (As branches 3 a 5 já mudam isso; ver acima.)
+- **Refactor de interface (main, PR #69).** O app saiu do tema escuro para o claro: `VanepTheme.dark()` deu lugar a `VanepTheme.light()`, e os tokens escuros (`backgroundDeep`, `backgroundMid`, `backgroundSoft`, `foreground`, `brand`, `glow*`, `glass*`, `surfaceGradient*`) foram apagados. `VanepGlassCard`, `VanepGradientBackground` e `VanepScreenBackground` **não existem mais**. Entraram `VanepCard`, `VanepMenuCard`, `VanepHomeTopBar`, `VanepComingSoonPage` e `VanepSkeleton`. A gestão de conta saiu da `ProfilePage` (apagada) para uma gaveta lateral: `lib/shell/shell_account_drawer.dart` + `auth/presentation/widgets/account_drawer.dart`, que hoje é dona de `handleProfileMenuSelection`. Os tokens claros em que esta change se apoia (`card`, `action`, `textPrimary`, `textSecondary`, `textMuted`, `cardBorder`, `inputBorder`, `placeholder`, `divider`, `danger`) sobreviveram intactos.
+
+- Na main, `PersonalDataPage` + `PersonalDataCubit` carregam `GET /api/user/me` e gravam nome/telefone/gênero no `PATCH /api/user/me`. E-mail é um sheet à parte. A página é um `Scaffold` + `AppBar` com campos de sublinhado inline (`PersonalDataInlineField` em `PersonalDataRow`) e gênero em chips. Não há bloco de endereço nem chamada a `/api/user/me/address`. (As branches 3 a 5 já mudam isso; ver acima.)
 - `OnboardingStep.personalAddress` já mapeia `PERSONAL_ADDRESS`. Nada na UI lê isso. `SERVICE_AREA` é banner pulável só no `DriverShell`.
 - Autocomplete do Places vive em `lib/core/places/` + `VanepPlaceAutocompleteField` e é usado por **busca**, **área de atuação** e, hoje, pelo **formulário de dependente**. Esta change tira o Places da casa e do dependente. Chaves Android/iOS do Places continuam só para busca e áreas.
 - Menu de perfil do CLIENT tem `ProfileMenuId.addresses` desabilitado. `dependents` já está `enabled: true`. Menus de motorista e assistente não têm `addresses`.
-- **Dependentes (main):** módulo `lib/modules/dependents/` completo. `DependentAddress` tem `street`, `number`, `complement`, `district`, `cityName`, `stateUf`. `DependentAddressDraft` guarda `placeId` + `sessionToken` + `label` + `number` + `complement`; `addressWasEdited` reconhece “só número/complemento mudou” e o body manda `address` sem `placeId` (amend). O formulário usa `VanepPlaceAutocompleteField` e `PlaceAutocompleteController`. Gênero é `VanepGenderChips` + botão “Não informar”. Páginas usam `VanepScreenBackground` + `VanepGlassCard` (visual antigo).
+- **Dependentes (main):** módulo `lib/modules/dependents/` completo. `DependentAddress` tem `street`, `number`, `complement`, `district`, `cityName`, `stateUf`. `DependentAddressDraft` guarda `placeId` + `sessionToken` + `label` + `number` + `complement`; `addressWasEdited` reconhece “só número/complemento mudou” e o body manda `address` sem `placeId` (amend). O formulário usa `VanepPlaceAutocompleteField` e `PlaceAutocompleteController`. Gênero é `VanepGenderChips` + botão “Não informar”. Páginas usam `Scaffold` + `AppBar` e o kit visual da main (`VanepCard`, `VanepSkeletonList`).
 - **Auth nativo (main):** telas de login/cadastro/verificação/reset com a identidade nova. `VanepTextField` (rótulo acima, borda 10, foco `VanepColors.action`) e `VanepPrimaryButton` (`action`, raio 10) foram **alterados em `lib/core/ui/`**; o chrome de página (`AuthAppBar`, `AuthPageHeader`, `AuthIconBadge`, `AuthBottomBar`, `AuthOutlinedPanel`, `AuthFieldRow`, `withSpacing`) mora em `lib/modules/auth/presentation/widgets/auth_page_chrome.dart`. Tokens novos: `VanepColors.action`, `success`, `inputBorder`, `cardBorder`, `placeholder`; `VanepTypography.fieldLabel`, `fieldValue`, `loginTitle`.
 - `Gender` e o formatador de nascimento moram em `lib/core/`. `readProblemDetail` / `readProblemField` em `lib/core/network/problem_detail.dart`. Diretórios de módulo em `snake_case` (`driver_search`, `driver_service_areas`).
 - `AuthRepository` é dono de OAuth, sessão e PATCH/refresh do perfil. Constituição: Clean Architecture, `Result<E, T>`, módulos por feature, teste primeiro, UI de core (R10a/R10b), copy só em ARB, R40a, PRs fatiados (R16–R23), contrato e impl em PRs separados (R20), commit só com validação no aparelho (R27a).
@@ -236,11 +238,13 @@ Não chama GET `/address` depois do 204.
 
 ### D9 — Remover `ProfileMenuId.addresses` por completo
 
-Apagar o valor do enum, a entrada do menu CLIENT, o case no-op do `profile_page`, o ícone em `profile_menu_card`, chaves ARB `profileAddresses` e testes que esperam a linha. Não deixar stub desabilitado. `ProfileMenuId.dependents` fica como está.
+Apagar o valor do enum, a entrada do menu CLIENT, o case no-op do handler de menu, o ícone em `profile_menu_card`, chaves ARB `profileAddresses` e testes que esperam a linha. Não deixar stub desabilitado. `ProfileMenuId.dependents` fica como está.
 
-**Origem:** já feito na branch 4 (enum, menu CLIENT, `profile_page`, `profile_menu_card`, ARB); é portado como está.
+**Origem:** já feito na branch 4 (enum, menu CLIENT, handler, `profile_menu_card`, ARB); é portado como está.
 
-Papéis compartilham a `PersonalDataPage`; shells não mexem. Sem banner de `PERSONAL_ADDRESS`. Banner de `SERVICE_AREA` do motorista fica. `ProfilePage` só perde a linha; não é restilizada (D13).
+**Onde mora o handler.** A `ProfilePage` não existe mais: a main (PR #69) moveu o menu de conta para uma gaveta lateral e `handleProfileMenuSelection` foi de `auth/presentation/pages/profile_page.dart` para `auth/presentation/widgets/account_drawer.dart` (a gaveta é montada por `lib/shell/shell_account_drawer.dart`). É nesse arquivo que o case de `addresses` sai.
+
+Papéis compartilham a `PersonalDataPage`; shells não mexem. Sem banner de `PERSONAL_ADDRESS`. Banner de `SERVICE_AREA` do motorista fica. A gaveta de conta só perde a linha; não é restilizada (D13).
 
 ### D10 — 400 de cidade sem município IBGE não é lista vazia
 
@@ -312,9 +316,11 @@ Telas do escopo:
 - **Formulário de dependente** — `VanepAppBar`, `VanepTextField` para nome, data de nascimento (campo somente leitura que abre o date picker, no lugar do `OutlinedButton`), `VanepGenderSelect`, `VanepPostalAddressForm` inline, Salvar no `VanepBottomBar`.
 - **`EmailChangeSheet`** — já usa `VanepTextField` / `VanepPrimaryButton`; só revisar tokens (`action`, nada de `brand`).
 
-`VanepScreenBackground` e `VanepGlassCard` deixam de ser usados nessas telas; os widgets ficam (o resto do app os usa).
+`VanepScreenBackground` e `VanepGlassCard` não são usados nessas telas. Os dois widgets **deixaram de existir**: a main (PR #69) apagou os dois junto com o tema escuro, e nenhuma tela do app os usa mais.
 
-**Rejeitado:** trocar o tema do app inteiro agora (decisão do produto: replicação depois). **Rejeitado:** restilizar `ProfilePage` para “combinar” com a página nova. **Rejeitado:** manter `PersonalDataInlineField` (sublinhado inline é a identidade antiga). **Rejeitado:** duplicar o chrome dentro de `dependents`.
+**Rejeitado:** trocar o tema do app inteiro nesta change (decisão do produto: replicação depois — a main já fez essa replicação no PR #69, num kit próprio: `VanepCard`, `VanepMenuCard`, `VanepHomeTopBar`, `VanepSkeleton`). **Rejeitado:** restilizar o menu de conta para “combinar” com a página nova. **Rejeitado:** manter `PersonalDataInlineField` (sublinhado inline é a identidade antiga). **Rejeitado:** duplicar o chrome dentro de `dependents`.
+
+Os dois kits convivem e partem dos mesmos tokens claros (`card`, `action`, `textPrimary`, `cardBorder`, `inputBorder`, `placeholder`), que a main manteve. Unificar `VanepPageChrome` com o kit da main não é escopo desta change.
 
 ### D14 — Dependente: endereço postal ponta a ponta
 
