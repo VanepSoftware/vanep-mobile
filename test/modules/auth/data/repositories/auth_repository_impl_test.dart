@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/google_id_token_source.dart';
 import 'package:vanep_mobile/modules/auth/data/repositories/auth_repository_impl.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/auth_session_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
@@ -256,6 +257,72 @@ void main() {
     });
   });
 
+  group('refreshSession', () {
+    test('renews even when the stored expiry still looks valid', () async {
+      final unexpired = testAuthSessionDto(
+        expiresAt: fixedNow.add(const Duration(minutes: 10)),
+      );
+      when(local.readSession).thenAnswer((_) async => unexpired);
+      when(() => remote.refresh(any())).thenAnswer(
+        (_) async => testTokenResponseDto.copyWith(accessToken: 'access-2'),
+      );
+      when(
+        () => local.saveSession(any()),
+      ).thenAnswer((_) => Future<void>.value());
+
+      final result = await repository.refreshSession();
+
+      expect(result.valueOrNull!.accessToken, 'access-2');
+      verify(() => remote.refresh('refresh-1')).called(1);
+    });
+
+    test('spends the refresh token once for concurrent callers', () async {
+      final expired = testAuthSessionDto(
+        expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
+      );
+      when(local.readSession).thenAnswer((_) async => expired);
+      when(() => remote.refresh(any())).thenAnswer((_) async {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        return testTokenResponseDto.copyWith(
+          accessToken: 'access-2',
+          refreshToken: 'refresh-2',
+        );
+      });
+      when(
+        () => local.saveSession(any()),
+      ).thenAnswer((_) => Future<void>.value());
+
+      final results = await Future.wait([
+        repository.refreshSession(),
+        repository.refreshSession(),
+        repository.refreshSession(),
+      ]);
+
+      verify(() => remote.refresh('refresh-1')).called(1);
+      for (final result in results) {
+        expect(result.valueOrNull!.accessToken, 'access-2');
+      }
+    });
+
+    test('starts a new exchange after the previous one settled', () async {
+      final expired = testAuthSessionDto(
+        expiresAt: fixedNow.subtract(const Duration(minutes: 1)),
+      );
+      when(local.readSession).thenAnswer((_) async => expired);
+      when(() => remote.refresh(any())).thenAnswer(
+        (_) async => testTokenResponseDto.copyWith(accessToken: 'access-2'),
+      );
+      when(
+        () => local.saveSession(any()),
+      ).thenAnswer((_) => Future<void>.value());
+
+      await repository.refreshSession();
+      await repository.refreshSession();
+
+      verify(() => remote.refresh('refresh-1')).called(2);
+    });
+  });
+
   group('signOut', () {
     test(
       'revokes both tokens, clears the local session and signs out of Google',
@@ -318,6 +385,29 @@ void main() {
 
       expect(result.errorOrNull, isA<UnexpectedProfileEditFailure>());
       verifyNever(profileRemote.fetchMe);
+    });
+
+    test('keeps tokens refreshed while the profile was loading', () async {
+      final before = testAuthSessionDto();
+      final rotated = testAuthSessionDto().copyWith(
+        accessToken: 'access-2',
+        refreshToken: 'refresh-2',
+      );
+      var readCount = 0;
+      when(local.readSession).thenAnswer((_) async {
+        readCount += 1;
+        return readCount == 1 ? before : rotated;
+      });
+      when(profileRemote.fetchMe).thenAnswer((_) async => testUserProfileDto);
+      final saved = <AuthSessionDto>[];
+      when(() => local.saveSession(any())).thenAnswer((invocation) async {
+        saved.add(invocation.positionalArguments.first as AuthSessionDto);
+      });
+
+      await repository.refreshUserProfile();
+
+      expect(saved.single.accessToken, 'access-2');
+      expect(saved.single.refreshToken, 'refresh-2');
     });
   });
 

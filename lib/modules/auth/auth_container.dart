@@ -183,7 +183,7 @@ Dio _buildAuthenticatedDio(GetIt getIt, Environment environment) {
       readAccessToken: () async =>
           (await getIt<AuthLocalDataSource>().readSession())?.accessToken,
       refreshAccessToken: () async {
-        final result = await getIt<AuthRepository>().currentSession();
+        final result = await getIt<AuthRepository>().refreshSession();
         return switch (result) {
           Ok(:final value) => value?.accessToken,
           Err() => null,
