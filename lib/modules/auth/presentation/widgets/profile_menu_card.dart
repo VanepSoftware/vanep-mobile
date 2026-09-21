@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
+import '../../../../core/ui/vanep_menu_card.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/builders/profile_menu_builder.dart';
 import '../../domain/value_objects/profile_menu_id.dart';
@@ -63,143 +64,22 @@ class ProfileMenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Material(
-      color: VanepColors.card,
-      elevation: 1,
-      shadowColor: VanepColors.textPrimary.withValues(alpha: 0.08),
-      borderRadius: BorderRadius.circular(16),
-      child: Column(
-        children: [
-          for (var index = 0; index < section.entries.length; index++) ...[
-            if (index > 0)
-              const Divider(
-                height: 1,
-                thickness: 1,
-                indent: 14,
-                endIndent: 14,
-                color: VanepColors.divider,
-              ),
-            ProfileMenuTile(
-              entry: section.entries[index],
-              label: profileMenuLabel(section.entries[index].id, l10n),
-              icon: profileMenuIcon(section.entries[index].id),
-              subtitle:
-                  pendingEmailConfirmation &&
-                      section.entries[index].id == ProfileMenuId.personalData
-                  ? l10n.profilePendingEmailMenuSubtitle
-                  : null,
-              onTap: section.entries[index].enabled
-                  ? () => onItemSelected(section.entries[index].id)
-                  : null,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class ProfileMenuTile extends StatelessWidget {
-  const ProfileMenuTile({
-    required this.entry,
-    required this.label,
-    required this.icon,
-    this.subtitle,
-    this.onTap,
-    super.key,
-  });
-
-  final ProfileMenuEntry entry;
-  final String label;
-  final IconData icon;
-  final String? subtitle;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final enabled = entry.enabled;
-    final isSignOut = entry.id == ProfileMenuId.signOut;
-    final foreground = !enabled
-        ? VanepColors.textMuted
-        : isSignOut
-        ? VanepColors.danger
-        : VanepColors.textPrimary;
-    final iconColor = !enabled
-        ? VanepColors.textMuted
-        : isSignOut
-        ? VanepColors.danger
-        : VanepColors.textSecondary;
-    final iconBackground = isSignOut && enabled
-        ? VanepColors.danger.withValues(alpha: 0.10)
-        : VanepColors.searchField;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Opacity(
-        opacity: enabled ? 1 : 0.55,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: iconBackground,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, size: 20, color: iconColor),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      label,
-                      style: VanepTypography.cardTitle.copyWith(
-                        color: foreground,
-                      ),
-                    ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 3),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            size: 13,
-                            color: VanepColors.warning,
-                          ),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
-                              subtitle!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: VanepTypography.cardSubtitle.copyWith(
-                                color: VanepColors.warning,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (!isSignOut)
-                Icon(
-                  Icons.chevron_right,
-                  color: enabled ? VanepColors.textMuted : VanepColors.divider,
-                ),
-            ],
+    return VanepMenuCard(
+      items: [
+        for (final entry in section.entries)
+          VanepMenuItem(
+            label: profileMenuLabel(entry.id, l10n),
+            icon: profileMenuIcon(entry.id),
+            enabled: entry.enabled,
+            isDestructive: entry.id == ProfileMenuId.signOut,
+            warningSubtitle:
+                pendingEmailConfirmation &&
+                    entry.id == ProfileMenuId.personalData
+                ? l10n.profilePendingEmailMenuSubtitle
+                : null,
+            onTap: () => onItemSelected(entry.id),
           ),
-        ),
-      ),
+      ],
     );
   }
 }
@@ -208,11 +88,7 @@ String profileMenuLabel(ProfileMenuId id, AppLocalizations l10n) {
   return switch (id) {
     ProfileMenuId.personalData => l10n.profilePersonalData,
     ProfileMenuId.paymentMethods => l10n.profilePaymentMethods,
-    ProfileMenuId.dependents => l10n.profileDependents,
-    ProfileMenuId.vans => l10n.profileVans,
-    ProfileMenuId.contracts => l10n.profileContracts,
     ProfileMenuId.professionalData => l10n.profileProfessionalData,
-    ProfileMenuId.serviceAreas => l10n.profileServiceAreas,
     ProfileMenuId.assistantInvite => l10n.profileAssistantInvite,
     ProfileMenuId.settings => l10n.profileSettings,
     ProfileMenuId.privacySecurity => l10n.profilePrivacySecurity,
@@ -222,12 +98,8 @@ String profileMenuLabel(ProfileMenuId id, AppLocalizations l10n) {
 
 IconData profileMenuIcon(ProfileMenuId id) {
   return switch (id) {
-    ProfileMenuId.serviceAreas => Icons.map_outlined,
     ProfileMenuId.personalData => Icons.person_outline,
     ProfileMenuId.paymentMethods => Icons.credit_card_outlined,
-    ProfileMenuId.dependents => Icons.family_restroom_outlined,
-    ProfileMenuId.vans => Icons.airport_shuttle_outlined,
-    ProfileMenuId.contracts => Icons.description_outlined,
     ProfileMenuId.professionalData => Icons.work_outline,
     ProfileMenuId.assistantInvite => Icons.mail_outline,
     ProfileMenuId.settings => Icons.settings_outlined,

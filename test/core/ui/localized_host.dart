@@ -5,7 +5,7 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 
 Widget localizedHost(Widget child, {Locale locale = const Locale('pt')}) {
   return MaterialApp(
-    theme: VanepTheme.dark(),
+    theme: VanepTheme.light(),
     locale: locale,
     localizationsDelegates: const [
       AppLocalizations.delegate,

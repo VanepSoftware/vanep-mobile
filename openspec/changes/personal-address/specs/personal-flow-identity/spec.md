@@ -8,7 +8,7 @@ A main trouxe uma identidade visual nova, aplicada primeiro ao fluxo nativo de a
 
 O app SHALL aplicar a identidade nova de auth nestas telas e apenas nelas: `PersonalDataPage` (incluindo o cartão de endereço residencial e o sheet de troca de e-mail), a tela de endereço da conta (`PersonalAddressFormPage`), `DependentsPage`, `DependentFormPage` e o `VanepCityPickerSheet` que as telas de endereço abrem.
 
-O app MUST NOT restilizar outras telas nesta change: menu de perfil (`ProfilePage`), shells de cliente/motorista/assistente, busca de motorista, áreas de atuação, home. O visual dessas telas MUST NOT mudar por esta change. As edições de comportamento que ela faz nelas (remover a linha Endereços do menu, tratar o 400 de cidade sem município IBGE na busca e na área) e a troca de import do chrome de auth movido para core não são restyle.
+O app MUST NOT restilizar outras telas nesta change: gaveta de conta (`AccountDrawer`, que substituiu a `ProfilePage` no PR #69), shells de cliente/motorista/assistente, busca de motorista, áreas de atuação, home. Essas telas já têm o visual do refactor da main; esta change não mexe nele. O visual dessas telas MUST NOT mudar por esta change. As edições de comportamento que ela faz nelas (remover a linha Endereços do menu, tratar o 400 de cidade sem município IBGE na busca e na área) e a troca de import do chrome de auth movido para core não são restyle.
 
 A única alteração no cadastro é o controle de gênero, que passa a ser o `VanepGenderSelect` (`gender-select`); o resto do cadastro não é tocado.
 
@@ -59,7 +59,7 @@ Copy só em ARB. Feedback (`VanepFeedback`) e diálogo de confirmação (`showVa
 
 Dados pessoais SHALL ter barra superior sem título (`VanepAppBar`), corpo rolável que começa com um cabeçalho (`VanepPageHeader`, com título e subtítulo, como nas telas de auth) e segue com um painel (`VanepOutlinedPanel`) para os campos da conta e outro para o cartão de endereço residencial (título, resumo e a ação de cadastrar ou o menu Editar / Limpar endereço), e uma barra inferior (`VanepBottomBar`) com o Salvar do perfil. A tela de endereço da conta SHALL ter barra superior sem título, um cabeçalho no corpo (`VanepPageHeader`, com título e subtítulo, como nas telas de auth), o `VanepPostalAddressForm` e uma barra inferior com o Salvar do endereço. Lista de dependentes SHALL mostrar cada dependente num `VanepOutlinedPanel`, com o dependente padrão destacado (`highlighted`) e um badge de padrão em tom de ação; o botão de adicionar fica na barra inferior. O formulário de dependente SHALL seguir o mesmo esqueleto: barra superior, campos `VanepTextField`, formulário postal, barra inferior com o Salvar. Estados de carregamento e de erro com retry usam o mesmo esqueleto e os mesmos botões.
 
-`VanepScreenBackground` e `VanepGlassCard` MUST NOT ser usados nessas telas; os widgets continuam existindo para o resto do app.
+`VanepScreenBackground` e `VanepGlassCard` MUST NOT ser usados nessas telas. Os dois widgets deixaram de existir no app (apagados pela main no PR #69), então nenhuma tela pode usá-los.
 
 #### Scenario: Dependente padrão destacado
 

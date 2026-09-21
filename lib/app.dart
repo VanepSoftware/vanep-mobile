@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'core/design_system/vanep_colors.dart';
 import 'core/design_system/vanep_theme.dart';
 import 'core/di/service_locator.dart';
-import 'core/ui/vanep_gradient_background.dart';
 import 'core/ui/vanep_wordmark.dart';
 import 'l10n/app_localizations.dart';
 import 'modules/auth/presentation/cubit/auth_cubit.dart';
@@ -12,6 +12,7 @@ import 'modules/auth/presentation/cubit/auth_state.dart';
 import 'modules/auth/presentation/cubit/login_cubit.dart';
 import 'modules/auth/presentation/pages/login_page.dart';
 import 'modules/auth/domain/value_objects/user_type.dart';
+import 'modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'core/places/place_autocomplete_controller.dart';
 import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
@@ -33,7 +34,7 @@ class VanepApp extends StatelessWidget {
       child: MaterialApp(
         onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
         debugShowCheckedModeBanner: false,
-        theme: VanepTheme.dark(),
+        theme: VanepTheme.light(),
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -86,6 +87,9 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<DriverSearchCubit>(
                   create: (_) => getIt<DriverSearchCubit>(),
                 ),
+                BlocProvider<DependentsCubit>(
+                  create: (_) => getIt<DependentsCubit>(),
+                ),
               ],
               child: ClientShell(
                 profile: session.profile,
@@ -137,7 +141,8 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: VanepGradientBackground(child: Center(child: VanepWordmark())),
+      backgroundColor: VanepColors.card,
+      body: Center(child: VanepWordmark()),
     );
   }
 }

@@ -7,12 +7,10 @@ import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/core/ui/vanep_cep_address_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
-import 'package:vanep_mobile/core/ui/vanep_glass_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
 import 'package:vanep_mobile/core/ui/vanep_postal_address_form.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
-import 'package:vanep_mobile/core/ui/vanep_screen_background.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
@@ -169,8 +167,6 @@ void main() {
       expect(find.byType(VanepAppBar), findsOneWidget);
       expect(find.byType(VanepPageHeader), findsOneWidget);
       expect(find.byType(VanepBottomBar), findsOneWidget);
-      expect(find.byType(VanepScreenBackground), findsNothing);
-      expect(find.byType(VanepGlassCard), findsNothing);
     });
 
     testWidgets('the address is the postal form, without Places', (

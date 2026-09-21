@@ -4,9 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/core/ui/vanep_glass_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
-import 'package:vanep_mobile/core/ui/vanep_screen_background.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
@@ -15,9 +13,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_pa
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_card.dart';
 
 import '../dependents_fixtures.dart';
-
-class MockDependentsCubit extends MockCubit<DependentsState>
-    implements DependentsCubit {}
+import '../dependents_mocks.dart';
 
 Widget harness(DependentsCubit cubit) {
   return MaterialApp(
@@ -122,7 +118,7 @@ void main() {
     expect(find.textContaining('ano'), findsOneWidget);
   });
 
-  testWidgets('the first load shows a spinner', (tester) async {
+  testWidgets('the first load shows the loading indicator', (tester) async {
     seed(const DependentsState(status: DependentsStatus.loading));
 
     await tester.pumpWidget(harness(cubit));
@@ -235,8 +231,6 @@ void main() {
 
       expect(find.byType(VanepAppBar), findsOneWidget);
       expect(find.byType(VanepPageHeader), findsOneWidget);
-      expect(find.byType(VanepScreenBackground), findsNothing);
-      expect(find.byType(VanepGlassCard), findsNothing);
     });
 
     testWidgets('each dependent sits in its own outlined panel', (
