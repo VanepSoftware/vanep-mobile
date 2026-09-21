@@ -366,7 +366,40 @@ void main() {
       await tester.pump();
 
       expect(tester.widget<TextField>(fieldOf('Nome')).enabled, isFalse);
-      expect(find.textContaining('dias'), findsWidgets);
+      expect(find.textContaining('dias'), findsOneWidget);
+    });
+
+    testWidgets('the cooldown badge sits on the label row, at the input end', (
+      tester,
+    ) async {
+      useTallScreen(tester);
+      when(() => cubit.state).thenReturn(
+        pageState(
+          profile: FakeUserProfile(
+            nameChangeAvailableAt: DateTime.now().add(const Duration(days: 30)),
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(personalDataHarness(cubit));
+      await tester.pump();
+
+      final label = tester.getRect(find.text('Nome'));
+      final badge = tester.getRect(find.byType(CooldownBadge));
+      final input = tester.getRect(fieldOf('Nome'));
+      expect(badge.center.dy, closeTo(label.center.dy, 1));
+      expect(badge.right, closeTo(input.right, 1));
+      expect(badge.bottom, lessThanOrEqualTo(input.top));
+    });
+
+    testWidgets('there is no badge when no field is on cooldown', (
+      tester,
+    ) async {
+      useTallScreen(tester);
+      await tester.pumpWidget(personalDataHarness(cubit));
+      await tester.pump();
+
+      expect(find.byType(CooldownBadge), findsNothing);
     });
   });
 

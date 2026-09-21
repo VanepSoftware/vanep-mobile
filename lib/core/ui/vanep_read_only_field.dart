@@ -9,6 +9,7 @@ class VanepReadOnlyField extends StatefulWidget {
     this.onTap,
     this.enabled = true,
     this.hintText,
+    this.labelTrailing,
     super.key,
   });
 
@@ -17,6 +18,7 @@ class VanepReadOnlyField extends StatefulWidget {
   final VoidCallback? onTap;
   final bool enabled;
   final String? hintText;
+  final Widget? labelTrailing;
 
   @override
   State<VanepReadOnlyField> createState() => VanepReadOnlyFieldState();
@@ -48,6 +50,7 @@ class VanepReadOnlyFieldState extends State<VanepReadOnlyField> {
       readOnly: true,
       enabled: widget.enabled,
       hintText: widget.hintText,
+      labelTrailing: widget.labelTrailing,
       onTap: widget.onTap,
     );
   }

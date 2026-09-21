@@ -312,7 +312,7 @@ Tokens (sem cor solta): `action` (ação, foco, links, badge de padrão), `card`
 
 Telas do escopo:
 
-- **Dados pessoais** — fundo `card`, `VanepAppBar`; os campos passam a `VanepTextField` (nome e telefone editáveis; e-mail, documento e nascimento somente leitura) no lugar do sublinhado inline; gênero no `VanepGenderSelect`; `CooldownBadge` abaixo do campo com tokens novos; `PendingEmailBanner` mantém `warningSurface`; cartão de endereço num `VanepOutlinedPanel` (ações em `action`, “Limpar endereço” em `danger`); Salvar do perfil no `VanepBottomBar`.
+- **Dados pessoais** — fundo `card`, `VanepAppBar`; os campos passam a `VanepTextField` (nome e telefone editáveis; e-mail, documento e nascimento somente leitura) no lugar do sublinhado inline; gênero no `VanepGenderSelect`; `CooldownBadge` na linha do rótulo, colado no fim do campo (`labelTrailing`) com tokens novos; `PendingEmailBanner` mantém `warningSurface`; cartão de endereço num `VanepOutlinedPanel` (ações em `action`, “Limpar endereço” em `danger`); Salvar do perfil no `VanepBottomBar`.
 - **Tela de endereço da conta** — `VanepAppBar`, `VanepPostalAddressForm`, Salvar no `VanepBottomBar`.
 - **Lista de dependentes** — `VanepAppBar`; cada dependente num `VanepOutlinedPanel`, o padrão com `highlighted: true` e badge de padrão em tom de ação (`action` a 8% + texto `action`); “definir como padrão” em `action`; “adicionar” no `VanepBottomBar`. Estados de carga/erro/vazio no mesmo esqueleto.
 - **Formulário de dependente** — `VanepAppBar`, `VanepTextField` para nome, data de nascimento (campo somente leitura que abre o date picker, no lugar do `OutlinedButton`), `VanepGenderSelect`, `VanepPostalAddressForm` inline, Salvar no `VanepBottomBar`.
