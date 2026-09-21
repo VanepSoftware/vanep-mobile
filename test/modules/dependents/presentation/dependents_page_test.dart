@@ -118,13 +118,25 @@ void main() {
     expect(find.textContaining('ano'), findsOneWidget);
   });
 
-  testWidgets('the first load shows the loading indicator', (tester) async {
+  testWidgets('the first load shows card placeholders', (tester) async {
     seed(const DependentsState(status: DependentsStatus.loading));
 
     await tester.pumpWidget(harness(cubit));
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(DependentCardSkeleton), findsNWidgets(3));
     expect(find.byType(DependentCard), findsNothing);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('the placeholders keep the shape of the real card', (
+    tester,
+  ) async {
+    seed(const DependentsState(status: DependentsStatus.loading));
+
+    await tester.pumpWidget(harness(cubit));
+
+    expect(find.byType(VanepPageHeader), findsOneWidget);
+    expect(find.byType(VanepOutlinedPanel), findsNWidgets(3));
   });
 
   testWidgets('a loading refresh keeps the cards on screen', (tester) async {
@@ -138,7 +150,7 @@ void main() {
     await tester.pumpWidget(harness(cubit));
 
     expect(find.byType(DependentCard), findsNWidgets(2));
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(DependentCardSkeleton), findsNothing);
   });
 
   testWidgets('a single dependent offers no default control', (tester) async {

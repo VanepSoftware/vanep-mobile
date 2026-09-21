@@ -6,6 +6,7 @@ import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_page_chrome.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
+import '../../../../core/ui/vanep_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/dependent.dart';
 import '../cubit/dependents_cubit.dart';
@@ -63,9 +64,7 @@ class DependentsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (state.isLoading && state.dependents.isEmpty) {
       return const DependentsSkeleton(
-        child: Center(
-          child: CircularProgressIndicator(color: VanepColors.action),
-        ),
+        child: VanepSkeletonList(buildPlaceholder: buildDependentCardSkeleton),
       );
     }
     if (state.hasLoadFailed) {

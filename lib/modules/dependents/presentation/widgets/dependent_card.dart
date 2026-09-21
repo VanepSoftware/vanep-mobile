@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
@@ -72,6 +73,40 @@ class DependentCard extends StatelessWidget {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget buildDependentCardSkeleton(BuildContext context) {
+  return const DependentCardSkeleton();
+}
+
+/// Placeholder with the shape of a [DependentCard]: name, age, address and
+/// the edit action, so the list does not jump once the dependents arrive.
+class DependentCardSkeleton extends StatelessWidget {
+  const DependentCardSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const VanepOutlinedPanel(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Bone.text(words: 2, fontSize: 16),
+                SizedBox(height: 4),
+                Bone.text(width: 72, fontSize: 13),
+                SizedBox(height: 4),
+                Bone.text(words: 4, fontSize: 13),
+              ],
+            ),
+          ),
+          SizedBox(width: 12),
+          Bone.icon(size: 24),
         ],
       ),
     );
