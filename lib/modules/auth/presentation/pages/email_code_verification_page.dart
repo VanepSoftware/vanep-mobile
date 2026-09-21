@@ -10,7 +10,7 @@ import '../cubit/auth_cubit.dart';
 import '../cubit/email_code_verification_cubit.dart';
 import '../cubit/email_code_verification_state.dart';
 import '../mappers/account_failure_l10n.dart';
-import '../widgets/auth_page_chrome.dart';
+import '../../../../core/ui/vanep_page_chrome.dart';
 import '../widgets/verification_code_field.dart';
 
 Future<void> openEmailCodeVerification(
@@ -59,11 +59,11 @@ class EmailCodeVerificationPage extends StatelessWidget {
         final cubit = context.read<EmailCodeVerificationCubit>();
         return Scaffold(
           backgroundColor: VanepColors.card,
-          appBar: const AuthAppBar(),
+          appBar: const VanepAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
-              AuthPageHeader(
+              VanepPageHeader(
                 icon: Icons.mark_email_unread_outlined,
                 title: l10n.emailVerificationTitle,
                 subtitle: state.codeAlreadySent

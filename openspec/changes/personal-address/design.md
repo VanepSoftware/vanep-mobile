@@ -2,7 +2,7 @@
 
 Motivação em `proposal.md`. Contrato em `specs/`: `personal-address`, `postal-address-form`, `dependent-postal-address`, `gender-select`, `personal-flow-identity`, `places-ibge-city-match`.
 
-**Estado atual do trabalho (branches locais, sem push e sem PR).** Já existe uma pilha de branches por merge (`feat/1-personal-address-domain` ⊂ `feat/2-personal-address-data` ⊂ `feat/3-personal-data-address-cubit` ⊂ `feat/4-personal-data-address-save` ⊂ `feat/5-personal-address-delete`), todas baseadas na main **anterior** ao N-177, mais um `stash@{0}` sobre a ponta da 5. Elas são o **material de origem** desta change, não um limite: as fases podem ser reorganizadas e refeitas onde for preciso, e a pilha final tem **5 fases** (ver “Entrega fatiada”). O que há nelas:
+**Estado atual do trabalho (branches locais, sem push e sem PR).** Já existe uma pilha de branches por merge (`feat/1-personal-address-domain` ⊂ `feat/2-personal-address-data` ⊂ `feat/3-personal-data-address-cubit` ⊂ `feat/4-personal-data-address-save` ⊂ `feat/5-personal-address-delete`), todas baseadas na main **anterior** ao N-177, mais um `stash@{0}` sobre a ponta da 5. Elas são o **material de origem** desta change, não um limite: as fases podem ser reorganizadas e refeitas onde for preciso, e a pilha final tem **6 fases** (ver “Entrega fatiada”). O que há nelas:
 
 - **branch 1 — domínio:** `ibge_locations/domain` completo e `auth/domain` da casa (`PersonalAddress`, `PersonalAddressWrite` com `toJsonMap()` e builder, falhas, repositório, use cases).
 - **branch 2 — dados:** DTOs, datasources, repositórios, containers e `Environment` dos dois módulos.
@@ -144,7 +144,7 @@ Lookup só com 8 dígitos no path. Debounce **400 ms** depois do 8º dígito. St
 
 HTTP 200 (regra do rascunho, o que o cubit já faz):
 
-- sempre aplica `cityToken` / `cityName` / `uf` e **trava** UF e município (o município do ViaCEP é 1:1 com o `cityToken`)
+- sempre aplica `cityToken` / `cityName` / `uf` e **trava** UF e município (o município do ViaCEP é 1:1 com o `cityToken`); a UI mostra os dois num card só de leitura, não como campos desabilitados
 - **substitui** `street` / `neighborhood` (nulo vira vazio; não mescla com o rascunho); se `neighborhood` veio preenchido, **trava** o bairro, senão o campo fica aberto
 - nunca preenche nem apaga número e complemento
 - mudar o CEP (8 dígitos de novo) consulta de novo e substitui cidade/UF/rua/bairro; o travamento do bairro segue o lookup novo; o cubit **ignora** as ações do usuário que a trava proíbe (`openCityPicker`, `selectUf`, `selectCity` com a cidade travada; `updateNeighborhood` com o bairro travado), sem depender de a UI esconder o controle
@@ -261,9 +261,9 @@ DF/SP em área de atuação ainda exigem distrito no pin (`requires_district` / 
 **Na pilha nova.**
 
 - Enum continua `male` / `female` / `other`. Prefiro não informar **não** vira `UNSPECIFIED` no enum — o dono do fato é `null`, igual `Gender.fromApi` já faz. `Gender.toApi(null)` já devolve JSON `null`. O back aceita `"gender": null` no PATCH da conta e do dependente (`JsonNullable<Gender>` nos dois).
-- **Um** componente: `VanepGenderSelect` em `lib/core/ui/`, extraído do dropdown de `auth` (mesma aparência de campo, `vanepInputDecoration`, rótulo acima; as quatro opções; `onChanged(Gender?)`). Justifica extrair agora: o select passa a ter **dois** consumidores (dados pessoais e dependente) — R06. Não é um `VanepSelect` genérico: só o de gênero.
+- **Um** componente: `VanepGenderSelect` em `lib/core/ui/`, extraído do dropdown de `auth` (mesma aparência de campo, `vanepInputDecoration`, rótulo acima; as quatro opções; `onChanged(Gender?)`). Justifica extrair agora: o select passa a ter **três** consumidores (dados pessoais, cadastro e dependente) — R06. Não é um `VanepSelect` genérico: só o de gênero.
 - `genderLabel` (core) passa a aceitar `Gender?` e devolve `profileGenderUnspecified` (“Prefiro não informar” / “Prefer not to say”) para `null`; `profileGenderLabel` de `auth` some se sobrar sem uso (R43).
-- Apagar `PersonalDataGenderDropdown`, `ProfileGenderChoice` (e `genderFromProfileGenderChoice`), `VanepGenderChips` e a chave `dependentFieldGenderClear`.
+- Apagar `PersonalDataGenderDropdown`, `ProfileGenderChoice` (e `genderFromProfileGenderChoice`) e a chave `dependentFieldGenderClear`. O cadastro (`signup_page`) também passa ao select: `SignupForm.copyWith` ganha `clearGender`, `SignupCubit.updateGender(Gender?)` e a página usa `VanepGenderSelect`; “Prefiro não informar” omite a chave `gender` do `POST /api/auth/signup/{type}` (o campo é opcional). `PersonalDataGenderChips` e `profileGenderLabel` saem na fase 4 e `VanepGenderChips`, na fase 5, quando o formulário de dependente deixar de usá-lo.
 - Dependente: create com gênero omitido não manda a chave; update de gênero informado para omitido manda `"gender": null`.
 
 **Rejeitado:** quarto valor no enum (segunda fonte para o mesmo “ausente” do API). **Rejeitado:** manter chips no dependente. **Rejeitado:** `VanepSelect` genérico agora (um só uso concreto).
@@ -276,11 +276,13 @@ Casa e dependente têm o mesmo formulário, as mesmas regras e o mesmo body. R02
 
 - `isBlank`, `isComplete` (`cityToken` + rua + CEP de 8 dígitos), `isSavable` (completo e CEP não inexistente), `issues` (`cityRequired`, `streetRequired`, `zipCodeInvalid`), `sameContentAs`;
 - `withCepLookup({cityToken, cityName, uf, street?, neighborhood?})` — trava cidade, **substitui** rua/bairro, trava o bairro só se veio; `withCepUnavailable()` destrava e limpa o que veio do lookup; `withCepUnknown()` faz o mesmo e marca o CEP como inexistente até o CEP mudar;
-- `withUf(uf)` zera o município e destrava a cidade; `withCity(token, name, uf)`; `unlockCity()`; `withZipCode` (limpa o bloqueio de CEP inexistente e **destrava a cidade quando o CEP fica com menos de 8 dígitos**, sem apagar dados); setters de texto que respeitam `PostalAddressLimits` (255 / 16 / 128 / 128) e truncam. `withUf` e `withCity` **não** limpam o bloqueio de CEP inexistente. O rascunho de uma casa gravada (`PostalAddressDraft.fromParts`) nasce com a cidade travada e o bairro destravado.
+- `withUf(uf)` zera o município e destrava a cidade; `withCity(token, name, uf)`; `unlockCity()`; `withZipCode` (limpa o bloqueio de CEP inexistente e **destrava a cidade quando o CEP fica com menos de 8 dígitos**, sem apagar dados); setters de texto que respeitam `PostalAddressLimits` (255 / 16 / 128 / 128) e truncam. `withUf` e `withCity` **não** limpam o bloqueio de CEP inexistente. O rascunho de uma casa gravada (`PostalAddressDraft.fromParts`) nasce com a cidade travada e o bairro **travado quando a casa tem bairro** (o back não guarda se ele veio do CEP ou foi digitado; tratá-lo como vindo do CEP mantém a edição igual ao cadastro). Casa sem bairro salvo deixa o campo aberto. Custo assumido: um bairro digitado à mão (CEP de cidade pequena, que não traz bairro) também fica travado na edição; a pessoa o muda editando o CEP, e o lookup novo libera o campo se o CEP não trouxer bairro.
 
 Não referencia `PersonalAddress`, `DependentAddress`, `CepLookup`, `CepFailure` nem tipo de módulo: recebe primitivos. Cada módulo converte a sua entidade e o seu resultado de lookup na sua borda.
 
 **UI** (`lib/core/ui/`): `VanepPostalAddressForm` (de `PersonalAddressForm` + `PersonalAddressUfField`) e `VanepCityPickerSheet` (de `PersonalAddressCityPickerSheet`). São **apresentacionais**: recebem valores, controllers, o estado do picker e callbacks; **não** conhecem cubit nem módulo. O estado do rascunho, do lookup e do picker é do cubit do consumidor (R06a); a página envolve o sheet num `BlocBuilder` e passa as listas. A máscara `00000-000` vai num input formatter em `lib/core/formatters/`. O marcador de campo obrigatório (`isRequired`, `VanepFieldLabel`) que o stash acrescenta a `VanepTextField` é reaplicado **sobre a versão da main** (que reescreveu o widget), não copiado por cima.
+
+**Apresentação por modo (card do CEP).** O rascunho já sabe o que está travado; o formulário só o **desenha** por modo. CEP, rua, número e complemento aparecem sempre; o que depende do CEP é a **localização**: nada (aguardando ou CEP inexistente), o card (resolvido) ou os campos de UF e município (fallback manual depois de falha de serviço), e o bairro só quando o CEP não o trouxe. `postalLocationModeOf(draft, isLookingUpCep:)` decide o modo (`none`, `resolved` ou `manual`), e o consumidor passa `isLookingUpCep` (do 8º dígito até a resposta, debounce incluído; é um flag do cubit, não do rascunho). O lookup segue **substituindo** a rua e o bairro: o que a pessoa digitou na rua antes do CEP resolver é sobrescrito, por decisão. Não há campo desabilitado só para mostrar valor: um `DropdownButton` desabilitado usa o `disabledColor` do tema, que no tema escuro do app é branco a 38% e some sobre o campo branco. Por isso o formulário deixou de carregar a lista de estados ao abrir: ela só é usada no fallback manual, e o cubit a carrega quando o lookup falha.
 
 **Trade-off assumido.** A consulta de CEP com debounce, o status do lookup e o carregamento das listas do picker (~30 linhas de cubit) ficam repetidos em `PersonalDataCubit` e `DependentFormCubit`. As **regras** não se repetem: estão no rascunho. Extrair a orquestração pediria tipos do `ibge_locations` em `lib/core/` (`core` não importa módulo) ou um import de presentation entre módulos (R02). Se aparecer um terceiro consumidor (escola), reavalia-se mover o `ibge_locations` para core.
 
@@ -386,7 +388,7 @@ Telas do escopo:
 **R14 — Duas cópias de ~30 linhas de wiring de CEP/picker (D12).**  
 *Mitigação:* regras num só lugar (o rascunho); duplicação só de plumbing. Reavaliar com um terceiro consumidor.
 
-**R15 — A fase 5 mistura camadas.**  
+**R15 — A fase 6 mistura camadas.**  
 *Mitigação:* exceção justificada em D14; segue sob R20 (contrato de repositório inalterado) e R21 (só mergeia com a API no ar).
 
 **R16 — A pilha refaz código já implementado e validado.** A pilha nova troca os oito campos soltos por `PostalAddressDraft`, tira o mapa da API de dentro de `PersonalAddressWrite` e move form/picker/dropdown para core.  
@@ -397,9 +399,9 @@ Telas do escopo:
 
 ## Migration Plan
 
-Nada de geografia persistida no aparelho. Rollout é a ordem das fases + o mesmo release da API. Cada fase é branch/PR próprio e reverte sozinha, exceto que a fase 5 só mergeia depois da API com o contrato postal do dependente.
+Nada de geografia persistida no aparelho. Rollout é a ordem das fases + o mesmo release da API. Cada fase é branch/PR próprio e reverte sozinha, exceto que a fase 6 só mergeia depois da API com o contrato postal do dependente.
 
-Rollback da UI de dados pessoais devolve a tela ao Salvar só de perfil; a casa no back, se já gravou no contrato postal, permanece. Rollback da fase 5 devolve o dependente ao contrato Places, que o back novo **não aceita mais** — só faz sentido reverter junto com a API.
+Rollback da UI de dados pessoais devolve a tela ao Salvar só de perfil; a casa no back, se já gravou no contrato postal, permanece. Rollback da fase 6 devolve o dependente ao contrato Places, que o back novo **não aceita mais** — só faz sentido reverter junto com a API.
 
 Esta change **não** depende de usar `lib/core/places/` na tela de dados pessoais nem no dependente. Places continua necessário para busca e áreas.
 
@@ -416,7 +418,7 @@ Nada disso é feito sem a sua aprovação (R27a). A alternativa é propagar a ma
 
 ### Entrega fatiada (R16–R23)
 
-Cinco fases. Uma camada por PR (R19) na 1–4; contrato e impl separados (R20). Teto de 10 arquivos **não** corta fase de camada.
+Seis fases. Uma camada por PR (R19) da 1 à 5; contrato e impl separados (R20). Teto de 10 arquivos **não** corta fase de camada.
 
 | Fase | Conteúdo | Depende de | Paralelo com |
 |----|----------|------------|---------------|
@@ -429,11 +431,11 @@ Cinco fases. Uma camada por PR (R19) na 1–4; contrato e impl separados (R20). 
 Notas:
 
 - **Fase 1** ganha o rascunho compartilhado no lugar dos campos soltos (D12). **Fase 3** junta o que eram o cubit de carga, o de save e o DELETE, e já nasce sobre o rascunho.
-- **Fase 4** é toda de apresentação (o kit de core é UI). O 400 de cidade (`driver_search`, `driver_service_areas`) entra aqui só por ser pequeno e não ter fase própria; é o corte natural se a fase estourar.
-- **Fase 5** é a única que mistura camadas (D14). Como a 4 já entrega o kit e a identidade, a 5 só o consome.
+- **Fase 4** é o kit de UI em core (chrome, gênero — inclusive no cadastro —, formulário postal, picker, card do CEP). O 400 de cidade (`driver_search`, `driver_service_areas`) entra aqui só por ser pequeno e não ter fase própria. **Fase 5** são as telas de dados pessoais e endereço na identidade nova, com o flag de lookup no cubit, a hidratação da casa e a remoção do menu Endereços. A UI era uma fase só e passou de 5 mil linhas; o kit não depende de tela nenhuma e as telas o consomem.
+- **Fase 6** é a única que mistura camadas (D14). Como a 4 entrega o kit e a 5 a identidade das telas de conta, a 6 só os consome.
 - R20: contrato (fase 1) e impl (fase 2) continuam separados. R27a: parar depois de `make lint` / `make test` para validação no aparelho antes do commit.
 
  Open Questions
 
-- A aparência do `VanepGenderSelect` (dropdown ancorado no campo vs. bottom sheet de opções) fica para a validação em aparelho da fase 4 (R27a). Não muda contrato nem fases.
+- A aparência do `VanepGenderSelect` (dropdown ancorado no campo vs. bottom sheet de opções) fica para a validação em aparelho das fases 4 e 5 (R27a). Não muda contrato nem fases.
 - Se o back passar a mandar um `code` estável nos 400/404 de localização e de CEP, os marcadores de `detail` (R11) viram troca de uma linha por repositório. Não bloqueia nada.

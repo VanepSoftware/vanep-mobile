@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/network/city_unmatched_problem.dart';
 import '../../../../core/network/problem_detail.dart';
 import '../../../../core/result/result.dart';
 import '../../domain/entities/service_area.dart';
@@ -16,6 +17,9 @@ ServiceAreaFailure serviceAreaFailureFrom(DioException exception) {
   if (status == null) return ServiceAreaFailure.network;
   if (status == 429) return ServiceAreaFailure.rateLimited;
   if (status != 400) return ServiceAreaFailure.unexpected;
+  if (isIbgeCityUnmatchedProblem(exception.response?.data)) {
+    return ServiceAreaFailure.cityUnmatched;
+  }
   final detail = readProblemDetail(exception.response?.data).toLowerCase();
   if (detail.contains(tooManyAreasMarker)) return ServiceAreaFailure.tooManyAreas;
   if (detail.contains(districtRequiredMarker)) {

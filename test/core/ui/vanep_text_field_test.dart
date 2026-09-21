@@ -91,4 +91,104 @@ void main() {
     expect(tester.widget<TextField>(find.byType(TextField)).readOnly, isTrue);
     expect(taps, 1);
   });
+
+  testWidgets('an optional field shows only its label', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'Bairro',
+            controller: controller,
+            onChanged: (_) {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Bairro'), findsOneWidget);
+    expect(find.text('*'), findsNothing);
+  });
+
+  testWidgets('a required field marks its label', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'CEP',
+            isRequired: true,
+            controller: controller,
+            onChanged: (_) {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('CEP'), findsOneWidget);
+    expect(find.text('*'), findsOneWidget);
+  });
+
+  testWidgets('VanepFieldLabel marks required labels on its own', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: VanepFieldLabel(label: 'UF', isRequired: true)),
+      ),
+    );
+
+    expect(find.text('UF'), findsOneWidget);
+    expect(find.text('*'), findsOneWidget);
+  });
+
+  group('loading', () {
+    Future<void> pumpField(
+      WidgetTester tester, {
+      bool isLoading = false,
+      String? loadingLabel,
+    }) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: VanepTextField(
+              label: 'CEP',
+              controller: controller,
+              onChanged: (_) {},
+              isLoading: isLoading,
+              loadingLabel: loadingLabel,
+            ),
+          ),
+        ),
+      );
+    }
+
+    testWidgets('shows a spinner only while loading', (tester) async {
+      await pumpField(tester, isLoading: true);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      await pumpField(tester);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
+
+    testWidgets('the spinner announces the loading label', (tester) async {
+      final handle = tester.ensureSemantics();
+      await pumpField(tester, isLoading: true, loadingLabel: 'Consultando CEP');
+
+      expect(find.bySemanticsLabel('Consultando CEP'), findsOneWidget);
+      handle.dispose();
+    });
+
+    testWidgets('the field stays editable while loading', (tester) async {
+      await pumpField(tester, isLoading: true);
+
+      expect(tester.widget<TextField>(find.byType(TextField)).enabled, isTrue);
+    });
+  });
 }
