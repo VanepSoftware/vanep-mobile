@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/formatters/birth_date_formatter.dart';
 import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
+import '../../../../core/ui/vanep_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/failures/profile_edit_failure.dart';
@@ -126,7 +128,7 @@ Widget buildPersonalDataBody({
 }) {
   if (state.status == PersonalDataStatus.loading ||
       state.status == PersonalDataStatus.initial) {
-    return const Center(child: CircularProgressIndicator());
+    return const PersonalDataSkeleton();
   }
 
   if (state.status == PersonalDataStatus.loadFailed || state.profile == null) {
@@ -259,11 +261,7 @@ Widget buildPersonalDataBody({
                   PersonalDataRow(
                     label: l10n.profileFieldBirthDate,
                     child: PersonalDataStaticValue(
-                      value: formatBirthDate(
-                        profile.birthDate,
-                        locale,
-                        empty,
-                      ),
+                      value: formatBirthDate(profile.birthDate, locale, empty),
                       muted: true,
                     ),
                   ),
@@ -295,6 +293,56 @@ Widget buildPersonalDataBody({
       ),
     ],
   );
+}
+
+/// Placeholder that mirrors the personal-data form while the profile loads.
+class PersonalDataSkeleton extends StatelessWidget {
+  const PersonalDataSkeleton({this.rowCount = 6, super.key});
+
+  final int rowCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return VanepSkeleton(
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        children: [
+          Material(
+            color: VanepColors.card,
+            borderRadius: BorderRadius.circular(20),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) ...[
+                  if (rowIndex > 0) const PersonalDataRowDivider(),
+                  const PersonalDataRowSkeleton(),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PersonalDataRowSkeleton extends StatelessWidget {
+  const PersonalDataRowSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Bone.text(width: 96, fontSize: 13),
+          SizedBox(height: 8),
+          Bone.text(words: 3, fontSize: 16),
+        ],
+      ),
+    );
+  }
 }
 
 void presentPersonalDataFeedback(
@@ -497,7 +545,7 @@ class PersonalDataInlineField extends StatelessWidget {
         enabledBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: VanepColors.brand, width: 1.5),
+          borderSide: BorderSide(color: VanepColors.action, width: 1.5),
         ),
         errorBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: VanepColors.danger),

@@ -49,6 +49,9 @@ dependencies:
   intl: ^0.20.2
   flutter_secure_storage: ^11.2.0
   google_sign_in: ^7.2.0
+  skeletonizer: ^3.0.0
+  salomon_bottom_bar: ^3.3.2
+  sidebarx: ^0.17.2
 
 dev_dependencies:
   flutter_test:

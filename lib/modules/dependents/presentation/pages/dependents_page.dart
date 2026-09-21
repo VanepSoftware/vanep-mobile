@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_screen_background.dart';
+import '../../../../core/ui/vanep_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/dependent.dart';
 import '../cubit/dependents_cubit.dart';
@@ -20,38 +21,51 @@ class DependentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return VanepScreenBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: Text(l10n.profileDependents),
-        ),
-        body: BlocConsumer<DependentsCubit, DependentsState>(
-          listenWhen: (previous, current) =>
-              current.failure != null && previous.failure != current.failure,
-          listener: (context, state) {
-            if (state.hasLoadFailed) return;
-            VanepFeedback.showError(
-              context,
-              dependentFailureLabel(l10n, state.failure!),
+    return Scaffold(
+      backgroundColor: VanepColors.surface,
+      appBar: AppBar(title: Text(l10n.profileDependents)),
+      body: BlocConsumer<DependentsCubit, DependentsState>(
+        listenWhen: (previous, current) =>
+            current.failure != null && previous.failure != current.failure,
+        listener: (context, state) {
+          if (state.hasLoadFailed) return;
+          VanepFeedback.showError(
+            context,
+            dependentFailureLabel(l10n, state.failure!),
+          );
+        },
+        builder: (context, state) {
+          if (state.isLoading && state.dependents.isEmpty) {
+            return const DependentsSkeletonList();
+          }
+          if (state.hasLoadFailed) {
+            return DependentsLoadFailure(
+              onRetry: context.read<DependentsCubit>().loadDependents,
             );
-          },
-          builder: (context, state) {
-            if (state.isLoading && state.dependents.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state.hasLoadFailed) {
-              return DependentsLoadFailure(
-                onRetry: context.read<DependentsCubit>().loadDependents,
-              );
-            }
-            return DependentsList(state: state);
-          },
-        ),
+          }
+          return DependentsList(state: state);
+        },
       ),
     );
   }
+}
+
+class DependentsSkeletonList extends StatelessWidget {
+  const DependentsSkeletonList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      children: const [
+        VanepSkeletonList(buildPlaceholder: buildDependentCardSkeleton),
+      ],
+    );
+  }
+}
+
+Widget buildDependentCardSkeleton(BuildContext context) {
+  return const DependentCardSkeleton();
 }
 
 class DependentsList extends StatelessWidget {
@@ -116,10 +130,7 @@ class DependentsLoadFailure extends StatelessWidget {
               style: VanepTypography.cardSubtitle,
             ),
             const SizedBox(height: 16),
-            VanepPrimaryButton(
-              label: l10n.dependentsRetry,
-              onPressed: onRetry,
-            ),
+            VanepPrimaryButton(label: l10n.dependentsRetry, onPressed: onRetry),
           ],
         ),
       ),
