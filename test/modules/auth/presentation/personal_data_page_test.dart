@@ -104,7 +104,30 @@ void main() {
 
       expect(find.byType(VanepAppBar), findsOneWidget);
       expect(find.byType(VanepBottomBar), findsOneWidget);
-      expect(find.byType(VanepOutlinedPanel), findsWidgets);
+    });
+
+    testWidgets('only the address card has a border, the fields do not', (
+      tester,
+    ) async {
+      useTallScreen(tester);
+      await tester.pumpWidget(personalDataHarness(cubit));
+      await tester.pump();
+
+      expect(find.byType(VanepOutlinedPanel), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(PersonalAddressCard),
+          matching: find.byType(VanepOutlinedPanel),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.ancestor(
+          of: find.byType(PersonalDataFields),
+          matching: find.byType(VanepOutlinedPanel),
+        ),
+        findsNothing,
+      );
     });
 
     testWidgets('shows a title and a subtitle in the body', (tester) async {
@@ -636,7 +659,7 @@ void main() {
       await tester.pump();
 
       expect(find.byType(VanepPageHeader), findsOneWidget);
-      expect(find.byType(VanepOutlinedPanel), findsNWidgets(2));
+      expect(find.byType(VanepOutlinedPanel), findsOneWidget);
     });
 
     testWidgets('a load failure offers a retry', (tester) async {
