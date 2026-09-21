@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vanep_mobile/core/ui/vanep_read_only_field.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 
 void main() {
@@ -144,6 +145,98 @@ void main() {
 
     expect(find.text('UF'), findsOneWidget);
     expect(find.text('*'), findsOneWidget);
+  });
+
+  group('label trailing', () {
+    const trailingKey = Key('trailing');
+    const trailing = SizedBox(key: trailingKey, width: 60, height: 24);
+
+    Future<void> pumpIn300(WidgetTester tester, Widget child) {
+      return tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(width: 300, child: child),
+            ),
+          ),
+        ),
+      );
+    }
+
+    testWidgets('sits on the label row, glued to the right edge', (
+      tester,
+    ) async {
+      await pumpIn300(
+        tester,
+        const VanepFieldLabel(label: 'Nome', trailing: trailing),
+      );
+
+      final label = tester.getRect(find.text('Nome'));
+      final badge = tester.getRect(find.byKey(trailingKey));
+      expect(badge.right, 300);
+      expect(badge.center.dy, closeTo(label.center.dy, 1));
+      expect(badge.left, greaterThan(label.right));
+    });
+
+    testWidgets('leaves the label alone when there is no trailing', (
+      tester,
+    ) async {
+      await pumpIn300(tester, const VanepFieldLabel(label: 'Nome'));
+
+      expect(find.byType(Row), findsNothing);
+    });
+
+    testWidgets('keeps the required mark next to the label', (tester) async {
+      await pumpIn300(
+        tester,
+        const VanepFieldLabel(
+          label: 'CEP',
+          isRequired: true,
+          trailing: trailing,
+        ),
+      );
+
+      final label = tester.getRect(find.text('CEP'));
+      final star = tester.getRect(find.text('*'));
+      final badge = tester.getRect(find.byKey(trailingKey));
+      expect(star.left, greaterThanOrEqualTo(label.right));
+      expect(star.right, lessThan(badge.left));
+    });
+
+    testWidgets('the text field puts it above the input', (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      await pumpIn300(
+        tester,
+        VanepTextField(
+          label: 'Nome',
+          controller: controller,
+          onChanged: (_) {},
+          labelTrailing: trailing,
+        ),
+      );
+
+      final badge = tester.getRect(find.byKey(trailingKey));
+      final input = tester.getRect(find.byType(TextField));
+      expect(badge.bottom, lessThanOrEqualTo(input.top));
+      expect(badge.right, closeTo(input.right, 1));
+    });
+
+    testWidgets('the read-only field forwards it', (tester) async {
+      await pumpIn300(
+        tester,
+        const VanepReadOnlyField(
+          label: 'Nome',
+          value: 'Alex',
+          labelTrailing: trailing,
+        ),
+      );
+
+      final label = tester.getRect(find.text('Nome'));
+      final badge = tester.getRect(find.byKey(trailingKey));
+      expect(badge.center.dy, closeTo(label.center.dy, 1));
+    });
   });
 
   group('loading', () {

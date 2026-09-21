@@ -193,7 +193,7 @@ Widget buildPersonalDataBody({
 }
 
 /// Number of fields [PersonalDataFields] renders, mirrored by the placeholder
-/// so the panel keeps its height once the profile arrives.
+/// so the form keeps its height once the profile arrives.
 const int personalDataFieldCount = 6;
 
 /// Placeholder that mirrors the personal-data form while the profile loads.
@@ -293,58 +293,54 @@ class PersonalDataFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: withSpacing([
-        CooldownField(
-          cooldown: nameCooldown,
-          child: nameCooldown == null
-              ? VanepTextField(
-                  label: l10n.profileFieldName,
-                  controller: nameController,
-                  onChanged: cubit.updateName,
-                  textInputAction: TextInputAction.next,
-                  autofillHints: const [AutofillHints.name],
-                  maxLength: ProfileFieldLimits.nameMaxLength,
-                  errorText: profileFieldErrorMessage(
-                    l10n,
-                    state.fieldErrors['name'],
-                  ),
-                )
-              : VanepReadOnlyField(
-                  label: l10n.profileFieldName,
-                  value: profileDisplayOrEmpty(profile.name, empty),
-                  enabled: false,
-                ),
-        ),
-        CooldownField(
-          cooldown: emailCooldown,
-          child: VanepReadOnlyField(
-            label: l10n.profileFieldEmail,
-            value: profileDisplayOrEmpty(profile.email, empty),
-            enabled: canChangeEmail,
-            onTap: canChangeEmail ? () => showEmailChangeSheet(context) : null,
+        if (nameCooldown == null)
+          VanepTextField(
+            label: l10n.profileFieldName,
+            controller: nameController,
+            onChanged: cubit.updateName,
+            textInputAction: TextInputAction.next,
+            autofillHints: const [AutofillHints.name],
+            maxLength: ProfileFieldLimits.nameMaxLength,
+            errorText: profileFieldErrorMessage(
+              l10n,
+              state.fieldErrors['name'],
+            ),
+          )
+        else
+          VanepReadOnlyField(
+            label: l10n.profileFieldName,
+            value: profileDisplayOrEmpty(profile.name, empty),
+            enabled: false,
+            labelTrailing: buildCooldownBadge(l10n, nameCooldown),
           ),
+        VanepReadOnlyField(
+          label: l10n.profileFieldEmail,
+          value: profileDisplayOrEmpty(profile.email, empty),
+          enabled: canChangeEmail,
+          onTap: canChangeEmail ? () => showEmailChangeSheet(context) : null,
+          labelTrailing: buildCooldownBadge(l10n, emailCooldown),
         ),
-        CooldownField(
-          cooldown: phoneCooldown,
-          child: phoneCooldown == null
-              ? VanepTextField(
-                  label: l10n.profileFieldPhone,
-                  controller: phoneController,
-                  onChanged: cubit.updatePhone,
-                  keyboardType: TextInputType.phone,
-                  textInputAction: TextInputAction.done,
-                  autofillHints: const [AutofillHints.telephoneNumber],
-                  inputFormatters: const [ProfilePhoneInputFormatter()],
-                  errorText: profileFieldErrorMessage(
-                    l10n,
-                    state.fieldErrors['phone'],
-                  ),
-                )
-              : VanepReadOnlyField(
-                  label: l10n.profileFieldPhone,
-                  value: formatProfilePhone(profile.phone, empty),
-                  enabled: false,
-                ),
-        ),
+        if (phoneCooldown == null)
+          VanepTextField(
+            label: l10n.profileFieldPhone,
+            controller: phoneController,
+            onChanged: cubit.updatePhone,
+            keyboardType: TextInputType.phone,
+            textInputAction: TextInputAction.done,
+            autofillHints: const [AutofillHints.telephoneNumber],
+            inputFormatters: const [ProfilePhoneInputFormatter()],
+            errorText: profileFieldErrorMessage(
+              l10n,
+              state.fieldErrors['phone'],
+            ),
+          )
+        else
+          VanepReadOnlyField(
+            label: l10n.profileFieldPhone,
+            value: formatProfilePhone(profile.phone, empty),
+            enabled: false,
+            labelTrailing: buildCooldownBadge(l10n, phoneCooldown),
+          ),
         VanepReadOnlyField(
           label: l10n.profileFieldDocument,
           value: formatProfileDocument(profile.document, empty),
@@ -365,30 +361,15 @@ class PersonalDataFields extends StatelessWidget {
   }
 }
 
-class CooldownField extends StatelessWidget {
-  const CooldownField({required this.cooldown, required this.child, super.key});
-
-  final DateTime? cooldown;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final target = cooldown;
-    if (target == null) return child;
-    final l10n = AppLocalizations.of(context)!;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        child,
-        const SizedBox(height: 8),
-        CooldownBadge(
-          text: l10n.profileCooldownDaysRemaining(
-            profileCooldownDaysRemaining(target),
-          ),
-        ),
-      ],
-    );
-  }
+/// Days left until the field unlocks, or null when it is not on cooldown.
+/// Meant for the label row of the field it belongs to.
+Widget? buildCooldownBadge(AppLocalizations l10n, DateTime? target) {
+  if (target == null) return null;
+  return CooldownBadge(
+    text: l10n.profileCooldownDaysRemaining(
+      profileCooldownDaysRemaining(target),
+    ),
+  );
 }
 
 void presentPersonalDataFeedback(
