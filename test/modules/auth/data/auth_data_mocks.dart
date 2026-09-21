@@ -10,6 +10,7 @@ import 'package:vanep_mobile/modules/auth/data/datasources/user_profile_remote_d
 import 'package:vanep_mobile/modules/auth/data/dtos/auth_session_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/token_response_dto.dart';
 import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/personal_address_write.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
@@ -68,5 +69,12 @@ void registerAuthDataFallbacks() {
   registerFallbackValue(RequestOptions());
   registerFallbackValue(const ProfilePatchRequest());
   registerFallbackValue(<String, Object?>{});
+  registerFallbackValue(
+    const PersonalAddressWrite(
+      cityToken: 'city-brasilia',
+      street: 'QND 12',
+      zipCode: '72120120',
+    ),
+  );
   registerFallbackValue(validClientSignupForm);
 }

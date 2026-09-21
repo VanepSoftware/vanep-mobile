@@ -14,6 +14,7 @@ import 'modules/driver/driver_container.dart';
 import 'modules/driver_service_areas/driver_service_areas_container.dart';
 import 'modules/drivers/drivers_container.dart';
 import 'modules/driver_search/driver_search_container.dart';
+import 'modules/ibge_locations/ibge_locations_container.dart';
 import 'modules/profile/profile_container.dart';
 
 Future<void> main() async {
@@ -31,6 +32,7 @@ Future<void> main() async {
   registerPlacesDependencies(getIt);
   registerDriverServiceAreasDependencies(getIt);
   registerDriverSearchDependencies(getIt);
+  registerIbgeLocationsDependencies(getIt);
   registerDependentsDependencies(getIt);
 
   runApp(const VanepApp());

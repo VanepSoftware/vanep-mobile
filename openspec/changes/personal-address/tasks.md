@@ -36,10 +36,10 @@ Sem Dio, DTO nem endpoint. `auth` MUST NOT importar `ibge_locations` (`cityToken
 
 ## 2. Fase 2 — Dados (`feat/2-personal-address-data`)
 
-- [ ] 2.1 `Environment`: `cepLookupEndpoint(cep)` (só dígitos), `statesEndpoint`, `citiesEndpoint`, `userPersonalAddressEndpoint` — os quatro de uma vez.
-- [ ] 2.2 `lib/core/network/postal_address_body.dart`: `postalAddressToJson` — `cityToken`, `street`, `zipCode` (8 dígitos) e os **três opcionais sempre presentes** (valor ou `null`); nunca `placeId`, `sessionToken`, `stateToken`, `cityName`, `uf`.
-- [ ] 2.3 `ibge_locations/data`: DTOs, datasource, repositório, container. CEP 200/400/404 (dois `detail`, marcador nomeado para “catálogo”)/429/503/timeout; cities exige `uf`, UF inexistente → `ufNotFound`. Registrar em `main.dart` depois do Dio autenticado.
-- [ ] 2.4 `auth/data`: DTO, datasource e repositório da casa (body via `postalAddressToJson`). GET 404 → `Ok(null)`; PUT 404 → `cityNotFound`; PUT 400 (ProblemDetail genérico, sem lista por campo) → `validation`; DELETE 204 → `Ok(null)`; timeout → `network`. Registrar no `auth_container.dart`.
+- [x] 2.1 `Environment`: `cepLookupEndpoint(cep)` (só dígitos), `statesEndpoint`, `citiesEndpoint`, `userPersonalAddressEndpoint` — os quatro de uma vez.
+- [x] 2.2 `lib/core/network/postal_address_body.dart`: `postalAddressToJson` — `cityToken`, `street`, `zipCode` (8 dígitos) e os **três opcionais sempre presentes** (valor ou `null`); nunca `placeId`, `sessionToken`, `stateToken`, `cityName`, `uf`.
+- [x] 2.3 `ibge_locations/data`: DTOs, datasource, repositório, container. CEP 200/400/404 (dois `detail`, marcador nomeado para “catálogo”)/429/503/timeout; cities exige `uf`, UF inexistente → `ufNotFound`. Registrar em `main.dart` depois do Dio autenticado.
+- [x] 2.4 `auth/data`: DTO, datasource e repositório da casa (body via `postalAddressToJson`). GET 404 → `Ok(null)`; PUT 404 → `cityNotFound`; PUT 400 (ProblemDetail genérico, sem lista por campo) → `validation`; DELETE 204 → `Ok(null)`; timeout → `network`. Registrar no `auth_container.dart`.
 - [ ] 2.5 `make lint` + `make test`. **Parar para validação (R27a).**
 
 ## 3. Fase 3 — Cubit de dados pessoais (`feat/3-personal-data-address-cubit`)
