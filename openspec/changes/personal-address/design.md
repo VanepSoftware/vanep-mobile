@@ -195,7 +195,7 @@ Mesmo molde das áreas: mapear status + `detail` (marcador de texto, porque o ba
 
 Casa (`PersonalAddressFailure`): `cityNotFound` (PUT 404), `validation` (PUT 400, **sem** mapa por campo — o back não devolve; as pendências por campo vêm de `PostalAddressDraft.issues`), `network`, `unexpected`.
 
-CEP (`CepFailure`): `invalidFormat` (400), `notFound` (404 CEP), `cityNotInCatalog` (404 município), `rateLimited` (429), `unavailable` (503), `network`, `unexpected`. Distinguir os dois 404 pelo `detail` (marcador de “catálogo”). `notFound` bloqueia o Salvar até o CEP mudar (D2); os outros 404, o 429 e o 503 só destravam o picker.
+CEP (`CepFailure`): `invalidFormat` (400), `notFound` (404 CEP), `cityNotInCatalog` (404 município), `rateLimited` (429), `unavailable` (503), `network`, `unexpected`. Distinguir os dois 404 pelo `detail` (marcadores `catálogo` e `catalog`, porque o back devolve a mensagem no idioma da requisição). `notFound` bloqueia o Salvar até o CEP mudar (D2); os outros 404, o 429 e o 503 só destravam o picker.
 
 IBGE (`IbgeLocationsFailure`): `ufMissing` (não emitir; defesa se 400), `ufNotFound` (404), `network`, `unexpected`.
 

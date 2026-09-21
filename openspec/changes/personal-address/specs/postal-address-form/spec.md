@@ -78,7 +78,7 @@ O app MUST NOT chamar `viacep.com.br` nem qualquer lookup de CEP fora desta API.
 | 429 | rate limit por usuário (20/60 s); destrava o picker; mensagem para esperar; grava pelo fallback |
 | 503 | ViaCEP fora / timeout; destrava o picker; mensagem para tentar de novo ou preencher na mão; grava pelo fallback |
 
-O back não manda `code` nesses erros, só `detail` localizado; os dois 404 se distinguem pelo `detail` (marcador de “catálogo”), no mesmo molde dos marcadores que o app já usa em área de atuação.
+O back não manda `code` nesses erros, só `detail` localizado; os dois 404 se distinguem pelo `detail` (marcador de “catálogo”, que também casa a mensagem em inglês, “catalog”), no mesmo molde dos marcadores que o app já usa em área de atuação.
 
 #### Scenario: CEP encontrado preenche o form e trava UF e município
 
