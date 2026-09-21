@@ -38,7 +38,6 @@ class ClientShellState extends State<ClientShell> {
     final displayName = widget.profile.name ?? widget.profile.email ?? '';
 
     return Scaffold(
-      extendBody: true,
       backgroundColor: VanepColors.surface,
       body: IndexedStack(
         index: selectedIndex,
@@ -64,18 +63,17 @@ class ClientShellState extends State<ClientShell> {
                   summaryState.assistantStatus,
                 ),
                 statusColor: assistantStatusColor(summaryState.assistantStatus),
+                isSummaryLoading:
+                    summaryState.status == ProfileSummaryStatus.loading,
                 onRefresh: refreshProfileTab,
               );
             },
           ),
         ],
       ),
-      bottomNavigationBar: Material(
-        type: MaterialType.transparency,
-        child: ClientBottomNav(
-          currentIndex: selectedIndex,
-          onDestinationSelected: selectShellTab,
-        ),
+      bottomNavigationBar: ClientBottomNav(
+        currentIndex: selectedIndex,
+        onDestinationSelected: selectShellTab,
       ),
     );
   }

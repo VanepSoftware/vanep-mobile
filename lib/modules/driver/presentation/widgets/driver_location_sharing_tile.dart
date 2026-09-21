@@ -29,11 +29,7 @@ class DriverLocationSharingTile extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        Switch(
-          value: sharing,
-          onChanged: onChanged,
-          activeTrackColor: VanepColors.brand,
-        ),
+        Switch(value: sharing, onChanged: onChanged),
       ],
     );
   }

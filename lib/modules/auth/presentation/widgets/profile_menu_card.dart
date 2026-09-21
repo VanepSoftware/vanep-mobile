@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
+import '../../../../core/design_system/vanep_theme.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/builders/profile_menu_builder.dart';
@@ -65,9 +66,12 @@ class ProfileMenuCard extends StatelessWidget {
 
     return Material(
       color: VanepColors.card,
-      elevation: 1,
-      shadowColor: VanepColors.textPrimary.withValues(alpha: 0.08),
-      borderRadius: BorderRadius.circular(16),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
+        side: const BorderSide(color: VanepColors.cardBorder),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           for (var index = 0; index < section.entries.length; index++) ...[
@@ -131,7 +135,7 @@ class ProfileMenuTile extends StatelessWidget {
         : VanepColors.textSecondary;
     final iconBackground = isSignOut && enabled
         ? VanepColors.danger.withValues(alpha: 0.10)
-        : VanepColors.searchField;
+        : VanepColors.surface;
 
     return InkWell(
       onTap: onTap,

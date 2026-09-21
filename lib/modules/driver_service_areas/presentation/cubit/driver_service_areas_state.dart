@@ -23,6 +23,10 @@ class DriverServiceAreasState extends Equatable {
 
   final ServiceAreaFailure? failure;
 
+  bool get isLoadingAreas =>
+      status == DriverServiceAreasStatus.initial ||
+      status == DriverServiceAreasStatus.loading;
+
   bool get canAddMore => drafts.length < maxServiceAreas;
 
   bool get isEmpty => drafts.isEmpty;

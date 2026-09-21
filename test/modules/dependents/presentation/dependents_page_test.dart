@@ -119,12 +119,12 @@ void main() {
     expect(find.textContaining('ano'), findsOneWidget);
   });
 
-  testWidgets('the first load shows a spinner', (tester) async {
+  testWidgets('the first load shows card skeletons', (tester) async {
     seed(const DependentsState(status: DependentsStatus.loading));
 
     await tester.pumpWidget(harness(cubit));
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(DependentCardSkeleton), findsNWidgets(3));
     expect(find.byType(DependentCard), findsNothing);
   });
 
@@ -139,7 +139,7 @@ void main() {
     await tester.pumpWidget(harness(cubit));
 
     expect(find.byType(DependentCard), findsNWidgets(2));
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(DependentCardSkeleton), findsNothing);
   });
 
   testWidgets('a single dependent offers no default control', (tester) async {

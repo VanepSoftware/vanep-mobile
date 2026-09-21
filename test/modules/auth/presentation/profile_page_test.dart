@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/result/result.dart';
@@ -73,6 +74,7 @@ Widget profileHarness(
   String? city,
   String? statusLabel,
   Color? statusColor,
+  bool isSummaryLoading = false,
   Future<void> Function()? onRefresh,
 }) {
   return MaterialApp(
@@ -94,6 +96,7 @@ Widget profileHarness(
           city: city,
           statusLabel: statusLabel,
           statusColor: statusColor,
+          isSummaryLoading: isSummaryLoading,
           onRefresh: onRefresh,
         ),
       ),
@@ -130,6 +133,38 @@ void main() {
     expect(find.text('Preferências'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Sair'), 200);
     expect(find.text('Sair'), findsOneWidget);
+  });
+
+  testWidgets('skeletons the summary fields while the summary loads', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      profileHarness(cubit, const ClientProfile(), isSummaryLoading: true),
+    );
+
+    // Name and e-mail come from the session, so they stay readable.
+    expect(find.text('Alex Morgan'), findsOneWidget);
+    expect(find.text('alex.morgan@example.com'), findsOneWidget);
+    // Photo and rating come from the summary request, so they are shaded.
+    expect(find.byType(VanepSkeleton), findsNWidgets(2));
+    expect(find.byIcon(Icons.photo_camera_outlined), findsNothing);
+  });
+
+  testWidgets('drops the summary skeletons once the rating arrives', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      profileHarness(
+        cubit,
+        const ClientProfile(),
+        rating: 4.8,
+        isSummaryLoading: false,
+      ),
+    );
+
+    expect(find.byType(VanepSkeleton), findsNothing);
+    expect(find.text('4.8'), findsOneWidget);
+    expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
   });
 
   testWidgets('disabled menu items do not navigate', (tester) async {
@@ -229,7 +264,9 @@ void main() {
     verifyNever(() => cubit.signOut());
   });
 
-  testWidgets('driver header shows rating and city under email', (tester) async {
+  testWidgets('driver header shows rating and city under email', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       profileHarness(
         cubit,
@@ -279,7 +316,9 @@ void main() {
     expect(find.byIcon(Icons.star), findsOneWidget);
   });
 
-  testWidgets('client header does not show rating when omitted', (tester) async {
+  testWidgets('client header does not show rating when omitted', (
+    tester,
+  ) async {
     await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
 
     expect(find.byIcon(Icons.star), findsNothing);

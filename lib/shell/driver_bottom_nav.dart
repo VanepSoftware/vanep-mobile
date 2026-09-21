@@ -23,22 +23,22 @@ class DriverBottomNav extends StatelessWidget {
       items: [
         VanepNavItem(
           icon: Icons.home_outlined,
-          selectedIcon: Icons.home,
+          selectedIcon: Icons.home_rounded,
           label: l10n.navHome,
         ),
         VanepNavItem(
           icon: Icons.assignment_outlined,
-          selectedIcon: Icons.assignment,
+          selectedIcon: Icons.assignment_rounded,
           label: l10n.navProposals,
         ),
         VanepNavItem(
           icon: Icons.groups_outlined,
-          selectedIcon: Icons.groups,
+          selectedIcon: Icons.groups_rounded,
           label: l10n.navStudents,
         ),
         VanepNavItem(
           icon: Icons.person_outline,
-          selectedIcon: Icons.person,
+          selectedIcon: Icons.person_rounded,
           label: l10n.navProfile,
         ),
       ],

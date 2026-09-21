@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/ui/vanep_glass_card.dart';
+import '../../../../core/ui/vanep_card.dart';
 import '../../../../core/ui/vanep_greeting_header.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -34,7 +34,7 @@ class DriverHomeTab extends StatelessWidget {
               const SizedBox(height: 14),
               DriverShiftBadge(onShift: state.onShift),
               const SizedBox(height: 20),
-              const VanepGlassCard(child: SizedBox(height: 56)),
+              const VanepCard(child: SizedBox(height: 56)),
               const SizedBox(height: 24),
               VanepPrimaryButton(
                 label: state.onShift

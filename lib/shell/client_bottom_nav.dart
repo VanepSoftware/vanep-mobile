@@ -23,22 +23,22 @@ class ClientBottomNav extends StatelessWidget {
       items: [
         VanepNavItem(
           icon: Icons.home_outlined,
-          selectedIcon: Icons.home,
+          selectedIcon: Icons.home_rounded,
           label: l10n.navHome,
         ),
         VanepNavItem(
           icon: Icons.airport_shuttle_outlined,
-          selectedIcon: Icons.airport_shuttle,
+          selectedIcon: Icons.airport_shuttle_rounded,
           label: l10n.navVans,
         ),
         VanepNavItem(
           icon: Icons.notifications_outlined,
-          selectedIcon: Icons.notifications,
+          selectedIcon: Icons.notifications_rounded,
           label: l10n.navNotifications,
         ),
         VanepNavItem(
           icon: Icons.person_outline,
-          selectedIcon: Icons.person,
+          selectedIcon: Icons.person_rounded,
           label: l10n.navProfile,
         ),
       ],

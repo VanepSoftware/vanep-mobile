@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../design_system/vanep_colors.dart';
+import '../design_system/vanep_typography.dart';
+
+/// Matches [VanepColors.actionSurface] (`0x14` alpha) so the selected pill
+/// keeps the same tint the cards and badges use.
+const double _selectedPillOpacity = 0.08;
+
+/// The bar lays its destinations out with `spaceBetween`, so the outer two sit
+/// flush against whatever room they are given. Insetting the row pulls them in
+/// towards the centre instead of letting them hug the screen edges.
+const EdgeInsets _rowMargin = EdgeInsets.symmetric(horizontal: 24, vertical: 8);
 
 class VanepNavItem {
   const VanepNavItem({
@@ -14,6 +25,8 @@ class VanepNavItem {
   final String label;
 }
 
+/// Bottom navigation where the selected destination expands into a labelled
+/// stadium pill and the others stay icon-only.
 class VanepBottomNav extends StatelessWidget {
   const VanepBottomNav({
     required this.items,
@@ -28,79 +41,47 @@ class VanepBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        child: Material(
-          color: VanepColors.card,
-          elevation: 8,
-          shadowColor: Colors.black.withValues(alpha: 0.18),
-          borderRadius: BorderRadius.circular(28),
-          clipBehavior: Clip.antiAlias,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                for (var index = 0; index < items.length; index++)
-                  VanepNavButton(
-                    item: items[index],
-                    selected: index == currentIndex,
-                    onTap: () => onDestinationSelected(index),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return SalomonBottomBar(
+      currentIndex: currentIndex,
+      onTap: onDestinationSelected,
+      backgroundColor: VanepColors.card,
+      selectedItemColor: VanepColors.action,
+      unselectedItemColor: VanepColors.textSecondary,
+      selectedColorOpacity: _selectedPillOpacity,
+      margin: _rowMargin,
+      items: [
+        for (var index = 0; index < items.length; index++)
+          navBarItem(items[index], selected: index == currentIndex),
+      ],
     );
   }
 }
 
-class VanepNavButton extends StatelessWidget {
-  const VanepNavButton({
-    required this.item,
-    required this.selected,
-    required this.onTap,
-    super.key,
-  });
+SalomonBottomBarItem navBarItem(VanepNavItem item, {required bool selected}) {
+  return SalomonBottomBarItem(
+    icon: NavItemIcon(item: item, selected: false),
+    activeIcon: NavItemIcon(item: item, selected: true),
+    // The label is announced by [NavItemIcon] whether or not it is selected;
+    // without this the unselected labels would be clipped out of semantics.
+    title: ExcludeSemantics(
+      child: Text(item.label, style: VanepTypography.button),
+    ),
+  );
+}
+
+class NavItemIcon extends StatelessWidget {
+  const NavItemIcon({required this.item, required this.selected, super.key});
 
   final VanepNavItem item;
   final bool selected;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final color = selected
-        ? VanepColors.textPrimary
-        : VanepColors.textSecondary;
-
     return Semantics(
-      button: true,
-      selected: selected,
       label: item.label,
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: selected
-                  ? VanepColors.navSelectedSurface
-                  : Colors.transparent,
-            ),
-            child: Icon(
-              selected ? item.selectedIcon : item.icon,
-              color: color,
-            ),
-          ),
-        ),
+      selected: selected,
+      child: ExcludeSemantics(
+        child: Icon(selected ? item.selectedIcon : item.icon),
       ),
     );
   }

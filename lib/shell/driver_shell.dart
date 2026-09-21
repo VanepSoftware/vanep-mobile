@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../core/design_system/vanep_colors.dart';
 import '../core/ui/vanep_coming_soon.dart';
-import '../core/ui/vanep_screen_background.dart';
 import '../l10n/app_localizations.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
 import '../modules/auth/domain/value_objects/onboarding_step.dart';
@@ -47,56 +47,56 @@ class DriverShellState extends State<DriverShell> {
     final l10n = AppLocalizations.of(context)!;
     final displayName = widget.profile.name ?? widget.profile.email ?? '';
 
-    return VanepScreenBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Column(
-          children: [
-            if (shouldOfferServiceAreas)
-              ServiceAreasOnboardingBanner(
-                onStart: () => startServiceAreasOnboarding(context),
-                onSkip: () => setState(() => onboardingDismissed = true),
-              ),
-            Expanded(
-              child: IndexedStack(
-                index: selectedIndex,
-                children: [
-                  DriverHomeTab(displayName: displayName),
-                  VanepComingSoon(
-                    title: l10n.navProposals,
-                    message: l10n.comingSoon,
-                  ),
-                  VanepComingSoon(
-                    title: l10n.navStudents,
-                    message: l10n.comingSoon,
-                  ),
-                  BlocBuilder<ProfileSummaryCubit, ProfileSummaryState>(
-                    builder: (context, summaryState) {
-                      return ProfilePage(
-                        profile: widget.profile,
-                        photoUrl: summaryState.photoUrl,
-                        rating: summaryState.rating,
-                        city: summaryState.city,
-                        statusLabel: assistantStatusLabel(
-                          l10n,
-                          summaryState.assistantStatus,
-                        ),
-                        statusColor: assistantStatusColor(
-                          summaryState.assistantStatus,
-                        ),
-                        onRefresh: refreshProfileTab,
-                      );
-                    },
-                  ),
-                ],
-              ),
+    return Scaffold(
+      backgroundColor: VanepColors.surface,
+      body: Column(
+        children: [
+          if (shouldOfferServiceAreas)
+            ServiceAreasOnboardingBanner(
+              onStart: () => startServiceAreasOnboarding(context),
+              onSkip: () => setState(() => onboardingDismissed = true),
             ),
-          ],
-        ),
-        bottomNavigationBar: DriverBottomNav(
-          currentIndex: selectedIndex,
-          onDestinationSelected: selectShellTab,
-        ),
+          Expanded(
+            child: IndexedStack(
+              index: selectedIndex,
+              children: [
+                DriverHomeTab(displayName: displayName),
+                VanepComingSoon(
+                  title: l10n.navProposals,
+                  message: l10n.comingSoon,
+                ),
+                VanepComingSoon(
+                  title: l10n.navStudents,
+                  message: l10n.comingSoon,
+                ),
+                BlocBuilder<ProfileSummaryCubit, ProfileSummaryState>(
+                  builder: (context, summaryState) {
+                    return ProfilePage(
+                      profile: widget.profile,
+                      photoUrl: summaryState.photoUrl,
+                      rating: summaryState.rating,
+                      city: summaryState.city,
+                      statusLabel: assistantStatusLabel(
+                        l10n,
+                        summaryState.assistantStatus,
+                      ),
+                      statusColor: assistantStatusColor(
+                        summaryState.assistantStatus,
+                      ),
+                      isSummaryLoading:
+                          summaryState.status == ProfileSummaryStatus.loading,
+                      onRefresh: refreshProfileTab,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: DriverBottomNav(
+        currentIndex: selectedIndex,
+        onDestinationSelected: selectShellTab,
       ),
     );
   }

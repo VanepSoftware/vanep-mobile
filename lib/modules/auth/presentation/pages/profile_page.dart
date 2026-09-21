@@ -28,6 +28,7 @@ class ProfilePage extends StatelessWidget {
     this.city,
     this.statusLabel,
     this.statusColor,
+    this.isSummaryLoading = false,
     this.onRefresh,
     super.key,
   });
@@ -38,6 +39,7 @@ class ProfilePage extends StatelessWidget {
   final String? city;
   final String? statusLabel;
   final Color? statusColor;
+  final bool isSummaryLoading;
   final Future<void> Function()? onRefresh;
 
   @override
@@ -48,9 +50,7 @@ class ProfilePage extends StatelessWidget {
     final hasPendingEmailConfirmation = profile.pendingEmail != null;
     final refresh = onRefresh;
     final listView = ListView(
-      physics: refresh == null
-          ? null
-          : const AlwaysScrollableScrollPhysics(),
+      physics: refresh == null ? null : const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 124),
       children: [
         Text(l10n.navProfile, style: VanepTypography.pageTitle),
@@ -63,6 +63,7 @@ class ProfilePage extends StatelessWidget {
           city: city,
           statusLabel: statusLabel,
           statusColor: statusColor,
+          isSummaryLoading: isSummaryLoading,
         ),
         const SizedBox(height: 24),
         for (var index = 0; index < sections.length; index++) ...[
@@ -84,7 +85,7 @@ class ProfilePage extends StatelessWidget {
           : RefreshIndicator(
               onRefresh: refresh,
               backgroundColor: VanepColors.card,
-              color: VanepColors.brand,
+              color: VanepColors.action,
               child: listView,
             ),
     );
