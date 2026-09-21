@@ -680,6 +680,19 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsNothing);
     });
 
+    testWidgets('the form has as many fields as the placeholder shows', (
+      tester,
+    ) async {
+      useTallScreen(tester);
+      await tester.pumpWidget(personalDataHarness(cubit));
+      await tester.pump();
+
+      expect(
+        find.byType(VanepFieldLabel),
+        findsNWidgets(personalDataFieldCount),
+      );
+    });
+
     testWidgets('the placeholders keep the shape of the real form', (
       tester,
     ) async {

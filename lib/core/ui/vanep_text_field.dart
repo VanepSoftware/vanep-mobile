@@ -47,8 +47,6 @@ class VanepTextField extends StatefulWidget {
   final bool readOnly;
   final bool isLoading;
   final String? loadingLabel;
-
-  /// Shown on the label row, glued to the end of the input.
   final Widget? labelTrailing;
   final VoidCallback? onTap;
   final ValueChanged<String>? onSubmitted;
@@ -210,8 +208,6 @@ class VanepFieldLabel extends StatelessWidget {
 
   final String label;
   final bool isRequired;
-
-  /// Widget on the same row as the label, pushed to the far end.
   final Widget? trailing;
 
   @override
