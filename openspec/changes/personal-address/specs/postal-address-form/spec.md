@@ -66,7 +66,7 @@ O app SHALL oferecer um campo CEP com máscara `00000-000`. Quando houver 8 díg
 
 **404 “CEP não existe” (`CepFailure.notFound`).** Além do que vale para os outros 404, o app MUST **bloquear o Salvar** do endereço até a pessoa trocar o CEP. Escolher UF, município ou rua na mão MUST NOT habilitar o write nem apagar essa falha. Os outros 404, o 429 e o 503 continuam graváveis pelo fallback manual.
 
-O picker MUST permanecer disponível enquanto o CEP for desconhecido, incompleto ou o lookup tiver falhado, inclusive se a pessoa não souber o CEP (não precisa esperar um 404 para preencher UF e município na primeira vez). Depois de um 200, UF e município ficam travados até outro CEP.
+O picker MUST permanecer disponível enquanto o CEP for desconhecido, incompleto ou o lookup tiver falhado, inclusive se a pessoa não souber o CEP (não precisa esperar um 404 para preencher UF e município na primeira vez). Depois de um 200, UF e município ficam travados até a pessoa editar o CEP para menos de 8 dígitos (o picker volta a ficar livre, sem apagar o que já estava) ou até outro lookup.
 
 O app MUST NOT chamar `viacep.com.br` nem qualquer lookup de CEP fora desta API. Sem o back não existe `cityToken`.
 
@@ -104,6 +104,14 @@ O back não manda `code` nesses erros, só `detail` localizado; os dois 404 se d
 - **AND** o app não mantém rua nem bairro do CEP anterior
 - **AND** o bairro fica travado só se o lookup novo trouxe `neighborhood`
 
+#### Scenario: Editar o CEP destrava o picker
+
+- **WHEN** a pessoa tem UF e município travados por um CEP com 200, ou por uma casa gravada
+- **AND** apaga um dígito do CEP
+- **THEN** UF e município ficam destravados e o picker pode abrir
+- **AND** cidade, rua e bairro que já estavam continuam preenchidos
+- **AND** ao completar 8 dígitos o app consulta de novo e trava outra vez se o lookup devolver 200
+
 #### Scenario: CEP com hífen não vai no path
 
 - **WHEN** o campo mostra `70040-010`
@@ -139,7 +147,7 @@ O back não manda `code` nesses erros, só `detail` localizado; os dois 404 se d
 
 ### Requirement: Rascunho postal tem um dono e regras de completude
 
-O app SHALL representar o endereço em edição por um único valor de domínio compartilhado, `PostalAddressDraft`, em `lib/core/domain/`. Contém CEP (só dígitos), `cityToken`, nome do município e UF (só para exibição — a identidade é o token), rua, bairro, número e complemento, mais o que o último lookup de CEP decidiu: cidade travada, bairro travado e CEP inexistente. Comparação por valor com normalização: opcionais `null` e string vazia são iguais; o CEP compara só dígitos; texto é aparado.
+O app SHALL representar o endereço em edição por um único valor de domínio compartilhado, `PostalAddressDraft`, em `lib/core/domain/`. Contém CEP (só dígitos), `cityToken`, nome do município e UF (só para exibição — a identidade é o token), rua, bairro, número e complemento, mais o que o último lookup de CEP decidiu: cidade travada, bairro travado e CEP inexistente. O texto é guardado como a pessoa digitou; só o CEP é normalizado ao guardar (só dígitos, até 8). A comparação de conteúdo — que decide se o endereço está sujo — normaliza: opcionais em branco e ausentes são iguais, o CEP compara só dígitos e o texto é aparado.
 
 O rascunho é **completo** quando tem `cityToken`, rua não vazia e CEP com exatamente 8 dígitos. Está **gravável** quando é completo e o CEP não foi dado como inexistente. Número, complemento e bairro sozinhos MUST NOT tornar um rascunho completo. O rascunho é **em branco** quando todos os campos de endereço estão vazios. Limites do cliente, espelho do Bean Validation do back: rua 255, número 16, complemento 128, bairro 128.
 

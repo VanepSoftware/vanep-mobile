@@ -20,18 +20,18 @@ Cinco fases. As branches e o stash que já existem são **material de origem**: 
 
 Só com a sua aprovação. Recomendação: refazer a pilha a partir da main em vez de propagar a main por 5 merges e refatorar depois.
 
-- [ ] 0.1 Commitar esta spec em `spec/personal-address` (já contém a main desde `bba38b0`).
-- [ ] 0.2 Renomear as 5 branches antigas para `old/<nome>` (referência; nada é apagado). O `stash@{0}` fica intacto.
-- [ ] 0.3 Criar cada branch nova (nomes da tabela) **quando a fase começa**, empilhada sobre a anterior (a 1 sai de `spec/personal-address`). Portar por fase, sem `stash pop`: `git checkout old/<branch> -- <paths>` e `git show stash@{0}:<path>`. Ficam de fora `openspec/*` e `vanep_text_field.dart` do stash.
+- [x] 0.1 Commitar esta spec em `spec/personal-address` (já contém a main desde `bba38b0`).
+- [x] 0.2 Renomear as 5 branches antigas para `old/<nome>` (referência; nada é apagado). O `stash@{0}` fica intacto.
+- [x] 0.3 Criar cada branch nova (nomes da tabela) **quando a fase começa**, empilhada sobre a anterior (a 1 sai de `spec/personal-address`). Portar por fase, sem `stash pop`: `git checkout old/<branch> -- <paths>` e `git show stash@{0}:<path>`. Ficam de fora `openspec/*` e `vanep_text_field.dart` do stash.
 - [ ] 0.4 Depois da validação de todas as fases: você decide se descarta `old/*` e o stash.
 
 ## 1. Fase 1 — Domínio (`feat/1-personal-address-domain`)
 
 Sem Dio, DTO nem endpoint. `auth` MUST NOT importar `ibge_locations` (`cityToken` na casa é `String`).
 
-- [ ] 1.1 `ibge_locations/domain`: `BrazilianState`, `BrazilianCity` (sem `ibge_code`), `CepLookup` (rua e bairro anuláveis), página de catálogo, `CepFailure` (`invalidFormat`, `notFound`, `cityNotInCatalog`, `rateLimited`, `unavailable`, `network`, `unexpected`), `IbgeLocationsFailure`, `IbgeLocationsRepository` e use cases `LookupCep`, `ListStates`, `ListCities`. Portar da branch 1.
-- [ ] 1.2 `lib/core/domain/postal_address_draft.dart`: `PostalAddressDraft`, `PostalAddressIssue`, `PostalAddressLimits` (Dart puro). Testar normalização; `isBlank`, `isComplete`, `isSavable`, `issues`; `withCepLookup` (trava cidade, **substitui** rua/bairro, trava bairro só se veio, não toca número/complemento); `withCepUnavailable` (destrava, limpa o que veio do lookup); `withCepUnknown` (idem + bloqueia até o CEP mudar); `withUf` zera município; `withCity`; caps 255/16/128/128. Portar as regras e os casos de teste dos campos soltos do state/cubit das branches 3–4.
-- [ ] 1.3 `auth/domain`: `PersonalAddress` (sem `googlePlaceId`, converte para rascunho), `PersonalAddressWrite` (só nasce de rascunho **completo**; sem chaves da API — R01), `PersonalAddressFailure` (`cityNotFound`, `validation`, `network`, `unexpected`), `PersonalAddressRepository` e use cases `FindMyPersonalAddress`, `UpsertMyPersonalAddress`, `DeleteMyPersonalAddress`.
+- [x] 1.1 `ibge_locations/domain`: `BrazilianState`, `BrazilianCity` (sem `ibge_code`), `CepLookup` (rua e bairro anuláveis), página de catálogo, `CepFailure` (`invalidFormat`, `notFound`, `cityNotInCatalog`, `rateLimited`, `unavailable`, `network`, `unexpected`), `IbgeLocationsFailure`, `IbgeLocationsRepository` e use cases `LookupCep`, `ListStates`, `ListCities`. Portar da branch 1.
+- [x] 1.2 `lib/core/domain/postal_address_draft.dart`: `PostalAddressDraft`, `PostalAddressIssue`, `PostalAddressLimits` (Dart puro). Testar normalização; `isBlank`, `isComplete`, `isSavable`, `issues`; `withCepLookup` (trava cidade, **substitui** rua/bairro, trava bairro só se veio, não toca número/complemento); `withCepUnavailable` (destrava, limpa o que veio do lookup); `withCepUnknown` (idem + bloqueia até o CEP mudar); `withUf` zera município; `withCity`; caps 255/16/128/128. Portar as regras e os casos de teste dos campos soltos do state/cubit das branches 3–4.
+- [x] 1.3 `auth/domain`: `PersonalAddress` (sem `googlePlaceId`, converte para rascunho), `PersonalAddressWrite` (só nasce de rascunho **gravável** — completo e sem CEP inexistente; sem chaves da API — R01), `PersonalAddressFailure` (`cityNotFound`, `validation`, `network`, `unexpected`), `PersonalAddressRepository` e use cases `FindMyPersonalAddress`, `UpsertMyPersonalAddress`, `DeleteMyPersonalAddress`.
 - [ ] 1.4 `make lint` + `make test`. **Parar para validação (R27a).**
 
 ## 2. Fase 2 — Dados (`feat/2-personal-address-data`)
