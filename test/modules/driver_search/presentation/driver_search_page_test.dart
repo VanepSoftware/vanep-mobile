@@ -13,6 +13,7 @@ import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_card.dart';
 
 class MockDriverSearchCubit extends MockCubit<DriverSearchState>
     implements DriverSearchCubit {}
@@ -157,12 +158,12 @@ void main() {
     );
   });
 
-  testWidgets('shows progress while searching', (tester) async {
+  testWidgets('shows card skeletons while searching', (tester) async {
     seed(const DriverSearchState(status: DriverSearchStatus.searching));
 
     await tester.pumpWidget(harness(cubit, autocomplete));
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(DriverCardSkeleton), findsNWidgets(3));
   });
 
   testWidgets('a failed page keeps the results and offers a retry', (
@@ -180,7 +181,7 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.text('Exato QNL 5'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(DriverCardSkeleton), findsNothing);
 
     await tester.tap(find.text('Tentar novamente'));
     await tester.pumpAndSettle();

@@ -11,7 +11,6 @@ import '../../../../core/places/place_autocomplete_controller.dart';
 import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_gender_chips.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_screen_background.dart';
 import '../../../../core/ui/vanep_text_field.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/dependent.dart';
@@ -73,95 +72,92 @@ class DependentFormViewState extends State<DependentFormView> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return VanepScreenBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: BlocBuilder<DependentFormCubit, DependentFormState>(
-            buildWhen: (previous, current) =>
-                previous.isCreating != current.isCreating,
-            builder: (context, state) => Text(
-              state.isCreating
-                  ? l10n.dependentFormNewTitle
-                  : l10n.dependentFormEditTitle,
-            ),
+    return Scaffold(
+      backgroundColor: VanepColors.surface,
+      appBar: AppBar(
+        title: BlocBuilder<DependentFormCubit, DependentFormState>(
+          buildWhen: (previous, current) =>
+              previous.isCreating != current.isCreating,
+          builder: (context, state) => Text(
+            state.isCreating
+                ? l10n.dependentFormNewTitle
+                : l10n.dependentFormEditTitle,
           ),
         ),
-        body: BlocConsumer<DependentFormCubit, DependentFormState>(
-          listenWhen: (previous, current) =>
-              current.status == DependentFormStatus.saved ||
-              current.failure != previous.failure,
-          listener: (context, state) {
-            if (state.status == DependentFormStatus.saved) {
-              Navigator.of(context).pop(true);
-              return;
-            }
-            if (!shouldShowDependentFailureFeedback(state.failure)) return;
-            VanepFeedback.showError(
-              context,
-              dependentFailureLabel(l10n, state.failure!),
-            );
-          },
-          builder: (context, state) {
-            final cubit = context.read<DependentFormCubit>();
+      ),
+      body: BlocConsumer<DependentFormCubit, DependentFormState>(
+        listenWhen: (previous, current) =>
+            current.status == DependentFormStatus.saved ||
+            current.failure != previous.failure,
+        listener: (context, state) {
+          if (state.status == DependentFormStatus.saved) {
+            Navigator.of(context).pop(true);
+            return;
+          }
+          if (!shouldShowDependentFailureFeedback(state.failure)) return;
+          VanepFeedback.showError(
+            context,
+            dependentFailureLabel(l10n, state.failure!),
+          );
+        },
+        builder: (context, state) {
+          final cubit = context.read<DependentFormCubit>();
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  VanepTextField(
-                    label: l10n.dependentFieldName,
-                    controller: nameController,
-                    onChanged: cubit.changeName,
-                    enabled: !state.isSaving,
-                    maxLength: maxDependentNameLength,
-                    textInputAction: TextInputAction.next,
-                    errorText: dependentFieldErrorLabel(
-                      l10n,
-                      state.errorOf(DependentField.name),
+          return SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                VanepTextField(
+                  label: l10n.dependentFieldName,
+                  controller: nameController,
+                  onChanged: cubit.changeName,
+                  enabled: !state.isSaving,
+                  maxLength: maxDependentNameLength,
+                  textInputAction: TextInputAction.next,
+                  errorText: dependentFieldErrorLabel(
+                    l10n,
+                    state.errorOf(DependentField.name),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                DependentBirthDateField(state: state),
+                const SizedBox(height: 20),
+                Text(
+                  l10n.dependentFieldGender,
+                  style: VanepTypography.cardSubtitle,
+                ),
+                const SizedBox(height: 8),
+                VanepGenderChips(
+                  value: state.draft.gender,
+                  onChanged: cubit.changeGender,
+                  labelOf: (gender) => genderLabel(gender, l10n),
+                ),
+                if (state.draft.gender != null)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () => cubit.changeGender(null),
+                      child: Text(l10n.dependentFieldGenderClear),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  DependentBirthDateField(state: state),
-                  const SizedBox(height: 20),
-                  Text(
-                    l10n.dependentFieldGender,
-                    style: VanepTypography.cardSubtitle,
-                  ),
-                  const SizedBox(height: 8),
-                  VanepGenderChips(
-                    value: state.draft.gender,
-                    onChanged: cubit.changeGender,
-                    labelOf: (gender) => genderLabel(gender, l10n),
-                  ),
-                  if (state.draft.gender != null)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton(
-                        onPressed: () => cubit.changeGender(null),
-                        child: Text(l10n.dependentFieldGenderClear),
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                  DependentAddressField(
-                    state: state,
-                    autocomplete: autocomplete,
-                    numberController: numberController,
-                    complementController: complementController,
-                  ),
-                  const SizedBox(height: 28),
-                  VanepPrimaryButton(
-                    label: l10n.dependentFormSave,
-                    isLoading: state.isSaving,
-                    onPressed: cubit.save,
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                const SizedBox(height: 20),
+                DependentAddressField(
+                  state: state,
+                  autocomplete: autocomplete,
+                  numberController: numberController,
+                  complementController: complementController,
+                ),
+                const SizedBox(height: 28),
+                VanepPrimaryButton(
+                  label: l10n.dependentFormSave,
+                  isLoading: state.isSaving,
+                  onPressed: cubit.save,
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -206,10 +202,7 @@ class DependentBirthDateField extends StatelessWidget {
             if (state.draft.birthDate != null)
               IconButton(
                 tooltip: l10n.dependentFieldBirthDateClear,
-                icon: const Icon(
-                  Icons.close,
-                  color: VanepColors.textSecondary,
-                ),
+                icon: const Icon(Icons.close, color: VanepColors.textSecondary),
                 onPressed: () => cubit.changeBirthDate(null),
               ),
           ],
