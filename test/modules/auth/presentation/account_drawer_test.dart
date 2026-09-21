@@ -8,7 +8,9 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/personal_address_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
@@ -19,6 +21,7 @@ import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.
 import 'package:vanep_mobile/modules/auth/presentation/widgets/account_drawer.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/profile_header.dart';
 
+import '../../ibge_locations/ibge_locations_mocks.dart';
 import '../auth_fixtures.dart';
 import '../auth_mocks.dart';
 import 'auth_presentation_mocks.dart';
@@ -195,14 +198,24 @@ void main() {
     final refreshUserProfile = MockRefreshUserProfile();
     final patchUserProfile = MockPatchUserProfile();
     final requestEmailChange = MockRequestEmailChange();
+    final findMyPersonalAddress = MockFindMyPersonalAddress();
     when(refreshUserProfile.call).thenAnswer(
       (_) async => const Ok<ProfileEditFailure, UserProfile>(ClientProfile()),
+    );
+    when(findMyPersonalAddress.call).thenAnswer(
+      (_) async => const Ok<PersonalAddressFailure, PersonalAddress?>(null),
     );
     getIt.registerFactoryParam<PersonalDataCubit, SyncProfile, void>(
       (syncProfile, _) => PersonalDataCubit(
         refreshUserProfile: refreshUserProfile,
         patchUserProfile: patchUserProfile,
         requestEmailChange: requestEmailChange,
+        findMyPersonalAddress: findMyPersonalAddress,
+        upsertMyPersonalAddress: MockUpsertMyPersonalAddress(),
+        deleteMyPersonalAddress: MockDeleteMyPersonalAddress(),
+        lookupCep: MockLookupCep(),
+        listStates: MockListStates(),
+        listCities: MockListCities(),
         syncProfile: syncProfile,
       ),
     );

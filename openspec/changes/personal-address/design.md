@@ -149,7 +149,7 @@ HTTP 200 (regra do rascunho, o que o cubit já faz):
 - sempre aplica `cityToken` / `cityName` / `uf` e **trava** UF e município (o município do ViaCEP é 1:1 com o `cityToken`)
 - **substitui** `street` / `neighborhood` (nulo vira vazio; não mescla com o rascunho); se `neighborhood` veio preenchido, **trava** o bairro, senão o campo fica aberto
 - nunca preenche nem apaga número e complemento
-- mudar o CEP (8 dígitos de novo) consulta de novo e substitui cidade/UF/rua/bairro; o travamento do bairro segue o lookup novo
+- mudar o CEP (8 dígitos de novo) consulta de novo e substitui cidade/UF/rua/bairro; o travamento do bairro segue o lookup novo; o cubit **ignora** as ações do usuário que a trava proíbe (`openCityPicker`, `selectUf`, `selectCity` com a cidade travada; `updateNeighborhood` com o bairro travado), sem depender de a UI esconder o controle
 - não emite write
 
 404 (município fora do catálogo), 429 e 503: mensagem localizada distinta e **destrava** o picker; o CEP digitado fica; rua, bairro, UF e município do lookup anterior saem e o bairro fica aberto; número e complemento ficam. 404 de **CEP inexistente** faz o mesmo **e** bloqueia o Salvar até trocar o CEP (escolher UF/município não limpa a falha). 400 de formato: não deveria sair do app se o cubit só consulta com 8 dígitos; ainda mapeia para falha de formato.
@@ -226,7 +226,7 @@ Contrato: `deleteMyAddress()` → `Result<PersonalAddressFailure, void>`. 204 é
 
 Cubit: ação própria (`clearAddress`), não um draft que espera o Salvar. No 204:
 
-1. zera snapshot e rascunho de endereço
+1. zera snapshot e rascunho de endereço (as edições de perfil ainda não salvas **ficam**; o stash as descartava em silêncio)
 2. `refreshUserProfile()` para `PERSONAL_ADDRESS` voltar a `pendingSteps`
 3. no Ok do refresh → `syncProfile`
 4. no Err do refresh → a casa já não está no back; flag da sessão pode ficar velha (mesmo molde de R2, invertido)
