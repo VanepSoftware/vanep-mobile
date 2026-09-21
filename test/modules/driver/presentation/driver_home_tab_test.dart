@@ -6,7 +6,11 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_home_tab.dart';
 
-Widget harness(DriverHomeCubit cubit) {
+Widget harness(
+  DriverHomeCubit cubit, {
+  VoidCallback? onMenuTapped,
+  VoidCallback? onNotificationsTapped,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -19,7 +23,11 @@ Widget harness(DriverHomeCubit cubit) {
     home: Scaffold(
       body: BlocProvider<DriverHomeCubit>.value(
         value: cubit,
-        child: const DriverHomeTab(displayName: 'Carlos Souza'),
+        child: DriverHomeTab(
+          displayName: 'Carlos Souza',
+          onMenuTapped: onMenuTapped ?? () {},
+          onNotificationsTapped: onNotificationsTapped ?? () {},
+        ),
       ),
     ),
   );
@@ -67,5 +75,23 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(cubit.state.sharingLocation, isTrue);
+  });
+
+  testWidgets('the top bar menu and bell call their callbacks', (tester) async {
+    var menuTaps = 0;
+    var notificationTaps = 0;
+    await tester.pumpWidget(
+      harness(
+        cubit,
+        onMenuTapped: () => menuTaps++,
+        onNotificationsTapped: () => notificationTaps++,
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Abrir menu'));
+    await tester.tap(find.byTooltip('Notificações'));
+
+    expect(menuTaps, 1);
+    expect(notificationTaps, 1);
   });
 }

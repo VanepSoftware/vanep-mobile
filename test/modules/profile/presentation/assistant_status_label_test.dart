@@ -33,10 +33,7 @@ void main() {
   testWidgets('maps assistant statuses to localized labels', (tester) async {
     final l10n = await loadPt(tester);
 
-    expect(
-      assistantStatusLabel(l10n, AssistantStatus.unlinked),
-      'Sem vínculo',
-    );
+    expect(assistantStatusLabel(l10n, AssistantStatus.unlinked), 'Sem vínculo');
     expect(
       assistantStatusLabel(l10n, AssistantStatus.pending),
       'Convite pendente',
@@ -47,7 +44,7 @@ void main() {
   });
 
   test('maps assistant statuses to quiet chip colors', () {
-    expect(assistantStatusColor(AssistantStatus.active), VanepColors.brand);
+    expect(assistantStatusColor(AssistantStatus.active), VanepColors.success);
     expect(
       assistantStatusColor(AssistantStatus.pending),
       VanepColors.ratingStar,
