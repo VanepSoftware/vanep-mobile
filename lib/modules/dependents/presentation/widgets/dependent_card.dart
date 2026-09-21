@@ -83,8 +83,6 @@ Widget buildDependentCardSkeleton(BuildContext context) {
   return const DependentCardSkeleton();
 }
 
-/// Placeholder with the shape of a [DependentCard]: name, age, address and
-/// the edit action, so the list does not jump once the dependents arrive.
 class DependentCardSkeleton extends StatelessWidget {
   const DependentCardSkeleton({super.key});
 
