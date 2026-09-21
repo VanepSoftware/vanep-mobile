@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
@@ -9,6 +10,7 @@ import '../../../../core/ui/vanep_gender_select.dart';
 import '../../../../core/ui/vanep_page_chrome.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
 import '../../../../core/ui/vanep_read_only_field.dart';
+import '../../../../core/ui/vanep_skeleton.dart';
 import '../../../../core/ui/vanep_text_field.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/user_profile.dart';
@@ -124,9 +126,7 @@ Widget buildPersonalDataBody({
 }) {
   if (state.status == PersonalDataStatus.loading ||
       state.status == PersonalDataStatus.initial) {
-    return const Center(
-      child: CircularProgressIndicator(color: VanepColors.action),
-    );
+    return const PersonalDataSkeleton();
   }
 
   if (state.status == PersonalDataStatus.loadFailed || state.profile == null) {
@@ -192,6 +192,76 @@ Widget buildPersonalDataBody({
       ),
     ],
   );
+}
+
+/// Number of fields [PersonalDataFields] renders, mirrored by the placeholder
+/// so the panel keeps its height once the profile arrives.
+const int personalDataFieldCount = 6;
+
+/// Placeholder that mirrors the personal-data form while the profile loads.
+///
+/// The header is the real one: its copy is static, so there is nothing to
+/// wait for. Only the panels, which the API fills, are boned.
+class PersonalDataSkeleton extends StatelessWidget {
+  const PersonalDataSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return VanepSkeleton(
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        children: [
+          VanepPageHeader(
+            title: l10n.profilePersonalData,
+            subtitle: l10n.personalDataSubtitle,
+          ),
+          VanepOutlinedPanel(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: withSpacing([
+                for (
+                  var fieldIndex = 0;
+                  fieldIndex < personalDataFieldCount;
+                  fieldIndex++
+                )
+                  const PersonalDataFieldSkeleton(),
+              ], 20),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const VanepOutlinedPanel(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Bone.text(words: 2, fontSize: 16),
+                SizedBox(height: 12),
+                Bone.text(words: 4, fontSize: 13),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Label above a field-sized box, the shape every row of the form takes.
+class PersonalDataFieldSkeleton extends StatelessWidget {
+  const PersonalDataFieldSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Bone.text(width: 96, fontSize: 13),
+        SizedBox(height: 8),
+        Bone(height: 48, borderRadius: BorderRadius.all(Radius.circular(10))),
+      ],
+    );
+  }
 }
 
 class PersonalDataFields extends StatelessWidget {
