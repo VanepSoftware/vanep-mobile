@@ -7,16 +7,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
-import 'package:vanep_mobile/modules/drivers/presentation/pages/drivers_home_tab.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/pages/find_vans_tab.dart';
 
 import '../drivers_fixtures.dart';
 import 'drivers_presentation_mocks.dart';
 
-Widget _harness(
-  DriversCubit cubit,
-  String displayName, {
-  VoidCallback? onSearchTapped,
-}) {
+Widget _harness(DriversCubit cubit, {VoidCallback? onSearchTapped}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -29,10 +25,7 @@ Widget _harness(
     home: Scaffold(
       body: BlocProvider<DriversCubit>.value(
         value: cubit,
-        child: DriversHomeTab(
-          displayName: displayName,
-          onSearchTapped: onSearchTapped ?? () {},
-        ),
+        child: FindVansTab(onSearchTapped: onSearchTapped ?? () {}),
       ),
     ),
   );
@@ -53,11 +46,13 @@ void main() {
     );
   });
 
-  testWidgets('greets the user by first name', (tester) async {
-    await tester.pumpWidget(_harness(cubit, 'Maria Silva'));
+  testWidgets('shows the vans title, search and suggestions', (tester) async {
+    await tester.pumpWidget(_harness(cubit));
 
-    expect(find.text('Olá, Maria!'), findsOneWidget);
+    expect(find.text('Vans'), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
     expect(find.text('Sugestões perto de você'), findsOneWidget);
+    expect(find.textContaining('Olá'), findsNothing);
   });
 
   testWidgets('tapping the search field opens the search screen', (
@@ -65,7 +60,7 @@ void main() {
   ) async {
     var opened = false;
     await tester.pumpWidget(
-      _harness(cubit, 'Maria Silva', onSearchTapped: () => opened = true),
+      _harness(cubit, onSearchTapped: () => opened = true),
     );
 
     await tester.tap(find.byType(TextField));
@@ -75,7 +70,7 @@ void main() {
   });
 
   testWidgets('the search field never filters locally', (tester) async {
-    await tester.pumpWidget(_harness(cubit, 'Maria Silva'));
+    await tester.pumpWidget(_harness(cubit));
 
     final field = tester.widget<TextField>(find.byType(TextField));
 
