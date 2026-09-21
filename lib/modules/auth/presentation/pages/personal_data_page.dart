@@ -192,15 +192,8 @@ Widget buildPersonalDataBody({
   );
 }
 
-/// Number of fields [PersonalDataFields] renders, mirrored by the placeholder
-/// so the form keeps its height once the profile arrives.
 const int personalDataFieldCount = 6;
 
-/// Placeholder that mirrors the personal-data form while the profile loads.
-///
-/// The header is the real one: its copy is static, so there is nothing to
-/// wait for. Only the fields and the address card, which the API fills, are
-/// boned.
 class PersonalDataSkeleton extends StatelessWidget {
   const PersonalDataSkeleton({super.key});
 
@@ -244,7 +237,6 @@ class PersonalDataSkeleton extends StatelessWidget {
   }
 }
 
-/// Label above a field-sized box, the shape every row of the form takes.
 class PersonalDataFieldSkeleton extends StatelessWidget {
   const PersonalDataFieldSkeleton({super.key});
 
@@ -361,8 +353,6 @@ class PersonalDataFields extends StatelessWidget {
   }
 }
 
-/// Days left until the field unlocks, or null when it is not on cooldown.
-/// Meant for the label row of the field it belongs to.
 Widget? buildCooldownBadge(AppLocalizations l10n, DateTime? target) {
   if (target == null) return null;
   return CooldownBadge(
