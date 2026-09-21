@@ -7,6 +7,9 @@ import '../../core/environment/environment.dart';
 import '../../core/network/auth_interceptor.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/result/result.dart';
+import '../ibge_locations/domain/usecases/list_cities.dart';
+import '../ibge_locations/domain/usecases/list_states.dart';
+import '../ibge_locations/domain/usecases/lookup_cep.dart';
 import 'data/datasources/account_remote_datasource.dart';
 import 'data/datasources/auth_local_datasource.dart';
 import 'data/datasources/google_id_token_source.dart';
@@ -190,6 +193,12 @@ void registerAuthDependencies(
         refreshUserProfile: getIt<RefreshUserProfile>(),
         patchUserProfile: getIt<PatchUserProfile>(),
         requestEmailChange: getIt<RequestEmailChange>(),
+        findMyPersonalAddress: getIt<FindMyPersonalAddress>(),
+        upsertMyPersonalAddress: getIt<UpsertMyPersonalAddress>(),
+        deleteMyPersonalAddress: getIt<DeleteMyPersonalAddress>(),
+        lookupCep: getIt<LookupCep>(),
+        listStates: getIt<ListStates>(),
+        listCities: getIt<ListCities>(),
         syncProfile: syncProfile,
       ),
     )

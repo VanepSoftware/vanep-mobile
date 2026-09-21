@@ -6,11 +6,14 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/personal_address_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/email_change_sheet.dart';
 
+import '../../ibge_locations/ibge_locations_mocks.dart';
 import '../auth_fixtures.dart';
 import '../auth_mocks.dart';
 import 'auth_presentation_mocks.dart';
@@ -28,14 +31,22 @@ void main() {
     patchUserProfile = MockPatchUserProfile();
     requestEmailChange = MockRequestEmailChange();
     when(refreshUserProfile.call).thenAnswer(
-      (_) async => const Ok<ProfileEditFailure, UserProfile>(
-        FakeUserProfile(),
-      ),
+      (_) async => const Ok<ProfileEditFailure, UserProfile>(FakeUserProfile()),
+    );
+    final findMyPersonalAddress = MockFindMyPersonalAddress();
+    when(findMyPersonalAddress.call).thenAnswer(
+      (_) async => const Ok<PersonalAddressFailure, PersonalAddress?>(null),
     );
     cubit = PersonalDataCubit(
       refreshUserProfile: refreshUserProfile,
       patchUserProfile: patchUserProfile,
       requestEmailChange: requestEmailChange,
+      findMyPersonalAddress: findMyPersonalAddress,
+      upsertMyPersonalAddress: MockUpsertMyPersonalAddress(),
+      deleteMyPersonalAddress: MockDeleteMyPersonalAddress(),
+      lookupCep: MockLookupCep(),
+      listStates: MockListStates(),
+      listCities: MockListCities(),
       syncProfile: (_) {},
     );
     await cubit.load();
@@ -82,10 +93,7 @@ void main() {
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
 
-      await tester.enterText(
-        find.byType(TextField),
-        'novo@vanep.com.br',
-      );
+      await tester.enterText(find.byType(TextField), 'novo@vanep.com.br');
       await tester.pump();
 
       await tester.tap(

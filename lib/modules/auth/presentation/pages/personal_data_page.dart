@@ -306,7 +306,10 @@ void presentPersonalDataFeedback(
   switch (feedback) {
     case PersonalDataSaveSuccessFeedback():
       VanepFeedback.showInfo(context, l10n.profileEditSaveSuccess);
-    case PersonalDataEmailChangeSuccessFeedback():
+    case PersonalDataEmailChangeSuccessFeedback() ||
+        PersonalDataAddressClearedFeedback() ||
+        PersonalDataAddressFailureFeedback() ||
+        PersonalDataAddressSaveFailureFeedback():
       break;
     case PersonalDataFailureFeedback(:final failure):
       final message = profileEditFailureMessage(
