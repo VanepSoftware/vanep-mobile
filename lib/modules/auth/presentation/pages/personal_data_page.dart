@@ -169,16 +169,14 @@ Widget buildPersonalDataBody({
               PendingEmailBanner(email: profile.pendingEmail!),
               const SizedBox(height: 20),
             ],
-            VanepOutlinedPanel(
-              child: PersonalDataFields(
-                profile: profile,
-                state: state,
-                locale: locale,
-                nameController: nameController,
-                phoneController: phoneController,
-              ),
+            PersonalDataFields(
+              profile: profile,
+              state: state,
+              locale: locale,
+              nameController: nameController,
+              phoneController: phoneController,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             PersonalAddressCard(address: state.address),
           ],
         ),
@@ -201,7 +199,8 @@ const int personalDataFieldCount = 6;
 /// Placeholder that mirrors the personal-data form while the profile loads.
 ///
 /// The header is the real one: its copy is static, so there is nothing to
-/// wait for. Only the panels, which the API fills, are boned.
+/// wait for. Only the fields and the address card, which the API fills, are
+/// boned.
 class PersonalDataSkeleton extends StatelessWidget {
   const PersonalDataSkeleton({super.key});
 
@@ -217,20 +216,18 @@ class PersonalDataSkeleton extends StatelessWidget {
             title: l10n.profilePersonalData,
             subtitle: l10n.personalDataSubtitle,
           ),
-          VanepOutlinedPanel(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: withSpacing([
-                for (
-                  var fieldIndex = 0;
-                  fieldIndex < personalDataFieldCount;
-                  fieldIndex++
-                )
-                  const PersonalDataFieldSkeleton(),
-              ], 20),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: withSpacing([
+              for (
+                var fieldIndex = 0;
+                fieldIndex < personalDataFieldCount;
+                fieldIndex++
+              )
+                const PersonalDataFieldSkeleton(),
+            ], 20),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           const VanepOutlinedPanel(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
