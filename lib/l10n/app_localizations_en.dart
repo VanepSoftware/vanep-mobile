@@ -453,7 +453,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePersonalData => 'Personal data';
 
   @override
-  String get profileAddresses => 'Addresses';
+  String get personalDataSubtitle =>
+      'Review and update your account details and your home address.';
 
   @override
   String get profilePaymentMethods => 'Payment methods';
@@ -866,6 +867,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileGenderUnspecified => 'Prefer not to say';
 
   @override
+  String get personalAddressCardTitle => 'Address';
+
+  @override
+  String get personalAddressEmpty => 'No home address registered yet.';
+
+  @override
   String get postalAddressFieldNumber => 'Number';
 
   @override
@@ -890,7 +897,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get postalAddressCitySearchHint => 'Search city';
 
   @override
+  String get personalAddressClearAction => 'Clear address';
+
+  @override
+  String get personalAddressClearTitle => 'Clear address?';
+
+  @override
+  String get personalAddressClearMessage =>
+      'The home address will be removed from the account.';
+
+  @override
+  String get personalAddressClearConfirm => 'Clear';
+
+  @override
+  String get personalAddressClearSuccess => 'Address removed.';
+
+  @override
+  String get personalAddressFailureCityNotFound =>
+      'City not found in the catalog.';
+
+  @override
+  String get personalAddressFailureValidation =>
+      'Please review the address fields and try again.';
+
+  @override
+  String get personalAddressFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get personalAddressFailureUnexpected =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get personalAddressRegisterAction => 'Add address';
+
+  @override
+  String get personalAddressCardMenuTooltip => 'More options';
+
+  @override
+  String get personalAddressEditAction => 'Edit address';
+
+  @override
   String get postalAddressHintUf => 'UF';
+
+  @override
+  String get personalAddressFormTitleNew => 'Add address';
+
+  @override
+  String get personalAddressFormTitleEdit => 'Edit address';
+
+  @override
+  String get personalAddressFormSubtitle =>
+      'Enter your ZIP code and complete the address details.';
+
+  @override
+  String get personalAddressSaveAction => 'Save address';
 
   @override
   String get postalAddressHintZip => '00000-000';
@@ -924,6 +985,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get postalAddressNoCitiesFound => 'No cities found.';
+
+  @override
+  String get cepFailureInvalidFormat => 'ZIP code must have 8 digits.';
+
+  @override
+  String get cepFailureNotFound => 'ZIP code not found.';
+
+  @override
+  String get cepFailureCityNotInCatalog =>
+      'This ZIP code city is not in the catalog.';
+
+  @override
+  String get cepFailureRateLimited =>
+      'Too many ZIP lookups. Please wait a moment.';
+
+  @override
+  String get cepFailureUnavailable =>
+      'ZIP lookup is unavailable. Please fill in the address.';
+
+  @override
+  String get cepFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get cepFailureUnexpected => 'Something went wrong. Please try again.';
+
+  @override
+  String get ibgeLocationsFailureUfMissing => 'Please choose a state.';
+
+  @override
+  String get ibgeLocationsFailureUfNotFound => 'State not found.';
+
+  @override
+  String get ibgeLocationsFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get ibgeLocationsFailureUnexpected =>
+      'Something went wrong. Please try again.';
 
   @override
   String get placesCityUnmatched =>

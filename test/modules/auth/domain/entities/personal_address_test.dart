@@ -83,12 +83,19 @@ void main() {
       expect(draft.zipCode, '');
     });
 
-    test('starts locked on the saved city, like a CEP that answered 200', () {
+    test('starts locked on the saved city and neighborhood, like a 200', () {
       final draft = fakePersonalAddress().toDraft();
 
       expect(draft.isCityLocked, isTrue);
-      expect(draft.isNeighborhoodLocked, isFalse);
+      expect(draft.isNeighborhoodLocked, isTrue);
       expect(draft.isZipCodeUnknown, isFalse);
+    });
+
+    test('keeps the neighborhood open when none was saved', () {
+      final draft = fakePersonalAddress(neighborhood: null).toDraft();
+
+      expect(draft.isCityLocked, isTrue);
+      expect(draft.isNeighborhoodLocked, isFalse);
     });
 
     test('a saved address is not dirty against its own draft', () {

@@ -27,7 +27,6 @@ void main() {
       ids,
       [
         ProfileMenuId.personalData,
-        ProfileMenuId.addresses,
         ProfileMenuId.paymentMethods,
         ProfileMenuId.dependents,
         ProfileMenuId.vans,
@@ -39,7 +38,7 @@ void main() {
     );
     expect(enabled[ProfileMenuId.personalData], isTrue);
     expect(enabled[ProfileMenuId.signOut], isTrue);
-    expect(enabled[ProfileMenuId.addresses], isFalse);
+    expect(enabled[ProfileMenuId.paymentMethods], isFalse);
     expect(enabled[ProfileMenuId.dependents], isTrue);
     expect(
       menu.map((section) => section.title).toList(),
@@ -70,7 +69,6 @@ void main() {
         ProfileMenuId.signOut,
       ],
     );
-    expect(ids, isNot(contains(ProfileMenuId.addresses)));
     expect(ids, isNot(contains(ProfileMenuId.dependents)));
     expect(enabled[ProfileMenuId.personalData], isTrue);
     expect(enabled[ProfileMenuId.professionalData], isFalse);

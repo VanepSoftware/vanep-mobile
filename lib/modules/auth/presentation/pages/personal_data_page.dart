@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/formatters/birth_date_formatter.dart';
 import '../../../../core/ui/vanep_feedback.dart';
+import '../../../../core/ui/vanep_gender_select.dart';
+import '../../../../core/ui/vanep_page_chrome.dart';
 import '../../../../core/ui/vanep_primary_button.dart';
+import '../../../../core/ui/vanep_read_only_field.dart';
+import '../../../../core/ui/vanep_text_field.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/user_profile.dart';
 import '../../domain/failures/profile_edit_failure.dart';
@@ -14,9 +17,10 @@ import '../../domain/value_objects/profile_field_limits.dart';
 import '../cubit/personal_data_cubit.dart';
 import '../cubit/personal_data_state.dart';
 import '../formatters/profile_field_formatters.dart';
+import '../mappers/personal_address_failure_l10n.dart';
 import '../mappers/profile_edit_failure_l10n.dart';
 import '../widgets/email_change_sheet.dart';
-import '../widgets/personal_data_gender_chips.dart';
+import '../widgets/personal_address_card.dart';
 
 class PersonalDataPage extends StatefulWidget {
   const PersonalDataPage({super.key});
@@ -84,24 +88,18 @@ class _PersonalDataPageState extends State<PersonalDataPage>
       listener: (context, state) {
         syncControllers(state);
         final feedback = state.feedback;
-        if (feedback == null) return;
-        if (context.mounted) {
-          presentPersonalDataFeedback(context, l10n, locale, feedback);
-          context.read<PersonalDataCubit>().clearFeedback();
+        if (feedback == null || !context.mounted) return;
+        if (feedback is PersonalDataAddressSaveFailureFeedback &&
+            !(ModalRoute.of(context)?.isCurrent ?? true)) {
+          return;
         }
+        presentPersonalDataFeedback(context, l10n, locale, feedback);
+        context.read<PersonalDataCubit>().clearFeedback();
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: VanepColors.surface,
-          appBar: AppBar(
-            backgroundColor: VanepColors.surface,
-            foregroundColor: VanepColors.textPrimary,
-            elevation: 0,
-            title: Text(
-              l10n.profilePersonalData,
-              style: VanepTypography.cardTitle,
-            ),
-          ),
+          backgroundColor: VanepColors.card,
+          appBar: const VanepAppBar(),
           body: buildPersonalDataBody(
             context: context,
             l10n: l10n,
@@ -126,7 +124,9 @@ Widget buildPersonalDataBody({
 }) {
   if (state.status == PersonalDataStatus.loading ||
       state.status == PersonalDataStatus.initial) {
-    return const Center(child: CircularProgressIndicator());
+    return const Center(
+      child: CircularProgressIndicator(color: VanepColors.action),
+    );
   }
 
   if (state.status == PersonalDataStatus.loadFailed || state.profile == null) {
@@ -142,9 +142,9 @@ Widget buildPersonalDataBody({
               style: VanepTypography.cardSubtitle,
             ),
             const SizedBox(height: 16),
-            TextButton(
+            VanepPrimaryButton(
+              label: l10n.profileEditRetry,
               onPressed: () => context.read<PersonalDataCubit>().load(),
-              child: Text(l10n.profileEditRetry),
             ),
           ],
         ),
@@ -152,15 +152,8 @@ Widget buildPersonalDataBody({
     );
   }
 
-  final profile = state.profile!;
-  final empty = l10n.profileFieldEmpty;
-  final nameCooldown = profile.nameChangeAvailableAt;
-  final phoneCooldown = profile.phoneChangeAvailableAt;
-  final emailCooldown = profile.emailChangeAvailableAt;
-  final pendingEmail = profile.pendingEmail;
-  final canChangeEmail =
-      pendingEmail == null && emailCooldown == null && !state.isEmailSubmitting;
   final cubit = context.read<PersonalDataCubit>();
+  final profile = state.profile!;
 
   return Column(
     children: [
@@ -168,133 +161,167 @@ Widget buildPersonalDataBody({
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
-            if (pendingEmail != null) ...[
-              PendingEmailBanner(email: pendingEmail),
+            VanepPageHeader(
+              title: l10n.profilePersonalData,
+              subtitle: l10n.personalDataSubtitle,
+            ),
+            if (profile.pendingEmail != null) ...[
+              PendingEmailBanner(email: profile.pendingEmail!),
               const SizedBox(height: 20),
             ],
-            Material(
-              color: VanepColors.card,
-              borderRadius: BorderRadius.circular(20),
-              clipBehavior: Clip.antiAlias,
-              child: Column(
-                children: [
-                  PersonalDataRow(
-                    label: l10n.profileFieldName,
-                    isFirst: true,
-                    cooldownText: nameCooldown == null
-                        ? null
-                        : l10n.profileCooldownDaysRemaining(
-                            profileCooldownDaysRemaining(nameCooldown),
-                          ),
-                    child: nameCooldown == null
-                        ? PersonalDataInlineField(
-                            controller: nameController,
-                            onChanged: cubit.updateName,
-                            textInputAction: TextInputAction.next,
-                            autofillHints: const [AutofillHints.name],
-                            maxLength: ProfileFieldLimits.nameMaxLength,
-                            errorText: profileFieldErrorMessage(
-                              l10n,
-                              state.fieldErrors['name'],
-                            ),
-                          )
-                        : PersonalDataStaticValue(
-                            value: profileDisplayOrEmpty(profile.name, empty),
-                          ),
-                  ),
-                  const PersonalDataRowDivider(),
-                  PersonalDataRow(
-                    label: l10n.profileFieldEmail,
-                    cooldownText: emailCooldown == null
-                        ? null
-                        : l10n.profileCooldownDaysRemaining(
-                            profileCooldownDaysRemaining(emailCooldown),
-                          ),
-                    child: PersonalDataStaticValue(
-                      value: profileDisplayOrEmpty(profile.email, empty),
-                      muted: !canChangeEmail,
-                      onTap: canChangeEmail
-                          ? () => showEmailChangeSheet(context)
-                          : null,
-                    ),
-                  ),
-                  const PersonalDataRowDivider(),
-                  PersonalDataRow(
-                    label: l10n.profileFieldPhone,
-                    cooldownText: phoneCooldown == null
-                        ? null
-                        : l10n.profileCooldownDaysRemaining(
-                            profileCooldownDaysRemaining(phoneCooldown),
-                          ),
-                    child: phoneCooldown == null
-                        ? PersonalDataInlineField(
-                            controller: phoneController,
-                            onChanged: cubit.updatePhone,
-                            keyboardType: TextInputType.phone,
-                            textInputAction: TextInputAction.done,
-                            autofillHints: const [
-                              AutofillHints.telephoneNumber,
-                            ],
-                            inputFormatters: const [
-                              ProfilePhoneInputFormatter(),
-                            ],
-                            errorText: profileFieldErrorMessage(
-                              l10n,
-                              state.fieldErrors['phone'],
-                            ),
-                          )
-                        : PersonalDataStaticValue(
-                            value: formatProfilePhone(profile.phone, empty),
-                          ),
-                  ),
-                  const PersonalDataRowDivider(),
-                  PersonalDataRow(
-                    label: l10n.profileFieldDocument,
-                    child: PersonalDataStaticValue(
-                      value: formatProfileDocument(profile.document, empty),
-                      muted: true,
-                    ),
-                  ),
-                  const PersonalDataRowDivider(),
-                  PersonalDataRow(
-                    label: l10n.profileFieldBirthDate,
-                    child: PersonalDataStaticValue(
-                      value: formatBirthDate(
-                        profile.birthDate,
-                        locale,
-                        empty,
-                      ),
-                      muted: true,
-                    ),
-                  ),
-                  const PersonalDataRowDivider(),
-                  PersonalDataRow(
-                    label: l10n.profileFieldGender,
-                    isLast: true,
-                    child: PersonalDataGenderChips(
-                      value: state.draftGender,
-                      onChanged: cubit.updateGender,
-                    ),
-                  ),
-                ],
+            VanepOutlinedPanel(
+              child: PersonalDataFields(
+                profile: profile,
+                state: state,
+                locale: locale,
+                nameController: nameController,
+                phoneController: phoneController,
               ),
             ),
+            const SizedBox(height: 16),
+            PersonalAddressCard(address: state.address),
           ],
         ),
       ),
-      SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-          child: VanepPrimaryButton(
-            label: l10n.profileSave,
-            isLoading: state.isSaving,
-            onPressed: state.canSave ? cubit.save : null,
-          ),
+      VanepBottomBar(
+        child: VanepPrimaryButton(
+          label: l10n.profileSave,
+          isLoading: state.isSaving,
+          onPressed: state.isProfileDirty ? cubit.save : null,
         ),
       ),
     ],
   );
+}
+
+class PersonalDataFields extends StatelessWidget {
+  const PersonalDataFields({
+    required this.profile,
+    required this.state,
+    required this.locale,
+    required this.nameController,
+    required this.phoneController,
+    super.key,
+  });
+
+  final UserProfile profile;
+  final PersonalDataState state;
+  final Locale locale;
+  final TextEditingController nameController;
+  final TextEditingController phoneController;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final cubit = context.read<PersonalDataCubit>();
+    final empty = l10n.profileFieldEmpty;
+    final nameCooldown = profile.nameChangeAvailableAt;
+    final phoneCooldown = profile.phoneChangeAvailableAt;
+    final emailCooldown = profile.emailChangeAvailableAt;
+    final canChangeEmail =
+        profile.pendingEmail == null &&
+        emailCooldown == null &&
+        !state.isEmailSubmitting;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: withSpacing([
+        CooldownField(
+          cooldown: nameCooldown,
+          child: nameCooldown == null
+              ? VanepTextField(
+                  label: l10n.profileFieldName,
+                  controller: nameController,
+                  onChanged: cubit.updateName,
+                  textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.name],
+                  maxLength: ProfileFieldLimits.nameMaxLength,
+                  errorText: profileFieldErrorMessage(
+                    l10n,
+                    state.fieldErrors['name'],
+                  ),
+                )
+              : VanepReadOnlyField(
+                  label: l10n.profileFieldName,
+                  value: profileDisplayOrEmpty(profile.name, empty),
+                  enabled: false,
+                ),
+        ),
+        CooldownField(
+          cooldown: emailCooldown,
+          child: VanepReadOnlyField(
+            label: l10n.profileFieldEmail,
+            value: profileDisplayOrEmpty(profile.email, empty),
+            enabled: canChangeEmail,
+            onTap: canChangeEmail ? () => showEmailChangeSheet(context) : null,
+          ),
+        ),
+        CooldownField(
+          cooldown: phoneCooldown,
+          child: phoneCooldown == null
+              ? VanepTextField(
+                  label: l10n.profileFieldPhone,
+                  controller: phoneController,
+                  onChanged: cubit.updatePhone,
+                  keyboardType: TextInputType.phone,
+                  textInputAction: TextInputAction.done,
+                  autofillHints: const [AutofillHints.telephoneNumber],
+                  inputFormatters: const [ProfilePhoneInputFormatter()],
+                  errorText: profileFieldErrorMessage(
+                    l10n,
+                    state.fieldErrors['phone'],
+                  ),
+                )
+              : VanepReadOnlyField(
+                  label: l10n.profileFieldPhone,
+                  value: formatProfilePhone(profile.phone, empty),
+                  enabled: false,
+                ),
+        ),
+        VanepReadOnlyField(
+          label: l10n.profileFieldDocument,
+          value: formatProfileDocument(profile.document, empty),
+          enabled: false,
+        ),
+        VanepReadOnlyField(
+          label: l10n.profileFieldBirthDate,
+          value: formatBirthDate(profile.birthDate, locale, empty),
+          enabled: false,
+        ),
+        VanepGenderSelect(
+          label: l10n.profileFieldGender,
+          value: state.draftGender,
+          onChanged: cubit.updateGender,
+        ),
+      ], 20),
+    );
+  }
+}
+
+class CooldownField extends StatelessWidget {
+  const CooldownField({required this.cooldown, required this.child, super.key});
+
+  final DateTime? cooldown;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final target = cooldown;
+    if (target == null) return child;
+    final l10n = AppLocalizations.of(context)!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        child,
+        const SizedBox(height: 8),
+        CooldownBadge(
+          text: l10n.profileCooldownDaysRemaining(
+            profileCooldownDaysRemaining(target),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 void presentPersonalDataFeedback(
@@ -306,11 +333,16 @@ void presentPersonalDataFeedback(
   switch (feedback) {
     case PersonalDataSaveSuccessFeedback():
       VanepFeedback.showInfo(context, l10n.profileEditSaveSuccess);
-    case PersonalDataEmailChangeSuccessFeedback() ||
-        PersonalDataAddressClearedFeedback() ||
-        PersonalDataAddressFailureFeedback() ||
-        PersonalDataAddressSaveFailureFeedback():
+    case PersonalDataEmailChangeSuccessFeedback():
       break;
+    case PersonalDataAddressClearedFeedback():
+      VanepFeedback.showInfo(context, l10n.personalAddressClearSuccess);
+    case PersonalDataAddressFailureFeedback(:final failure) ||
+        PersonalDataAddressSaveFailureFeedback(:final failure):
+      VanepFeedback.showError(
+        context,
+        personalAddressFailureMessage(l10n, failure),
+      );
     case PersonalDataFailureFeedback(:final failure):
       final message = profileEditFailureMessage(
         l10n,
@@ -342,7 +374,7 @@ class PendingEmailBanner extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: VanepColors.warningSurface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       child: Row(
@@ -369,147 +401,6 @@ class PendingEmailBanner extends StatelessWidget {
   }
 }
 
-class PersonalDataRow extends StatelessWidget {
-  const PersonalDataRow({
-    required this.label,
-    required this.child,
-    this.cooldownText,
-    this.isFirst = false,
-    this.isLast = false,
-    super.key,
-  });
-
-  final String label;
-  final Widget child;
-  final String? cooldownText;
-  final bool isFirst;
-  final bool isLast;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, isFirst ? 18 : 14, 16, isLast ? 18 : 14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(label, style: VanepTypography.cardSubtitle),
-              const Spacer(),
-              if (cooldownText != null) CooldownBadge(text: cooldownText!),
-            ],
-          ),
-          const SizedBox(height: 6),
-          child,
-        ],
-      ),
-    );
-  }
-}
-
-class PersonalDataRowDivider extends StatelessWidget {
-  const PersonalDataRowDivider({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Divider(
-      height: 1,
-      thickness: 1,
-      indent: 16,
-      endIndent: 16,
-      color: VanepColors.divider,
-    );
-  }
-}
-
-class PersonalDataStaticValue extends StatelessWidget {
-  const PersonalDataStaticValue({
-    required this.value,
-    this.muted = false,
-    this.onTap,
-    super.key,
-  });
-
-  final String value;
-  final bool muted;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final text = Text(
-      value,
-      style: VanepTypography.cardTitle.copyWith(
-        color: muted ? VanepColors.textMuted : VanepColors.textPrimary,
-      ),
-    );
-    if (onTap == null) return text;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(4),
-      child: text,
-    );
-  }
-}
-
-class PersonalDataInlineField extends StatelessWidget {
-  const PersonalDataInlineField({
-    required this.controller,
-    required this.onChanged,
-    this.errorText,
-    this.keyboardType,
-    this.textInputAction,
-    this.autofillHints,
-    this.inputFormatters,
-    this.maxLength,
-    super.key,
-  });
-
-  final TextEditingController controller;
-  final ValueChanged<String> onChanged;
-  final String? errorText;
-  final TextInputType? keyboardType;
-  final TextInputAction? textInputAction;
-  final Iterable<String>? autofillHints;
-  final List<TextInputFormatter>? inputFormatters;
-  final int? maxLength;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onChanged: onChanged,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      autofillHints: autofillHints,
-      inputFormatters: inputFormatters,
-      maxLength: maxLength,
-      style: VanepTypography.cardTitle,
-      decoration: InputDecoration(
-        isDense: true,
-        contentPadding: const EdgeInsets.only(bottom: 6),
-        counterText: '',
-        errorText: errorText,
-        errorStyle: VanepTypography.cardSubtitle.copyWith(
-          color: VanepColors.danger,
-          fontSize: 12,
-        ),
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: VanepColors.brand, width: 1.5),
-        ),
-        errorBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: VanepColors.danger),
-        ),
-        focusedErrorBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: VanepColors.danger, width: 1.5),
-        ),
-      ),
-    );
-  }
-}
-
 class CooldownBadge extends StatelessWidget {
   const CooldownBadge({required this.text, super.key});
 
@@ -517,29 +408,26 @@ class CooldownBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: VanepColors.surface,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.history, size: 14, color: VanepColors.textMuted),
-            const SizedBox(width: 5),
-            Text(
-              text,
-              style: VanepTypography.cardSubtitle.copyWith(
-                color: VanepColors.textMuted,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: VanepColors.surface,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.history, size: 14, color: VanepColors.textMuted),
+          const SizedBox(width: 5),
+          Text(
+            text,
+            style: VanepTypography.cardSubtitle.copyWith(
+              color: VanepColors.textMuted,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -65,6 +65,7 @@ class PostalAddressDraft extends Equatable {
       neighborhood: neighborhood ?? '',
       number: number ?? '',
       complement: complement ?? '',
+      isNeighborhoodLocked: neighborhood?.trim().isNotEmpty ?? false,
     );
   }
 

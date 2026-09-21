@@ -124,7 +124,7 @@ void main() {
     expect(find.text('Dados pessoais'), findsOneWidget);
     expect(find.text('Conta'), findsOneWidget);
     expect(find.text('Serviços'), findsOneWidget);
-    expect(find.text('Endereços'), findsOneWidget);
+    expect(find.text('Endereços'), findsNothing);
     expect(find.text('Formas de pagamento'), findsOneWidget);
     expect(find.text('Gerenciar dependentes'), findsOneWidget);
     expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
@@ -138,7 +138,7 @@ void main() {
   testWidgets('disabled menu items do not navigate', (tester) async {
     await tester.pumpWidget(profileHarness(cubit, const ClientProfile()));
 
-    await tester.tap(find.text('Endereços'));
+    await tester.tap(find.text('Formas de pagamento'));
     await tester.pumpAndSettle();
 
     expect(find.byType(PersonalDataPage), findsNothing);

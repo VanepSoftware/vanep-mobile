@@ -207,7 +207,6 @@ class ProfileMenuTile extends StatelessWidget {
 String profileMenuLabel(ProfileMenuId id, AppLocalizations l10n) {
   return switch (id) {
     ProfileMenuId.personalData => l10n.profilePersonalData,
-    ProfileMenuId.addresses => l10n.profileAddresses,
     ProfileMenuId.paymentMethods => l10n.profilePaymentMethods,
     ProfileMenuId.dependents => l10n.profileDependents,
     ProfileMenuId.vans => l10n.profileVans,
@@ -225,7 +224,6 @@ IconData profileMenuIcon(ProfileMenuId id) {
   return switch (id) {
     ProfileMenuId.serviceAreas => Icons.map_outlined,
     ProfileMenuId.personalData => Icons.person_outline,
-    ProfileMenuId.addresses => Icons.location_on_outlined,
     ProfileMenuId.paymentMethods => Icons.credit_card_outlined,
     ProfileMenuId.dependents => Icons.family_restroom_outlined,
     ProfileMenuId.vans => Icons.airport_shuttle_outlined,
