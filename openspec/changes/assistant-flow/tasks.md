@@ -25,8 +25,8 @@
 - [x] 1.7 UseCase `ValidateAssistantInvite` with unit tests (`mocktail`)
 - [x] 1.8 UseCase `RegisterAssistantWithInvite` with unit tests (`mocktail`)
 - [x] 1.9 UseCase `GetLinkedVans` with unit tests (`mocktail`)
-- [ ] 1.10 Run `make lint` and `make test`
-- [ ] 1.11 **Aguardar validação do desenvolvedor (R27a)**; só então commitar e abrir PR
+- [x] 1.10 Run `make lint` and `make test`
+- [x] 1.11 **Aguardar validação do desenvolvedor (R27a)**; só então commitar e abrir PR
 
 ---
 
@@ -40,8 +40,8 @@
 - [x] 2.6 Repository implementation `AssistantRepositoryImpl` mapping DTOs to Domain Entities
 - [x] 2.7 Unit tests for `AssistantRemoteDataSource` and `AssistantRepositoryImpl` using `mocktail`
 - [x] 2.8 Dependency Injection registration in `assistant_container.dart` (R03)
-- [ ] 2.9 Run `make lint` and `make test`
-- [ ] 2.10 **Aguardar validação do desenvolvedor (R27a)**; só então commitar e abrir PR
+- [x] 2.9 Run `make lint` and `make test`
+- [x] 2.10 **Aguardar validação do desenvolvedor (R27a)**; só então commitar e abrir PR
 
 ---
 
