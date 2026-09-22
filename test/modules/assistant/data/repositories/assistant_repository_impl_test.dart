@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/assistant_remote_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_invite_dto.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_lean_signup_request_dto.dart';
