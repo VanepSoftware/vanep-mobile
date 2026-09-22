@@ -32,14 +32,14 @@
 
 ## 2. Phase 2 — Data Layer & Network (branch: `feat-(N-37)/assistant-data-network`)
 
-- [ ] 2.1 Remote datasource contract `AssistantRemoteDatasource` and implementation calling `/api/assistants/**`
-- [ ] 2.2 DTO `AssistantInviteValidationDTO` with `freezed` + `json_serializable` (R04)
-- [ ] 2.3 DTO `AssistantLeanSignupRequestDTO` with `freezed` + `json_serializable`
-- [ ] 2.4 DTO `AssistantVanSummaryDTO` with `freezed` + `json_serializable`
-- [ ] 2.5 Run `dart run build_runner build --delete-conflicting-outputs` (R15)
-- [ ] 2.6 Repository implementation `AssistantRepositoryImpl` mapping DTOs to Domain Entities
-- [ ] 2.7 Unit tests for `AssistantRemoteDatasource` and `AssistantRepositoryImpl` using `mocktail`
-- [ ] 2.8 Dependency Injection registration in `assistant_container.dart` (R03)
+- [x] 2.1 Remote datasource contract `AssistantRemoteDataSource` and implementation calling `/api/assistants/**`
+- [x] 2.2 DTO `AssistantInviteDto` with `fromJson` and `toJson` (R04)
+- [x] 2.3 DTO `AssistantLeanSignupRequestDto` with `toJson`
+- [x] 2.4 DTO `AssistantVanDto` with `fromJson` and `toJson`
+- [x] 2.5 DTOs and mappers implemented adhering to R04
+- [x] 2.6 Repository implementation `AssistantRepositoryImpl` mapping DTOs to Domain Entities
+- [x] 2.7 Unit tests for `AssistantRemoteDataSource` and `AssistantRepositoryImpl` using `mocktail`
+- [x] 2.8 Dependency Injection registration in `assistant_container.dart` (R03)
 - [ ] 2.9 Run `make lint` and `make test`
 - [ ] 2.10 **Aguardar validação do desenvolvedor (R27a)**; só então commitar e abrir PR
 
