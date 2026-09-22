@@ -12,7 +12,7 @@ const testEnvironment = Environment(
   oauthClientId: 'vanep-mobile',
 );
 
-Response<T> _response<T>(T data, {int statusCode = 200}) => Response<T>(
+Response<T> _response<T>(T? data, {int statusCode = 200}) => Response<T>(
       requestOptions: RequestOptions(path: ''),
       statusCode: statusCode,
       data: data,
@@ -63,7 +63,7 @@ void main() {
           any(),
           queryParameters: any(named: 'queryParameters'),
         ),
-      ).thenAnswer((_) async => _response<Map<String, dynamic>>(null as dynamic));
+      ).thenAnswer((_) async => _response<Map<String, dynamic>>(null));
 
       expect(
         () => datasource.validateInvite('CODE-99'),
@@ -127,7 +127,7 @@ void main() {
     test('returns empty list when response data is null', () async {
       when(
         () => dio.get<List<dynamic>>(any()),
-      ).thenAnswer((_) async => _response<List<dynamic>>(null as dynamic));
+      ).thenAnswer((_) async => _response<List<dynamic>>(null));
 
       final vans = await datasource.fetchLinkedVans();
 
