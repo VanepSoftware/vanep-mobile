@@ -12,44 +12,83 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
-  ci:
+  changes:
+    name: Detecta mudanças de código
     runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
     steps:
       - uses: actions/checkout@v4
 
+      - name: Filtra caminhos
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          # 'some-with-excludes': o arquivo entra se casar com algum padrao positivo
+          # e com nenhum negado. Sem isso os '!' viram apenas mais uma clausula OR
+          # e o filtro casaria com praticamente tudo.
+          predicate-quantifier: "some-with-excludes"
+          filters: |
+            code:
+              - '**'
+              - '!**/*.md'
+              - '!docs/**'
+              - '!openspec/**'
+
+  ci:
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docs-only PR — skip
+        if: needs.changes.outputs.code != 'true'
+        run: echo "No code changes — skipping CI"
+
+      - if: needs.changes.outputs.code == 'true'
+        uses: actions/checkout@v4
+
       - name: Install lcov
+        if: needs.changes.outputs.code == 'true'
         run: sudo apt-get update && sudo apt-get install -y lcov
 
       - name: Read FVM config
         id: fvm
+        if: needs.changes.outputs.code == 'true'
         uses: kuhnroyal/flutter-fvm-config-action@v2
         with:
           path: .fvmrc
 
-      - uses: subosito/flutter-action@v2
+      - if: needs.changes.outputs.code == 'true'
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ steps.fvm.outputs.FLUTTER_VERSION }}
           channel: stable
           cache: true
 
       - name: Install dependencies
+        if: needs.changes.outputs.code == 'true'
         run: flutter pub get
 
       - name: Generate code (build_runner)
+        if: needs.changes.outputs.code == 'true'
         run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Setup env
+        if: needs.changes.outputs.code == 'true'
         run: cp .env.example .env
 
       - name: Lint
+        if: needs.changes.outputs.code == 'true'
         run: flutter analyze --fatal-infos
 
       - name: Test with coverage
+        if: needs.changes.outputs.code == 'true'
         run: flutter test --coverage
 
       - name: Filter coverage
+        if: needs.changes.outputs.code == 'true'
         run: |
           lcov --ignore-errors unused \
             --remove coverage/lcov.info \
@@ -61,6 +100,7 @@ jobs:
             -o coverage/lcov.info
 
       - name: Check coverage >= 85%
+        if: needs.changes.outputs.code == 'true'
         uses: VeryGoodOpenSource/very_good_coverage@v3
         with:
           path: ${{ github.workspace }}/coverage/lcov.info
