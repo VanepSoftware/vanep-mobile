@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/ui/vanep_address_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -453,7 +454,7 @@ void main() {
         expect(find.text('Nenhum endereço cadastrado.'), findsOneWidget);
         expect(find.text('Cadastrar endereço'), findsOneWidget);
         expect(
-          find.byType(PopupMenuButton<PersonalAddressCardAction>),
+          find.byType(PopupMenuButton<VanepAddressCardAction>),
           findsNothing,
         );
       },
@@ -491,7 +492,7 @@ void main() {
 
       await tester.pumpWidget(personalDataHarness(cubit));
       await tester.pump();
-      await tester.tap(find.byType(PopupMenuButton<PersonalAddressCardAction>));
+      await tester.tap(find.byType(PopupMenuButton<VanepAddressCardAction>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Editar endereço'));
       await tester.pumpAndSettle();
@@ -507,7 +508,7 @@ void main() {
 
       await tester.pumpWidget(personalDataHarness(cubit));
       await tester.pump();
-      await tester.tap(find.byType(PopupMenuButton<PersonalAddressCardAction>));
+      await tester.tap(find.byType(PopupMenuButton<VanepAddressCardAction>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Limpar endereço'));
       await tester.pumpAndSettle();
@@ -527,7 +528,7 @@ void main() {
 
       await tester.pumpWidget(personalDataHarness(cubit));
       await tester.pump();
-      await tester.tap(find.byType(PopupMenuButton<PersonalAddressCardAction>));
+      await tester.tap(find.byType(PopupMenuButton<VanepAddressCardAction>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Limpar endereço'));
       await tester.pumpAndSettle();
