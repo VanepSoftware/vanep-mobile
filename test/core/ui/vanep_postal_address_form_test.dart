@@ -27,6 +27,7 @@ Widget form(
   bool showErrors = false,
   bool isLookingUpCep = false,
   String? zipErrorText,
+  String? cityErrorText,
   bool enabled = true,
 }) {
   return localizedHost(
@@ -36,6 +37,7 @@ Widget form(
       showErrors: showErrors,
       isLookingUpCep: isLookingUpCep,
       zipErrorText: zipErrorText,
+      cityErrorText: cityErrorText,
       enabled: enabled,
       onZipChanged: events.zip.add,
       onStreetChanged: events.street.add,
@@ -504,6 +506,37 @@ void main() {
 
       expect(find.text('CEP deve ter 8 dígitos.'), findsOneWidget);
       expect(find.text('Campo obrigatório.'), findsOneWidget);
+    });
+
+    testWidgets(
+      'a city error replaces the required error on the municipality',
+      (tester) async {
+        await tester.pumpWidget(
+          form(
+            FormEvents(),
+            draft: fakeManualDraft(),
+            showErrors: true,
+            cityErrorText: 'Cidade não encontrada.',
+          ),
+        );
+
+        expect(find.text('Cidade não encontrada.'), findsOneWidget);
+        expect(find.text('Campo obrigatório.'), findsNWidgets(2));
+      },
+    );
+
+    testWidgets('a city error shows even before the first save attempt', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        form(
+          FormEvents(),
+          draft: fakeManualDraft(),
+          cityErrorText: 'Cidade não encontrada.',
+        ),
+      );
+
+      expect(find.text('Cidade não encontrada.'), findsOneWidget);
     });
   });
 

@@ -39,6 +39,7 @@ class VanepPostalAddressForm extends StatefulWidget {
     this.showErrors = false,
     this.isLookingUpCep = false,
     this.zipErrorText,
+    this.cityErrorText,
     this.enabled = true,
     super.key,
   });
@@ -55,6 +56,7 @@ class VanepPostalAddressForm extends StatefulWidget {
   final bool showErrors;
   final bool isLookingUpCep;
   final String? zipErrorText;
+  final String? cityErrorText;
   final bool enabled;
 
   @override
@@ -135,9 +137,10 @@ class VanepPostalAddressFormState extends State<VanepPostalAddressForm> {
         : null;
     final ufError = widget.showErrors && draft.uf.isEmpty ? required : null;
     final cityError =
-        widget.showErrors && issues.contains(PostalAddressIssue.cityRequired)
-        ? required
-        : null;
+        widget.cityErrorText ??
+        (widget.showErrors && issues.contains(PostalAddressIssue.cityRequired)
+            ? required
+            : null);
     final canPickCity = widget.enabled && draft.uf.isNotEmpty;
 
     return Column(
