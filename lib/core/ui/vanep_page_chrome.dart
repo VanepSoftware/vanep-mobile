@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
+import '../design_system/vanep_colors.dart';
+import '../design_system/vanep_typography.dart';
 
-class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const AuthAppBar({this.title, super.key});
+class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const VanepAppBar({this.title, super.key});
 
   final String? title;
 
@@ -27,8 +27,8 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-class AuthPageHeader extends StatelessWidget {
-  const AuthPageHeader({
+class VanepPageHeader extends StatelessWidget {
+  const VanepPageHeader({
     required this.title,
     required this.subtitle,
     this.icon,
@@ -48,7 +48,7 @@ class AuthPageHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
-            AuthIconBadge(icon: icon, size: 56),
+            VanepIconBadge(icon: icon, size: 56),
             const SizedBox(height: 20),
           ],
           Text(title, style: VanepTypography.loginTitle),
@@ -66,8 +66,8 @@ class AuthPageHeader extends StatelessWidget {
   }
 }
 
-class AuthIconBadge extends StatelessWidget {
-  const AuthIconBadge({required this.icon, this.size = 48, super.key});
+class VanepIconBadge extends StatelessWidget {
+  const VanepIconBadge({required this.icon, this.size = 48, super.key});
 
   final IconData icon;
   final double size;
@@ -95,10 +95,10 @@ List<Widget> withSpacing(List<Widget> children, double spacing) {
   ];
 }
 
-const double authFieldRowMinWidth = 340;
+const double vanepFieldRowMinWidth = 340;
 
-class AuthFieldRow extends StatelessWidget {
-  const AuthFieldRow({required this.children, super.key});
+class VanepFieldRow extends StatelessWidget {
+  const VanepFieldRow({required this.children, super.key});
 
   final List<Widget> children;
 
@@ -106,7 +106,7 @@ class AuthFieldRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < authFieldRowMinWidth) {
+        if (constraints.maxWidth < vanepFieldRowMinWidth) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: withSpacing(children, 20),
@@ -126,8 +126,8 @@ class AuthFieldRow extends StatelessWidget {
   }
 }
 
-class AuthBottomBar extends StatelessWidget {
-  const AuthBottomBar({required this.child, super.key});
+class VanepBottomBar extends StatelessWidget {
+  const VanepBottomBar({required this.child, super.key});
 
   final Widget child;
 
@@ -149,8 +149,8 @@ class AuthBottomBar extends StatelessWidget {
   }
 }
 
-class AuthOutlinedPanel extends StatelessWidget {
-  const AuthOutlinedPanel({
+class VanepOutlinedPanel extends StatelessWidget {
+  const VanepOutlinedPanel({
     required this.child,
     this.onTap,
     this.highlighted = false,

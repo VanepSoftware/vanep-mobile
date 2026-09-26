@@ -875,4 +875,71 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get dependentAddressNotResolved =>
       'Não foi possível interpretar este endereço. Escolha outra sugestão.';
+
+  @override
+  String get profileGenderUnspecified => 'Prefiro não informar';
+
+  @override
+  String get postalAddressFieldNumber => 'Número';
+
+  @override
+  String get postalAddressFieldComplement => 'Complemento';
+
+  @override
+  String get postalAddressFieldStreet => 'Rua';
+
+  @override
+  String get postalAddressFieldNeighborhood => 'Bairro';
+
+  @override
+  String get postalAddressFieldZip => 'CEP';
+
+  @override
+  String get postalAddressFieldUf => 'UF';
+
+  @override
+  String get postalAddressFieldMunicipality => 'Município';
+
+  @override
+  String get postalAddressCitySearchHint => 'Buscar município';
+
+  @override
+  String get postalAddressHintUf => 'UF';
+
+  @override
+  String get postalAddressHintZip => '00000-000';
+
+  @override
+  String get postalAddressHintStreet => 'Nome da rua ou avenida';
+
+  @override
+  String get postalAddressHintNumber => 'Nº';
+
+  @override
+  String get postalAddressHintComplement => 'Apto, bloco, referência';
+
+  @override
+  String get postalAddressHintNeighborhood => 'Ex: Centro';
+
+  @override
+  String get postalAddressHintCity => 'Selecione a cidade';
+
+  @override
+  String get postalAddressFieldRequiredError => 'Campo obrigatório.';
+
+  @override
+  String get postalAddressChooseUfFirst => 'Selecione o estado primeiro';
+
+  @override
+  String get postalAddressLookingUpCep => 'Consultando CEP';
+
+  @override
+  String get postalAddressCityPickerTitle => 'Selecionar cidade';
+
+  @override
+  String get postalAddressNoCitiesFound => 'Nenhuma cidade encontrada.';
+
+  @override
+  String get placesCityUnmatched =>
+      'Este município não corresponde ao catálogo. Escolha outra sugestão.';
 }

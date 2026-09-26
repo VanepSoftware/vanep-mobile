@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/network/city_unmatched_problem.dart';
 import '../../../../core/result/result.dart';
 import '../../domain/entities/driver_search_page.dart';
 import '../../domain/failures/driver_search_failure.dart';
@@ -8,6 +9,9 @@ import '../datasources/driver_search_remote_datasource.dart';
 
 DriverSearchFailure driverSearchFailureFrom(DioException exception) {
   final status = exception.response?.statusCode;
+  if (status == 400 && isIbgeCityUnmatchedProblem(exception.response?.data)) {
+    return DriverSearchFailure.cityUnmatched;
+  }
   return switch (status) {
     null => DriverSearchFailure.network,
     400 => DriverSearchFailure.placeNotResolved,

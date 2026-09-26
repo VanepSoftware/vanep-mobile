@@ -1597,6 +1597,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not resolve this address. Pick another suggestion.'**
   String get dependentAddressNotResolved;
+
+  /// No description provided for @profileGenderUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get profileGenderUnspecified;
+
+  /// No description provided for @postalAddressFieldNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get postalAddressFieldNumber;
+
+  /// No description provided for @postalAddressFieldComplement.
+  ///
+  /// In en, this message translates to:
+  /// **'Complement'**
+  String get postalAddressFieldComplement;
+
+  /// No description provided for @postalAddressFieldStreet.
+  ///
+  /// In en, this message translates to:
+  /// **'Street'**
+  String get postalAddressFieldStreet;
+
+  /// No description provided for @postalAddressFieldNeighborhood.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighborhood'**
+  String get postalAddressFieldNeighborhood;
+
+  /// No description provided for @postalAddressFieldZip.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP code'**
+  String get postalAddressFieldZip;
+
+  /// No description provided for @postalAddressFieldUf.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get postalAddressFieldUf;
+
+  /// No description provided for @postalAddressFieldMunicipality.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get postalAddressFieldMunicipality;
+
+  /// No description provided for @postalAddressCitySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search city'**
+  String get postalAddressCitySearchHint;
+
+  /// No description provided for @postalAddressHintUf.
+  ///
+  /// In en, this message translates to:
+  /// **'UF'**
+  String get postalAddressHintUf;
+
+  /// No description provided for @postalAddressHintZip.
+  ///
+  /// In en, this message translates to:
+  /// **'00000-000'**
+  String get postalAddressHintZip;
+
+  /// No description provided for @postalAddressHintStreet.
+  ///
+  /// In en, this message translates to:
+  /// **'Street or avenue name'**
+  String get postalAddressHintStreet;
+
+  /// No description provided for @postalAddressHintNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'No.'**
+  String get postalAddressHintNumber;
+
+  /// No description provided for @postalAddressHintComplement.
+  ///
+  /// In en, this message translates to:
+  /// **'Apt, block, landmark'**
+  String get postalAddressHintComplement;
+
+  /// No description provided for @postalAddressHintNeighborhood.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Downtown'**
+  String get postalAddressHintNeighborhood;
+
+  /// No description provided for @postalAddressHintCity.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the city'**
+  String get postalAddressHintCity;
+
+  /// No description provided for @postalAddressFieldRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'Required field.'**
+  String get postalAddressFieldRequiredError;
+
+  /// No description provided for @postalAddressChooseUfFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the state first'**
+  String get postalAddressChooseUfFirst;
+
+  /// No description provided for @postalAddressLookingUpCep.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking up ZIP code'**
+  String get postalAddressLookingUpCep;
+
+  /// No description provided for @postalAddressCityPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select city'**
+  String get postalAddressCityPickerTitle;
+
+  /// No description provided for @postalAddressNoCitiesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No cities found.'**
+  String get postalAddressNoCitiesFound;
+
+  /// No description provided for @placesCityUnmatched.
+  ///
+  /// In en, this message translates to:
+  /// **'This city does not match the catalog. Please choose another suggestion.'**
+  String get placesCityUnmatched;
 }
 
 class _AppLocalizationsDelegate

@@ -457,4 +457,13 @@ void main() {
       await expectLater(pending, completes);
     });
   });
+
+  blocTest<SignupCubit, SignupState>(
+    'updateGender(null) clears a chosen gender',
+    build: buildCubit,
+    act: (cubit) => cubit
+      ..updateGender(Gender.female)
+      ..updateGender(null),
+    verify: (cubit) => expect(cubit.state.form.gender, isNull),
+  );
 }

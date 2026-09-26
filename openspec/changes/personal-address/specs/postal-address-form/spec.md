@@ -60,13 +60,15 @@ Todas as chamadas a `/api/cep/{cep}`, `/api/states` e `/api/cities` MUST enviar 
 
 O app SHALL oferecer um campo CEP com máscara `00000-000`. Quando houver 8 dígitos, o app MUST consultar `GET /api/cep/{cep}` com o path só de dígitos (`70040-010` no path é 400). A consulta MUST ser debounceada (400 ms depois do 8º dígito). O lookup MUST NOT gravar nada.
 
-**HTTP 200.** Preenche `cityToken`, `cityName` e `uf`, e **substitui** `street` e `neighborhood` pelo que veio (nulo vira vazio; não mescla com o que já estava no rascunho). UF e município MUST ficar **travados**: o município do ViaCEP é 1:1 com o `cityToken`, então a pessoa MUST NOT trocá-los pelo picker enquanto o 200 valer. Se o 200 trouxe `neighborhood`, o bairro MUST ficar travado; se veio sem bairro, o campo MUST permanecer aberto. CEP, rua, número e complemento permanecem editáveis. Número e complemento MUST NOT ser preenchidos nem apagados pelo lookup. Cidade MUST NOT virar texto livre. Se a pessoa mudar o CEP (8 dígitos de novo), o app MUST consultar de novo e substituir cidade, UF, rua e bairro; o travamento do bairro segue o lookup novo.
+**HTTP 200.** Preenche `cityToken`, `cityName` e `uf`, e **substitui** `street` e `neighborhood` pelo que veio (nulo vira vazio; não mescla com o que já estava no rascunho). UF e município MUST ficar **travados**: o município do ViaCEP é 1:1 com o `cityToken`, então a pessoa MUST NOT trocá-los pelo picker enquanto o 200 valer. Como ficam travados, o formulário MUST mostrá-los num **card só de leitura** logo abaixo do CEP, não como campos desabilitados (ver “O formulário postal é um só componente em core”). Se o 200 trouxe `neighborhood`, o bairro MUST ficar travado e aparecer dentro do card; se veio sem bairro, o campo MUST permanecer aberto. CEP, rua, número e complemento permanecem editáveis. Número e complemento MUST NOT ser preenchidos nem apagados pelo lookup. Cidade MUST NOT virar texto livre. Se a pessoa mudar o CEP (8 dígitos de novo), o app MUST consultar de novo e substituir cidade, UF, rua e bairro; o travamento do bairro segue o lookup novo.
 
 **404 (município fora do catálogo ou sem `ibge_code`), 429 e 503.** O app MUST mostrar uma mensagem localizada distinta e MUST **destravar** o picker (`GET /api/states` e `GET /api/cities?uf=`). O CEP digitado MUST permanecer (o write exige 8 dígitos). Rua, bairro, UF e município do lookup anterior MUST ser limpos e o bairro MUST ficar aberto. Número e complemento permanecem. Isso é o fallback manual, não um modo especial.
 
 **404 “CEP não existe” (`CepFailure.notFound`).** Além do que vale para os outros 404, o app MUST **bloquear o Salvar** do endereço até a pessoa trocar o CEP. Escolher UF, município ou rua na mão MUST NOT habilitar o write nem apagar essa falha. Os outros 404, o 429 e o 503 continuam graváveis pelo fallback manual.
 
-O picker MUST permanecer disponível enquanto o CEP for desconhecido, incompleto ou o lookup tiver falhado, inclusive se a pessoa não souber o CEP (não precisa esperar um 404 para preencher UF e município na primeira vez). Depois de um 200, UF e município ficam travados até a pessoa editar o CEP para menos de 8 dígitos (o picker volta a ficar livre, sem apagar o que já estava) ou até outro lookup.
+O picker só existe no **fallback manual**, isto é, depois de uma falha de serviço do lookup (404 de município fora do catálogo, 429, 503, rede ou erro inesperado). Antes de haver um CEP de 8 dígitos consultado, o formulário não mostra UF, município nem bairro: a cidade só vem do lookup, e o write exige o CEP. Depois de um 200, UF e município ficam travados até a pessoa editar o CEP para menos de 8 dígitos (o formulário volta a mostrar só o CEP, sem apagar o que já estava) ou até outro lookup.
+
+Enquanto o lookup está pendente, do 8º dígito até a resposta (debounce incluído), o campo CEP MUST mostrar um indicador de carregando e o formulário MUST NOT mostrar a localização (o card ou UF e município), mesmo que o rascunho já tivesse cidade de um CEP anterior. O campo CEP continua editável, e rua, número e complemento continuam visíveis. O lookup MUST continuar **substituindo** a rua e o bairro pelo que veio: o que a pessoa digitou na rua antes do CEP resolver é sobrescrito.
 
 O app MUST NOT chamar `viacep.com.br` nem qualquer lookup de CEP fora desta API. Sem o back não existe `cityToken`.
 
@@ -84,17 +86,17 @@ O back não manda `code` nesses erros, só `detail` localizado; os dois 404 se d
 
 - **WHEN** a pessoa digita um CEP de 8 dígitos e o GET devolve 200
 - **THEN** cidade, UF, `cityToken`, rua e bairro (quando vierem) entram no form
-- **AND** UF e município ficam travados
-- **AND** o bairro fica travado quando o lookup trouxe `neighborhood`
+- **AND** o município e a UF aparecem no card do CEP, sem campo editável
+- **AND** o bairro fica travado, dentro do card, quando o lookup trouxe `neighborhood`
 - **AND** o app ainda não emite write
 - **AND** a pessoa pode editar rua, número, complemento e CEP antes de salvar
 
 #### Scenario: CEP genérico sem rua nem bairro
 
 - **WHEN** o GET de CEP devolve 200 com `street` e `neighborhood` nulos
-- **THEN** cidade e `cityToken` entram no form e UF e município ficam travados
+- **THEN** cidade e `cityToken` entram no form e o card mostra só município e UF
 - **AND** rua e bairro são substituídos por vazio para a pessoa preencher
-- **AND** o bairro permanece aberto
+- **AND** o bairro aparece como campo editável
 - **AND** número e complemento que a pessoa já tinha digitado permanecem
 
 #### Scenario: Trocar o CEP substitui cidade e logradouro
@@ -104,13 +106,13 @@ O back não manda `code` nesses erros, só `detail` localizado; os dois 404 se d
 - **AND** o app não mantém rua nem bairro do CEP anterior
 - **AND** o bairro fica travado só se o lookup novo trouxe `neighborhood`
 
-#### Scenario: Editar o CEP destrava o picker
+#### Scenario: Editar o CEP esconde o resultado anterior
 
 - **WHEN** a pessoa tem UF e município travados por um CEP com 200, ou por uma casa gravada
 - **AND** apaga um dígito do CEP
-- **THEN** UF e município ficam destravados e o picker pode abrir
-- **AND** cidade, rua e bairro que já estavam continuam preenchidos
-- **AND** ao completar 8 dígitos o app consulta de novo e trava outra vez se o lookup devolver 200
+- **THEN** o card some e o formulário deixa de mostrar a localização
+- **AND** cidade, rua e bairro que já estavam continuam no rascunho
+- **AND** ao completar 8 dígitos o app consulta de novo e mostra o card outra vez se o lookup devolver 200
 
 #### Scenario: CEP com hífen não vai no path
 
@@ -122,11 +124,11 @@ O back não manda `code` nesses erros, só `detail` localizado; os dois 404 se d
 - **WHEN** o campo tem 7 dígitos
 - **THEN** o app não chama `/api/cep`
 
-#### Scenario: Falha do lookup destrava o picker
+#### Scenario: Falha do lookup abre o fallback manual
 
 - **WHEN** o GET de CEP devolve 404 (município fora do catálogo), 429 ou 503
 - **THEN** o app mostra um erro localizado distinto para cidade fora do catálogo, limite ou indisponível
-- **AND** UF e município ficam destravados e o picker abre
+- **AND** o formulário passa ao fallback manual: UF e município escolhíveis, e o picker abre
 - **AND** o CEP digitado permanece no form
 - **AND** rua, bairro, UF e município do lookup anterior saem e o bairro fica aberto
 - **AND** número e complemento permanecem
@@ -137,7 +139,7 @@ O back não manda `code` nesses erros, só `detail` localizado; os dois 404 se d
 - **WHEN** o GET de CEP devolve 404 porque o ViaCEP disse que o CEP não existe
 - **THEN** o app mostra o erro de CEP não encontrado
 - **AND** o Salvar permanece bloqueado mesmo com `cityToken`, rua e CEP de 8 dígitos
-- **AND** escolher UF ou município no picker não apaga essa falha
+- **AND** o formulário não mostra localização (card, UF, município nem bairro)
 - **AND** o app não emite write
 
 #### Scenario: App nunca consulta ViaCEP direto
@@ -199,7 +201,18 @@ O back não devolve erro por campo em 400 de Bean Validation (é o ProblemDetail
 
 O app SHALL montar o endereço postal com um único formulário apresentacional em `lib/core/ui/` (`VanepPostalAddressForm`) e um único sheet de escolha de UF e município (`VanepCityPickerSheet`), usados pela tela de endereço da conta e pelo formulário de dependente. Nenhum dos dois módulos MUST reimplementar esses campos.
 
-Ordem dos campos: CEP, UF, município, rua, número, complemento, bairro. UF e município são seletores que abrem o picker (não campos de texto) e respeitam a trava do CEP. Os campos obrigatórios (CEP, UF, município, rua) são marcados como obrigatórios no rótulo. Copy só em ARB. O formulário não conhece cubit nem módulo: recebe valores e callbacks; o estado do rascunho, do lookup e do picker é do cubit do consumidor (R06a). Onde o formulário mora é do consumidor: a conta o hospeda numa tela própria de endereço; o dependente o hospeda inline no formulário de dependente.
+O formulário MUST mostrar os campos por **modo**, decidido pelo rascunho e por um indicador de lookup pendente que o consumidor passa:
+
+| Modo | Quando | O que aparece |
+|---|---|---|
+| Aguardando o CEP | CEP com menos de 8 dígitos, ou lookup pendente | CEP (com indicador de carregando se pendente), rua, número e complemento |
+| CEP inexistente | `isZipCodeUnknown` | CEP com a mensagem de erro, rua, número e complemento; o Salvar fica bloqueado |
+| Resolvido | cidade travada pelo lookup, ou casa gravada | CEP, **card do CEP**, bairro (só se o CEP não o trouxe, ou se a casa gravada não tem bairro), rua, número e complemento |
+| Manual | CEP de 8 dígitos, lookup terminado e cidade não travada (falha de serviço) | CEP, UF e município, bairro, rua, número e complemento |
+
+O **card do CEP** (`VanepCepAddressCard`) é só de leitura: um ícone de endereço e uma única linha de texto, “Bairro, Município – UF” (o bairro só quando o CEP o trouxe; sem ele, “Município – UF”). Não tem título, campo nem toque, e não usa o nome do ViaCEP (quem consulta é o back). Linha longa quebra em vez de estourar.
+
+Ordem dos campos: CEP, depois a localização (o card, ou UF e município lado a lado no modo manual), depois bairro, rua e número e complemento (lado a lado). Na mesma linha do modo manual, a UF é uma lista suspensa (as UFs de `GET /api/states`) e o município é um campo somente leitura que abre um sheet de busca de municípios da UF escolhida (não é campo de texto). Os campos obrigatórios (CEP, rua e, no modo manual, UF e município) são marcados como obrigatórios no rótulo. Quando a UF não é selecionável (formulário desabilitado), o valor aparece como texto na cor do design system, nunca como `DropdownButton` desabilitado: o Flutter pinta esse valor com o `disabledColor` do tema escuro do app, branco a 38%, invisível sobre o campo branco. Copy só em ARB. O formulário não conhece cubit nem módulo: recebe valores e callbacks; o estado do rascunho, do lookup e do picker é do cubit do consumidor (R06a). Onde o formulário mora é do consumidor: a conta o hospeda numa tela própria de endereço; o dependente o hospeda inline no formulário de dependente.
 
 O formulário MUST NOT conter autocomplete do Google Places.
 
@@ -210,15 +223,72 @@ O formulário MUST NOT conter autocomplete do Google Places.
 
 #### Scenario: Município escolhido por sheet
 
-- **WHEN** a pessoa toca o seletor de município com o picker destravado
-- **THEN** abre o sheet de UF e município
+- **WHEN** a pessoa escolhe a UF e toca o campo de município com o picker destravado
+- **THEN** abre o sheet de busca de municípios da UF escolhida
 - **AND** ao escolher um município o sheet fecha e o seletor mostra o nome e a UF
 
-#### Scenario: UF e município travados não abrem o picker
+#### Scenario: Antes do lookup só falta a localização
+
+- **WHEN** o formulário abre sem CEP, ou o CEP tem menos de 8 dígitos
+- **THEN** aparecem o CEP, a rua, o número e o complemento, todos editáveis
+- **AND** não há card, UF, município nem bairro
+
+#### Scenario: Casa gravada com bairro abre com o bairro travado
+
+- **WHEN** a pessoa abre para editar uma casa gravada que tem bairro
+- **THEN** o card mostra “Bairro, Município – UF”
+- **AND** não há campo de bairro para editar
+
+#### Scenario: Casa gravada sem bairro deixa o campo aberto
+
+- **WHEN** a pessoa abre para editar uma casa gravada sem bairro
+- **THEN** o card mostra só “Município – UF”
+- **AND** o campo de bairro aparece editável
+
+#### Scenario: Mudar o CEP de uma casa gravada segue o lookup novo
+
+- **WHEN** a pessoa edita o CEP de uma casa gravada e o lookup devolve 200 sem bairro
+- **THEN** o bairro antigo sai e o campo de bairro aparece editável
+
+#### Scenario: O lookup sobrescreve a rua digitada antes
+
+- **WHEN** a pessoa digita uma rua antes de o CEP resolver
+- **AND** o lookup devolve 200 com outra rua
+- **THEN** a rua do lookup substitui a digitada
+
+#### Scenario: Indicador de carregando enquanto consulta
+
+- **WHEN** o 8º dígito é digitado
+- **THEN** o campo CEP mostra um indicador de carregando até a resposta do lookup
+- **AND** o formulário não mostra o card nem UF e município, mesmo com a cidade de um CEP anterior no rascunho
+- **AND** rua, número e complemento continuam visíveis
+- **AND** o campo CEP continua editável
+
+#### Scenario: CEP resolvido mostra o card
 
 - **WHEN** o último lookup de CEP devolveu 200
-- **THEN** os seletores de UF e município aparecem travados
-- **AND** tocar neles não abre o picker
+- **THEN** o card do CEP mostra “Município – UF”, precedido de “Bairro, ” se o CEP o trouxe, numa linha só e com ícone de endereço
+- **AND** não há campo de UF nem de município para editar
+- **AND** rua, número e complemento ficam abaixo, editáveis
+- **AND** o bairro aparece como campo editável só quando o CEP não o trouxe
+
+#### Scenario: CEP inexistente não mostra localização
+
+- **WHEN** o lookup devolveu 404 porque o CEP não existe
+- **THEN** o campo CEP mostra a mensagem de erro
+- **AND** não há card, UF, município nem bairro
+- **AND** o Salvar continua bloqueado
+
+#### Scenario: Falha de serviço mostra o fallback manual
+
+- **WHEN** o lookup falhou por 429, 503, rede, erro inesperado ou município fora do catálogo
+- **THEN** o formulário mostra UF e município escolhíveis, bairro, rua, número e complemento
+
+#### Scenario: UF travada legível
+
+- **WHEN** o formulário está desabilitado (por exemplo, salvando) e a UF tem valor
+- **THEN** a UF aparece como texto na cor do design system
+- **AND** não usa a cor de desabilitado do tema
 
 #### Scenario: Sem Places
 

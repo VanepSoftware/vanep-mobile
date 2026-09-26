@@ -874,4 +874,71 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get dependentAddressNotResolved =>
       'Could not resolve this address. Pick another suggestion.';
+
+  @override
+  String get profileGenderUnspecified => 'Prefer not to say';
+
+  @override
+  String get postalAddressFieldNumber => 'Number';
+
+  @override
+  String get postalAddressFieldComplement => 'Complement';
+
+  @override
+  String get postalAddressFieldStreet => 'Street';
+
+  @override
+  String get postalAddressFieldNeighborhood => 'Neighborhood';
+
+  @override
+  String get postalAddressFieldZip => 'ZIP code';
+
+  @override
+  String get postalAddressFieldUf => 'State';
+
+  @override
+  String get postalAddressFieldMunicipality => 'City';
+
+  @override
+  String get postalAddressCitySearchHint => 'Search city';
+
+  @override
+  String get postalAddressHintUf => 'UF';
+
+  @override
+  String get postalAddressHintZip => '00000-000';
+
+  @override
+  String get postalAddressHintStreet => 'Street or avenue name';
+
+  @override
+  String get postalAddressHintNumber => 'No.';
+
+  @override
+  String get postalAddressHintComplement => 'Apt, block, landmark';
+
+  @override
+  String get postalAddressHintNeighborhood => 'e.g. Downtown';
+
+  @override
+  String get postalAddressHintCity => 'Select the city';
+
+  @override
+  String get postalAddressFieldRequiredError => 'Required field.';
+
+  @override
+  String get postalAddressChooseUfFirst => 'Select the state first';
+
+  @override
+  String get postalAddressLookingUpCep => 'Looking up ZIP code';
+
+  @override
+  String get postalAddressCityPickerTitle => 'Select city';
+
+  @override
+  String get postalAddressNoCitiesFound => 'No cities found.';
+
+  @override
+  String get placesCityUnmatched =>
+      'This city does not match the catalog. Please choose another suggestion.';
 }

@@ -7,6 +7,7 @@ String driverSearchFailureLabel(
 ) {
   return switch (failure) {
     DriverSearchFailure.placeNotResolved => l10n.driverSearchPlaceNotResolved,
+    DriverSearchFailure.cityUnmatched => l10n.placesCityUnmatched,
     DriverSearchFailure.rateLimited => l10n.driverSearchRateLimited,
     DriverSearchFailure.network => l10n.driverSearchNetworkError,
     DriverSearchFailure.unexpected => l10n.driverSearchUnexpectedError,
