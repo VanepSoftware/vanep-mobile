@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/domain/postal_address_draft.dart';
 import '../../../ibge_locations/domain/entities/brazilian_city.dart';
 import '../../../ibge_locations/domain/entities/brazilian_state.dart';
 import '../../../ibge_locations/domain/failures/cep_failure.dart';
@@ -87,6 +88,9 @@ class DependentFormState extends Equatable {
       isLookingUpCep || draft.address.isZipCodeUnknown;
 
   bool get showsAddressErrors => showAddressIssues && !draft.address.isBlank;
+
+  Set<PostalAddressIssue> get addressIssues =>
+      findAddressIssues(draft, snapshot: snapshot);
 
   DependentFieldError? errorOf(DependentField field) => fieldErrors[field];
 

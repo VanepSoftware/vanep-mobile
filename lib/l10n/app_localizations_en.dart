@@ -866,7 +866,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dependentFieldAddressEmpty => 'No address set.';
 
   @override
-  String get dependentFieldAddressRemove => 'Remove address';
+  String get dependentFieldAddressRemove => 'Clear address';
+
+  @override
+  String get dependentAddressRegisterAction => 'Add address';
+
+  @override
+  String get dependentAddressEditAction => 'Edit address';
+
+  @override
+  String get dependentAddressMenuTooltip => 'More options';
+
+  @override
+  String get dependentAddressFormTitleNew => 'Add address';
+
+  @override
+  String get dependentAddressFormTitleEdit => 'Edit address';
+
+  @override
+  String get dependentAddressFormSubtitle =>
+      'Enter the ZIP code and complete the dependent\'s address details.';
+
+  @override
+  String get dependentAddressConfirmAction => 'Confirm address';
+
+  @override
+  String get dependentAddressIncomplete => 'Complete the address to save.';
 
   @override
   String get profileGenderUnspecified => 'Prefer not to say';

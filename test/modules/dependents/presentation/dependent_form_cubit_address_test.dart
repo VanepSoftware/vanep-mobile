@@ -632,4 +632,114 @@ void main() {
       isTrue,
     );
   });
+
+  group('replaceAddress', () {
+    blocTest<DependentFormCubit, DependentFormState>(
+      'swaps the address and drops a pending lookup and failures',
+      setUp: cepResolves,
+      build: () => buildCubit(dependent: helenaWithAddress),
+      act: (cubit) async {
+        cubit.updateZipCode('72120120');
+        cubit.replaceAddress(cubit.state.draft.address.withNumber('1'));
+        await Future<void>.delayed(cepLookupTestWait);
+      },
+      verify: (cubit) {
+        verifyNever(() => lookupCep(any()));
+        expect(cubit.state.isLookingUpCep, isFalse);
+        expect(cubit.state.cepFailure, isNull);
+        expect(cubit.state.showAddressIssues, isFalse);
+      },
+    );
+
+    blocTest<DependentFormCubit, DependentFormState>(
+      'restores an earlier address exactly, locks included',
+      build: () => buildCubit(dependent: helenaWithAddress),
+      act: (cubit) {
+        final initial = cubit.state.draft.address;
+        cubit.updateNumber('99');
+        cubit.updateStreet('Outra rua');
+        cubit.replaceAddress(initial);
+      },
+      verify: (cubit) {
+        final address = cubit.state.draft.address;
+        expect(address.number, '12');
+        expect(address.street, 'QNL 5 Conjunto A');
+        expect(address.isCityLocked, isTrue);
+        expect(address.isNeighborhoodLocked, isTrue);
+      },
+    );
+  });
+
+  group('confirmAddress', () {
+    test('a complete address confirms', () {
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+      cubit.replaceAddress(fakeCompleteDraft());
+
+      expect(cubit.confirmAddress(), isTrue);
+      expect(cubit.state.showAddressIssues, isFalse);
+    });
+
+    test('a blank address confirms as no address', () {
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+
+      expect(cubit.confirmAddress(), isTrue);
+    });
+
+    test('a partial address does not confirm and shows the issues', () {
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+      cubit.updateStreet('Rua Sete');
+
+      expect(cubit.confirmAddress(), isFalse);
+      expect(cubit.state.showsAddressErrors, isTrue);
+      expect(cubit.state.addressIssues, isNotEmpty);
+    });
+
+    test('a cep that does not exist never confirms', () async {
+      cepFails(CepFailure.notFound);
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+      await typeZip(cubit, '99999999');
+
+      expect(cubit.confirmAddress(), isFalse);
+    });
+
+    test('a pending lookup never confirms', () {
+      when(
+        () => lookupCep(any()),
+      ).thenAnswer((_) => Completer<Result<CepFailure, CepLookup>>().future);
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+      cubit.updateZipCode('72120120');
+
+      expect(cubit.confirmAddress(), isFalse);
+    });
+
+    test('a saved address the person never touched confirms', () {
+      final cubit = buildCubit(
+        dependent: const TestDependent(
+          token: 'dep-legacy',
+          name: 'Helena',
+          address: TestDependentAddress(zipCode: null),
+        ),
+      );
+      addTearDown(cubit.close);
+
+      expect(cubit.confirmAddress(), isTrue);
+      expect(cubit.state.addressIssues, isEmpty);
+    });
+  });
+
+  test('an address left without a city is reported as incomplete', () {
+    final cubit = buildCubit();
+    addTearDown(cubit.close);
+    cubit.replaceAddress(fakeCompleteDraft().withUf('DF'));
+
+    expect(
+      cubit.state.addressIssues,
+      contains(PostalAddressIssue.cityRequired),
+    );
+  });
 }

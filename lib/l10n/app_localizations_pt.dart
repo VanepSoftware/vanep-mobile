@@ -867,7 +867,33 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dependentFieldAddressEmpty => 'Nenhum endereço informado.';
 
   @override
-  String get dependentFieldAddressRemove => 'Remover endereço';
+  String get dependentFieldAddressRemove => 'Limpar endereço';
+
+  @override
+  String get dependentAddressRegisterAction => 'Cadastrar endereço';
+
+  @override
+  String get dependentAddressEditAction => 'Editar endereço';
+
+  @override
+  String get dependentAddressMenuTooltip => 'Mais opções';
+
+  @override
+  String get dependentAddressFormTitleNew => 'Cadastrar endereço';
+
+  @override
+  String get dependentAddressFormTitleEdit => 'Editar endereço';
+
+  @override
+  String get dependentAddressFormSubtitle =>
+      'Informe o CEP e complete os dados do endereço do dependente.';
+
+  @override
+  String get dependentAddressConfirmAction => 'Confirmar endereço';
+
+  @override
+  String get dependentAddressIncomplete =>
+      'Complete o endereço para poder salvar.';
 
   @override
   String get profileGenderUnspecified => 'Prefiro não informar';

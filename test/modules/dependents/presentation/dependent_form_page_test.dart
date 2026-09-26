@@ -5,18 +5,19 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/core/ui/vanep_address_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_cep_address_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
 import 'package:vanep_mobile/core/ui/vanep_postal_address_form.dart';
-import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_address_form_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_form_page.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
@@ -154,29 +155,24 @@ void main() {
       expect(find.text('Novo dependente'), findsOneWidget);
       expect(textOf(tester, 'Data de nascimento'), isEmpty);
       expect(find.byTooltip('Limpar data'), findsNothing);
-      expect(find.byType(VanepPostalAddressForm), findsOneWidget);
-      expect(find.byType(VanepCepAddressCard), findsNothing);
-      expect(find.text('Remover endereço'), findsNothing);
+      expect(find.byType(VanepAddressCard), findsOneWidget);
+      expect(find.text('Nenhum endereço informado.'), findsOneWidget);
+      expect(find.text('Cadastrar endereço'), findsOneWidget);
     });
 
-    testWidgets('uses the new identity chrome and none of the old', (
-      tester,
-    ) async {
+    testWidgets('the address is a card, not the inline form', (tester) async {
+      await openForm(tester);
+
+      expect(find.byType(VanepPostalAddressForm), findsNothing);
+      expect(find.byType(VanepPlaceAutocompleteField), findsNothing);
+    });
+
+    testWidgets('uses the identity chrome', (tester) async {
       await openForm(tester);
 
       expect(find.byType(VanepAppBar), findsOneWidget);
       expect(find.byType(VanepPageHeader), findsOneWidget);
       expect(find.byType(VanepBottomBar), findsOneWidget);
-    });
-
-    testWidgets('the address is the postal form, without Places', (
-      tester,
-    ) async {
-      await openForm(tester);
-
-      expect(find.byType(VanepPlaceAutocompleteField), findsNothing);
-      expect(find.text('CEP'), findsOneWidget);
-      expect(find.text('Rua'), findsOneWidget);
     });
 
     testWidgets('the save button sits in the bottom bar', (tester) async {
@@ -191,19 +187,17 @@ void main() {
       );
     });
 
-    testWidgets('editing prefills the fields from the dependent', (
+    testWidgets('editing prefills the fields and summarizes the address', (
       tester,
     ) async {
       await openForm(tester, dependent: helenaWithAddress);
 
       expect(find.text('Editar dependente'), findsOneWidget);
       expect(find.text('Helena Souza'), findsOneWidget);
-      expect(find.text('QNL 5 Conjunto A'), findsOneWidget);
-      expect(find.text('12'), findsOneWidget);
-      expect(find.text('Casa 2'), findsOneWidget);
-      expect(find.text('72120-120'), findsOneWidget);
-      expect(find.byType(VanepCepAddressCard), findsOneWidget);
+      expect(find.text('QNL 5 Conjunto A, 12, Casa 2'), findsOneWidget);
+      expect(find.text('Taguatinga · Brasília/DF · 72120-120'), findsOneWidget);
       expect(find.byTooltip('Limpar data'), findsOneWidget);
+      expect(find.text('Cadastrar endereço'), findsNothing);
     });
   });
 
@@ -260,18 +254,39 @@ void main() {
   });
 
   group('address', () {
-    testWidgets('a resolved cep shows the card and locks the location', (
+    Future<void> openAddressPage(WidgetTester tester) async {
+      await tester.tap(find.text('Cadastrar endereço'));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> confirmAddress(WidgetTester tester) async {
+      await tester.tap(find.text('Confirmar endereço'));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> chooseMenuAction(WidgetTester tester, String label) async {
+      await tester.tap(find.byType(PopupMenuButton<VanepAddressCardAction>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label).last);
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('registering opens the address page and returns the summary', (
       tester,
     ) async {
       cepResolves();
       await openForm(tester);
 
+      await openAddressPage(tester);
+      expect(find.byType(DependentAddressFormPage), findsOneWidget);
       await typeCep(tester, '72120120');
+      await confirmAddress(tester);
 
-      expect(find.byType(VanepCepAddressCard), findsOneWidget);
+      expect(find.byType(DependentAddressFormPage), findsNothing);
+      expect(find.byType(DependentFormView), findsOneWidget);
       expect(find.text('QND 12'), findsOneWidget);
-      expect(find.text('Remover endereço'), findsOneWidget);
-      verify(() => lookupCep('72120120')).called(1);
+      expect(find.text('Taguatinga · Brasília/DF · 72120-120'), findsOneWidget);
+      expect(find.text('Cadastrar endereço'), findsNothing);
     });
 
     testWidgets('a saved dependent with an address closes the form', (
@@ -282,9 +297,11 @@ void main() {
       await openForm(tester);
 
       await tester.enterText(fieldLabeled('Nome'), 'Helena Souza');
+      await openAddressPage(tester);
       await typeCep(tester, '72120120');
       await tester.enterText(fieldLabeled('Número'), '340');
       await tester.enterText(fieldLabeled('Complemento'), 'Bloco B');
+      await confirmAddress(tester);
       await tapSave(tester);
 
       final draft =
@@ -300,7 +317,7 @@ void main() {
       expect(find.text('abrir'), findsOneWidget);
     });
 
-    testWidgets('changing only the number of a saved address resends it', (
+    testWidgets('editing changes only the number and resends the address', (
       tester,
     ) async {
       when(
@@ -313,7 +330,10 @@ void main() {
       );
       await openForm(tester, dependent: helenaWithAddress);
 
+      await chooseMenuAction(tester, 'Editar endereço');
+      expect(find.text('Editar endereço'), findsWidgets);
       await tester.enterText(fieldLabeled('Número'), '99');
+      await confirmAddress(tester);
       await tapSave(tester);
 
       final draft =
@@ -328,108 +348,44 @@ void main() {
       expect(draft.address.cityToken, 'city-brasilia');
     });
 
-    testWidgets('removing the address brings the blank form back', (
+    testWidgets('clearing from the menu brings the empty card back', (
       tester,
     ) async {
       await openForm(tester, dependent: helenaWithAddress);
 
-      await tester.tap(find.text('Remover endereço'));
-      await tester.pump();
+      await chooseMenuAction(tester, 'Limpar endereço');
 
-      expect(find.byType(VanepCepAddressCard), findsNothing);
-      expect(find.text('QNL 5 Conjunto A'), findsNothing);
-      expect(find.text('Remover endereço'), findsNothing);
+      expect(find.text('Nenhum endereço informado.'), findsOneWidget);
+      expect(find.text('Cadastrar endereço'), findsOneWidget);
+      expect(find.text('QNL 5 Conjunto A, 12, Casa 2'), findsNothing);
     });
 
-    testWidgets('a partial address shows what is missing and sends nothing', (
-      tester,
-    ) async {
-      createSucceeds();
-      await openForm(tester);
-
-      await tester.enterText(fieldLabeled('Nome'), 'Helena Souza');
-      await tester.enterText(fieldLabeled('Rua'), 'Rua Sete');
-      await tapSave(tester);
-
-      expect(find.text('Campo obrigatório.'), findsOneWidget);
-      verifyNever(() => createDependent(any()));
-      expect(find.byType(DependentFormView), findsOneWidget);
-    });
-
-    testWidgets('a cep that does not exist blocks the save', (tester) async {
-      when(() => lookupCep(any())).thenAnswer(
-        (_) async => const Err<CepFailure, CepLookup>(CepFailure.notFound),
+    testWidgets('a cleared address is sent as removed', (tester) async {
+      when(
+        () => updateDependent(
+          snapshot: any(named: 'snapshot'),
+          draft: any(named: 'draft'),
+        ),
+      ).thenAnswer(
+        (_) async => const Ok<DependentFailure, Dependent>(testHelenaDependent),
       );
-      await openForm(tester);
+      await openForm(tester, dependent: helenaWithAddress);
 
-      await typeCep(tester, '99999999');
-
-      expect(find.text('CEP não encontrado.'), findsOneWidget);
-      final button = tester.widget<VanepPrimaryButton>(
-        find.byType(VanepPrimaryButton),
-      );
-      expect(button.onPressed, isNull);
-    });
-
-    testWidgets('a city outside the catalog opens the manual fallback', (
-      tester,
-    ) async {
-      when(() => lookupCep(any())).thenAnswer(
-        (_) async =>
-            const Err<CepFailure, CepLookup>(CepFailure.cityNotInCatalog),
-      );
-      await openForm(tester);
-
-      await typeCep(tester, '72120120');
-      await tester.pumpAndSettle();
-
-      expect(
-        find.text('Município deste CEP não está no catálogo.'),
-        findsOneWidget,
-      );
-      expect(find.byType(DropdownButton<String>), findsOneWidget);
-      expect(find.text('Município'), findsOneWidget);
-      final button = tester.widget<VanepPrimaryButton>(
-        find.byType(VanepPrimaryButton),
-      );
-      expect(button.onPressed, isNotNull);
-    });
-
-    testWidgets('the manual fallback picks the city in the sheet', (
-      tester,
-    ) async {
-      createSucceeds();
-      when(() => lookupCep(any())).thenAnswer(
-        (_) async =>
-            const Err<CepFailure, CepLookup>(CepFailure.cityNotInCatalog),
-      );
-      await openForm(tester);
-
-      await tester.enterText(fieldLabeled('Nome'), 'Helena Souza');
-      await typeCep(tester, '72120120');
-      await tester.pumpAndSettle();
-      await tester.enterText(fieldLabeled('Rua'), 'QND 12');
-      await tester.tap(find.byType(DropdownButton<String>));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('DF').last);
-      await tester.pumpAndSettle();
-      await tester.tap(fieldLabeled('Município'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Selecionar cidade'), findsOneWidget);
-      verify(() => listCities(uf: 'DF')).called(greaterThanOrEqualTo(1));
-
-      await tester.tap(find.text('Brasília'));
-      await tester.pumpAndSettle();
+      await chooseMenuAction(tester, 'Limpar endereço');
       await tapSave(tester);
 
       final draft =
-          verify(() => createDependent(captureAny())).captured.single
+          verify(
+                () => updateDependent(
+                  snapshot: helenaWithAddress,
+                  draft: captureAny(named: 'draft'),
+                ),
+              ).captured.single
               as DependentDraft;
-      expect(draft.address.cityToken, 'city-brasilia');
+      expect(draft.address.isBlank, isTrue);
     });
 
-    testWidgets('a city the backend rejects is flagged on the municipality', (
+    testWidgets('a city the backend rejects is flagged on the card', (
       tester,
     ) async {
       when(() => createDependent(any())).thenAnswer(
@@ -441,20 +397,45 @@ void main() {
       await openForm(tester);
 
       await tester.enterText(fieldLabeled('Nome'), 'Helena Souza');
+      await openAddressPage(tester);
       await typeCep(tester, '72120120');
+      await confirmAddress(tester);
       await tapSave(tester);
 
+      const message =
+          'Não encontramos essa cidade. Escolha o município novamente.';
+      expect(find.text(message), findsOneWidget);
+      expect(find.byType(DependentFormView), findsOneWidget);
+      expect(find.text('Helena Souza'), findsOneWidget);
+    });
+
+    testWidgets('editing after a rejected city opens the manual fallback', (
+      tester,
+    ) async {
+      when(() => createDependent(any())).thenAnswer(
+        (_) async => const Err<DependentFailure, Dependent>(
+          DependentCityNotFoundFailure(),
+        ),
+      );
+      cepResolves();
+      await openForm(tester);
+
+      await tester.enterText(fieldLabeled('Nome'), 'Helena Souza');
+      await openAddressPage(tester);
+      await typeCep(tester, '72120120');
+      await confirmAddress(tester);
+      await tapSave(tester);
+      await chooseMenuAction(tester, 'Editar endereço');
+
+      expect(find.byType(DependentAddressFormPage), findsOneWidget);
+      expect(find.text('Município'), findsOneWidget);
+      expect(find.byType(VanepCepAddressCard), findsNothing);
       expect(
         find.text(
           'Não encontramos essa cidade. Escolha o município novamente.',
         ),
         findsOneWidget,
       );
-      expect(find.byType(DependentFormView), findsOneWidget);
-      expect(find.text('Helena Souza'), findsOneWidget);
-      expect(find.text('QND 12'), findsOneWidget);
-      expect(find.text('Município'), findsOneWidget);
-      expect(find.byType(VanepCepAddressCard), findsNothing);
     });
 
     testWidgets('a generic validation failure shows the localized copy', (

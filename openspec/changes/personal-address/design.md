@@ -212,7 +212,7 @@ Caps no client (espelho do Bean Validation, `PostalAddressLimits`): rua 255, nú
 - Limpar: `showVanepConfirmDialog(isDestructive: true)` → `cubit.clearAddress()`.
 - **Não** há `VanepPlaceAutocompleteField` nem `PlaceAutocompleteController` nessas telas.
 
-**Na pilha nova:** o comportamento acima é o alvo e **não muda**. O que muda é (a) onde o form e o picker moram — `PersonalAddressForm` e `PersonalAddressCityPickerSheet` leem `PersonalDataCubit` direto e o dependente não pode importá-los; nascem como `VanepPostalAddressForm` e `VanepCityPickerSheet` em core, apresentacionais (D12), e as telas de `auth` só os hospedam; (b) o visual (D13). O `PersonalDataInlineField` e o `PersonalDataGenderDropdown`/`ProfileGenderChoice` locais deixam de existir (D11, D13). O formatter `personal_address_display` continua (o cartão precisa da linha de resumo); o do dependente é outro (D14).
+**Na pilha nova:** o comportamento acima é o alvo e **não muda**. O que muda é (a) onde o form e o picker moram (e o cartão que abre a tela também sobe para core, `VanepAddressCard`, para a conta e o dependente terem o mesmo) — `PersonalAddressForm` e `PersonalAddressCityPickerSheet` leem `PersonalDataCubit` direto e o dependente não pode importá-los; nascem como `VanepPostalAddressForm` e `VanepCityPickerSheet` em core, apresentacionais (D12), e as telas de `auth` só os hospedam; (b) o visual (D13). O `PersonalDataInlineField` e o `PersonalDataGenderDropdown`/`ProfileGenderChoice` locais deixam de existir (D11, D13). O formatter `personal_address_display` continua (o cartão precisa da linha de resumo); o do dependente é outro (D14).
 
 **Rejeitado (o que eu tinha escrito antes de olhar o código):** formulário inline dentro da página de dados pessoais, sem cartão e sem tela própria. Contradiz a UI já implementada e validada.
 
@@ -267,7 +267,7 @@ DF/SP em área de atuação ainda exigem distrito no pin (`requires_district` / 
 - Enum continua `male` / `female` / `other`. Prefiro não informar **não** vira `UNSPECIFIED` no enum — o dono do fato é `null`, igual `Gender.fromApi` já faz. `Gender.toApi(null)` já devolve JSON `null`. O back aceita `"gender": null` no PATCH da conta e do dependente (`JsonNullable<Gender>` nos dois).
 - **Um** componente: `VanepGenderSelect` em `lib/core/ui/`, extraído do dropdown de `auth` (mesma aparência de campo, `vanepInputDecoration`, rótulo acima; as quatro opções; `onChanged(Gender?)`). Justifica extrair agora: o select passa a ter **três** consumidores (dados pessoais, cadastro e dependente) — R06. Não é um `VanepSelect` genérico: só o de gênero.
 - `genderLabel` (core) passa a aceitar `Gender?` e devolve `profileGenderUnspecified` (“Prefiro não informar” / “Prefer not to say”) para `null`; `profileGenderLabel` de `auth` some se sobrar sem uso (R43).
-- Apagar `PersonalDataGenderDropdown`, `ProfileGenderChoice` (e `genderFromProfileGenderChoice`) e a chave `dependentFieldGenderClear`. O cadastro (`signup_page`) também passa ao select: `SignupForm.copyWith` ganha `clearGender`, `SignupCubit.updateGender(Gender?)` e a página usa `VanepGenderSelect`; “Prefiro não informar” omite a chave `gender` do `POST /api/auth/signup/{type}` (o campo é opcional). `PersonalDataGenderChips` e `profileGenderLabel` saem na fase 4 e `VanepGenderChips`, na fase 5, quando o formulário de dependente deixar de usá-lo.
+- Apagar `PersonalDataGenderDropdown`, `ProfileGenderChoice` (e `genderFromProfileGenderChoice`) e a chave `dependentFieldGenderClear`. O cadastro (`signup_page`) também passa ao select: `SignupForm.copyWith` ganha `clearGender`, `SignupCubit.updateGender(Gender?)` e a página usa `VanepGenderSelect`; “Prefiro não informar” omite a chave `gender` do `POST /api/auth/signup/{type}` (o campo é opcional). `PersonalDataGenderChips` e `profileGenderLabel` saem na fase 4 e `VanepGenderChips`, na fase 6, quando o formulário de dependente deixar de usá-lo.
 - Dependente: create com gênero omitido não manda a chave; update de gênero informado para omitido manda `"gender": null`.
 
 **Rejeitado:** quarto valor no enum (segunda fonte para o mesmo “ausente” do API). **Rejeitado:** manter chips no dependente. **Rejeitado:** `VanepSelect` genérico agora (um só uso concreto).
@@ -315,7 +315,7 @@ Telas do escopo:
 - **Dados pessoais** — fundo `card`, `VanepAppBar`; os campos passam a `VanepTextField` (nome e telefone editáveis; e-mail, documento e nascimento somente leitura) no lugar do sublinhado inline; gênero no `VanepGenderSelect`; `CooldownBadge` na linha do rótulo, colado no fim do campo (`labelTrailing`) com tokens novos; `PendingEmailBanner` mantém `warningSurface`; cartão de endereço num `VanepOutlinedPanel` (ações em `action`, “Limpar endereço” em `danger`); Salvar do perfil no `VanepBottomBar`.
 - **Tela de endereço da conta** — `VanepAppBar`, `VanepPostalAddressForm`, Salvar no `VanepBottomBar`.
 - **Lista de dependentes** — `VanepAppBar`; cada dependente num `VanepOutlinedPanel`, o padrão com `highlighted: true` e badge de padrão em tom de ação (`action` a 8% + texto `action`); “definir como padrão” em `action`; “adicionar” no `VanepBottomBar`. Estados de carga/erro/vazio no mesmo esqueleto.
-- **Formulário de dependente** — `VanepAppBar`, `VanepTextField` para nome, data de nascimento (campo somente leitura que abre o date picker, no lugar do `OutlinedButton`), `VanepGenderSelect`, `VanepPostalAddressForm` inline, Salvar no `VanepBottomBar`.
+- **Formulário de dependente** — `VanepAppBar`, `VanepTextField` para nome, data de nascimento (campo somente leitura que abre o date picker, no lugar do `OutlinedButton`), `VanepGenderSelect`, cartão de endereço (`VanepAddressCard`, o mesmo da conta) que abre a tela de endereço do dependente com o `VanepPostalAddressForm`, Salvar no `VanepBottomBar`.
 - **`EmailChangeSheet`** — já usa `VanepTextField` / `VanepPrimaryButton`; só revisar tokens (`action`, nada de `brand`).
 
 `VanepScreenBackground` e `VanepGlassCard` não são usados nessas telas. Os dois widgets **deixaram de existir**: a main (PR #69) apagou os dois junto com o tema escuro, e nenhuma tela do app os usa mais.
@@ -342,7 +342,9 @@ Os dois kits convivem e partem dos mesmos tokens claros (`card`, `action`, `text
 **Apresentação.**
 
 - `DependentFormCubit` ganha `LookupCep`, `ListStates`, `ListCities`; o wiring de CEP/picker é o de D12. `choosePlace`, `changeAddressNumber`, `changeAddressComplement` e `removeAddress` saem; entram os updaters postais e `clearAddress` (rascunho volta a em branco). Estado ganha status do lookup, `CepFailure?`, picker e as pendências de endereço. O lookup de CEP segue a mesma semântica da conta (D4): trava cidade, substitui rua/bairro, destrava o picker na falha e bloqueia o Salvar em CEP inexistente — vem do `PostalAddressDraft`.
-- `DependentAddressField` (Places + resumo) é apagado; o form usa `VanepPostalAddressForm` direto. O form deixa de resolver `PlaceAutocompleteController` e de descartá-lo.
+- `DependentAddressField` (Places + resumo) é apagado. O endereço aparece no formulário como `DependentAddressCard` (sobre o `VanepAddressCard` de core, o mesmo componente do cartão da conta) e é editado em `DependentAddressFormPage`, que hospeda o `VanepPostalAddressForm` e o `VanepCityPickerSheet` sobre o mesmo `DependentFormCubit` (`BlocProvider.value`). O form deixa de resolver `PlaceAutocompleteController` e de descartá-lo.
+- **Confirmar, não salvar.** O botão da tela de endereço é “Confirmar endereço”: valida o rascunho (`confirmAddress`) e volta; não emite request, porque o endereço viaja no POST/PATCH do dependente. Voltar sem confirmar restaura o endereço que a tela recebeu (`replaceAddress`), e limpar no menu é `clearAddress` (sem diálogo: só o Salvar do dependente grava). O cartão deriva o erro do estado: `DependentCityNotFoundFailure` ou pendências do rascunho (`addressIssues`).
+- **Rejeitado (primeira versão da fase 6):** o formulário postal inline no formulário de dependente. Deixava as duas telas de endereço com padrões diferentes; a conta já tinha cartão + tela própria validados.
 - `dependentAddressLabel` passa a “rua, nº · complemento · bairro · Cidade - UF · CEP”. Sem endereço, a copy de “sem endereço”.
 - Copy Places do dependente sai do ARB (`dependentFieldAddressSearchHint`, entre outras); `dependentFieldGenderClear` sai (D11).
 
@@ -431,13 +433,14 @@ Seis fases. Uma camada por PR (R19) da 1 à 5; contrato e impl separados (R20). 
 | 1 | Domínio: `ibge_locations` + casa + `PostalAddressDraft` (core) — sem HTTP | — | — |
 | 2 | Dados: `ibge_locations` + casa, `postalAddressToJson`, `Environment` completo, DI | 1 | — |
 | 3 | Cubit de dados pessoais: carga, CEP, picker, save (PATCH→PUT), gênero `null`, DELETE | 2 | — |
-| 4 | UI: kit em core (chrome, select de gênero, form postal, picker) + dados pessoais e endereço na identidade nova + menu Endereços + 400 de cidade | 3 | — |
-| 5 | Dependentes: endereço postal ponta a ponta + select de gênero + identidade nova | 2, 4 + **API do dependente no ar** | — |
+| 4 | UI: kit em core (chrome, select de gênero, form postal, picker, cartão de endereço, card do CEP) + cadastro com o select de gênero + 400 de cidade | 3 | — |
+| 5 | Telas: dados pessoais e endereço da conta na identidade nova, com o flag de lookup no cubit, a hidratação da casa e a remoção do menu Endereços | 4 | — |
+| 6 | Dependentes: endereço postal ponta a ponta (cartão + tela de endereço) + select de gênero + identidade nova | 2, 5 + **API do dependente no ar** | — |
 
 Notas:
 
 - **Fase 1** ganha o rascunho compartilhado no lugar dos campos soltos (D12). **Fase 3** junta o que eram o cubit de carga, o de save e o DELETE, e já nasce sobre o rascunho.
-- **Fase 4** é o kit de UI em core (chrome, gênero — inclusive no cadastro —, formulário postal, picker, card do CEP). O 400 de cidade (`driver_search`, `driver_service_areas`) entra aqui só por ser pequeno e não ter fase própria. **Fase 5** são as telas de dados pessoais e endereço na identidade nova, com o flag de lookup no cubit, a hidratação da casa e a remoção do menu Endereços. A UI era uma fase só e passou de 5 mil linhas; o kit não depende de tela nenhuma e as telas o consomem.
+- **Fase 4** é o kit de UI em core (chrome, gênero — inclusive no cadastro —, formulário postal, picker, card do CEP, cartão de endereço). O 400 de cidade (`driver_search`, `driver_service_areas`) entra aqui só por ser pequeno e não ter fase própria. **Fase 5** são as telas de dados pessoais e endereço na identidade nova, com o flag de lookup no cubit, a hidratação da casa e a remoção do menu Endereços. A UI era uma fase só e passou de 5 mil linhas; o kit não depende de tela nenhuma e as telas o consomem.
 - **Fase 6** é a única que mistura camadas (D14). Como a 4 entrega o kit e a 5 a identidade das telas de conta, a 6 só os consome.
 - R20: contrato (fase 1) e impl (fase 2) continuam separados. R27a: parar depois de `make lint` / `make test` para validação no aparelho antes do commit.
 

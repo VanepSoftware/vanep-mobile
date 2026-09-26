@@ -1577,8 +1577,56 @@ abstract class AppLocalizations {
   /// No description provided for @dependentFieldAddressRemove.
   ///
   /// In en, this message translates to:
-  /// **'Remove address'**
+  /// **'Clear address'**
   String get dependentFieldAddressRemove;
+
+  /// No description provided for @dependentAddressRegisterAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get dependentAddressRegisterAction;
+
+  /// No description provided for @dependentAddressEditAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get dependentAddressEditAction;
+
+  /// No description provided for @dependentAddressMenuTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get dependentAddressMenuTooltip;
+
+  /// No description provided for @dependentAddressFormTitleNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get dependentAddressFormTitleNew;
+
+  /// No description provided for @dependentAddressFormTitleEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get dependentAddressFormTitleEdit;
+
+  /// No description provided for @dependentAddressFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the ZIP code and complete the dependent\'s address details.'**
+  String get dependentAddressFormSubtitle;
+
+  /// No description provided for @dependentAddressConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm address'**
+  String get dependentAddressConfirmAction;
+
+  /// No description provided for @dependentAddressIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the address to save.'**
+  String get dependentAddressIncomplete;
 
   /// No description provided for @profileGenderUnspecified.
   ///

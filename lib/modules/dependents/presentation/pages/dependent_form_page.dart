@@ -5,7 +5,6 @@ import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/domain/iso_calendar_date.dart';
 import '../../../../core/formatters/birth_date_formatter.dart';
-import '../../../../core/ui/vanep_city_picker_sheet.dart';
 import '../../../../core/ui/vanep_feedback.dart';
 import '../../../../core/ui/vanep_gender_select.dart';
 import '../../../../core/ui/vanep_page_chrome.dart';
@@ -18,8 +17,7 @@ import '../../domain/value_objects/dependent_draft.dart';
 import '../cubit/dependent_form_cubit.dart';
 import '../cubit/dependent_form_state.dart';
 import '../formatters/dependent_labels.dart';
-import '../widgets/dependent_address_section.dart';
-import '../widgets/dependent_city_picker.dart';
+import '../widgets/dependent_address_card.dart';
 
 const int maxDependentNameLength = 255;
 
@@ -57,17 +55,6 @@ class DependentFormViewState extends State<DependentFormView> {
   void dispose() {
     nameController.dispose();
     super.dispose();
-  }
-
-  Future<void> openCityPicker() async {
-    final cubit = context.read<DependentFormCubit>();
-    await cubit.refreshCities(cubit.state.draft.address.uf);
-    if (!mounted) return;
-    await showVanepCityPickerSheet(
-      context,
-      builder: (_) =>
-          BlocProvider.value(value: cubit, child: const DependentCityPicker()),
-    );
   }
 
   @override
@@ -124,10 +111,7 @@ class DependentFormViewState extends State<DependentFormView> {
                   onChanged: cubit.changeGender,
                   enabled: !state.isSaving,
                 ),
-                DependentAddressSection(
-                  state: state,
-                  onCityTap: openCityPicker,
-                ),
+                DependentAddressCard(state: state),
               ], 20),
             ],
           ),
@@ -135,7 +119,7 @@ class DependentFormViewState extends State<DependentFormView> {
             child: VanepPrimaryButton(
               label: l10n.dependentFormSave,
               isLoading: state.isSaving,
-              onPressed: state.isAddressBlockingSave ? null : cubit.save,
+              onPressed: cubit.save,
             ),
           ),
         );

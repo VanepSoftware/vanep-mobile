@@ -234,12 +234,14 @@ class DependentFormCubit extends Cubit<DependentFormState> {
     );
   }
 
-  void clearAddress() {
+  void clearAddress() => replaceAddress(const PostalAddressDraft());
+
+  void replaceAddress(PostalAddressDraft address) {
     _cepLookupTimer?.cancel();
     _cepLookupGeneration++;
     emit(
       state.copyWith(
-        draft: state.draft.withAddress(const PostalAddressDraft()),
+        draft: state.draft.withAddress(address),
         fieldErrors: fieldErrorsWithout(
           state.fieldErrors,
           DependentField.address,
@@ -250,6 +252,13 @@ class DependentFormCubit extends Cubit<DependentFormState> {
         showAddressIssues: false,
       ),
     );
+  }
+
+  bool confirmAddress() {
+    if (state.isAddressBlockingSave) return false;
+    final issues = findAddressIssues(state.draft, snapshot: state.snapshot);
+    emit(state.copyWith(showAddressIssues: issues.isNotEmpty));
+    return issues.isEmpty;
   }
 
   Future<void> save() async {
