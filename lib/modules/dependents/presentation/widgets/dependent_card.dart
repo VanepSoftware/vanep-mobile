@@ -3,7 +3,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_card.dart';
+import '../../../../core/ui/vanep_page_chrome.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/dependent.dart';
 import '../formatters/dependent_labels.dart';
@@ -27,7 +27,8 @@ class DependentCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final age = dependentAgeLabel(l10n, dependent.birthDate);
 
-    return VanepCard(
+    return VanepOutlinedPanel(
+      highlighted: dependent.isDefault,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -65,7 +66,10 @@ class DependentCard extends StatelessWidget {
                 onPressed: onChooseDefault,
                 child: Text(
                   l10n.dependentsSetDefault,
-                  style: VanepTypography.linkAction.copyWith(fontSize: 13),
+                  style: VanepTypography.cardSubtitle.copyWith(
+                    color: VanepColors.action,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -75,13 +79,16 @@ class DependentCard extends StatelessWidget {
   }
 }
 
-/// Placeholder that mirrors [DependentCard]'s layout while the list is loading.
+Widget buildDependentCardSkeleton(BuildContext context) {
+  return const DependentCardSkeleton();
+}
+
 class DependentCardSkeleton extends StatelessWidget {
   const DependentCardSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const VanepCard(
+    return const VanepOutlinedPanel(
       child: Row(
         children: [
           Expanded(
@@ -114,9 +121,8 @@ class DependentDefaultBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: VanepColors.actionSurface,
+        color: VanepColors.action.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: VanepColors.action),
       ),
       child: Text(
         l10n.dependentsDefaultBadge,

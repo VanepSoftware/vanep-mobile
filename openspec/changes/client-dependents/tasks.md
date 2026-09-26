@@ -54,6 +54,19 @@
 
 ## 5. Phase 5 — dependent address (branch name: feat/8-dependent-address)
 
+> **SUPERSEDED** by change `personal-address`, phase 6 (tasks 6.1–6.7). The dependent address is no longer Places (`placeId` + `sessionToken`); it is the shared IBGE postal form, and the gender chips built in 4.9 became the shared `VanepGenderSelect` (capability `gender-select`). Tasks 5.1–5.9 stay below as the record of what was built and are **not to be implemented further**. Where each one went:
+>
+> | Here | Now in `personal-address` |
+> |---|---|
+> | 5.1 backend prerequisite | The contract is on `feat/ibge-postal-address-dependent` of `vanep-api-java`; phase 6 only merges with the API deployed (6.7, R21) |
+> | 5.2, 5.3 body and change tests | 6.1 (domain) and 6.2 (data): `dependent_changes`, `dependent_request_body`, repository 404 mapping |
+> | 5.4 `DependentAddressDraft` and the address diff | 6.1: `DependentAddressDraft` is deleted; `DependentDraft.address` is the shared `PostalAddressDraft` |
+> | 5.5 Places field in the form | 6.4: `VanepPostalAddressForm` + `VanepCityPickerSheet` inline; no `PlaceAutocompleteController` |
+> | 5.6 address on the form and the card | 6.4 and 6.5: `dependentAddressLabel`, `DependentCard`, `DependentFormPage` |
+> | 5.7 address strings | 6.4: ARB, Places copy removed |
+> | 5.8 lint and tests | 6.7 |
+> | 5.9 PR | 6.7: commit only, no PR until the API is deployed |
+
 - [ ] 5.1 Confirm the backend change accepting `placeId` + `sessionToken` on `POST/PATCH /api/dependent` is merged — **NOT merged**. Built against the agreed contract under R21; this branch must not open a PR until the backend lands
 - [x] 5.2 Write tests asserting the save body carries `placeId`, `sessionToken`, `number` and `complement` and no city, state, district, zip code or street
 - [x] 5.3 Write tests for saving without an address, for replacing an existing address, for amending only the number, and for a place the backend cannot resolve landing on the address field

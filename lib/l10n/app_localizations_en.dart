@@ -759,7 +759,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dependentsSubtitle =>
-      'Who rides the van. Each contract binds one dependent.';
+      'Add and manage the people who ride the van.';
 
   @override
   String get dependentsEmpty => 'You have not added any dependents yet.';
@@ -827,9 +827,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dependentFieldGender => 'Gender';
 
   @override
-  String get dependentFieldGenderClear => 'Prefer not to say';
-
-  @override
   String get dependentErrorNameRequired => 'Enter the dependent\'s name.';
 
   @override
@@ -855,26 +852,46 @@ class AppLocalizationsEn extends AppLocalizations {
       'Something went wrong. Please try again.';
 
   @override
+  String get dependentFormSubtitle =>
+      'Enter the details of who rides the van. Only the name is required.';
+
+  @override
+  String get dependentFailureCityNotFound =>
+      'We could not find that city. Choose the municipality again.';
+
+  @override
   String get dependentFieldAddress => 'Address';
 
   @override
   String get dependentFieldAddressEmpty => 'No address set.';
 
   @override
-  String get dependentFieldAddressSearchHint => 'Search address';
+  String get dependentFieldAddressRemove => 'Clear address';
 
   @override
-  String get dependentFieldAddressNumber => 'Number';
+  String get dependentAddressRegisterAction => 'Add address';
 
   @override
-  String get dependentFieldAddressComplement => 'Complement';
+  String get dependentAddressEditAction => 'Edit address';
 
   @override
-  String get dependentFieldAddressRemove => 'Remove address';
+  String get dependentAddressMenuTooltip => 'More options';
 
   @override
-  String get dependentAddressNotResolved =>
-      'Could not resolve this address. Pick another suggestion.';
+  String get dependentAddressFormTitleNew => 'Add address';
+
+  @override
+  String get dependentAddressFormTitleEdit => 'Edit address';
+
+  @override
+  String get dependentAddressFormSubtitle =>
+      'Enter the ZIP code and complete the dependent\'s address details.';
+
+  @override
+  String get dependentAddressConfirmAction => 'Confirm address';
+
+  @override
+  String get dependentAddressIncomplete => 'Complete the address to save.';
 
   @override
   String get profileGenderUnspecified => 'Prefer not to say';

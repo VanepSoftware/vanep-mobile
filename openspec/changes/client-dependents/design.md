@@ -56,6 +56,8 @@ Response DTOs stay freezed + `json_serializable`, as in `profile_summary_dto.dar
 
 ### The address is a `placeId`, and the backend change gates it
 
+> **Superseded** by change `personal-address` (decision D14, phase 6): the dependent address is the shared IBGE postal form (`cityToken`, `street`, `zipCode`), not a `placeId`. The backend prerequisite described below was resolved the other way — the back accepts the catalog `cityToken`, and CLIENT can read `/api/cep`, `/api/states` and `/api/cities` with only the Bearer token. Kept as the record of the earlier decision.
+
 The app sends `{placeId, sessionToken, number, complement}` as `address`. This is what `PUT /api/user/me/address` already accepts and what the `location-system` specs describe as the rule for every place the backend resolves. The dependent endpoint is the one that still asks for `cityToken`, and the CLIENT bundle cannot read `/api/cities` anyway, so the current contract is not implementable from the app regardless of which shape we prefer.
 
 Consequence for sequencing: phases 1–4 depend on none of it and ship against today's backend. Phase 5 waits for the backend PR. Per R21 the phase-5 branch may be built against a mocked datasource, but it does not open until the backend change is merged.

@@ -69,19 +69,21 @@ void main() {
     expect(result.errorOrNull, const DependentUnexpectedFailure());
   });
 
-  test('400 carries the backend detail', () async {
-    when(() => remote.createDependent(any())).thenThrow(
-      dioFailure(400, body: const {'detail': 'O nome não pode ficar em branco.'}),
-    );
+  test(
+    '400 with the generic Spring detail is not attributed to a field',
+    () async {
+      when(() => remote.createDependent(any())).thenThrow(
+        dioFailure(400, body: const {'detail': 'Invalid request content.'}),
+      );
 
-    final result = await repository.createDependent(
-      buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
-    );
+      final result = await repository.createDependent(
+        buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
+      );
 
-    final failure = result.errorOrNull! as DependentValidationFailure;
-    expect(failure.detail, 'O nome não pode ficar em branco.');
-    expect(failure.isAttributedToAField, isFalse);
-  });
+      final failure = result.errorOrNull! as DependentValidationFailure;
+      expect(failure.isAttributedToAField, isFalse);
+    },
+  );
 
   test('400 naming a known field attributes the message to it', () async {
     when(() => remote.createDependent(any())).thenThrow(
@@ -113,7 +115,92 @@ void main() {
 
     final failure = result.errorOrNull! as DependentValidationFailure;
     expect(failure.isAttributedToAField, isFalse);
-    expect(failure.detail, 'Documento duplicado.');
+  });
+
+  test('a placeId field is no longer attributed to the address', () async {
+    when(() => remote.createDependent(any())).thenThrow(
+      dioFailure(
+        400,
+        body: const {'detail': 'placeId inválido.', 'field': 'placeId'},
+      ),
+    );
+
+    final result = await repository.createDependent(
+      buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
+    );
+
+    final failure = result.errorOrNull! as DependentValidationFailure;
+    expect(failure.isAttributedToAField, isFalse);
+  });
+
+  group('404', () {
+    const cityNotFoundProblem = {'detail': 'Cidade não encontrada.'};
+    const dependentNotFoundProblem = {'detail': 'Dependente não encontrado.'};
+
+    Future<DependentFailure?> patchWith(Object? body) async {
+      when(
+        () => remote.updateDependent(
+          token: any(named: 'token'),
+          changes: any(named: 'changes'),
+        ),
+      ).thenThrow(dioFailure(404, body: body));
+      final result = await repository.updateDependent(
+        token: 'dep-helena',
+        changes: buildDependentChangesForCreate(
+          const DependentDraft(name: 'Helena'),
+        ),
+      );
+      return result.errorOrNull;
+    }
+
+    test('on create is always the city', () async {
+      when(
+        () => remote.createDependent(any()),
+      ).thenThrow(dioFailure(404, body: dependentNotFoundProblem));
+
+      final result = await repository.createDependent(
+        buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
+      );
+
+      expect(result.errorOrNull, const DependentCityNotFoundFailure());
+    });
+
+    test('on update with the city marker is the city', () async {
+      expect(
+        await patchWith(cityNotFoundProblem),
+        const DependentCityNotFoundFailure(),
+      );
+    });
+
+    test('on update with the English city marker is the city', () async {
+      expect(
+        await patchWith(const {'detail': 'City not found.'}),
+        const DependentCityNotFoundFailure(),
+      );
+    });
+
+    test('on update without the marker is the dependent', () async {
+      expect(
+        await patchWith(dependentNotFoundProblem),
+        const DependentNotFoundFailure(),
+      );
+    });
+
+    test('on update without a body is the dependent', () async {
+      expect(await patchWith(null), const DependentNotFoundFailure());
+    });
+  });
+
+  test('409 maps to unexpected', () async {
+    when(() => remote.createDependent(any())).thenThrow(
+      dioFailure(409, body: const {'detail': 'Address already owned.'}),
+    );
+
+    final result = await repository.createDependent(
+      buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
+    );
+
+    expect(result.errorOrNull, const DependentUnexpectedFailure());
   });
 
   test('an unreadable payload maps to unexpected', () async {

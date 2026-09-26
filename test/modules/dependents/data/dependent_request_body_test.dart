@@ -36,7 +36,9 @@ void main() {
   test('an untouched field is absent from the body', () {
     final body = dependentChangesToJson(
       buildDependentChangesForUpdate(
-        draft: DependentDraft.fromDependent(testHelenaDependent).withName('Lena'),
+        draft: DependentDraft.fromDependent(
+          testHelenaDependent,
+        ).withName('Lena'),
         snapshot: testHelenaDependent,
       ),
     );
@@ -49,7 +51,9 @@ void main() {
   test('a cleared field is sent as an explicit null', () {
     final body = dependentChangesToJson(
       buildDependentChangesForUpdate(
-        draft: DependentDraft.fromDependent(testHelenaDependent).withGender(null),
+        draft: DependentDraft.fromDependent(
+          testHelenaDependent,
+        ).withGender(null),
         snapshot: testHelenaDependent,
       ),
     );

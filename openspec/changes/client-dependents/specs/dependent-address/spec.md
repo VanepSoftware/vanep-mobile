@@ -1,3 +1,5 @@
+> **SUPERSEDED** by change `personal-address`, capability `dependent-postal-address` (`openspec/changes/personal-address/specs/dependent-postal-address/spec.md`). The backend replaced the Places contract (`placeId` + `sessionToken`, number-only amend) with the IBGE postal form (`cityToken`, `street`, `zipCode`, optionals; PATCH replaces the whole address). Do not implement this spec; it is kept as the record of the earlier contract.
+
 ## ADDED Requirements
 
 ### Requirement: A dependent's address is chosen from Google Places

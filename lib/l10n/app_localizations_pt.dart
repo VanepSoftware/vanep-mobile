@@ -760,7 +760,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dependentsSubtitle =>
-      'Quem viaja na van. Cada contrato vincula um dependente.';
+      'Cadastre e gerencie as pessoas que viajam na van.';
 
   @override
   String get dependentsEmpty => 'Você ainda não cadastrou nenhum dependente.';
@@ -829,9 +829,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dependentFieldGender => 'Sexo';
 
   @override
-  String get dependentFieldGenderClear => 'Não informar';
-
-  @override
   String get dependentErrorNameRequired => 'Informe o nome do dependente.';
 
   @override
@@ -856,26 +853,47 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dependentFailureUnexpected => 'Algo deu errado. Tente novamente.';
 
   @override
+  String get dependentFormSubtitle =>
+      'Informe os dados de quem viaja na van. Só o nome é obrigatório.';
+
+  @override
+  String get dependentFailureCityNotFound =>
+      'Não encontramos essa cidade. Escolha o município novamente.';
+
+  @override
   String get dependentFieldAddress => 'Endereço';
 
   @override
   String get dependentFieldAddressEmpty => 'Nenhum endereço informado.';
 
   @override
-  String get dependentFieldAddressSearchHint => 'Buscar endereço';
+  String get dependentFieldAddressRemove => 'Limpar endereço';
 
   @override
-  String get dependentFieldAddressNumber => 'Número';
+  String get dependentAddressRegisterAction => 'Cadastrar endereço';
 
   @override
-  String get dependentFieldAddressComplement => 'Complemento';
+  String get dependentAddressEditAction => 'Editar endereço';
 
   @override
-  String get dependentFieldAddressRemove => 'Remover endereço';
+  String get dependentAddressMenuTooltip => 'Mais opções';
 
   @override
-  String get dependentAddressNotResolved =>
-      'Não foi possível interpretar este endereço. Escolha outra sugestão.';
+  String get dependentAddressFormTitleNew => 'Cadastrar endereço';
+
+  @override
+  String get dependentAddressFormTitleEdit => 'Editar endereço';
+
+  @override
+  String get dependentAddressFormSubtitle =>
+      'Informe o CEP e complete os dados do endereço do dependente.';
+
+  @override
+  String get dependentAddressConfirmAction => 'Confirmar endereço';
+
+  @override
+  String get dependentAddressIncomplete =>
+      'Complete o endereço para poder salvar.';
 
   @override
   String get profileGenderUnspecified => 'Prefiro não informar';
