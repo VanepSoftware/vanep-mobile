@@ -17,7 +17,6 @@ void main() {
 
       expect(state.isProfileDirty, isFalse);
       expect(state.isAddressDirty, isFalse);
-      expect(state.isDirty, isFalse);
       expect(state.canSave, isFalse);
     });
 
@@ -135,11 +134,12 @@ void main() {
     test('a saved house locks the municipality until the picker frees it', () {
       final state = readyState(address: fakePersonalAddress());
 
-      expect(state.isMunicipalityLocked, isTrue);
+      expect(state.addressDraft.isCityLocked, isTrue);
       expect(
         state
             .copyWith(addressDraft: state.addressDraft.unlockCity())
-            .isMunicipalityLocked,
+            .addressDraft
+            .isCityLocked,
         isFalse,
       );
     });

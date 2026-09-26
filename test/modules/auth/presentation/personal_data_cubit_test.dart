@@ -65,19 +65,20 @@ void main() {
     );
   });
 
-  PersonalDataCubit buildCubit() => PersonalDataCubit(
-    refreshUserProfile: refreshUserProfile,
-    patchUserProfile: patchUserProfile,
-    requestEmailChange: requestEmailChange,
-    findMyPersonalAddress: findMyPersonalAddress,
-    upsertMyPersonalAddress: upsertMyPersonalAddress,
-    deleteMyPersonalAddress: deleteMyPersonalAddress,
-    lookupCep: lookupCep,
-    listStates: listStates,
-    listCities: listCities,
-    syncProfile: syncedProfiles.add,
-    cepLookupDebounce: Duration.zero,
-  );
+  PersonalDataCubit buildCubit({Duration debounce = Duration.zero}) =>
+      PersonalDataCubit(
+        refreshUserProfile: refreshUserProfile,
+        patchUserProfile: patchUserProfile,
+        requestEmailChange: requestEmailChange,
+        findMyPersonalAddress: findMyPersonalAddress,
+        upsertMyPersonalAddress: upsertMyPersonalAddress,
+        deleteMyPersonalAddress: deleteMyPersonalAddress,
+        lookupCep: lookupCep,
+        listStates: listStates,
+        listCities: listCities,
+        syncProfile: syncedProfiles.add,
+        cepLookupDebounce: debounce,
+      );
 
   void profileRefreshes([UserProfile profile = const FakeUserProfile()]) {
     when(
@@ -100,7 +101,8 @@ void main() {
             .having((s) => s.draftGender, 'draftGender', Gender.female)
             .having((s) => s.address, 'address', isNull)
             .having((s) => s.addressDraft.isBlank, 'blank draft', isTrue)
-            .having((s) => s.isDirty, 'isDirty', false)
+            .having((s) => s.isProfileDirty, 'isProfileDirty', false)
+            .having((s) => s.isAddressDirty, 'isAddressDirty', false)
             .having((s) => s.canSave, 'canSave', isFalse),
       ],
       verify: (_) {
@@ -134,8 +136,9 @@ void main() {
             .having((s) => s.addressDraft.zipCode, 'zip digits', '72120120')
             .having((s) => s.addressDraft.street, 'street', 'QND 12')
             .having((s) => s.addressDraft.number, 'number', '10')
-            .having((s) => s.isMunicipalityLocked, 'locked', isTrue)
-            .having((s) => s.isDirty, 'isDirty', false),
+            .having((s) => s.addressDraft.isCityLocked, 'locked', isTrue)
+            .having((s) => s.isProfileDirty, 'isProfileDirty', false)
+            .having((s) => s.isAddressDirty, 'isAddressDirty', false),
       ],
     );
 
@@ -182,7 +185,7 @@ void main() {
       expect: () => [
         isA<PersonalDataState>()
             .having((s) => s.draftPhone, 'draftPhone', '11988887777')
-            .having((s) => s.isDirty, 'isDirty', true),
+            .having((s) => s.isProfileDirty, 'isProfileDirty', true),
       ],
     );
 
@@ -196,7 +199,7 @@ void main() {
       expect: () => [
         isA<PersonalDataState>()
             .having((s) => s.draftName, 'draftName', 'Maria')
-            .having((s) => s.isDirty, 'isDirty', true)
+            .having((s) => s.isProfileDirty, 'isProfileDirty', true)
             .having((s) => s.fieldErrors, 'fieldErrors', isEmpty),
       ],
     );
@@ -234,7 +237,8 @@ void main() {
         isA<PersonalDataState>()
             .having((s) => s.status, 'status', PersonalDataStatus.ready)
             .having((s) => s.draftName, 'draftName', 'Maria')
-            .having((s) => s.isDirty, 'isDirty', false)
+            .having((s) => s.isProfileDirty, 'isProfileDirty', false)
+            .having((s) => s.isAddressDirty, 'isAddressDirty', false)
             .having(
               (s) => s.feedback,
               'feedback',
@@ -773,6 +777,68 @@ void main() {
     );
   });
 
+  group('a saved house', () {
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'loads with the city and the saved neighborhood locked',
+      setUp: () {
+        profileRefreshes();
+        when(findMyPersonalAddress.call).thenAnswer(
+          (_) async => Ok<PersonalAddressFailure, PersonalAddress?>(
+            fakePersonalAddress(),
+          ),
+        );
+      },
+      build: buildCubit,
+      act: (cubit) => cubit.load(),
+      verify: (cubit) {
+        expect(cubit.state.addressDraft.isCityLocked, isTrue);
+        expect(cubit.state.addressDraft.isNeighborhoodLocked, isTrue);
+      },
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'ignores edits to the neighborhood it loaded',
+      seed: () => readyState(address: fakePersonalAddress()),
+      build: buildCubit,
+      act: (cubit) => cubit.updateNeighborhood('Outro bairro'),
+      expect: () => const <PersonalDataState>[],
+      verify: (cubit) {
+        expect(cubit.state.addressDraft.neighborhood, 'Taguatinga');
+      },
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'lets the person type the neighborhood when none was saved',
+      seed: () => readyState(address: fakePersonalAddress(neighborhood: null)),
+      build: buildCubit,
+      act: (cubit) => cubit.updateNeighborhood('Centro'),
+      verify: (cubit) {
+        expect(cubit.state.addressDraft.isNeighborhoodLocked, isFalse);
+        expect(cubit.state.addressDraft.neighborhood, 'Centro');
+      },
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'a new CEP lookup frees the neighborhood when the CEP brings none',
+      setUp: () {
+        when(() => lookupCep(any())).thenAnswer(
+          (_) async =>
+              Ok<CepFailure, CepLookup>(fakeCepLookup(neighborhood: null)),
+        );
+      },
+      seed: () => readyState(address: fakePersonalAddress()),
+      build: buildCubit,
+      act: (cubit) async {
+        cubit.updateZipCode('70040010');
+        await Future<void>.delayed(cepLookupTestWait);
+      },
+      verify: (cubit) {
+        expect(cubit.state.addressDraft.isNeighborhoodLocked, isFalse);
+        expect(cubit.state.addressDraft.neighborhood, '');
+      },
+    );
+  });
+
   group('cep lookup', () {
     blocTest<PersonalDataCubit, PersonalDataState>(
       'looks up eight digits after the debounce and strips the hyphen',
@@ -802,7 +868,7 @@ void main() {
               'Taguatinga',
             )
             .having((s) => s.addressDraft.number, 'number', '')
-            .having((s) => s.isMunicipalityLocked, 'city locked', isTrue)
+            .having((s) => s.addressDraft.isCityLocked, 'city locked', isTrue)
             .having(
               (s) => s.addressDraft.isNeighborhoodLocked,
               'neighborhood locked',
@@ -889,7 +955,7 @@ void main() {
         expect(state.addressDraft.zipCode, '00000000');
         expect(state.addressDraft.number, '10');
         expect(state.addressDraft.cityToken, '');
-        expect(state.isMunicipalityLocked, isFalse);
+        expect(state.addressDraft.isCityLocked, isFalse);
         expect(state.isAddressSavable, isFalse);
         verify(() => listStates()).called(1);
       },
@@ -926,7 +992,7 @@ void main() {
           expect(state.addressDraft.neighborhood, '');
           expect(state.addressDraft.number, '10');
           expect(state.addressDraft.complement, 'Casa 2');
-          expect(state.isMunicipalityLocked, isFalse);
+          expect(state.addressDraft.isCityLocked, isFalse);
           verify(() => listStates()).called(1);
         },
       );
@@ -952,6 +1018,97 @@ void main() {
     );
 
     blocTest<PersonalDataCubit, PersonalDataState>(
+      'is looking up from the eighth digit until the lookup answers',
+      setUp: () {
+        when(
+          () => lookupCep(any()),
+        ).thenAnswer((_) async => Ok<CepFailure, CepLookup>(fakeCepLookup()));
+      },
+      build: buildCubit,
+      seed: readyState,
+      act: (cubit) => cubit.updateZipCode('70040010'),
+      wait: cepLookupTestWait,
+      expect: () => [
+        isA<PersonalDataState>().having(
+          (s) => s.isLookingUpCep,
+          'looking up',
+          isTrue,
+        ),
+        isA<PersonalDataState>().having(
+          (s) => s.isLookingUpCep,
+          'looking up',
+          isFalse,
+        ),
+      ],
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'stops looking up when the lookup fails',
+      setUp: () {
+        when(() => lookupCep(any())).thenAnswer(
+          (_) async => const Err<CepFailure, CepLookup>(CepFailure.rateLimited),
+        );
+      },
+      build: buildCubit,
+      seed: readyState,
+      act: (cubit) => cubit.updateZipCode('70040010'),
+      wait: cepLookupTestWait,
+      verify: (cubit) {
+        expect(cubit.state.isLookingUpCep, isFalse);
+        expect(cubit.state.cepFailure, CepFailure.rateLimited);
+      },
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'does not look up while fewer than eight digits are typed',
+      build: buildCubit,
+      seed: readyState,
+      act: (cubit) => cubit.updateZipCode('7004001'),
+      verify: (cubit) => expect(cubit.state.isLookingUpCep, isFalse),
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'deleting a digit while a lookup is pending cancels the flag',
+      setUp: () {
+        when(
+          () => lookupCep(any()),
+        ).thenAnswer((_) async => Ok<CepFailure, CepLookup>(fakeCepLookup()));
+      },
+      build: () => buildCubit(debounce: const Duration(milliseconds: 200)),
+      seed: readyState,
+      act: (cubit) {
+        cubit.updateZipCode('70040010');
+        cubit.updateZipCode('7004001');
+      },
+      wait: const Duration(milliseconds: 300),
+      verify: (cubit) {
+        expect(cubit.state.isLookingUpCep, isFalse);
+        verifyNever(() => lookupCep(any()));
+      },
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'a newer CEP keeps the flag on until its own lookup answers',
+      setUp: () {
+        when(
+          () => lookupCep(any()),
+        ).thenAnswer((_) async => Ok<CepFailure, CepLookup>(fakeCepLookup()));
+      },
+      build: () => buildCubit(debounce: const Duration(milliseconds: 100)),
+      seed: readyState,
+      act: (cubit) {
+        cubit.updateZipCode('70040010');
+        cubit.updateZipCode('72120120');
+      },
+      wait: const Duration(milliseconds: 250),
+      verify: (cubit) {
+        expect(cubit.state.isLookingUpCep, isFalse);
+        verify(() => lookupCep('72120120')).called(1);
+        verifyNever(() => lookupCep('70040010'));
+      },
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
       'does not look up seven digits',
       build: buildCubit,
       seed: readyState,
@@ -967,7 +1124,7 @@ void main() {
       act: (cubit) => cubit.updateZipCode('7212012'),
       wait: cepLookupTestWait,
       verify: (cubit) {
-        expect(cubit.state.isMunicipalityLocked, isFalse);
+        expect(cubit.state.addressDraft.isCityLocked, isFalse);
         expect(cubit.state.addressDraft.cityToken, 'city-brasilia');
         verifyNever(() => lookupCep(any()));
       },

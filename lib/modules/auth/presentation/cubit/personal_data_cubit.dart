@@ -120,8 +120,15 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     _cepLookupTimer?.cancel();
     _cepLookupGeneration++;
     final draft = state.addressDraft.withZipCode(value);
-    emit(state.copyWith(addressDraft: draft, clearCepFailure: true));
-    if (draft.zipCode.length != brazilianZipDigitCount) return;
+    final willLookUp = draft.zipCode.length == brazilianZipDigitCount;
+    emit(
+      state.copyWith(
+        addressDraft: draft,
+        clearCepFailure: true,
+        isLookingUpCep: willLookUp,
+      ),
+    );
+    if (!willLookUp) return;
     final generation = _cepLookupGeneration;
     _cepLookupTimer = Timer(cepLookupDebounce, () {
       if (isClosed || generation != _cepLookupGeneration) return;
@@ -168,6 +175,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
               neighborhood: lookup.neighborhood,
             ),
             clearCepFailure: true,
+            isLookingUpCep: false,
           ),
         );
       case Err<CepFailure, CepLookup>(error: final failure):
@@ -177,13 +185,19 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
 
   Future<void> applyCepLookupFailure(CepFailure failure) async {
     if (failure == CepFailure.invalidFormat) {
-      emit(state.copyWith(cepFailure: failure));
+      emit(state.copyWith(cepFailure: failure, isLookingUpCep: false));
       return;
     }
     final draft = failure == CepFailure.notFound
         ? state.addressDraft.withCepUnknown()
         : state.addressDraft.withCepUnavailable();
-    emit(state.copyWith(addressDraft: draft, cepFailure: failure));
+    emit(
+      state.copyWith(
+        addressDraft: draft,
+        cepFailure: failure,
+        isLookingUpCep: false,
+      ),
+    );
     await refreshStates();
   }
 

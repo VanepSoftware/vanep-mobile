@@ -914,11 +914,11 @@ abstract class AppLocalizations {
   /// **'Personal data'**
   String get profilePersonalData;
 
-  /// No description provided for @profileAddresses.
+  /// No description provided for @personalDataSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Addresses'**
-  String get profileAddresses;
+  /// **'Review and update your account details and your home address.'**
+  String get personalDataSubtitle;
 
   /// No description provided for @profilePaymentMethods.
   ///
@@ -1604,6 +1604,18 @@ abstract class AppLocalizations {
   /// **'Prefer not to say'**
   String get profileGenderUnspecified;
 
+  /// No description provided for @personalAddressCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get personalAddressCardTitle;
+
+  /// No description provided for @personalAddressEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No home address registered yet.'**
+  String get personalAddressEmpty;
+
   /// No description provided for @postalAddressFieldNumber.
   ///
   /// In en, this message translates to:
@@ -1652,11 +1664,107 @@ abstract class AppLocalizations {
   /// **'Search city'**
   String get postalAddressCitySearchHint;
 
+  /// No description provided for @personalAddressClearAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear address'**
+  String get personalAddressClearAction;
+
+  /// No description provided for @personalAddressClearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear address?'**
+  String get personalAddressClearTitle;
+
+  /// No description provided for @personalAddressClearMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The home address will be removed from the account.'**
+  String get personalAddressClearMessage;
+
+  /// No description provided for @personalAddressClearConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get personalAddressClearConfirm;
+
+  /// No description provided for @personalAddressClearSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Address removed.'**
+  String get personalAddressClearSuccess;
+
+  /// No description provided for @personalAddressFailureCityNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'City not found in the catalog.'**
+  String get personalAddressFailureCityNotFound;
+
+  /// No description provided for @personalAddressFailureValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review the address fields and try again.'**
+  String get personalAddressFailureValidation;
+
+  /// No description provided for @personalAddressFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get personalAddressFailureNetwork;
+
+  /// No description provided for @personalAddressFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get personalAddressFailureUnexpected;
+
+  /// No description provided for @personalAddressRegisterAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get personalAddressRegisterAction;
+
+  /// No description provided for @personalAddressCardMenuTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get personalAddressCardMenuTooltip;
+
+  /// No description provided for @personalAddressEditAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get personalAddressEditAction;
+
   /// No description provided for @postalAddressHintUf.
   ///
   /// In en, this message translates to:
   /// **'UF'**
   String get postalAddressHintUf;
+
+  /// No description provided for @personalAddressFormTitleNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get personalAddressFormTitleNew;
+
+  /// No description provided for @personalAddressFormTitleEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get personalAddressFormTitleEdit;
+
+  /// No description provided for @personalAddressFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your ZIP code and complete the address details.'**
+  String get personalAddressFormSubtitle;
+
+  /// No description provided for @personalAddressSaveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Save address'**
+  String get personalAddressSaveAction;
 
   /// No description provided for @postalAddressHintZip.
   ///
@@ -1723,6 +1831,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No cities found.'**
   String get postalAddressNoCitiesFound;
+
+  /// No description provided for @cepFailureInvalidFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP code must have 8 digits.'**
+  String get cepFailureInvalidFormat;
+
+  /// No description provided for @cepFailureNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP code not found.'**
+  String get cepFailureNotFound;
+
+  /// No description provided for @cepFailureCityNotInCatalog.
+  ///
+  /// In en, this message translates to:
+  /// **'This ZIP code city is not in the catalog.'**
+  String get cepFailureCityNotInCatalog;
+
+  /// No description provided for @cepFailureRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many ZIP lookups. Please wait a moment.'**
+  String get cepFailureRateLimited;
+
+  /// No description provided for @cepFailureUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP lookup is unavailable. Please fill in the address.'**
+  String get cepFailureUnavailable;
+
+  /// No description provided for @cepFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get cepFailureNetwork;
+
+  /// No description provided for @cepFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get cepFailureUnexpected;
+
+  /// No description provided for @ibgeLocationsFailureUfMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose a state.'**
+  String get ibgeLocationsFailureUfMissing;
+
+  /// No description provided for @ibgeLocationsFailureUfNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'State not found.'**
+  String get ibgeLocationsFailureUfNotFound;
+
+  /// No description provided for @ibgeLocationsFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get ibgeLocationsFailureNetwork;
+
+  /// No description provided for @ibgeLocationsFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get ibgeLocationsFailureUnexpected;
 
   /// No description provided for @placesCityUnmatched.
   ///

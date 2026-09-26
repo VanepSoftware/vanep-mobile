@@ -54,7 +54,6 @@ const _baseMenu = [
 const _clientMenu = [
   ProfileMenuSection([
     _enabledPersonalData,
-    ProfileMenuEntry(id: ProfileMenuId.addresses, enabled: false),
     ProfileMenuEntry(id: ProfileMenuId.paymentMethods, enabled: false),
   ], title: ProfileMenuSectionTitle.account),
   _settingsSection,

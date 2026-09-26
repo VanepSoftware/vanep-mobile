@@ -92,7 +92,6 @@ Future<void> handleProfileMenuSelection(
       );
     case ProfileMenuId.signOut:
       await confirmAndSignOut(context);
-    case ProfileMenuId.addresses:
     case ProfileMenuId.paymentMethods:
     case ProfileMenuId.professionalData:
     case ProfileMenuId.assistantInvite:

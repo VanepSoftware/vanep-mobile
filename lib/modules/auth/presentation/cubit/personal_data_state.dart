@@ -76,6 +76,7 @@ class PersonalDataState extends Equatable {
     this.address,
     this.addressDraft = const PostalAddressDraft(),
     this.cepFailure,
+    this.isLookingUpCep = false,
     this.catalogStates = const [],
     this.catalogCities = const [],
     this.catalogFailure,
@@ -91,6 +92,7 @@ class PersonalDataState extends Equatable {
   final PersonalAddress? address;
   final PostalAddressDraft addressDraft;
   final CepFailure? cepFailure;
+  final bool isLookingUpCep;
   final List<BrazilianState> catalogStates;
   final List<BrazilianCity> catalogCities;
   final IbgeLocationsFailure? catalogFailure;
@@ -112,8 +114,6 @@ class PersonalDataState extends Equatable {
 
   bool get isAddressSavable => isAddressDirty && addressDraft.isSavable;
 
-  bool get isDirty => isProfileDirty || isAddressDirty;
-
   bool get canSave =>
       status == PersonalDataStatus.ready &&
       profile != null &&
@@ -122,8 +122,6 @@ class PersonalDataState extends Equatable {
   bool get isSaving => status == PersonalDataStatus.saving;
 
   bool get isEmailSubmitting => status == PersonalDataStatus.emailSubmitting;
-
-  bool get isMunicipalityLocked => addressDraft.isCityLocked;
 
   PersonalDataState copyWith({
     PersonalDataStatus? status,
@@ -137,6 +135,7 @@ class PersonalDataState extends Equatable {
     PostalAddressDraft? addressDraft,
     CepFailure? cepFailure,
     bool clearCepFailure = false,
+    bool? isLookingUpCep,
     List<BrazilianState>? catalogStates,
     List<BrazilianCity>? catalogCities,
     IbgeLocationsFailure? catalogFailure,
@@ -155,6 +154,7 @@ class PersonalDataState extends Equatable {
       address: clearAddress ? null : (address ?? this.address),
       addressDraft: addressDraft ?? this.addressDraft,
       cepFailure: clearCepFailure ? null : (cepFailure ?? this.cepFailure),
+      isLookingUpCep: isLookingUpCep ?? this.isLookingUpCep,
       catalogStates: catalogStates ?? this.catalogStates,
       catalogCities: catalogCities ?? this.catalogCities,
       catalogFailure: clearCatalogFailure
@@ -177,6 +177,7 @@ class PersonalDataState extends Equatable {
     address,
     addressDraft,
     cepFailure,
+    isLookingUpCep,
     catalogStates,
     catalogCities,
     catalogFailure,
