@@ -59,6 +59,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
 
   Timer? _cepLookupTimer;
   int _cepLookupGeneration = 0;
+  int _cityListGeneration = 0;
 
   Future<void> load() => refresh();
 
@@ -120,8 +121,15 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     _cepLookupTimer?.cancel();
     _cepLookupGeneration++;
     final draft = state.addressDraft.withZipCode(value);
-    emit(state.copyWith(addressDraft: draft, clearCepFailure: true));
-    if (draft.zipCode.length != brazilianZipDigitCount) return;
+    final willLookUp = draft.zipCode.length == brazilianZipDigitCount;
+    emit(
+      state.copyWith(
+        addressDraft: draft,
+        clearCepFailure: true,
+        isLookingUpCep: willLookUp,
+      ),
+    );
+    if (!willLookUp) return;
     final generation = _cepLookupGeneration;
     _cepLookupTimer = Timer(cepLookupDebounce, () {
       if (isClosed || generation != _cepLookupGeneration) return;
@@ -168,6 +176,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
               neighborhood: lookup.neighborhood,
             ),
             clearCepFailure: true,
+            isLookingUpCep: false,
           ),
         );
       case Err<CepFailure, CepLookup>(error: final failure):
@@ -177,13 +186,19 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
 
   Future<void> applyCepLookupFailure(CepFailure failure) async {
     if (failure == CepFailure.invalidFormat) {
-      emit(state.copyWith(cepFailure: failure));
+      emit(state.copyWith(cepFailure: failure, isLookingUpCep: false));
       return;
     }
     final draft = failure == CepFailure.notFound
         ? state.addressDraft.withCepUnknown()
         : state.addressDraft.withCepUnavailable();
-    emit(state.copyWith(addressDraft: draft, cepFailure: failure));
+    emit(
+      state.copyWith(
+        addressDraft: draft,
+        cepFailure: failure,
+        isLookingUpCep: false,
+      ),
+    );
     await refreshStates();
   }
 
@@ -221,10 +236,11 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
 
   Future<void> refreshCities(String uf, {String? search}) async {
     if (uf.isEmpty) return;
+    final generation = ++_cityListGeneration;
     final result = search == null || search.isEmpty
         ? await _listCities(uf: uf)
         : await _listCities(uf: uf, search: search);
-    if (isClosed) return;
+    if (isClosed || generation != _cityListGeneration) return;
     switch (result) {
       case Ok(:final value):
         emit(
@@ -254,6 +270,9 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     final snapshot = state.profile;
     if (snapshot == null) return;
 
+    _cepLookupTimer?.cancel();
+    _cepLookupGeneration++;
+
     final write = state.isAddressSavable
         ? personalAddressWriteFromDraft(state.addressDraft)
         : null;
@@ -262,6 +281,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     emit(
       state.copyWith(
         status: PersonalDataStatus.saving,
+        isLookingUpCep: false,
         clearFieldErrors: true,
         clearFeedback: true,
       ),
