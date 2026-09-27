@@ -161,7 +161,7 @@ class DependentFormCubit extends Cubit<DependentFormState> {
       emit(state.copyWith(cepFailure: failure, isLookingUpCep: false));
       return;
     }
-    final address = failure == CepFailure.notFound
+    final address = failure.blocksSave
         ? state.draft.address.withCepUnknown()
         : state.draft.address.withCepUnavailable();
     emit(
@@ -194,7 +194,7 @@ class DependentFormCubit extends Cubit<DependentFormState> {
         draft: state.draft.withAddress(state.draft.address.withUf(uf)),
         catalogCities: const [],
         clearFailure: true,
-        clearCepFailure: state.cepFailure != CepFailure.notFound,
+        clearCepFailure: !(state.cepFailure?.blocksSave ?? false),
         clearCatalogFailure: true,
       ),
     );
@@ -229,7 +229,7 @@ class DependentFormCubit extends Cubit<DependentFormState> {
           ),
         ),
         clearFailure: true,
-        clearCepFailure: state.cepFailure != CepFailure.notFound,
+        clearCepFailure: !(state.cepFailure?.blocksSave ?? false),
       ),
     );
   }

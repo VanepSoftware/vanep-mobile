@@ -169,7 +169,6 @@ void main() {
     );
 
     for (final failure in [
-      CepFailure.rateLimited,
       CepFailure.unavailable,
       CepFailure.network,
       CepFailure.unexpected,
@@ -187,51 +186,53 @@ void main() {
       );
     }
 
-    blocTest<DependentFormCubit, DependentFormState>(
-      'a cep that does not exist blocks the save until the cep changes',
-      setUp: () => cepFails(CepFailure.notFound),
-      build: buildCubit,
-      act: (cubit) async {
-        cubit.changeName('Helena');
-        await typeZip(cubit, '72120120');
-        await cubit.save();
-      },
-      verify: (cubit) {
-        expect(cubit.state.cepFailure, CepFailure.notFound);
-        expect(cubit.state.draft.address.isZipCodeUnknown, isTrue);
-        expect(cubit.state.isAddressBlockingSave, isTrue);
-        verifyNever(() => createDependent(any()));
-      },
-    );
+    for (final failure in [CepFailure.notFound, CepFailure.rateLimited]) {
+      blocTest<DependentFormCubit, DependentFormState>(
+        'a $failure cep blocks the save until the cep changes',
+        setUp: () => cepFails(failure),
+        build: buildCubit,
+        act: (cubit) async {
+          cubit.changeName('Helena');
+          await typeZip(cubit, '72120120');
+          await cubit.save();
+        },
+        verify: (cubit) {
+          expect(cubit.state.cepFailure, failure);
+          expect(cubit.state.draft.address.isZipCodeUnknown, isTrue);
+          expect(cubit.state.isAddressBlockingSave, isTrue);
+          verifyNever(() => createDependent(any()));
+        },
+      );
 
-    blocTest<DependentFormCubit, DependentFormState>(
-      'picking a state or city does not lift the nonexistent-cep block',
-      setUp: () => cepFails(CepFailure.notFound),
-      build: buildCubit,
-      act: (cubit) async {
-        await typeZip(cubit, '72120120');
-        await cubit.selectUf('DF');
-        cubit.selectCity(fakeBrazilianCity());
-      },
-      verify: (cubit) {
-        expect(cubit.state.cepFailure, CepFailure.notFound);
-        expect(cubit.state.isAddressBlockingSave, isTrue);
-      },
-    );
+      blocTest<DependentFormCubit, DependentFormState>(
+        'picking a state or city does not lift the $failure cep block',
+        setUp: () => cepFails(failure),
+        build: buildCubit,
+        act: (cubit) async {
+          await typeZip(cubit, '72120120');
+          await cubit.selectUf('DF');
+          cubit.selectCity(fakeBrazilianCity());
+        },
+        verify: (cubit) {
+          expect(cubit.state.cepFailure, failure);
+          expect(cubit.state.isAddressBlockingSave, isTrue);
+        },
+      );
 
-    blocTest<DependentFormCubit, DependentFormState>(
-      'editing the cep after a nonexistent one lifts the block',
-      setUp: () => cepFails(CepFailure.notFound),
-      build: buildCubit,
-      act: (cubit) async {
-        await typeZip(cubit, '72120120');
-        cubit.updateZipCode('7212012');
-      },
-      verify: (cubit) {
-        expect(cubit.state.cepFailure, isNull);
-        expect(cubit.state.isAddressBlockingSave, isFalse);
-      },
-    );
+      blocTest<DependentFormCubit, DependentFormState>(
+        'editing the cep after a $failure one lifts the block',
+        setUp: () => cepFails(failure),
+        build: buildCubit,
+        act: (cubit) async {
+          await typeZip(cubit, '72120120');
+          cubit.updateZipCode('7212012');
+        },
+        verify: (cubit) {
+          expect(cubit.state.cepFailure, isNull);
+          expect(cubit.state.isAddressBlockingSave, isFalse);
+        },
+      );
+    }
 
     blocTest<DependentFormCubit, DependentFormState>(
       'a stale lookup answer is ignored after the cep changes',
@@ -699,6 +700,15 @@ void main() {
 
     test('a cep that does not exist never confirms', () async {
       cepFails(CepFailure.notFound);
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+      await typeZip(cubit, '99999999');
+
+      expect(cubit.confirmAddress(), isFalse);
+    });
+
+    test('a rate-limited cep never confirms', () async {
+      cepFails(CepFailure.rateLimited);
       final cubit = buildCubit();
       addTearDown(cubit.close);
       await typeZip(cubit, '99999999');

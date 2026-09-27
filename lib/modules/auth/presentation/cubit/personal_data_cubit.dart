@@ -188,7 +188,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
       emit(state.copyWith(cepFailure: failure, isLookingUpCep: false));
       return;
     }
-    final draft = failure == CepFailure.notFound
+    final draft = failure.blocksSave
         ? state.addressDraft.withCepUnknown()
         : state.addressDraft.withCepUnavailable();
     emit(
@@ -226,7 +226,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
       state.copyWith(
         addressDraft: state.addressDraft.withUf(uf),
         catalogCities: const [],
-        clearCepFailure: state.cepFailure != CepFailure.notFound,
+        clearCepFailure: !(state.cepFailure?.blocksSave ?? false),
         clearCatalogFailure: true,
       ),
     );
@@ -258,7 +258,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
           name: city.name,
           uf: city.stateUf,
         ),
-        clearCepFailure: state.cepFailure != CepFailure.notFound,
+        clearCepFailure: !(state.cepFailure?.blocksSave ?? false),
       ),
     );
   }
