@@ -44,6 +44,7 @@ class DependentFormCubit extends Cubit<DependentFormState> {
 
   Timer? _cepLookupTimer;
   int _cepLookupGeneration = 0;
+  int _cityListGeneration = 0;
 
   void changeName(String value) {
     emit(
@@ -203,10 +204,11 @@ class DependentFormCubit extends Cubit<DependentFormState> {
 
   Future<void> refreshCities(String uf, {String? search}) async {
     if (uf.isEmpty) return;
+    final generation = ++_cityListGeneration;
     final result = search == null || search.isEmpty
         ? await listCities(uf: uf)
         : await listCities(uf: uf, search: search);
-    if (isClosed) return;
+    if (isClosed || generation != _cityListGeneration) return;
     switch (result) {
       case Ok(:final value):
         emit(

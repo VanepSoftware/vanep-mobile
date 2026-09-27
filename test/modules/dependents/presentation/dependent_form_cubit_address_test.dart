@@ -12,6 +12,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_for
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
 
@@ -309,6 +310,45 @@ void main() {
       verify: (_) =>
           verify(() => listCities(uf: 'DF', search: 'bras')).called(1),
     );
+
+    group('a stale city search answer', () {
+      late Completer<
+        Result<IbgeLocationsFailure, IbgeLocationsPage<BrazilianCity>>
+      >
+      staleSearch;
+      late Completer<
+        Result<IbgeLocationsFailure, IbgeLocationsPage<BrazilianCity>>
+      >
+      freshSearch;
+
+      blocTest<DependentFormCubit, DependentFormState>(
+        'does not overwrite a newer search that resolved first',
+        setUp: () {
+          staleSearch = Completer();
+          freshSearch = Completer();
+          when(
+            () => listCities(uf: 'DF', search: 'bra'),
+          ).thenAnswer((_) => staleSearch.future);
+          when(
+            () => listCities(uf: 'DF', search: 'brasi'),
+          ).thenAnswer((_) => freshSearch.future);
+        },
+        build: buildCubit,
+        act: (cubit) async {
+          unawaited(cubit.refreshCities('DF', search: 'bra'));
+          unawaited(cubit.refreshCities('DF', search: 'brasi'));
+          freshSearch.complete(
+            Ok(fakeIbgeLocationsPage(items: [fakeBrazilianCity()])),
+          );
+          await Future<void>.delayed(Duration.zero);
+          staleSearch.complete(Ok(fakeIbgeLocationsPage(items: const [])));
+          await Future<void>.delayed(Duration.zero);
+        },
+        verify: (cubit) {
+          expect(cubit.state.catalogCities, [fakeBrazilianCity()]);
+        },
+      );
+    });
 
     blocTest<DependentFormCubit, DependentFormState>(
       'no city is ever listed without a state',
