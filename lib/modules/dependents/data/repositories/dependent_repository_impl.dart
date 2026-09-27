@@ -16,13 +16,6 @@ const Map<String, DependentField> dependentFieldsByApiName = {
   'address': DependentField.address,
 };
 
-const cityNotFoundDetailMarkers = ['cidade', 'city'];
-
-bool isCityNotFoundDetail(String detail) {
-  final normalized = detail.toLowerCase();
-  return cityNotFoundDetailMarkers.any(normalized.contains);
-}
-
 DependentFailure dependentFailureFrom(
   DioException exception, {
   bool isCreate = false,
@@ -31,7 +24,7 @@ DependentFailure dependentFailureFrom(
   if (status == null) return const DependentNetworkFailure();
   final body = exception.response?.data;
   if (status == 404) {
-    final isCity = isCreate || isCityNotFoundDetail(readProblemDetail(body));
+    final isCity = isCreate || readProblemCode(body) == 'city.not_found';
     return isCity
         ? const DependentCityNotFoundFailure()
         : const DependentNotFoundFailure();

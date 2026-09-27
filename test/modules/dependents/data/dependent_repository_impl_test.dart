@@ -134,8 +134,14 @@ void main() {
   });
 
   group('404', () {
-    const cityNotFoundProblem = {'detail': 'Cidade não encontrada.'};
-    const dependentNotFoundProblem = {'detail': 'Dependente não encontrado.'};
+    const cityNotFoundProblem = {
+      'detail': 'Cidade não encontrada.',
+      'code': 'city.not_found',
+    };
+    const dependentNotFoundProblem = {
+      'detail': 'Dependente não encontrado.',
+      'code': 'dependent.not_found',
+    };
 
     Future<DependentFailure?> patchWith(Object? body) async {
       when(
@@ -165,21 +171,14 @@ void main() {
       expect(result.errorOrNull, const DependentCityNotFoundFailure());
     });
 
-    test('on update with the city marker is the city', () async {
+    test('on update with the city code is the city', () async {
       expect(
         await patchWith(cityNotFoundProblem),
         const DependentCityNotFoundFailure(),
       );
     });
 
-    test('on update with the English city marker is the city', () async {
-      expect(
-        await patchWith(const {'detail': 'City not found.'}),
-        const DependentCityNotFoundFailure(),
-      );
-    });
-
-    test('on update without the marker is the dependent', () async {
+    test('on update without the city code is the dependent', () async {
       expect(
         await patchWith(dependentNotFoundProblem),
         const DependentNotFoundFailure(),
