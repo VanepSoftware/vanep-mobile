@@ -115,8 +115,6 @@ class PersonalDataState extends Equatable {
   bool get isAddressSavable =>
       isAddressDirty && addressDraft.isSavable && !isLookingUpCep;
 
-  bool get isDirty => isProfileDirty || isAddressDirty;
-
   bool get canSave =>
       status == PersonalDataStatus.ready &&
       profile != null &&
@@ -125,8 +123,6 @@ class PersonalDataState extends Equatable {
   bool get isSaving => status == PersonalDataStatus.saving;
 
   bool get isEmailSubmitting => status == PersonalDataStatus.emailSubmitting;
-
-  bool get isMunicipalityLocked => addressDraft.isCityLocked;
 
   PersonalDataState copyWith({
     PersonalDataStatus? status,

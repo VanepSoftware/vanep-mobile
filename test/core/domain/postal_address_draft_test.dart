@@ -197,7 +197,7 @@ void main() {
   });
 
   group('hydration from a saved address', () {
-    test('normalizes the zip and locks the city', () {
+    test('normalizes the zip, locks the city and the saved neighborhood', () {
       final draft = PostalAddressDraft.fromParts(
         zipCode: '72120-120',
         cityToken: 'city-brasilia',
@@ -212,8 +212,24 @@ void main() {
       expect(draft.zipCode, '72120120');
       expect(draft.complement, '');
       expect(draft.isCityLocked, isTrue);
-      expect(draft.isNeighborhoodLocked, isFalse);
+      expect(draft.isNeighborhoodLocked, isTrue);
       expect(draft.isZipCodeUnknown, isFalse);
+    });
+
+    test('leaves the neighborhood open when the saved address has none', () {
+      for (final neighborhood in <String?>[null, '', '   ']) {
+        final draft = PostalAddressDraft.fromParts(
+          zipCode: '72120120',
+          cityToken: 'city-brasilia',
+          cityName: 'Brasília',
+          uf: 'DF',
+          street: 'QND 12',
+          neighborhood: neighborhood,
+        );
+
+        expect(draft.isNeighborhoodLocked, isFalse, reason: '$neighborhood');
+        expect(draft.isCityLocked, isTrue, reason: '$neighborhood');
+      }
     });
 
     test('null parts become an empty draft', () {
