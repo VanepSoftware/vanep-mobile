@@ -107,7 +107,9 @@ class _PersonalAddressFormPageState extends State<PersonalAddressFormPage> {
             child: VanepPrimaryButton(
               label: l10n.personalAddressSaveAction,
               isLoading: state.isSaving,
-              onPressed: draft.isZipCodeUnknown ? null : handleSave,
+              onPressed: draft.isZipCodeUnknown || state.isLookingUpCep
+                  ? null
+                  : handleSave,
             ),
           ),
         );

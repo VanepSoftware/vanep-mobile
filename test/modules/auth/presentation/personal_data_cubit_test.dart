@@ -854,6 +854,68 @@ void main() {
     );
   });
 
+  group('discard address draft', () {
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'restores an edited draft back to the saved address',
+      build: buildCubit,
+      seed: () => readyState(
+        address: fakePersonalAddress(),
+        addressDraft: fakePersonalAddress().toDraft().withNumber('999'),
+      ),
+      act: (cubit) => cubit.discardAddressDraft(),
+      verify: (cubit) {
+        expect(
+          cubit.state.addressDraft.sameContentAs(
+            fakePersonalAddress().toDraft(),
+          ),
+          isTrue,
+        );
+        expect(cubit.state.isAddressDirty, isFalse);
+      },
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'clears the draft when there is no saved address to go back to',
+      build: buildCubit,
+      seed: () => readyState(addressDraft: fakeCompleteDraft()),
+      act: (cubit) => cubit.discardAddressDraft(),
+      verify: (cubit) => expect(cubit.state.addressDraft.isBlank, isTrue),
+    );
+
+    group('a pending cep lookup', () {
+      late Completer<Result<CepFailure, CepLookup>> pendingLookup;
+
+      blocTest<PersonalDataCubit, PersonalDataState>(
+        'cannot resurrect a discarded draft once it answers',
+        setUp: () {
+          pendingLookup = Completer<Result<CepFailure, CepLookup>>();
+          when(() => lookupCep(any())).thenAnswer((_) => pendingLookup.future);
+        },
+        build: buildCubit,
+        seed: () => readyState(address: fakePersonalAddress()),
+        act: (cubit) async {
+          cubit.updateZipCode('11060002');
+          await Future<void>.delayed(Duration.zero);
+          cubit.discardAddressDraft();
+          pendingLookup.complete(
+            Ok<CepFailure, CepLookup>(
+              fakeCepLookup(
+                cityToken: 'city-santos',
+                cityName: 'Santos',
+                uf: 'SP',
+              ),
+            ),
+          );
+          await Future<void>.delayed(cepLookupTestWait);
+        },
+        verify: (cubit) {
+          expect(cubit.state.addressDraft.cityToken, 'city-brasilia');
+          expect(cubit.state.isLookingUpCep, isFalse);
+        },
+      );
+    });
+  });
+
   group('a saved house', () {
     blocTest<PersonalDataCubit, PersonalDataState>(
       'loads with the city and the saved neighborhood locked',

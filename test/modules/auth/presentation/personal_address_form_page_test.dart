@@ -295,6 +295,24 @@ void main() {
       verifyNever(cubit.save);
     });
 
+    testWidgets('a pending CEP lookup disables the save button', (
+      tester,
+    ) async {
+      stateIs(
+        readyState(
+          addressDraft: fakeCompleteDraft(),
+        ).copyWith(isLookingUpCep: true),
+      );
+
+      await openForm(tester, cubit, settle: false);
+
+      final save = tester.widget<VanepPrimaryButton>(
+        find.byType(VanepPrimaryButton),
+      );
+      expect(save.onPressed, isNull);
+      verifyNever(cubit.save);
+    });
+
     testWidgets('shows the saving state on the button', (tester) async {
       stateIs(
         readyState(

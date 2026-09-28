@@ -443,6 +443,18 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     emit(state.copyWith(clearFeedback: true));
   }
 
+  void discardAddressDraft() {
+    _cepLookupTimer?.cancel();
+    _cepLookupGeneration++;
+    emit(
+      state.copyWith(
+        addressDraft: state.address?.toDraft() ?? const PostalAddressDraft(),
+        clearCepFailure: true,
+        isLookingUpCep: false,
+      ),
+    );
+  }
+
   void applyMutationFailure(ProfileEditFailure failure) {
     emit(
       state.copyWith(

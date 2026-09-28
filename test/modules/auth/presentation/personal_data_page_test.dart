@@ -95,6 +95,7 @@ void main() {
     when(cubit.save).thenAnswer((_) async {});
     when(cubit.clearAddress).thenAnswer((_) async {});
     when(cubit.refreshStates).thenAnswer((_) async {});
+    when(cubit.discardAddressDraft).thenReturn(null);
   });
 
   group('identity', () {
@@ -469,6 +470,22 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(PersonalAddressFormPage), findsOneWidget);
+    });
+
+    testWidgets('leaving the address page without saving discards the draft', (
+      tester,
+    ) async {
+      useTallScreen(tester);
+      await tester.pumpWidget(personalDataHarness(cubit));
+      await tester.pump();
+
+      await tester.tap(find.text('Cadastrar endereço'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+
+      verify(cubit.discardAddressDraft).called(1);
     });
 
     testWidgets('a saved house shows its summary and no inline postal fields', (
