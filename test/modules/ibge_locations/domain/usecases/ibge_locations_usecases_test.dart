@@ -95,7 +95,7 @@ void main() {
   test('ListCities requires uf and returns a page of cities', () async {
     final page = fakeIbgeLocationsPage(items: [fakeBrazilianCity()]);
     when(
-      () => repository.listCities(uf: 'DF', search: null, page: 0, size: 20),
+      () => repository.listCities(uf: 'DF', search: null, page: 0, size: 50),
     ).thenAnswer(
       (_) async =>
           Ok<IbgeLocationsFailure, IbgeLocationsPage<BrazilianCity>>(page),
@@ -105,13 +105,13 @@ void main() {
 
     expect(result.valueOrNull, page);
     verify(
-      () => repository.listCities(uf: 'DF', search: null, page: 0, size: 20),
+      () => repository.listCities(uf: 'DF', search: null, page: 0, size: 50),
     ).called(1);
   });
 
   test('ListCities forwards failures', () async {
     when(
-      () => repository.listCities(uf: 'XX', search: null, page: 0, size: 20),
+      () => repository.listCities(uf: 'XX', search: null, page: 0, size: 50),
     ).thenAnswer(
       (_) async =>
           const Err<IbgeLocationsFailure, IbgeLocationsPage<BrazilianCity>>(

@@ -55,15 +55,20 @@ void main() {
     await tester.pumpWidget(sheet(onSearchChanged: searches.add));
 
     await tester.enterText(find.byType(TextField), 'b');
+    await tester.pump(vanepCitySearchDebounce);
 
     expect(searches, isEmpty);
   });
 
-  testWidgets('two letters search with the trimmed text', (tester) async {
+  testWidgets('two letters search with the trimmed text after the debounce', (
+    tester,
+  ) async {
     final searches = <String>[];
     await tester.pumpWidget(sheet(onSearchChanged: searches.add));
 
     await tester.enterText(find.byType(TextField), ' br ');
+    expect(searches, isEmpty);
+    await tester.pump(vanepCitySearchDebounce);
 
     expect(searches, ['br']);
   });
@@ -75,9 +80,27 @@ void main() {
     await tester.pumpWidget(sheet(onSearchChanged: searches.add));
 
     await tester.enterText(find.byType(TextField), 'bra');
+    await tester.pump(vanepCitySearchDebounce);
     await tester.enterText(find.byType(TextField), '');
+    await tester.pump(vanepCitySearchDebounce);
 
     expect(searches, ['bra', '']);
+  });
+
+  testWidgets('rapid typing collapses into a single debounced search', (
+    tester,
+  ) async {
+    final searches = <String>[];
+    await tester.pumpWidget(sheet(onSearchChanged: searches.add));
+
+    await tester.enterText(find.byType(TextField), 'b');
+    await tester.pump(const Duration(milliseconds: 50));
+    await tester.enterText(find.byType(TextField), 'br');
+    await tester.pump(const Duration(milliseconds: 50));
+    await tester.enterText(find.byType(TextField), 'bra');
+    await tester.pump(vanepCitySearchDebounce);
+
+    expect(searches, ['bra']);
   });
 
   testWidgets('no cities shows the empty message', (tester) async {

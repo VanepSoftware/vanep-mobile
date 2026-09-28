@@ -13,7 +13,7 @@ class ListCities {
     required String uf,
     String? search,
     int page = 0,
-    int size = 20,
+    int size = 50,
   }) {
     return repository.listCities(
       uf: uf,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +10,7 @@ import 'vanep_text_field.dart';
 
 const vanepCityPickerMaxHeight = 360.0;
 const vanepCitySearchMinLength = 2;
+const vanepCitySearchDebounce = Duration(milliseconds: 300);
 
 class VanepCityOption extends Equatable {
   const VanepCityOption({required this.token, required this.name});
@@ -39,7 +42,7 @@ Future<void> showVanepCityPickerSheet(
   );
 }
 
-class VanepCityPickerSheet extends StatelessWidget {
+class VanepCityPickerSheet extends StatefulWidget {
   const VanepCityPickerSheet({
     required this.options,
     required this.onSearchChanged,
@@ -55,11 +58,26 @@ class VanepCityPickerSheet extends StatelessWidget {
   final ValueChanged<String> onSearchChanged;
   final ValueChanged<VanepCityOption> onSelected;
 
+  @override
+  State<VanepCityPickerSheet> createState() => _VanepCityPickerSheetState();
+}
+
+class _VanepCityPickerSheetState extends State<VanepCityPickerSheet> {
+  Timer? _debounce;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
   void handleSearch(String value) {
+    _debounce?.cancel();
     final query = value.trim();
-    if (query.length >= vanepCitySearchMinLength || query.isEmpty) {
-      onSearchChanged(query);
-    }
+    if (query.isNotEmpty && query.length < vanepCitySearchMinLength) return;
+    _debounce = Timer(vanepCitySearchDebounce, () {
+      widget.onSearchChanged(query);
+    });
   }
 
   @override
@@ -91,10 +109,10 @@ class VanepCityPickerSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             CityPickerResults(
-              options: options,
-              selectedToken: selectedToken,
-              errorText: errorText,
-              onSelected: onSelected,
+              options: widget.options,
+              selectedToken: widget.selectedToken,
+              errorText: widget.errorText,
+              onSelected: widget.onSelected,
             ),
           ],
         ),

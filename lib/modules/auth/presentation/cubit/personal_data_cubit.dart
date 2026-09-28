@@ -59,6 +59,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
 
   Timer? _cepLookupTimer;
   int _cepLookupGeneration = 0;
+  int _cityListGeneration = 0;
 
   Future<void> load() => refresh();
 
@@ -235,10 +236,11 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
 
   Future<void> refreshCities(String uf, {String? search}) async {
     if (uf.isEmpty) return;
+    final generation = ++_cityListGeneration;
     final result = search == null || search.isEmpty
         ? await _listCities(uf: uf)
         : await _listCities(uf: uf, search: search);
-    if (isClosed) return;
+    if (isClosed || generation != _cityListGeneration) return;
     switch (result) {
       case Ok(:final value):
         emit(
@@ -268,6 +270,9 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     final snapshot = state.profile;
     if (snapshot == null) return;
 
+    _cepLookupTimer?.cancel();
+    _cepLookupGeneration++;
+
     final write = state.isAddressSavable
         ? personalAddressWriteFromDraft(state.addressDraft)
         : null;
@@ -276,6 +281,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     emit(
       state.copyWith(
         status: PersonalDataStatus.saving,
+        isLookingUpCep: false,
         clearFieldErrors: true,
         clearFeedback: true,
       ),

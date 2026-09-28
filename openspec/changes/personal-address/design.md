@@ -160,7 +160,7 @@ Write da casa. `PersonalAddressWrite` (domínio do `auth`) só **prova** que o r
 
 Body do PUT 200 é o DTO do GET. O cubit troca o snapshot por esse JSON e reseta o rascunho para ele. Sem GET extra de `/address`.
 
-Picker sem esperar falha de CEP: a pessoa pode abrir UF/município com CEP vazio. Sempre `uf` nas cidades. UFs: `size=30`, `sort=name,asc` (27 cabem). Cidades: default `size=20`, `sort=name,asc`; search depois de 2 ou 3 caracteres, ou primeira página sem search (DF = Brasília). Não chamar `/api/cities` sem `uf`.
+Picker sem esperar falha de CEP: a pessoa pode abrir UF/município com CEP vazio. Sempre `uf` nas cidades. UFs: `size=30`, `sort=name,asc` (27 cabem). Cidades: default `size=50`, `sort=name,asc`; search depois de 2 ou 3 caracteres, ou primeira página sem search (DF = Brasília). O campo de busca do `VanepCityPickerSheet` debounceia 300 ms (`vanepCitySearchDebounce`) antes de chamar `onSearchChanged` — sem isso, cada tecla disparava uma consulta. `size=50` (era `20`) reduz, mas não elimina, o risco de uma busca curta numa UF grande (ex.: "sao" em SP) esconder a cidade buscada numa página maior; não há "carregar mais" ainda. Não chamar `/api/cities` sem `uf`.
 
 **Rejeitado:** mandar `placeId` “por compatibilidade”. **Rejeitado:** cidade texto livre. **Rejeitado:** ViaCEP no client para “já ir preenchendo”. **Rejeitado:** o mapa da API dentro de `PersonalAddressWrite` (repetiria as chaves no dependente e poria nome de API no domínio).
 
