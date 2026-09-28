@@ -52,7 +52,7 @@ class ProfilePatchRequestBuilder {
     _phone = phone;
   }
 
-  void setGender(Gender gender) {
+  void setGender(Gender? gender) {
     _includesGender = true;
     _gender = gender;
   }

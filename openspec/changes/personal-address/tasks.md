@@ -46,12 +46,12 @@ Sem Dio, DTO nem endpoint. `auth` MUST NOT importar `ibge_locations` (`cityToken
 
 Só presentation; sem layout. Nasce sobre o `PostalAddressDraft`.
 
-- [ ] 3.1 `PersonalDataState`: snapshot da casa + `PostalAddressDraft`, status do lookup, `CepFailure?`, picker; `isProfileDirty`, `isAddressDirty` (rascunho ≠ rascunho derivado do snapshot), `isAddressSavable`, `canSave`; `clearDraftGender` e `updateGender(Gender?)`; `ProfilePatchRequestBuilder.setGender(Gender?)` (`{'gender': null}`).
-- [ ] 3.2 Carga: `/me` e find de endereço em paralelo; 404 de endereço → ready com cartão vazio; perfil Err ou endereço Err não-404 → `loadFailed`; 200 hidrata o rascunho.
-- [ ] 3.3 CEP e picker: 8 dígitos → `LookupCep` com debounce de 400 ms (path só de dígitos); 200 aplica `withCepLookup`; 404/429/503 destravam o picker; `notFound` bloqueia o Salvar; `ListStates`; `ListCities` sempre com `uf`; trocar UF zera município.
-- [ ] 3.4 Save (PATCH → PUT): só perfil → PATCH; só casa gravável → PUT com write completo e depois `refreshUserProfile`; os dois → PATCH depois PUT; PATCH Err → sem PUT; PATCH ok + PUT Err → perfil sincronizado, rascunho fica, sem sucesso, sem refresh; PUT 400 → feedback genérico; `FEMALE` → `null` manda `"gender": null`; gênero já `null` e intacto → sem a chave. Sucesso só se todos os writes emitidos passaram.
-- [ ] 3.5 `clearAddress`: DELETE, no 204 zera snapshot e rascunho, `refreshUserProfile`, `syncProfile`, sem PUT e sem GET `/address`; Err mantém o snapshot. Salvar e PUT de troca **nunca** emitem DELETE.
-- [ ] 3.6 Ligar os use cases na factory do cubit (`auth_container.dart`). Testes de perfil atuais seguem passando.
+- [x] 3.1 `PersonalDataState`: snapshot da casa + `PostalAddressDraft`, status do lookup, `CepFailure?`, picker; `isProfileDirty`, `isAddressDirty` (rascunho ≠ rascunho derivado do snapshot), `isAddressSavable`, `canSave`; `clearDraftGender` e `updateGender(Gender?)`; `ProfilePatchRequestBuilder.setGender(Gender?)` (`{'gender': null}`).
+- [x] 3.2 Carga: `/me` e find de endereço em paralelo; 404 de endereço → ready com cartão vazio; perfil Err ou endereço Err não-404 → `loadFailed`; 200 hidrata o rascunho.
+- [x] 3.3 CEP e picker: 8 dígitos → `LookupCep` com debounce de 400 ms (path só de dígitos); 200 aplica `withCepLookup`; 404/429/503 destravam o picker; `notFound` bloqueia o Salvar; `ListStates`; `ListCities` sempre com `uf`; trocar UF zera município.
+- [x] 3.4 Save (PATCH → PUT): só perfil → PATCH; só casa gravável → PUT com write completo e depois `refreshUserProfile`; os dois → PATCH depois PUT; PATCH Err → sem PUT; PATCH ok + PUT Err → perfil sincronizado, rascunho fica, sem sucesso, sem refresh; PUT 400 → feedback genérico; `FEMALE` → `null` manda `"gender": null`; gênero já `null` e intacto → sem a chave. Sucesso só se todos os writes emitidos passaram.
+- [x] 3.5 `clearAddress`: DELETE, no 204 zera snapshot e rascunho, `refreshUserProfile`, `syncProfile`, sem PUT e sem GET `/address`; Err mantém o snapshot. Salvar e PUT de troca **nunca** emitem DELETE.
+- [x] 3.6 Ligar os use cases na factory do cubit (`auth_container.dart`). Testes de perfil atuais seguem passando.
 - [ ] 3.7 `make lint` + `make test`. **Parar para validação (R27a).**
 
 ## 4. Fase 4 — UI (`feat/4-personal-data-address-ui`)
