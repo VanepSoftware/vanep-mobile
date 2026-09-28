@@ -77,7 +77,6 @@ class PersonalDataState extends Equatable {
     this.addressDraft = const PostalAddressDraft(),
     this.isLookingUpCep = false,
     this.cepFailure,
-    this.isLookingUpCep = false,
     this.catalogStates = const [],
     this.catalogCities = const [],
     this.catalogFailure,
@@ -94,7 +93,6 @@ class PersonalDataState extends Equatable {
   final PostalAddressDraft addressDraft;
   final bool isLookingUpCep;
   final CepFailure? cepFailure;
-  final bool isLookingUpCep;
   final List<BrazilianState> catalogStates;
   final List<BrazilianCity> catalogCities;
   final IbgeLocationsFailure? catalogFailure;
@@ -139,7 +137,6 @@ class PersonalDataState extends Equatable {
     bool? isLookingUpCep,
     CepFailure? cepFailure,
     bool clearCepFailure = false,
-    bool? isLookingUpCep,
     List<BrazilianState>? catalogStates,
     List<BrazilianCity>? catalogCities,
     IbgeLocationsFailure? catalogFailure,
@@ -159,7 +156,6 @@ class PersonalDataState extends Equatable {
       addressDraft: addressDraft ?? this.addressDraft,
       isLookingUpCep: isLookingUpCep ?? this.isLookingUpCep,
       cepFailure: clearCepFailure ? null : (cepFailure ?? this.cepFailure),
-      isLookingUpCep: isLookingUpCep ?? this.isLookingUpCep,
       catalogStates: catalogStates ?? this.catalogStates,
       catalogCities: catalogCities ?? this.catalogCities,
       catalogFailure: clearCatalogFailure
@@ -183,7 +179,6 @@ class PersonalDataState extends Equatable {
     addressDraft,
     isLookingUpCep,
     cepFailure,
-    isLookingUpCep,
     catalogStates,
     catalogCities,
     catalogFailure,

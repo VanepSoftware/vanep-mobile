@@ -515,6 +515,7 @@ void main() {
         ),
         'bras',
       );
+      await tester.pump(vanepCitySearchDebounce);
 
       verify(() => cubit.refreshCities('DF', search: 'bras')).called(1);
     });
