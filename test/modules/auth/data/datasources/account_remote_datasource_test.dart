@@ -60,6 +60,13 @@ void main() {
     expect(body.containsKey('birthDate'), isFalse);
   });
 
+  test('signUp omits the gender when the person prefers not to say', () async {
+    await remote.signUp(validClientSignupForm.copyWith(clearGender: true));
+
+    final body = capturedBody('http://10.0.2.2:8080/api/auth/signup/client');
+    expect(body.containsKey('gender'), isFalse);
+  });
+
   test('verifyEmail posts the e-mail and the code', () async {
     await remote.verifyEmail(email: 'ana@vanep.com.br', code: '012345');
 

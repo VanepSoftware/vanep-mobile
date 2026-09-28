@@ -56,8 +56,9 @@ void main() {
   setUp(() {
     cubit = MockDriverSearchCubit();
     final datasource = MockPlaceAutocompleteDataSource();
-    when(() => datasource.findSuggestions(any(), any()))
-        .thenAnswer((_) async => const Ok([]));
+    when(
+      () => datasource.findSuggestions(any(), any()),
+    ).thenAnswer((_) async => const Ok([]));
     autocomplete = PlaceAutocompleteController(datasource: datasource);
   });
 
@@ -199,5 +200,29 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.text('Brasília · Taguatinga · QNL'), findsOneWidget);
+  });
+
+  testWidgets('an unmatched IBGE city is not shown as an empty result', (
+    tester,
+  ) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.failed,
+        failure: DriverSearchFailure.cityUnmatched,
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(
+      find.text(
+        'Este município não corresponde ao catálogo. Escolha outra sugestão.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Nenhum motorista atende este local ainda.'),
+      findsNothing,
+    );
   });
 }

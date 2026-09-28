@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
@@ -347,5 +349,89 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  group('gender', () {
+    void personalStep() {
+      givenState(
+        const SignupState(
+          form: SignupForm(type: UserType.client),
+          stepIndex: 1,
+        ),
+      );
+      when(() => cubit.updateGender(any())).thenReturn(null);
+    }
+
+    testWidgets('is a select with the four options, not chips', (tester) async {
+      personalStep();
+      useTallScreen(tester);
+
+      await tester.pumpWidget(authTestApp(signupPage()));
+
+      expect(find.byType(VanepGenderSelect), findsOneWidget);
+      expect(find.text('Sexo'), findsOneWidget);
+      expect(find.text('Prefiro não informar'), findsOneWidget);
+
+      await tester.tap(find.byType(DropdownButton<Gender?>));
+      await tester.pumpAndSettle();
+
+      for (final label in ['Masculino', 'Feminino', 'Outro']) {
+        expect(find.text(label), findsWidgets, reason: label);
+      }
+    });
+
+    testWidgets('choosing a gender reaches the cubit', (tester) async {
+      personalStep();
+      useTallScreen(tester);
+
+      await tester.pumpWidget(authTestApp(signupPage()));
+      await tester.tap(find.byType(DropdownButton<Gender?>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Feminino').last);
+      await tester.pumpAndSettle();
+
+      verify(() => cubit.updateGender(Gender.female)).called(1);
+    });
+
+    testWidgets('choosing Prefiro não informar clears it', (tester) async {
+      givenState(
+        const SignupState(
+          form: SignupForm(type: UserType.client, gender: Gender.female),
+          stepIndex: 1,
+        ),
+      );
+      when(() => cubit.updateGender(any())).thenReturn(null);
+      useTallScreen(tester);
+
+      await tester.pumpWidget(authTestApp(signupPage()));
+      await tester.tap(find.byType(DropdownButton<Gender?>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Prefiro não informar').last);
+      await tester.pumpAndSettle();
+
+      verify(() => cubit.updateGender(null)).called(1);
+    });
+  });
+
+  group('birth date field', () {
+    testWidgets('shows the chosen date as dd/MM/yyyy without the time', (
+      tester,
+    ) async {
+      givenState(
+        SignupState(
+          form: SignupForm(
+            type: UserType.client,
+            birthDate: DateTime(1994, 3, 7),
+          ),
+          stepIndex: 1,
+        ),
+      );
+      useTallScreen(tester);
+
+      await tester.pumpWidget(authTestApp(signupPage()));
+
+      expect(find.text('07/03/1994'), findsOneWidget);
+      expect(find.textContaining('T00:00'), findsNothing);
+    });
   });
 }
