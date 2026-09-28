@@ -32,7 +32,11 @@ const rankedResults = [
   DriverSearchResult(token: 'd4', name: 'Cidade inteira'),
 ];
 
-Widget harness(DriverSearchCubit cubit, PlaceAutocompleteController auto) {
+Widget harness(
+  DriverSearchCubit cubit,
+  PlaceAutocompleteController auto, {
+  ValueChanged<String>? onDriverSelected,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -44,7 +48,10 @@ Widget harness(DriverSearchCubit cubit, PlaceAutocompleteController auto) {
     locale: const Locale('pt'),
     home: BlocProvider<DriverSearchCubit>.value(
       value: cubit,
-      child: DriverSearchPage(autocomplete: auto),
+      child: DriverSearchPage(
+        autocomplete: auto,
+        onDriverSelected: onDriverSelected,
+      ),
     ),
   );
 }
@@ -77,6 +84,23 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.byType(TextField), findsOneWidget);
+  });
+
+  testWidgets('tapping a result opens that driver', (tester) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: rankedResults,
+      ),
+    );
+    final selected = <String>[];
+
+    await tester.pumpWidget(
+      harness(cubit, autocomplete, onDriverSelected: selected.add),
+    );
+    await tester.tap(find.text('Setor L Norte'));
+
+    expect(selected, ['d2']);
   });
 
   testWidgets('renders results in the order the API returned', (tester) async {

@@ -875,4 +875,150 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get dependentAddressNotResolved =>
       'Não foi possível interpretar este endereço. Escolha outra sugestão.';
+
+  @override
+  String driverProfileExperience(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count anos de experiência',
+      one: '1 ano de experiência',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String driverProfileRating(String rating) {
+    return '$rating / 5.0';
+  }
+
+  @override
+  String driverProfileVanTitle(String model, String year, String brand) {
+    return '$model $year · $brand';
+  }
+
+  @override
+  String driverProfileVanCapacity(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lugares',
+      one: '1 lugar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get driverProfileVanPhotos => 'Fotos da van';
+
+  @override
+  String get driverProfileNoVan =>
+      'Este motorista ainda não cadastrou uma van.';
+
+  @override
+  String get driverProfileAbout => 'Sobre';
+
+  @override
+  String get driverProfileChatButton => 'Conversar com o motorista';
+
+  @override
+  String get driverProfileNotFound =>
+      'Este motorista não está mais disponível.';
+
+  @override
+  String get driverProfileLoadError =>
+      'Não foi possível carregar o motorista. Tente novamente.';
+
+  @override
+  String get photoSourceGallery => 'Escolher da galeria';
+
+  @override
+  String get photoSourceCamera => 'Tirar foto';
+
+  @override
+  String get photoFailurePermissionDenied =>
+      'Permita o acesso às fotos nas configurações do celular.';
+
+  @override
+  String get photoFailureTooLarge => 'A foto é grande demais. Escolha outra.';
+
+  @override
+  String get photoFailureUnsupportedType =>
+      'Formato não suportado. Use JPG, PNG ou WEBP.';
+
+  @override
+  String get photoFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get photoFailureUnexpected =>
+      'Não foi possível enviar a foto. Tente novamente.';
+
+  @override
+  String get profilePhotoChange => 'Trocar foto';
+
+  @override
+  String get profilePhotoUpdated => 'Foto atualizada.';
+
+  @override
+  String get driverVansRegisterIntro =>
+      'Cadastre sua van para os clientes verem as fotos dela.';
+
+  @override
+  String get driverVanFieldPlate => 'Placa';
+
+  @override
+  String get driverVanFieldBrand => 'Marca';
+
+  @override
+  String get driverVanFieldModel => 'Modelo';
+
+  @override
+  String get driverVanFieldYear => 'Ano';
+
+  @override
+  String get driverVanFieldColor => 'Cor';
+
+  @override
+  String get driverVanFieldCapacity => 'Lugares';
+
+  @override
+  String get driverVanFieldRequired => 'Obrigatório';
+
+  @override
+  String get driverVanPlateInvalid => 'Placa inválida. Ex.: ABC1D23';
+
+  @override
+  String get driverVanYearInvalid => 'Ano inválido';
+
+  @override
+  String get driverVanCapacityInvalid => 'Informe ao menos 1 lugar';
+
+  @override
+  String get driverVanRegister => 'Cadastrar van';
+
+  @override
+  String get driverVanRegistered => 'Van cadastrada.';
+
+  @override
+  String get driverVanPhotoFront => 'Frente';
+
+  @override
+  String get driverVanPhotoSide => 'Lateral';
+
+  @override
+  String get driverVanFailureDuplicatePlate => 'Esta placa já está cadastrada.';
+
+  @override
+  String get driverVanFailureInvalid => 'Confira os dados da van.';
+
+  @override
+  String get driverVanFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get driverVanFailureUnexpected => 'Algo deu errado. Tente novamente.';
+
+  @override
+  String get driverVansLoadError => 'Não foi possível carregar sua van.';
 }

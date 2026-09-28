@@ -1,12 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/media/photo_failure.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/profile/data/datasources/profile_summary_remote_datasource.dart';
 import 'package:vanep_mobile/modules/profile/data/repositories/profile_summary_repository_impl.dart';
 import 'package:vanep_mobile/modules/profile/domain/failures/profile_summary_failure.dart';
 
+import '../../../../core/media/media_mocks.dart';
 import '../../profile_fixtures.dart';
 
 class MockProfileSummaryRemoteDataSource extends Mock
@@ -52,5 +54,43 @@ void main() {
 
     expect(result.errorOrNull, const UnsupportedProfileSummaryFailure());
     verifyNever(() => remote.fetchSummary(any()));
+  });
+
+  group('uploadPhoto', () {
+    setUpAll(() => registerFallbackValue(testPickedPhoto));
+
+    test('returns Ok once the photo is stored', () async {
+      when(
+        () => remote.uploadPhoto(testDriverSummaryDto, testPickedPhoto),
+      ).thenAnswer((_) async {});
+
+      final result = await repository.uploadPhoto(
+        testDriverSummaryDto,
+        testPickedPhoto,
+      );
+
+      expect(result.isOk, isTrue);
+    });
+
+    test('maps a rejected file to a photo failure', () async {
+      when(
+        () => remote.uploadPhoto(testDriverSummaryDto, testPickedPhoto),
+      ).thenThrow(
+        DioException(
+          requestOptions: RequestOptions(),
+          response: Response<void>(
+            requestOptions: RequestOptions(),
+            statusCode: 413,
+          ),
+        ),
+      );
+
+      final result = await repository.uploadPhoto(
+        testDriverSummaryDto,
+        testPickedPhoto,
+      );
+
+      expect(result.errorOrNull, PhotoFailure.tooLarge);
+    });
   });
 }

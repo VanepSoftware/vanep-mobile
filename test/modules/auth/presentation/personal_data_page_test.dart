@@ -10,13 +10,17 @@ import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_slots.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/email_change_sheet.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/personal_data_gender_chips.dart';
 
 import '../auth_fixtures.dart';
 import 'auth_presentation_mocks.dart';
 
-Widget personalDataHarness(PersonalDataCubit cubit) {
+Widget personalDataHarness(
+  PersonalDataCubit cubit, {
+  PersonalDataSlots slots = const PersonalDataSlots(),
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -28,7 +32,7 @@ Widget personalDataHarness(PersonalDataCubit cubit) {
     locale: const Locale('pt'),
     home: BlocProvider<PersonalDataCubit>.value(
       value: cubit,
-      child: const PersonalDataPage(),
+      child: PersonalDataPage(slots: slots),
     ),
   );
 }
@@ -56,6 +60,33 @@ void main() {
     when(() => cubit.state).thenReturn(readyState());
     when(() => cubit.stream).thenAnswer((_) => const Stream.empty());
     when(cubit.close).thenAnswer((_) async {});
+  });
+
+  testWidgets('shows the injected header above and sections below the form', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      personalDataHarness(
+        cubit,
+        slots: const PersonalDataSlots(
+          header: Text('foto de perfil'),
+          footer: [Text('minha van')],
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('foto de perfil'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('foto de perfil')).dy,
+      lessThan(tester.getTopLeft(find.text('Nome')).dy),
+    );
+    await tester.scrollUntilVisible(
+      find.text('minha van'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('minha van'), findsOneWidget);
   });
 
   testWidgets('shows editable fields and disabled save when clean', (

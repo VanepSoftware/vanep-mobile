@@ -7,7 +7,7 @@ import '../../domain/usecases/refresh_user_profile.dart';
 import '../../domain/usecases/request_email_change.dart';
 import '../../../../core/domain/gender.dart';
 import '../../domain/value_objects/profile_patch_request.dart';
-import '../formatters/profile_field_formatters.dart';
+import '../../../../core/formatters/phone_formatter.dart';
 import 'personal_data_state.dart';
 
 typedef SyncProfile = void Function(UserProfile profile);

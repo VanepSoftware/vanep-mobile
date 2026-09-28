@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/formatters/phone_formatter.dart';
 import 'package:vanep_mobile/modules/auth/presentation/formatters/profile_field_formatters.dart';
 
 TextEditingValue textEditingValueAt(String text) {

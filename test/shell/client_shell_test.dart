@@ -67,6 +67,7 @@ Widget _harness(
         BlocProvider<DependentsCubit>.value(value: dependentsCubit),
       ],
       child: ClientShell(
+        openDriverProfile: (_, _) async {},
         profile: const FakeUserProfile(),
         openDriverSearch: openDriverSearch ?? (_) async {},
       ),

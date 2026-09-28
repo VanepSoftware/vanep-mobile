@@ -44,6 +44,7 @@ Widget harness(
       child: DriverShell(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
         openServiceAreas: openServiceAreas ?? (_) async {},
+        openMyVans: (_) async {},
       ),
     ),
   );

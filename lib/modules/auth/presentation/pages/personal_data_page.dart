@@ -15,13 +15,17 @@ import '../../domain/failures/profile_edit_failure.dart';
 import '../../domain/value_objects/profile_field_limits.dart';
 import '../cubit/personal_data_cubit.dart';
 import '../cubit/personal_data_state.dart';
+import 'personal_data_slots.dart';
+import '../../../../core/formatters/phone_formatter.dart';
 import '../formatters/profile_field_formatters.dart';
 import '../mappers/profile_edit_failure_l10n.dart';
 import '../widgets/email_change_sheet.dart';
 import '../widgets/personal_data_gender_chips.dart';
 
 class PersonalDataPage extends StatefulWidget {
-  const PersonalDataPage({super.key});
+  const PersonalDataPage({this.slots = const PersonalDataSlots(), super.key});
+
+  final PersonalDataSlots slots;
 
   @override
   State<PersonalDataPage> createState() => _PersonalDataPageState();
@@ -111,6 +115,7 @@ class _PersonalDataPageState extends State<PersonalDataPage>
             state: state,
             nameController: _nameController,
             phoneController: _phoneController,
+            slots: widget.slots,
           ),
         );
       },
@@ -125,6 +130,7 @@ Widget buildPersonalDataBody({
   required PersonalDataState state,
   required TextEditingController nameController,
   required TextEditingController phoneController,
+  PersonalDataSlots slots = const PersonalDataSlots(),
 }) {
   if (state.status == PersonalDataStatus.loading ||
       state.status == PersonalDataStatus.initial) {
@@ -163,6 +169,7 @@ Widget buildPersonalDataBody({
   final canChangeEmail =
       pendingEmail == null && emailCooldown == null && !state.isEmailSubmitting;
   final cubit = context.read<PersonalDataCubit>();
+  final header = slots.header;
 
   return Column(
     children: [
@@ -170,6 +177,7 @@ Widget buildPersonalDataBody({
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
+            if (header != null) ...[header, const SizedBox(height: 16)],
             if (pendingEmail != null) ...[
               PendingEmailBanner(email: pendingEmail),
               const SizedBox(height: 20),
@@ -277,6 +285,10 @@ Widget buildPersonalDataBody({
                 ],
               ),
             ),
+            for (final section in slots.footer) ...[
+              const SizedBox(height: 20),
+              section,
+            ],
           ],
         ),
       ),

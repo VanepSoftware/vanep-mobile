@@ -10,7 +10,9 @@ import '../cubit/drivers_state.dart';
 import 'driver_card.dart';
 
 class DriversHomeBody extends StatelessWidget {
-  const DriversHomeBody({super.key});
+  const DriversHomeBody({this.onDriverSelected, super.key});
+
+  final ValueChanged<String>? onDriverSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class DriversHomeBody extends StatelessWidget {
           DriversStatus.loaded => DriversSuggestionsList(
             drivers: state.visibleDrivers,
             emptyMessage: l10n.driversEmpty,
+            onDriverSelected: onDriverSelected,
           ),
         };
       },
@@ -88,11 +91,13 @@ class DriversSuggestionsList extends StatelessWidget {
   const DriversSuggestionsList({
     required this.drivers,
     required this.emptyMessage,
+    this.onDriverSelected,
     super.key,
   });
 
   final List<Driver> drivers;
   final String emptyMessage;
+  final ValueChanged<String>? onDriverSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +117,20 @@ class DriversSuggestionsList extends StatelessWidget {
         for (final driver in drivers)
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: DriverCard(driver: driver),
+            child: DriverCard(
+              driver: driver,
+              onTap: selectDriverCallback(onDriverSelected, driver.token),
+            ),
           ),
       ],
     );
   }
+}
+
+VoidCallback? selectDriverCallback(
+  ValueChanged<String>? onDriverSelected,
+  String driverToken,
+) {
+  if (onDriverSelected == null) return null;
+  return () => onDriverSelected(driverToken);
 }

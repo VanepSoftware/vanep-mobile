@@ -17,12 +17,15 @@ class DriverShell extends StatefulWidget {
   const DriverShell({
     required this.profile,
     required this.openServiceAreas,
+    required this.openMyVans,
     super.key,
   });
 
   final UserProfile profile;
 
   final Future<void> Function(BuildContext context) openServiceAreas;
+
+  final Future<void> Function(BuildContext context) openMyVans;
 
   @override
   State<DriverShell> createState() => DriverShellState();
@@ -72,6 +75,7 @@ class DriverShellState extends State<DriverShell> {
                   onNotificationsTapped: () => openNotifications(context),
                 ),
                 DriverVansTab(
+                  onOpenMyVans: () => widget.openMyVans(context),
                   onOpenServiceAreas: () =>
                       openServiceAreasAndRefreshProfile(context),
                 ),
