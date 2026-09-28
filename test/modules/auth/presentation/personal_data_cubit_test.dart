@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -15,6 +17,7 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_state.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
 
@@ -614,6 +617,80 @@ void main() {
     );
 
     blocTest<PersonalDataCubit, PersonalDataState>(
+      'does not put a house while a cep lookup is pending',
+      build: buildCubit,
+      seed: () => readyState(
+        addressDraft: fakeCompleteDraft(),
+      ).copyWith(isLookingUpCep: true),
+      act: (cubit) => cubit.save(),
+      expect: () => <PersonalDataState>[],
+      verify: (_) => verifyNever(() => upsertMyPersonalAddress(any())),
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'touching Salvar right after a new cep never puts a mismatched address',
+      setUp: () {
+        when(() => lookupCep(any())).thenAnswer(
+          (_) async => Ok<CepFailure, CepLookup>(
+            fakeCepLookup(
+              cityToken: 'city-santos',
+              cityName: 'Santos',
+              uf: 'SP',
+            ),
+          ),
+        );
+      },
+      build: buildCubit,
+      seed: () => readyState(address: fakePersonalAddress()),
+      act: (cubit) async {
+        cubit.updateZipCode('11060002');
+        await cubit.save();
+      },
+      verify: (_) => verifyNever(() => upsertMyPersonalAddress(any())),
+    );
+
+    group('a pending cep lookup that answers after save', () {
+      late Completer<Result<CepFailure, CepLookup>> pendingLookup;
+
+      blocTest<PersonalDataCubit, PersonalDataState>(
+        'is ignored instead of overwriting the saved city',
+        setUp: () {
+          pendingLookup = Completer<Result<CepFailure, CepLookup>>();
+          when(() => lookupCep(any())).thenAnswer((_) => pendingLookup.future);
+          when(() => patchUserProfile(any())).thenAnswer(
+            (_) async => const Ok<ProfileEditFailure, UserProfile>(
+              FakeUserProfile(name: 'Maria'),
+            ),
+          );
+          profileRefreshes(const FakeUserProfile(name: 'Maria'));
+        },
+        build: buildCubit,
+        seed: () => readyState(address: fakePersonalAddress()),
+        act: (cubit) async {
+          cubit.updateZipCode('11060002');
+          await Future<void>.delayed(Duration.zero);
+          cubit.updateName('Maria');
+          await cubit.save();
+          pendingLookup.complete(
+            Ok<CepFailure, CepLookup>(
+              fakeCepLookup(
+                cityToken: 'city-santos',
+                cityName: 'Santos',
+                uf: 'SP',
+              ),
+            ),
+          );
+          await Future<void>.delayed(cepLookupTestWait);
+        },
+        verify: (cubit) {
+          verifyNever(() => upsertMyPersonalAddress(any()));
+          expect(cubit.state.addressDraft.cityToken, 'city-brasilia');
+          expect(cubit.state.isLookingUpCep, isFalse);
+        },
+      );
+    });
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
       'writes a masked zip as eight digits',
       setUp: () {
         when(() => upsertMyPersonalAddress(any())).thenAnswer(
@@ -775,6 +852,68 @@ void main() {
         expect(syncedProfiles, isEmpty);
       },
     );
+  });
+
+  group('discard address draft', () {
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'restores an edited draft back to the saved address',
+      build: buildCubit,
+      seed: () => readyState(
+        address: fakePersonalAddress(),
+        addressDraft: fakePersonalAddress().toDraft().withNumber('999'),
+      ),
+      act: (cubit) => cubit.discardAddressDraft(),
+      verify: (cubit) {
+        expect(
+          cubit.state.addressDraft.sameContentAs(
+            fakePersonalAddress().toDraft(),
+          ),
+          isTrue,
+        );
+        expect(cubit.state.isAddressDirty, isFalse);
+      },
+    );
+
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'clears the draft when there is no saved address to go back to',
+      build: buildCubit,
+      seed: () => readyState(addressDraft: fakeCompleteDraft()),
+      act: (cubit) => cubit.discardAddressDraft(),
+      verify: (cubit) => expect(cubit.state.addressDraft.isBlank, isTrue),
+    );
+
+    group('a pending cep lookup', () {
+      late Completer<Result<CepFailure, CepLookup>> pendingLookup;
+
+      blocTest<PersonalDataCubit, PersonalDataState>(
+        'cannot resurrect a discarded draft once it answers',
+        setUp: () {
+          pendingLookup = Completer<Result<CepFailure, CepLookup>>();
+          when(() => lookupCep(any())).thenAnswer((_) => pendingLookup.future);
+        },
+        build: buildCubit,
+        seed: () => readyState(address: fakePersonalAddress()),
+        act: (cubit) async {
+          cubit.updateZipCode('11060002');
+          await Future<void>.delayed(Duration.zero);
+          cubit.discardAddressDraft();
+          pendingLookup.complete(
+            Ok<CepFailure, CepLookup>(
+              fakeCepLookup(
+                cityToken: 'city-santos',
+                cityName: 'Santos',
+                uf: 'SP',
+              ),
+            ),
+          );
+          await Future<void>.delayed(cepLookupTestWait);
+        },
+        verify: (cubit) {
+          expect(cubit.state.addressDraft.cityToken, 'city-brasilia');
+          expect(cubit.state.isLookingUpCep, isFalse);
+        },
+      );
+    });
   });
 
   group('a saved house', () {
@@ -1314,6 +1453,42 @@ void main() {
       verify: (_) =>
           verify(() => listCities(uf: 'DF', search: 'bras')).called(1),
     );
+
+    group('a stale city search answer', () {
+      late Completer<Result<IbgeLocationsFailure, IbgeLocationsPage<BrazilianCity>>>
+      staleSearch;
+      late Completer<Result<IbgeLocationsFailure, IbgeLocationsPage<BrazilianCity>>>
+      freshSearch;
+
+      blocTest<PersonalDataCubit, PersonalDataState>(
+        'does not overwrite a newer search that resolved first',
+        setUp: () {
+          staleSearch = Completer();
+          freshSearch = Completer();
+          when(
+            () => listCities(uf: 'DF', search: 'bra'),
+          ).thenAnswer((_) => staleSearch.future);
+          when(
+            () => listCities(uf: 'DF', search: 'brasi'),
+          ).thenAnswer((_) => freshSearch.future);
+        },
+        build: buildCubit,
+        seed: readyState,
+        act: (cubit) async {
+          unawaited(cubit.refreshCities('DF', search: 'bra'));
+          unawaited(cubit.refreshCities('DF', search: 'brasi'));
+          freshSearch.complete(
+            Ok(fakeIbgeLocationsPage(items: [fakeBrazilianCity()])),
+          );
+          await Future<void>.delayed(Duration.zero);
+          staleSearch.complete(Ok(fakeIbgeLocationsPage(items: const [])));
+          await Future<void>.delayed(Duration.zero);
+        },
+        verify: (cubit) {
+          expect(cubit.state.catalogCities, [fakeBrazilianCity()]);
+        },
+      );
+    });
 
     blocTest<PersonalDataCubit, PersonalDataState>(
       'a catalog failure is kept for the UI',

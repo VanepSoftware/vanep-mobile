@@ -9,9 +9,9 @@ import '../cubit/personal_data_cubit.dart';
 import '../formatters/personal_address_display.dart';
 import '../pages/personal_address_form_page.dart';
 
-Future<void> openPersonalAddressFormPage(BuildContext context) {
+Future<void> openPersonalAddressFormPage(BuildContext context) async {
   final cubit = context.read<PersonalDataCubit>();
-  return Navigator.of(context).push(
+  await Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => BlocProvider.value(
         value: cubit,
@@ -19,6 +19,7 @@ Future<void> openPersonalAddressFormPage(BuildContext context) {
       ),
     ),
   );
+  cubit.discardAddressDraft();
 }
 
 Future<void> confirmClearPersonalAddress(BuildContext context) async {

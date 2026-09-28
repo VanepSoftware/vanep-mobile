@@ -10,7 +10,7 @@ O app MUST NOT deixar a pessoa digitar o nome da cidade como texto livre no save
 
 O picker SHALL listar UFs em `GET /api/states` (página única cabe; o app MAY cachear) e municípios em `GET /api/cities?uf={UF}&search={texto}&page=&size=`. `uf` MUST ser enviado (2 letras). O app MUST NOT chamar `GET /api/cities` sem `uf`. UF inexistente (404) MUST mostrar erro localizado. Sem `uf` o back responde 400; o app não emite essa chamada. O back lista só municípios ativos.
 
-`search` é opcional; o back faz contains no nome sem acento. Em UFs grandes o app MUST buscar depois de 2 ou 3 caracteres ou paginar. O app MUST NOT criar município. O app MUST NOT mandar `stateToken` em nenhum write de endereço — só `cityToken`.
+`search` é opcional; o back faz contains no nome sem acento. A busca MUST ser debounceada (300 ms) e MUST NOT disparar uma consulta por caractere digitado. Em UFs grandes, buscar com só 2-3 caracteres pode devolver mais municípios do que cabem numa página; o app pede uma página maior (`size=50`, contra o `size=30` do picker de UF) para reduzir esse corte, sem paginação de verdade (sem "carregar mais"). O app MUST NOT criar município. O app MUST NOT mandar `stateToken` em nenhum write de endereço — só `cityToken`.
 
 Identidade pública da cidade é o `token` da lista (é o `cityToken`). `ibge_code` não vem na API.
 

@@ -108,6 +108,16 @@ void main() {
       expect(state.canSave, isFalse);
     });
 
+    test('a pending cep lookup blocks save even on a complete draft', () {
+      final state = readyState(
+        addressDraft: fakeCompleteDraft(),
+      ).copyWith(isLookingUpCep: true);
+
+      expect(state.addressDraft.isComplete, isTrue);
+      expect(state.isAddressSavable, isFalse);
+      expect(state.canSave, isFalse);
+    });
+
     test('a manual fallback after a city outside the catalog still saves', () {
       final state = readyState(
         addressDraft: const PostalAddressDraft()
