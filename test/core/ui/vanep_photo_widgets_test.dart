@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/media/photo_source.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
+import 'package:vanep_mobile/core/ui/vanep_cover_background.dart';
 import 'package:vanep_mobile/core/ui/vanep_editable_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_edit_badge.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_slot.dart';
@@ -138,5 +139,39 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(picked, PhotoSource.camera);
+  });
+
+  testWidgets('a cover without photo keeps the plain background', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      harness(const VanepCoverBackground(child: Text('Carlos'))),
+    );
+
+    expect(find.text('Carlos'), findsOneWidget);
+    expect(find.byType(Image), findsNothing);
+    expect(find.byType(VanepCoverScrim), findsNothing);
+  });
+
+  testWidgets('a cover with photo loads it behind a scrim', (tester) async {
+    final loader = MockApiImageLoader();
+    when(() => loader.loadBytes(any())).thenThrow(StateError('offline'));
+
+    await tester.pumpWidget(
+      harness(
+        const VanepCoverBackground(
+          photoUrl: '/api/vehicles/van-9/photo-front?v=1',
+          child: Text('Carlos'),
+        ),
+        loader: loader,
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Carlos'), findsOneWidget);
+    expect(find.byType(VanepCoverScrim), findsOneWidget);
+    verify(
+      () => loader.loadBytes('/api/vehicles/van-9/photo-front?v=1'),
+    ).called(1);
   });
 }

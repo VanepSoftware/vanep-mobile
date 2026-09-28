@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
@@ -24,6 +25,8 @@ class DriverProfilePage extends StatelessWidget {
       builder: (context, state) {
         final profile = state.profile;
         final failure = state.failure;
+        final onCover =
+            profile != null && driverProfileCoverPhotoUrl(profile) != null;
 
         return Scaffold(
           backgroundColor: VanepColors.card,
@@ -32,6 +35,8 @@ class DriverProfilePage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             elevation: 0,
+            foregroundColor: onCover ? VanepColors.card : null,
+            systemOverlayStyle: onCover ? SystemUiOverlayStyle.light : null,
           ),
           body: switch (state.status) {
             DriverProfileStatus.loading => const Center(

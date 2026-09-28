@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/l10n/app_localizations_pt.dart';
+import 'package:vanep_mobile/modules/drivers/data/dtos/driver_profile_dto.dart';
 import 'package:vanep_mobile/modules/drivers/domain/failures/driver_failure.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/formatters/driver_profile_formatters.dart';
 
@@ -37,5 +38,51 @@ void main() {
       driverProfileFailureLabel(l10n, const UnexpectedDriverFailure()),
       'Não foi possível carregar o motorista. Tente novamente.',
     );
+  });
+
+  test('the cover is the first van photo, front before side', () {
+    const noPhotos = DriverProfileVehicleDto(
+      token: 'van-0',
+      brand: 'Ford',
+      model: 'Transit',
+      manufactureYear: 2020,
+      color: 'Prata',
+      capacity: 12,
+    );
+    const sideOnly = DriverProfileVehicleDto(
+      token: 'van-1',
+      brand: 'Mercedes-Benz',
+      model: 'Sprinter',
+      manufactureYear: 2021,
+      color: 'Branca',
+      capacity: 15,
+      photoSideUrl: '/api/vehicles/van-1/photo-side?v=1',
+    );
+
+    expect(
+      driverProfileCoverPhotoUrl(
+        const DriverProfileDto(
+          token: 'driver-1',
+          name: 'Carlos',
+          vehicles: [noPhotos, sideOnly],
+        ),
+      ),
+      '/api/vehicles/van-1/photo-side?v=1',
+    );
+    expect(
+      driverProfileCoverPhotoUrl(
+        DriverProfileDto(
+          token: 'driver-1',
+          name: 'Carlos',
+          vehicles: [
+            sideOnly.copyWith(
+              photoFrontUrl: '/api/vehicles/van-1/photo-front?v=1',
+            ),
+          ],
+        ),
+      ),
+      '/api/vehicles/van-1/photo-front?v=1',
+    );
+    expect(driverProfileCoverPhotoUrl(testDriverProfile), isNull);
   });
 }

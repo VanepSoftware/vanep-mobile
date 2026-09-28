@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../core/ui/vanep_avatar.dart';
+import '../../../../core/ui/vanep_cover_background.dart';
 import '../../../../core/ui/vanep_photo_slot.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/driver_profile.dart';
@@ -16,21 +17,35 @@ class DriverProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topInset = MediaQuery.paddingOf(context).top + kToolbarHeight;
+    final coverPhotoUrl = driverProfileCoverPhotoUrl(profile);
+    final onCover = coverPhotoUrl != null;
 
-    return ColoredBox(
-      color: VanepColors.actionSurface,
+    return VanepCoverBackground(
+      photoUrl: coverPhotoUrl,
       child: Padding(
         padding: EdgeInsets.fromLTRB(20, topInset, 20, 24),
-        child: Column(
-          children: [
-            VanepAvatar(photoUrl: profile.photoUrl, size: 96),
-            const SizedBox(height: 16),
-            Text(
-              profile.name,
-              style: VanepTypography.heading,
-              textAlign: TextAlign.center,
-            ),
-          ],
+        child: Center(
+          child: Column(
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: onCover
+                      ? Border.all(color: VanepColors.card, width: 3)
+                      : null,
+                ),
+                child: VanepAvatar(photoUrl: profile.photoUrl, size: 96),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                profile.name,
+                style: onCover
+                    ? VanepTypography.heading.copyWith(color: VanepColors.card)
+                    : VanepTypography.heading,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

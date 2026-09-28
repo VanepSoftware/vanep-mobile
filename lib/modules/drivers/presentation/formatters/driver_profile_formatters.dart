@@ -25,3 +25,11 @@ String driverProfileFailureLabel(AppLocalizations l10n, DriverFailure failure) {
     UnexpectedDriverFailure() => l10n.driverProfileLoadError,
   };
 }
+
+String? driverProfileCoverPhotoUrl(DriverProfile profile) {
+  for (final vehicle in profile.vehicles) {
+    final photoUrl = vehicle.photoFrontUrl ?? vehicle.photoSideUrl;
+    if (photoUrl != null && photoUrl.isNotEmpty) return photoUrl;
+  }
+  return null;
+}
