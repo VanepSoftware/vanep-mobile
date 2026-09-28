@@ -1100,9 +1100,32 @@ void main() {
       },
     );
 
+    blocTest<PersonalDataCubit, PersonalDataState>(
+      'a rate-limited lookup also blocks save',
+      setUp: () {
+        when(() => lookupCep(any())).thenAnswer(
+          (_) async => const Err<CepFailure, CepLookup>(CepFailure.rateLimited),
+        );
+      },
+      build: buildCubit,
+      seed: () =>
+          readyState(addressDraft: const PostalAddressDraft().withNumber('10')),
+      act: (cubit) => cubit.updateZipCode('70040010'),
+      wait: cepLookupTestWait,
+      verify: (cubit) {
+        final state = cubit.state;
+        expect(state.cepFailure, CepFailure.rateLimited);
+        expect(state.addressDraft.isZipCodeUnknown, isTrue);
+        expect(state.addressDraft.number, '10');
+        expect(state.addressDraft.cityToken, '');
+        expect(state.addressDraft.isCityLocked, isFalse);
+        expect(state.isAddressSavable, isFalse);
+        verify(() => listStates()).called(1);
+      },
+    );
+
     for (final failure in [
       CepFailure.cityNotInCatalog,
-      CepFailure.rateLimited,
       CepFailure.unavailable,
       CepFailure.network,
       CepFailure.unexpected,
@@ -1363,48 +1386,51 @@ void main() {
       build: buildCubit,
       seed: () => readyState(
         addressDraft: const PostalAddressDraft().withCepUnavailable(),
-      ).copyWith(cepFailure: CepFailure.rateLimited),
+      ).copyWith(cepFailure: CepFailure.unavailable),
       act: (cubit) => cubit.selectCity(fakeBrazilianCity()),
       verify: (cubit) => expect(cubit.state.cepFailure, isNull),
     );
 
-    blocTest<PersonalDataCubit, PersonalDataState>(
-      'choosing a city after a CEP that does not exist keeps save blocked',
-      build: buildCubit,
-      seed: () => readyState(
-        addressDraft: fakeCompleteDraft(
-          cityToken: '',
-          cityName: '',
-          uf: '',
-        ).withCepUnknown().withStreet('QND 12'),
-      ).copyWith(cepFailure: CepFailure.notFound),
-      act: (cubit) => cubit.selectCity(fakeBrazilianCity()),
-      verify: (cubit) {
-        expect(cubit.state.cepFailure, CepFailure.notFound);
-        expect(cubit.state.addressDraft.isZipCodeUnknown, isTrue);
-        expect(cubit.state.isAddressSavable, isFalse);
-      },
-    );
+    for (final failure in [CepFailure.notFound, CepFailure.rateLimited]) {
+      blocTest<PersonalDataCubit, PersonalDataState>(
+        'choosing a city after a ${failure.name} CEP keeps save blocked',
+        build: buildCubit,
+        seed: () => readyState(
+          addressDraft: fakeCompleteDraft(
+            cityToken: '',
+            cityName: '',
+            uf: '',
+          ).withCepUnknown().withStreet('QND 12'),
+        ).copyWith(cepFailure: failure),
+        act: (cubit) => cubit.selectCity(fakeBrazilianCity()),
+        verify: (cubit) {
+          expect(cubit.state.cepFailure, failure);
+          expect(cubit.state.addressDraft.isZipCodeUnknown, isTrue);
+          expect(cubit.state.isAddressSavable, isFalse);
+        },
+      );
 
-    blocTest<PersonalDataCubit, PersonalDataState>(
-      'changing the uf after a CEP that does not exist keeps the failure',
-      setUp: () {
-        when(() => listCities(uf: 'DF')).thenAnswer(
-          (_) async => Ok(fakeIbgeLocationsPage(items: [fakeBrazilianCity()])),
-        );
-      },
-      build: buildCubit,
-      seed: () => readyState(
-        addressDraft: const PostalAddressDraft()
-            .withZipCode('00000000')
-            .withCepUnknown(),
-      ).copyWith(cepFailure: CepFailure.notFound),
-      act: (cubit) => cubit.selectUf('DF'),
-      verify: (cubit) {
-        expect(cubit.state.cepFailure, CepFailure.notFound);
-        expect(cubit.state.addressDraft.isZipCodeUnknown, isTrue);
-      },
-    );
+      blocTest<PersonalDataCubit, PersonalDataState>(
+        'changing the uf after a ${failure.name} CEP keeps the failure',
+        setUp: () {
+          when(() => listCities(uf: 'DF')).thenAnswer(
+            (_) async =>
+                Ok(fakeIbgeLocationsPage(items: [fakeBrazilianCity()])),
+          );
+        },
+        build: buildCubit,
+        seed: () => readyState(
+          addressDraft: const PostalAddressDraft()
+              .withZipCode('00000000')
+              .withCepUnknown(),
+        ).copyWith(cepFailure: failure),
+        act: (cubit) => cubit.selectUf('DF'),
+        verify: (cubit) {
+          expect(cubit.state.cepFailure, failure);
+          expect(cubit.state.addressDraft.isZipCodeUnknown, isTrue);
+        },
+      );
+    }
 
     blocTest<PersonalDataCubit, PersonalDataState>(
       'does not list cities without a uf',

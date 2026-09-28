@@ -3,6 +3,9 @@ import 'package:get_it/get_it.dart';
 
 import '../../core/environment/environment.dart';
 import '../../core/network/dio_client.dart';
+import '../ibge_locations/domain/usecases/list_cities.dart';
+import '../ibge_locations/domain/usecases/list_states.dart';
+import '../ibge_locations/domain/usecases/lookup_cep.dart';
 import 'data/datasources/dependent_remote_datasource.dart';
 import 'data/repositories/dependent_repository_impl.dart';
 import 'domain/entities/dependent.dart';
@@ -50,6 +53,9 @@ void registerDependentsDependencies(GetIt getIt) {
       (dependent, _) => DependentFormCubit(
         createDependent: getIt<CreateDependent>(),
         updateDependent: getIt<UpdateDependent>(),
+        lookupCep: getIt<LookupCep>(),
+        listStates: getIt<ListStates>(),
+        listCities: getIt<ListCities>(),
         dependent: dependent,
       ),
     );

@@ -127,17 +127,12 @@ Map<String, Object?> fakeIbgeLocationsPageJson({
 }
 
 Map<String, Object?> fakeCepNotFoundProblem() {
-  return {'detail': 'CEP não encontrado.'};
+  return {'detail': 'CEP não encontrado.', 'code': 'cep.not_found'};
 }
 
 Map<String, Object?> fakeCepCityNotInCatalogProblem() {
-  return {'detail': 'A cidade deste CEP não está no catálogo.'};
-}
-
-Map<String, Object?> fakeCepNotFoundProblemEn() {
-  return {'detail': 'CEP not found.'};
-}
-
-Map<String, Object?> fakeCepCityNotInCatalogProblemEn() {
-  return {'detail': 'This CEP city is not in the catalog.'};
+  return {
+    'detail': 'A cidade deste CEP não está no catálogo.',
+    'code': 'cep.ibge.not_found',
+  };
 }

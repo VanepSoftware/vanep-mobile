@@ -87,37 +87,6 @@ void main() {
     expect(result.errorOrNull, CepFailure.cityNotInCatalog);
   });
 
-  test(
-    'CEP 404 in English with not in the catalog is cityNotInCatalog',
-    () async {
-      when(() => remote.lookupCep(any())).thenThrow(
-        ibgeHttpFailure(
-          path: '/api/cep/70000000',
-          statusCode: 404,
-          data: fakeCepCityNotInCatalogProblemEn(),
-        ),
-      );
-
-      final result = await repository.lookupCep('70000000');
-
-      expect(result.errorOrNull, CepFailure.cityNotInCatalog);
-    },
-  );
-
-  test('CEP 404 in English with not found is notFound', () async {
-    when(() => remote.lookupCep(any())).thenThrow(
-      ibgeHttpFailure(
-        path: '/api/cep/00000000',
-        statusCode: 404,
-        data: fakeCepNotFoundProblemEn(),
-      ),
-    );
-
-    final result = await repository.lookupCep('00000000');
-
-    expect(result.errorOrNull, CepFailure.notFound);
-  });
-
   test('CEP 404 without a body is notFound', () async {
     when(
       () => remote.lookupCep(any()),

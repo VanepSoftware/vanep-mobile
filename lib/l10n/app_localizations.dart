@@ -1403,7 +1403,7 @@ abstract class AppLocalizations {
   /// No description provided for @dependentsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Who rides the van. Each contract binds one dependent.'**
+  /// **'Add and manage the people who ride the van.'**
   String get dependentsSubtitle;
 
   /// No description provided for @dependentsEmpty.
@@ -1508,12 +1508,6 @@ abstract class AppLocalizations {
   /// **'Gender'**
   String get dependentFieldGender;
 
-  /// No description provided for @dependentFieldGenderClear.
-  ///
-  /// In en, this message translates to:
-  /// **'Prefer not to say'**
-  String get dependentFieldGenderClear;
-
   /// No description provided for @dependentErrorNameRequired.
   ///
   /// In en, this message translates to:
@@ -1556,6 +1550,18 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get dependentFailureUnexpected;
 
+  /// No description provided for @dependentFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the details of who rides the van. Only the name is required.'**
+  String get dependentFormSubtitle;
+
+  /// No description provided for @dependentFailureCityNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not find that city. Choose the municipality again.'**
+  String get dependentFailureCityNotFound;
+
   /// No description provided for @dependentFieldAddress.
   ///
   /// In en, this message translates to:
@@ -1568,35 +1574,59 @@ abstract class AppLocalizations {
   /// **'No address set.'**
   String get dependentFieldAddressEmpty;
 
-  /// No description provided for @dependentFieldAddressSearchHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Search address'**
-  String get dependentFieldAddressSearchHint;
-
-  /// No description provided for @dependentFieldAddressNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Number'**
-  String get dependentFieldAddressNumber;
-
-  /// No description provided for @dependentFieldAddressComplement.
-  ///
-  /// In en, this message translates to:
-  /// **'Complement'**
-  String get dependentFieldAddressComplement;
-
   /// No description provided for @dependentFieldAddressRemove.
   ///
   /// In en, this message translates to:
-  /// **'Remove address'**
+  /// **'Clear address'**
   String get dependentFieldAddressRemove;
 
-  /// No description provided for @dependentAddressNotResolved.
+  /// No description provided for @dependentAddressRegisterAction.
   ///
   /// In en, this message translates to:
-  /// **'Could not resolve this address. Pick another suggestion.'**
-  String get dependentAddressNotResolved;
+  /// **'Add address'**
+  String get dependentAddressRegisterAction;
+
+  /// No description provided for @dependentAddressEditAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get dependentAddressEditAction;
+
+  /// No description provided for @dependentAddressMenuTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get dependentAddressMenuTooltip;
+
+  /// No description provided for @dependentAddressFormTitleNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get dependentAddressFormTitleNew;
+
+  /// No description provided for @dependentAddressFormTitleEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get dependentAddressFormTitleEdit;
+
+  /// No description provided for @dependentAddressFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the ZIP code and complete the dependent\'s address details.'**
+  String get dependentAddressFormSubtitle;
+
+  /// No description provided for @dependentAddressConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm address'**
+  String get dependentAddressConfirmAction;
+
+  /// No description provided for @dependentAddressIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the address to save.'**
+  String get dependentAddressIncomplete;
 
   /// No description provided for @profileGenderUnspecified.
   ///

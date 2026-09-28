@@ -15,7 +15,9 @@ abstract class DependentAddressDto
     @Default('') String street,
     String? number,
     String? complement,
-    String? district,
+    String? zipCode,
+    String? neighborhood,
+    @Default('') String cityToken,
     @Default('') String cityName,
     @Default('') String stateUf,
   }) = _DependentAddressDto;

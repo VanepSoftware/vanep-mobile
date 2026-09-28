@@ -26,6 +26,49 @@ O CEP, o picker de município e as regras de completude do rascunho são os de `
 - **THEN** o endereço é o formulário postal
 - **AND** não há campo de autocomplete do Places
 
+### Requirement: O endereço é editado numa tela própria, aberta por um cartão
+
+O formulário de dependente SHALL mostrar o endereço num cartão (`VanepAddressCard`, o mesmo componente do cartão de endereço residencial da conta), e não como campos soltos. Sem endereço, o cartão mostra o texto “sem endereço” e a ação de cadastrar. Com endereço, mostra o resumo (rua, número e complemento; bairro, município/UF e CEP) e um menu com Editar e Limpar endereço. Cadastrar e Editar abrem uma tela própria (`DependentAddressFormPage`) com o `VanepPostalAddressForm` e o `VanepCityPickerSheet`, no mesmo esqueleto da tela de endereço da conta.
+
+O botão da tela de endereço é **Confirmar endereço** e MUST NOT emitir request: ele só valida o rascunho e devolve a pessoa ao formulário de dependente, e quem grava é o Salvar do dependente, com um único POST/PATCH. Rascunho incompleto MUST mostrar o que falta na própria tela e MUST NOT fechá-la. CEP inexistente e lookup pendente MUST desabilitar o botão. Sair da tela sem confirmar (voltar) MUST descartar as edições e restaurar o endereço que a tela recebeu ao abrir, cancelando um lookup pendente.
+
+Limpar endereço no menu MUST tirar o endereço do rascunho sem request nem diálogo de confirmação, porque só o Salvar do dependente grava; o Salvar então envia `"address": null` se o dependente já tinha endereço. O cartão MUST mostrar a falha de cidade não encontrada (404) e o rascunho incompleto que impediria o Salvar, como texto de erro localizado.
+
+#### Scenario: Cadastrar o endereço pelo cartão
+
+- **WHEN** o dependente não tem endereço e o cliente toca em Cadastrar endereço
+- **THEN** abre a tela de endereço, com o título de cadastro
+- **AND** ao preencher o CEP e tocar em Confirmar endereço a tela fecha e o cartão mostra o resumo
+- **AND** nenhum request de dependente foi emitido
+
+#### Scenario: Editar o endereço pelo menu
+
+- **WHEN** o dependente tem endereço e o cliente escolhe Editar endereço no menu do cartão
+- **THEN** a tela abre com o endereço preenchido e o título de edição
+
+#### Scenario: Voltar sem confirmar descarta
+
+- **WHEN** o cliente altera o número na tela de endereço e volta sem confirmar
+- **THEN** o rascunho volta ao endereço que a tela recebeu
+- **AND** o cartão mostra o resumo de antes
+
+#### Scenario: Endereço incompleto não confirma
+
+- **WHEN** o cliente preencheu só a rua e toca em Confirmar endereço
+- **THEN** a tela mostra o que falta e continua aberta
+
+#### Scenario: Limpar pelo cartão
+
+- **WHEN** o dependente tem endereço e o cliente escolhe Limpar endereço e salva
+- **THEN** o cartão volta ao estado sem endereço
+- **AND** o PATCH traz `"address": null`
+
+#### Scenario: Cidade rejeitada pelo back aparece no cartão
+
+- **WHEN** o POST ou PATCH devolve 404 de cidade
+- **THEN** o cartão mostra o erro de cidade não encontrada
+- **AND** ao tocar em Editar a tela abre no fallback manual, com o município a escolher
+
 ### Requirement: Endereço é opcional; em branco significa sem endereço
 
 O app SHALL permitir salvar o dependente sem endereço, porque só `name` é obrigatório. Um rascunho de endereço **em branco** significa “sem endereço”. Um rascunho **parcialmente preenchido** e incompleto MUST bloquear o save com erro localizado por campo (cidade, rua, CEP) e MUST NOT enviar request. O back recusa `address` sem `cityToken`, `street` ou `zipCode` com 400; o app não deixa chegar lá.

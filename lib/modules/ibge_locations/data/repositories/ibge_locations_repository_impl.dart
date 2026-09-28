@@ -11,13 +11,6 @@ import '../../domain/failures/ibge_locations_failure.dart';
 import '../../domain/repositories/ibge_locations_repository.dart';
 import '../datasources/ibge_locations_remote_datasource.dart';
 
-const cityNotInCatalogMarkers = ['catálogo', 'catalog'];
-
-bool isCityNotInCatalogDetail(String detail) {
-  final normalized = detail.toLowerCase();
-  return cityNotInCatalogMarkers.any(normalized.contains);
-}
-
 CepFailure cepFailureFrom(DioException exception) {
   final status = exception.response?.statusCode;
   if (status == null) return CepFailure.network;
@@ -25,8 +18,8 @@ CepFailure cepFailureFrom(DioException exception) {
   if (status == 429) return CepFailure.rateLimited;
   if (status == 503) return CepFailure.unavailable;
   if (status == 404) {
-    final detail = readProblemDetail(exception.response?.data);
-    if (isCityNotInCatalogDetail(detail)) {
+    final code = readProblemCode(exception.response?.data);
+    if (code == 'cep.ibge.not_found') {
       return CepFailure.cityNotInCatalog;
     }
     return CepFailure.notFound;

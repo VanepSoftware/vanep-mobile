@@ -152,7 +152,7 @@ HTTP 200 (regra do rascunho, o que o cubit já faz):
 - mudar o CEP (8 dígitos de novo) consulta de novo e substitui cidade/UF/rua/bairro; o travamento do bairro segue o lookup novo; o cubit **ignora** as ações do usuário que a trava proíbe (`openCityPicker`, `selectUf`, `selectCity` com a cidade travada; `updateNeighborhood` com o bairro travado), sem depender de a UI esconder o controle
 - não emite write
 
-404 (município fora do catálogo), 429 e 503: mensagem localizada distinta e **destrava** o picker; o CEP digitado fica; rua, bairro, UF e município do lookup anterior saem e o bairro fica aberto; número e complemento ficam. 404 de **CEP inexistente** faz o mesmo **e** bloqueia o Salvar até trocar o CEP (escolher UF/município não limpa a falha). 400 de formato: não deveria sair do app se o cubit só consulta com 8 dígitos; ainda mapeia para falha de formato.
+404 (município fora do catálogo) e 503: mensagem localizada distinta e **destrava** o picker; o CEP digitado fica; rua, bairro, UF e município do lookup anterior saem e o bairro fica aberto; número e complemento ficam; o Salvar segue disponível pelo fallback assim que o rascunho ficar completo. 404 de **CEP inexistente** e **429** fazem o mesmo destravamento **e** bloqueiam o Salvar até trocar o CEP (escolher UF/município não limpa a falha) — o 429 entra nesse grupo porque a própria pessoa consegue provocá-lo (encadear consultas), então não pode ser um jeito de contornar o bloqueio do CEP inexistente. 400 de formato: não deveria sair do app se o cubit só consulta com 8 dígitos; ainda mapeia para falha de formato.
 
 O app MUST NOT chamar `viacep.com.br`.
 
@@ -191,11 +191,11 @@ Salvar MUST NOT emitir DELETE. Ficar sem casa é outra ação (D8).
 
 ### D6 — Falhas enumeradas e localizadas (R10)
 
-Mesmo molde das áreas: mapear status + `detail` (marcador de texto, porque o back não manda `code`) para um enum pequeno, depois ARB. Não renderizar a string do back no widget.
+Mesmo molde das áreas: mapear status (+ `code` quando o back manda, senão `detail` como marcador de texto) para um enum pequeno, depois ARB. Não renderizar a string do back no widget.
 
 Casa (`PersonalAddressFailure`): `cityNotFound` (PUT 404), `validation` (PUT 400, **sem** mapa por campo — o back não devolve; as pendências por campo vêm de `PostalAddressDraft.issues`), `network`, `unexpected`.
 
-CEP (`CepFailure`): `invalidFormat` (400), `notFound` (404 CEP), `cityNotInCatalog` (404 município), `rateLimited` (429), `unavailable` (503), `network`, `unexpected`. Distinguir os dois 404 pelo `detail` (marcadores `catálogo` e `catalog`, porque o back devolve a mensagem no idioma da requisição). `notFound` bloqueia o Salvar até o CEP mudar (D2); os outros 404, o 429 e o 503 só destravam o picker.
+CEP (`CepFailure`): `invalidFormat` (400), `notFound` (404 CEP), `cityNotInCatalog` (404 município), `rateLimited` (429), `unavailable` (503), `network`, `unexpected`. O back manda `code` nos dois 404 (`cep.ibge.not_found` para cidade fora do catálogo; o CEP inexistente cai em `notFound` por eliminação), então o app distingue pelo `code`, não mais por marcador de texto no `detail`. `notFound` e `rateLimited` bloqueiam o Salvar até o CEP mudar — o `rateLimited` entra nesse grupo porque a pessoa consegue provocá-lo de propósito e ele não pode virar atalho pra furar o bloqueio do CEP inexistente; `cityNotInCatalog` e `unavailable` só destravam o picker.
 
 IBGE (`IbgeLocationsFailure`): `ufMissing` (não emitir; defesa se 400), `ufNotFound` (404), `network`, `unexpected`.
 
@@ -212,7 +212,7 @@ Caps no client (espelho do Bean Validation, `PostalAddressLimits`): rua 255, nú
 - Limpar: `showVanepConfirmDialog(isDestructive: true)` → `cubit.clearAddress()`.
 - **Não** há `VanepPlaceAutocompleteField` nem `PlaceAutocompleteController` nessas telas.
 
-**Na pilha nova:** o comportamento acima é o alvo e **não muda**. O que muda é (a) onde o form e o picker moram — `PersonalAddressForm` e `PersonalAddressCityPickerSheet` leem `PersonalDataCubit` direto e o dependente não pode importá-los; nascem como `VanepPostalAddressForm` e `VanepCityPickerSheet` em core, apresentacionais (D12), e as telas de `auth` só os hospedam; (b) o visual (D13). O `PersonalDataInlineField` e o `PersonalDataGenderDropdown`/`ProfileGenderChoice` locais deixam de existir (D11, D13). O formatter `personal_address_display` continua (o cartão precisa da linha de resumo); o do dependente é outro (D14).
+**Na pilha nova:** o comportamento acima é o alvo e **não muda**. O que muda é (a) onde o form e o picker moram (e o cartão que abre a tela também sobe para core, `VanepAddressCard`, para a conta e o dependente terem o mesmo) — `PersonalAddressForm` e `PersonalAddressCityPickerSheet` leem `PersonalDataCubit` direto e o dependente não pode importá-los; nascem como `VanepPostalAddressForm` e `VanepCityPickerSheet` em core, apresentacionais (D12), e as telas de `auth` só os hospedam; (b) o visual (D13). O `PersonalDataInlineField` e o `PersonalDataGenderDropdown`/`ProfileGenderChoice` locais deixam de existir (D11, D13). O formatter `personal_address_display` continua (o cartão precisa da linha de resumo); o do dependente é outro (D14).
 
 **Rejeitado (o que eu tinha escrito antes de olhar o código):** formulário inline dentro da página de dados pessoais, sem cartão e sem tela própria. Contradiz a UI já implementada e validada.
 
@@ -267,7 +267,7 @@ DF/SP em área de atuação ainda exigem distrito no pin (`requires_district` / 
 - Enum continua `male` / `female` / `other`. Prefiro não informar **não** vira `UNSPECIFIED` no enum — o dono do fato é `null`, igual `Gender.fromApi` já faz. `Gender.toApi(null)` já devolve JSON `null`. O back aceita `"gender": null` no PATCH da conta e do dependente (`JsonNullable<Gender>` nos dois).
 - **Um** componente: `VanepGenderSelect` em `lib/core/ui/`, extraído do dropdown de `auth` (mesma aparência de campo, `vanepInputDecoration`, rótulo acima; as quatro opções; `onChanged(Gender?)`). Justifica extrair agora: o select passa a ter **três** consumidores (dados pessoais, cadastro e dependente) — R06. Não é um `VanepSelect` genérico: só o de gênero.
 - `genderLabel` (core) passa a aceitar `Gender?` e devolve `profileGenderUnspecified` (“Prefiro não informar” / “Prefer not to say”) para `null`; `profileGenderLabel` de `auth` some se sobrar sem uso (R43).
-- Apagar `PersonalDataGenderDropdown`, `ProfileGenderChoice` (e `genderFromProfileGenderChoice`) e a chave `dependentFieldGenderClear`. O cadastro (`signup_page`) também passa ao select: `SignupForm.copyWith` ganha `clearGender`, `SignupCubit.updateGender(Gender?)` e a página usa `VanepGenderSelect`; “Prefiro não informar” omite a chave `gender` do `POST /api/auth/signup/{type}` (o campo é opcional). `PersonalDataGenderChips` e `profileGenderLabel` saem na fase 4 e `VanepGenderChips`, na fase 5, quando o formulário de dependente deixar de usá-lo.
+- Apagar `PersonalDataGenderDropdown`, `ProfileGenderChoice` (e `genderFromProfileGenderChoice`) e a chave `dependentFieldGenderClear`. O cadastro (`signup_page`) também passa ao select: `SignupForm.copyWith` ganha `clearGender`, `SignupCubit.updateGender(Gender?)` e a página usa `VanepGenderSelect`; “Prefiro não informar” omite a chave `gender` do `POST /api/auth/signup/{type}` (o campo é opcional). `PersonalDataGenderChips` e `profileGenderLabel` saem na fase 4 e `VanepGenderChips`, na fase 6, quando o formulário de dependente deixar de usá-lo.
 - Dependente: create com gênero omitido não manda a chave; update de gênero informado para omitido manda `"gender": null`.
 
 **Rejeitado:** quarto valor no enum (segunda fonte para o mesmo “ausente” do API). **Rejeitado:** manter chips no dependente. **Rejeitado:** `VanepSelect` genérico agora (um só uso concreto).
@@ -315,7 +315,7 @@ Telas do escopo:
 - **Dados pessoais** — fundo `card`, `VanepAppBar`; os campos passam a `VanepTextField` (nome e telefone editáveis; e-mail, documento e nascimento somente leitura) no lugar do sublinhado inline; gênero no `VanepGenderSelect`; `CooldownBadge` na linha do rótulo, colado no fim do campo (`labelTrailing`) com tokens novos; `PendingEmailBanner` mantém `warningSurface`; cartão de endereço num `VanepOutlinedPanel` (ações em `action`, “Limpar endereço” em `danger`); Salvar do perfil no `VanepBottomBar`.
 - **Tela de endereço da conta** — `VanepAppBar`, `VanepPostalAddressForm`, Salvar no `VanepBottomBar`.
 - **Lista de dependentes** — `VanepAppBar`; cada dependente num `VanepOutlinedPanel`, o padrão com `highlighted: true` e badge de padrão em tom de ação (`action` a 8% + texto `action`); “definir como padrão” em `action`; “adicionar” no `VanepBottomBar`. Estados de carga/erro/vazio no mesmo esqueleto.
-- **Formulário de dependente** — `VanepAppBar`, `VanepTextField` para nome, data de nascimento (campo somente leitura que abre o date picker, no lugar do `OutlinedButton`), `VanepGenderSelect`, `VanepPostalAddressForm` inline, Salvar no `VanepBottomBar`.
+- **Formulário de dependente** — `VanepAppBar`, `VanepTextField` para nome, data de nascimento (campo somente leitura que abre o date picker, no lugar do `OutlinedButton`), `VanepGenderSelect`, cartão de endereço (`VanepAddressCard`, o mesmo da conta) que abre a tela de endereço do dependente com o `VanepPostalAddressForm`, Salvar no `VanepBottomBar`.
 - **`EmailChangeSheet`** — já usa `VanepTextField` / `VanepPrimaryButton`; só revisar tokens (`action`, nada de `brand`).
 
 `VanepScreenBackground` e `VanepGlassCard` não são usados nessas telas. Os dois widgets **deixaram de existir**: a main (PR #69) apagou os dois junto com o tema escuro, e nenhuma tela do app os usa mais.
@@ -337,12 +337,14 @@ Os dois kits convivem e partem dos mesmos tokens claros (`card`, `action`, `text
 
 - `DependentAddressDto` lê `zipCode`, `neighborhood`, `cityToken`; ignora `district`. 
 - `dependentAddressToJson`: tocado + em branco → `null` explícito; tocado + preenchido → `postalAddressToJson(draft)` (D4). Nunca `placeId` / `sessionToken`.
-- Falhas: novo `DependentCityNotFoundFailure`. O 404 do POST é sempre cidade. No PATCH o 404 é ambíguo (`dependent.not_found` vs `city.not_found`, ambos `ResponseStatusException` com `detail` localizado, sem `code`): distingue-se por marcador de “cidade” no `detail` (mesma técnica de `districtRequiredMarker`); sem o marcador, continua `DependentNotFoundFailure`. `dependentFieldsByApiName['placeId']` sai. 400: `dependentFailureLabel` nunca renderiza o `detail` do back (é o texto genérico do Spring) — usa a copy localizada. 409 → `unexpected`.
+- Falhas: novo `DependentCityNotFoundFailure`. O 404 do POST é sempre cidade. No PATCH o 404 é ambíguo (`dependent.not_found` vs `city.not_found`, ambos `ResponseStatusException`); desde 2026-09-27 o back manda `code` nos dois, e o repositório distingue por `body['code'] == 'city.not_found'` (antes disso era marcador de “cidade” no `detail`, mesma técnica de `districtRequiredMarker` — ver R11). `dependentFieldsByApiName['placeId']` sai. 400: `dependentFailureLabel` nunca renderiza o `detail` do back (é o texto genérico do Spring) — usa a copy localizada. 409 → `unexpected`.
 
 **Apresentação.**
 
-- `DependentFormCubit` ganha `LookupCep`, `ListStates`, `ListCities`; o wiring de CEP/picker é o de D12. `choosePlace`, `changeAddressNumber`, `changeAddressComplement` e `removeAddress` saem; entram os updaters postais e `clearAddress` (rascunho volta a em branco). Estado ganha status do lookup, `CepFailure?`, picker e as pendências de endereço. O lookup de CEP segue a mesma semântica da conta (D4): trava cidade, substitui rua/bairro, destrava o picker na falha e bloqueia o Salvar em CEP inexistente — vem do `PostalAddressDraft`.
-- `DependentAddressField` (Places + resumo) é apagado; o form usa `VanepPostalAddressForm` direto. O form deixa de resolver `PlaceAutocompleteController` e de descartá-lo.
+- `DependentFormCubit` ganha `LookupCep`, `ListStates`, `ListCities`; o wiring de CEP/picker é o de D12. `choosePlace`, `changeAddressNumber`, `changeAddressComplement` e `removeAddress` saem; entram os updaters postais e `clearAddress` (rascunho volta a em branco). Estado ganha status do lookup, `CepFailure?`, picker e as pendências de endereço. O lookup de CEP segue a mesma semântica da conta (D4): trava cidade, substitui rua/bairro, destrava o picker na falha e bloqueia o Salvar em CEP inexistente ou rate limit — vem do `PostalAddressDraft`.
+- `DependentAddressField` (Places + resumo) é apagado. O endereço aparece no formulário como `DependentAddressCard` (sobre o `VanepAddressCard` de core, o mesmo componente do cartão da conta) e é editado em `DependentAddressFormPage`, que hospeda o `VanepPostalAddressForm` e o `VanepCityPickerSheet` sobre o mesmo `DependentFormCubit` (`BlocProvider.value`). O form deixa de resolver `PlaceAutocompleteController` e de descartá-lo.
+- **Confirmar, não salvar.** O botão da tela de endereço é “Confirmar endereço”: valida o rascunho (`confirmAddress`) e volta; não emite request, porque o endereço viaja no POST/PATCH do dependente. Voltar sem confirmar restaura o endereço que a tela recebeu (`replaceAddress`), e limpar no menu é `clearAddress` (sem diálogo: só o Salvar do dependente grava). O cartão deriva o erro do estado: `DependentCityNotFoundFailure` ou pendências do rascunho (`addressIssues`).
+- **Rejeitado (primeira versão da fase 6):** o formulário postal inline no formulário de dependente. Deixava as duas telas de endereço com padrões diferentes; a conta já tinha cartão + tela própria validados.
 - `dependentAddressLabel` passa a “rua, nº · complemento · bairro · Cidade - UF · CEP”. Sem endereço, a copy de “sem endereço”.
 - Copy Places do dependente sai do ARB (`dependentFieldAddressSearchHint`, entre outras); `dependentFieldGenderClear` sai (D11).
 
@@ -361,11 +363,11 @@ Os dois kits convivem e partem dos mesmos tokens claros (`card`, `action`, `text
 **R3 — PUT replace total apaga opcional omitido.** Esquecer `neighborhood` no JSON zera o bairro gravado. Vale para a casa **e** para o dependente.  
 *Mitigação:* `postalAddressToJson` é a única função que monta o body e sempre manda os três opcionais. Teste de DTO trava as chaves nos dois módulos.
 
-**R4 — CEP 429 por usuário.** Digitação sem debounce estoura o limite.  
-*Mitigação:* só consulta com 8 dígitos; debounce 400 ms; 429 abre o picker em vez de martelar de novo.
+**R4 — CEP 429 por usuário.** Digitação sem debounce estoura o limite. Além disso, como o 429 é por usuário (a pessoa consegue provocá-lo de propósito, ao contrário do 503), deixá-lo gravável pelo fallback abriria um jeito fácil de furar o bloqueio do CEP inexistente: bastava encadear consultas até estourar o limite.  
+*Mitigação:* só consulta com 8 dígitos; debounce 400 ms; 429 abre o picker em vez de martelar de novo; e, desde 2026-09-27, 429 bloqueia o Salvar junto com `notFound` em vez de cair no fallback gravável.
 
-**R5 — Dois 404 de CEP.** “CEP não encontrado” vs “cidade fora do catálogo” pedem copy diferente e o mesmo fallback (picker).  
-*Mitigação:* mapear pelo `detail`; teste de fixture para os dois.
+**R5 — Dois 404 de CEP.** “CEP não encontrado” vs “cidade fora do catálogo” pedem copy diferente, o mesmo picker mas Salvar diferente (o primeiro bloqueia, o segundo não).  
+*Mitigação:* mapear pelo `code` (`cep.ibge.not_found` identifica o segundo; o primeiro é o 404 sem esse `code`); teste de fixture para os dois.
 
 **R6 — Remoção do menu é visível só no CLIENT, mas o enum é global.** Apagar pela metade deixa `switch` exaustivo quebrado.  
 *Mitigação:* a fase de UI apaga enum, menu, switches, ARB e testes no mesmo conjunto.
@@ -382,8 +384,8 @@ Os dois kits convivem e partem dos mesmos tokens claros (`card`, `action`, `text
 **R10 — PATCH `"gender": null`.** O cubit manda a chave com `null` quando a pessoa escolhe Prefiro não informar.  
 *Mitigação:* teste de `ProfilePatchRequest` trava a chave com `null`; teste do body de dependente idem.
 
-**R11 — Marcadores de `detail` são texto localizado.** CEP (“catálogo”), cidade sem município (“município brasileiro”) e 404 de cidade do dependente (“cidade”) dependem do texto pt-BR do back; mudar a mensagem quebra o mapeamento. É o mesmo risco que `districtRequiredMarker` já corre.  
-*Mitigação:* marcadores como constantes nomeadas no repositório, um teste de fixture por marcador. Pedir ao back um campo `code` estável resolve de vez e não muda esta change.
+**R11 — Marcadores de `detail` são texto localizado.** Cidade sem município (“município brasileiro”) ainda depende do texto pt-BR do back; mudar a mensagem quebra o mapeamento. É o mesmo risco que `districtRequiredMarker` já corre. **Resolvido para CEP e para o 404 de cidade do dependente** (2026-09-27): o back passou a mandar `code` estável (`cep.ibge.not_found`, `city.not_found`, `dependent.not_found`) nesses dois pontos, e `ibge_locations_repository_impl.dart` / `dependent_repository_impl.dart` já leem `code` em vez de marcador de texto.  
+*Mitigação (pro que resta):* marcador como constante nomeada no repositório, um teste de fixture. Pedir ao back o mesmo campo `code` estável pra esse caso resolve de vez, como já resolveu os outros dois.
 
 **R12 — Mover o chrome de auth para core.** A movimentação é obrigatória (R02); o rename `Auth*` → `Vanep*` é escolha de nome (R39: `AuthAppBar` dentro de `lib/core/ui/` e usado por dependentes engana). Toca 4 páginas de auth (`account_type_page`, `email_code_verification_page`, `password_reset_page`, `signup_page`) e nenhum teste (nada em `test/` referencia essas classes).  
 *Mitigação:* movimentação pura, feita na fase 4, sem mudar aparência nem comportamento. A prova é `make test` verde sem editar nenhum teste e as 4 páginas mudando só import e nome de classe.
@@ -434,17 +436,18 @@ Seis fases. Uma camada por PR (R19) da 1 à 5; contrato e impl separados (R20). 
 | 1 | Domínio: `ibge_locations` + casa + `PostalAddressDraft` (core) — sem HTTP | — | — |
 | 2 | Dados: `ibge_locations` + casa, `postalAddressToJson`, `Environment` completo, DI | 1 | — |
 | 3 | Cubit de dados pessoais: carga, CEP, picker, save (PATCH→PUT), gênero `null`, DELETE | 2 | — |
-| 4 | UI: kit em core (chrome, select de gênero, form postal, picker) + dados pessoais e endereço na identidade nova + menu Endereços + 400 de cidade | 3 | — |
-| 5 | Dependentes: endereço postal ponta a ponta + select de gênero + identidade nova | 2, 4 + **API do dependente no ar** | — |
+| 4 | UI: kit em core (chrome, select de gênero, form postal, picker, cartão de endereço, card do CEP) + cadastro com o select de gênero + 400 de cidade | 3 | — |
+| 5 | Telas: dados pessoais e endereço da conta na identidade nova, com o flag de lookup no cubit, a hidratação da casa e a remoção do menu Endereços | 4 | — |
+| 6 | Dependentes: endereço postal ponta a ponta (cartão + tela de endereço) + select de gênero + identidade nova | 2, 5 + **API do dependente no ar** | — |
 
 Notas:
 
 - **Fase 1** ganha o rascunho compartilhado no lugar dos campos soltos (D12). **Fase 3** junta o que eram o cubit de carga, o de save e o DELETE, e já nasce sobre o rascunho.
-- **Fase 4** é o kit de UI em core (chrome, gênero — inclusive no cadastro —, formulário postal, picker, card do CEP). O 400 de cidade (`driver_search`, `driver_service_areas`) entra aqui só por ser pequeno e não ter fase própria. **Fase 5** são as telas de dados pessoais e endereço na identidade nova, com o flag de lookup no cubit, a hidratação da casa e a remoção do menu Endereços. A UI era uma fase só e passou de 5 mil linhas; o kit não depende de tela nenhuma e as telas o consomem.
+- **Fase 4** é o kit de UI em core (chrome, gênero — inclusive no cadastro —, formulário postal, picker, card do CEP, cartão de endereço). O 400 de cidade (`driver_search`, `driver_service_areas`) entra aqui só por ser pequeno e não ter fase própria. **Fase 5** são as telas de dados pessoais e endereço na identidade nova, com o flag de lookup no cubit, a hidratação da casa e a remoção do menu Endereços. A UI era uma fase só e passou de 5 mil linhas; o kit não depende de tela nenhuma e as telas o consomem.
 - **Fase 6** é a única que mistura camadas (D14). Como a 4 entrega o kit e a 5 a identidade das telas de conta, a 6 só os consome.
 - R20: contrato (fase 1) e impl (fase 2) continuam separados. R27a: parar depois de `make lint` / `make test` para validação no aparelho antes do commit.
 
  Open Questions
 
 - A aparência do `VanepGenderSelect` (dropdown ancorado no campo vs. bottom sheet de opções) fica para a validação em aparelho das fases 4 e 5 (R27a). Não muda contrato nem fases.
-- Se o back passar a mandar um `code` estável nos 400/404 de localização e de CEP, os marcadores de `detail` (R11) viram troca de uma linha por repositório. Não bloqueia nada.
+- ~~Se o back passar a mandar um `code` estável nos 400/404 de localização e de CEP, os marcadores de `detail` (R11) viram troca de uma linha por repositório.~~ Já aconteceu pro CEP e pro 404 de cidade do dependente (2026-09-27, ver R11). Falta só o 400 de cidade sem município (`districtRequiredMarker`); não bloqueia nada.
