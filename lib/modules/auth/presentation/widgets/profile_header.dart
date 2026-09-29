@@ -3,6 +3,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
+import '../../../../core/network/api_image.dart';
 import '../../../../core/ui/vanep_skeleton.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -155,7 +156,6 @@ class ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final url = photoUrl;
     return SizedBox(
       width: size,
       height: size,
@@ -165,9 +165,7 @@ class ProfileAvatar extends StatelessWidget {
           CircleAvatar(
             radius: size / 2,
             backgroundColor: VanepColors.avatarPlaceholder,
-            foregroundImage: (url != null && url.isNotEmpty)
-                ? NetworkImage(url)
-                : null,
+            foregroundImage: ApiImage.forPath(photoUrl),
             child: Icon(
               Icons.person_outline,
               size: size * 0.45,
