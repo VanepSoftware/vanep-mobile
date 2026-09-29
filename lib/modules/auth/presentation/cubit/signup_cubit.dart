@@ -54,8 +54,10 @@ class SignupCubit extends Cubit<SignupState> {
   void updateBirthDate(DateTime value) =>
       updateForm(state.form.copyWith(birthDate: value), AccountField.birthDate);
 
-  void updateGender(Gender value) =>
-      updateForm(state.form.copyWith(gender: value), AccountField.gender);
+  void updateGender(Gender? value) => updateForm(
+    state.form.copyWith(gender: value, clearGender: value == null),
+    AccountField.gender,
+  );
 
   void updateAcceptTerms(bool value) => updateForm(
     state.form.copyWith(acceptTerms: value),

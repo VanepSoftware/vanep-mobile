@@ -4,7 +4,7 @@ import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/value_objects/user_type.dart';
-import '../widgets/auth_page_chrome.dart';
+import '../../../../core/ui/vanep_page_chrome.dart';
 import 'signup_page.dart';
 
 typedef AccountTypeSelected =
@@ -31,11 +31,11 @@ class AccountTypePage extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: VanepColors.card,
-      appBar: const AuthAppBar(),
+      appBar: const VanepAppBar(),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         children: [
-          AuthPageHeader(
+          VanepPageHeader(
             title: l10n.signupChooseTypeTitle,
             subtitle: l10n.signupChooseTypeSubtitle,
           ),
@@ -120,11 +120,11 @@ class AccountTypeOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuthOutlinedPanel(
+    return VanepOutlinedPanel(
       onTap: onTap,
       child: Row(
         children: [
-          AuthIconBadge(icon: icon),
+          VanepIconBadge(icon: icon),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

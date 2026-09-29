@@ -37,10 +37,9 @@ void main() {
 
   test('FindMyDependents forwards a failure', () async {
     when(repository.findMyDependents).thenAnswer(
-      (_) async =>
-          const Err<DependentFailure, List<Dependent>>(
-            DependentNetworkFailure(),
-          ),
+      (_) async => const Err<DependentFailure, List<Dependent>>(
+        DependentNetworkFailure(),
+      ),
     );
 
     final result = await FindMyDependents(repository)();
@@ -77,12 +76,14 @@ void main() {
       draft: DependentDraft.fromDependent(testHelenaDependent).withName('Lena'),
     );
 
-    final captured = verify(
-      () => repository.updateDependent(
-        token: 'dep-helena',
-        changes: captureAny(named: 'changes'),
-      ),
-    ).captured.single as DependentChanges;
+    final captured =
+        verify(
+              () => repository.updateDependent(
+                token: 'dep-helena',
+                changes: captureAny(named: 'changes'),
+              ),
+            ).captured.single
+            as DependentChanges;
     expect(captured.touchedFields, {DependentField.name});
   });
 

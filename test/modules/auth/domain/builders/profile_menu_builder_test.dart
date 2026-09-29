@@ -24,7 +24,6 @@ void main() {
 
     expect(menuIds(menu), [
       ProfileMenuId.personalData,
-      ProfileMenuId.addresses,
       ProfileMenuId.paymentMethods,
       ProfileMenuId.settings,
       ProfileMenuId.privacySecurity,
@@ -32,7 +31,6 @@ void main() {
     ]);
     expect(enabled[ProfileMenuId.personalData], isTrue);
     expect(enabled[ProfileMenuId.signOut], isTrue);
-    expect(enabled[ProfileMenuId.addresses], isFalse);
     expect(enabled[ProfileMenuId.paymentMethods], isFalse);
     expect(menu.map((section) => section.title).toList(), [
       ProfileMenuSectionTitle.account,

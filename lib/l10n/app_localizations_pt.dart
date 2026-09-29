@@ -478,7 +478,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get profilePersonalData => 'Dados pessoais';
 
   @override
-  String get profileAddresses => 'Endereços';
+  String get personalDataSubtitle =>
+      'Confira e atualize os dados da sua conta e o endereço da sua casa.';
 
   @override
   String get profilePaymentMethods => 'Formas de pagamento';
@@ -759,7 +760,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dependentsSubtitle =>
-      'Quem viaja na van. Cada contrato vincula um dependente.';
+      'Cadastre e gerencie as pessoas que viajam na van.';
 
   @override
   String get dependentsEmpty => 'Você ainda não cadastrou nenhum dependente.';
@@ -828,9 +829,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dependentFieldGender => 'Sexo';
 
   @override
-  String get dependentFieldGenderClear => 'Não informar';
-
-  @override
   String get dependentErrorNameRequired => 'Informe o nome do dependente.';
 
   @override
@@ -855,24 +853,211 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dependentFailureUnexpected => 'Algo deu errado. Tente novamente.';
 
   @override
+  String get dependentFormSubtitle =>
+      'Informe os dados de quem viaja na van. Só o nome é obrigatório.';
+
+  @override
+  String get dependentFailureCityNotFound =>
+      'Não encontramos essa cidade. Escolha o município novamente.';
+
+  @override
   String get dependentFieldAddress => 'Endereço';
 
   @override
   String get dependentFieldAddressEmpty => 'Nenhum endereço informado.';
 
   @override
-  String get dependentFieldAddressSearchHint => 'Buscar endereço';
+  String get dependentFieldAddressRemove => 'Limpar endereço';
 
   @override
-  String get dependentFieldAddressNumber => 'Número';
+  String get dependentAddressRegisterAction => 'Cadastrar endereço';
 
   @override
-  String get dependentFieldAddressComplement => 'Complemento';
+  String get dependentAddressEditAction => 'Editar endereço';
 
   @override
-  String get dependentFieldAddressRemove => 'Remover endereço';
+  String get dependentAddressMenuTooltip => 'Mais opções';
 
   @override
-  String get dependentAddressNotResolved =>
-      'Não foi possível interpretar este endereço. Escolha outra sugestão.';
+  String get dependentAddressFormTitleNew => 'Cadastrar endereço';
+
+  @override
+  String get dependentAddressFormTitleEdit => 'Editar endereço';
+
+  @override
+  String get dependentAddressFormSubtitle =>
+      'Informe o CEP e complete os dados do endereço do dependente.';
+
+  @override
+  String get dependentAddressConfirmAction => 'Confirmar endereço';
+
+  @override
+  String get dependentAddressIncomplete =>
+      'Complete o endereço para poder salvar.';
+
+  @override
+  String get profileGenderUnspecified => 'Prefiro não informar';
+
+  @override
+  String get personalAddressCardTitle => 'Endereço';
+
+  @override
+  String get personalAddressEmpty => 'Nenhum endereço cadastrado.';
+
+  @override
+  String get postalAddressFieldNumber => 'Número';
+
+  @override
+  String get postalAddressFieldComplement => 'Complemento';
+
+  @override
+  String get postalAddressFieldStreet => 'Rua';
+
+  @override
+  String get postalAddressFieldNeighborhood => 'Bairro';
+
+  @override
+  String get postalAddressFieldZip => 'CEP';
+
+  @override
+  String get postalAddressFieldUf => 'UF';
+
+  @override
+  String get postalAddressFieldMunicipality => 'Município';
+
+  @override
+  String get postalAddressCitySearchHint => 'Buscar município';
+
+  @override
+  String get personalAddressClearAction => 'Limpar endereço';
+
+  @override
+  String get personalAddressClearTitle => 'Limpar endereço?';
+
+  @override
+  String get personalAddressClearMessage =>
+      'O endereço residencial será removido da conta.';
+
+  @override
+  String get personalAddressClearConfirm => 'Limpar';
+
+  @override
+  String get personalAddressClearSuccess => 'Endereço removido.';
+
+  @override
+  String get personalAddressFailureCityNotFound =>
+      'Cidade não encontrada no catálogo.';
+
+  @override
+  String get personalAddressFailureValidation =>
+      'Revise os campos do endereço e tente novamente.';
+
+  @override
+  String get personalAddressFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get personalAddressFailureUnexpected =>
+      'Algo deu errado. Tente novamente.';
+
+  @override
+  String get personalAddressRegisterAction => 'Cadastrar endereço';
+
+  @override
+  String get personalAddressCardMenuTooltip => 'Mais opções';
+
+  @override
+  String get personalAddressEditAction => 'Editar endereço';
+
+  @override
+  String get postalAddressHintUf => 'UF';
+
+  @override
+  String get personalAddressFormTitleNew => 'Cadastrar endereço';
+
+  @override
+  String get personalAddressFormTitleEdit => 'Editar endereço';
+
+  @override
+  String get personalAddressFormSubtitle =>
+      'Informe seu CEP e complete os dados do endereço.';
+
+  @override
+  String get personalAddressSaveAction => 'Salvar endereço';
+
+  @override
+  String get postalAddressHintZip => '00000-000';
+
+  @override
+  String get postalAddressHintStreet => 'Nome da rua ou avenida';
+
+  @override
+  String get postalAddressHintNumber => 'Nº';
+
+  @override
+  String get postalAddressHintComplement => 'Apto, bloco, referência';
+
+  @override
+  String get postalAddressHintNeighborhood => 'Ex: Centro';
+
+  @override
+  String get postalAddressHintCity => 'Selecione a cidade';
+
+  @override
+  String get postalAddressFieldRequiredError => 'Campo obrigatório.';
+
+  @override
+  String get postalAddressChooseUfFirst => 'Selecione o estado primeiro';
+
+  @override
+  String get postalAddressLookingUpCep => 'Consultando CEP';
+
+  @override
+  String get postalAddressCityPickerTitle => 'Selecionar cidade';
+
+  @override
+  String get postalAddressNoCitiesFound => 'Nenhuma cidade encontrada.';
+
+  @override
+  String get cepFailureInvalidFormat => 'CEP deve ter 8 dígitos.';
+
+  @override
+  String get cepFailureNotFound => 'CEP não encontrado.';
+
+  @override
+  String get cepFailureCityNotInCatalog =>
+      'Município deste CEP não está no catálogo.';
+
+  @override
+  String get cepFailureRateLimited =>
+      'Muitas consultas de CEP. Aguarde um momento.';
+
+  @override
+  String get cepFailureUnavailable =>
+      'Consulta de CEP indisponível. Preencha na mão.';
+
+  @override
+  String get cepFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get cepFailureUnexpected => 'Algo deu errado. Tente novamente.';
+
+  @override
+  String get ibgeLocationsFailureUfMissing => 'Escolha uma UF.';
+
+  @override
+  String get ibgeLocationsFailureUfNotFound => 'UF não encontrada.';
+
+  @override
+  String get ibgeLocationsFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get ibgeLocationsFailureUnexpected =>
+      'Algo deu errado. Tente novamente.';
+
+  @override
+  String get placesCityUnmatched =>
+      'Este município não corresponde ao catálogo. Escolha outra sugestão.';
 }
