@@ -13,7 +13,7 @@ import '../cubit/password_reset_cubit.dart';
 import '../cubit/password_reset_state.dart';
 import '../mappers/account_failure_l10n.dart';
 import '../widgets/account_text_field.dart';
-import '../widgets/auth_page_chrome.dart';
+import '../../../../core/ui/vanep_page_chrome.dart';
 import '../widgets/password_requirements_checklist.dart';
 import '../widgets/verification_code_field.dart';
 import 'email_code_verification_page.dart';
@@ -45,7 +45,7 @@ class PasswordResetPage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: VanepColors.card,
-          appBar: const AuthAppBar(),
+          appBar: const VanepAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
@@ -94,7 +94,7 @@ class PasswordResetEmailStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AuthPageHeader(
+        VanepPageHeader(
           icon: Icons.lock_reset_outlined,
           title: l10n.passwordResetTitle,
           subtitle: l10n.passwordResetEmailHint,
@@ -144,7 +144,7 @@ class PasswordResetCodeStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AuthPageHeader(
+        VanepPageHeader(
           icon: Icons.mark_email_read_outlined,
           title: l10n.passwordResetCodeTitle,
           subtitle: l10n.passwordResetCodeSentTo(state.email.trim()),

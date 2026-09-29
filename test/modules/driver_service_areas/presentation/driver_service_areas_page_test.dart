@@ -144,4 +144,26 @@ void main() {
 
     verify(() => cubit.removeDraft('place-qnl5')).called(1);
   });
+
+  testWidgets('an unmatched IBGE city asks for another suggestion', (
+    tester,
+  ) async {
+    seed(
+      const DriverServiceAreasState(
+        drafts: [testQnl5Draft],
+        failure: ServiceAreaFailure.cityUnmatched,
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(
+      find.text(
+        'Este município não corresponde ao catálogo. Escolha outra sugestão.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Nenhuma região cadastrada ainda.'), findsNothing);
+    expect(find.text('QNL 5'), findsOneWidget);
+  });
 }

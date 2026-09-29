@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/complete_google_signup.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/delete_my_personal_address.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/get_current_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/patch_user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.dart';
@@ -12,6 +14,7 @@ import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_google.da
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_up.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/upsert_my_personal_address.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/verify_email_code.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
@@ -37,6 +40,14 @@ class MockAuthCubit extends MockCubit<AuthState> implements AuthCubit {}
 class MockPatchUserProfile extends Mock implements PatchUserProfile {}
 
 class MockRequestEmailChange extends Mock implements RequestEmailChange {}
+
+class MockFindMyPersonalAddress extends Mock implements FindMyPersonalAddress {}
+
+class MockUpsertMyPersonalAddress extends Mock
+    implements UpsertMyPersonalAddress {}
+
+class MockDeleteMyPersonalAddress extends Mock
+    implements DeleteMyPersonalAddress {}
 
 class MockPersonalDataCubit extends MockCubit<PersonalDataState>
     implements PersonalDataCubit {}

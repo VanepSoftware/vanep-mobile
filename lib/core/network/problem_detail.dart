@@ -9,3 +9,9 @@ String readProblemField(Object? body) {
   final field = body['field'];
   return field is String ? field : '';
 }
+
+String readProblemCode(Object? body) {
+  if (body is! Map) return '';
+  final code = body['code'];
+  return code is String ? code : '';
+}

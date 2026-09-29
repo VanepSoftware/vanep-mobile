@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../domain/postal_address_draft.dart';
+
 String normalizeCertFingerprint(String sha1) {
   return sha1.replaceAll(':', '').replaceAll(' ', '').toUpperCase();
 }
@@ -73,6 +75,15 @@ class Environment {
 
   String get userProfileEmailChangeEndpoint =>
       '$authBaseUrl/api/user/me/email-change';
+
+  String get userPersonalAddressEndpoint => '$authBaseUrl/api/user/me/address';
+
+  String cepLookupEndpoint(String cep) =>
+      '$authBaseUrl/api/cep/${extractZipDigits(cep)}';
+
+  String get statesEndpoint => '$authBaseUrl/api/states';
+
+  String get citiesEndpoint => '$authBaseUrl/api/cities';
 
   String get driversEndpoint => '$authBaseUrl/api/drivers';
 

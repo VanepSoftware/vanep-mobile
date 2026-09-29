@@ -2,15 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/domain/gender.dart';
-import '../../../../core/formatters/gender_label.dart';
 import '../../../../core/formatters/phone_formatter.dart';
-import '../../../../l10n/app_localizations.dart';
-
-String profileGenderLabel(Gender? gender, AppLocalizations l10n) {
-  if (gender == null) return l10n.profileFieldEmpty;
-  return genderLabel(gender, l10n);
-}
 
 class ProfilePhoneInputFormatter extends TextInputFormatter {
   const ProfilePhoneInputFormatter();
