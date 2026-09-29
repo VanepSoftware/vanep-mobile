@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_glass_card.dart';
+import '../../../../core/ui/vanep_page_chrome.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/dependent.dart';
 import '../formatters/dependent_labels.dart';
@@ -26,7 +27,8 @@ class DependentCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final age = dependentAgeLabel(l10n, dependent.birthDate);
 
-    return VanepGlassCard(
+    return VanepOutlinedPanel(
+      highlighted: dependent.isDefault,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -65,12 +67,44 @@ class DependentCard extends StatelessWidget {
                 child: Text(
                   l10n.dependentsSetDefault,
                   style: VanepTypography.cardSubtitle.copyWith(
-                    color: VanepColors.brand,
+                    color: VanepColors.action,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget buildDependentCardSkeleton(BuildContext context) {
+  return const DependentCardSkeleton();
+}
+
+class DependentCardSkeleton extends StatelessWidget {
+  const DependentCardSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const VanepOutlinedPanel(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Bone.text(words: 2, fontSize: 16),
+                SizedBox(height: 4),
+                Bone.text(width: 72, fontSize: 13),
+                SizedBox(height: 4),
+                Bone.text(words: 4, fontSize: 13),
+              ],
+            ),
+          ),
+          SizedBox(width: 12),
+          Bone.icon(size: 24),
         ],
       ),
     );
@@ -87,13 +121,13 @@ class DependentDefaultBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: VanepColors.brand,
+        color: VanepColors.action.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         l10n.dependentsDefaultBadge,
         style: VanepTypography.cardSubtitle.copyWith(
-          color: VanepColors.backgroundDeep,
+          color: VanepColors.action,
           fontWeight: FontWeight.w700,
         ),
       ),

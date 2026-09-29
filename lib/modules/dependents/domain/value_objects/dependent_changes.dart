@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import '../entities/dependent.dart';
-import 'dependent_address_draft.dart';
 import 'dependent_draft.dart';
 
 class DependentChanges extends Equatable {
@@ -23,7 +22,7 @@ DependentChanges buildDependentChangesForCreate(DependentDraft draft) {
   final touched = <DependentField>{DependentField.name};
   if (hasText(draft.birthDate)) touched.add(DependentField.birthDate);
   if (draft.gender != null) touched.add(DependentField.gender);
-  if (draft.address?.carriesANewPlace ?? false) {
+  if (isDependentAddressEdited(draft, null)) {
     touched.add(DependentField.address);
   }
   return DependentChanges(draft: draft, touchedFields: touched);
@@ -44,23 +43,10 @@ DependentChanges buildDependentChangesForUpdate({
   if (draft.gender != snapshot.gender) {
     touched.add(DependentField.gender);
   }
-  if (addressWasEdited(draft.address, snapshot.address)) {
+  if (isDependentAddressEdited(draft, snapshot)) {
     touched.add(DependentField.address);
   }
   return DependentChanges(draft: draft, touchedFields: touched);
-}
-
-bool addressWasEdited(
-  DependentAddressDraft? draft,
-  DependentAddress? snapshot,
-) {
-  if (draft == null) return snapshot != null;
-  if (draft.carriesANewPlace) return true;
-  if (snapshot == null) return false;
-  return normalizeOptional(draft.number) !=
-          normalizeOptional(snapshot.number) ||
-      normalizeOptional(draft.complement) !=
-          normalizeOptional(snapshot.complement);
 }
 
 bool hasText(String? value) => value != null && value.trim().isNotEmpty;

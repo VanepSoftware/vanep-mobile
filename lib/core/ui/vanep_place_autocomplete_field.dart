@@ -6,6 +6,7 @@ import '../places/place_autocomplete_controller.dart';
 import '../places/place_autocomplete_failure.dart';
 import '../places/place_suggestion.dart';
 import '../result/result.dart';
+import 'vanep_text_field.dart';
 
 class PlaceSelection {
   const PlaceSelection({required this.suggestion, required this.sessionToken});
@@ -108,35 +109,13 @@ class VanepPlaceAutocompleteFieldState
           enabled: widget.enabled,
           onChanged: onQueryChanged,
           textInputAction: TextInputAction.search,
-          style: VanepTypography.cardSubtitle.copyWith(
+          style: VanepTypography.fieldValue.copyWith(
             color: VanepColors.textPrimary,
             fontSize: 15,
           ),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: VanepColors.searchField,
+          decoration: vanepInputDecoration(
             hintText: widget.hint,
-            hintStyle: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
-            prefixIcon: const Icon(
-              Icons.search,
-              color: VanepColors.textSecondary,
-            ),
-            contentPadding: const EdgeInsets.symmetric(vertical: 14),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(28),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(28),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(28),
-              borderSide: const BorderSide(
-                color: VanepColors.brand,
-                width: 1.5,
-              ),
-            ),
+            prefixIcon: Icons.search,
           ),
         ),
         if (message != null)
@@ -162,10 +141,7 @@ class VanepPlaceAutocompleteFieldState
         if (message == null && searched && suggestions.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: Text(
-              widget.emptyLabel,
-              style: VanepTypography.cardSubtitle,
-            ),
+            child: Text(widget.emptyLabel, style: VanepTypography.cardSubtitle),
           ),
         for (final suggestion in suggestions)
           ListTile(

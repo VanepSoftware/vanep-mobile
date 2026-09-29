@@ -407,10 +407,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navNotifications => 'Notifications';
 
   @override
-  String get navProfile => 'Profile';
+  String get comingSoon => 'Coming soon';
 
   @override
-  String get comingSoon => 'Coming soon';
+  String get navContracts => 'Contracts';
+
+  @override
+  String get navDependents => 'Dependents';
+
+  @override
+  String get navProposals => 'Proposals';
+
+  @override
+  String get navProposalsAndContracts => 'Proposals & contracts';
+
+  @override
+  String get clientHomeNoLinkedVanTitle => 'No linked van';
+
+  @override
+  String get clientHomeNoLinkedVanMessage =>
+      'You don\'t have a van yet. Find one that serves your area.';
+
+  @override
+  String get clientHomeFindVanButton => 'Find a van';
+
+  @override
+  String get driverVansMyVans => 'My vans';
+
+  @override
+  String get homeMenuTooltip => 'Open menu';
 
   @override
   String driverShiftStartsAt(String time) {
@@ -444,28 +469,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverShareLiveLocation => 'Share live location';
 
   @override
-  String get navProposals => 'Proposals';
-
-  @override
   String get navStudents => 'Students';
 
   @override
   String get profilePersonalData => 'Personal data';
 
   @override
-  String get profileAddresses => 'Addresses';
+  String get personalDataSubtitle =>
+      'Review and update your account details and your home address.';
 
   @override
   String get profilePaymentMethods => 'Payment methods';
 
   @override
   String get profileDependents => 'Manage dependents';
-
-  @override
-  String get profileVans => 'Vans';
-
-  @override
-  String get profileContracts => 'Contracts';
 
   @override
   String get profileProfessionalData => 'Professional data';
@@ -741,11 +758,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverSearchCoversWholeCity => 'Covers the whole city';
 
   @override
-  String get profileServiceAreas => 'Where you operate';
-
-  @override
   String get dependentsSubtitle =>
-      'Who rides the van. Each contract binds one dependent.';
+      'Add and manage the people who ride the van.';
 
   @override
   String get dependentsEmpty => 'You have not added any dependents yet.';
@@ -813,9 +827,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dependentFieldGender => 'Gender';
 
   @override
-  String get dependentFieldGenderClear => 'Prefer not to say';
-
-  @override
   String get dependentErrorNameRequired => 'Enter the dependent\'s name.';
 
   @override
@@ -841,24 +852,353 @@ class AppLocalizationsEn extends AppLocalizations {
       'Something went wrong. Please try again.';
 
   @override
+  String get dependentFormSubtitle =>
+      'Enter the details of who rides the van. Only the name is required.';
+
+  @override
+  String get dependentFailureCityNotFound =>
+      'We could not find that city. Choose the municipality again.';
+
+  @override
   String get dependentFieldAddress => 'Address';
 
   @override
   String get dependentFieldAddressEmpty => 'No address set.';
 
   @override
-  String get dependentFieldAddressSearchHint => 'Search address';
+  String get dependentFieldAddressRemove => 'Clear address';
 
   @override
-  String get dependentFieldAddressNumber => 'Number';
+  String get dependentAddressRegisterAction => 'Add address';
 
   @override
-  String get dependentFieldAddressComplement => 'Complement';
+  String get dependentAddressEditAction => 'Edit address';
 
   @override
-  String get dependentFieldAddressRemove => 'Remove address';
+  String get dependentAddressMenuTooltip => 'More options';
 
   @override
-  String get dependentAddressNotResolved =>
-      'Could not resolve this address. Pick another suggestion.';
+  String get dependentAddressFormTitleNew => 'Add address';
+
+  @override
+  String get dependentAddressFormTitleEdit => 'Edit address';
+
+  @override
+  String get dependentAddressFormSubtitle =>
+      'Enter the ZIP code and complete the dependent\'s address details.';
+
+  @override
+  String get dependentAddressConfirmAction => 'Confirm address';
+
+  @override
+  String get dependentAddressIncomplete => 'Complete the address to save.';
+
+  @override
+  String get profileGenderUnspecified => 'Prefer not to say';
+
+  @override
+  String get personalAddressCardTitle => 'Address';
+
+  @override
+  String get personalAddressEmpty => 'No home address registered yet.';
+
+  @override
+  String get postalAddressFieldNumber => 'Number';
+
+  @override
+  String get postalAddressFieldComplement => 'Complement';
+
+  @override
+  String get postalAddressFieldStreet => 'Street';
+
+  @override
+  String get postalAddressFieldNeighborhood => 'Neighborhood';
+
+  @override
+  String get postalAddressFieldZip => 'ZIP code';
+
+  @override
+  String get postalAddressFieldUf => 'State';
+
+  @override
+  String get postalAddressFieldMunicipality => 'City';
+
+  @override
+  String get postalAddressCitySearchHint => 'Search city';
+
+  @override
+  String get personalAddressClearAction => 'Clear address';
+
+  @override
+  String get personalAddressClearTitle => 'Clear address?';
+
+  @override
+  String get personalAddressClearMessage =>
+      'The home address will be removed from the account.';
+
+  @override
+  String get personalAddressClearConfirm => 'Clear';
+
+  @override
+  String get personalAddressClearSuccess => 'Address removed.';
+
+  @override
+  String get personalAddressFailureCityNotFound =>
+      'City not found in the catalog.';
+
+  @override
+  String get personalAddressFailureValidation =>
+      'Please review the address fields and try again.';
+
+  @override
+  String get personalAddressFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get personalAddressFailureUnexpected =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get personalAddressRegisterAction => 'Add address';
+
+  @override
+  String get personalAddressCardMenuTooltip => 'More options';
+
+  @override
+  String get personalAddressEditAction => 'Edit address';
+
+  @override
+  String get postalAddressHintUf => 'UF';
+
+  @override
+  String get personalAddressFormTitleNew => 'Add address';
+
+  @override
+  String get personalAddressFormTitleEdit => 'Edit address';
+
+  @override
+  String get personalAddressFormSubtitle =>
+      'Enter your ZIP code and complete the address details.';
+
+  @override
+  String get personalAddressSaveAction => 'Save address';
+
+  @override
+  String get postalAddressHintZip => '00000-000';
+
+  @override
+  String get postalAddressHintStreet => 'Street or avenue name';
+
+  @override
+  String get postalAddressHintNumber => 'No.';
+
+  @override
+  String get postalAddressHintComplement => 'Apt, block, landmark';
+
+  @override
+  String get postalAddressHintNeighborhood => 'e.g. Downtown';
+
+  @override
+  String get postalAddressHintCity => 'Select the city';
+
+  @override
+  String get postalAddressFieldRequiredError => 'Required field.';
+
+  @override
+  String get postalAddressChooseUfFirst => 'Select the state first';
+
+  @override
+  String get postalAddressLookingUpCep => 'Looking up ZIP code';
+
+  @override
+  String get postalAddressCityPickerTitle => 'Select city';
+
+  @override
+  String get postalAddressNoCitiesFound => 'No cities found.';
+
+  @override
+  String get cepFailureInvalidFormat => 'ZIP code must have 8 digits.';
+
+  @override
+  String get cepFailureNotFound => 'ZIP code not found.';
+
+  @override
+  String get cepFailureCityNotInCatalog =>
+      'This ZIP code city is not in the catalog.';
+
+  @override
+  String get cepFailureRateLimited =>
+      'Too many ZIP lookups. Please wait a moment.';
+
+  @override
+  String get cepFailureUnavailable =>
+      'ZIP lookup is unavailable. Please fill in the address.';
+
+  @override
+  String get cepFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get cepFailureUnexpected => 'Something went wrong. Please try again.';
+
+  @override
+  String get ibgeLocationsFailureUfMissing => 'Please choose a state.';
+
+  @override
+  String get ibgeLocationsFailureUfNotFound => 'State not found.';
+
+  @override
+  String get ibgeLocationsFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get ibgeLocationsFailureUnexpected =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get placesCityUnmatched =>
+      'This city does not match the catalog. Please choose another suggestion.';
+
+  @override
+  String driverProfileExperience(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count years of experience',
+      one: '1 year of experience',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String driverProfileRating(String rating) {
+    return '$rating / 5.0';
+  }
+
+  @override
+  String driverProfileVanTitle(String model, String year, String brand) {
+    return '$model $year · $brand';
+  }
+
+  @override
+  String driverProfileVanCapacity(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count seats',
+      one: '1 seat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get driverProfileVanPhotos => 'Van photos';
+
+  @override
+  String get driverProfileNoVan => 'This driver has not registered a van yet.';
+
+  @override
+  String get driverProfileAbout => 'About';
+
+  @override
+  String get driverProfileChatButton => 'Chat with the driver';
+
+  @override
+  String get driverProfileNotFound => 'This driver is no longer available.';
+
+  @override
+  String get driverProfileLoadError => 'Could not load this driver. Try again.';
+
+  @override
+  String get photoSourceGallery => 'Choose from gallery';
+
+  @override
+  String get photoSourceCamera => 'Take a photo';
+
+  @override
+  String get photoFailurePermissionDenied =>
+      'Allow access to your photos in the phone settings.';
+
+  @override
+  String get photoFailureTooLarge =>
+      'This photo is too large. Pick another one.';
+
+  @override
+  String get photoFailureUnsupportedType =>
+      'Unsupported format. Use JPG, PNG or WEBP.';
+
+  @override
+  String get photoFailureNetwork => 'No connection to the server. Try again.';
+
+  @override
+  String get photoFailureUnexpected => 'Could not send the photo. Try again.';
+
+  @override
+  String get profilePhotoChange => 'Change photo';
+
+  @override
+  String get profilePhotoUpdated => 'Photo updated.';
+
+  @override
+  String get driverVansRegisterIntro =>
+      'Register your van so clients can see its photos.';
+
+  @override
+  String get driverVanFieldPlate => 'Plate';
+
+  @override
+  String get driverVanFieldBrand => 'Brand';
+
+  @override
+  String get driverVanFieldModel => 'Model';
+
+  @override
+  String get driverVanFieldYear => 'Year';
+
+  @override
+  String get driverVanFieldColor => 'Color';
+
+  @override
+  String get driverVanFieldCapacity => 'Seats';
+
+  @override
+  String get driverVanFieldRequired => 'Required';
+
+  @override
+  String get driverVanPlateInvalid => 'Invalid plate. E.g. ABC1D23';
+
+  @override
+  String get driverVanYearInvalid => 'Invalid year';
+
+  @override
+  String get driverVanCapacityInvalid => 'At least 1 seat';
+
+  @override
+  String get driverVanRegister => 'Register van';
+
+  @override
+  String get driverVanRegistered => 'Van registered.';
+
+  @override
+  String get driverVanPhotoFront => 'Front';
+
+  @override
+  String get driverVanPhotoSide => 'Side';
+
+  @override
+  String get driverVanFailureDuplicatePlate =>
+      'This plate is already registered.';
+
+  @override
+  String get driverVanFailureInvalid => 'Check the van details.';
+
+  @override
+  String get driverVanFailureNetwork =>
+      'No connection to the server. Try again.';
+
+  @override
+  String get driverVanFailureUnexpected => 'Something went wrong. Try again.';
+
+  @override
+  String get driverVansLoadError => 'Could not load your van.';
 }

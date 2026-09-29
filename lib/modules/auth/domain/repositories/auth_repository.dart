@@ -15,6 +15,8 @@ abstract class AuthRepository {
 
   Future<Result<AuthFailure, AuthSession?>> currentSession();
 
+  Future<Result<AuthFailure, AuthSession?>> refreshSession();
+
   Future<Result<AuthFailure, void>> signOut();
 
   Future<Result<ProfileEditFailure, UserProfile>> refreshUserProfile();

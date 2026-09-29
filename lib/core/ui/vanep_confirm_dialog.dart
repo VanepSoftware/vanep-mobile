@@ -11,7 +11,7 @@ Future<bool> showVanepConfirmDialog({
   required String cancelLabel,
   bool isDestructive = false,
 }) async {
-  final confirmColor = isDestructive ? VanepColors.danger : VanepColors.brand;
+  final confirmColor = isDestructive ? VanepColors.danger : VanepColors.action;
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) {

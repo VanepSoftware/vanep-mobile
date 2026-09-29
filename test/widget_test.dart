@@ -16,6 +16,8 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
@@ -30,6 +32,7 @@ import 'package:vanep_mobile/shell/driver_shell.dart';
 
 import 'modules/auth/auth_fixtures.dart';
 import 'modules/auth/presentation/auth_presentation_mocks.dart';
+import 'modules/dependents/dependents_mocks.dart';
 import 'modules/drivers/drivers_fixtures.dart';
 import 'modules/drivers/presentation/drivers_presentation_mocks.dart';
 import 'modules/profile/profile_mocks.dart';
@@ -112,6 +115,12 @@ void main() {
       initialState: const ProfileSummaryState(),
     );
     when(() => driversCubit.loadRecentDrivers()).thenAnswer((_) async {});
+    final dependentsCubit = MockDependentsCubit();
+    whenListen(
+      dependentsCubit,
+      const Stream<DependentsState>.empty(),
+      initialState: const DependentsState(),
+    );
     final searchCubit = MockDriverSearchCubit();
     whenListen(
       searchCubit,
@@ -126,6 +135,7 @@ void main() {
       ..registerFactory<DriversCubit>(() => driversCubit)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
       ..registerFactory<DriverSearchCubit>(() => searchCubit)
+      ..registerFactory<DependentsCubit>(() => dependentsCubit)
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
@@ -141,7 +151,7 @@ void main() {
 
     expect(find.byType(ClientShell), findsOneWidget);
     expect(find.byType(DriverShell), findsNothing);
-    expect(find.text('Sugestões perto de você'), findsOneWidget);
+    expect(find.text('Nenhuma van vinculada'), findsOneWidget);
   });
 
   testWidgets('routes a driver session to the driver shell', (tester) async {

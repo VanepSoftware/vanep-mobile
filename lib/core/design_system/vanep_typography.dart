@@ -15,19 +15,19 @@ class VanepTypography {
   static const TextStyle tagline = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: VanepColors.foreground,
+    color: VanepColors.textSecondary,
   );
 
   static const TextStyle heading = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w700,
-    color: VanepColors.foreground,
+    color: VanepColors.textPrimary,
   );
 
   static const TextStyle body = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w400,
-    color: VanepColors.foreground,
+    color: VanepColors.textPrimary,
   );
 
   static const TextStyle button = TextStyle(
@@ -44,7 +44,7 @@ class VanepTypography {
   static const TextStyle sectionTitle = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w700,
-    color: VanepColors.brand,
+    color: VanepColors.textPrimary,
   );
 
   static const TextStyle cardTitle = TextStyle(
@@ -62,7 +62,7 @@ class VanepTypography {
   static const TextStyle ratingLabel = TextStyle(
     fontSize: 13,
     fontWeight: FontWeight.w700,
-    color: VanepColors.brand,
+    color: VanepColors.textPrimary,
   );
 
   static const TextStyle fieldLabel = TextStyle(
@@ -82,5 +82,11 @@ class VanepTypography {
     fontWeight: FontWeight.w600,
     letterSpacing: -0.3,
     color: VanepColors.textPrimary,
+  );
+
+  static const TextStyle linkAction = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+    color: VanepColors.action,
   );
 }

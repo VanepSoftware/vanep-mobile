@@ -31,6 +31,7 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource local;
   final GoogleIdTokenSource googleIdTokens;
   final DateTime Function() _now;
+  Future<Result<AuthFailure, AuthSession?>>? _refreshInFlight;
 
   @override
   Future<Result<AuthFailure, AuthSession>> signInWithPassword({
@@ -94,24 +95,17 @@ class AuthRepositoryImpl implements AuthRepository {
     final stored = await local.readSession();
     if (stored == null) return const Ok(null);
     if (!stored.isExpired(_now())) return Ok(stored);
+    return refreshSession();
+  }
 
-    try {
-      final token = await remote.refresh(stored.refreshToken);
-      final refreshed = sessionFromTokenResponse(
-        token: token,
-        profile: stored.profile,
-        now: _now(),
-        fallbackRefreshToken: stored.refreshToken,
-      );
-      await local.saveSession(refreshed);
-      return Ok(refreshed);
-    } on DioException catch (error) {
-      if (isDefinitiveAuthRejection(error)) {
-        await local.clearSession();
-        return const Ok(null);
-      }
-      return Ok(stored);
-    }
+  @override
+  Future<Result<AuthFailure, AuthSession?>> refreshSession() {
+    return _refreshInFlight ??=
+        exchangeStoredRefreshToken(
+          remote: remote,
+          local: local,
+          now: _now,
+        ).whenComplete(() => _refreshInFlight = null);
   }
 
   @override
@@ -163,6 +157,33 @@ bool isDefinitiveAuthRejection(DioException error) {
   return status == 400 || status == 401;
 }
 
+Future<Result<AuthFailure, AuthSession?>> exchangeStoredRefreshToken({
+  required OAuthRemoteDataSource remote,
+  required AuthLocalDataSource local,
+  required DateTime Function() now,
+}) async {
+  final stored = await local.readSession();
+  if (stored == null) return const Ok(null);
+
+  try {
+    final token = await remote.refresh(stored.refreshToken);
+    final refreshed = sessionFromTokenResponse(
+      token: token,
+      profile: stored.profile,
+      now: now(),
+      fallbackRefreshToken: stored.refreshToken,
+    );
+    await local.saveSession(refreshed);
+    return Ok(refreshed);
+  } on DioException catch (error) {
+    if (isDefinitiveAuthRejection(error)) {
+      await local.clearSession();
+      return const Ok(null);
+    }
+    return Ok(stored);
+  }
+}
+
 AuthSessionDto sessionFromTokenResponse({
   required TokenResponseDto token,
   required UserProfileDto profile,
@@ -192,13 +213,16 @@ Future<Result<ProfileEditFailure, UserProfile>> replaceStoredUserProfile({
   required AuthLocalDataSource local,
   required Future<UserProfileDto> Function() loadProfile,
 }) async {
-  final stored = await local.readSession();
-  if (stored == null) {
+  if (await local.readSession() == null) {
     return const Err(UnexpectedProfileEditFailure('no_session'));
   }
   try {
     final profile = await loadProfile();
-    await local.saveSession(stored.copyWith(profile: profile));
+    final current = await local.readSession();
+    if (current == null) {
+      return const Err(UnexpectedProfileEditFailure('no_session'));
+    }
+    await local.saveSession(current.copyWith(profile: profile));
     return Ok(profile);
   } on DioException catch (error) {
     return Err(mapProfileEditDioException(error));

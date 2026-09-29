@@ -13,6 +13,7 @@ import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_card.dart';
 
 class MockDriverSearchCubit extends MockCubit<DriverSearchState>
     implements DriverSearchCubit {}
@@ -31,7 +32,11 @@ const rankedResults = [
   DriverSearchResult(token: 'd4', name: 'Cidade inteira'),
 ];
 
-Widget harness(DriverSearchCubit cubit, PlaceAutocompleteController auto) {
+Widget harness(
+  DriverSearchCubit cubit,
+  PlaceAutocompleteController auto, {
+  ValueChanged<String>? onDriverSelected,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -43,7 +48,10 @@ Widget harness(DriverSearchCubit cubit, PlaceAutocompleteController auto) {
     locale: const Locale('pt'),
     home: BlocProvider<DriverSearchCubit>.value(
       value: cubit,
-      child: DriverSearchPage(autocomplete: auto),
+      child: DriverSearchPage(
+        autocomplete: auto,
+        onDriverSelected: onDriverSelected,
+      ),
     ),
   );
 }
@@ -55,8 +63,9 @@ void main() {
   setUp(() {
     cubit = MockDriverSearchCubit();
     final datasource = MockPlaceAutocompleteDataSource();
-    when(() => datasource.findSuggestions(any(), any()))
-        .thenAnswer((_) async => const Ok([]));
+    when(
+      () => datasource.findSuggestions(any(), any()),
+    ).thenAnswer((_) async => const Ok([]));
     autocomplete = PlaceAutocompleteController(datasource: datasource);
   });
 
@@ -76,6 +85,23 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.byType(TextField), findsOneWidget);
+  });
+
+  testWidgets('tapping a result opens that driver', (tester) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: rankedResults,
+      ),
+    );
+    final selected = <String>[];
+
+    await tester.pumpWidget(
+      harness(cubit, autocomplete, onDriverSelected: selected.add),
+    );
+    await tester.tap(find.text('Setor L Norte'));
+
+    expect(selected, ['d2']);
   });
 
   testWidgets('renders results in the order the API returned', (tester) async {
@@ -156,12 +182,12 @@ void main() {
     );
   });
 
-  testWidgets('shows progress while searching', (tester) async {
+  testWidgets('shows card skeletons while searching', (tester) async {
     seed(const DriverSearchState(status: DriverSearchStatus.searching));
 
     await tester.pumpWidget(harness(cubit, autocomplete));
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(DriverCardSkeleton), findsNWidgets(3));
   });
 
   testWidgets('a failed page keeps the results and offers a retry', (
@@ -179,7 +205,7 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.text('Exato QNL 5'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(DriverCardSkeleton), findsNothing);
 
     await tester.tap(find.text('Tentar novamente'));
     await tester.pumpAndSettle();
@@ -198,5 +224,29 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.text('Brasília · Taguatinga · QNL'), findsOneWidget);
+  });
+
+  testWidgets('an unmatched IBGE city is not shown as an empty result', (
+    tester,
+  ) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.failed,
+        failure: DriverSearchFailure.cityUnmatched,
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(
+      find.text(
+        'Este município não corresponde ao catálogo. Escolha outra sugestão.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Nenhum motorista atende este local ainda.'),
+      findsNothing,
+    );
   });
 }

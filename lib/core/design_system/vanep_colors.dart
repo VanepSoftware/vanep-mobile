@@ -3,40 +3,25 @@ import 'package:flutter/material.dart';
 class VanepColors {
   const VanepColors._();
 
-  static const Color backgroundDeep = Color(0xFF071D37);
-  static const Color backgroundMid = Color(0xFF0A2C50);
-  static const Color backgroundSoft = Color(0xFF103E6E);
-  static const Color foreground = Color(0xFFEAF4FB);
-  static const Color brand = Color(0xFF5CBCD6);
-
-  static const Color glowPrimary = Color(0x335CBCD6);
-  static const Color glowPrimaryFade = Color(0x005CBCD6);
-
-  static const Color glowSecondary = Color(0x2445A9C6);
-  static const Color glowSecondaryFade = Color(0x0045A9C6);
-
   static const Color surface = Color(0xFFF4F6F8);
   static const Color card = Color(0xFFFFFFFF);
-  static const Color searchField = Color(0xFFE4EAF0);
   static const Color textPrimary = Color(0xFF0B2038);
   static const Color textSecondary = Color(0xFF6B7A8C);
   static const Color textMuted = Color(0xFF9AA7B4);
   static const Color divider = Color(0xFFE1E7ED);
   static const Color ratingStar = Color(0xFFF5A623);
-  static const Color avatarPlaceholder = Color(0xFFD8E0E8);
-  static const Color navSelectedSurface = Color(0xFFDDE8F2);
-
-  static const Color surfaceGradientTop = Color(0xFFF6FAFD);
-  static const Color surfaceGradientBottom = Color(0xFFD7E7F5);
-  static const Color glassBorder = Color(0xFFFFFFFF);
-  static const Color glassTint = Color(0xFFCFE1F2);
+  static const Color avatarPlaceholder = Color(0xFFE8EAED);
   static const Color danger = Color(0xFFC4564A);
   static const Color warning = Color(0xFFC98A1F);
   static const Color warningSurface = Color(0xFFFBF0DA);
 
   static const Color action = Color(0xFF0B6BD3);
+  static const Color actionSurface = Color(0x140B6BD3);
   static const Color success = Color(0xFF1E8E5A);
   static const Color inputBorder = Color(0xFFDFE3E7);
   static const Color cardBorder = Color(0xFFE4E5E7);
   static const Color placeholder = Color(0xFF9AA0A6);
+
+  static const Color skeletonBase = Color(0xFFE6EAEF);
+  static const Color skeletonHighlight = Color(0xFFF5F7F9);
 }

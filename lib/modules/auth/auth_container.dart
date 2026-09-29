@@ -7,16 +7,24 @@ import '../../core/environment/environment.dart';
 import '../../core/network/auth_interceptor.dart';
 import '../../core/network/dio_client.dart';
 import '../../core/result/result.dart';
+import '../ibge_locations/domain/usecases/list_cities.dart';
+import '../ibge_locations/domain/usecases/list_states.dart';
+import '../ibge_locations/domain/usecases/lookup_cep.dart';
 import 'data/datasources/account_remote_datasource.dart';
 import 'data/datasources/auth_local_datasource.dart';
 import 'data/datasources/google_id_token_source.dart';
 import 'data/datasources/oauth_remote_datasource.dart';
+import 'data/datasources/personal_address_remote_datasource.dart';
 import 'data/datasources/user_profile_remote_datasource.dart';
 import 'data/repositories/account_repository_impl.dart';
 import 'data/repositories/auth_repository_impl.dart';
+import 'data/repositories/personal_address_repository_impl.dart';
 import 'domain/repositories/account_repository.dart';
 import 'domain/repositories/auth_repository.dart';
+import 'domain/repositories/personal_address_repository.dart';
 import 'domain/usecases/complete_google_signup.dart';
+import 'domain/usecases/delete_my_personal_address.dart';
+import 'domain/usecases/find_my_personal_address.dart';
 import 'domain/usecases/get_current_session.dart';
 import 'domain/usecases/patch_user_profile.dart';
 import 'domain/usecases/refresh_user_profile.dart';
@@ -28,6 +36,7 @@ import 'domain/usecases/sign_in_with_google.dart';
 import 'domain/usecases/sign_in_with_password.dart';
 import 'domain/usecases/sign_out.dart';
 import 'domain/usecases/sign_up.dart';
+import 'domain/usecases/upsert_my_personal_address.dart';
 import 'domain/usecases/verify_email_code.dart';
 import 'presentation/cubit/auth_cubit.dart';
 import 'presentation/cubit/code_resend_cooldown.dart';
@@ -159,11 +168,37 @@ void registerAuthDependencies(
     ..registerFactory<RequestEmailChange>(
       () => RequestEmailChange(getIt<AuthRepository>()),
     )
+    ..registerSingleton<PersonalAddressRemoteDataSource>(
+      PersonalAddressRemoteDataSource(
+        dio: getIt<Dio>(instanceName: authenticatedDioName),
+        environment: environment,
+      ),
+    )
+    ..registerSingleton<PersonalAddressRepository>(
+      PersonalAddressRepositoryImpl(
+        remote: getIt<PersonalAddressRemoteDataSource>(),
+      ),
+    )
+    ..registerFactory<FindMyPersonalAddress>(
+      () => FindMyPersonalAddress(getIt<PersonalAddressRepository>()),
+    )
+    ..registerFactory<UpsertMyPersonalAddress>(
+      () => UpsertMyPersonalAddress(getIt<PersonalAddressRepository>()),
+    )
+    ..registerFactory<DeleteMyPersonalAddress>(
+      () => DeleteMyPersonalAddress(getIt<PersonalAddressRepository>()),
+    )
     ..registerFactoryParam<PersonalDataCubit, SyncProfile, void>(
       (syncProfile, _) => PersonalDataCubit(
         refreshUserProfile: getIt<RefreshUserProfile>(),
         patchUserProfile: getIt<PatchUserProfile>(),
         requestEmailChange: getIt<RequestEmailChange>(),
+        findMyPersonalAddress: getIt<FindMyPersonalAddress>(),
+        upsertMyPersonalAddress: getIt<UpsertMyPersonalAddress>(),
+        deleteMyPersonalAddress: getIt<DeleteMyPersonalAddress>(),
+        lookupCep: getIt<LookupCep>(),
+        listStates: getIt<ListStates>(),
+        listCities: getIt<ListCities>(),
         syncProfile: syncProfile,
       ),
     )
@@ -183,7 +218,7 @@ Dio _buildAuthenticatedDio(GetIt getIt, Environment environment) {
       readAccessToken: () async =>
           (await getIt<AuthLocalDataSource>().readSession())?.accessToken,
       refreshAccessToken: () async {
-        final result = await getIt<AuthRepository>().currentSession();
+        final result = await getIt<AuthRepository>().refreshSession();
         return switch (result) {
           Ok(:final value) => value?.accessToken,
           Err() => null,

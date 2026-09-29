@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../domain/postal_address_draft.dart';
+
 String normalizeCertFingerprint(String sha1) {
   return sha1.replaceAll(':', '').replaceAll(' ', '').toUpperCase();
 }
@@ -74,15 +76,40 @@ class Environment {
   String get userProfileEmailChangeEndpoint =>
       '$authBaseUrl/api/user/me/email-change';
 
+  String get userPersonalAddressEndpoint => '$authBaseUrl/api/user/me/address';
+
+  String cepLookupEndpoint(String cep) =>
+      '$authBaseUrl/api/cep/${extractZipDigits(cep)}';
+
+  String get statesEndpoint => '$authBaseUrl/api/states';
+
+  String get citiesEndpoint => '$authBaseUrl/api/cities';
+
   String get driversEndpoint => '$authBaseUrl/api/drivers';
 
-  String get clientsMeEndpoint => '$authBaseUrl/api/clients/me';
+  String get driversRecommendedEndpoint => '$driversEndpoint/recommended';
+
+  String driverProfileEndpoint(String driverToken) =>
+      '$driversEndpoint/${Uri.encodeComponent(driverToken)}/profile';
+
+  String get clientsEndpoint => '$authBaseUrl/api/clients';
+
+  String get clientsMeEndpoint => '$clientsEndpoint/me';
 
   String get dependentsEndpoint => '$authBaseUrl/api/dependent';
 
   String get driversMeEndpoint => '$authBaseUrl/api/drivers/me';
 
-  String get assistantsMeEndpoint => '$authBaseUrl/api/assistants/me';
+  String get vehiclesEndpoint => '$authBaseUrl/api/vehicles';
+
+  String get myVehiclesEndpoint => '$vehiclesEndpoint/me';
+
+  String vehiclePhotoEndpoint(String vehicleToken, String slot) =>
+      '$vehiclesEndpoint/${Uri.encodeComponent(vehicleToken)}/$slot';
+
+  String get assistantsEndpoint => '$authBaseUrl/api/assistants';
+
+  String get assistantsMeEndpoint => '$assistantsEndpoint/me';
 
   String get placesAutocompleteEndpoint =>
       'https://places.googleapis.com/v1/places:autocomplete';

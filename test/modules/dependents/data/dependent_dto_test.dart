@@ -26,7 +26,10 @@ void main() {
           'street': 'QNL 5 Conjunto A',
           'number': '12',
           'complement': 'Casa',
-          'district': 'Taguatinga',
+          'zipCode': '72120120',
+          'neighborhood': 'Taguatinga',
+          'cityToken': 'city-brasilia',
+          'district': null,
           'cityName': 'Brasília',
           'stateUf': 'DF',
         },
@@ -39,8 +42,29 @@ void main() {
     expect(dependent.gender, Gender.female);
     expect(dependent.isDefault, isTrue);
     expect(dependent.address?.street, 'QNL 5 Conjunto A');
+    expect(dependent.address?.zipCode, '72120120');
+    expect(dependent.address?.neighborhood, 'Taguatinga');
+    expect(dependent.address?.cityToken, 'city-brasilia');
     expect(dependent.address?.cityName, 'Brasília');
     expect(dependent.address?.stateUf, 'DF');
+  });
+
+  test('a district sent by the API is ignored', () {
+    final dependent = DependentDto.fromJson(
+      dependentPayload(
+        address: {
+          'token': 'addr-1',
+          'street': 'Rua do Embarque',
+          'district': 'Asa Norte',
+          'cityToken': 'city-brasilia',
+          'cityName': 'Brasília',
+          'stateUf': 'DF',
+        },
+      ),
+    );
+
+    expect(dependent.address?.neighborhood, isNull);
+    expect(dependent.address?.street, 'Rua do Embarque');
   });
 
   test('reads a dependent without birth date, gender or address', () {
@@ -68,19 +92,22 @@ void main() {
     expect(dependent.isDefault, isFalse);
   });
 
-  test('an address without a district is read', () {
+  test('an address without the optional parts is read', () {
     final dependent = DependentDto.fromJson(
       dependentPayload(
         address: {
           'token': 'addr-1',
           'street': 'Rua do Embarque',
+          'zipCode': '72120120',
+          'cityToken': 'city-brasilia',
           'cityName': 'Brasília',
           'stateUf': 'DF',
         },
       ),
     );
 
-    expect(dependent.address?.district, isNull);
+    expect(dependent.address?.neighborhood, isNull);
     expect(dependent.address?.number, isNull);
+    expect(dependent.address?.complement, isNull);
   });
 }

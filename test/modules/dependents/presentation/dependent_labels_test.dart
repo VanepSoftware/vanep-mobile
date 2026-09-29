@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/l10n/app_localizations_pt.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
 
 import '../dependents_fixtures.dart';
@@ -10,20 +12,17 @@ void main() {
   final l10n = AppLocalizationsPt();
 
   group('dependentFailureLabel', () {
-    test('prefers the backend detail of a validation failure', () {
-      expect(
-        dependentFailureLabel(
-          l10n,
-          const DependentValidationFailure(detail: 'Nome inválido.'),
-        ),
-        'Nome inválido.',
-      );
-    });
-
-    test('falls back to the generic validation message', () {
+    test('a validation failure always reads as the localized message', () {
       expect(
         dependentFailureLabel(l10n, const DependentValidationFailure()),
         l10n.dependentFailureValidation,
+      );
+    });
+
+    test('a city the backend does not know has its own message', () {
+      expect(
+        dependentFailureLabel(l10n, const DependentCityNotFoundFailure()),
+        l10n.dependentFailureCityNotFound,
       );
     });
 
@@ -61,12 +60,19 @@ void main() {
         isTrue,
       );
       expect(
-        shouldShowDependentFailureFeedback(
-          const DependentValidationFailure(detail: 'Nome muito longo.'),
-        ),
+        shouldShowDependentFailureFeedback(const DependentValidationFailure()),
         isTrue,
       );
       expect(shouldShowDependentFailureFeedback(null), isFalse);
+    });
+
+    test('keeps the city failure on the municipality field', () {
+      expect(
+        shouldShowDependentFailureFeedback(
+          const DependentCityNotFoundFailure(),
+        ),
+        isFalse,
+      );
     });
   });
 
@@ -78,13 +84,13 @@ void main() {
       );
     });
 
-    test('joins street, number, complement, district and city', () {
+    test('joins street, number, complement, neighborhood, city and cep', () {
       expect(
         dependentAddressLabel(
           l10n,
           const TestDependentAddress(complement: 'Casa 2'),
         ),
-        'QNL 5 Conjunto A, 12 · Casa 2 · Taguatinga · Brasília - DF',
+        'QNL 5 Conjunto A, 12 · Casa 2 · Taguatinga · Brasília - DF · 72120-120',
       );
     });
 
@@ -92,9 +98,20 @@ void main() {
       expect(
         dependentAddressLabel(
           l10n,
-          const TestDependentAddress(number: '', district: null),
+          const TestDependentAddress(
+            number: '',
+            neighborhood: null,
+            zipCode: null,
+          ),
         ),
         'QNL 5 Conjunto A · Brasília - DF',
+      );
+    });
+
+    test('never shows a district', () {
+      expect(
+        dependentAddressLabel(l10n, const TestDependentAddress()),
+        isNot(contains('district')),
       );
     });
   });
@@ -125,6 +142,58 @@ void main() {
       expect(
         dependentAgeLabel(l10n, '2015-03-22', today: today),
         l10n.dependentsAgeYears(11),
+      );
+    });
+  });
+
+  group('catalog failure labels', () {
+    test('maps every cep failure to its message', () {
+      expect(
+        dependentCepFailureLabel(l10n, CepFailure.invalidFormat),
+        l10n.cepFailureInvalidFormat,
+      );
+      expect(
+        dependentCepFailureLabel(l10n, CepFailure.notFound),
+        l10n.cepFailureNotFound,
+      );
+      expect(
+        dependentCepFailureLabel(l10n, CepFailure.cityNotInCatalog),
+        l10n.cepFailureCityNotInCatalog,
+      );
+      expect(
+        dependentCepFailureLabel(l10n, CepFailure.rateLimited),
+        l10n.cepFailureRateLimited,
+      );
+      expect(
+        dependentCepFailureLabel(l10n, CepFailure.unavailable),
+        l10n.cepFailureUnavailable,
+      );
+      expect(
+        dependentCepFailureLabel(l10n, CepFailure.network),
+        l10n.cepFailureNetwork,
+      );
+      expect(
+        dependentCepFailureLabel(l10n, CepFailure.unexpected),
+        l10n.cepFailureUnexpected,
+      );
+    });
+
+    test('maps every catalog failure to its message', () {
+      expect(
+        dependentCatalogFailureLabel(l10n, IbgeLocationsFailure.ufMissing),
+        l10n.ibgeLocationsFailureUfMissing,
+      );
+      expect(
+        dependentCatalogFailureLabel(l10n, IbgeLocationsFailure.ufNotFound),
+        l10n.ibgeLocationsFailureUfNotFound,
+      );
+      expect(
+        dependentCatalogFailureLabel(l10n, IbgeLocationsFailure.network),
+        l10n.ibgeLocationsFailureNetwork,
+      );
+      expect(
+        dependentCatalogFailureLabel(l10n, IbgeLocationsFailure.unexpected),
+        l10n.ibgeLocationsFailureUnexpected,
       );
     });
   });

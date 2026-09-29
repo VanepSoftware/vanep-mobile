@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
@@ -12,9 +13,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_pa
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_card.dart';
 
 import '../dependents_fixtures.dart';
-
-class MockDependentsCubit extends MockCubit<DependentsState>
-    implements DependentsCubit {}
+import '../dependents_mocks.dart';
 
 Widget harness(DependentsCubit cubit) {
   return MaterialApp(
@@ -119,13 +118,25 @@ void main() {
     expect(find.textContaining('ano'), findsOneWidget);
   });
 
-  testWidgets('the first load shows a spinner', (tester) async {
+  testWidgets('the first load shows card placeholders', (tester) async {
     seed(const DependentsState(status: DependentsStatus.loading));
 
     await tester.pumpWidget(harness(cubit));
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(DependentCardSkeleton), findsNWidgets(3));
     expect(find.byType(DependentCard), findsNothing);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('the placeholders keep the shape of the real card', (
+    tester,
+  ) async {
+    seed(const DependentsState(status: DependentsStatus.loading));
+
+    await tester.pumpWidget(harness(cubit));
+
+    expect(find.byType(VanepPageHeader), findsOneWidget);
+    expect(find.byType(VanepOutlinedPanel), findsNWidgets(3));
   });
 
   testWidgets('a loading refresh keeps the cards on screen', (tester) async {
@@ -139,7 +150,7 @@ void main() {
     await tester.pumpWidget(harness(cubit));
 
     expect(find.byType(DependentCard), findsNWidgets(2));
-    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.byType(DependentCardSkeleton), findsNothing);
   });
 
   testWidgets('a single dependent offers no default control', (tester) async {
@@ -198,7 +209,10 @@ void main() {
 
     await tester.pumpWidget(harness(cubit));
 
-    expect(find.text('Não foi possível carregar seus dependentes.'), findsOneWidget);
+    expect(
+      find.text('Não foi possível carregar seus dependentes.'),
+      findsOneWidget,
+    );
     expect(find.text('Tentar novamente'), findsOneWidget);
     expect(
       find.text('Você ainda não cadastrou nenhum dependente.'),
@@ -214,5 +228,94 @@ void main() {
     await tester.tap(find.text('Tentar novamente'));
 
     verify(cubit.loadDependents).called(1);
+  });
+
+  group('identity', () {
+    testWidgets('uses the new chrome and none of the old', (tester) async {
+      seed(
+        const DependentsState(
+          status: DependentsStatus.ready,
+          dependents: [testHelenaDependent],
+        ),
+      );
+
+      await tester.pumpWidget(harness(cubit));
+
+      expect(find.byType(VanepAppBar), findsOneWidget);
+      expect(find.byType(VanepPageHeader), findsOneWidget);
+    });
+
+    testWidgets('each dependent sits in its own outlined panel', (
+      tester,
+    ) async {
+      seed(
+        const DependentsState(
+          status: DependentsStatus.ready,
+          dependents: [testHelenaDependent, testMiguelDependent],
+        ),
+      );
+
+      await tester.pumpWidget(harness(cubit));
+
+      expect(
+        find.descendant(
+          of: find.byType(DependentCard),
+          matching: find.byType(VanepOutlinedPanel),
+        ),
+        findsNWidgets(2),
+      );
+    });
+
+    testWidgets('only the default dependent has a highlighted panel', (
+      tester,
+    ) async {
+      seed(
+        const DependentsState(
+          status: DependentsStatus.ready,
+          dependents: [testHelenaDependent, testMiguelDependent],
+        ),
+      );
+
+      await tester.pumpWidget(harness(cubit));
+
+      final panels = tester
+          .widgetList<VanepOutlinedPanel>(find.byType(VanepOutlinedPanel))
+          .toList();
+      expect(panels.where((panel) => panel.highlighted), hasLength(1));
+      expect(panels, hasLength(2));
+    });
+
+    testWidgets('the add button lives in the bottom bar', (tester) async {
+      seed(const DependentsState(status: DependentsStatus.ready));
+
+      await tester.pumpWidget(harness(cubit));
+
+      expect(
+        find.descendant(
+          of: find.byType(VanepBottomBar),
+          matching: find.text('Adicionar dependente'),
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('no add button while the first load runs', (tester) async {
+      seed(const DependentsState(status: DependentsStatus.loading));
+
+      await tester.pumpWidget(harness(cubit));
+
+      expect(find.byType(VanepBottomBar), findsNothing);
+      expect(find.text('Gerenciar dependentes'), findsOneWidget);
+    });
+
+    testWidgets('no add button after the load failed', (tester) async {
+      seed(const DependentsState(status: DependentsStatus.loadFailed));
+
+      await tester.pumpWidget(harness(cubit));
+
+      expect(find.byType(VanepBottomBar), findsNothing);
+      expect(find.text('Gerenciar dependentes'), findsOneWidget);
+      expect(find.text('Tentar novamente'), findsOneWidget);
+    });
   });
 }

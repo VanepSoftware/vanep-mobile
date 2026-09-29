@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/environment/environment.dart';
 import '../dtos/driver_dto.dart';
+import '../dtos/driver_profile_dto.dart';
 
 class DriverRemoteDataSource {
   DriverRemoteDataSource({required this.dio, required this.environment});
@@ -11,12 +12,19 @@ class DriverRemoteDataSource {
 
   Future<List<DriverDto>> fetchRecentDrivers({required int limit}) async {
     final response = await dio.get<Map<String, dynamic>>(
-      environment.driversEndpoint,
-      queryParameters: {'size': limit, 'sort': 'createdAt,desc'},
+      environment.driversRecommendedEndpoint,
+      queryParameters: {'size': limit},
     );
     final content = response.data?['content'] as List<dynamic>? ?? const [];
     return content
         .map((item) => DriverDto.fromJson(item as Map<String, Object?>))
         .toList();
+  }
+
+  Future<DriverProfileDto> fetchProfile(String driverToken) async {
+    final response = await dio.get<Map<String, dynamic>>(
+      environment.driverProfileEndpoint(driverToken),
+    );
+    return DriverProfileDto.fromJson(response.data ?? const {});
   }
 }

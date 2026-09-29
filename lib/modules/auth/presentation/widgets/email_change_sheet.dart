@@ -144,7 +144,7 @@ class EmailChangeConfirmation extends StatelessWidget {
         const Icon(
           Icons.mark_email_read_outlined,
           size: 44,
-          color: VanepColors.brand,
+          color: VanepColors.action,
         ),
         const SizedBox(height: 16),
         Text(

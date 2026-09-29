@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/network/photo_uploader.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/profile/data/datasources/profile_summary_remote_datasource.dart';
@@ -25,6 +26,7 @@ void main() {
     remote = ProfileSummaryRemoteDataSource(
       dio: dio,
       environment: testEnvironment,
+      photoUploader: PhotoUploader(dio: dio),
     );
   });
 
@@ -118,6 +120,21 @@ void main() {
     expect(
       profileSummaryEndpointFor(UserType.assistant, testEnvironment),
       'http://10.0.2.2:8080/api/assistants/me',
+    );
+  });
+
+  test('each kind of profile uploads its photo to its own route', () {
+    expect(
+      profilePhotoEndpointFor(testClientSummaryDto, testEnvironment),
+      'http://10.0.2.2:8080/api/clients/client-summary-1/photo',
+    );
+    expect(
+      profilePhotoEndpointFor(testDriverSummaryDto, testEnvironment),
+      'http://10.0.2.2:8080/api/drivers/summary-token-1/photo',
+    );
+    expect(
+      profilePhotoEndpointFor(testAssistantSummaryDto, testEnvironment),
+      'http://10.0.2.2:8080/api/assistants/assistant-summary-1/photo',
     );
   });
 }

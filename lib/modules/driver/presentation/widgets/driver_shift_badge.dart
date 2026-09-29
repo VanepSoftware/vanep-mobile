@@ -12,13 +12,14 @@ class DriverShiftBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final label = onShift ? l10n.driverShiftOn : l10n.driverShiftOff;
-    final dotColor = onShift ? VanepColors.brand : VanepColors.textMuted;
+    final dotColor = onShift ? VanepColors.success : VanepColors.textMuted;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: VanepColors.searchField,
+        color: VanepColors.card,
         borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: VanepColors.cardBorder),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -26,10 +27,7 @@ class DriverShiftBadge extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: dotColor,
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: dotColor),
           ),
           const SizedBox(width: 8),
           Text(

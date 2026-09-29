@@ -800,17 +800,65 @@ abstract class AppLocalizations {
   /// **'Notifications'**
   String get navNotifications;
 
-  /// No description provided for @navProfile.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile'**
-  String get navProfile;
-
   /// No description provided for @comingSoon.
   ///
   /// In en, this message translates to:
   /// **'Coming soon'**
   String get comingSoon;
+
+  /// No description provided for @navContracts.
+  ///
+  /// In en, this message translates to:
+  /// **'Contracts'**
+  String get navContracts;
+
+  /// No description provided for @navDependents.
+  ///
+  /// In en, this message translates to:
+  /// **'Dependents'**
+  String get navDependents;
+
+  /// No description provided for @navProposals.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposals'**
+  String get navProposals;
+
+  /// No description provided for @navProposalsAndContracts.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposals & contracts'**
+  String get navProposalsAndContracts;
+
+  /// No description provided for @clientHomeNoLinkedVanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No linked van'**
+  String get clientHomeNoLinkedVanTitle;
+
+  /// No description provided for @clientHomeNoLinkedVanMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have a van yet. Find one that serves your area.'**
+  String get clientHomeNoLinkedVanMessage;
+
+  /// No description provided for @clientHomeFindVanButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a van'**
+  String get clientHomeFindVanButton;
+
+  /// No description provided for @driverVansMyVans.
+  ///
+  /// In en, this message translates to:
+  /// **'My vans'**
+  String get driverVansMyVans;
+
+  /// No description provided for @homeMenuTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open menu'**
+  String get homeMenuTooltip;
 
   /// No description provided for @driverShiftStartsAt.
   ///
@@ -854,12 +902,6 @@ abstract class AppLocalizations {
   /// **'Share live location'**
   String get driverShareLiveLocation;
 
-  /// No description provided for @navProposals.
-  ///
-  /// In en, this message translates to:
-  /// **'Proposals'**
-  String get navProposals;
-
   /// No description provided for @navStudents.
   ///
   /// In en, this message translates to:
@@ -872,11 +914,11 @@ abstract class AppLocalizations {
   /// **'Personal data'**
   String get profilePersonalData;
 
-  /// No description provided for @profileAddresses.
+  /// No description provided for @personalDataSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Addresses'**
-  String get profileAddresses;
+  /// **'Review and update your account details and your home address.'**
+  String get personalDataSubtitle;
 
   /// No description provided for @profilePaymentMethods.
   ///
@@ -889,18 +931,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage dependents'**
   String get profileDependents;
-
-  /// No description provided for @profileVans.
-  ///
-  /// In en, this message translates to:
-  /// **'Vans'**
-  String get profileVans;
-
-  /// No description provided for @profileContracts.
-  ///
-  /// In en, this message translates to:
-  /// **'Contracts'**
-  String get profileContracts;
 
   /// No description provided for @profileProfessionalData.
   ///
@@ -1370,16 +1400,10 @@ abstract class AppLocalizations {
   /// **'Covers the whole city'**
   String get driverSearchCoversWholeCity;
 
-  /// No description provided for @profileServiceAreas.
-  ///
-  /// In en, this message translates to:
-  /// **'Where you operate'**
-  String get profileServiceAreas;
-
   /// No description provided for @dependentsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Who rides the van. Each contract binds one dependent.'**
+  /// **'Add and manage the people who ride the van.'**
   String get dependentsSubtitle;
 
   /// No description provided for @dependentsEmpty.
@@ -1484,12 +1508,6 @@ abstract class AppLocalizations {
   /// **'Gender'**
   String get dependentFieldGender;
 
-  /// No description provided for @dependentFieldGenderClear.
-  ///
-  /// In en, this message translates to:
-  /// **'Prefer not to say'**
-  String get dependentFieldGenderClear;
-
   /// No description provided for @dependentErrorNameRequired.
   ///
   /// In en, this message translates to:
@@ -1532,6 +1550,18 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get dependentFailureUnexpected;
 
+  /// No description provided for @dependentFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the details of who rides the van. Only the name is required.'**
+  String get dependentFormSubtitle;
+
+  /// No description provided for @dependentFailureCityNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not find that city. Choose the municipality again.'**
+  String get dependentFailureCityNotFound;
+
   /// No description provided for @dependentFieldAddress.
   ///
   /// In en, this message translates to:
@@ -1544,35 +1574,599 @@ abstract class AppLocalizations {
   /// **'No address set.'**
   String get dependentFieldAddressEmpty;
 
-  /// No description provided for @dependentFieldAddressSearchHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Search address'**
-  String get dependentFieldAddressSearchHint;
-
-  /// No description provided for @dependentFieldAddressNumber.
-  ///
-  /// In en, this message translates to:
-  /// **'Number'**
-  String get dependentFieldAddressNumber;
-
-  /// No description provided for @dependentFieldAddressComplement.
-  ///
-  /// In en, this message translates to:
-  /// **'Complement'**
-  String get dependentFieldAddressComplement;
-
   /// No description provided for @dependentFieldAddressRemove.
   ///
   /// In en, this message translates to:
-  /// **'Remove address'**
+  /// **'Clear address'**
   String get dependentFieldAddressRemove;
 
-  /// No description provided for @dependentAddressNotResolved.
+  /// No description provided for @dependentAddressRegisterAction.
   ///
   /// In en, this message translates to:
-  /// **'Could not resolve this address. Pick another suggestion.'**
-  String get dependentAddressNotResolved;
+  /// **'Add address'**
+  String get dependentAddressRegisterAction;
+
+  /// No description provided for @dependentAddressEditAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get dependentAddressEditAction;
+
+  /// No description provided for @dependentAddressMenuTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get dependentAddressMenuTooltip;
+
+  /// No description provided for @dependentAddressFormTitleNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get dependentAddressFormTitleNew;
+
+  /// No description provided for @dependentAddressFormTitleEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get dependentAddressFormTitleEdit;
+
+  /// No description provided for @dependentAddressFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the ZIP code and complete the dependent\'s address details.'**
+  String get dependentAddressFormSubtitle;
+
+  /// No description provided for @dependentAddressConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm address'**
+  String get dependentAddressConfirmAction;
+
+  /// No description provided for @dependentAddressIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the address to save.'**
+  String get dependentAddressIncomplete;
+
+  /// No description provided for @profileGenderUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get profileGenderUnspecified;
+
+  /// No description provided for @personalAddressCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get personalAddressCardTitle;
+
+  /// No description provided for @personalAddressEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No home address registered yet.'**
+  String get personalAddressEmpty;
+
+  /// No description provided for @postalAddressFieldNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get postalAddressFieldNumber;
+
+  /// No description provided for @postalAddressFieldComplement.
+  ///
+  /// In en, this message translates to:
+  /// **'Complement'**
+  String get postalAddressFieldComplement;
+
+  /// No description provided for @postalAddressFieldStreet.
+  ///
+  /// In en, this message translates to:
+  /// **'Street'**
+  String get postalAddressFieldStreet;
+
+  /// No description provided for @postalAddressFieldNeighborhood.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighborhood'**
+  String get postalAddressFieldNeighborhood;
+
+  /// No description provided for @postalAddressFieldZip.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP code'**
+  String get postalAddressFieldZip;
+
+  /// No description provided for @postalAddressFieldUf.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get postalAddressFieldUf;
+
+  /// No description provided for @postalAddressFieldMunicipality.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get postalAddressFieldMunicipality;
+
+  /// No description provided for @postalAddressCitySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search city'**
+  String get postalAddressCitySearchHint;
+
+  /// No description provided for @personalAddressClearAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear address'**
+  String get personalAddressClearAction;
+
+  /// No description provided for @personalAddressClearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear address?'**
+  String get personalAddressClearTitle;
+
+  /// No description provided for @personalAddressClearMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The home address will be removed from the account.'**
+  String get personalAddressClearMessage;
+
+  /// No description provided for @personalAddressClearConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get personalAddressClearConfirm;
+
+  /// No description provided for @personalAddressClearSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Address removed.'**
+  String get personalAddressClearSuccess;
+
+  /// No description provided for @personalAddressFailureCityNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'City not found in the catalog.'**
+  String get personalAddressFailureCityNotFound;
+
+  /// No description provided for @personalAddressFailureValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please review the address fields and try again.'**
+  String get personalAddressFailureValidation;
+
+  /// No description provided for @personalAddressFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get personalAddressFailureNetwork;
+
+  /// No description provided for @personalAddressFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get personalAddressFailureUnexpected;
+
+  /// No description provided for @personalAddressRegisterAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get personalAddressRegisterAction;
+
+  /// No description provided for @personalAddressCardMenuTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get personalAddressCardMenuTooltip;
+
+  /// No description provided for @personalAddressEditAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get personalAddressEditAction;
+
+  /// No description provided for @postalAddressHintUf.
+  ///
+  /// In en, this message translates to:
+  /// **'UF'**
+  String get postalAddressHintUf;
+
+  /// No description provided for @personalAddressFormTitleNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get personalAddressFormTitleNew;
+
+  /// No description provided for @personalAddressFormTitleEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit address'**
+  String get personalAddressFormTitleEdit;
+
+  /// No description provided for @personalAddressFormSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your ZIP code and complete the address details.'**
+  String get personalAddressFormSubtitle;
+
+  /// No description provided for @personalAddressSaveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Save address'**
+  String get personalAddressSaveAction;
+
+  /// No description provided for @postalAddressHintZip.
+  ///
+  /// In en, this message translates to:
+  /// **'00000-000'**
+  String get postalAddressHintZip;
+
+  /// No description provided for @postalAddressHintStreet.
+  ///
+  /// In en, this message translates to:
+  /// **'Street or avenue name'**
+  String get postalAddressHintStreet;
+
+  /// No description provided for @postalAddressHintNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'No.'**
+  String get postalAddressHintNumber;
+
+  /// No description provided for @postalAddressHintComplement.
+  ///
+  /// In en, this message translates to:
+  /// **'Apt, block, landmark'**
+  String get postalAddressHintComplement;
+
+  /// No description provided for @postalAddressHintNeighborhood.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Downtown'**
+  String get postalAddressHintNeighborhood;
+
+  /// No description provided for @postalAddressHintCity.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the city'**
+  String get postalAddressHintCity;
+
+  /// No description provided for @postalAddressFieldRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'Required field.'**
+  String get postalAddressFieldRequiredError;
+
+  /// No description provided for @postalAddressChooseUfFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the state first'**
+  String get postalAddressChooseUfFirst;
+
+  /// No description provided for @postalAddressLookingUpCep.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking up ZIP code'**
+  String get postalAddressLookingUpCep;
+
+  /// No description provided for @postalAddressCityPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select city'**
+  String get postalAddressCityPickerTitle;
+
+  /// No description provided for @postalAddressNoCitiesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No cities found.'**
+  String get postalAddressNoCitiesFound;
+
+  /// No description provided for @cepFailureInvalidFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP code must have 8 digits.'**
+  String get cepFailureInvalidFormat;
+
+  /// No description provided for @cepFailureNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP code not found.'**
+  String get cepFailureNotFound;
+
+  /// No description provided for @cepFailureCityNotInCatalog.
+  ///
+  /// In en, this message translates to:
+  /// **'This ZIP code city is not in the catalog.'**
+  String get cepFailureCityNotInCatalog;
+
+  /// No description provided for @cepFailureRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many ZIP lookups. Please wait a moment.'**
+  String get cepFailureRateLimited;
+
+  /// No description provided for @cepFailureUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP lookup is unavailable. Please fill in the address.'**
+  String get cepFailureUnavailable;
+
+  /// No description provided for @cepFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get cepFailureNetwork;
+
+  /// No description provided for @cepFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get cepFailureUnexpected;
+
+  /// No description provided for @ibgeLocationsFailureUfMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose a state.'**
+  String get ibgeLocationsFailureUfMissing;
+
+  /// No description provided for @ibgeLocationsFailureUfNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'State not found.'**
+  String get ibgeLocationsFailureUfNotFound;
+
+  /// No description provided for @ibgeLocationsFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get ibgeLocationsFailureNetwork;
+
+  /// No description provided for @ibgeLocationsFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get ibgeLocationsFailureUnexpected;
+
+  /// No description provided for @placesCityUnmatched.
+  ///
+  /// In en, this message translates to:
+  /// **'This city does not match the catalog. Please choose another suggestion.'**
+  String get placesCityUnmatched;
+
+  /// No description provided for @driverProfileExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 year of experience} other{{count} years of experience}}'**
+  String driverProfileExperience(int count);
+
+  /// No description provided for @driverProfileRating.
+  ///
+  /// In en, this message translates to:
+  /// **'{rating} / 5.0'**
+  String driverProfileRating(String rating);
+
+  /// No description provided for @driverProfileVanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{model} {year} · {brand}'**
+  String driverProfileVanTitle(String model, String year, String brand);
+
+  /// No description provided for @driverProfileVanCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 seat} other{{count} seats}}'**
+  String driverProfileVanCapacity(int count);
+
+  /// No description provided for @driverProfileVanPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Van photos'**
+  String get driverProfileVanPhotos;
+
+  /// No description provided for @driverProfileNoVan.
+  ///
+  /// In en, this message translates to:
+  /// **'This driver has not registered a van yet.'**
+  String get driverProfileNoVan;
+
+  /// No description provided for @driverProfileAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get driverProfileAbout;
+
+  /// No description provided for @driverProfileChatButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with the driver'**
+  String get driverProfileChatButton;
+
+  /// No description provided for @driverProfileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This driver is no longer available.'**
+  String get driverProfileNotFound;
+
+  /// No description provided for @driverProfileLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this driver. Try again.'**
+  String get driverProfileLoadError;
+
+  /// No description provided for @photoSourceGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get photoSourceGallery;
+
+  /// No description provided for @photoSourceCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get photoSourceCamera;
+
+  /// No description provided for @photoFailurePermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow access to your photos in the phone settings.'**
+  String get photoFailurePermissionDenied;
+
+  /// No description provided for @photoFailureTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'This photo is too large. Pick another one.'**
+  String get photoFailureTooLarge;
+
+  /// No description provided for @photoFailureUnsupportedType.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported format. Use JPG, PNG or WEBP.'**
+  String get photoFailureUnsupportedType;
+
+  /// No description provided for @photoFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Try again.'**
+  String get photoFailureNetwork;
+
+  /// No description provided for @photoFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not send the photo. Try again.'**
+  String get photoFailureUnexpected;
+
+  /// No description provided for @profilePhotoChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change photo'**
+  String get profilePhotoChange;
+
+  /// No description provided for @profilePhotoUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo updated.'**
+  String get profilePhotoUpdated;
+
+  /// No description provided for @driverVansRegisterIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Register your van so clients can see its photos.'**
+  String get driverVansRegisterIntro;
+
+  /// No description provided for @driverVanFieldPlate.
+  ///
+  /// In en, this message translates to:
+  /// **'Plate'**
+  String get driverVanFieldPlate;
+
+  /// No description provided for @driverVanFieldBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get driverVanFieldBrand;
+
+  /// No description provided for @driverVanFieldModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get driverVanFieldModel;
+
+  /// No description provided for @driverVanFieldYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get driverVanFieldYear;
+
+  /// No description provided for @driverVanFieldColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get driverVanFieldColor;
+
+  /// No description provided for @driverVanFieldCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Seats'**
+  String get driverVanFieldCapacity;
+
+  /// No description provided for @driverVanFieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get driverVanFieldRequired;
+
+  /// No description provided for @driverVanPlateInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid plate. E.g. ABC1D23'**
+  String get driverVanPlateInvalid;
+
+  /// No description provided for @driverVanYearInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid year'**
+  String get driverVanYearInvalid;
+
+  /// No description provided for @driverVanCapacityInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 1 seat'**
+  String get driverVanCapacityInvalid;
+
+  /// No description provided for @driverVanRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Register van'**
+  String get driverVanRegister;
+
+  /// No description provided for @driverVanRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Van registered.'**
+  String get driverVanRegistered;
+
+  /// No description provided for @driverVanPhotoFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front'**
+  String get driverVanPhotoFront;
+
+  /// No description provided for @driverVanPhotoSide.
+  ///
+  /// In en, this message translates to:
+  /// **'Side'**
+  String get driverVanPhotoSide;
+
+  /// No description provided for @driverVanFailureDuplicatePlate.
+  ///
+  /// In en, this message translates to:
+  /// **'This plate is already registered.'**
+  String get driverVanFailureDuplicatePlate;
+
+  /// No description provided for @driverVanFailureInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the van details.'**
+  String get driverVanFailureInvalid;
+
+  /// No description provided for @driverVanFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Try again.'**
+  String get driverVanFailureNetwork;
+
+  /// No description provided for @driverVanFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get driverVanFailureUnexpected;
+
+  /// No description provided for @driverVansLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your van.'**
+  String get driverVansLoadError;
 }
 
 class _AppLocalizationsDelegate

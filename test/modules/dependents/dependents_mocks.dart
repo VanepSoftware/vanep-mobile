@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/dependents/data/datasources/dependent_remote_datasource.dart';
 import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_repository.dart';
@@ -7,6 +8,8 @@ import 'package:vanep_mobile/modules/dependents/domain/usecases/set_default_depe
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 
 import 'dependents_fixtures.dart';
 
@@ -22,6 +25,9 @@ class MockCreateDependent extends Mock implements CreateDependent {}
 class MockUpdateDependent extends Mock implements UpdateDependent {}
 
 class MockSetDefaultDependent extends Mock implements SetDefaultDependent {}
+
+class MockDependentsCubit extends MockCubit<DependentsState>
+    implements DependentsCubit {}
 
 void registerDependentFallbackValues() {
   registerFallbackValue(

@@ -24,3 +24,7 @@ class UnexpectedDriverFailure extends DriverFailure {
   @override
   List<Object?> get props => [detail];
 }
+
+class NotFoundDriverFailure extends DriverFailure {
+  const NotFoundDriverFailure();
+}

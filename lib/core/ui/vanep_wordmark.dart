@@ -5,7 +5,7 @@ import '../design_system/vanep_typography.dart';
 
 class VanepWordmark extends StatelessWidget {
   const VanepWordmark({
-    this.color = VanepColors.foreground,
+    this.color = VanepColors.textPrimary,
     this.fontSize,
     super.key,
   });
@@ -24,7 +24,7 @@ class VanepWordmark extends StatelessWidget {
           ),
           const TextSpan(
             text: '.',
-            style: TextStyle(color: VanepColors.brand),
+            style: TextStyle(color: VanepColors.action),
           ),
         ],
         style: VanepTypography.wordmark.copyWith(fontSize: fontSize),

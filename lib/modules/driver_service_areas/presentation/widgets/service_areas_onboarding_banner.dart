@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_glass_card.dart';
+import '../../../../core/ui/vanep_card.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class ServiceAreasOnboardingBanner extends StatelessWidget {
@@ -20,7 +20,7 @@ class ServiceAreasOnboardingBanner extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      child: VanepGlassCard(
+      child: VanepCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

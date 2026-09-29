@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
+import '../../../../core/ui/vanep_skeleton.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/driver.dart';
 import '../cubit/drivers_cubit.dart';
@@ -10,7 +10,9 @@ import '../cubit/drivers_state.dart';
 import 'driver_card.dart';
 
 class DriversHomeBody extends StatelessWidget {
-  const DriversHomeBody({super.key});
+  const DriversHomeBody({this.onDriverSelected, super.key});
+
+  final ValueChanged<String>? onDriverSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class DriversHomeBody extends StatelessWidget {
       builder: (context, state) {
         return switch (state.status) {
           DriversStatus.initial ||
-          DriversStatus.loading => const DriversLoadingIndicator(),
+          DriversStatus.loading => const DriversSkeletonList(),
           DriversStatus.error => DriversErrorView(
             message: l10n.driversLoadError,
             retryLabel: l10n.driversRetryButton,
@@ -29,6 +31,7 @@ class DriversHomeBody extends StatelessWidget {
           DriversStatus.loaded => DriversSuggestionsList(
             drivers: state.visibleDrivers,
             emptyMessage: l10n.driversEmpty,
+            onDriverSelected: onDriverSelected,
           ),
         };
       },
@@ -36,16 +39,16 @@ class DriversHomeBody extends StatelessWidget {
   }
 }
 
-class DriversLoadingIndicator extends StatelessWidget {
-  const DriversLoadingIndicator({super.key});
+class DriversSkeletonList extends StatelessWidget {
+  const DriversSkeletonList({this.count = 3, super.key});
+
+  final int count;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(top: 48),
-      child: Center(
-        child: CircularProgressIndicator(color: VanepColors.brand),
-      ),
+    return VanepSkeletonList(
+      count: count,
+      buildPlaceholder: (context) => const DriverCardSkeleton(),
     );
   }
 }
@@ -76,10 +79,7 @@ class DriversErrorView extends StatelessWidget {
           const SizedBox(height: 16),
           TextButton(
             onPressed: onRetry,
-            child: Text(
-              retryLabel,
-              style: VanepTypography.ratingLabel,
-            ),
+            child: Text(retryLabel, style: VanepTypography.ratingLabel),
           ),
         ],
       ),
@@ -91,11 +91,13 @@ class DriversSuggestionsList extends StatelessWidget {
   const DriversSuggestionsList({
     required this.drivers,
     required this.emptyMessage,
+    this.onDriverSelected,
     super.key,
   });
 
   final List<Driver> drivers;
   final String emptyMessage;
+  final ValueChanged<String>? onDriverSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -115,9 +117,20 @@ class DriversSuggestionsList extends StatelessWidget {
         for (final driver in drivers)
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: DriverCard(driver: driver),
+            child: DriverCard(
+              driver: driver,
+              onTap: selectDriverCallback(onDriverSelected, driver.token),
+            ),
           ),
       ],
     );
   }
+}
+
+VoidCallback? selectDriverCallback(
+  ValueChanged<String>? onDriverSelected,
+  String driverToken,
+) {
+  if (onDriverSelected == null) return null;
+  return () => onDriverSelected(driverToken);
 }

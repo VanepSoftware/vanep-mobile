@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../design_system/vanep_colors.dart';
+import '../design_system/vanep_theme.dart';
+import '../design_system/vanep_typography.dart';
 
 class VanepFeedback {
   const VanepFeedback._();
 
   static void showError(BuildContext context, String message) {
-    _show(context, message, background: Colors.redAccent.shade200);
+    _show(context, message, background: VanepColors.danger);
   }
 
   static void showInfo(BuildContext context, String message) {
-    _show(context, message, background: VanepColors.backgroundSoft);
+    _show(context, message, background: VanepColors.textPrimary);
   }
 
   static void _show(
@@ -24,11 +26,14 @@ class VanepFeedback {
         SnackBar(
           content: Text(
             message,
-
-            style: const TextStyle(color: VanepColors.foreground),
+            style: VanepTypography.body.copyWith(color: VanepColors.card),
           ),
           backgroundColor: background,
           behavior: SnackBarBehavior.floating,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(VanepTheme.controlRadius),
+          ),
         ),
       );
   }

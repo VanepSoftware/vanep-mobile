@@ -16,7 +16,7 @@ String? assistantStatusLabel(AppLocalizations l10n, AssistantStatus? status) {
 
 Color? assistantStatusColor(AssistantStatus? status) {
   return switch (status) {
-    AssistantStatus.active => VanepColors.brand,
+    AssistantStatus.active => VanepColors.success,
     AssistantStatus.pending => VanepColors.ratingStar,
     AssistantStatus.unlinked => VanepColors.textMuted,
     AssistantStatus.inactive => VanepColors.danger,
