@@ -15,9 +15,15 @@ import '../formatters/driver_search_failure_label.dart';
 const loadMoreThresholdPixels = 240.0;
 
 class DriverSearchPage extends StatefulWidget {
-  const DriverSearchPage({required this.autocomplete, super.key});
+  const DriverSearchPage({
+    required this.autocomplete,
+    this.onDriverSelected,
+    super.key,
+  });
 
   final PlaceAutocompleteController autocomplete;
+
+  final ValueChanged<String>? onDriverSelected;
 
   @override
   State<DriverSearchPage> createState() => DriverSearchPageState();
@@ -98,6 +104,10 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                   child: DriverCard(
                     driver: driver,
                     coverage: driver.serviceAreas,
+                    onTap: selectDriverCallback(
+                      widget.onDriverSelected,
+                      driver.token,
+                    ),
                   ),
                 ),
               if (state.status == DriverSearchStatus.loadingMore)

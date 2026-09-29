@@ -22,7 +22,7 @@ void main() {
     remote = DriverRemoteDataSource(dio: dio, environment: testEnvironment);
   });
 
-  test('fetchRecentDrivers requests sorted page and parses content', () async {
+  test('fetchRecentDrivers requests the recommended page and parses content', () async {
     when(
       () => dio.get<Map<String, dynamic>>(
         any(),
@@ -38,13 +38,13 @@ void main() {
     final query =
         verify(
               () => dio.get<Map<String, dynamic>>(
-                testEnvironment.driversEndpoint,
+                testEnvironment.driversRecommendedEndpoint,
                 queryParameters: captureAny(named: 'queryParameters'),
               ),
             ).captured.single
             as Map<String, dynamic>;
     expect(query['size'], 3);
-    expect(query['sort'], 'createdAt,desc');
+    expect(query.containsKey('sort'), isFalse);
   });
 
   test('fetchRecentDrivers returns empty list when content is absent', () async {
@@ -58,5 +58,21 @@ void main() {
     final drivers = await remote.fetchRecentDrivers(limit: 3);
 
     expect(drivers, isEmpty);
+  });
+
+  test('fetchProfile reads the public profile of the chosen driver', () async {
+    when(
+      () => dio.get<Map<String, dynamic>>(any()),
+    ).thenAnswer((_) async => _ok(Map<String, dynamic>.of(carlosProfileJson)));
+
+    final profile = await remote.fetchProfile('driver-1');
+
+    expect(profile.name, 'Carlos Souza');
+    expect(profile.vehicles.single.model, 'Sprinter');
+    verify(
+      () => dio.get<Map<String, dynamic>>(
+        'http://10.0.2.2:8080/api/drivers/driver-1/profile',
+      ),
+    ).called(1);
   });
 }

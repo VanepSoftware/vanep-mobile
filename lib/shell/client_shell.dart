@@ -20,12 +20,16 @@ class ClientShell extends StatefulWidget {
   const ClientShell({
     required this.profile,
     required this.openDriverSearch,
+    required this.openDriverProfile,
     super.key,
   });
 
   final UserProfile profile;
 
   final Future<void> Function(BuildContext context) openDriverSearch;
+
+  final Future<void> Function(BuildContext context, String driverToken)
+  openDriverProfile;
 
   @override
   State<ClientShell> createState() => ClientShellState();
@@ -59,7 +63,11 @@ class ClientShellState extends State<ClientShell> {
             onNotificationsTapped: () => openNotifications(context),
             onFindVanTapped: () => selectShellTab(clientShellVansTabIndex),
           ),
-          FindVansTab(onSearchTapped: () => widget.openDriverSearch(context)),
+          FindVansTab(
+            onSearchTapped: () => widget.openDriverSearch(context),
+            onDriverSelected: (driverToken) =>
+                widget.openDriverProfile(context, driverToken),
+          ),
           VanepComingSoon(title: l10n.navContracts, message: l10n.comingSoon),
           const DependentsPage(),
         ],

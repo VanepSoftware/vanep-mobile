@@ -23,7 +23,7 @@ import '../../domain/usecases/request_email_change.dart';
 import '../../domain/usecases/upsert_my_personal_address.dart';
 import '../../domain/value_objects/personal_address_write.dart';
 import '../../domain/value_objects/profile_patch_request.dart';
-import '../formatters/profile_field_formatters.dart';
+import '../../../../core/formatters/phone_formatter.dart';
 import 'personal_data_state.dart';
 
 typedef SyncProfile = void Function(UserProfile profile);

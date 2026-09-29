@@ -18,6 +18,7 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_address_form_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_slots.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/email_change_sheet.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/personal_address_card.dart';
 
@@ -26,7 +27,10 @@ import '../auth_fixtures.dart';
 import '../personal_address_fixture.dart';
 import 'auth_presentation_mocks.dart';
 
-Widget personalDataHarness(PersonalDataCubit cubit) {
+Widget personalDataHarness(
+  PersonalDataCubit cubit, {
+  PersonalDataSlots slots = const PersonalDataSlots(),
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -38,7 +42,7 @@ Widget personalDataHarness(PersonalDataCubit cubit) {
     locale: const Locale('pt'),
     home: BlocProvider<PersonalDataCubit>.value(
       value: cubit,
-      child: const PersonalDataPage(),
+      child: PersonalDataPage(slots: slots),
     ),
   );
 }
@@ -96,6 +100,34 @@ void main() {
     when(cubit.clearAddress).thenAnswer((_) async {});
     when(cubit.refreshStates).thenAnswer((_) async {});
     when(cubit.discardAddressDraft).thenReturn(null);
+  });
+
+  testWidgets('shows the injected header above and sections below the form', (
+    tester,
+  ) async {
+    useTallScreen(tester);
+    await tester.pumpWidget(
+      personalDataHarness(
+        cubit,
+        slots: const PersonalDataSlots(
+          header: Text('foto de perfil'),
+          footer: [Text('minha van')],
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('foto de perfil'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('foto de perfil')).dy,
+      lessThan(tester.getTopLeft(find.text('Nome')).dy),
+    );
+    await tester.scrollUntilVisible(
+      find.text('minha van'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('minha van'), findsOneWidget);
   });
 
   group('identity', () {

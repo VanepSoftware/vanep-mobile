@@ -11,6 +11,7 @@ import '../../domain/value_objects/profile_menu_id.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/personal_data_cubit.dart';
 import '../pages/personal_data_page.dart';
+import '../pages/personal_data_slots.dart';
 import 'profile_header.dart';
 import 'profile_menu_card.dart';
 
@@ -23,6 +24,7 @@ class AccountDrawer extends StatelessWidget {
     this.statusLabel,
     this.statusColor,
     this.isSummaryLoading = false,
+    this.buildPersonalDataSlots,
     super.key,
   });
 
@@ -33,6 +35,7 @@ class AccountDrawer extends StatelessWidget {
   final String? statusLabel;
   final Color? statusColor;
   final bool isSummaryLoading;
+  final PersonalDataSlotsBuilder? buildPersonalDataSlots;
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +64,12 @@ class AccountDrawer extends StatelessWidget {
               if (index > 0) const SizedBox(height: 16),
               ProfileMenuSectionView(
                 section: sections[index],
-                onItemSelected: (id) =>
-                    handleProfileMenuSelection(context, profile, id),
+                onItemSelected: (id) => handleProfileMenuSelection(
+                  context,
+                  profile,
+                  id,
+                  buildPersonalDataSlots: buildPersonalDataSlots,
+                ),
                 pendingEmailConfirmation: hasPendingEmailConfirmation,
               ),
             ],
@@ -76,17 +83,20 @@ class AccountDrawer extends StatelessWidget {
 Future<void> handleProfileMenuSelection(
   BuildContext context,
   UserProfile profile,
-  ProfileMenuId id,
-) async {
+  ProfileMenuId id, {
+  PersonalDataSlotsBuilder? buildPersonalDataSlots,
+}) async {
   switch (id) {
     case ProfileMenuId.personalData:
       final syncProfile = context.read<AuthCubit>().syncProfile;
+      final slots =
+          buildPersonalDataSlots?.call(context) ?? const PersonalDataSlots();
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (_) => BlocProvider(
             create: (_) =>
                 getIt<PersonalDataCubit>(param1: syncProfile)..load(),
-            child: const PersonalDataPage(),
+            child: PersonalDataPage(slots: slots),
           ),
         ),
       );

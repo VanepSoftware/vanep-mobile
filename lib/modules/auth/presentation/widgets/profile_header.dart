@@ -3,7 +3,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/design_system/vanep_colors.dart';
 import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/network/api_image.dart';
+import '../../../../core/ui/vanep_avatar.dart';
 import '../../../../core/ui/vanep_skeleton.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -44,7 +44,7 @@ class ProfileHeader extends StatelessWidget {
         if (isSummaryLoading && (photoUrl == null || photoUrl!.isEmpty))
           const VanepSkeleton(child: Bone.circle(size: 72))
         else
-          ProfileAvatar(photoUrl: photoUrl),
+          VanepAvatar(photoUrl: photoUrl, size: 72),
         const SizedBox(width: 16),
         Expanded(
           child: Column(
@@ -143,56 +143,6 @@ class ProfileAssistantStatusChip extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-      ),
-    );
-  }
-}
-
-class ProfileAvatar extends StatelessWidget {
-  const ProfileAvatar({this.photoUrl, this.size = 72, super.key});
-
-  final String? photoUrl;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          CircleAvatar(
-            radius: size / 2,
-            backgroundColor: VanepColors.avatarPlaceholder,
-            foregroundImage: ApiImage.forPath(photoUrl),
-            child: Icon(
-              Icons.person_outline,
-              size: size * 0.45,
-              color: VanepColors.textMuted,
-            ),
-          ),
-          Positioned(
-            right: -2,
-            bottom: -2,
-            child: IgnorePointer(
-              child: Container(
-                width: 26,
-                height: 26,
-                decoration: BoxDecoration(
-                  color: VanepColors.action,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: VanepColors.card, width: 2),
-                ),
-                child: const Icon(
-                  Icons.photo_camera_outlined,
-                  size: 14,
-                  color: VanepColors.card,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

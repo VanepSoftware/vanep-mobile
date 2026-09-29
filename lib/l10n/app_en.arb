@@ -450,5 +450,78 @@
   "ibgeLocationsFailureUfNotFound": "State not found.",
   "ibgeLocationsFailureNetwork": "No connection to the server. Please try again.",
   "ibgeLocationsFailureUnexpected": "Something went wrong. Please try again.",
-  "placesCityUnmatched": "This city does not match the catalog. Please choose another suggestion."
+  "placesCityUnmatched": "This city does not match the catalog. Please choose another suggestion.",
+  "driverProfileExperience": "{count, plural, =1{1 year of experience} other{{count} years of experience}}",
+  "@driverProfileExperience": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileRating": "{rating} / 5.0",
+  "@driverProfileRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileVanTitle": "{model} {year} · {brand}",
+  "@driverProfileVanTitle": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      },
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileVanCapacity": "{count, plural, =1{1 seat} other{{count} seats}}",
+  "@driverProfileVanCapacity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVanPhotos": "Van photos",
+  "driverProfileNoVan": "This driver has not registered a van yet.",
+  "driverProfileAbout": "About",
+  "driverProfileChatButton": "Chat with the driver",
+  "driverProfileNotFound": "This driver is no longer available.",
+  "driverProfileLoadError": "Could not load this driver. Try again.",
+  "photoSourceGallery": "Choose from gallery",
+  "photoSourceCamera": "Take a photo",
+  "photoFailurePermissionDenied": "Allow access to your photos in the phone settings.",
+  "photoFailureTooLarge": "This photo is too large. Pick another one.",
+  "photoFailureUnsupportedType": "Unsupported format. Use JPG, PNG or WEBP.",
+  "photoFailureNetwork": "No connection to the server. Try again.",
+  "photoFailureUnexpected": "Could not send the photo. Try again.",
+  "profilePhotoChange": "Change photo",
+  "profilePhotoUpdated": "Photo updated.",
+  "driverVansRegisterIntro": "Register your van so clients can see its photos.",
+  "driverVanFieldPlate": "Plate",
+  "driverVanFieldBrand": "Brand",
+  "driverVanFieldModel": "Model",
+  "driverVanFieldYear": "Year",
+  "driverVanFieldColor": "Color",
+  "driverVanFieldCapacity": "Seats",
+  "driverVanFieldRequired": "Required",
+  "driverVanPlateInvalid": "Invalid plate. E.g. ABC1D23",
+  "driverVanYearInvalid": "Invalid year",
+  "driverVanCapacityInvalid": "At least 1 seat",
+  "driverVanRegister": "Register van",
+  "driverVanRegistered": "Van registered.",
+  "driverVanPhotoFront": "Front",
+  "driverVanPhotoSide": "Side",
+  "driverVanFailureDuplicatePlate": "This plate is already registered.",
+  "driverVanFailureInvalid": "Check the van details.",
+  "driverVanFailureNetwork": "No connection to the server. Try again.",
+  "driverVanFailureUnexpected": "Something went wrong. Try again.",
+  "driverVansLoadError": "Could not load your van."
 }

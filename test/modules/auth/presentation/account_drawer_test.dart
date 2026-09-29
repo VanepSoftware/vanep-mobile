@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
@@ -126,7 +127,8 @@ void main() {
     expect(find.text('Dados pessoais'), findsOneWidget);
     expect(find.text('Endereços'), findsNothing);
     expect(find.text('Formas de pagamento'), findsOneWidget);
-    expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
+    expect(find.byType(VanepAvatar), findsOneWidget);
+    expect(find.byIcon(Icons.photo_camera_outlined), findsNothing);
     expect(find.text('Serviços'), findsNothing);
     expect(find.text('Gerenciar dependentes'), findsNothing);
     expect(find.text('Contratos'), findsNothing);
@@ -179,7 +181,7 @@ void main() {
 
     expect(find.byType(VanepSkeleton), findsNothing);
     expect(find.text('4.8'), findsOneWidget);
-    expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
+    expect(find.byType(VanepAvatar), findsOneWidget);
   });
 
   testWidgets('disabled menu items do not navigate', (tester) async {

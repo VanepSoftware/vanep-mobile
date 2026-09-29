@@ -18,6 +18,8 @@ import '../../domain/failures/profile_edit_failure.dart';
 import '../../domain/value_objects/profile_field_limits.dart';
 import '../cubit/personal_data_cubit.dart';
 import '../cubit/personal_data_state.dart';
+import 'personal_data_slots.dart';
+import '../../../../core/formatters/phone_formatter.dart';
 import '../formatters/profile_field_formatters.dart';
 import '../mappers/personal_address_failure_l10n.dart';
 import '../mappers/profile_edit_failure_l10n.dart';
@@ -25,7 +27,9 @@ import '../widgets/email_change_sheet.dart';
 import '../widgets/personal_address_card.dart';
 
 class PersonalDataPage extends StatefulWidget {
-  const PersonalDataPage({super.key});
+  const PersonalDataPage({this.slots = const PersonalDataSlots(), super.key});
+
+  final PersonalDataSlots slots;
 
   @override
   State<PersonalDataPage> createState() => _PersonalDataPageState();
@@ -109,6 +113,7 @@ class _PersonalDataPageState extends State<PersonalDataPage>
             state: state,
             nameController: _nameController,
             phoneController: _phoneController,
+            slots: widget.slots,
           ),
         );
       },
@@ -123,6 +128,7 @@ Widget buildPersonalDataBody({
   required PersonalDataState state,
   required TextEditingController nameController,
   required TextEditingController phoneController,
+  PersonalDataSlots slots = const PersonalDataSlots(),
 }) {
   if (state.status == PersonalDataStatus.loading ||
       state.status == PersonalDataStatus.initial) {
@@ -154,6 +160,7 @@ Widget buildPersonalDataBody({
 
   final cubit = context.read<PersonalDataCubit>();
   final profile = state.profile!;
+  final header = slots.header;
 
   return Column(
     children: [
@@ -165,6 +172,7 @@ Widget buildPersonalDataBody({
               title: l10n.profilePersonalData,
               subtitle: l10n.personalDataSubtitle,
             ),
+            if (header != null) ...[header, const SizedBox(height: 16)],
             if (profile.pendingEmail != null) ...[
               PendingEmailBanner(email: profile.pendingEmail!),
               const SizedBox(height: 20),
@@ -178,6 +186,10 @@ Widget buildPersonalDataBody({
             ),
             const SizedBox(height: 24),
             PersonalAddressCard(address: state.address),
+            for (final section in slots.footer) ...[
+              const SizedBox(height: 20),
+              section,
+            ],
           ],
         ),
       ),

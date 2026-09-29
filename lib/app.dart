@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/design_system/vanep_colors.dart';
 import 'core/design_system/vanep_theme.dart';
 import 'core/di/service_locator.dart';
+import 'core/network/api_image_loader.dart';
 import 'core/ui/vanep_wordmark.dart';
 import 'l10n/app_localizations.dart';
 import 'modules/auth/presentation/cubit/auth_cubit.dart';
@@ -15,11 +16,15 @@ import 'modules/auth/domain/value_objects/user_type.dart';
 import 'modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'core/places/place_autocomplete_controller.dart';
+import 'modules/drivers/presentation/cubit/driver_profile_cubit.dart';
 import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'modules/drivers/presentation/pages/driver_profile_page.dart';
 import 'modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'modules/driver_search/presentation/pages/driver_search_page.dart';
 import 'modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
 import 'modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
+import 'modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
+import 'modules/driver_vans/presentation/pages/driver_vans_page.dart';
 import 'modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'shell/client_shell.dart';
 import 'shell/driver_shell.dart';
@@ -29,20 +34,23 @@ class VanepApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthCubit>(
-      create: (_) => getIt<AuthCubit>()..checkSession(),
-      child: MaterialApp(
-        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-        debugShowCheckedModeBanner: false,
-        theme: VanepTheme.light(),
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: const AuthGate(),
+    return RepositoryProvider<ApiImageLoader>.value(
+      value: getIt<ApiImageLoader>(),
+      child: BlocProvider<AuthCubit>(
+        create: (_) => getIt<AuthCubit>()..checkSession(),
+        child: MaterialApp(
+          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          debugShowCheckedModeBanner: false,
+          theme: VanepTheme.light(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const AuthGate(),
+        ),
       ),
     );
   }
@@ -74,6 +82,7 @@ class AuthGate extends StatelessWidget {
               child: DriverShell(
                 profile: session.profile,
                 openServiceAreas: openDriverServiceAreas,
+                openMyVans: openDriverVans,
               ),
             ),
             _ => MultiBlocProvider(
@@ -94,6 +103,7 @@ class AuthGate extends StatelessWidget {
               child: ClientShell(
                 profile: session.profile,
                 openDriverSearch: openDriverSearch,
+                openDriverProfile: openDriverProfile,
               ),
             ),
           },
@@ -115,11 +125,38 @@ Future<void> openDriverSearch(BuildContext context) async {
     MaterialPageRoute<void>(
       builder: (_) => BlocProvider<DriverSearchCubit>(
         create: (_) => getIt<DriverSearchCubit>(),
-        child: DriverSearchPage(autocomplete: autocomplete),
+        child: DriverSearchPage(
+          autocomplete: autocomplete,
+          onDriverSelected: (driverToken) =>
+              openDriverProfile(context, driverToken),
+        ),
       ),
     ),
   );
   autocomplete.dispose();
+}
+
+Future<void> openDriverProfile(BuildContext context, String driverToken) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverProfileCubit>(
+        create: (_) =>
+            getIt<DriverProfileCubit>(param1: driverToken)..loadProfile(),
+        child: const DriverProfilePage(),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverVans(BuildContext context) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverVansCubit>(
+        create: (_) => getIt<DriverVansCubit>()..loadVans(),
+        child: const DriverVansPage(),
+      ),
+    ),
+  );
 }
 
 Future<void> openDriverServiceAreas(BuildContext context) async {

@@ -1933,6 +1933,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This city does not match the catalog. Please choose another suggestion.'**
   String get placesCityUnmatched;
+
+  /// No description provided for @driverProfileExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 year of experience} other{{count} years of experience}}'**
+  String driverProfileExperience(int count);
+
+  /// No description provided for @driverProfileRating.
+  ///
+  /// In en, this message translates to:
+  /// **'{rating} / 5.0'**
+  String driverProfileRating(String rating);
+
+  /// No description provided for @driverProfileVanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{model} {year} · {brand}'**
+  String driverProfileVanTitle(String model, String year, String brand);
+
+  /// No description provided for @driverProfileVanCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 seat} other{{count} seats}}'**
+  String driverProfileVanCapacity(int count);
+
+  /// No description provided for @driverProfileVanPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Van photos'**
+  String get driverProfileVanPhotos;
+
+  /// No description provided for @driverProfileNoVan.
+  ///
+  /// In en, this message translates to:
+  /// **'This driver has not registered a van yet.'**
+  String get driverProfileNoVan;
+
+  /// No description provided for @driverProfileAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get driverProfileAbout;
+
+  /// No description provided for @driverProfileChatButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with the driver'**
+  String get driverProfileChatButton;
+
+  /// No description provided for @driverProfileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This driver is no longer available.'**
+  String get driverProfileNotFound;
+
+  /// No description provided for @driverProfileLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this driver. Try again.'**
+  String get driverProfileLoadError;
+
+  /// No description provided for @photoSourceGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get photoSourceGallery;
+
+  /// No description provided for @photoSourceCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get photoSourceCamera;
+
+  /// No description provided for @photoFailurePermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow access to your photos in the phone settings.'**
+  String get photoFailurePermissionDenied;
+
+  /// No description provided for @photoFailureTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'This photo is too large. Pick another one.'**
+  String get photoFailureTooLarge;
+
+  /// No description provided for @photoFailureUnsupportedType.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported format. Use JPG, PNG or WEBP.'**
+  String get photoFailureUnsupportedType;
+
+  /// No description provided for @photoFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Try again.'**
+  String get photoFailureNetwork;
+
+  /// No description provided for @photoFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not send the photo. Try again.'**
+  String get photoFailureUnexpected;
+
+  /// No description provided for @profilePhotoChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change photo'**
+  String get profilePhotoChange;
+
+  /// No description provided for @profilePhotoUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo updated.'**
+  String get profilePhotoUpdated;
+
+  /// No description provided for @driverVansRegisterIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Register your van so clients can see its photos.'**
+  String get driverVansRegisterIntro;
+
+  /// No description provided for @driverVanFieldPlate.
+  ///
+  /// In en, this message translates to:
+  /// **'Plate'**
+  String get driverVanFieldPlate;
+
+  /// No description provided for @driverVanFieldBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get driverVanFieldBrand;
+
+  /// No description provided for @driverVanFieldModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get driverVanFieldModel;
+
+  /// No description provided for @driverVanFieldYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get driverVanFieldYear;
+
+  /// No description provided for @driverVanFieldColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get driverVanFieldColor;
+
+  /// No description provided for @driverVanFieldCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Seats'**
+  String get driverVanFieldCapacity;
+
+  /// No description provided for @driverVanFieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get driverVanFieldRequired;
+
+  /// No description provided for @driverVanPlateInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid plate. E.g. ABC1D23'**
+  String get driverVanPlateInvalid;
+
+  /// No description provided for @driverVanYearInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid year'**
+  String get driverVanYearInvalid;
+
+  /// No description provided for @driverVanCapacityInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 1 seat'**
+  String get driverVanCapacityInvalid;
+
+  /// No description provided for @driverVanRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Register van'**
+  String get driverVanRegister;
+
+  /// No description provided for @driverVanRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Van registered.'**
+  String get driverVanRegistered;
+
+  /// No description provided for @driverVanPhotoFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front'**
+  String get driverVanPhotoFront;
+
+  /// No description provided for @driverVanPhotoSide.
+  ///
+  /// In en, this message translates to:
+  /// **'Side'**
+  String get driverVanPhotoSide;
+
+  /// No description provided for @driverVanFailureDuplicatePlate.
+  ///
+  /// In en, this message translates to:
+  /// **'This plate is already registered.'**
+  String get driverVanFailureDuplicatePlate;
+
+  /// No description provided for @driverVanFailureInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the van details.'**
+  String get driverVanFailureInvalid;
+
+  /// No description provided for @driverVanFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Try again.'**
+  String get driverVanFailureNetwork;
+
+  /// No description provided for @driverVanFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get driverVanFailureUnexpected;
+
+  /// No description provided for @driverVansLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your van.'**
+  String get driverVansLoadError;
 }
 
 class _AppLocalizationsDelegate

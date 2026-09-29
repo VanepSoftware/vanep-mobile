@@ -8,6 +8,7 @@ import '../modules/auth/presentation/cubit/auth_cubit.dart';
 import '../modules/auth/presentation/widgets/account_drawer.dart';
 import '../modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import '../modules/profile/presentation/formatters/assistant_status_label.dart';
+import 'shell_personal_data_slots.dart';
 
 class ShellAccountDrawer extends StatelessWidget {
   const ShellAccountDrawer({required this.profile, super.key});
@@ -28,6 +29,8 @@ class ShellAccountDrawer extends StatelessWidget {
           statusLabel: assistantStatusLabel(l10n, summaryState.assistantStatus),
           statusColor: assistantStatusColor(summaryState.assistantStatus),
           isSummaryLoading: summaryState.status == ProfileSummaryStatus.loading,
+          buildPersonalDataSlots: (context) =>
+              buildShellPersonalDataSlots(context, profile),
         );
       },
     );
