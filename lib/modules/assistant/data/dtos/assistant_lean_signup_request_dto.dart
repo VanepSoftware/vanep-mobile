@@ -1,13 +1,15 @@
 class AssistantLeanSignupRequestDto {
   const AssistantLeanSignupRequestDto({
-    required this.inviteToken,
+    this.inviteToken,
     required this.name,
     required this.birthDate,
     required this.email,
     required this.cpf,
+    required this.password,
+    this.acceptTerms = true,
   });
 
-  final String inviteToken;
+  final String? inviteToken;
 
   final String name;
 
@@ -17,13 +19,20 @@ class AssistantLeanSignupRequestDto {
 
   final String cpf;
 
+  final String password;
+
+  final bool acceptTerms;
+
   Map<String, Object?> toJson() {
     return {
-      'inviteToken': inviteToken,
+      if (inviteToken != null && inviteToken!.isNotEmpty)
+        'inviteToken': inviteToken,
       'name': name.trim(),
       'birthDate': birthDate,
       'email': email.trim(),
+      'password': password,
       'document': cpf.replaceAll(RegExp(r'\D'), ''),
+      'acceptTerms': acceptTerms,
     };
   }
 }

@@ -37,6 +37,8 @@ void main() {
         birthDate: '',
         email: '',
         cpf: '',
+        password: '',
+        acceptTerms: true,
       ),
     );
   });
@@ -103,6 +105,8 @@ void main() {
         birthDate: '1995-04-12',
         email: 'carlos@vanep.test',
         cpf: '123.456.789-00',
+        password: 'Password123!',
+        acceptTerms: true,
       );
 
       expect(result.isOk, isTrue);
@@ -118,6 +122,8 @@ void main() {
         birthDate: 'invalid',
         email: 'carlos@vanep.test',
         cpf: '000',
+        password: 'Password123!',
+        acceptTerms: true,
       );
 
       expect(result.errorOrNull, AssistantFailure.invalidPersonalData);

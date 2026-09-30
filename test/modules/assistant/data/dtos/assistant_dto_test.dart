@@ -92,13 +92,15 @@ void main() {
   });
 
   group('AssistantLeanSignupRequestDto', () {
-    test('serializes cleaning non-digit characters from cpf', () {
+    test('serializes cleaning non-digit characters from cpf and includes password and acceptTerms', () {
       const dto = AssistantLeanSignupRequestDto(
         inviteToken: 'inv-tok-99',
         name: ' Lucas Lima ',
         birthDate: '2000-01-15',
         email: ' lucas@example.com ',
         cpf: '123.456.789-00',
+        password: 'Password123!',
+        acceptTerms: true,
       );
 
       final json = dto.toJson();
@@ -107,7 +109,9 @@ void main() {
       expect(json['name'], 'Lucas Lima');
       expect(json['birthDate'], '2000-01-15');
       expect(json['email'], 'lucas@example.com');
+      expect(json['password'], 'Password123!');
       expect(json['document'], '12345678900');
+      expect(json['acceptTerms'], true);
     });
   });
 }

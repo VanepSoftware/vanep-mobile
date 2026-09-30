@@ -52,7 +52,7 @@
 - [ ] 3.3 State management `AssistantInviteCubit` and states with `bloc_test`
 - [ ] 3.4 Update `WelcomePage` adding secondary action "Entrar como assistente"
 - [ ] 3.5 Screen `AssistantInviteCodePage` with code input formatting and clear error states (invalid, expired, used)
-- [ ] 3.6 Screen `AssistantLeanSignupPage` with Name, Birth Date, Email, CPF inputs (no driver-specific fields)
+- [ ] 3.6 Screen `AssistantLeanSignupPage` with Name, Birth Date, Email, CPF, Password, Terms inputs (no driver-specific fields)
 - [ ] 3.7 Deep link listener integration for `vanep://assistant/invite?token=...`
 - [ ] 3.8 Widget tests for `AssistantInviteCodePage` and `AssistantLeanSignupPage`
 - [ ] 3.9 Run `make lint` and `make test`

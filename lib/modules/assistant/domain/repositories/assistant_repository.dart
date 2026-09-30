@@ -9,11 +9,13 @@ abstract class AssistantRepository {
   );
 
   Future<Result<AssistantFailure, void>> registerWithInvite({
-    required String inviteToken,
+    String? inviteToken,
     required String name,
     required String birthDate,
     required String email,
     required String cpf,
+    required String password,
+    bool acceptTerms = true,
   });
 
   Future<Result<AssistantFailure, List<AssistantVan>>> getLinkedVans();

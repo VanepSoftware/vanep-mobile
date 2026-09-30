@@ -23,11 +23,13 @@ class AssistantRepositoryImpl implements AssistantRepository {
 
   @override
   Future<Result<AssistantFailure, void>> registerWithInvite({
-    required String inviteToken,
+    String? inviteToken,
     required String name,
     required String birthDate,
     required String email,
     required String cpf,
+    required String password,
+    bool acceptTerms = true,
   }) {
     final dto = AssistantLeanSignupRequestDto(
       inviteToken: inviteToken,
@@ -35,6 +37,8 @@ class AssistantRepositoryImpl implements AssistantRepository {
       birthDate: birthDate,
       email: email,
       cpf: cpf,
+      password: password,
+      acceptTerms: acceptTerms,
     );
     return guardAssistantCall(() => remote.registerWithInvite(dto));
   }

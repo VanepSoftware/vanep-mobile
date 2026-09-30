@@ -84,6 +84,8 @@ void main() {
         birthDate: '1998-05-20',
         email: 'carlos@vanep.test',
         cpf: '123.456.789-00',
+        password: 'Password123!',
+        acceptTerms: true,
       );
 
       await datasource.registerWithInvite(request);
