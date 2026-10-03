@@ -1,15 +1,15 @@
 class AssistantLeanSignupRequestDto {
   const AssistantLeanSignupRequestDto({
-    this.inviteToken,
+    required this.inviteToken,
     required this.name,
     required this.birthDate,
     required this.email,
     required this.cpf,
     required this.password,
-    this.acceptTerms = true,
+    required this.acceptTerms,
   });
 
-  final String? inviteToken;
+  final String inviteToken;
 
   final String name;
 
@@ -25,8 +25,7 @@ class AssistantLeanSignupRequestDto {
 
   Map<String, Object?> toJson() {
     return {
-      if (inviteToken != null && inviteToken!.isNotEmpty)
-        'inviteToken': inviteToken,
+      'inviteToken': inviteToken,
       'name': name.trim(),
       'birthDate': birthDate,
       'email': email.trim(),
