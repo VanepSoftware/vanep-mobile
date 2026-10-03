@@ -8,11 +8,13 @@ class RegisterAssistantWithInvite {
   final AssistantRepository repository;
 
   Future<Result<AssistantFailure, void>> call({
-    required String inviteToken,
+    String? inviteToken,
     required String name,
     required String birthDate,
     required String email,
     required String cpf,
+    required String password,
+    bool acceptTerms = true,
   }) {
     return repository.registerWithInvite(
       inviteToken: inviteToken,
@@ -20,6 +22,8 @@ class RegisterAssistantWithInvite {
       birthDate: birthDate,
       email: email,
       cpf: cpf,
+      password: password,
+      acceptTerms: acceptTerms,
     );
   }
 }

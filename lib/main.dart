@@ -10,6 +10,7 @@ import 'core/media/media_container.dart';
 import 'core/places/places_container.dart';
 import 'modules/auth/auth_container.dart';
 import 'modules/auth/data/datasources/auth_local_datasource.dart';
+import 'modules/assistant/assistant_container.dart';
 import 'modules/dependents/dependents_container.dart';
 import 'modules/driver/driver_container.dart';
 import 'modules/driver_service_areas/driver_service_areas_container.dart';
@@ -37,6 +38,7 @@ Future<void> main() async {
   registerDriverSearchDependencies(getIt);
   registerIbgeLocationsDependencies(getIt);
   registerDependentsDependencies(getIt);
+  registerAssistantDependencies(getIt);
   registerDriverVansDependencies(getIt);
 
   runApp(const VanepApp());
