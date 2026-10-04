@@ -14,6 +14,8 @@ abstract class AssistantRepository {
     required String birthDate,
     required String email,
     required String cpf,
+    required String password,
+    bool acceptTerms = true,
   });
 
   Future<Result<AssistantFailure, List<AssistantVan>>> getLinkedVans();

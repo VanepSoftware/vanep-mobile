@@ -13,6 +13,8 @@ class RegisterAssistantWithInvite {
     required String birthDate,
     required String email,
     required String cpf,
+    required String password,
+    bool acceptTerms = true,
   }) {
     return repository.registerWithInvite(
       inviteToken: inviteToken,
@@ -20,6 +22,8 @@ class RegisterAssistantWithInvite {
       birthDate: birthDate,
       email: email,
       cpf: cpf,
+      password: password,
+      acceptTerms: acceptTerms,
     );
   }
 }
