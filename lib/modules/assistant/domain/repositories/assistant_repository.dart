@@ -9,7 +9,7 @@ abstract class AssistantRepository {
   );
 
   Future<Result<AssistantFailure, void>> registerWithInvite({
-    String? inviteToken,
+    required String inviteToken,
     required String name,
     required String birthDate,
     required String email,

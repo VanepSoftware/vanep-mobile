@@ -8,7 +8,7 @@ class RegisterAssistantWithInvite {
   final AssistantRepository repository;
 
   Future<Result<AssistantFailure, void>> call({
-    String? inviteToken,
+    required String inviteToken,
     required String name,
     required String birthDate,
     required String email,
