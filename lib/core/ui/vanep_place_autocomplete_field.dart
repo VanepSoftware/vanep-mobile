@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../design_system/vanep_colors.dart';
-import '../design_system/vanep_typography.dart';
-import '../places/place_autocomplete_controller.dart';
-import '../places/place_autocomplete_failure.dart';
-import '../places/place_suggestion.dart';
-import '../result/result.dart';
-import 'vanep_text_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
+import 'package:vanep_mobile/core/places/place_suggestion.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 
 class PlaceSelection {
   const PlaceSelection({required this.suggestion, required this.sessionToken});

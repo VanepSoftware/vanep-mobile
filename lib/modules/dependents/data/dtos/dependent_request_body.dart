@@ -1,8 +1,8 @@
-import '../../../../core/domain/gender.dart';
-import '../../../../core/domain/postal_address_draft.dart';
-import '../../../../core/network/postal_address_body.dart';
-import '../../domain/value_objects/dependent_changes.dart';
-import '../../domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/core/network/postal_address_body.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 
 Map<String, Object?>? dependentAddressToJson(PostalAddressDraft address) {
   if (address.isBlank) return null;

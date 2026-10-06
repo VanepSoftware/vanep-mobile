@@ -1,4 +1,4 @@
-import 'user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 
 abstract class AuthSession {
   String get accessToken;

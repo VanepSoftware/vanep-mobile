@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/media/photo_picker.dart';
-import '../../../../core/media/photo_source.dart';
-import '../../domain/usecases/change_van_photo.dart';
-import '../../domain/usecases/list_my_vans.dart';
-import '../../domain/usecases/register_van.dart';
-import '../../domain/value_objects/van_photo_target.dart';
-import '../../domain/value_objects/van_registration.dart';
-import 'driver_vans_state.dart';
+import 'package:vanep_mobile/core/media/photo_picker.dart';
+import 'package:vanep_mobile/core/media/photo_source.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/usecases/change_van_photo.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/usecases/list_my_vans.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/usecases/register_van.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_target.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_registration.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_state.dart';
 
 class DriverVansCubit extends Cubit<DriverVansState> {
   DriverVansCubit({

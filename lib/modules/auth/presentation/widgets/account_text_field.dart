@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 
 class AccountTextField extends StatefulWidget {
   const AccountTextField({

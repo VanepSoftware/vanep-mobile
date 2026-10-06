@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../../../../core/media/picked_photo.dart';
-import '../../../../core/network/photo_uploader.dart';
-import '../../domain/value_objects/van_photo_side.dart';
-import '../../domain/value_objects/van_registration.dart';
-import '../dtos/driver_van_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/media/picked_photo.dart';
+import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_side.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_registration.dart';
+import 'package:vanep_mobile/modules/driver_vans/data/dtos/driver_van_dto.dart';
 
 class DriverVanRemoteDataSource {
   const DriverVanRemoteDataSource({

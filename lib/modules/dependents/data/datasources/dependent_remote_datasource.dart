@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../../domain/entities/dependent.dart';
-import '../../domain/value_objects/dependent_changes.dart';
-import '../dtos/dependent_dto.dart';
-import '../dtos/dependent_request_body.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
+import 'package:vanep_mobile/modules/dependents/data/dtos/dependent_dto.dart';
+import 'package:vanep_mobile/modules/dependents/data/dtos/dependent_request_body.dart';
 
 class DependentRemoteDataSource {
   DependentRemoteDataSource({required this.dio, required this.environment});

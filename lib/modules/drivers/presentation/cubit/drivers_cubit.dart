@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/usecases/list_recent_drivers.dart';
-import 'drivers_state.dart';
+import 'package:vanep_mobile/modules/drivers/domain/usecases/list_recent_drivers.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
 
 class DriversCubit extends Cubit<DriversState> {
   DriversCubit({required this._listRecentDrivers})

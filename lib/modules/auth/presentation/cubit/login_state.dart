@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 
 enum LoginStatus { editing, submitting, googleSubmitting }
 

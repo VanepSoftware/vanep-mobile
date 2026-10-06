@@ -1,9 +1,9 @@
-import '../../../../core/result/result.dart';
-import '../entities/auth_session.dart';
-import '../entities/user_profile.dart';
-import '../failures/auth_failure.dart';
-import '../failures/profile_edit_failure.dart';
-import '../value_objects/profile_patch_request.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
 
 abstract class AuthRepository {
   Future<Result<AuthFailure, AuthSession>> signInWithPassword({

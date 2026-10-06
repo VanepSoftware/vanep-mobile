@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../dtos/assistant_invite_dto.dart';
-import '../dtos/assistant_lean_signup_request_dto.dart';
-import '../dtos/assistant_van_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_invite_dto.dart';
+import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_lean_signup_request_dto.dart';
+import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_van_dto.dart';
 
 abstract class AssistantRemoteDataSource {
   Future<AssistantInviteDto> validateInvite(String codeOrToken);

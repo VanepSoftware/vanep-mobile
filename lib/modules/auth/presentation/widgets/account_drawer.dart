@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/ui/vanep_confirm_dialog.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/builders/profile_menu_builder.dart';
-import '../../domain/entities/user_profile.dart';
-import '../../domain/value_objects/profile_menu_id.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/personal_data_cubit.dart';
-import '../pages/personal_data_page.dart';
-import '../pages/personal_data_slots.dart';
-import 'profile_header.dart';
-import 'profile_menu_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/builders/profile_menu_builder.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_menu_id.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_slots.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/profile_header.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/profile_menu_card.dart';
 
 class AccountDrawer extends StatelessWidget {
   const AccountDrawer({

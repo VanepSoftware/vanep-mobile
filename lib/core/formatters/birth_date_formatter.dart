@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
-import '../domain/iso_calendar_date.dart';
+import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
 
 String formatBirthDate(String? raw, Locale locale, String emptyLabel) {
   if (raw == null || raw.trim().isEmpty) return emptyLabel;

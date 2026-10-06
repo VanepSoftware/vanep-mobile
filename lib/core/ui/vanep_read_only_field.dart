@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'vanep_text_field.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 
 class VanepReadOnlyField extends StatefulWidget {
   const VanepReadOnlyField({

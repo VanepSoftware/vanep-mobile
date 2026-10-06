@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'api_image_loader.dart';
+import 'package:vanep_mobile/core/network/api_image_loader.dart';
 
 class ApiImageProvider extends ImageProvider<ApiImageProvider> {
   const ApiImageProvider({required this.path, required this.loader});

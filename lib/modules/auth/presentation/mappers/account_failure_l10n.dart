@@ -1,7 +1,7 @@
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/failures/account_failure.dart';
-import '../../domain/value_objects/account_field.dart';
-import '../../domain/value_objects/password_policy.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/password_policy.dart';
 
 String accountFailureMessage(AppLocalizations l10n, AccountFailure failure) {
   return switch (failure) {

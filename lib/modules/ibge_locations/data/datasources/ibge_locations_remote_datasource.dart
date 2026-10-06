@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../../domain/entities/brazilian_city.dart';
-import '../../domain/entities/brazilian_state.dart';
-import '../../domain/entities/cep_lookup.dart';
-import '../../domain/entities/ibge_locations_page.dart';
-import '../dtos/brazilian_city_dto.dart';
-import '../dtos/brazilian_state_dto.dart';
-import '../dtos/cep_lookup_dto.dart';
-import '../dtos/ibge_locations_page_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_state.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
+import 'package:vanep_mobile/modules/ibge_locations/data/dtos/brazilian_city_dto.dart';
+import 'package:vanep_mobile/modules/ibge_locations/data/dtos/brazilian_state_dto.dart';
+import 'package:vanep_mobile/modules/ibge_locations/data/dtos/cep_lookup_dto.dart';
+import 'package:vanep_mobile/modules/ibge_locations/data/dtos/ibge_locations_page_dto.dart';
 
 class IbgeLocationsRemoteDataSource {
   IbgeLocationsRemoteDataSource({required this.dio, required this.environment});

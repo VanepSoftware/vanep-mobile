@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
 
 sealed class AccountFailure extends Equatable {
   const AccountFailure();

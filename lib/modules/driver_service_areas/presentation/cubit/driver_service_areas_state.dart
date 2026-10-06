@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/service_area.dart';
-import '../../domain/entities/service_area_draft.dart';
-import '../../domain/failures/service_area_failure.dart';
-import '../../domain/usecases/replace_my_service_areas.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/failures/service_area_failure.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/usecases/replace_my_service_areas.dart';
 
 enum DriverServiceAreasStatus { initial, loading, ready, saving, saved }
 

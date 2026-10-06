@@ -1,8 +1,8 @@
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/driver_van.dart';
-import '../../domain/failures/driver_van_failure.dart';
-import '../../domain/value_objects/van_photo_side.dart';
-import '../../domain/value_objects/van_registration.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/failures/driver_van_failure.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_side.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_registration.dart';
 
 String vanFieldLabel(AppLocalizations l10n, VanField field) {
   return switch (field) {

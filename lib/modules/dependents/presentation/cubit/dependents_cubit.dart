@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/usecases/find_my_dependents.dart';
-import '../../domain/usecases/set_default_dependent.dart';
-import 'dependents_state.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/set_default_dependent.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 
 class DependentsCubit extends Cubit<DependentsState> {
   DependentsCubit({

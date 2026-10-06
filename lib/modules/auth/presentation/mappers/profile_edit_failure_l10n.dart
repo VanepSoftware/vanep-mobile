@@ -1,6 +1,6 @@
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/failures/profile_edit_failure.dart';
-import '../../domain/value_objects/profile_field_limits.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_field_limits.dart';
 
 String profileEditFailureMessage(
   AppLocalizations l10n,

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../dtos/token_response_dto.dart';
-import '../dtos/user_profile_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/token_response_dto.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
 
 class OAuthRemoteDataSource {
   OAuthRemoteDataSource({required this.dio, required this.environment});

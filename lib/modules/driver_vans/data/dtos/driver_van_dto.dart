@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/driver_van.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 
 part 'driver_van_dto.freezed.dart';
 part 'driver_van_dto.g.dart';

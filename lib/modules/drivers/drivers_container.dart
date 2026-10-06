@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../core/environment/environment.dart';
-import '../../core/network/dio_client.dart';
-import 'data/datasources/driver_remote_datasource.dart';
-import 'data/repositories/driver_repository_impl.dart';
-import 'domain/repositories/driver_repository.dart';
-import 'domain/usecases/find_driver_profile.dart';
-import 'domain/usecases/list_recent_drivers.dart';
-import 'presentation/cubit/driver_profile_cubit.dart';
-import 'presentation/cubit/drivers_cubit.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/modules/drivers/data/datasources/driver_remote_datasource.dart';
+import 'package:vanep_mobile/modules/drivers/data/repositories/driver_repository_impl.dart';
+import 'package:vanep_mobile/modules/drivers/domain/repositories/driver_repository.dart';
+import 'package:vanep_mobile/modules/drivers/domain/usecases/find_driver_profile.dart';
+import 'package:vanep_mobile/modules/drivers/domain/usecases/list_recent_drivers.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 
 void registerDriverDependencies(GetIt getIt) {
   final environment = getIt<Environment>();

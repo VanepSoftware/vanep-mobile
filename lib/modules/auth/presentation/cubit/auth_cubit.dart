@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/entities/auth_session.dart';
-import '../../domain/entities/user_profile.dart';
-import '../../domain/usecases/get_current_session.dart';
-import '../../domain/usecases/refresh_user_profile.dart';
-import '../../domain/usecases/sign_out.dart';
-import 'auth_state.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/get_current_session.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit({

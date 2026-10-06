@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/usecases/find_driver_profile.dart';
-import 'driver_profile_state.dart';
+import 'package:vanep_mobile/modules/drivers/domain/usecases/find_driver_profile.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_state.dart';
 
 class DriverProfileCubit extends Cubit<DriverProfileState> {
   DriverProfileCubit({

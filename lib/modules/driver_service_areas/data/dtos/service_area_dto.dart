@@ -1,5 +1,5 @@
-import '../../domain/entities/service_area.dart';
-import '../../domain/entities/service_area_draft.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
 
 ServiceArea serviceAreaFromJson(Map<String, Object?> json) {
   return ServiceArea(
