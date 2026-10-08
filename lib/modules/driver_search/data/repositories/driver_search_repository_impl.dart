@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/network/city_unmatched_problem.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/driver_search_page.dart';
-import '../../domain/failures/driver_search_failure.dart';
-import '../../domain/repositories/driver_search_repository.dart';
-import '../datasources/driver_search_remote_datasource.dart';
+import 'package:vanep_mobile/core/network/city_unmatched_problem.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_page.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search_failure.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/repositories/driver_search_repository.dart';
+import 'package:vanep_mobile/modules/driver_search/data/datasources/driver_search_remote_datasource.dart';
 
 DriverSearchFailure driverSearchFailureFrom(DioException exception) {
   final status = exception.response?.statusCode;

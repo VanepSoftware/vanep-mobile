@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../../domain/failures/assistant_failure.dart';
+import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 
 AssistantFailure mapAssistantFailure(DioException exception) {
   final response = exception.response;

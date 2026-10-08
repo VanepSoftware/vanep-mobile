@@ -1,14 +1,14 @@
-import '../../../../core/domain/iso_calendar_date.dart';
-import '../../../../core/domain/postal_address_draft.dart';
-import '../../../../core/formatters/postal_code_input_formatter.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../ibge_locations/domain/failures/cep_failure.dart';
-import '../../../ibge_locations/domain/failures/ibge_locations_failure.dart';
-import '../../domain/entities/dependent.dart';
-import '../../domain/failures/dependent_failure.dart';
-import '../../domain/value_objects/dependent_changes.dart';
-import '../../domain/value_objects/dependent_draft.dart';
-import '../cubit/dependent_form_state.dart';
+import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/core/formatters/postal_code_input_formatter.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
 
 String dependentFailureLabel(AppLocalizations l10n, DependentFailure failure) {
   return switch (failure) {

@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/result/result.dart';
-import '../../domain/failures/account_failure.dart';
-import '../../domain/repositories/account_repository.dart';
-import '../../domain/value_objects/signup_form.dart';
-import '../datasources/account_remote_datasource.dart';
-import '../mappers/account_failure_mapper.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/account_repository.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/account_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/mappers/account_failure_mapper.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
   AccountRepositoryImpl({required this.remote});

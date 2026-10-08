@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/result/result.dart';
-import '../../domain/entities/assistant_invite.dart';
-import '../../domain/entities/assistant_van.dart';
-import '../../domain/failures/assistant_failure.dart';
-import '../../domain/repositories/assistant_repository.dart';
-import '../datasources/assistant_remote_datasource.dart';
-import '../dtos/assistant_lean_signup_request_dto.dart';
-import '../mappers/assistant_failure_mapper.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_invite.dart';
+import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
+import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
+import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_repository.dart';
+import 'package:vanep_mobile/modules/assistant/data/datasources/assistant_remote_datasource.dart';
+import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_lean_signup_request_dto.dart';
+import 'package:vanep_mobile/modules/assistant/data/mappers/assistant_failure_mapper.dart';
 
 class AssistantRepositoryImpl implements AssistantRepository {
   const AssistantRepositoryImpl({required this.remote});

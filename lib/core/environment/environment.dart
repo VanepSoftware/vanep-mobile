@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../domain/postal_address_draft.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 
 String normalizeCertFingerprint(String sha1) {
   return sha1.replaceAll(':', '').replaceAll(' ', '').toUpperCase();

@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/domain/iso_calendar_date.dart';
-import '../../../../core/formatters/birth_date_formatter.dart';
-import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_gender_select.dart';
-import '../../../../core/ui/vanep_page_chrome.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_read_only_field.dart';
-import '../../../../core/ui/vanep_text_field.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/dependent.dart';
-import '../../domain/value_objects/dependent_draft.dart';
-import '../cubit/dependent_form_cubit.dart';
-import '../cubit/dependent_form_state.dart';
-import '../formatters/dependent_labels.dart';
-import '../widgets/dependent_address_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
+import 'package:vanep_mobile/core/formatters/birth_date_formatter.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_read_only_field.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_address_card.dart';
 
 const int maxDependentNameLength = 255;
 

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import '../../domain/value_objects/signup_form.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
 
 const int cpfDigitCount = 11;
 

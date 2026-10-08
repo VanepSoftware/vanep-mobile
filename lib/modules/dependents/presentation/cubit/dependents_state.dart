@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/dependent.dart';
-import '../../domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 
 enum DependentsStatus { initial, loading, ready, loadFailed, changingDefault }
 

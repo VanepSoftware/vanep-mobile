@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/media/photo_failure.dart';
-import '../../../../core/media/picked_photo.dart';
-import '../../../../core/network/photo_uploader.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/driver_van.dart';
-import '../../domain/failures/driver_van_failure.dart';
-import '../../domain/repositories/driver_van_repository.dart';
-import '../../domain/value_objects/van_photo_side.dart';
-import '../../domain/value_objects/van_registration.dart';
-import '../datasources/driver_van_remote_datasource.dart';
+import 'package:vanep_mobile/core/media/photo_failure.dart';
+import 'package:vanep_mobile/core/media/picked_photo.dart';
+import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/failures/driver_van_failure.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/repositories/driver_van_repository.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_side.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_registration.dart';
+import 'package:vanep_mobile/modules/driver_vans/data/datasources/driver_van_remote_datasource.dart';
 
 class DriverVanRepositoryImpl implements DriverVanRepository {
   const DriverVanRepositoryImpl({required this.remote});

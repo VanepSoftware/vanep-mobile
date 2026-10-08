@@ -1,5 +1,5 @@
-import '../domain/postal_address_draft.dart';
-import 'postal_code_input_formatter.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/core/formatters/postal_code_input_formatter.dart';
 
 class PostalAddressDisplayFields {
   const PostalAddressDisplayFields({

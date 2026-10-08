@@ -1,4 +1,4 @@
-import '../../domain/entities/ibge_locations_page.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
 
 int readPagingInt(Object? value) {
   if (value is int) return value;

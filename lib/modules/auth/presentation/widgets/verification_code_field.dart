@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../domain/usecases/verify_email_code.dart';
-import '../../../../l10n/app_localizations.dart';
-import 'account_text_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/verify_email_code.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/account_text_field.dart';
 
 class VerificationCodeField extends StatelessWidget {
   const VerificationCodeField({

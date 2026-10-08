@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_skeleton.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/driver.dart';
-import '../cubit/drivers_cubit.dart';
-import '../cubit/drivers_state.dart';
-import 'driver_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_card.dart';
 
 class DriversHomeBody extends StatelessWidget {
   const DriversHomeBody({this.onDriverSelected, super.key});

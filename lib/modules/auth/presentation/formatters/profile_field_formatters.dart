@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/formatters/phone_formatter.dart';
+import 'package:vanep_mobile/core/formatters/phone_formatter.dart';
 
 class ProfilePhoneInputFormatter extends TextInputFormatter {
   const ProfilePhoneInputFormatter();

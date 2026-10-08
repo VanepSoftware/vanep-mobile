@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../design_system/vanep_colors.dart';
-import '../design_system/vanep_typography.dart';
-import '../domain/postal_address_draft.dart';
-import '../formatters/postal_code_input_formatter.dart';
-import 'vanep_cep_address_card.dart';
-import 'vanep_page_chrome.dart';
-import 'vanep_text_field.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/core/formatters/postal_code_input_formatter.dart';
+import 'package:vanep_mobile/core/ui/vanep_cep_address_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 
 const vanepUfFieldWidth = 108.0;
 
