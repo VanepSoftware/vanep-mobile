@@ -1,5 +1,5 @@
-import '../value_objects/profile_menu_id.dart';
-import '../value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_menu_id.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 enum ProfileMenuSectionTitle { account, services, preferences }
 
@@ -54,7 +54,6 @@ const _baseMenu = [
 const _clientMenu = [
   ProfileMenuSection([
     _enabledPersonalData,
-    ProfileMenuEntry(id: ProfileMenuId.addresses, enabled: false),
     ProfileMenuEntry(id: ProfileMenuId.paymentMethods, enabled: false),
   ], title: ProfileMenuSectionTitle.account),
   _settingsSection,

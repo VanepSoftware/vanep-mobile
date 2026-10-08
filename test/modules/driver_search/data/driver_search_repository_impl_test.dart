@@ -8,12 +8,16 @@ import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search
 class MockDriverSearchRemoteDataSource extends Mock
     implements DriverSearchRemoteDataSource {}
 
-DioException dioFailure(int? statusCode) {
+DioException dioFailure(int? statusCode, [Object? data]) {
   return DioException(
     requestOptions: RequestOptions(),
     response: statusCode == null
         ? null
-        : Response<void>(statusCode: statusCode, requestOptions: RequestOptions()),
+        : Response<dynamic>(
+            statusCode: statusCode,
+            requestOptions: RequestOptions(),
+            data: data,
+          ),
   );
 }
 
@@ -128,5 +132,40 @@ void main() {
 
     expect(drivers.drivers.single.props, isNot(contains('Rua X')));
     expect(drivers.drivers.single.props, isNot(contains('70000000')));
+  });
+
+  test('400 with the unmatched city code is cityUnmatched', () async {
+    when(() => remote.searchByPlace(any(), any())).thenThrow(
+      dioFailure(400, {'code': 'location.city.unmatched'}),
+    );
+
+    final result = await repository.searchByPlace('place-qnl5', null);
+
+    expect(result.errorOrNull, DriverSearchFailure.cityUnmatched);
+  });
+
+  test('400 with the unmatched detail is cityUnmatched in both languages', () async {
+    for (final detail in [
+      'Este nome de cidade não corresponde a um município brasileiro.',
+      'This city name does not match a Brazilian municipality.',
+    ]) {
+      when(
+        () => remote.searchByPlace(any(), any()),
+      ).thenThrow(dioFailure(400, {'detail': detail}));
+
+      final result = await repository.searchByPlace('place-qnl5', null);
+
+      expect(result.errorOrNull, DriverSearchFailure.cityUnmatched);
+    }
+  });
+
+  test('any other 400 is still placeNotResolved', () async {
+    when(() => remote.searchByPlace(any(), any())).thenThrow(
+      dioFailure(400, {'detail': 'Endereço não encontrado.'}),
+    );
+
+    final result = await repository.searchByPlace('place-qnl5', null);
+
+    expect(result.errorOrNull, DriverSearchFailure.placeNotResolved);
   });
 }

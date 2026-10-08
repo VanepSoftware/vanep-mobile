@@ -13,7 +13,7 @@ import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_home_b
 import '../drivers_fixtures.dart';
 import 'drivers_presentation_mocks.dart';
 
-Widget _harness(DriversCubit cubit) {
+Widget _harness(DriversCubit cubit, {ValueChanged<String>? onDriverSelected}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -26,7 +26,7 @@ Widget _harness(DriversCubit cubit) {
     home: Scaffold(
       body: BlocProvider<DriversCubit>.value(
         value: cubit,
-        child: const DriversHomeBody(),
+        child: DriversHomeBody(onDriverSelected: onDriverSelected),
       ),
     ),
   );
@@ -61,6 +61,22 @@ void main() {
     await tester.pumpWidget(_harness(cubit));
 
     expect(find.byType(DriverCard), findsNWidgets(2));
+  });
+
+  testWidgets('tapping a suggestion opens that driver', (tester) async {
+    _emit(
+      cubit,
+      const DriversState(
+        status: DriversStatus.loaded,
+        drivers: testRecentDrivers,
+      ),
+    );
+    final selected = <String>[];
+
+    await tester.pumpWidget(_harness(cubit, onDriverSelected: selected.add));
+    await tester.tap(find.text('Ana Pereira'));
+
+    expect(selected, ['driver-2']);
   });
 
   testWidgets('shows the empty message when there are no drivers', (

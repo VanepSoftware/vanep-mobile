@@ -1,0 +1,1 @@
+enum VanPhotoSide { front, side }

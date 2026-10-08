@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_card.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
 
 class NoLinkedVanCard extends StatelessWidget {
   const NoLinkedVanCard({required this.onFindVanTapped, super.key});

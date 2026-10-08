@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../widgets/drivers_home_body.dart';
-import '../widgets/drivers_search_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_home_body.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_search_field.dart';
 
 class FindVansTab extends StatelessWidget {
-  const FindVansTab({required this.onSearchTapped, super.key});
+  const FindVansTab({
+    required this.onSearchTapped,
+    this.onDriverSelected,
+    super.key,
+  });
 
   final VoidCallback onSearchTapped;
+
+  final ValueChanged<String>? onDriverSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +37,7 @@ class FindVansTab extends StatelessWidget {
             style: VanepTypography.sectionTitle,
           ),
           const SizedBox(height: 12),
-          const DriversHomeBody(),
+          DriversHomeBody(onDriverSelected: onDriverSelected),
         ],
       ),
     );

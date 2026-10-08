@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_menu_card.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/builders/profile_menu_builder.dart';
-import '../../domain/value_objects/profile_menu_id.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/builders/profile_menu_builder.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_menu_id.dart';
 
 class ProfileMenuSectionView extends StatelessWidget {
   const ProfileMenuSectionView({
@@ -87,7 +87,6 @@ class ProfileMenuCard extends StatelessWidget {
 String profileMenuLabel(ProfileMenuId id, AppLocalizations l10n) {
   return switch (id) {
     ProfileMenuId.personalData => l10n.profilePersonalData,
-    ProfileMenuId.addresses => l10n.profileAddresses,
     ProfileMenuId.paymentMethods => l10n.profilePaymentMethods,
     ProfileMenuId.professionalData => l10n.profileProfessionalData,
     ProfileMenuId.assistantInvite => l10n.profileAssistantInvite,
@@ -100,7 +99,6 @@ String profileMenuLabel(ProfileMenuId id, AppLocalizations l10n) {
 IconData profileMenuIcon(ProfileMenuId id) {
   return switch (id) {
     ProfileMenuId.personalData => Icons.person_outline,
-    ProfileMenuId.addresses => Icons.location_on_outlined,
     ProfileMenuId.paymentMethods => Icons.credit_card_outlined,
     ProfileMenuId.professionalData => Icons.work_outline,
     ProfileMenuId.assistantInvite => Icons.mail_outline,

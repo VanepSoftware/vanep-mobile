@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../../domain/failures/profile_edit_failure.dart';
-import '../dtos/profile_error_dto.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/profile_error_dto.dart';
 
 ProfileEditFailure mapProfileEditDioException(DioException error) {
   final status = error.response?.statusCode;

@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/result/result.dart';
-import '../../../auth/domain/value_objects/user_type.dart';
-import '../../domain/entities/profile_summary.dart';
-import '../../domain/failures/profile_summary_failure.dart';
-import '../../domain/profile_summary_support.dart';
-import '../../domain/repositories/profile_summary_repository.dart';
-import '../datasources/profile_summary_remote_datasource.dart';
+import 'package:vanep_mobile/core/media/photo_failure.dart';
+import 'package:vanep_mobile/core/media/picked_photo.dart';
+import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/profile/domain/entities/profile_summary.dart';
+import 'package:vanep_mobile/modules/profile/domain/failures/profile_summary_failure.dart';
+import 'package:vanep_mobile/modules/profile/domain/profile_summary_support.dart';
+import 'package:vanep_mobile/modules/profile/domain/repositories/profile_summary_repository.dart';
+import 'package:vanep_mobile/modules/profile/data/datasources/profile_summary_remote_datasource.dart';
 
 class ProfileSummaryRepositoryImpl implements ProfileSummaryRepository {
   ProfileSummaryRepositoryImpl({required this.remote});
@@ -27,6 +30,19 @@ class ProfileSummaryRepositoryImpl implements ProfileSummaryRepository {
       return Err(NetworkProfileSummaryFailure(error.message));
     } on Object catch (error) {
       return Err(UnexpectedProfileSummaryFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Result<PhotoFailure, void>> uploadPhoto(
+    ProfileSummary owner,
+    PickedPhoto photo,
+  ) async {
+    try {
+      await remote.uploadPhoto(owner, photo);
+      return const Ok(null);
+    } on DioException catch (error) {
+      return Err(photoFailureFrom(error));
     }
   }
 }

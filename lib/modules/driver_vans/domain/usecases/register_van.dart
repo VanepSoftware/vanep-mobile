@@ -1,0 +1,17 @@
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/failures/driver_van_failure.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/repositories/driver_van_repository.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_registration.dart';
+
+class RegisterVan {
+  const RegisterVan(this.repository);
+
+  final DriverVanRepository repository;
+
+  Future<Result<DriverVanFailure, DriverVan>> call(
+    VanRegistration registration,
+  ) {
+    return repository.registerVan(registration);
+  }
+}

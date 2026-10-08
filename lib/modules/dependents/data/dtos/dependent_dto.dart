@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../core/domain/gender.dart';
-import '../../domain/entities/dependent.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 
 part 'dependent_dto.freezed.dart';
 part 'dependent_dto.g.dart';
@@ -15,7 +15,9 @@ abstract class DependentAddressDto
     @Default('') String street,
     String? number,
     String? complement,
-    String? district,
+    String? zipCode,
+    String? neighborhood,
+    @Default('') String cityToken,
     @Default('') String cityName,
     @Default('') String stateUf,
   }) = _DependentAddressDto;

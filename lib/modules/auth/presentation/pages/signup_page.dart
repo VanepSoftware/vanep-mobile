@@ -2,31 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/formatters/birth_date_formatter.dart';
-import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_text_field.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/failures/account_failure.dart';
-import '../../domain/value_objects/account_field.dart';
-import '../../domain/value_objects/google_signup_ticket.dart';
-import '../../domain/value_objects/user_type.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/signup_cubit.dart';
-import '../cubit/signup_state.dart';
-import '../cubit/signup_steps.dart';
-import '../formatters/profile_field_formatters.dart';
-import '../formatters/signup_input_formatters.dart';
-import '../mappers/account_failure_l10n.dart';
-import '../widgets/account_text_field.dart';
-import '../widgets/auth_page_chrome.dart';
-import '../widgets/password_requirements_checklist.dart';
-import '../widgets/personal_data_gender_chips.dart';
-import 'account_type_page.dart';
-import 'email_code_verification_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
+import 'package:vanep_mobile/core/formatters/birth_date_formatter.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_steps.dart';
+import 'package:vanep_mobile/modules/auth/presentation/formatters/profile_field_formatters.dart';
+import 'package:vanep_mobile/modules/auth/presentation/formatters/signup_input_formatters.dart';
+import 'package:vanep_mobile/modules/auth/presentation/mappers/account_failure_l10n.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/account_text_field.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/password_requirements_checklist.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
 
 Future<void> openPasswordSignup(BuildContext context, UserType type) {
   return openSignup(context, type);
@@ -71,7 +72,7 @@ class SignupPage extends StatelessWidget {
           },
           child: Scaffold(
             backgroundColor: VanepColors.card,
-            appBar: const AuthAppBar(),
+            appBar: const VanepAppBar(),
             body: Column(
               children: [
                 Expanded(
@@ -84,7 +85,7 @@ class SignupPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                AuthBottomBar(
+                VanepBottomBar(
                   child: VanepPrimaryButton(
                     label: state.isLastStep
                         ? l10n.signupCreateAccount
@@ -189,7 +190,7 @@ class SignupStepHeader extends StatelessWidget {
           totalSteps: totalSteps,
         ),
         const SizedBox(height: 28),
-        AuthPageHeader(
+        VanepPageHeader(
           title: signupStepTitle(l10n, state.currentStep),
           subtitle: signupStepSubtitle(l10n, state.currentStep),
         ),
@@ -363,16 +364,10 @@ class SignupPersonalFields extends StatelessWidget {
           value: form.birthDate,
           onChanged: cubit.updateBirthDate,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.signupFieldGender, style: VanepTypography.fieldLabel),
-            const SizedBox(height: 8),
-            PersonalDataGenderChips(
-              value: form.gender,
-              onChanged: cubit.updateGender,
-            ),
-          ],
+        VanepGenderSelect(
+          label: l10n.signupFieldGender,
+          value: form.gender,
+          onChanged: cubit.updateGender,
         ),
       ], 20),
     );
@@ -395,7 +390,7 @@ class SignupProfessionalFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: withSpacing([
-        AuthFieldRow(
+        VanepFieldRow(
           children: [
             AccountTextField(
               label: l10n.signupFieldBasePrice,
@@ -482,10 +477,10 @@ class SignupAccountSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return AuthOutlinedPanel(
+    return VanepOutlinedPanel(
       child: Row(
         children: [
-          AuthIconBadge(icon: accountTypeIcon(type)),
+          VanepIconBadge(icon: accountTypeIcon(type)),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -550,7 +545,7 @@ class _SignupBirthDateFieldState extends State<SignupBirthDateField> {
     final locale = Localizations.localeOf(context);
     _controller.text = date == null
         ? ''
-        : formatBirthDate(date.toIso8601String(), locale, '');
+        : formatBirthDate(formatIsoCalendarDate(date), locale, '');
   }
 
   Future<void> pickDate() async {
@@ -598,7 +593,7 @@ class SignupTermsField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AuthOutlinedPanel(
+        VanepOutlinedPanel(
           highlighted: accepted,
           onTap: () => onChanged(!accepted),
           child: Row(

@@ -47,4 +47,47 @@ void main() {
 
     expect(result.errorOrNull, isA<UnexpectedDriverFailure>());
   });
+
+  group('findProfile', () {
+    DioException statusError(int? status) => DioException(
+      requestOptions: RequestOptions(),
+      response: status == null
+          ? null
+          : Response<void>(requestOptions: RequestOptions(), statusCode: status),
+    );
+
+    test('returns the profile on success', () async {
+      when(
+        () => remote.fetchProfile('driver-1'),
+      ).thenAnswer((_) async => testDriverProfile);
+
+      final result = await repository.findProfile('driver-1');
+
+      expect(result.valueOrNull, testDriverProfile);
+    });
+
+    test('maps a 404 to NotFoundDriverFailure', () async {
+      when(() => remote.fetchProfile('driver-1')).thenThrow(statusError(404));
+
+      final result = await repository.findProfile('driver-1');
+
+      expect(result.errorOrNull, const NotFoundDriverFailure());
+    });
+
+    test('maps a request without response to NetworkDriverFailure', () async {
+      when(() => remote.fetchProfile('driver-1')).thenThrow(statusError(null));
+
+      final result = await repository.findProfile('driver-1');
+
+      expect(result.errorOrNull, isA<NetworkDriverFailure>());
+    });
+
+    test('maps any other status to UnexpectedDriverFailure', () async {
+      when(() => remote.fetchProfile('driver-1')).thenThrow(statusError(500));
+
+      final result = await repository.findProfile('driver-1');
+
+      expect(result.errorOrNull, isA<UnexpectedDriverFailure>());
+    });
+  });
 }

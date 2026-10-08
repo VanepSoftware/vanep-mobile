@@ -1,4 +1,4 @@
-import '../../../../core/domain/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 
 abstract class Dependent {
   String get token;
@@ -23,7 +23,11 @@ abstract class DependentAddress {
 
   String? get complement;
 
-  String? get district;
+  String? get zipCode;
+
+  String? get neighborhood;
+
+  String get cityToken;
 
   String get cityName;
 

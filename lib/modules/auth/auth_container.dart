@@ -3,42 +3,51 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../core/environment/environment.dart';
-import '../../core/network/auth_interceptor.dart';
-import '../../core/network/dio_client.dart';
-import '../../core/result/result.dart';
-import 'data/datasources/account_remote_datasource.dart';
-import 'data/datasources/auth_local_datasource.dart';
-import 'data/datasources/google_id_token_source.dart';
-import 'data/datasources/oauth_remote_datasource.dart';
-import 'data/datasources/user_profile_remote_datasource.dart';
-import 'data/repositories/account_repository_impl.dart';
-import 'data/repositories/auth_repository_impl.dart';
-import 'domain/repositories/account_repository.dart';
-import 'domain/repositories/auth_repository.dart';
-import 'domain/usecases/complete_google_signup.dart';
-import 'domain/usecases/get_current_session.dart';
-import 'domain/usecases/patch_user_profile.dart';
-import 'domain/usecases/refresh_user_profile.dart';
-import 'domain/usecases/request_email_change.dart';
-import 'domain/usecases/request_password_reset.dart';
-import 'domain/usecases/resend_email_verification_code.dart';
-import 'domain/usecases/reset_password_with_code.dart';
-import 'domain/usecases/sign_in_with_google.dart';
-import 'domain/usecases/sign_in_with_password.dart';
-import 'domain/usecases/sign_out.dart';
-import 'domain/usecases/sign_up.dart';
-import 'domain/usecases/verify_email_code.dart';
-import 'presentation/cubit/auth_cubit.dart';
-import 'presentation/cubit/code_resend_cooldown.dart';
-import 'presentation/cubit/email_code_verification_cubit.dart';
-import 'presentation/cubit/email_code_verification_state.dart';
-import 'presentation/cubit/login_cubit.dart';
-import 'presentation/cubit/password_reset_cubit.dart';
-import 'presentation/cubit/personal_data_cubit.dart';
-import 'presentation/cubit/signup_cubit.dart';
-import 'presentation/cubit/signup_state.dart';
-import 'presentation/cubit/start_session.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/network/auth_interceptor.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/lookup_cep.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/account_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/google_id_token_source.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/oauth_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/personal_address_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/user_profile_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/repositories/account_repository_impl.dart';
+import 'package:vanep_mobile/modules/auth/data/repositories/auth_repository_impl.dart';
+import 'package:vanep_mobile/modules/auth/data/repositories/personal_address_repository_impl.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/account_repository.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/auth_repository.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/personal_address_repository.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/complete_google_signup.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/delete_my_personal_address.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/get_current_session.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/patch_user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/refresh_user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/request_email_change.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/request_password_reset.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/resend_email_verification_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/reset_password_with_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_google.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_up.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/upsert_my_personal_address.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/verify_email_code.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/code_resend_cooldown.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/password_reset_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart';
 
 void registerAuthDependencies(
   GetIt getIt, {
@@ -159,11 +168,37 @@ void registerAuthDependencies(
     ..registerFactory<RequestEmailChange>(
       () => RequestEmailChange(getIt<AuthRepository>()),
     )
+    ..registerSingleton<PersonalAddressRemoteDataSource>(
+      PersonalAddressRemoteDataSource(
+        dio: getIt<Dio>(instanceName: authenticatedDioName),
+        environment: environment,
+      ),
+    )
+    ..registerSingleton<PersonalAddressRepository>(
+      PersonalAddressRepositoryImpl(
+        remote: getIt<PersonalAddressRemoteDataSource>(),
+      ),
+    )
+    ..registerFactory<FindMyPersonalAddress>(
+      () => FindMyPersonalAddress(getIt<PersonalAddressRepository>()),
+    )
+    ..registerFactory<UpsertMyPersonalAddress>(
+      () => UpsertMyPersonalAddress(getIt<PersonalAddressRepository>()),
+    )
+    ..registerFactory<DeleteMyPersonalAddress>(
+      () => DeleteMyPersonalAddress(getIt<PersonalAddressRepository>()),
+    )
     ..registerFactoryParam<PersonalDataCubit, SyncProfile, void>(
       (syncProfile, _) => PersonalDataCubit(
         refreshUserProfile: getIt<RefreshUserProfile>(),
         patchUserProfile: getIt<PatchUserProfile>(),
         requestEmailChange: getIt<RequestEmailChange>(),
+        findMyPersonalAddress: getIt<FindMyPersonalAddress>(),
+        upsertMyPersonalAddress: getIt<UpsertMyPersonalAddress>(),
+        deleteMyPersonalAddress: getIt<DeleteMyPersonalAddress>(),
+        lookupCep: getIt<LookupCep>(),
+        listStates: getIt<ListStates>(),
+        listCities: getIt<ListCities>(),
         syncProfile: syncProfile,
       ),
     )

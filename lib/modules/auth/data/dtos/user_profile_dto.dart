@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/user_profile.dart';
-import '../../../../core/domain/gender.dart';
-import '../../domain/value_objects/onboarding_step.dart';
-import '../../domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 part 'user_profile_dto.freezed.dart';
 part 'user_profile_dto.g.dart';

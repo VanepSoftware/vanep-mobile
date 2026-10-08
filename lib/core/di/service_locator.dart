@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import '../environment/environment.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
 
 final GetIt getIt = GetIt.instance;
 

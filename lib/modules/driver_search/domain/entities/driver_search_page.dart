@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'driver_search_result.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_result.dart';
 
 class DriverSearchPage extends Equatable {
   const DriverSearchPage({required this.drivers, required this.isLast});

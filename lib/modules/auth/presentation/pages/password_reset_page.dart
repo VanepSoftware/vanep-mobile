@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/usecases/reset_password_with_code.dart';
-import '../../domain/value_objects/account_field.dart';
-import '../cubit/email_code_verification_state.dart';
-import '../cubit/password_reset_cubit.dart';
-import '../cubit/password_reset_state.dart';
-import '../mappers/account_failure_l10n.dart';
-import '../widgets/account_text_field.dart';
-import '../widgets/auth_page_chrome.dart';
-import '../widgets/password_requirements_checklist.dart';
-import '../widgets/verification_code_field.dart';
-import 'email_code_verification_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/reset_password_with_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/password_reset_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/password_reset_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/mappers/account_failure_l10n.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/account_text_field.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/password_requirements_checklist.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/verification_code_field.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
 
 Future<void> openPasswordReset(
   BuildContext context, {
@@ -45,7 +45,7 @@ class PasswordResetPage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: VanepColors.card,
-          appBar: const AuthAppBar(),
+          appBar: const VanepAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
@@ -94,7 +94,7 @@ class PasswordResetEmailStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AuthPageHeader(
+        VanepPageHeader(
           icon: Icons.lock_reset_outlined,
           title: l10n.passwordResetTitle,
           subtitle: l10n.passwordResetEmailHint,
@@ -144,7 +144,7 @@ class PasswordResetCodeStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AuthPageHeader(
+        VanepPageHeader(
           icon: Icons.mark_email_read_outlined,
           title: l10n.passwordResetCodeTitle,
           subtitle: l10n.passwordResetCodeSentTo(state.email.trim()),

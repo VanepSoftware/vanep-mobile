@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/value_objects/account_field.dart';
-import 'email_code_verification_state.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
 
 enum PasswordResetStep { email, code }
 

@@ -1,4 +1,4 @@
-import '../../domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
 
 enum SignupStep {
   access({

@@ -1,4 +1,4 @@
-import '../../../../core/domain/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 
 class ProfilePatchRequest {
   const ProfilePatchRequest({
@@ -52,7 +52,7 @@ class ProfilePatchRequestBuilder {
     _phone = phone;
   }
 
-  void setGender(Gender gender) {
+  void setGender(Gender? gender) {
     _includesGender = true;
     _gender = gender;
   }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../design_system/vanep_colors.dart';
-import '../design_system/vanep_typography.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
 class VanepTextField extends StatefulWidget {
   const VanepTextField({
@@ -11,6 +11,7 @@ class VanepTextField extends StatefulWidget {
     required this.controller,
     required this.onChanged,
     this.enabled = true,
+    this.isRequired = false,
     this.errorText,
     this.hintText,
     this.prefixIcon,
@@ -21,6 +22,9 @@ class VanepTextField extends StatefulWidget {
     this.maxLength,
     this.obscureText = false,
     this.readOnly = false,
+    this.isLoading = false,
+    this.loadingLabel,
+    this.labelTrailing,
     this.onTap,
     this.onSubmitted,
     super.key,
@@ -30,6 +34,7 @@ class VanepTextField extends StatefulWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final bool enabled;
+  final bool isRequired;
   final String? errorText;
   final String? hintText;
   final IconData? prefixIcon;
@@ -40,6 +45,9 @@ class VanepTextField extends StatefulWidget {
   final int? maxLength;
   final bool obscureText;
   final bool readOnly;
+  final bool isLoading;
+  final String? loadingLabel;
+  final Widget? labelTrailing;
   final VoidCallback? onTap;
   final ValueChanged<String>? onSubmitted;
 
@@ -57,7 +65,11 @@ class _VanepTextFieldState extends State<VanepTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: VanepTypography.fieldLabel),
+        VanepFieldLabel(
+          label: widget.label,
+          isRequired: widget.isRequired,
+          trailing: widget.labelTrailing,
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: widget.controller,
@@ -87,7 +99,9 @@ class _VanepTextFieldState extends State<VanepTextField> {
                     textHidden: _textHidden,
                     onPressed: toggleTextVisibility,
                   )
-                : null,
+                : (widget.isLoading
+                      ? VanepFieldSpinner(label: widget.loadingLabel)
+                      : null),
           ),
         ),
       ],
@@ -136,6 +150,29 @@ InputDecoration vanepInputDecoration({
   );
 }
 
+class VanepFieldSpinner extends StatelessWidget {
+  const VanepFieldSpinner({this.label, super.key});
+
+  final String? label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: label,
+      child: const Padding(
+        padding: EdgeInsets.all(14),
+        child: SizedBox.square(
+          dimension: 20,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: VanepColors.action,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class TextVisibilityToggle extends StatelessWidget {
   const TextVisibilityToggle({
     required this.textHidden,
@@ -157,6 +194,48 @@ class TextVisibilityToggle extends StatelessWidget {
         textHidden ? Icons.visibility_outlined : Icons.visibility_off_outlined,
         size: 20,
       ),
+    );
+  }
+}
+
+class VanepFieldLabel extends StatelessWidget {
+  const VanepFieldLabel({
+    required this.label,
+    this.isRequired = false,
+    this.trailing,
+    super.key,
+  });
+
+  final String label;
+  final bool isRequired;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Text(label, style: VanepTypography.fieldLabel);
+    final title = isRequired
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(child: text),
+              const SizedBox(width: 4),
+              Text(
+                '*',
+                style: VanepTypography.fieldLabel.copyWith(
+                  color: VanepColors.danger,
+                ),
+              ),
+            ],
+          )
+        : text;
+    final trailing = this.trailing;
+    if (trailing == null) return title;
+    return Row(
+      children: [
+        Expanded(child: title),
+        const SizedBox(width: 8),
+        trailing,
+      ],
     );
   }
 }

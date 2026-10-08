@@ -1,16 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/domain/gender.dart';
-import '../../domain/failures/account_failure.dart';
-import '../../domain/usecases/complete_google_signup.dart';
-import '../../domain/usecases/sign_in_with_google.dart';
-import '../../domain/usecases/sign_up.dart';
-import '../../domain/value_objects/account_field.dart';
-import '../../domain/value_objects/signup_form.dart';
-import '../../domain/value_objects/google_signup_ticket.dart';
-import 'signup_state.dart';
-import 'signup_steps.dart';
-import 'start_session.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/complete_google_signup.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_google.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_up.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_steps.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart';
 
 class SignupCubit extends Cubit<SignupState> {
   SignupCubit({
@@ -54,8 +54,10 @@ class SignupCubit extends Cubit<SignupState> {
   void updateBirthDate(DateTime value) =>
       updateForm(state.form.copyWith(birthDate: value), AccountField.birthDate);
 
-  void updateGender(Gender value) =>
-      updateForm(state.form.copyWith(gender: value), AccountField.gender);
+  void updateGender(Gender? value) => updateForm(
+    state.form.copyWith(gender: value, clearGender: value == null),
+    AccountField.gender,
+  );
 
   void updateAcceptTerms(bool value) => updateForm(
     state.form.copyWith(acceptTerms: value),

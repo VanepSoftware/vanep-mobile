@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/password_policy.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
@@ -182,6 +183,21 @@ void main() {
             .validate(),
         {AccountField.passwordConfirmation: AccountFieldIssue.mismatch},
       );
+    });
+  });
+
+  group('gender', () {
+    test('copyWith sets and keeps the gender', () {
+      final form = validClientSignupForm.copyWith(gender: Gender.female);
+
+      expect(form.gender, Gender.female);
+      expect(form.copyWith(name: 'Outra').gender, Gender.female);
+    });
+
+    test('copyWith can clear the gender', () {
+      final form = validClientSignupForm.copyWith(gender: Gender.female);
+
+      expect(form.copyWith(clearGender: true).gender, isNull);
     });
   });
 }

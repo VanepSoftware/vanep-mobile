@@ -1,6 +1,5 @@
 enum ProfileMenuId {
   personalData,
-  addresses,
   paymentMethods,
   professionalData,
   assistantInvite,

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/driver_search_result.dart';
-import '../../domain/failures/driver_search_failure.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_result.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search_failure.dart';
 
 enum DriverSearchStatus {
   initial,

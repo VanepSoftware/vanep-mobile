@@ -3,11 +3,10 @@ import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failur
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 
 void main() {
-  test('a validation failure without a field carries only the detail', () {
-    const failure = DependentValidationFailure(detail: 'Nome muito longo.');
+  test('a validation failure without a field is not attributed', () {
+    const failure = DependentValidationFailure();
 
     expect(failure.isAttributedToAField, isFalse);
-    expect(failure.detail, 'Nome muito longo.');
   });
 
   test('a validation failure attributed to a field exposes it', () {
@@ -25,8 +24,16 @@ void main() {
       equals(const DependentNetworkFailure()),
     );
     expect(
-      const DependentValidationFailure(detail: 'a'),
-      isNot(equals(const DependentValidationFailure(detail: 'b'))),
+      const DependentValidationFailure(
+        messagesByField: {DependentField.name: 'a'},
+      ),
+      isNot(
+        equals(
+          const DependentValidationFailure(
+            messagesByField: {DependentField.name: 'b'},
+          ),
+        ),
+      ),
     );
   });
 }

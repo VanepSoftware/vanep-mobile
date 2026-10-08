@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/ui/vanep_greeting_header.dart';
-import '../../../../core/ui/vanep_home_top_bar.dart';
-import '../widgets/no_linked_van_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_greeting_header.dart';
+import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
+import 'package:vanep_mobile/modules/client/presentation/widgets/no_linked_van_card.dart';
 
 class ClientHomeTab extends StatelessWidget {
   const ClientHomeTab({

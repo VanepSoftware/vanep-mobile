@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../core/environment/environment.dart';
-import '../../core/network/dio_client.dart';
-import 'data/datasources/driver_search_remote_datasource.dart';
-import 'data/repositories/driver_search_repository_impl.dart';
-import 'domain/repositories/driver_search_repository.dart';
-import 'domain/usecases/search_drivers_by_place.dart';
-import 'presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/modules/driver_search/data/datasources/driver_search_remote_datasource.dart';
+import 'package:vanep_mobile/modules/driver_search/data/repositories/driver_search_repository_impl.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/repositories/driver_search_repository.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/usecases/search_drivers_by_place.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 
 void registerDriverSearchDependencies(GetIt getIt) {
   final environment = getIt<Environment>();

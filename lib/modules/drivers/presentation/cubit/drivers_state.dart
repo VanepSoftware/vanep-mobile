@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/driver.dart';
-import '../../domain/failures/driver_failure.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
+import 'package:vanep_mobile/modules/drivers/domain/failures/driver_failure.dart';
 
 enum DriversStatus { initial, loading, loaded, error }
 

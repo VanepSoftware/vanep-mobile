@@ -1,7 +1,7 @@
-import '../../../../core/result/result.dart';
-import '../entities/dependent.dart';
-import '../failures/dependent_failure.dart';
-import '../value_objects/dependent_changes.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
 
 abstract class DependentRepository {
   Future<Result<DependentFailure, List<Dependent>>> findMyDependents();

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/email_code_verification_cubit.dart';
-import '../cubit/email_code_verification_state.dart';
-import '../mappers/account_failure_l10n.dart';
-import '../widgets/auth_page_chrome.dart';
-import '../widgets/verification_code_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/mappers/account_failure_l10n.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/verification_code_field.dart';
 
 Future<void> openEmailCodeVerification(
   BuildContext context, {
@@ -59,11 +59,11 @@ class EmailCodeVerificationPage extends StatelessWidget {
         final cubit = context.read<EmailCodeVerificationCubit>();
         return Scaffold(
           backgroundColor: VanepColors.card,
-          appBar: const AuthAppBar(),
+          appBar: const VanepAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
-              AuthPageHeader(
+              VanepPageHeader(
                 icon: Icons.mark_email_unread_outlined,
                 title: l10n.emailVerificationTitle,
                 subtitle: state.codeAlreadySent

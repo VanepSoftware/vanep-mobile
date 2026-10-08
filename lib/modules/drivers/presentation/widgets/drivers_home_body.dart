@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_skeleton.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/driver.dart';
-import '../cubit/drivers_cubit.dart';
-import '../cubit/drivers_state.dart';
-import 'driver_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_card.dart';
 
 class DriversHomeBody extends StatelessWidget {
-  const DriversHomeBody({super.key});
+  const DriversHomeBody({this.onDriverSelected, super.key});
+
+  final ValueChanged<String>? onDriverSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class DriversHomeBody extends StatelessWidget {
           DriversStatus.loaded => DriversSuggestionsList(
             drivers: state.visibleDrivers,
             emptyMessage: l10n.driversEmpty,
+            onDriverSelected: onDriverSelected,
           ),
         };
       },
@@ -88,11 +91,13 @@ class DriversSuggestionsList extends StatelessWidget {
   const DriversSuggestionsList({
     required this.drivers,
     required this.emptyMessage,
+    this.onDriverSelected,
     super.key,
   });
 
   final List<Driver> drivers;
   final String emptyMessage;
+  final ValueChanged<String>? onDriverSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +117,20 @@ class DriversSuggestionsList extends StatelessWidget {
         for (final driver in drivers)
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: DriverCard(driver: driver),
+            child: DriverCard(
+              driver: driver,
+              onTap: selectDriverCallback(onDriverSelected, driver.token),
+            ),
           ),
       ],
     );
   }
+}
+
+VoidCallback? selectDriverCallback(
+  ValueChanged<String>? onDriverSelected,
+  String driverToken,
+) {
+  if (onDriverSelected == null) return null;
+  return () => onDriverSelected(driverToken);
 }

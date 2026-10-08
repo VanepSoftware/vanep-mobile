@@ -23,6 +23,8 @@ void main() {
         birthDate: any(named: 'birthDate'),
         email: any(named: 'email'),
         cpf: any(named: 'cpf'),
+        password: any(named: 'password'),
+        acceptTerms: any(named: 'acceptTerms'),
       ),
     ).thenAnswer((_) async => const Ok<AssistantFailure, void>(null));
 
@@ -32,6 +34,8 @@ void main() {
       birthDate: '1995-04-12',
       email: 'carlos@example.com',
       cpf: '123.456.789-00',
+      password: 'Password123!',
+      acceptTerms: true,
     );
 
     expect(result, const Ok<AssistantFailure, void>(null));
@@ -42,6 +46,8 @@ void main() {
         birthDate: '1995-04-12',
         email: 'carlos@example.com',
         cpf: '123.456.789-00',
+        password: 'Password123!',
+        acceptTerms: true,
       ),
     ).called(1);
   });
@@ -54,6 +60,8 @@ void main() {
         birthDate: any(named: 'birthDate'),
         email: any(named: 'email'),
         cpf: any(named: 'cpf'),
+        password: any(named: 'password'),
+        acceptTerms: any(named: 'acceptTerms'),
       ),
     ).thenAnswer(
       (_) async => const Err<AssistantFailure, void>(
@@ -67,6 +75,8 @@ void main() {
       birthDate: 'invalid-date',
       email: 'carlos@example.com',
       cpf: 'invalid-cpf',
+      password: 'Password123!',
+      acceptTerms: true,
     );
 
     expect(

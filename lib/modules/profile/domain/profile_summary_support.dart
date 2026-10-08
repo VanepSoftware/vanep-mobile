@@ -1,4 +1,4 @@
-import '../../auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 UserType? profileSummaryUserType(UserType? type) {
   return switch (type) {

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'driver_home_state.dart';
+import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_state.dart';
 
 class DriverHomeCubit extends Cubit<DriverHomeState> {
   DriverHomeCubit() : super(const DriverHomeState());

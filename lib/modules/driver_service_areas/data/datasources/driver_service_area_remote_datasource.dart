@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../../domain/entities/service_area.dart';
-import '../../domain/entities/service_area_draft.dart';
-import '../dtos/service_area_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/data/dtos/service_area_dto.dart';
 
 class DriverServiceAreaRemoteDataSource {
   DriverServiceAreaRemoteDataSource({

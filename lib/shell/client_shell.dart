@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../core/design_system/vanep_colors.dart';
-import '../core/ui/vanep_coming_soon.dart';
-import '../l10n/app_localizations.dart';
-import '../modules/auth/domain/entities/user_profile.dart';
-import '../modules/client/presentation/pages/client_home_tab.dart';
-import '../modules/dependents/presentation/cubit/dependents_cubit.dart';
-import '../modules/dependents/presentation/pages/dependents_page.dart';
-import '../modules/drivers/presentation/pages/find_vans_tab.dart';
-import 'client_bottom_nav.dart';
-import 'shell_account_drawer.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/client/presentation/pages/client_home_tab.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/pages/find_vans_tab.dart';
+import 'package:vanep_mobile/shell/client_bottom_nav.dart';
+import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 
 const clientShellVansTabIndex = 1;
 
@@ -20,12 +20,16 @@ class ClientShell extends StatefulWidget {
   const ClientShell({
     required this.profile,
     required this.openDriverSearch,
+    required this.openDriverProfile,
     super.key,
   });
 
   final UserProfile profile;
 
   final Future<void> Function(BuildContext context) openDriverSearch;
+
+  final Future<void> Function(BuildContext context, String driverToken)
+  openDriverProfile;
 
   @override
   State<ClientShell> createState() => ClientShellState();
@@ -59,7 +63,11 @@ class ClientShellState extends State<ClientShell> {
             onNotificationsTapped: () => openNotifications(context),
             onFindVanTapped: () => selectShellTab(clientShellVansTabIndex),
           ),
-          FindVansTab(onSearchTapped: () => widget.openDriverSearch(context)),
+          FindVansTab(
+            onSearchTapped: () => widget.openDriverSearch(context),
+            onDriverSelected: (driverToken) =>
+                widget.openDriverProfile(context, driverToken),
+          ),
           VanepComingSoon(title: l10n.navContracts, message: l10n.comingSoon),
           const DependentsPage(),
         ],

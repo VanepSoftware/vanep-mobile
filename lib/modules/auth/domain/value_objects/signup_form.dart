@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/domain/gender.dart';
-import 'account_field.dart';
-import 'password_policy.dart';
-import 'user_type.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/password_policy.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 class SignupForm extends Equatable {
   const SignupForm({
@@ -69,6 +69,7 @@ class SignupForm extends Equatable {
     DateTime? birthDate,
     bool clearBirthDate = false,
     Gender? gender,
+    bool clearGender = false,
     bool? acceptTerms,
     String? basePrice,
     String? cnpj,
@@ -83,7 +84,7 @@ class SignupForm extends Equatable {
       document: document ?? this.document,
       phone: phone ?? this.phone,
       birthDate: clearBirthDate ? null : (birthDate ?? this.birthDate),
-      gender: gender ?? this.gender,
+      gender: clearGender ? null : (gender ?? this.gender),
       acceptTerms: acceptTerms ?? this.acceptTerms,
       basePrice: basePrice ?? this.basePrice,
       cnpj: cnpj ?? this.cnpj,

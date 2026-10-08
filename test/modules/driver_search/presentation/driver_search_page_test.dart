@@ -32,7 +32,11 @@ const rankedResults = [
   DriverSearchResult(token: 'd4', name: 'Cidade inteira'),
 ];
 
-Widget harness(DriverSearchCubit cubit, PlaceAutocompleteController auto) {
+Widget harness(
+  DriverSearchCubit cubit,
+  PlaceAutocompleteController auto, {
+  ValueChanged<String>? onDriverSelected,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -44,7 +48,10 @@ Widget harness(DriverSearchCubit cubit, PlaceAutocompleteController auto) {
     locale: const Locale('pt'),
     home: BlocProvider<DriverSearchCubit>.value(
       value: cubit,
-      child: DriverSearchPage(autocomplete: auto),
+      child: DriverSearchPage(
+        autocomplete: auto,
+        onDriverSelected: onDriverSelected,
+      ),
     ),
   );
 }
@@ -56,8 +63,9 @@ void main() {
   setUp(() {
     cubit = MockDriverSearchCubit();
     final datasource = MockPlaceAutocompleteDataSource();
-    when(() => datasource.findSuggestions(any(), any()))
-        .thenAnswer((_) async => const Ok([]));
+    when(
+      () => datasource.findSuggestions(any(), any()),
+    ).thenAnswer((_) async => const Ok([]));
     autocomplete = PlaceAutocompleteController(datasource: datasource);
   });
 
@@ -77,6 +85,23 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.byType(TextField), findsOneWidget);
+  });
+
+  testWidgets('tapping a result opens that driver', (tester) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: rankedResults,
+      ),
+    );
+    final selected = <String>[];
+
+    await tester.pumpWidget(
+      harness(cubit, autocomplete, onDriverSelected: selected.add),
+    );
+    await tester.tap(find.text('Setor L Norte'));
+
+    expect(selected, ['d2']);
   });
 
   testWidgets('renders results in the order the API returned', (tester) async {
@@ -199,5 +224,29 @@ void main() {
     await tester.pumpWidget(harness(cubit, autocomplete));
 
     expect(find.text('Brasília · Taguatinga · QNL'), findsOneWidget);
+  });
+
+  testWidgets('an unmatched IBGE city is not shown as an empty result', (
+    tester,
+  ) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.failed,
+        failure: DriverSearchFailure.cityUnmatched,
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(
+      find.text(
+        'Este município não corresponde ao catálogo. Escolha outra sugestão.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Nenhum motorista atende este local ainda.'),
+      findsNothing,
+    );
   });
 }

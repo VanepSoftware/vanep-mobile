@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_card.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/driver.dart';
-import 'driver_avatar.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
 
 class DriverCard extends StatelessWidget {
   const DriverCard({
@@ -29,7 +29,7 @@ class DriverCard extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          DriverAvatar(photoUrl: driver.photoUrl),
+          VanepAvatar(photoUrl: driver.photoUrl),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'vanep_colors.dart';
-import 'vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
 class VanepTheme {
   const VanepTheme._();
