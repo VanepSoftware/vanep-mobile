@@ -21,7 +21,7 @@ jobs:
     outputs:
       code: ${{ steps.filter.outputs.code }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Filtra caminhos
         id: filter
@@ -47,7 +47,7 @@ jobs:
         run: echo "No code changes — skipping CI"
 
       - if: needs.changes.outputs.code == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install lcov
         if: needs.changes.outputs.code == 'true'
