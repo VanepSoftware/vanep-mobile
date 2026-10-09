@@ -18,6 +18,7 @@ import 'account_type_page.dart';
 import 'email_code_verification_page.dart';
 import 'password_reset_page.dart';
 import 'signup_page.dart';
+import '../../../assistant/presentation/pages/assistant_invite_code_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -222,6 +223,23 @@ class LoginForm extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 8),
+                TextButton.icon(
+                  onPressed: editable
+                      ? () => openAssistantInvite(context)
+                      : null,
+                  icon: const Icon(Icons.support_agent_outlined, size: 18),
+                  label: Text(
+                    l10n.assistantEnterWithInvite,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    foregroundColor: VanepColors.textSecondary,
+                  ),
                 ),
               ],
             ),

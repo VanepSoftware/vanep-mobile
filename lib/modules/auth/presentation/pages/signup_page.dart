@@ -29,7 +29,12 @@ import '../widgets/password_requirements_checklist.dart';
 import 'account_type_page.dart';
 import 'email_code_verification_page.dart';
 
+import '../../../assistant/presentation/pages/assistant_invite_code_page.dart';
+
 Future<void> openPasswordSignup(BuildContext context, UserType type) {
+  if (type == UserType.assistant) {
+    return openAssistantInvite(context);
+  }
   return openSignup(context, type);
 }
 
