@@ -2167,6 +2167,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not load your van.'**
   String get driverVansLoadError;
+
+  /// No description provided for @assistantEnterWithInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter as assistant'**
+  String get assistantEnterWithInvite;
+
+  /// No description provided for @assistantInviteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant invitation'**
+  String get assistantInviteTitle;
+
+  /// No description provided for @assistantInviteSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code shared with you by the driver.'**
+  String get assistantInviteSubtitle;
+
+  /// No description provided for @assistantInviteCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation code'**
+  String get assistantInviteCodeLabel;
+
+  /// No description provided for @assistantInviteCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. ABC123'**
+  String get assistantInviteCodeHint;
+
+  /// No description provided for @assistantInviteSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate code'**
+  String get assistantInviteSubmit;
+
+  /// No description provided for @assistantInviteDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver: {name}'**
+  String assistantInviteDriver(String name);
+
+  /// No description provided for @assistantInviteVan.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle: {vehicle}'**
+  String assistantInviteVan(String vehicle);
+
+  /// No description provided for @assistantInviteSuccessContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to registration'**
+  String get assistantInviteSuccessContinue;
+
+  /// No description provided for @assistantFailureInvalidCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid invitation code. Check the code and try again.'**
+  String get assistantFailureInvalidCode;
+
+  /// No description provided for @assistantFailureExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation has expired. Ask the driver for a new code.'**
+  String get assistantFailureExpired;
+
+  /// No description provided for @assistantFailureAlreadyUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation has already been used.'**
+  String get assistantFailureAlreadyUsed;
+
+  /// No description provided for @assistantFailureRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation was revoked by the driver.'**
+  String get assistantFailureRevoked;
+
+  /// No description provided for @assistantFailureInvalidPersonalData.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check the entered information and try again.'**
+  String get assistantFailureInvalidPersonalData;
+
+  /// No description provided for @assistantFailureUnauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have permission to access this resource.'**
+  String get assistantFailureUnauthorized;
+
+  /// No description provided for @assistantFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Please try again.'**
+  String get assistantFailureNetwork;
+
+  /// No description provided for @assistantFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get assistantFailureUnexpected;
+
+  /// No description provided for @assistantSignupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant registration'**
+  String get assistantSignupTitle;
+
+  /// No description provided for @assistantSignupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in your details to start monitoring routes.'**
+  String get assistantSignupSubtitle;
+
+  /// No description provided for @assistantSignupInvitedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'You were invited by {name}'**
+  String assistantSignupInvitedBy(String name);
+
+  /// No description provided for @assistantSignupVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle: {vehicle}'**
+  String assistantSignupVehicle(String vehicle);
+
+  /// No description provided for @assistantSignupFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get assistantSignupFieldName;
+
+  /// No description provided for @assistantSignupNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your full name'**
+  String get assistantSignupNameHint;
+
+  /// No description provided for @assistantSignupFieldBirthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of birth'**
+  String get assistantSignupFieldBirthDate;
+
+  /// No description provided for @assistantSignupBirthDateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'mm/dd/yyyy'**
+  String get assistantSignupBirthDateHint;
+
+  /// No description provided for @assistantSignupFieldEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get assistantSignupFieldEmail;
+
+  /// No description provided for @assistantSignupEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'you@email.com'**
+  String get assistantSignupEmailHint;
+
+  /// No description provided for @assistantSignupFieldCpf.
+  ///
+  /// In en, this message translates to:
+  /// **'CPF'**
+  String get assistantSignupFieldCpf;
+
+  /// No description provided for @assistantSignupCpfHint.
+  ///
+  /// In en, this message translates to:
+  /// **'000.000.000-00'**
+  String get assistantSignupCpfHint;
+
+  /// No description provided for @assistantSignupFieldPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get assistantSignupFieldPassword;
+
+  /// No description provided for @assistantSignupPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a strong password'**
+  String get assistantSignupPasswordHint;
+
+  /// No description provided for @assistantSignupFieldPasswordConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get assistantSignupFieldPasswordConfirmation;
+
+  /// No description provided for @assistantSignupPasswordConfirmationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat password'**
+  String get assistantSignupPasswordConfirmationHint;
+
+  /// No description provided for @assistantSignupAcceptTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and agree to the Terms of Service'**
+  String get assistantSignupAcceptTerms;
+
+  /// No description provided for @assistantSignupSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete registration'**
+  String get assistantSignupSubmit;
+
+  /// No description provided for @assistantSignupSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant account created successfully! Log in to continue.'**
+  String get assistantSignupSuccess;
+
+  /// No description provided for @assistantSignupErrorNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name.'**
+  String get assistantSignupErrorNameRequired;
+
+  /// No description provided for @assistantSignupErrorBirthDateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your date of birth.'**
+  String get assistantSignupErrorBirthDateRequired;
+
+  /// No description provided for @assistantSignupErrorBirthDateUnderage.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant must be at least 18 years old.'**
+  String get assistantSignupErrorBirthDateUnderage;
+
+  /// No description provided for @assistantSignupErrorEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address.'**
+  String get assistantSignupErrorEmailInvalid;
+
+  /// No description provided for @assistantSignupErrorCpfInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid CPF.'**
+  String get assistantSignupErrorCpfInvalid;
+
+  /// No description provided for @assistantSignupErrorPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a password.'**
+  String get assistantSignupErrorPasswordRequired;
+
+  /// No description provided for @assistantSignupErrorPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match.'**
+  String get assistantSignupErrorPasswordMismatch;
+
+  /// No description provided for @assistantSignupErrorTermsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the terms of service to continue.'**
+  String get assistantSignupErrorTermsRequired;
 }
 
 class _AppLocalizationsDelegate

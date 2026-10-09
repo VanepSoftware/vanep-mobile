@@ -1202,8 +1202,160 @@ class AppLocalizationsPt extends AppLocalizations {
       'Sem conexão com o servidor. Tente novamente.';
 
   @override
-  String get driverVanFailureUnexpected => 'Algo deu errado. Tente novamente.';
+  String get driverVanFailureUnexpected => 'Something went wrong. Try again.';
 
   @override
   String get driverVansLoadError => 'Não foi possível carregar sua van.';
+
+  @override
+  String get assistantEnterWithInvite => 'Entrar como assistente';
+
+  @override
+  String get assistantInviteTitle => 'Convite de assistente';
+
+  @override
+  String get assistantInviteSubtitle =>
+      'Digite o código que o motorista compartilhou com você.';
+
+  @override
+  String get assistantInviteCodeLabel => 'Código do convite';
+
+  @override
+  String get assistantInviteCodeHint => 'Ex: ABC123';
+
+  @override
+  String get assistantInviteSubmit => 'Validar código';
+
+  @override
+  String assistantInviteDriver(String name) {
+    return 'Motorista: $name';
+  }
+
+  @override
+  String assistantInviteVan(String vehicle) {
+    return 'Veículo: $vehicle';
+  }
+
+  @override
+  String get assistantInviteSuccessContinue => 'Continuar para cadastro';
+
+  @override
+  String get assistantFailureInvalidCode =>
+      'Código de convite inválido. Verifique o código e tente novamente.';
+
+  @override
+  String get assistantFailureExpired =>
+      'Este convite expirou. Peça um novo código ao motorista.';
+
+  @override
+  String get assistantFailureAlreadyUsed => 'Este convite já foi utilizado.';
+
+  @override
+  String get assistantFailureRevoked =>
+      'Este convite foi revogado pelo motorista.';
+
+  @override
+  String get assistantFailureInvalidPersonalData =>
+      'Verifique as informações preenchidas e tente novamente.';
+
+  @override
+  String get assistantFailureUnauthorized =>
+      'Você não tem permissão para acessar este recurso.';
+
+  @override
+  String get assistantFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get assistantFailureUnexpected => 'Algo deu errado. Tente novamente.';
+
+  @override
+  String get assistantSignupTitle => 'Cadastro de assistente';
+
+  @override
+  String get assistantSignupSubtitle =>
+      'Preencha seus dados para começar a acompanhar as rotas.';
+
+  @override
+  String assistantSignupInvitedBy(String name) {
+    return 'Você foi convidado por $name';
+  }
+
+  @override
+  String assistantSignupVehicle(String vehicle) {
+    return 'Veículo: $vehicle';
+  }
+
+  @override
+  String get assistantSignupFieldName => 'Nome completo';
+
+  @override
+  String get assistantSignupNameHint => 'Seu nome completo';
+
+  @override
+  String get assistantSignupFieldBirthDate => 'Data de nascimento';
+
+  @override
+  String get assistantSignupBirthDateHint => 'dd/mm/aaaa';
+
+  @override
+  String get assistantSignupFieldEmail => 'E-mail';
+
+  @override
+  String get assistantSignupEmailHint => 'seu@email.com';
+
+  @override
+  String get assistantSignupFieldCpf => 'CPF';
+
+  @override
+  String get assistantSignupCpfHint => '000.000.000-00';
+
+  @override
+  String get assistantSignupFieldPassword => 'Senha';
+
+  @override
+  String get assistantSignupPasswordHint => 'Crie uma senha forte';
+
+  @override
+  String get assistantSignupFieldPasswordConfirmation => 'Confirmar senha';
+
+  @override
+  String get assistantSignupPasswordConfirmationHint => 'Repita a senha';
+
+  @override
+  String get assistantSignupAcceptTerms => 'Li e aceito os Termos de Uso';
+
+  @override
+  String get assistantSignupSubmit => 'Concluir cadastro';
+
+  @override
+  String get assistantSignupSuccess =>
+      'Conta de assistente criada com sucesso! Entre para continuar.';
+
+  @override
+  String get assistantSignupErrorNameRequired => 'Informe seu nome completo.';
+
+  @override
+  String get assistantSignupErrorBirthDateRequired =>
+      'Informe sua data de nascimento.';
+
+  @override
+  String get assistantSignupErrorBirthDateUnderage =>
+      'O assistente deve ter pelo menos 18 anos.';
+
+  @override
+  String get assistantSignupErrorEmailInvalid => 'Informe um e-mail válido.';
+
+  @override
+  String get assistantSignupErrorCpfInvalid => 'Informe um CPF válido.';
+
+  @override
+  String get assistantSignupErrorPasswordRequired => 'Crie uma senha.';
+
+  @override
+  String get assistantSignupErrorPasswordMismatch => 'As senhas não coincidem.';
+
+  @override
+  String get assistantSignupErrorTermsRequired =>
+      'Você deve aceitar os termos de uso para continuar.';
 }

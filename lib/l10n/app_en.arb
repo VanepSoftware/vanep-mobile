@@ -523,5 +523,77 @@
   "driverVanFailureInvalid": "Check the van details.",
   "driverVanFailureNetwork": "No connection to the server. Try again.",
   "driverVanFailureUnexpected": "Something went wrong. Try again.",
-  "driverVansLoadError": "Could not load your van."
+  "driverVansLoadError": "Could not load your van.",
+  "assistantEnterWithInvite": "Enter as assistant",
+  "assistantInviteTitle": "Assistant invitation",
+  "assistantInviteSubtitle": "Enter the code shared with you by the driver.",
+  "assistantInviteCodeLabel": "Invitation code",
+  "assistantInviteCodeHint": "e.g. ABC123",
+  "assistantInviteSubmit": "Validate code",
+  "assistantInviteDriver": "Driver: {name}",
+  "@assistantInviteDriver": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantInviteVan": "Vehicle: {vehicle}",
+  "@assistantInviteVan": {
+    "placeholders": {
+      "vehicle": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantInviteSuccessContinue": "Continue to registration",
+  "assistantFailureInvalidCode": "Invalid invitation code. Check the code and try again.",
+  "assistantFailureExpired": "This invitation has expired. Ask the driver for a new code.",
+  "assistantFailureAlreadyUsed": "This invitation has already been used.",
+  "assistantFailureRevoked": "This invitation was revoked by the driver.",
+  "assistantFailureInvalidPersonalData": "Please check the entered information and try again.",
+  "assistantFailureUnauthorized": "You do not have permission to access this resource.",
+  "assistantFailureNetwork": "No connection to the server. Please try again.",
+  "assistantFailureUnexpected": "Something went wrong. Please try again.",
+  "assistantSignupTitle": "Assistant registration",
+  "assistantSignupSubtitle": "Fill in your details to start monitoring routes.",
+  "assistantSignupInvitedBy": "You were invited by {name}",
+  "@assistantSignupInvitedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantSignupVehicle": "Vehicle: {vehicle}",
+  "@assistantSignupVehicle": {
+    "placeholders": {
+      "vehicle": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantSignupFieldName": "Full name",
+  "assistantSignupNameHint": "Your full name",
+  "assistantSignupFieldBirthDate": "Date of birth",
+  "assistantSignupBirthDateHint": "mm/dd/yyyy",
+  "assistantSignupFieldEmail": "Email",
+  "assistantSignupEmailHint": "you@email.com",
+  "assistantSignupFieldCpf": "CPF",
+  "assistantSignupCpfHint": "000.000.000-00",
+  "assistantSignupFieldPassword": "Password",
+  "assistantSignupPasswordHint": "Create a strong password",
+  "assistantSignupFieldPasswordConfirmation": "Confirm password",
+  "assistantSignupPasswordConfirmationHint": "Repeat password",
+  "assistantSignupAcceptTerms": "I have read and agree to the Terms of Service",
+  "assistantSignupSubmit": "Complete registration",
+  "assistantSignupSuccess": "Assistant account created successfully! Log in to continue.",
+  "assistantSignupErrorNameRequired": "Enter your full name.",
+  "assistantSignupErrorBirthDateRequired": "Enter your date of birth.",
+  "assistantSignupErrorBirthDateUnderage": "The assistant must be at least 18 years old.",
+  "assistantSignupErrorEmailInvalid": "Enter a valid email address.",
+  "assistantSignupErrorCpfInvalid": "Enter a valid CPF.",
+  "assistantSignupErrorPasswordRequired": "Create a password.",
+  "assistantSignupErrorPasswordMismatch": "Passwords do not match.",
+  "assistantSignupErrorTermsRequired": "You must accept the terms of service to continue."
 }

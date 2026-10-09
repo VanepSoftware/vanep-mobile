@@ -1201,4 +1201,159 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driverVansLoadError => 'Could not load your van.';
+
+  @override
+  String get assistantEnterWithInvite => 'Enter as assistant';
+
+  @override
+  String get assistantInviteTitle => 'Assistant invitation';
+
+  @override
+  String get assistantInviteSubtitle =>
+      'Enter the code shared with you by the driver.';
+
+  @override
+  String get assistantInviteCodeLabel => 'Invitation code';
+
+  @override
+  String get assistantInviteCodeHint => 'e.g. ABC123';
+
+  @override
+  String get assistantInviteSubmit => 'Validate code';
+
+  @override
+  String assistantInviteDriver(String name) {
+    return 'Driver: $name';
+  }
+
+  @override
+  String assistantInviteVan(String vehicle) {
+    return 'Vehicle: $vehicle';
+  }
+
+  @override
+  String get assistantInviteSuccessContinue => 'Continue to registration';
+
+  @override
+  String get assistantFailureInvalidCode =>
+      'Invalid invitation code. Check the code and try again.';
+
+  @override
+  String get assistantFailureExpired =>
+      'This invitation has expired. Ask the driver for a new code.';
+
+  @override
+  String get assistantFailureAlreadyUsed =>
+      'This invitation has already been used.';
+
+  @override
+  String get assistantFailureRevoked =>
+      'This invitation was revoked by the driver.';
+
+  @override
+  String get assistantFailureInvalidPersonalData =>
+      'Please check the entered information and try again.';
+
+  @override
+  String get assistantFailureUnauthorized =>
+      'You do not have permission to access this resource.';
+
+  @override
+  String get assistantFailureNetwork =>
+      'No connection to the server. Please try again.';
+
+  @override
+  String get assistantFailureUnexpected =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get assistantSignupTitle => 'Assistant registration';
+
+  @override
+  String get assistantSignupSubtitle =>
+      'Fill in your details to start monitoring routes.';
+
+  @override
+  String assistantSignupInvitedBy(String name) {
+    return 'You were invited by $name';
+  }
+
+  @override
+  String assistantSignupVehicle(String vehicle) {
+    return 'Vehicle: $vehicle';
+  }
+
+  @override
+  String get assistantSignupFieldName => 'Full name';
+
+  @override
+  String get assistantSignupNameHint => 'Your full name';
+
+  @override
+  String get assistantSignupFieldBirthDate => 'Date of birth';
+
+  @override
+  String get assistantSignupBirthDateHint => 'mm/dd/yyyy';
+
+  @override
+  String get assistantSignupFieldEmail => 'Email';
+
+  @override
+  String get assistantSignupEmailHint => 'you@email.com';
+
+  @override
+  String get assistantSignupFieldCpf => 'CPF';
+
+  @override
+  String get assistantSignupCpfHint => '000.000.000-00';
+
+  @override
+  String get assistantSignupFieldPassword => 'Password';
+
+  @override
+  String get assistantSignupPasswordHint => 'Create a strong password';
+
+  @override
+  String get assistantSignupFieldPasswordConfirmation => 'Confirm password';
+
+  @override
+  String get assistantSignupPasswordConfirmationHint => 'Repeat password';
+
+  @override
+  String get assistantSignupAcceptTerms =>
+      'I have read and agree to the Terms of Service';
+
+  @override
+  String get assistantSignupSubmit => 'Complete registration';
+
+  @override
+  String get assistantSignupSuccess =>
+      'Assistant account created successfully! Log in to continue.';
+
+  @override
+  String get assistantSignupErrorNameRequired => 'Enter your full name.';
+
+  @override
+  String get assistantSignupErrorBirthDateRequired =>
+      'Enter your date of birth.';
+
+  @override
+  String get assistantSignupErrorBirthDateUnderage =>
+      'The assistant must be at least 18 years old.';
+
+  @override
+  String get assistantSignupErrorEmailInvalid => 'Enter a valid email address.';
+
+  @override
+  String get assistantSignupErrorCpfInvalid => 'Enter a valid CPF.';
+
+  @override
+  String get assistantSignupErrorPasswordRequired => 'Create a password.';
+
+  @override
+  String get assistantSignupErrorPasswordMismatch => 'Passwords do not match.';
+
+  @override
+  String get assistantSignupErrorTermsRequired =>
+      'You must accept the terms of service to continue.';
 }
