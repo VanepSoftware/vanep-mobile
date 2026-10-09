@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../auth/domain/value_objects/password_policy.dart';
-import '../../domain/usecases/register_assistant_with_invite.dart';
-import '../../domain/usecases/validate_assistant_invite.dart';
-import 'assistant_invite_state.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/register_assistant_with_invite.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/validate_assistant_invite.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_state.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/password_policy.dart';
 
 class AssistantInviteCubit extends Cubit<AssistantInviteState> {
   AssistantInviteCubit({

@@ -29,7 +29,7 @@ import 'package:vanep_mobile/modules/auth/presentation/widgets/password_requirem
 import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
 
-import '../../../assistant/presentation/pages/assistant_invite_code_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_invite_code_page.dart';
 
 Future<void> openPasswordSignup(BuildContext context, UserType type) {
   if (type == UserType.assistant) {

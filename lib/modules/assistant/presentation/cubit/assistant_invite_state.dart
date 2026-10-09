@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/assistant_invite.dart';
-import '../../domain/failures/assistant_failure.dart';
+import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_invite.dart';
+import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 
 enum AssistantInviteStep {
   code,

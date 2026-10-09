@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_page_chrome.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_text_field.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../auth/presentation/formatters/signup_input_formatters.dart';
-import '../../../auth/presentation/widgets/password_requirements_checklist.dart';
-import '../cubit/assistant_invite_cubit.dart';
-import '../cubit/assistant_invite_state.dart';
-import '../mappers/assistant_failure_l10n.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_state.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/mappers/assistant_failure_l10n.dart';
+import 'package:vanep_mobile/modules/auth/presentation/formatters/signup_input_formatters.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/password_requirements_checklist.dart';
 
 class AssistantLeanSignupPage extends StatefulWidget {
   const AssistantLeanSignupPage({super.key});

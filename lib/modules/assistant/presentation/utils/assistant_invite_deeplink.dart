@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../pages/assistant_invite_code_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_invite_code_page.dart';
 
 String? parseAssistantInviteToken(Uri uri) {
   final isCustomScheme = uri.scheme == 'vanep' &&

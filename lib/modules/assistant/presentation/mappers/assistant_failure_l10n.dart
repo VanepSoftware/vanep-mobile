@@ -1,5 +1,5 @@
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/failures/assistant_failure.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 
 String assistantFailureMessage(
   AppLocalizations l10n,
