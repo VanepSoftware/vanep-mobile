@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'vanep_avatar.dart';
-import 'vanep_photo_edit_badge.dart';
+import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
+import 'package:vanep_mobile/core/ui/vanep_photo_edit_badge.dart';
 
 class VanepEditableAvatar extends StatelessWidget {
   const VanepEditableAvatar({

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../domain/failures/account_failure.dart';
-import '../../domain/value_objects/account_field.dart';
-import '../dtos/auth_api_error_dto.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/auth_api_error_dto.dart';
 
 AccountFailure mapAccountFailure(DioException error) {
   final response = error.response;

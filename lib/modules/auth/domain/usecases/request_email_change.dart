@@ -1,7 +1,7 @@
-import '../../../../core/result/result.dart';
-import '../entities/user_profile.dart';
-import '../failures/profile_edit_failure.dart';
-import '../repositories/auth_repository.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/auth_repository.dart';
 
 class RequestEmailChange {
   const RequestEmailChange(this._repository);

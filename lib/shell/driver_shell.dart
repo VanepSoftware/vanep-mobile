@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../core/design_system/vanep_colors.dart';
-import '../core/ui/vanep_coming_soon.dart';
-import '../l10n/app_localizations.dart';
-import '../modules/auth/domain/entities/user_profile.dart';
-import '../modules/auth/domain/value_objects/onboarding_step.dart';
-import '../modules/auth/presentation/cubit/auth_cubit.dart';
-import '../modules/driver/presentation/pages/driver_home_tab.dart';
-import '../modules/driver/presentation/pages/driver_vans_tab.dart';
-import '../modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
-import 'driver_bottom_nav.dart';
-import 'shell_account_drawer.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/driver/presentation/pages/driver_home_tab.dart';
+import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
+import 'package:vanep_mobile/shell/driver_bottom_nav.dart';
+import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 
 class DriverShell extends StatefulWidget {
   const DriverShell({

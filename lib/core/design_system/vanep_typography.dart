@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 
 class VanepTypography {
   const VanepTypography._();

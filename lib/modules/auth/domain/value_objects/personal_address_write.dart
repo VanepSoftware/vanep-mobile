@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 
 class PersonalAddressWrite extends Equatable {
   const PersonalAddressWrite({

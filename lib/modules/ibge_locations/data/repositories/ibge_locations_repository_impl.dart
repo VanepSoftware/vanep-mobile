@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/network/problem_detail.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/brazilian_city.dart';
-import '../../domain/entities/brazilian_state.dart';
-import '../../domain/entities/cep_lookup.dart';
-import '../../domain/entities/ibge_locations_page.dart';
-import '../../domain/failures/cep_failure.dart';
-import '../../domain/failures/ibge_locations_failure.dart';
-import '../../domain/repositories/ibge_locations_repository.dart';
-import '../datasources/ibge_locations_remote_datasource.dart';
+import 'package:vanep_mobile/core/network/problem_detail.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_state.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/repositories/ibge_locations_repository.dart';
+import 'package:vanep_mobile/modules/ibge_locations/data/datasources/ibge_locations_remote_datasource.dart';
 
 CepFailure cepFailureFrom(DioException exception) {
   final status = exception.response?.statusCode;

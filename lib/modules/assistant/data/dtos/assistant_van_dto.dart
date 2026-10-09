@@ -1,4 +1,4 @@
-import '../../domain/entities/assistant_van.dart';
+import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
 
 class AssistantVanDto extends AssistantVan {
   const AssistantVanDto({

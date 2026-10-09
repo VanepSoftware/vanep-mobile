@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/places/place_autocomplete_controller.dart';
-import '../../../../core/ui/vanep_place_autocomplete_field.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../drivers/presentation/widgets/driver_card.dart';
-import '../../../drivers/presentation/widgets/drivers_home_body.dart';
-import '../cubit/driver_search_cubit.dart';
-import '../cubit/driver_search_state.dart';
-import '../formatters/driver_search_failure_label.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_card.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_home_body.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/formatters/driver_search_failure_label.dart';
 
 const loadMoreThresholdPixels = 240.0;
 

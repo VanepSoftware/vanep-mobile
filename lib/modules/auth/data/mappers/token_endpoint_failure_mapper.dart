@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../../domain/failures/auth_failure.dart';
-import '../../domain/value_objects/google_signup_ticket.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
 
 AuthFailure mapTokenEndpointFailure(DioException error) {
   final response = error.response;

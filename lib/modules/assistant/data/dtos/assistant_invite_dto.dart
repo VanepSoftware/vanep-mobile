@@ -1,4 +1,4 @@
-import '../../domain/entities/assistant_invite.dart';
+import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_invite.dart';
 
 class AssistantInviteDto extends AssistantInvite {
   const AssistantInviteDto({

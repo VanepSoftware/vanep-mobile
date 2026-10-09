@@ -1,8 +1,8 @@
-import '../../../../core/result/result.dart';
-import '../failures/account_failure.dart';
-import '../repositories/account_repository.dart';
-import '../value_objects/account_field.dart';
-import '../value_objects/signup_form.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/account_repository.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
 
 const int verificationCodeLength = 6;
 

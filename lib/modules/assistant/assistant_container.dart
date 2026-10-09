@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../core/environment/environment.dart';
-import '../../core/network/dio_client.dart';
-import 'data/datasources/assistant_remote_datasource.dart';
-import 'data/repositories/assistant_repository_impl.dart';
-import 'domain/repositories/assistant_repository.dart';
-import 'domain/usecases/get_linked_vans.dart';
-import 'domain/usecases/register_assistant_with_invite.dart';
-import 'domain/usecases/validate_assistant_invite.dart';
-import 'presentation/cubit/assistant_invite_cubit.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/modules/assistant/data/datasources/assistant_remote_datasource.dart';
+import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_repository_impl.dart';
+import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_repository.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/get_linked_vans.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/register_assistant_with_invite.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/validate_assistant_invite.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_cubit.dart';
 
 void registerAssistantDependencies(GetIt getIt) {
   final environment = getIt<Environment>();

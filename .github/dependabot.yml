@@ -1,0 +1,64 @@
+version: 2
+updates:
+  # pubspec.yaml / pubspec.lock na raiz.
+  # O Dependabot nao mexe na constraint do SDK (environment: sdk / flutter) —
+  # upgrade de Flutter continua manual, via .fvmrc.
+  - package-ecosystem: pub
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/Sao_Paulo
+    open-pull-requests-limit: 5
+    rebase-strategy: auto
+    labels:
+      - dependencies
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      pub-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # Deps nativas de iOS via SwiftPM (GoogleSignIn-iOS, AppAuth-iOS, GTMAppAuth...).
+  # Nao existe Package.swift: as versoes ficam no Runner.xcodeproj/project.pbxproj
+  # e os pins no Package.resolved dentro do bundle do .xcodeproj/.xcworkspace.
+  # O Dependabot so passou a ler esse layout em 03/2026.
+  # Requer o Package.resolved do iOS commitado — hoje ele esta untracked.
+  - package-ecosystem: swift
+    directory: "/ios"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/Sao_Paulo
+    open-pull-requests-limit: 5
+    rebase-strategy: auto
+    labels:
+      - dependencies
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      swift-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/Sao_Paulo
+    open-pull-requests-limit: 5
+    rebase-strategy: auto
+    labels:
+      - dependencies
+    commit-message:
+      prefix: chore
+      include: scope

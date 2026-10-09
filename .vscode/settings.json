@@ -1,6 +1,0 @@
-{
-  "dart.flutterSdkPath": ".fvm/versions/3.44.4",
-  "java.import.gradle.enabled": false,
-  "java.autobuild.enabled": false,
-  "java.configuration.updateBuildConfiguration": "disabled"
-}

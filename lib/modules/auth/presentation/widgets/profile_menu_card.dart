@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_menu_card.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/builders/profile_menu_builder.dart';
-import '../../domain/value_objects/profile_menu_id.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/builders/profile_menu_builder.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_menu_id.dart';
 
 class ProfileMenuSectionView extends StatelessWidget {
   const ProfileMenuSectionView({

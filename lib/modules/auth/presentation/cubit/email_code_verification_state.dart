@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/failures/account_failure.dart';
-import '../../domain/usecases/verify_email_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/verify_email_code.dart';
 
 enum EmailCodeVerificationStatus {
   editing,

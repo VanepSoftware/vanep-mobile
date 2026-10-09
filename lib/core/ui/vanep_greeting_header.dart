@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../design_system/vanep_colors.dart';
-import '../design_system/vanep_typography.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
 String firstNameOf(String value) {
   final trimmed = value.trim();

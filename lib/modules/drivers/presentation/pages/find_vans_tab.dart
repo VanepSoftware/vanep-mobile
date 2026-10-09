@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../widgets/drivers_home_body.dart';
-import '../widgets/drivers_search_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_home_body.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_search_field.dart';
 
 class FindVansTab extends StatelessWidget {
   const FindVansTab({

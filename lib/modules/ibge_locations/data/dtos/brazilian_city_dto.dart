@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/brazilian_city.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
 
 part 'brazilian_city_dto.freezed.dart';
 part 'brazilian_city_dto.g.dart';

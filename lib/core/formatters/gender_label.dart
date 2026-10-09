@@ -1,5 +1,5 @@
-import '../../l10n/app_localizations.dart';
-import '../domain/gender.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 
 String genderLabel(Gender? gender, AppLocalizations l10n) {
   return switch (gender) {

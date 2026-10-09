@@ -1,9 +1,9 @@
-import '../../../../core/result/result.dart';
-import '../entities/dependent.dart';
-import '../failures/dependent_failure.dart';
-import '../repositories/dependent_repository.dart';
-import '../value_objects/dependent_changes.dart';
-import '../value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_repository.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 
 class CreateDependent {
   const CreateDependent(this.repository);

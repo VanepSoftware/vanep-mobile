@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 
 class VanepPhotoEditBadge extends StatelessWidget {
   const VanepPhotoEditBadge({this.size = 28, super.key});

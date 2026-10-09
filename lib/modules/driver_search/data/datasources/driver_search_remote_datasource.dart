@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../../domain/entities/driver_search_page.dart';
-import '../../domain/entities/driver_search_result.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_page.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_result.dart';
 
 List<String> readServiceAreaNames(Object? raw) {
   if (raw is! List) return const [];

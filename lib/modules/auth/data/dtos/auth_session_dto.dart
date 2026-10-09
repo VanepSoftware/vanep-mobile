@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/auth_session.dart';
-import 'user_profile_dto.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
 
 part 'auth_session_dto.freezed.dart';
 part 'auth_session_dto.g.dart';

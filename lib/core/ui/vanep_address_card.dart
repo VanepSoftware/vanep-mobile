@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../design_system/vanep_colors.dart';
-import '../design_system/vanep_typography.dart';
-import '../formatters/postal_address_display.dart';
-import 'vanep_page_chrome.dart';
-import 'vanep_secondary_button.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/formatters/postal_address_display.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 
 enum VanepAddressCardAction { edit, clear }
 

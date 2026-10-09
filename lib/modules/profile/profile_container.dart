@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../core/environment/environment.dart';
-import '../../core/media/photo_picker.dart';
-import '../../core/network/dio_client.dart';
-import '../../core/network/photo_uploader.dart';
-import 'data/datasources/profile_summary_remote_datasource.dart';
-import 'data/repositories/profile_summary_repository_impl.dart';
-import 'domain/repositories/profile_summary_repository.dart';
-import 'domain/usecases/change_profile_photo.dart';
-import 'domain/usecases/get_profile_summary.dart';
-import 'presentation/cubit/profile_photo_cubit.dart';
-import 'presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/media/photo_picker.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/modules/profile/data/datasources/profile_summary_remote_datasource.dart';
+import 'package:vanep_mobile/modules/profile/data/repositories/profile_summary_repository_impl.dart';
+import 'package:vanep_mobile/modules/profile/domain/repositories/profile_summary_repository.dart';
+import 'package:vanep_mobile/modules/profile/domain/usecases/change_profile_photo.dart';
+import 'package:vanep_mobile/modules/profile/domain/usecases/get_profile_summary.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_photo_cubit.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 
 void registerProfileDependencies(GetIt getIt) {
   final environment = getIt<Environment>();

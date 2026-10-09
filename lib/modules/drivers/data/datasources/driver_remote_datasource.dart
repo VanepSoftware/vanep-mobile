@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../dtos/driver_dto.dart';
-import '../dtos/driver_profile_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/drivers/data/dtos/driver_dto.dart';
+import 'package:vanep_mobile/modules/drivers/data/dtos/driver_profile_dto.dart';
 
 class DriverRemoteDataSource {
   DriverRemoteDataSource({required this.dio, required this.environment});

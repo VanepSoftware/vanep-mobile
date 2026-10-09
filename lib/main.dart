@@ -3,22 +3,22 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
-import 'app.dart';
-import 'core/di/service_locator.dart';
-import 'core/environment/environment.dart';
-import 'core/media/media_container.dart';
-import 'core/places/places_container.dart';
-import 'modules/auth/auth_container.dart';
-import 'modules/auth/data/datasources/auth_local_datasource.dart';
-import 'modules/assistant/assistant_container.dart';
-import 'modules/dependents/dependents_container.dart';
-import 'modules/driver/driver_container.dart';
-import 'modules/driver_service_areas/driver_service_areas_container.dart';
-import 'modules/driver_vans/driver_vans_container.dart';
-import 'modules/drivers/drivers_container.dart';
-import 'modules/driver_search/driver_search_container.dart';
-import 'modules/ibge_locations/ibge_locations_container.dart';
-import 'modules/profile/profile_container.dart';
+import 'package:vanep_mobile/app.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/media/media_container.dart';
+import 'package:vanep_mobile/core/places/places_container.dart';
+import 'package:vanep_mobile/modules/auth/auth_container.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
+import 'package:vanep_mobile/modules/assistant/assistant_container.dart';
+import 'package:vanep_mobile/modules/dependents/dependents_container.dart';
+import 'package:vanep_mobile/modules/driver/driver_container.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/driver_service_areas_container.dart';
+import 'package:vanep_mobile/modules/driver_vans/driver_vans_container.dart';
+import 'package:vanep_mobile/modules/drivers/drivers_container.dart';
+import 'package:vanep_mobile/modules/driver_search/driver_search_container.dart';
+import 'package:vanep_mobile/modules/ibge_locations/ibge_locations_container.dart';
+import 'package:vanep_mobile/modules/profile/profile_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

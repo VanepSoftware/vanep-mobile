@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/domain/postal_address_draft.dart';
-import '../../../ibge_locations/domain/entities/brazilian_city.dart';
-import '../../../ibge_locations/domain/entities/brazilian_state.dart';
-import '../../../ibge_locations/domain/failures/cep_failure.dart';
-import '../../../ibge_locations/domain/failures/ibge_locations_failure.dart';
-import '../../domain/entities/dependent.dart';
-import '../../domain/failures/dependent_failure.dart';
-import '../../domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_state.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 
 enum DependentFormStatus { editing, saving, saved }
 
