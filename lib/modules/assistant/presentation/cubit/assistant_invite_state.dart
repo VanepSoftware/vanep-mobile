@@ -3,28 +3,13 @@ import 'package:equatable/equatable.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_invite.dart';
 import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 
-enum AssistantInviteStep {
-  code,
-  signup,
-  success,
-}
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_step.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_signup_field.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_signup_field_error.dart';
 
-enum AssistantSignupField {
-  name,
-  birthDate,
-  email,
-  cpf,
-  password,
-  passwordConfirmation,
-  acceptTerms,
-}
-
-enum AssistantSignupFieldError {
-  required,
-  invalid,
-  underage,
-  mismatch,
-}
+export 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_step.dart';
+export 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_signup_field.dart';
+export 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_signup_field_error.dart';
 
 class AssistantInviteState extends Equatable {
   const AssistantInviteState({
