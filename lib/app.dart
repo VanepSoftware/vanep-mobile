@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
-import 'package:vanep_mobile/core/ui/vanep_wordmark.dart';
+import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
+import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
@@ -49,7 +49,7 @@ class VanepApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const AuthGate(),
+          home: const VanepIntroGate(child: AuthGate()),
         ),
       ),
     );
@@ -177,9 +177,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: VanepColors.card,
-      body: Center(child: VanepWordmark()),
-    );
+    return const VanepBrandSplash();
   }
 }
