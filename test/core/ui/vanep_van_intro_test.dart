@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/ui/vanep_van_intro.dart';
 import 'package:vanep_mobile/core/ui/vanep_van_intro_timeline.dart';
