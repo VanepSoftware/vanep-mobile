@@ -50,8 +50,9 @@ app.*.map.json
 # Real .env is per-developer (holds AUTH_URL etc.); commit only .env.example.
 .env
 
-# Generated files (build_runner: freezed / json_serializable)
+# Generated files (build_runner: freezed / json_serializable / l10n)
 **/generated/
 *.freezed.dart
 *.g.dart
+lib/l10n/app_localizations*.dart
 
