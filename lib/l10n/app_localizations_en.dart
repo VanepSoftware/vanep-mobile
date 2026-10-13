@@ -1201,4 +1201,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driverVansLoadError => 'Could not load your van.';
+
+  @override
+  String get conversationTitle => 'Chat';
+
+  @override
+  String get conversationInputHint => 'Write a message';
+
+  @override
+  String get conversationSend => 'Send';
+
+  @override
+  String get conversationEmpty => 'No messages yet. Say hi!';
+
+  @override
+  String get conversationLoadError => 'Could not open the conversation.';
+
+  @override
+  String get conversationRetry => 'Try again';
+
+  @override
+  String get conversationFailureNetwork =>
+      'No connection to the server. Try again.';
+
+  @override
+  String get conversationFailureDriverUnavailable =>
+      'This driver is no longer available.';
+
+  @override
+  String get conversationFailureRejected => 'This message could not be sent.';
+
+  @override
+  String get conversationFailureForbidden =>
+      'You are not part of this conversation.';
+
+  @override
+  String get conversationFailureUnexpected =>
+      'Something went wrong. Try again.';
 }

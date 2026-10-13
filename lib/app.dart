@@ -13,6 +13,9 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
@@ -142,7 +145,20 @@ Future<void> openDriverProfile(BuildContext context, String driverToken) {
       builder: (_) => BlocProvider<DriverProfileCubit>(
         create: (_) =>
             getIt<DriverProfileCubit>(param1: driverToken)..loadProfile(),
-        child: const DriverProfilePage(),
+        child: DriverProfilePage(
+          onChatTapped: (driverToken) => openDriverChat(context, driverToken),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverChat(BuildContext context, String driverToken) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<ChatCubit>(
+        create: (_) => getIt<ChatCubit>(param1: driverToken)..start(),
+        child: const ChatPage(viewerSide: ConversationParticipant.client),
       ),
     ),
   );

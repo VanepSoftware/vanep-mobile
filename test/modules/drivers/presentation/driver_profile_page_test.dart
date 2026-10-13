@@ -20,7 +20,11 @@ import 'drivers_presentation_mocks.dart';
 
 class MockApiImageLoader extends Mock implements ApiImageLoader {}
 
-Widget harness(DriverProfileCubit cubit, ApiImageLoader loader) {
+Widget harness(
+  DriverProfileCubit cubit,
+  ApiImageLoader loader, {
+  ValueChanged<String>? onChatTapped,
+}) {
   return RepositoryProvider<ApiImageLoader>.value(
     value: loader,
     child: MaterialApp(
@@ -34,7 +38,7 @@ Widget harness(DriverProfileCubit cubit, ApiImageLoader loader) {
       locale: const Locale('pt'),
       home: BlocProvider<DriverProfileCubit>.value(
         value: cubit,
-        child: const DriverProfilePage(),
+        child: DriverProfilePage(onChatTapped: onChatTapped),
       ),
     ),
   );
@@ -209,19 +213,24 @@ void main() {
     expect(find.text('Fotos da van'), findsNothing);
   });
 
-  testWidgets('offers the chat button, which does nothing yet', (tester) async {
+  testWidgets('the chat button opens the chat with this driver', (
+    tester,
+  ) async {
     seed(
       const DriverProfileState(
         status: DriverProfileStatus.loaded,
         profile: testDriverProfile,
       ),
     );
+    final tappedDrivers = <String>[];
 
-    await tester.pumpWidget(harness(cubit, loader));
+    await tester.pumpWidget(
+      harness(cubit, loader, onChatTapped: tappedDrivers.add),
+    );
     await tester.tap(find.text('Conversar com o motorista'));
     await tester.pump();
 
-    expect(find.byType(DriverProfilePage), findsOneWidget);
+    expect(tappedDrivers, [testDriverProfile.token]);
   });
 
   testWidgets('a missing driver is explained and can be retried', (

@@ -59,16 +59,16 @@ Device verification of M3 and M4 needs backend B2 (REST) and B3 (realtime) deplo
 > Goal: the client taps "Conversar com o motorista" and chats with the driver in real time.
 > Order: test → cubit → page/widget
 
-- [ ] 3.1 Create the branch from `feat/38-chat-data`
-- [ ] 3.2 `bloc_test` for `ChatCubit`: open-or-resume then load (client route), load directly (driver route), open failure with retry, older page on scroll, send success (input cleared), send failure (text kept), live message inserted, duplicate token ignored (D5), reload on reconnection, subscription cancelled on `close()`
-- [ ] 3.3 `ChatState` and `ChatCubit` (D2, D4, D5). Messages ordered by `sentAt`, unique by token
-- [ ] 3.4 Widgets `ConversationMessageBubble` (aligned by `sender == viewerSide`, D3) and `ConversationInputBar` (composes `VanepTextField`, send disabled when blank or sending, 2000-character limit) using design-system tokens (D10)
-- [ ] 3.5 `ChatPage(viewerSide)`: reversed list, loading skeleton, error with retry, older pages on scroll. Widget test for alignment and the disabled send button
-- [ ] 3.6 ARB keys in `app_pt.arb` and `app_en.arb`: page title, input hint, send, empty conversation, open/load/send errors, retry if no existing key fits
-- [ ] 3.7 `openDriverChat(context, driverToken)` in `app.dart` with `viewerSide: client`. Pass it to `DriverProfilePage` as a callback and wire `driverProfileChatButton` (D1)
-- [ ] 3.8 Register `ChatCubit` as a factory in `conversations_container.dart`
-- [ ] 3.9 Run `make lint` and `make test`
-- [ ] 3.10 **Wait for developer validation on device (R27a)** against an API with B2 and B3: open a new conversation, reopen it, send, receive live from a second session, and drop/restore the network to see missed messages appear. Then commit and open the PR
+- [x] 3.1 Create the branch from `feat/38-chat-data`
+- [x] 3.2 `bloc_test` for `ChatCubit`: open-or-resume then load (client route), load directly (driver route), open failure with retry, older page on scroll, send success (input cleared), send failure (text kept), live message inserted, duplicate token ignored (D5), reload on reconnection, subscription cancelled on `close()`
+- [x] 3.3 `ChatState` and `ChatCubit` (D2, D4, D5). Messages ordered by `sentAt`, unique by token
+- [x] 3.4 Widgets `ConversationMessageBubble` (aligned by `sender == viewerSide`, D3) and `ConversationInputBar` (uses the shared `vanepInputDecoration`, since `VanepTextField` always renders a label; send disabled when blank or sending, 2000-character limit) using design-system tokens (D10)
+- [x] 3.5 `ChatPage(viewerSide)`: reversed list, loading spinner, error with retry through `VanepErrorView` (promoted from `drivers`' `DriversErrorView` to `lib/core/ui`, R10b), older pages on scroll. Widget test for alignment and the disabled send button
+- [x] 3.6 ARB keys in `app_pt.arb` and `app_en.arb`: page title, input hint, send, empty conversation, open/load/send errors, retry if no existing key fits
+- [x] 3.7 `openDriverChat(context, driverToken)` in `app.dart` with `viewerSide: client`. Pass it to `DriverProfilePage` as a callback and wire `driverProfileChatButton` (D1)
+- [x] 3.8 Register `ChatCubit` as a factory in `conversations_container.dart`
+- [x] 3.9 Run `make lint` and `make test`
+- [x] 3.10 PR opened. The developer asked to open every phase PR without stopping for device validation (2026-10-12); the on-device check below stays pending before merge: against an API with B2 and B3: open a new conversation, reopen it, send, receive live from a second session, and drop/restore the network to see missed messages appear. Then commit and open the PR
 
 ## 4. Phase M4 — Driver inbox (branch: `feat/38-chat-driver-inbox`)
 

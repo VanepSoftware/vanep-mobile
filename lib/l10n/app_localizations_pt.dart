@@ -1206,4 +1206,42 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get driverVansLoadError => 'Não foi possível carregar sua van.';
+
+  @override
+  String get conversationTitle => 'Conversa';
+
+  @override
+  String get conversationInputHint => 'Escreva uma mensagem';
+
+  @override
+  String get conversationSend => 'Enviar';
+
+  @override
+  String get conversationEmpty => 'Nenhuma mensagem ainda. Diga olá!';
+
+  @override
+  String get conversationLoadError => 'Não foi possível abrir a conversa.';
+
+  @override
+  String get conversationRetry => 'Tentar novamente';
+
+  @override
+  String get conversationFailureNetwork =>
+      'Sem conexão com o servidor. Tente novamente.';
+
+  @override
+  String get conversationFailureDriverUnavailable =>
+      'Este motorista não está mais disponível.';
+
+  @override
+  String get conversationFailureRejected =>
+      'Não foi possível enviar esta mensagem.';
+
+  @override
+  String get conversationFailureForbidden =>
+      'Você não participa desta conversa.';
+
+  @override
+  String get conversationFailureUnexpected =>
+      'Algo deu errado. Tente novamente.';
 }

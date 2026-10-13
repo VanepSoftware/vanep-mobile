@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/phone_formatter.dart';
+import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
@@ -12,10 +13,11 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_c
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/formatters/driver_profile_formatters.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_profile_sections.dart';
-import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_home_body.dart';
 
 class DriverProfilePage extends StatelessWidget {
-  const DriverProfilePage({super.key});
+  const DriverProfilePage({this.onChatTapped, super.key});
+
+  final ValueChanged<String>? onChatTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class DriverProfilePage extends StatelessWidget {
               child: CircularProgressIndicator(color: VanepColors.action),
             ),
             DriverProfileStatus.error => SafeArea(
-              child: DriversErrorView(
+              child: VanepErrorView(
                 message: failure == null
                     ? l10n.driverProfileLoadError
                     : driverProfileFailureLabel(l10n, failure),
@@ -61,7 +63,9 @@ class DriverProfilePage extends StatelessWidget {
                   minimum: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                   child: VanepPrimaryButton(
                     label: l10n.driverProfileChatButton,
-                    onPressed: () {},
+                    onPressed: onChatTapped == null
+                        ? null
+                        : () => onChatTapped!(profile.token),
                   ),
                 ),
         );

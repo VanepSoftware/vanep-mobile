@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
@@ -23,7 +24,7 @@ class DriversHomeBody extends StatelessWidget {
         return switch (state.status) {
           DriversStatus.initial ||
           DriversStatus.loading => const DriversSkeletonList(),
-          DriversStatus.error => DriversErrorView(
+          DriversStatus.error => VanepErrorView(
             message: l10n.driversLoadError,
             retryLabel: l10n.driversRetryButton,
             onRetry: () => context.read<DriversCubit>().loadRecentDrivers(),
@@ -49,40 +50,6 @@ class DriversSkeletonList extends StatelessWidget {
     return VanepSkeletonList(
       count: count,
       buildPlaceholder: (context) => const DriverCardSkeleton(),
-    );
-  }
-}
-
-class DriversErrorView extends StatelessWidget {
-  const DriversErrorView({
-    required this.message,
-    required this.retryLabel,
-    required this.onRetry,
-    super.key,
-  });
-
-  final String message;
-  final String retryLabel;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 48),
-      child: Column(
-        children: [
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: VanepTypography.cardSubtitle,
-          ),
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: onRetry,
-            child: Text(retryLabel, style: VanepTypography.ratingLabel),
-          ),
-        ],
-      ),
     );
   }
 }

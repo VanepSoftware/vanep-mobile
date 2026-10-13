@@ -523,5 +523,16 @@
   "driverVanFailureInvalid": "Check the van details.",
   "driverVanFailureNetwork": "No connection to the server. Try again.",
   "driverVanFailureUnexpected": "Something went wrong. Try again.",
-  "driverVansLoadError": "Could not load your van."
+  "driverVansLoadError": "Could not load your van.",
+  "conversationTitle": "Chat",
+  "conversationInputHint": "Write a message",
+  "conversationSend": "Send",
+  "conversationEmpty": "No messages yet. Say hi!",
+  "conversationLoadError": "Could not open the conversation.",
+  "conversationRetry": "Try again",
+  "conversationFailureNetwork": "No connection to the server. Try again.",
+  "conversationFailureDriverUnavailable": "This driver is no longer available.",
+  "conversationFailureRejected": "This message could not be sent.",
+  "conversationFailureForbidden": "You are not part of this conversation.",
+  "conversationFailureUnexpected": "Something went wrong. Try again."
 }

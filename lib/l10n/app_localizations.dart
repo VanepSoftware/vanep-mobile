@@ -2167,6 +2167,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not load your van.'**
   String get driverVansLoadError;
+
+  /// No description provided for @conversationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get conversationTitle;
+
+  /// No description provided for @conversationInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a message'**
+  String get conversationInputHint;
+
+  /// No description provided for @conversationSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get conversationSend;
+
+  /// No description provided for @conversationEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet. Say hi!'**
+  String get conversationEmpty;
+
+  /// No description provided for @conversationLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the conversation.'**
+  String get conversationLoadError;
+
+  /// No description provided for @conversationRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get conversationRetry;
+
+  /// No description provided for @conversationFailureNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. Try again.'**
+  String get conversationFailureNetwork;
+
+  /// No description provided for @conversationFailureDriverUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This driver is no longer available.'**
+  String get conversationFailureDriverUnavailable;
+
+  /// No description provided for @conversationFailureRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'This message could not be sent.'**
+  String get conversationFailureRejected;
+
+  /// No description provided for @conversationFailureForbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'You are not part of this conversation.'**
+  String get conversationFailureForbidden;
+
+  /// No description provided for @conversationFailureUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get conversationFailureUnexpected;
 }
 
 class _AppLocalizationsDelegate

@@ -402,5 +402,16 @@
   "driverVanFailureInvalid": "Confira os dados da van.",
   "driverVanFailureNetwork": "Sem conexão com o servidor. Tente novamente.",
   "driverVanFailureUnexpected": "Algo deu errado. Tente novamente.",
-  "driverVansLoadError": "Não foi possível carregar sua van."
+  "driverVansLoadError": "Não foi possível carregar sua van.",
+  "conversationTitle": "Conversa",
+  "conversationInputHint": "Escreva uma mensagem",
+  "conversationSend": "Enviar",
+  "conversationEmpty": "Nenhuma mensagem ainda. Diga olá!",
+  "conversationLoadError": "Não foi possível abrir a conversa.",
+  "conversationRetry": "Tentar novamente",
+  "conversationFailureNetwork": "Sem conexão com o servidor. Tente novamente.",
+  "conversationFailureDriverUnavailable": "Este motorista não está mais disponível.",
+  "conversationFailureRejected": "Não foi possível enviar esta mensagem.",
+  "conversationFailureForbidden": "Você não participa desta conversa.",
+  "conversationFailureUnexpected": "Algo deu errado. Tente novamente."
 }
