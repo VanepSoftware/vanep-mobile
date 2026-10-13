@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/network/access_token_source.dart';
 import 'package:vanep_mobile/core/network/auth_interceptor.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/core/result/result.dart';
@@ -119,10 +120,12 @@ void registerAuthDependencies(
       ),
     );
 
-  getIt.registerSingleton<Dio>(
-    _buildAuthenticatedDio(getIt, environment),
-    instanceName: authenticatedDioName,
-  );
+  getIt
+    ..registerSingleton<AccessTokenSource>(buildSessionAccessTokenSource(getIt))
+    ..registerSingleton<Dio>(
+      _buildAuthenticatedDio(getIt, environment),
+      instanceName: authenticatedDioName,
+    );
 
   getIt
     ..registerSingleton<UserProfileRemoteDataSource>(
@@ -211,19 +214,27 @@ void registerAuthDependencies(
     );
 }
 
+AccessTokenSource buildSessionAccessTokenSource(GetIt getIt) {
+  return AccessTokenSource(
+    readAccessToken: () async =>
+        (await getIt<AuthLocalDataSource>().readSession())?.accessToken,
+    refreshAccessToken: () async {
+      final result = await getIt<AuthRepository>().refreshSession();
+      return switch (result) {
+        Ok(:final value) => value?.accessToken,
+        Err() => null,
+      };
+    },
+  );
+}
+
 Dio _buildAuthenticatedDio(GetIt getIt, Environment environment) {
+  final tokens = getIt<AccessTokenSource>();
   final dio = DioClient.create(environment.authBaseUrl);
   dio.interceptors.add(
     AuthInterceptor(
-      readAccessToken: () async =>
-          (await getIt<AuthLocalDataSource>().readSession())?.accessToken,
-      refreshAccessToken: () async {
-        final result = await getIt<AuthRepository>().refreshSession();
-        return switch (result) {
-          Ok(:final value) => value?.accessToken,
-          Err() => null,
-        };
-      },
+      readAccessToken: tokens.readAccessToken,
+      refreshAccessToken: tokens.refreshAccessToken,
       retryClient: DioClient.create(environment.authBaseUrl),
     ),
   );

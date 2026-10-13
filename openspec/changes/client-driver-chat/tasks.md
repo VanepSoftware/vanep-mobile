@@ -43,16 +43,16 @@ Device verification of M3 and M4 needs backend B2 (REST) and B3 (realtime) deplo
 > Goal: the contract talks to the real API over REST and STOMP.
 > Order: test → DTO → datasource → repository → DI
 
-- [ ] 2.1 Create the branch from `feat/38-chat-domain`
-- [ ] 2.2 Move `readPagingInt` from `ibge_locations` to `lib/core/network/` and update its caller (D9). Existing tests stay green
-- [ ] 2.3 `Environment.conversationsWebSocketUrl` derived from `authBaseUrl` (`http`→`ws`, `https`→`wss`, path `/api/ws`), with a unit test for both schemes (D6)
-- [ ] 2.4 Freezed DTOs `ConversationDto` and `ConversationMessageDto` implementing the entities, mapping `sender` to `ConversationParticipant`. Run `build_runner` (R15)
-- [ ] 2.5 `ConversationRemoteDatasource` (authenticated `Dio`): the four REST calls, mapping the history `Page` to `ConversationMessagePage`. Tests with mocked `Dio` and JSON fixtures
-- [ ] 2.6 Add `stomp_dart_client`. `ConversationRealtimeDatasource`: connects with `Authorization: Bearer` in `webSocketConnectHeaders` (D7), subscribes to `/topic/conversations/{token}`, emits `ConversationRealtimeEvent`s, signals reconnection, refreshes the token once on handshake failure, and disconnects when the stream is cancelled. Tests with a fake STOMP client
-- [ ] 2.7 `ConversationRepositoryImpl`: wraps both datasources in `Result` and maps HTTP status codes to `ConversationFailure`. Tests
-- [ ] 2.8 `conversations_container.dart`: register datasources, repository and use cases, and call it from the app's DI setup
-- [ ] 2.9 Run `make lint` and `make test`
-- [ ] 2.10 **Wait for developer validation (R27a)**, then commit and open the PR
+- [x] 2.1 Create the branch from `feat/38-chat-domain`
+- [x] 2.2 Move `readPagingInt` from `ibge_locations` to `lib/core/network/` and update its caller (D9). Existing tests stay green
+- [x] 2.3 `Environment.conversationsWebSocketUrl` derived from `authBaseUrl` (`http`→`ws`, `https`→`wss`, path `/api/ws`), with a unit test for both schemes (D6)
+- [x] 2.4 Freezed DTOs `ConversationDto` and `ConversationMessageDto` implementing the entities, mapping `sender` to `ConversationParticipant`. Run `build_runner` (R15)
+- [x] 2.5 `ConversationRemoteDatasource` (authenticated `Dio`): the four REST calls, mapping the history `Page` to `ConversationMessagePage`. Tests with mocked `Dio` and JSON fixtures
+- [x] 2.6 Add `stomp_dart_client`. `ConversationRealtimeDatasource`: connects with `Authorization: Bearer` in `webSocketConnectHeaders` (D7), subscribes to `/topic/conversations/{token}`, emits `ConversationRealtimeEvent`s, signals reconnection, refreshes the token once on handshake failure, and disconnects when the stream is cancelled. Reconnection is driven by the datasource (one `StompClient` per attempt) because `StompConfig` fixes the handshake headers. Tests with a fake STOMP client
+- [x] 2.7 `ConversationRepositoryImpl`: wraps both datasources in `Result` and maps HTTP status codes to `ConversationFailure`. Tests
+- [x] 2.8 `conversations_container.dart`: register datasources, repository and use cases, and call it from the app's DI setup. The token functions move out of `AuthInterceptor` wiring into `AccessTokenSource` (`lib/core/network`), registered by `auth_container` and shared by the interceptor and the realtime datasource (R02, R06a)
+- [x] 2.9 Run `make lint` and `make test`
+- [x] 2.10 **Wait for developer validation (R27a)**, then commit and open the PR
 
 ## 3. Phase M3 — Client chat (branch: `feat/38-chat-client-page`)
 

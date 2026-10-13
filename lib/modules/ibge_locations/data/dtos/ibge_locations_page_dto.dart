@@ -1,10 +1,5 @@
+import 'package:vanep_mobile/core/network/paging_json.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
-
-int readPagingInt(Object? value) {
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  return 0;
-}
 
 IbgeLocationsPage<T> ibgeLocationsPageFromJson<T>(
   Map<String, Object?> json,

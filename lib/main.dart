@@ -11,6 +11,7 @@ import 'package:vanep_mobile/core/places/places_container.dart';
 import 'package:vanep_mobile/modules/auth/auth_container.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/assistant_container.dart';
+import 'package:vanep_mobile/modules/conversations/conversations_container.dart';
 import 'package:vanep_mobile/modules/dependents/dependents_container.dart';
 import 'package:vanep_mobile/modules/driver/driver_container.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/driver_service_areas_container.dart';
@@ -40,6 +41,7 @@ Future<void> main() async {
   registerDependentsDependencies(getIt);
   registerAssistantDependencies(getIt);
   registerDriverVansDependencies(getIt);
+  registerConversationsDependencies(getIt);
 
   runApp(const VanepApp());
 }

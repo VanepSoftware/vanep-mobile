@@ -111,6 +111,16 @@ class Environment {
 
   String get assistantsMeEndpoint => '$assistantsEndpoint/me';
 
+  String get conversationsEndpoint => '$authBaseUrl/api/conversations';
+
+  String get conversationsMeEndpoint => '$conversationsEndpoint/me';
+
+  String conversationMessagesEndpoint(String conversationToken) =>
+      '$conversationsEndpoint/${Uri.encodeComponent(conversationToken)}/messages';
+
+  String get conversationsWebSocketUrl =>
+      '${authBaseUrl.replaceFirst(RegExp('^http'), 'ws')}/api/ws';
+
   String get placesAutocompleteEndpoint =>
       'https://places.googleapis.com/v1/places:autocomplete';
 
