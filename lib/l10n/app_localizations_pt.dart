@@ -412,9 +412,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get comingSoon => 'Em breve';
 
   @override
-  String get navContracts => 'Contratos';
-
-  @override
   String get navDependents => 'Dependentes';
 
   @override

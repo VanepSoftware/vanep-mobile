@@ -32,9 +32,9 @@ class ClientBottomNav extends StatelessWidget {
           label: l10n.navVans,
         ),
         VanepNavItem(
-          icon: Icons.description_outlined,
-          selectedIcon: Icons.description_rounded,
-          label: l10n.navContracts,
+          icon: Icons.chat_bubble_outline_rounded,
+          selectedIcon: Icons.chat_bubble_rounded,
+          label: l10n.conversationsInboxTitle,
         ),
         VanepNavItem(
           icon: Icons.family_restroom_outlined,

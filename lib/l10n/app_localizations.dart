@@ -806,12 +806,6 @@ abstract class AppLocalizations {
   /// **'Coming soon'**
   String get comingSoon;
 
-  /// No description provided for @navContracts.
-  ///
-  /// In en, this message translates to:
-  /// **'Contracts'**
-  String get navContracts;
-
   /// No description provided for @navDependents.
   ///
   /// In en, this message translates to:

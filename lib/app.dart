@@ -18,7 +18,6 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/pages/driver_conversations_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
@@ -84,12 +83,15 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<ProfileSummaryCubit>(
                   create: (_) => getIt<ProfileSummaryCubit>(),
                 ),
+                BlocProvider<DriverConversationsCubit>(
+                  create: (_) => getIt<DriverConversationsCubit>(),
+                ),
               ],
               child: DriverShell(
                 profile: session.profile,
                 openServiceAreas: openDriverServiceAreas,
                 openMyVans: openDriverVans,
-                openConversations: openDriverConversations,
+                openConversationChat: openConversationChat,
               ),
             ),
             _ => MultiBlocProvider(
@@ -151,20 +153,6 @@ Future<void> openDriverProfile(BuildContext context, String driverToken) {
             getIt<DriverProfileCubit>(param1: driverToken)..loadProfile(),
         child: DriverProfilePage(
           onChatTapped: (driverToken) => openDriverChat(context, driverToken),
-        ),
-      ),
-    ),
-  );
-}
-
-Future<void> openDriverConversations(BuildContext context) {
-  return Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) => BlocProvider<DriverConversationsCubit>(
-        create: (_) => getIt<DriverConversationsCubit>()..loadConversations(),
-        child: DriverConversationsPage(
-          onConversationTapped: (conversation) =>
-              openConversationChat(context, conversation),
         ),
       ),
     ),

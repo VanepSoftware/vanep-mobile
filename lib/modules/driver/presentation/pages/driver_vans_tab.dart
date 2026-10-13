@@ -8,11 +8,13 @@ class DriverVansTab extends StatelessWidget {
   const DriverVansTab({
     required this.onOpenMyVans,
     required this.onOpenServiceAreas,
+    required this.onOpenStudents,
     super.key,
   });
 
   final VoidCallback onOpenMyVans;
   final VoidCallback onOpenServiceAreas;
+  final VoidCallback onOpenStudents;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,11 @@ class DriverVansTab extends StatelessWidget {
                 label: l10n.serviceAreasTitle,
                 icon: Icons.map_outlined,
                 onTap: onOpenServiceAreas,
+              ),
+              VanepMenuItem(
+                label: l10n.navStudents,
+                icon: Icons.groups_outlined,
+                onTap: onOpenStudents,
               ),
             ],
           ),

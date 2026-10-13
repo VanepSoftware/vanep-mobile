@@ -85,3 +85,13 @@ Device verification of M3 and M4 needs backend B2 (REST) and B3 (realtime) deplo
 - [x] 4.8 Register `DriverConversationsCubit` in `conversations_container.dart`
 - [x] 4.9 Run `make lint` and `make test`
 - [x] 4.10 PR opened without per-phase device validation, at the developer's request (2026-10-12); the on-device check below stays pending before merge:: the driver opens the inbox, sees the client's conversation on top, replies, and the client receives the reply live. Then commit and open the PR
+
+## 5. Phase M5 — Chat in the bottom navigation (branch: `feat/38-chat-tabs`)
+
+> Goal: the chat is a bottom-navigation tab for both sides instead of an icon in the driver's top bar.
+
+- [x] 5.1 Driver tabs: Início · Vans · Propostas · **Mensagens**. "Alunos" leaves the bottom bar and becomes an item of the Vans hub (still coming soon)
+- [x] 5.2 Client tabs: Início · Vans · **Mensagens** · Dependentes. "Contratos" leaves the bottom bar; it returns inside Vans when contracts exist
+- [x] 5.3 Driver "Mensagens" tab reuses the conversation list (`DriverConversationsTab`), reloads when selected and opens the chat. The top-bar messages icon from M4 is removed
+- [x] 5.4 Client "Mensagens" tab shows coming soon: listing the client's conversations needs a backend route that does not exist yet
+- [x] 5.5 Run `make lint` and `make test`; open the PR

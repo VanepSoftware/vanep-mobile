@@ -10,6 +10,9 @@ import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
@@ -17,6 +20,8 @@ import 'package:vanep_mobile/shell/driver_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
+import '../modules/conversations/conversations_fixtures.dart';
+import '../modules/conversations/conversations_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 
 Widget harness(
@@ -25,7 +30,8 @@ Widget harness(
   ProfileSummaryCubit profileSummaryCubit, {
   List<OnboardingStep> pendingSteps = const [],
   Future<void> Function(BuildContext)? openServiceAreas,
-  Future<void> Function(BuildContext)? openConversations,
+  DriverConversationsCubit? conversationsCubit,
+  Future<void> Function(BuildContext, Conversation)? openConversationChat,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -41,15 +47,34 @@ Widget harness(
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<DriverHomeCubit>.value(value: cubit),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
+        BlocProvider<DriverConversationsCubit>.value(
+          value: conversationsCubit ?? readyConversationsCubit(),
+        ),
       ],
       child: DriverShell(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
         openServiceAreas: openServiceAreas ?? (_) async {},
         openMyVans: (_) async {},
-        openConversations: openConversations ?? (_) async {},
+        openConversationChat: openConversationChat ?? (_, _) async {},
       ),
     ),
   );
+}
+
+MockDriverConversationsCubit readyConversationsCubit([
+  List<Conversation> conversations = const [],
+]) {
+  final cubit = MockDriverConversationsCubit();
+  whenListen(
+    cubit,
+    const Stream<DriverConversationsState>.empty(),
+    initialState: DriverConversationsState(
+      status: DriverConversationsStatus.ready,
+      conversations: conversations,
+    ),
+  );
+  when(() => cubit.loadConversations()).thenAnswer((_) async {});
+  return cubit;
 }
 
 List<String> bottomNavLabels(WidgetTester tester) {
@@ -83,12 +108,17 @@ void main() {
     expect(find.text('Olá, Ana!'), findsOneWidget);
   });
 
-  testWidgets('bottom bar offers home, vans, proposals and students', (
+  testWidgets('bottom bar offers home, vans, proposals and messages', (
     tester,
   ) async {
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
 
-    expect(bottomNavLabels(tester), ['Início', 'Vans', 'Propostas', 'Alunos']);
+    expect(bottomNavLabels(tester), [
+      'Início',
+      'Vans',
+      'Propostas',
+      'Mensagens',
+    ]);
   });
 
   testWidgets('switches to the Vans tab showing the vans hub', (tester) async {
@@ -135,15 +165,18 @@ void main() {
     expect(find.text('Em breve'), findsOneWidget);
   });
 
-  testWidgets('switches to the Alunos tab showing the coming soon view', (
+  testWidgets('students live in the Vans hub and are coming soon', (
     tester,
   ) async {
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
 
-    await tester.tap(find.bySemanticsLabel('Alunos'));
+    await tester.tap(find.bySemanticsLabel('Vans'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Alunos'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Em breve'), findsOneWidget);
+    expect(find.byType(VanepComingSoonPage), findsOneWidget);
+    expect(find.text('Alunos'), findsWidgets);
   });
 
   testWidgets('the menu button opens the account drawer and refreshes it', (
@@ -160,23 +193,30 @@ void main() {
     verify(() => profileSummaryCubit.refresh(any())).called(1);
   });
 
-  testWidgets('the messages icon opens the driver conversations', (
+  testWidgets('the Mensagens tab loads the conversations and opens a chat', (
     tester,
   ) async {
-    var opened = 0;
+    final conversationsCubit = readyConversationsCubit([testConversation]);
+    final opened = <Conversation>[];
     await tester.pumpWidget(
       harness(
         cubit,
         authCubit,
         profileSummaryCubit,
-        openConversations: (_) async => opened++,
+        conversationsCubit: conversationsCubit,
+        openConversationChat: (_, conversation) async =>
+            opened.add(conversation),
       ),
     );
 
-    await tester.tap(find.byTooltip('Mensagens'));
-    await tester.pump();
+    await tester.tap(find.bySemanticsLabel('Mensagens'));
+    await tester.pumpAndSettle();
+    verify(() => conversationsCubit.loadConversations()).called(1);
 
-    expect(opened, 1);
+    await tester.tap(find.text('Ana Cliente'));
+    await tester.pumpAndSettle();
+
+    expect(opened, [testConversation]);
   });
 
   testWidgets('the bell opens the notifications coming soon page', (

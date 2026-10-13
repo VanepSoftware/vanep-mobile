@@ -68,7 +68,10 @@ class ClientShellState extends State<ClientShell> {
             onDriverSelected: (driverToken) =>
                 widget.openDriverProfile(context, driverToken),
           ),
-          VanepComingSoon(title: l10n.navContracts, message: l10n.comingSoon),
+          VanepComingSoon(
+            title: l10n.conversationsInboxTitle,
+            message: l10n.comingSoon,
+          ),
           const DependentsPage(),
         ],
       ),

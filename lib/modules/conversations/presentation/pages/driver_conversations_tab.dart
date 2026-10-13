@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
-import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
@@ -12,11 +11,8 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_con
 import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/widgets/driver_conversation_tile.dart';
 
-class DriverConversationsPage extends StatelessWidget {
-  const DriverConversationsPage({
-    required this.onConversationTapped,
-    super.key,
-  });
+class DriverConversationsTab extends StatelessWidget {
+  const DriverConversationsTab({required this.onConversationTapped, super.key});
 
   final Future<void> Function(Conversation conversation) onConversationTapped;
 
@@ -24,14 +20,28 @@ class DriverConversationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      backgroundColor: VanepColors.card,
-      appBar: VanepAppBar(title: l10n.conversationsInboxTitle),
-      body: BlocBuilder<DriverConversationsCubit, DriverConversationsState>(
-        builder: (context, state) => DriverConversationsBody(
-          state: state,
-          onConversationTapped: onConversationTapped,
-        ),
+    return SafeArea(
+      bottom: false,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+            child: Text(
+              l10n.conversationsInboxTitle,
+              style: VanepTypography.pageTitle,
+            ),
+          ),
+          Expanded(
+            child:
+                BlocBuilder<DriverConversationsCubit, DriverConversationsState>(
+                  builder: (context, state) => DriverConversationsBody(
+                    state: state,
+                    onConversationTapped: onConversationTapped,
+                  ),
+                ),
+          ),
+        ],
       ),
     );
   }

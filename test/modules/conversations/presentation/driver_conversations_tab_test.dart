@@ -7,7 +7,7 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.
 import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_failure.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_state.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/pages/driver_conversations_page.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/pages/driver_conversations_tab.dart';
 
 import '../../../core/ui/localized_harness.dart';
 import '../conversations_fixtures.dart';
@@ -18,10 +18,12 @@ Widget harness(
   Future<void> Function(Conversation) onConversationTapped,
 ) {
   return localizedHarness(
-    BlocProvider<DriverConversationsCubit>.value(
-      value: cubit,
-      child: DriverConversationsPage(
-        onConversationTapped: onConversationTapped,
+    Scaffold(
+      body: BlocProvider<DriverConversationsCubit>.value(
+        value: cubit,
+        child: DriverConversationsTab(
+          onConversationTapped: onConversationTapped,
+        ),
       ),
     ),
   );

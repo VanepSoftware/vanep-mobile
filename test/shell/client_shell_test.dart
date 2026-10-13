@@ -141,7 +141,7 @@ void main() {
     verifyNever(authCubit.refreshSessionProfile);
   });
 
-  testWidgets('bottom bar offers home, vans, contracts and dependents', (
+  testWidgets('bottom bar offers home, vans, messages and dependents', (
     tester,
   ) async {
     await tester.pumpWidget(harness());
@@ -149,7 +149,7 @@ void main() {
     expect(bottomNavLabels(tester), [
       'Início',
       'Vans',
-      'Contratos',
+      'Mensagens',
       'Dependentes',
     ]);
   });
@@ -173,15 +173,15 @@ void main() {
     expect(find.byType(TextField), findsOneWidget);
   });
 
-  testWidgets('switches to the Contratos tab showing the coming soon view', (
+  testWidgets('the Mensagens tab is coming soon for the client', (
     tester,
   ) async {
     await tester.pumpWidget(harness());
 
-    await tester.tap(find.bySemanticsLabel('Contratos'));
+    await tester.tap(find.bySemanticsLabel('Mensagens'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Contratos'), findsWidgets);
+    expect(find.text('Mensagens'), findsWidgets);
     expect(find.text('Em breve'), findsOneWidget);
   });
 
