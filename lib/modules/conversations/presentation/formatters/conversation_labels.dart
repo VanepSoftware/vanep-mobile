@@ -36,3 +36,15 @@ bool isSentByViewer(
 
 String formatConversationTime(DateTime moment) =>
     DateFormat.Hm().format(moment.toLocal());
+
+String formatConversationListTime(DateTime moment, {DateTime? now}) {
+  final local = moment.toLocal();
+  final today = (now ?? DateTime.now()).toLocal();
+  final isToday =
+      local.year == today.year &&
+      local.month == today.month &&
+      local.day == today.day;
+  return isToday
+      ? DateFormat.Hm().format(local)
+      : DateFormat('dd/MM').format(local);
+}

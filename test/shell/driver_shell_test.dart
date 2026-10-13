@@ -25,6 +25,7 @@ Widget harness(
   ProfileSummaryCubit profileSummaryCubit, {
   List<OnboardingStep> pendingSteps = const [],
   Future<void> Function(BuildContext)? openServiceAreas,
+  Future<void> Function(BuildContext)? openConversations,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -45,6 +46,7 @@ Widget harness(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
         openServiceAreas: openServiceAreas ?? (_) async {},
         openMyVans: (_) async {},
+        openConversations: openConversations ?? (_) async {},
       ),
     ),
   );
@@ -86,12 +88,7 @@ void main() {
   ) async {
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
 
-    expect(bottomNavLabels(tester), [
-      'Início',
-      'Vans',
-      'Propostas',
-      'Alunos',
-    ]);
+    expect(bottomNavLabels(tester), ['Início', 'Vans', 'Propostas', 'Alunos']);
   });
 
   testWidgets('switches to the Vans tab showing the vans hub', (tester) async {
@@ -161,6 +158,25 @@ void main() {
     expect(find.text('Dados profissionais'), findsOneWidget);
     verify(() => authCubit.refreshSessionProfile()).called(1);
     verify(() => profileSummaryCubit.refresh(any())).called(1);
+  });
+
+  testWidgets('the messages icon opens the driver conversations', (
+    tester,
+  ) async {
+    var opened = 0;
+    await tester.pumpWidget(
+      harness(
+        cubit,
+        authCubit,
+        profileSummaryCubit,
+        openConversations: (_) async => opened++,
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Mensagens'));
+    await tester.pump();
+
+    expect(opened, 1);
   });
 
   testWidgets('the bell opens the notifications coming soon page', (

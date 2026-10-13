@@ -413,5 +413,8 @@
   "conversationFailureDriverUnavailable": "Este motorista não está mais disponível.",
   "conversationFailureRejected": "Não foi possível enviar esta mensagem.",
   "conversationFailureForbidden": "Você não participa desta conversa.",
-  "conversationFailureUnexpected": "Algo deu errado. Tente novamente."
+  "conversationFailureUnexpected": "Algo deu errado. Tente novamente.",
+  "conversationsInboxTitle": "Mensagens",
+  "conversationsInboxEmpty": "Nenhuma conversa ainda. Quando um cliente escrever, ela aparece aqui.",
+  "conversationsInboxLoadError": "Não foi possível carregar suas conversas."
 }

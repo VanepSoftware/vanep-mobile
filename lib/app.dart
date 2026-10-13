@@ -13,9 +13,12 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/pages/driver_conversations_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
@@ -86,6 +89,7 @@ class AuthGate extends StatelessWidget {
                 profile: session.profile,
                 openServiceAreas: openDriverServiceAreas,
                 openMyVans: openDriverVans,
+                openConversations: openDriverConversations,
               ),
             ),
             _ => MultiBlocProvider(
@@ -148,6 +152,34 @@ Future<void> openDriverProfile(BuildContext context, String driverToken) {
         child: DriverProfilePage(
           onChatTapped: (driverToken) => openDriverChat(context, driverToken),
         ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverConversations(BuildContext context) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverConversationsCubit>(
+        create: (_) => getIt<DriverConversationsCubit>()..loadConversations(),
+        child: DriverConversationsPage(
+          onConversationTapped: (conversation) =>
+              openConversationChat(context, conversation),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openConversationChat(
+  BuildContext context,
+  Conversation conversation,
+) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<ChatCubit>(
+        create: (_) => getIt<ChatCubit>(param2: conversation)..start(),
+        child: const ChatPage(viewerSide: ConversationParticipant.driver),
       ),
     ),
   );

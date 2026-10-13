@@ -4,11 +4,14 @@ import 'package:vanep_mobile/modules/conversations/data/datasources/conversation
 import 'package:vanep_mobile/modules/conversations/data/datasources/conversation_remote_datasource.dart';
 import 'package:vanep_mobile/modules/conversations/domain/repositories/conversation_repository.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_conversation_messages.dart';
+import 'package:vanep_mobile/modules/conversations/domain/usecases/list_driver_conversations.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/open_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/watch_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_state.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_state.dart';
 
 class MockConversationRepository extends Mock
     implements ConversationRepository {}
@@ -30,3 +33,9 @@ class MockSendConversationMessage extends Mock
 class MockWatchConversation extends Mock implements WatchConversation {}
 
 class MockChatCubit extends MockCubit<ChatState> implements ChatCubit {}
+
+class MockListDriverConversations extends Mock
+    implements ListDriverConversations {}
+
+class MockDriverConversationsCubit extends MockCubit<DriverConversationsState>
+    implements DriverConversationsCubit {}

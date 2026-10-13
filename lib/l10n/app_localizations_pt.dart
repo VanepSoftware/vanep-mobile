@@ -1244,4 +1244,15 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get conversationFailureUnexpected =>
       'Algo deu errado. Tente novamente.';
+
+  @override
+  String get conversationsInboxTitle => 'Mensagens';
+
+  @override
+  String get conversationsInboxEmpty =>
+      'Nenhuma conversa ainda. Quando um cliente escrever, ela aparece aqui.';
+
+  @override
+  String get conversationsInboxLoadError =>
+      'Não foi possível carregar suas conversas.';
 }

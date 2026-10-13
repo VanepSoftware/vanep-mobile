@@ -16,12 +16,14 @@ class DriverHomeTab extends StatelessWidget {
     required this.displayName,
     required this.onMenuTapped,
     required this.onNotificationsTapped,
+    this.onMessagesTapped,
     super.key,
   });
 
   final String displayName;
   final VoidCallback onMenuTapped;
   final VoidCallback onNotificationsTapped;
+  final VoidCallback? onMessagesTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class DriverHomeTab extends StatelessWidget {
               VanepHomeTopBar(
                 onMenuTapped: onMenuTapped,
                 onNotificationsTapped: onNotificationsTapped,
+                onMessagesTapped: onMessagesTapped,
               ),
               const SizedBox(height: 8),
               VanepGreetingHeader(

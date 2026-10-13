@@ -534,5 +534,8 @@
   "conversationFailureDriverUnavailable": "This driver is no longer available.",
   "conversationFailureRejected": "This message could not be sent.",
   "conversationFailureForbidden": "You are not part of this conversation.",
-  "conversationFailureUnexpected": "Something went wrong. Try again."
+  "conversationFailureUnexpected": "Something went wrong. Try again.",
+  "conversationsInboxTitle": "Messages",
+  "conversationsInboxEmpty": "No conversations yet. When a client writes to you, it shows up here.",
+  "conversationsInboxLoadError": "Could not load your conversations."
 }

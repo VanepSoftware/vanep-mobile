@@ -1238,4 +1238,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get conversationFailureUnexpected =>
       'Something went wrong. Try again.';
+
+  @override
+  String get conversationsInboxTitle => 'Messages';
+
+  @override
+  String get conversationsInboxEmpty =>
+      'No conversations yet. When a client writes to you, it shows up here.';
+
+  @override
+  String get conversationsInboxLoadError =>
+      'Could not load your conversations.';
 }

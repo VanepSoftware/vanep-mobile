@@ -15,6 +15,7 @@ import 'package:vanep_mobile/modules/conversations/domain/usecases/open_conversa
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/watch_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
 
 void registerConversationsDependencies(GetIt getIt) {
   final environment = getIt<Environment>();
@@ -61,6 +62,11 @@ void registerConversationsDependencies(GetIt getIt) {
         watchConversation: getIt<WatchConversation>(),
         driverToken: driverToken,
         conversation: conversation,
+      ),
+    )
+    ..registerFactory<DriverConversationsCubit>(
+      () => DriverConversationsCubit(
+        listDriverConversations: getIt<ListDriverConversations>(),
       ),
     );
 }

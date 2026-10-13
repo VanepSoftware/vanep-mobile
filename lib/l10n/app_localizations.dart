@@ -2233,6 +2233,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Try again.'**
   String get conversationFailureUnexpected;
+
+  /// No description provided for @conversationsInboxTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get conversationsInboxTitle;
+
+  /// No description provided for @conversationsInboxEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet. When a client writes to you, it shows up here.'**
+  String get conversationsInboxEmpty;
+
+  /// No description provided for @conversationsInboxLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your conversations.'**
+  String get conversationsInboxLoadError;
 }
 
 class _AppLocalizationsDelegate

@@ -75,13 +75,13 @@ Device verification of M3 and M4 needs backend B2 (REST) and B3 (realtime) deplo
 > Goal: the driver sees who messaged them and replies.
 > Order: test → cubit → page/widget
 
-- [ ] 4.1 Create the branch from `feat/38-chat-client-page`
-- [ ] 4.2 `bloc_test` for `DriverConversationsCubit`: loaded list, empty state, failure with retry, reload when returning from a chat
-- [ ] 4.3 `DriverConversationsState` and `DriverConversationsCubit`
-- [ ] 4.4 `DriverConversationTile` (client name and last message time, design-system list-row tokens) and `DriverConversationsPage` (loading, empty, error, list)
-- [ ] 4.5 `VanepHomeTopBar`: optional `onMessagesTapped`. The icon renders only when it is provided. Widget test: client shell unchanged, driver shell shows the icon
-- [ ] 4.6 `openDriverConversations(context)` and `openConversationChat(context, conversation)` with `viewerSide: driver` in `app.dart`. Wire them through `driver_shell.dart` and `DriverHomeTab`
-- [ ] 4.7 ARB keys: messages action tooltip, inbox title, empty state
-- [ ] 4.8 Register `DriverConversationsCubit` in `conversations_container.dart`
-- [ ] 4.9 Run `make lint` and `make test`
-- [ ] 4.10 **Wait for developer validation on device (R27a)**: the driver opens the inbox, sees the client's conversation on top, replies, and the client receives the reply live. Then commit and open the PR
+- [x] 4.1 Create the branch from `feat/38-chat-client-page`
+- [x] 4.2 `bloc_test` for `DriverConversationsCubit`: loaded list, empty state, failure with retry, reload when returning from a chat
+- [x] 4.3 `DriverConversationsState` and `DriverConversationsCubit`
+- [x] 4.4 `DriverConversationTile` (client name and last message time, design-system list-row tokens) and `DriverConversationsPage` (loading, empty, error, list)
+- [x] 4.5 `VanepHomeTopBar`: optional `onMessagesTapped`. The icon renders only when it is provided. Widget test: client shell unchanged, driver shell shows the icon
+- [x] 4.6 `openDriverConversations(context)` and `openConversationChat(context, conversation)` with `viewerSide: driver` in `app.dart`. Wire them through `driver_shell.dart` (new required `openConversations`, like `openMyVans`) and `DriverHomeTab` (optional `onMessagesTapped`)
+- [x] 4.7 ARB keys: messages action tooltip, inbox title, empty state
+- [x] 4.8 Register `DriverConversationsCubit` in `conversations_container.dart`
+- [x] 4.9 Run `make lint` and `make test`
+- [x] 4.10 PR opened without per-phase device validation, at the developer's request (2026-10-12); the on-device check below stays pending before merge:: the driver opens the inbox, sees the client's conversation on top, replies, and the client receives the reply live. Then commit and open the PR

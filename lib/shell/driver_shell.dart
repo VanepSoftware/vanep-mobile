@@ -18,6 +18,7 @@ class DriverShell extends StatefulWidget {
     required this.profile,
     required this.openServiceAreas,
     required this.openMyVans,
+    required this.openConversations,
     super.key,
   });
 
@@ -26,6 +27,8 @@ class DriverShell extends StatefulWidget {
   final Future<void> Function(BuildContext context) openServiceAreas;
 
   final Future<void> Function(BuildContext context) openMyVans;
+
+  final Future<void> Function(BuildContext context) openConversations;
 
   @override
   State<DriverShell> createState() => DriverShellState();
@@ -73,6 +76,7 @@ class DriverShellState extends State<DriverShell> {
                   displayName: displayName,
                   onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
                   onNotificationsTapped: () => openNotifications(context),
+                  onMessagesTapped: () => widget.openConversations(context),
                 ),
                 DriverVansTab(
                   onOpenMyVans: () => widget.openMyVans(context),

@@ -57,4 +57,40 @@ void main() {
       greaterThanOrEqualTo(kMinInteractiveDimension),
     );
   });
+
+  testWidgets('without a messages callback there is no messages icon', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      localizedHarness(
+        Scaffold(
+          body: VanepHomeTopBar(
+            onMenuTapped: () {},
+            onNotificationsTapped: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.chat_bubble_outline_rounded), findsNothing);
+  });
+
+  testWidgets('the messages icon calls its callback', (tester) async {
+    var messageTaps = 0;
+    await tester.pumpWidget(
+      localizedHarness(
+        Scaffold(
+          body: VanepHomeTopBar(
+            onMenuTapped: () {},
+            onNotificationsTapped: () {},
+            onMessagesTapped: () => messageTaps++,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Mensagens'));
+
+    expect(messageTaps, 1);
+  });
 }
