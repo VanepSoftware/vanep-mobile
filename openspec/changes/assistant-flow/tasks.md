@@ -47,16 +47,16 @@
 
 ## 3. Phase 3 — Invite & Lean Registration UI (branch: `feat-(N-37)/assistant-invite-registration-ui`)
 
-- [ ] 3.1 Localizations in `lib/l10n/app_pt.arb` and `lib/l10n/app_en.arb` for invite entry, errors, and signup fields (R10)
-- [ ] 3.2 Regenerate localizations with `fvm flutter gen-l10n`
-- [ ] 3.3 State management `AssistantInviteCubit` and states with `bloc_test`
-- [ ] 3.4 Update `WelcomePage` adding secondary action "Entrar como assistente"
-- [ ] 3.5 Screen `AssistantInviteCodePage` with code input formatting and clear error states (invalid, expired, used)
-- [ ] 3.6 Screen `AssistantLeanSignupPage` with Name, Birth Date, Email, CPF, Password, Terms inputs (no driver-specific fields)
-- [ ] 3.7 Deep link listener integration for `vanep://assistant/invite?token=...`
-- [ ] 3.8 Widget tests for `AssistantInviteCodePage` and `AssistantLeanSignupPage`
-- [ ] 3.9 Run `make lint` and `make test`
-- [ ] 3.10 **Aguardar validação do desenvolvedor no emulador/aparelho (R27a)**; só então commitar e abrir PR
+- [x] 3.1 Localizations in `lib/l10n/app_pt.arb` and `lib/l10n/app_en.arb` for invite entry, errors, and signup fields (R10)
+- [x] 3.2 Regenerate localizations with `fvm flutter gen-l10n`
+- [x] 3.3 State management `AssistantInviteCubit` and states with `bloc_test`
+- [x] 3.4 Update entry points adding secondary action "Entrar como assistente" (LoginPage / AccountTypePage)
+- [x] 3.5 Screen `AssistantInviteCodePage` with code input formatting and clear error states (invalid, expired, used)
+- [x] 3.6 Screen `AssistantLeanSignupPage` with Name, Birth Date, Email, CPF, Password, Terms inputs (no driver-specific fields)
+- [x] 3.7 Deep link listener integration for `vanep://assistant/invite?token=...`
+- [x] 3.8 Widget tests for `AssistantInviteCodePage` and `AssistantLeanSignupPage`
+- [x] 3.9 Run `make lint` and `make test`
+- [x] 3.10 **Aguardar validação do desenvolvedor no emulador/aparelho (R27a)**; só então commitar e abrir PR
 
 ---
 

@@ -10,6 +10,7 @@ import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/core/ui/vanep_wordmark.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_invite_code_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
@@ -222,6 +223,23 @@ class LoginForm extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 8),
+                TextButton.icon(
+                  onPressed: editable
+                      ? () => openAssistantInvite(context)
+                      : null,
+                  icon: const Icon(Icons.support_agent_outlined, size: 18),
+                  label: Text(
+                    l10n.assistantEnterWithInvite,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    foregroundColor: VanepColors.textSecondary,
+                  ),
                 ),
               ],
             ),
