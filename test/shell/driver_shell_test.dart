@@ -12,7 +12,6 @@ import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/s
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
@@ -59,22 +58,6 @@ Widget harness(
       ),
     ),
   );
-}
-
-MockDriverConversationsCubit readyConversationsCubit([
-  List<Conversation> conversations = const [],
-]) {
-  final cubit = MockDriverConversationsCubit();
-  whenListen(
-    cubit,
-    const Stream<DriverConversationsState>.empty(),
-    initialState: DriverConversationsState(
-      status: DriverConversationsStatus.ready,
-      conversations: conversations,
-    ),
-  );
-  when(() => cubit.loadConversations()).thenAnswer((_) async {});
-  return cubit;
 }
 
 List<String> bottomNavLabels(WidgetTester tester) {

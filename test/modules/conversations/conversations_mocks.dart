@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/conversations/data/datasources/conversation_realtime_datasource.dart';
 import 'package:vanep_mobile/modules/conversations/data/datasources/conversation_remote_datasource.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/repositories/conversation_repository.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_conversation_messages.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_driver_conversations.dart';
@@ -39,3 +40,19 @@ class MockListDriverConversations extends Mock
 
 class MockDriverConversationsCubit extends MockCubit<DriverConversationsState>
     implements DriverConversationsCubit {}
+
+MockDriverConversationsCubit readyConversationsCubit([
+  List<Conversation> conversations = const [],
+]) {
+  final cubit = MockDriverConversationsCubit();
+  whenListen(
+    cubit,
+    const Stream<DriverConversationsState>.empty(),
+    initialState: DriverConversationsState(
+      status: DriverConversationsStatus.ready,
+      conversations: conversations,
+    ),
+  );
+  when(() => cubit.loadConversations()).thenAnswer((_) async {});
+  return cubit;
+}
