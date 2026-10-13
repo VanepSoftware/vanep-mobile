@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
-import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/client/presentation/pages/client_home_tab.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/pages/conversations_inbox_tab.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_page.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/pages/find_vans_tab.dart';
@@ -14,6 +16,8 @@ import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 
 const clientShellVansTabIndex = 1;
 
+const clientShellConversationsTabIndex = 2;
+
 const clientShellDependentsTabIndex = 3;
 
 class ClientShell extends StatefulWidget {
@@ -21,6 +25,7 @@ class ClientShell extends StatefulWidget {
     required this.profile,
     required this.openDriverSearch,
     required this.openDriverProfile,
+    required this.openConversationChat,
     super.key,
   });
 
@@ -30,6 +35,9 @@ class ClientShell extends StatefulWidget {
 
   final Future<void> Function(BuildContext context, String driverToken)
   openDriverProfile;
+
+  final Future<void> Function(BuildContext context, Conversation conversation)
+  openConversationChat;
 
   @override
   State<ClientShell> createState() => ClientShellState();
@@ -42,7 +50,6 @@ class ClientShellState extends State<ClientShell> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final displayName = widget.profile.name ?? widget.profile.email ?? '';
 
     return Scaffold(
@@ -68,9 +75,10 @@ class ClientShellState extends State<ClientShell> {
             onDriverSelected: (driverToken) =>
                 widget.openDriverProfile(context, driverToken),
           ),
-          VanepComingSoon(
-            title: l10n.conversationsInboxTitle,
-            message: l10n.comingSoon,
+          ConversationsInboxTab(
+            viewerSide: ConversationParticipant.client,
+            onConversationTapped: (conversation) =>
+                widget.openConversationChat(context, conversation),
           ),
           const DependentsPage(),
         ],
@@ -84,7 +92,11 @@ class ClientShellState extends State<ClientShell> {
 
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);
-    if (index != clientShellDependentsTabIndex) return;
-    context.read<DependentsCubit>().loadDependents();
+    if (index == clientShellConversationsTabIndex) {
+      context.read<ConversationsInboxCubit>().loadConversations();
+    }
+    if (index == clientShellDependentsTabIndex) {
+      context.read<DependentsCubit>().loadDependents();
+    }
   }
 }

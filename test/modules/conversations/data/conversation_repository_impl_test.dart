@@ -64,10 +64,10 @@ void main() {
 
   test('a malformed payload maps to an unexpected failure', () async {
     when(
-      remote.listDriverConversations,
+      remote.listMyConversations,
     ).thenThrow(const FormatException('bad'));
 
-    final result = await repository.listDriverConversations();
+    final result = await repository.listMyConversations();
 
     expect(result.errorOrNull, const ConversationUnexpectedFailure());
   });

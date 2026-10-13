@@ -1246,4 +1246,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get conversationsInboxLoadError =>
       'Could not load your conversations.';
+
+  @override
+  String get conversationsInboxEmptyClient =>
+      'No conversations yet. To talk to a driver, open their profile in Vans and tap “Chat with the driver”.';
 }

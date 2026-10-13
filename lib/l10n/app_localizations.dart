@@ -2245,6 +2245,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not load your conversations.'**
   String get conversationsInboxLoadError;
+
+  /// No description provided for @conversationsInboxEmptyClient.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet. To talk to a driver, open their profile in Vans and tap “Chat with the driver”.'**
+  String get conversationsInboxEmptyClient;
 }
 
 class _AppLocalizationsDelegate

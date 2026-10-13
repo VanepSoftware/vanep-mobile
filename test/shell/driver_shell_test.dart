@@ -11,7 +11,7 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.d
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
@@ -29,7 +29,7 @@ Widget harness(
   ProfileSummaryCubit profileSummaryCubit, {
   List<OnboardingStep> pendingSteps = const [],
   Future<void> Function(BuildContext)? openServiceAreas,
-  DriverConversationsCubit? conversationsCubit,
+  ConversationsInboxCubit? conversationsCubit,
   Future<void> Function(BuildContext, Conversation)? openConversationChat,
 }) {
   return MaterialApp(
@@ -46,7 +46,7 @@ Widget harness(
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<DriverHomeCubit>.value(value: cubit),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
-        BlocProvider<DriverConversationsCubit>.value(
+        BlocProvider<ConversationsInboxCubit>.value(
           value: conversationsCubit ?? readyConversationsCubit(),
         ),
       ],

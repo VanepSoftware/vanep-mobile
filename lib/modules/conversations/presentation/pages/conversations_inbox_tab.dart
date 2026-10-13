@@ -6,14 +6,20 @@ import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_state.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_state.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/widgets/driver_conversation_tile.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/widgets/conversation_inbox_tile.dart';
 
-class DriverConversationsTab extends StatelessWidget {
-  const DriverConversationsTab({required this.onConversationTapped, super.key});
+class ConversationsInboxTab extends StatelessWidget {
+  const ConversationsInboxTab({
+    required this.viewerSide,
+    required this.onConversationTapped,
+    super.key,
+  });
 
+  final ConversationParticipant viewerSide;
   final Future<void> Function(Conversation conversation) onConversationTapped;
 
   @override
@@ -34,9 +40,10 @@ class DriverConversationsTab extends StatelessWidget {
           ),
           Expanded(
             child:
-                BlocBuilder<DriverConversationsCubit, DriverConversationsState>(
-                  builder: (context, state) => DriverConversationsBody(
+                BlocBuilder<ConversationsInboxCubit, ConversationsInboxState>(
+                  builder: (context, state) => ConversationsInboxBody(
                     state: state,
+                    viewerSide: viewerSide,
                     onConversationTapped: onConversationTapped,
                   ),
                 ),
@@ -47,20 +54,22 @@ class DriverConversationsTab extends StatelessWidget {
   }
 }
 
-class DriverConversationsBody extends StatelessWidget {
-  const DriverConversationsBody({
+class ConversationsInboxBody extends StatelessWidget {
+  const ConversationsInboxBody({
     required this.state,
+    required this.viewerSide,
     required this.onConversationTapped,
     super.key,
   });
 
-  final DriverConversationsState state;
+  final ConversationsInboxState state;
+  final ConversationParticipant viewerSide;
   final Future<void> Function(Conversation conversation) onConversationTapped;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final cubit = context.read<DriverConversationsCubit>();
+    final cubit = context.read<ConversationsInboxCubit>();
 
     if (state.isLoading) {
       return const Center(
@@ -82,7 +91,7 @@ class DriverConversationsBody extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            l10n.conversationsInboxEmpty,
+            conversationsInboxEmptyLabel(l10n, viewerSide),
             textAlign: TextAlign.center,
             style: VanepTypography.cardSubtitle,
           ),
@@ -99,9 +108,10 @@ class DriverConversationsBody extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final conversation = state.conversations[index];
-          return DriverConversationTile(
+          return ConversationInboxTile(
             key: ValueKey(conversation.token),
             conversation: conversation,
+            viewerSide: viewerSide,
             onTap: () async {
               await onConversationTapped(conversation);
               await cubit.loadConversations();

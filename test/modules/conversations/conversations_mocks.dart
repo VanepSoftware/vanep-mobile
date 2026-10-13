@@ -5,14 +5,14 @@ import 'package:vanep_mobile/modules/conversations/data/datasources/conversation
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/repositories/conversation_repository.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_conversation_messages.dart';
-import 'package:vanep_mobile/modules/conversations/domain/usecases/list_driver_conversations.dart';
+import 'package:vanep_mobile/modules/conversations/domain/usecases/list_my_conversations.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/open_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/watch_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_state.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_state.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_state.dart';
 
 class MockConversationRepository extends Mock
     implements ConversationRepository {}
@@ -35,21 +35,21 @@ class MockWatchConversation extends Mock implements WatchConversation {}
 
 class MockChatCubit extends MockCubit<ChatState> implements ChatCubit {}
 
-class MockListDriverConversations extends Mock
-    implements ListDriverConversations {}
+class MockListMyConversations extends Mock
+    implements ListMyConversations {}
 
-class MockDriverConversationsCubit extends MockCubit<DriverConversationsState>
-    implements DriverConversationsCubit {}
+class MockConversationsInboxCubit extends MockCubit<ConversationsInboxState>
+    implements ConversationsInboxCubit {}
 
-MockDriverConversationsCubit readyConversationsCubit([
+MockConversationsInboxCubit readyConversationsCubit([
   List<Conversation> conversations = const [],
 ]) {
-  final cubit = MockDriverConversationsCubit();
+  final cubit = MockConversationsInboxCubit();
   whenListen(
     cubit,
-    const Stream<DriverConversationsState>.empty(),
-    initialState: DriverConversationsState(
-      status: DriverConversationsStatus.ready,
+    const Stream<ConversationsInboxState>.empty(),
+    initialState: ConversationsInboxState(
+      status: ConversationsInboxStatus.ready,
       conversations: conversations,
     ),
   );

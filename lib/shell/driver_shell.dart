@@ -9,8 +9,9 @@ import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/pages/driver_conversations_tab.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/pages/conversations_inbox_tab.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_home_tab.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
@@ -98,7 +99,8 @@ class DriverShellState extends State<DriverShell> {
                   title: l10n.navProposalsAndContracts,
                   message: l10n.comingSoon,
                 ),
-                DriverConversationsTab(
+                ConversationsInboxTab(
+                  viewerSide: ConversationParticipant.driver,
                   onConversationTapped: (conversation) =>
                       widget.openConversationChat(context, conversation),
                 ),
@@ -123,6 +125,6 @@ class DriverShellState extends State<DriverShell> {
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);
     if (index != driverShellConversationsTabIndex) return;
-    context.read<DriverConversationsCubit>().loadConversations();
+    context.read<ConversationsInboxCubit>().loadConversations();
   }
 }

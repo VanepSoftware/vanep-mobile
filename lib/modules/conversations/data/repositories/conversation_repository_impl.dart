@@ -49,8 +49,8 @@ class ConversationRepositoryImpl implements ConversationRepository {
 
   @override
   Future<Result<ConversationFailure, List<Conversation>>>
-  listDriverConversations() {
-    return guardConversationCall(remote.listDriverConversations);
+  listMyConversations() {
+    return guardConversationCall(remote.listMyConversations);
   }
 
   @override

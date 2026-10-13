@@ -51,13 +51,13 @@ void main() {
     expect(conversation.token, 'conversation-1');
   });
 
-  test('listDriverConversations reads the driver list', () async {
+  test('listMyConversations reads the driver list', () async {
     when(
       () =>
           dio.get<List<dynamic>>('http://localhost:8080/api/conversations/me'),
     ).thenAnswer((_) async => okResponse<List<dynamic>>([conversationJson]));
 
-    final conversations = await remote.listDriverConversations();
+    final conversations = await remote.listMyConversations();
 
     expect(conversations.single.clientName, 'Maria');
   });

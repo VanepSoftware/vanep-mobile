@@ -1252,4 +1252,8 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get conversationsInboxLoadError =>
       'Não foi possível carregar suas conversas.';
+
+  @override
+  String get conversationsInboxEmptyClient =>
+      'Nenhuma conversa ainda. Para falar com um motorista, abra o perfil dele em Vans e toque em “Conversar com o motorista”.';
 }

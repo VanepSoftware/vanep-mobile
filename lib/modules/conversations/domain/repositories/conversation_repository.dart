@@ -9,8 +9,7 @@ abstract class ConversationRepository {
     String driverToken,
   );
 
-  Future<Result<ConversationFailure, List<Conversation>>>
-  listDriverConversations();
+  Future<Result<ConversationFailure, List<Conversation>>> listMyConversations();
 
   Future<Result<ConversationFailure, ConversationMessagePage>> listMessages({
     required String conversationToken,

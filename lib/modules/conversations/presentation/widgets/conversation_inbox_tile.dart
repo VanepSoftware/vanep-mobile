@@ -4,16 +4,19 @@ import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
 
-class DriverConversationTile extends StatelessWidget {
-  const DriverConversationTile({
+class ConversationInboxTile extends StatelessWidget {
+  const ConversationInboxTile({
     required this.conversation,
+    required this.viewerSide,
     required this.onTap,
     super.key,
   });
 
   final Conversation conversation;
+  final ConversationParticipant viewerSide;
   final VoidCallback onTap;
 
   @override
@@ -29,7 +32,7 @@ class DriverConversationTile extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              conversation.clientName,
+              conversationCounterpartName(conversation, viewerSide),
               style: VanepTypography.cardTitle,
               overflow: TextOverflow.ellipsis,
             ),

@@ -29,6 +29,16 @@ String conversationCounterpartName(
   };
 }
 
+String conversationsInboxEmptyLabel(
+  AppLocalizations l10n,
+  ConversationParticipant viewerSide,
+) {
+  return switch (viewerSide) {
+    ConversationParticipant.client => l10n.conversationsInboxEmptyClient,
+    ConversationParticipant.driver => l10n.conversationsInboxEmpty,
+  };
+}
+
 bool isSentByViewer(
   ConversationMessage message,
   ConversationParticipant viewerSide,

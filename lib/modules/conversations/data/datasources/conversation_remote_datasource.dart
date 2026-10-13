@@ -22,7 +22,7 @@ class ConversationRemoteDataSource {
     return readConversation(response.data);
   }
 
-  Future<List<Conversation>> listDriverConversations() async {
+  Future<List<Conversation>> listMyConversations() async {
     final response = await dio.get<List<dynamic>>(
       environment.conversationsMeEndpoint,
     );

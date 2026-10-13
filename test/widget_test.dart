@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/app.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -138,6 +138,9 @@ void main() {
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
       ..registerFactory<DriverSearchCubit>(() => searchCubit)
       ..registerFactory<DependentsCubit>(() => dependentsCubit)
+      ..registerFactory<ConversationsInboxCubit>(
+        () => readyConversationsCubit(),
+      )
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
@@ -170,7 +173,7 @@ void main() {
     getIt
       ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
-      ..registerFactory<DriverConversationsCubit>(
+      ..registerFactory<ConversationsInboxCubit>(
         () => readyConversationsCubit(),
       )
       ..registerFactory<PlaceAutocompleteController>(
@@ -211,7 +214,7 @@ void main() {
       )
       ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
-      ..registerFactory<DriverConversationsCubit>(
+      ..registerFactory<ConversationsInboxCubit>(
         () => readyConversationsCubit(),
       );
     addTearDown(getIt.reset);

@@ -10,12 +10,12 @@ import 'package:vanep_mobile/modules/conversations/data/repositories/conversatio
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/repositories/conversation_repository.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_conversation_messages.dart';
-import 'package:vanep_mobile/modules/conversations/domain/usecases/list_driver_conversations.dart';
+import 'package:vanep_mobile/modules/conversations/domain/usecases/list_my_conversations.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/open_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/watch_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/driver_conversations_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 
 void registerConversationsDependencies(GetIt getIt) {
   final environment = getIt<Environment>();
@@ -42,8 +42,8 @@ void registerConversationsDependencies(GetIt getIt) {
     ..registerFactory<OpenConversation>(
       () => OpenConversation(getIt<ConversationRepository>()),
     )
-    ..registerFactory<ListDriverConversations>(
-      () => ListDriverConversations(getIt<ConversationRepository>()),
+    ..registerFactory<ListMyConversations>(
+      () => ListMyConversations(getIt<ConversationRepository>()),
     )
     ..registerFactory<ListConversationMessages>(
       () => ListConversationMessages(getIt<ConversationRepository>()),
@@ -64,9 +64,9 @@ void registerConversationsDependencies(GetIt getIt) {
         conversation: conversation,
       ),
     )
-    ..registerFactory<DriverConversationsCubit>(
-      () => DriverConversationsCubit(
-        listDriverConversations: getIt<ListDriverConversations>(),
+    ..registerFactory<ConversationsInboxCubit>(
+      () => ConversationsInboxCubit(
+        listMyConversations: getIt<ListMyConversations>(),
       ),
     );
 }
