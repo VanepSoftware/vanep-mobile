@@ -2,7 +2,7 @@
     <!-- Required for API calls. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="vanep_mobile"
+        android:label="Vanep"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
