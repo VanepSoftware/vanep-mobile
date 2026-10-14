@@ -37,9 +37,9 @@ class DriverBottomNav extends StatelessWidget {
           label: l10n.navProposals,
         ),
         VanepNavItem(
-          icon: Icons.groups_outlined,
-          selectedIcon: Icons.groups_rounded,
-          label: l10n.navStudents,
+          icon: Icons.chat_bubble_outline_rounded,
+          selectedIcon: Icons.chat_bubble_rounded,
+          label: l10n.conversationsInboxTitle,
         ),
       ],
     );

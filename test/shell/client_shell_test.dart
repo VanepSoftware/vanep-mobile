@@ -18,12 +18,16 @@ import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
+import '../modules/conversations/conversations_fixtures.dart';
+import '../modules/conversations/conversations_mocks.dart';
 import '../modules/dependents/dependents_mocks.dart';
 import '../modules/drivers/drivers_fixtures.dart';
 import '../modules/drivers/presentation/drivers_presentation_mocks.dart';
@@ -48,7 +52,9 @@ Widget _harness(
   AuthCubit authCubit,
   ProfileSummaryCubit profileSummaryCubit,
   DependentsCubit dependentsCubit,
+  ConversationsInboxCubit conversationsCubit,
   Future<void> Function(BuildContext)? openDriverSearch,
+  Future<void> Function(BuildContext, Conversation)? openConversationChat,
 ) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -65,11 +71,13 @@ Widget _harness(
         BlocProvider<DriversCubit>.value(value: driversCubit),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
         BlocProvider<DependentsCubit>.value(value: dependentsCubit),
+        BlocProvider<ConversationsInboxCubit>.value(value: conversationsCubit),
       ],
       child: ClientShell(
         openDriverProfile: (_, _) async {},
         profile: const FakeUserProfile(),
         openDriverSearch: openDriverSearch ?? (_) async {},
+        openConversationChat: openConversationChat ?? (_, _) async {},
       ),
     ),
   );
@@ -85,14 +93,20 @@ void main() {
   late MockAuthCubit authCubit;
   late MockProfileSummaryCubit profileSummaryCubit;
   late MockDependentsCubit dependentsCubit;
+  late MockConversationsInboxCubit conversationsCubit;
 
-  Widget harness({Future<void> Function(BuildContext)? openDriverSearch}) {
+  Widget harness({
+    Future<void> Function(BuildContext)? openDriverSearch,
+    Future<void> Function(BuildContext, Conversation)? openConversationChat,
+  }) {
     return _harness(
       driversCubit,
       authCubit,
       profileSummaryCubit,
       dependentsCubit,
+      conversationsCubit,
       openDriverSearch,
+      openConversationChat,
     );
   }
 
@@ -105,6 +119,7 @@ void main() {
     authCubit = MockAuthCubit();
     profileSummaryCubit = MockProfileSummaryCubit();
     dependentsCubit = MockDependentsCubit();
+    conversationsCubit = readyConversationsCubit([testConversation]);
     whenListen(
       driversCubit,
       const Stream<DriversState>.empty(),
@@ -141,7 +156,7 @@ void main() {
     verifyNever(authCubit.refreshSessionProfile);
   });
 
-  testWidgets('bottom bar offers home, vans, contracts and dependents', (
+  testWidgets('bottom bar offers home, vans, messages and dependents', (
     tester,
   ) async {
     await tester.pumpWidget(harness());
@@ -149,7 +164,7 @@ void main() {
     expect(bottomNavLabels(tester), [
       'Início',
       'Vans',
-      'Contratos',
+      'Mensagens',
       'Dependentes',
     ]);
   });
@@ -173,16 +188,28 @@ void main() {
     expect(find.byType(TextField), findsOneWidget);
   });
 
-  testWidgets('switches to the Contratos tab showing the coming soon view', (
+  testWidgets('the Mensagens tab lists the client conversations by driver', (
     tester,
   ) async {
-    await tester.pumpWidget(harness());
+    final opened = <Conversation>[];
+    await tester.pumpWidget(
+      harness(
+        openConversationChat: (_, conversation) async =>
+            opened.add(conversation),
+      ),
+    );
 
-    await tester.tap(find.bySemanticsLabel('Contratos'));
+    await tester.tap(find.bySemanticsLabel('Mensagens'));
+    await tester.pumpAndSettle();
+    verify(() => conversationsCubit.loadConversations()).called(1);
+
+    expect(find.text('Carlos Motorista'), findsOneWidget);
+    expect(find.text('Ana Cliente'), findsNothing);
+
+    await tester.tap(find.text('Carlos Motorista'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Contratos'), findsWidgets);
-    expect(find.text('Em breve'), findsOneWidget);
+    expect(opened, [testConversation]);
   });
 
   testWidgets('tapping the vans search field opens the search page', (

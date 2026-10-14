@@ -5,15 +5,17 @@ import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.d
 import '../../../core/ui/localized_harness.dart';
 
 void main() {
-  testWidgets('opens my vans and where you operate', (tester) async {
+  testWidgets('opens my vans, where you operate and students', (tester) async {
     var myVansOpened = 0;
     var serviceAreasOpened = 0;
+    var studentsOpened = 0;
     await tester.pumpWidget(
       localizedHarness(
         Scaffold(
           body: DriverVansTab(
             onOpenMyVans: () => myVansOpened++,
             onOpenServiceAreas: () => serviceAreasOpened++,
+            onOpenStudents: () => studentsOpened++,
           ),
         ),
       ),
@@ -29,5 +31,8 @@ void main() {
 
     await tester.tap(find.text('Onde você atende'));
     expect(serviceAreasOpened, 1);
+
+    await tester.tap(find.text('Alunos'));
+    expect(studentsOpened, 1);
   });
 }

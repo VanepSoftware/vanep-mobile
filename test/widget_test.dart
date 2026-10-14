@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/app.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -33,6 +34,7 @@ import 'package:vanep_mobile/shell/driver_shell.dart';
 import 'modules/auth/auth_fixtures.dart';
 import 'modules/auth/presentation/auth_presentation_mocks.dart';
 import 'modules/dependents/dependents_mocks.dart';
+import 'modules/conversations/conversations_mocks.dart';
 import 'modules/drivers/drivers_fixtures.dart';
 import 'modules/drivers/presentation/drivers_presentation_mocks.dart';
 import 'modules/profile/profile_mocks.dart';
@@ -136,6 +138,9 @@ void main() {
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
       ..registerFactory<DriverSearchCubit>(() => searchCubit)
       ..registerFactory<DependentsCubit>(() => dependentsCubit)
+      ..registerFactory<ConversationsInboxCubit>(
+        () => readyConversationsCubit(),
+      )
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
@@ -168,6 +173,9 @@ void main() {
     getIt
       ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
+      ..registerFactory<ConversationsInboxCubit>(
+        () => readyConversationsCubit(),
+      )
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
@@ -205,7 +213,10 @@ void main() {
         (_, _) => loginCubit,
       )
       ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
-      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
+      ..registerFactory<ConversationsInboxCubit>(
+        () => readyConversationsCubit(),
+      );
     addTearDown(getIt.reset);
     final authenticated = AuthAuthenticated(
       FakeAuthSession(profile: const FakeUserProfile(type: UserType.driver)),
