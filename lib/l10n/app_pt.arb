@@ -460,5 +460,17 @@
   "conversationsInboxTitle": "Mensagens",
   "conversationsInboxEmpty": "Nenhuma conversa ainda. Quando um cliente escrever, ela aparece aqui.",
   "conversationsInboxLoadError": "Não foi possível carregar suas conversas.",
-  "conversationsInboxEmptyClient": "Nenhuma conversa ainda. Para falar com um motorista, abra o perfil dele em Vans e toque em “Conversar com o motorista”."
+  "conversationsInboxEmptyClient": "Nenhuma conversa ainda. Para falar com um motorista, abra o perfil dele em Vans e toque em “Conversar com o motorista”.",
+  "navRoute": "Rota",
+  "navTodayRoute": "Rota do dia",
+  "navAssistantProfile": "Meu perfil",
+  "assistantActiveVan": "Van ativa",
+  "assistantSwitchVan": "Trocar van",
+  "assistantSelectVanTitle": "Selecione a van",
+  "assistantSelectVanSubtitle": "Escolha qual van você vai acompanhar hoje",
+  "assistantNoVansLinked": "Nenhuma van vinculada no momento.",
+  "assistantShiftMorning": "Manhã",
+  "assistantShiftAfternoon": "Tarde",
+  "assistantShiftNight": "Noite",
+  "unauthorizedAccess": "Acesso não autorizado."
 }

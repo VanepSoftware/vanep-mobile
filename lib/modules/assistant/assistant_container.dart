@@ -10,6 +10,7 @@ import 'package:vanep_mobile/modules/assistant/domain/usecases/get_linked_vans.d
 import 'package:vanep_mobile/modules/assistant/domain/usecases/register_assistant_with_invite.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/validate_assistant_invite.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 
 void registerAssistantDependencies(GetIt getIt) {
   final environment = getIt<Environment>();
@@ -33,6 +34,11 @@ void registerAssistantDependencies(GetIt getIt) {
     )
     ..registerFactory<GetLinkedVans>(
       () => GetLinkedVans(getIt<AssistantRepository>()),
+    )
+    ..registerFactory<AssistantVanSelectorCubit>(
+      () => AssistantVanSelectorCubit(
+        getLinkedVans: getIt<GetLinkedVans>(),
+      ),
     )
     ..registerFactoryParam<AssistantInviteCubit, String?, void>(
       (initialCode, _) => AssistantInviteCubit(
