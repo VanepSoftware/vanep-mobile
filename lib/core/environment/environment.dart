@@ -12,6 +12,7 @@ class Environment {
     required this.authBaseUrl,
     required this.oauthClientId,
     this.googleServerClientId = '',
+    this.googleIosClientId = '',
     this.placesApiKeyAndroid = '',
     this.placesApiKeyIos = '',
     this.placesAndroidPackage = '',
@@ -24,6 +25,7 @@ class Environment {
       authBaseUrl: _require(env, 'AUTH_URL'),
       oauthClientId: _require(env, 'OAUTH_CLIENT_ID'),
       googleServerClientId: env.maybeGet('GOOGLE_SERVER_CLIENT_ID') ?? '',
+      googleIosClientId: env.maybeGet('GOOGLE_IOS_CLIENT_ID') ?? '',
       placesApiKeyAndroid: env.maybeGet('GOOGLE_PLACES_API_KEY_ANDROID') ?? '',
       placesApiKeyIos: env.maybeGet('GOOGLE_PLACES_API_KEY_IOS') ?? '',
       placesAndroidPackage: env.maybeGet('GOOGLE_PLACES_ANDROID_PACKAGE') ?? '',
@@ -38,6 +40,8 @@ class Environment {
   final String oauthClientId;
 
   final String googleServerClientId;
+
+  final String googleIosClientId;
 
   final String placesApiKeyAndroid;
 

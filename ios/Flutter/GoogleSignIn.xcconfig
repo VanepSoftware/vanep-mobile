@@ -1,0 +1,6 @@
+// iOS OAuth client for bundle com.vanep.vanepMobile, from the same Google
+// Cloud project as GOOGLE_SERVER_CLIENT_ID. The reversed id is the client id
+// with the domain flipped: 123-abc.apps.googleusercontent.com becomes
+// com.googleusercontent.apps.123-abc. Both are public; they ship in the app.
+GOOGLE_IOS_CLIENT_ID=101010385612-fm22e0ccr5pns13t02o5j1ue47h1rsss.apps.googleusercontent.com
+GOOGLE_IOS_REVERSED_CLIENT_ID=com.googleusercontent.apps.101010385612-fm22e0ccr5pns13t02o5j1ue47h1rsss
