@@ -1,4 +1,6 @@
-# [N-XX] Feature | Change Request | Bug — <short title>
+# [VAN-XX] Feature | Change Request | Bug — <short title>
+
+<!-- VAN-XX is the Linear issue identifier. -->
 
 ## Description
 
