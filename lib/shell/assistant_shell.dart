@@ -6,8 +6,11 @@ import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_state.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_students_list_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_today_route_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_van_selector_sheet.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/shell/assistant_bottom_nav.dart';
@@ -28,6 +31,19 @@ class AssistantShell extends StatefulWidget {
 class AssistantShellState extends State<AssistantShell> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final selectedVan =
+          context.read<AssistantVanSelectorCubit>().state.selectedVan;
+      if (selectedVan != null) {
+        context.read<AssistantChecklistCubit>().loadRoute(selectedVan.token);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +71,21 @@ class AssistantShellState extends State<AssistantShell> {
                     onNotificationsTapped: () => openNotifications(context),
                   ),
                   const SizedBox(height: 12),
-                  BlocBuilder<AssistantVanSelectorCubit, AssistantVanSelectorState>(
+                  BlocConsumer<
+                    AssistantVanSelectorCubit,
+                    AssistantVanSelectorState
+                  >(
+                    listenWhen: (previous, current) =>
+                        previous.selectedVan?.token !=
+                        current.selectedVan?.token,
+                    listener: (context, state) {
+                      final van = state.selectedVan;
+                      if (van != null) {
+                        context.read<AssistantChecklistCubit>().loadRoute(
+                          van.token,
+                        );
+                      }
+                    },
                     builder: (context, state) {
                       if (state.isLoading) {
                         return const VanepCard(
@@ -113,13 +143,13 @@ class AssistantShellState extends State<AssistantShell> {
                         return VanepCard(
                           onTap: state.hasMultipleVans
                               ? () => showAssistantVanSelectorSheet(
-                                    context,
-                                    vans: state.vans,
-                                    selectedVan: state.selectedVan,
-                                    onSelectVan: (selected) => context
-                                        .read<AssistantVanSelectorCubit>()
-                                        .selectVan(selected),
-                                  )
+                                  context,
+                                  vans: state.vans,
+                                  selectedVan: state.selectedVan,
+                                  onSelectVan: (selected) => context
+                                      .read<AssistantVanSelectorCubit>()
+                                      .selectVan(selected),
+                                )
                               : null,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -162,14 +192,15 @@ class AssistantShellState extends State<AssistantShell> {
                               ),
                               if (state.hasMultipleVans)
                                 TextButton(
-                                  onPressed: () => showAssistantVanSelectorSheet(
-                                    context,
-                                    vans: state.vans,
-                                    selectedVan: state.selectedVan,
-                                    onSelectVan: (selected) => context
-                                        .read<AssistantVanSelectorCubit>()
-                                        .selectVan(selected),
-                                  ),
+                                  onPressed: () =>
+                                      showAssistantVanSelectorSheet(
+                                        context,
+                                        vans: state.vans,
+                                        selectedVan: state.selectedVan,
+                                        onSelectVan: (selected) => context
+                                            .read<AssistantVanSelectorCubit>()
+                                            .selectVan(selected),
+                                      ),
                                   child: Text(
                                     l10n.assistantSwitchVan,
                                     style: VanepTypography.linkAction,
@@ -190,14 +221,8 @@ class AssistantShellState extends State<AssistantShell> {
               child: IndexedStack(
                 index: selectedIndex,
                 children: [
-                  VanepComingSoon(
-                    title: l10n.navTodayRoute,
-                    message: l10n.comingSoon,
-                  ),
-                  VanepComingSoon(
-                    title: l10n.navStudents,
-                    message: l10n.comingSoon,
-                  ),
+                  const AssistantTodayRoutePage(),
+                  const AssistantStudentsListPage(),
                   VanepComingSoon(
                     title: l10n.navAssistantProfile,
                     message: l10n.comingSoon,
