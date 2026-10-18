@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/google_logo.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
@@ -191,7 +192,7 @@ class LoginForm extends StatelessWidget {
                 const SizedBox(height: 20),
                 VanepSecondaryButton(
                   label: l10n.loginWithGoogle,
-                  icon: Icons.account_circle_outlined,
+                  leading: const GoogleLogo(),
                   isLoading: state.isSubmittingGoogle,
                   onPressed: editable ? cubit.signInWithGoogle : null,
                 ),
