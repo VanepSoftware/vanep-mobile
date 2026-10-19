@@ -15,12 +15,14 @@ class PlaceAutocompleteController {
     PlaceSearchSession? session,
     this.debounce = placeAutocompleteDebounce,
     this.minimumCharacters = placeAutocompleteMinimumCharacters,
+    this.includedPrimaryTypes = const [],
   }) : session = session ?? PlaceSearchSession();
 
   final PlaceAutocompleteDataSource datasource;
   final PlaceSearchSession session;
   final Duration debounce;
   final int minimumCharacters;
+  final List<String> includedPrimaryTypes;
 
   Timer? _pending;
   int _requestSequence = 0;
@@ -45,7 +47,11 @@ class PlaceAutocompleteController {
     void Function(Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>) onResult,
   ) async {
     final sequence = ++_requestSequence;
-    final result = await datasource.findSuggestions(input, session.currentToken());
+    final result = await datasource.findSuggestions(
+      input,
+      session.currentToken(),
+      includedPrimaryTypes: includedPrimaryTypes,
+    );
     if (sequence != _requestSequence) return;
     onResult(result);
   }

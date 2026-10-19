@@ -106,6 +106,27 @@ void main() {
     expect(captured['sessionToken'], 'session-abc');
     expect(captured['includedRegionCodes'], ['br']);
     expect(captured['input'], 'qnl 5');
+    expect(captured.containsKey('includedPrimaryTypes'), isFalse);
+  });
+
+  test('restricts the place types only when asked to', () async {
+    stubResponse(autocompleteResponseFixture);
+
+    await datasource.findSuggestions(
+      'escola classe',
+      'session-abc',
+      includedPrimaryTypes: const ['school', 'primary_school'],
+    );
+
+    final captured = verify(
+      () => dio.post<Map<String, dynamic>>(
+        any(),
+        data: captureAny(named: 'data'),
+        options: any(named: 'options'),
+      ),
+    ).captured.single as Map<String, Object?>;
+
+    expect(captured['includedPrimaryTypes'], ['school', 'primary_school']);
   });
 
   test('sends the platform key in the header', () async {

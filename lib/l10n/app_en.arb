@@ -742,6 +742,8 @@
   "clientHomeSearchVans": "Search vans",
   "clientHomeShiftMorning": "morning",
   "clientHomeShiftAfternoon": "afternoon",
+  "clientHomeShiftNight": "night",
+  "clientHomeShiftFullTime": "full-time",
   "clientHomeVanTitle": "{driver}'s van · {shift}",
   "@clientHomeVanTitle": {
     "placeholders": {
@@ -1330,5 +1332,7 @@
   "clientProposalsEmptyClosedTitle": "No closed proposals",
   "clientProposalsEmptyClosedMessage": "Accepted, declined and expired proposals show up here.",
   "clientProposalsLoadError": "We couldn't load your proposals.",
-  "clientProposalsRetry": "Try again"
+  "clientProposalsRetry": "Try again",
+  "mapPlaceholderSemantics": "Illustrative map",
+  "mapAdjustAction": "Adjust on map"
 }

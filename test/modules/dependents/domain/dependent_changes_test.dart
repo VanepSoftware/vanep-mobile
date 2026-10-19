@@ -188,4 +188,101 @@ void main() {
       expect(changes.touchedFields, {DependentField.address});
     });
   });
+
+  group('document and school', () {
+    const pedro = TestDependent(
+      token: 'dep-pedro',
+      name: 'Pedro Oliveira',
+      document: '52998224725',
+      school: TestDependentSchool(),
+    );
+
+    test('creating with a CPF and a school touches both', () {
+      final changes = buildDependentChangesForCreate(
+        const DependentDraft(
+          name: 'Pedro',
+          document: '529.982.247-25',
+          schoolToken: 'school-delta',
+        ),
+      );
+
+      expect(changes.touchedFields, {
+        DependentField.name,
+        DependentField.document,
+        DependentField.school,
+      });
+    });
+
+    test('creating with a blank CPF does not touch it', () {
+      final changes = buildDependentChangesForCreate(
+        const DependentDraft(name: 'Pedro', document: '  '),
+      );
+
+      expect(changes.touches(DependentField.document), isFalse);
+    });
+
+    test('the same CPF with a mask is not a change', () {
+      final changes = buildDependentChangesForUpdate(
+        draft: DependentDraft.fromDependent(pedro).withDocument('529.982.247-25'),
+        snapshot: pedro,
+      );
+
+      expect(changes.isEmpty, isTrue);
+    });
+
+    test('another CPF touches the document', () {
+      final changes = buildDependentChangesForUpdate(
+        draft: DependentDraft.fromDependent(pedro).withDocument('390.533.447-05'),
+        snapshot: pedro,
+      );
+
+      expect(changes.touchedFields, {DependentField.document});
+    });
+
+    test('clearing the CPF touches the document', () {
+      final changes = buildDependentChangesForUpdate(
+        draft: DependentDraft.fromDependent(pedro).withDocument(''),
+        snapshot: pedro,
+      );
+
+      expect(changes.touchedFields, {DependentField.document});
+    });
+
+    test('another school touches the school', () {
+      final changes = buildDependentChangesForUpdate(
+        draft: DependentDraft.fromDependent(
+          pedro,
+        ).withSchoolToken('school-horizonte'),
+        snapshot: pedro,
+      );
+
+      expect(changes.touchedFields, {DependentField.school});
+    });
+
+    test('the same school is not a change', () {
+      final changes = buildDependentChangesForUpdate(
+        draft: DependentDraft.fromDependent(
+          pedro,
+        ).withSchoolToken('school-delta'),
+        snapshot: pedro,
+      );
+
+      expect(changes.isEmpty, isTrue);
+    });
+
+    test('a school without a token is not a change when untouched', () {
+      const withBlankSchool = TestDependent(
+        token: 'dep-pedro',
+        name: 'Pedro Oliveira',
+        school: TestDependentSchool(token: ''),
+      );
+
+      final changes = buildDependentChangesForUpdate(
+        draft: DependentDraft.fromDependent(withBlankSchool),
+        snapshot: withBlankSchool,
+      );
+
+      expect(changes.isEmpty, isTrue);
+    });
+  });
 }
