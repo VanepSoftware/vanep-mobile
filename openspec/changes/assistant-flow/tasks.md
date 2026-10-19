@@ -62,15 +62,15 @@
 
 ## 4. Phase 4 — Assistant Shell & Multi-Van Selection (branch: `feat-(N-37)/assistant-shell-van-selector`)
 
-- [ ] 4.1 State management `AssistantVanSelectorCubit` for active van selection (N:N support)
-- [ ] 4.2 Widget `AssistantVanSelectorSheet` to switch active van when linked to 2+ vans
-- [ ] 4.3 Widget `AssistantBottomNav` with icons only and `Semantics` labels: Rota, Alunos, Perfil
-- [ ] 4.4 Top-level `AssistantShell` hosting Rota, Alunos, and Perfil views
-- [ ] 4.5 Route guard preventing navigation to driver/client restricted paths
-- [ ] 4.6 Update `AuthGate` in `lib/app.dart` to branch `UserType.assistant` to `AssistantShell`
-- [ ] 4.7 Widget and flow tests for `AssistantShell` and `AuthGate`
-- [ ] 4.8 Run `make lint` and `make test`
-- [ ] 4.9 **Aguardar validação do desenvolvedor no emulador/aparelho (R27a)**; só então commitar e abrir PR
+- [x] 4.1 State management `AssistantVanSelectorCubit` for active van selection (N:N support)
+- [x] 4.2 Widget `AssistantVanSelectorSheet` to switch active van when linked to 2+ vans
+- [x] 4.3 Widget `AssistantBottomNav` with icons only and `Semantics` labels: Rota, Alunos, Perfil
+- [x] 4.4 Top-level `AssistantShell` hosting Rota, Alunos, and Perfil views
+- [x] 4.5 Route guard preventing navigation to driver/client restricted paths
+- [x] 4.6 Update `AuthGate` in `lib/app.dart` to branch `UserType.assistant` to `AssistantShell`
+- [x] 4.7 Widget and flow tests for `AssistantShell` and `AuthGate`
+- [x] 4.8 Run `make lint` and `make test`
+- [x] 4.9 **Aguardar validação do desenvolvedor no emulador/aparelho (R27a)**; só então commitar e abrir PR
 
 ---
 

@@ -27,7 +27,10 @@ import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/shell/assistant_shell.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
@@ -58,6 +61,9 @@ class MockDriverSearchCubit extends MockCubit<DriverSearchState>
 
 class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
+
+class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
+    implements AssistantVanSelectorCubit {}
 
 void main() {
   late MockAuthCubit cubit;
@@ -191,6 +197,43 @@ void main() {
 
     expect(find.byType(DriverShell), findsOneWidget);
     expect(find.byType(ClientShell), findsNothing);
+  });
+
+  testWidgets('routes an assistant session to the assistant shell', (
+    tester,
+  ) async {
+    final assistantCubit = MockAssistantVanSelectorCubit();
+    whenListen(
+      assistantCubit,
+      const Stream<AssistantVanSelectorState>.empty(),
+      initialState: const AssistantVanSelectorState(),
+    );
+    when(() => assistantCubit.loadVans()).thenAnswer((_) async {});
+    final profileSummaryCubit = MockProfileSummaryCubit();
+    whenListen(
+      profileSummaryCubit,
+      const Stream<ProfileSummaryState>.empty(),
+      initialState: const ProfileSummaryState(),
+    );
+    getIt
+      ..registerFactory<AssistantVanSelectorCubit>(() => assistantCubit)
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
+    addTearDown(getIt.reset);
+
+    final state = AuthAuthenticated(
+      FakeAuthSession(
+        profile: const FakeUserProfile(type: UserType.assistant),
+      ),
+    );
+    when(() => cubit.state).thenReturn(state);
+    whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);
+
+    await tester.pumpWidget(_harness(cubit));
+
+    expect(find.byType(AssistantShell), findsOneWidget);
+    expect(find.byType(DriverShell), findsNothing);
+    expect(find.byType(ClientShell), findsNothing);
+    verify(() => assistantCubit.loadVans()).called(1);
   });
 
   testWidgets('starting a session closes the pages pushed over the login', (
