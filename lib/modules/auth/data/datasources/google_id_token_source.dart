@@ -21,10 +21,12 @@ class GoogleSignInIdTokenSource implements GoogleIdTokenSource {
   GoogleSignInIdTokenSource({
     required this.googleSignIn,
     required this.serverClientId,
+    this.clientId = '',
   });
 
   final GoogleSignIn googleSignIn;
   final String serverClientId;
+  final String clientId;
   Future<void>? _initialization;
 
   @override
@@ -56,6 +58,7 @@ class GoogleSignInIdTokenSource implements GoogleIdTokenSource {
 
   Future<void> initializeOnce() {
     return _initialization ??= googleSignIn.initialize(
+      clientId: clientId.isEmpty ? null : clientId,
       serverClientId: serverClientId,
     );
   }
