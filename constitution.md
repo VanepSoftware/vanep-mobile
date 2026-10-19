@@ -6,7 +6,7 @@ The rules below are not negotiable, you must follow them.
 
 ## Stack
 
-Stack: Flutter (pinned via FVM / `.fvmrc`, currently `3.44.4`), Dart SDK `^3.12.2`, Android + iOS targets. Dev workflow via `Makefile` (`make install`, `make lint`, `make lint_fix`, `make test`, `make coverage`). Static analysis is strict: `flutter analyze --fatal-infos`.
+Stack: Flutter (pinned via FVM / `.fvmrc`, currently `3.47.2`), Dart SDK `^3.13.2`, Android + iOS targets. Dev workflow via `Makefile` (`make install`, `make lint`, `make lint_fix`, `make test`, `make coverage`). Static analysis is strict: `flutter analyze --fatal-infos`.
 
 ## Project rules
 
