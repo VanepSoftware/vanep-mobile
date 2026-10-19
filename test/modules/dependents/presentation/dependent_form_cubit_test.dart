@@ -150,6 +150,33 @@ void main() {
   );
 
   blocTest<DependentFormCubit, DependentFormState>(
+    'an invalid CPF already saved blocks the request',
+    build: () => buildCubit(
+      dependent: const TestDependent(
+        token: 'dep-lucas',
+        name: 'Lucas Souza',
+        document: '90000000001',
+      ),
+    ),
+    act: (cubit) async {
+      cubit.changeName('Lucas S. Souza');
+      await cubit.save();
+    },
+    verify: (cubit) {
+      expect(
+        cubit.state.errorOf(DependentField.document),
+        const LocalDependentFieldError(DependentDraftError.documentInvalid),
+      );
+      verifyNever(
+        () => updateDependent(
+          snapshot: any(named: 'snapshot'),
+          draft: any(named: 'draft'),
+        ),
+      );
+    },
+  );
+
+  blocTest<DependentFormCubit, DependentFormState>(
     'a backend field error lands on the matching field',
     setUp: () {
       when(() => createDependent(any())).thenAnswer(

@@ -742,6 +742,8 @@
   "clientHomeSearchVans": "Search vans",
   "clientHomeShiftMorning": "morning",
   "clientHomeShiftAfternoon": "afternoon",
+  "clientHomeShiftNight": "night",
+  "clientHomeShiftFullTime": "full-time",
   "clientHomeVanTitle": "{driver}'s van · {shift}",
   "@clientHomeVanTitle": {
     "placeholders": {
@@ -1476,5 +1478,7 @@
   "vanCentralBasePriceValue": "{price}/month in search",
   "vanCentralBasePriceNone": "No price set",
   "vanCentralLoadError": "Could not load the van hub.",
-  "vanCentralAttendanceError": "Could not change whether you accept new students. Try again."
+  "vanCentralAttendanceError": "Could not change whether you accept new students. Try again.",
+  "mapPlaceholderSemantics": "Illustrative map",
+  "mapAdjustAction": "Adjust on map"
 }

@@ -1,13 +1,19 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vanep_mobile/core/domain/cpf.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
 import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 
-enum DependentField { name, birthDate, gender, address }
+enum DependentField { name, birthDate, gender, address, document, school }
 
-enum DependentDraftError { nameRequired, birthDateInFuture, birthDateInvalid }
+enum DependentDraftError {
+  nameRequired,
+  birthDateInFuture,
+  birthDateInvalid,
+  documentInvalid,
+}
 
 class DependentDraft extends Equatable {
   const DependentDraft({
@@ -15,6 +21,8 @@ class DependentDraft extends Equatable {
     this.birthDate,
     this.gender,
     this.address = const PostalAddressDraft(),
+    this.document,
+    this.schoolToken,
   });
 
   factory DependentDraft.fromDependent(Dependent dependent) {
@@ -23,6 +31,8 @@ class DependentDraft extends Equatable {
       birthDate: dependent.birthDate,
       gender: dependent.gender,
       address: dependentAddressDraft(dependent.address),
+      document: dependent.document,
+      schoolToken: dependent.school?.token,
     );
   }
 
@@ -34,12 +44,18 @@ class DependentDraft extends Equatable {
 
   final PostalAddressDraft address;
 
+  final String? document;
+
+  final String? schoolToken;
+
   DependentDraft withName(String value) {
     return DependentDraft(
       name: value,
       birthDate: birthDate,
       gender: gender,
       address: address,
+      document: document,
+      schoolToken: schoolToken,
     );
   }
 
@@ -49,6 +65,8 @@ class DependentDraft extends Equatable {
       birthDate: value,
       gender: gender,
       address: address,
+      document: document,
+      schoolToken: schoolToken,
     );
   }
 
@@ -58,6 +76,8 @@ class DependentDraft extends Equatable {
       birthDate: birthDate,
       gender: value,
       address: address,
+      document: document,
+      schoolToken: schoolToken,
     );
   }
 
@@ -67,11 +87,42 @@ class DependentDraft extends Equatable {
       birthDate: birthDate,
       gender: gender,
       address: value,
+      document: document,
+      schoolToken: schoolToken,
+    );
+  }
+
+  DependentDraft withDocument(String? value) {
+    return DependentDraft(
+      name: name,
+      birthDate: birthDate,
+      gender: gender,
+      address: address,
+      document: value,
+      schoolToken: schoolToken,
+    );
+  }
+
+  DependentDraft withSchoolToken(String? value) {
+    return DependentDraft(
+      name: name,
+      birthDate: birthDate,
+      gender: gender,
+      address: address,
+      document: document,
+      schoolToken: value,
     );
   }
 
   @override
-  List<Object?> get props => [name, birthDate, gender, address];
+  List<Object?> get props => [
+    name,
+    birthDate,
+    gender,
+    address,
+    document,
+    schoolToken,
+  ];
 }
 
 PostalAddressDraft dependentAddressDraft(DependentAddress? address) {
@@ -103,6 +154,12 @@ Map<DependentField, DependentDraftError> validateDependentDraft(
   final birthDateError = findBirthDateError(draft.birthDate, today: today);
   if (birthDateError != null) {
     errors[DependentField.birthDate] = birthDateError;
+  }
+  final document = draft.document;
+  if (document != null &&
+      document.trim().isNotEmpty &&
+      !isValidCpf(document)) {
+    errors[DependentField.document] = DependentDraftError.documentInvalid;
   }
   return errors;
 }

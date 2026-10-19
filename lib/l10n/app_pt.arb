@@ -525,6 +525,8 @@
   "clientHomeSearchVans": "Buscar vans",
   "clientHomeShiftMorning": "manhã",
   "clientHomeShiftAfternoon": "tarde",
+  "clientHomeShiftNight": "noite",
+  "clientHomeShiftFullTime": "integral",
   "clientHomeVanTitle": "Van de {driver} · {shift}",
   "clientHomeVanSubtitle": "{model} {plate} · sai às {time}",
   "clientHomeVanRowSubtitle": "{names} · embarque {time}",
@@ -714,5 +716,7 @@
   "vanCentralBasePriceValue": "{price}/mês na busca",
   "vanCentralBasePriceNone": "Sem preço definido",
   "vanCentralLoadError": "Não foi possível carregar a central da van.",
-  "vanCentralAttendanceError": "Não foi possível mudar o aceite de novos alunos. Tente de novo."
+  "vanCentralAttendanceError": "Não foi possível mudar o aceite de novos alunos. Tente de novo.",
+  "mapPlaceholderSemantics": "Mapa ilustrativo",
+  "mapAdjustAction": "Ajustar no mapa"
 }

@@ -8,19 +8,6 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import '../../account_fixtures.dart';
 
 void main() {
-  group('isValidCpf', () {
-    test('accepts valid check digits with or without punctuation', () {
-      expect(isValidCpf('52998224725'), isTrue);
-      expect(isValidCpf(validCpf), isTrue);
-    });
-
-    test('rejects wrong check digits, repeated digits and wrong length', () {
-      expect(isValidCpf('52998224726'), isFalse);
-      expect(isValidCpf('11111111111'), isFalse);
-      expect(isValidCpf('5299822472'), isFalse);
-    });
-  });
-
   group('isValidEmail', () {
     test('accepts a common address and rejects malformed ones', () {
       expect(isValidEmail('ana@vanep.com.br'), isTrue);
