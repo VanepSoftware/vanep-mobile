@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vanep_mobile/core/domain/cpf.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/password_policy.dart';
@@ -166,21 +167,3 @@ double? parseDecimal(String raw) {
 final RegExp emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
 bool isValidEmail(String email) => emailPattern.hasMatch(email.trim());
-
-bool isValidCpf(String raw) {
-  final digits = extractDigits(raw);
-  if (digits.length != 11) return false;
-  if (RegExp(r'^(\d)\1{10}$').hasMatch(digits)) return false;
-  final numbers = digits.split('').map(int.parse).toList();
-  return cpfCheckDigit(numbers.sublist(0, 9)) == numbers[9] &&
-      cpfCheckDigit(numbers.sublist(0, 10)) == numbers[10];
-}
-
-int cpfCheckDigit(List<int> numbers) {
-  var sum = 0;
-  for (var index = 0; index < numbers.length; index++) {
-    sum += numbers[index] * (numbers.length + 1 - index);
-  }
-  final remainder = (sum * 10) % 11;
-  return remainder == 10 ? 0 : remainder;
-}

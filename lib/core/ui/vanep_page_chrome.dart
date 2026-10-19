@@ -4,9 +4,11 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
 class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const VanepAppBar({this.title, super.key});
+  const VanepAppBar({this.title, this.caption, this.actions, super.key});
 
   final String? title;
+  final String? caption;
+  final List<Widget>? actions;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -22,7 +24,36 @@ class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: 0,
       title: title == null
           ? null
-          : Text(title, style: VanepTypography.cardTitle),
+          : VanepAppBarTitle(title: title, caption: caption),
+      actions: actions,
+    );
+  }
+}
+
+class VanepAppBarTitle extends StatelessWidget {
+  const VanepAppBarTitle({required this.title, this.caption, super.key});
+
+  final String title;
+  final String? caption;
+
+  @override
+  Widget build(BuildContext context) {
+    final caption = this.caption;
+    final titleText = Text(title, style: VanepTypography.cardTitle);
+    if (caption == null) return titleText;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        titleText,
+        const SizedBox(height: 1),
+        Text(
+          caption,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: VanepTypography.cardSubtitle.copyWith(fontSize: 12),
+        ),
+      ],
     );
   }
 }

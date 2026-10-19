@@ -7,6 +7,7 @@ import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
 import 'package:vanep_mobile/core/formatters/birth_date_formatter.dart';
+import 'package:vanep_mobile/core/formatters/cpf_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';

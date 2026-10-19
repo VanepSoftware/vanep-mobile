@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vanep_mobile/core/domain/cpf.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 
@@ -25,6 +26,10 @@ DependentChanges buildDependentChangesForCreate(DependentDraft draft) {
   if (isDependentAddressEdited(draft, null)) {
     touched.add(DependentField.address);
   }
+  if (normalizeDocument(draft.document) != null) {
+    touched.add(DependentField.document);
+  }
+  if (hasText(draft.schoolToken)) touched.add(DependentField.school);
   return DependentChanges(draft: draft, touchedFields: touched);
 }
 
@@ -46,10 +51,23 @@ DependentChanges buildDependentChangesForUpdate({
   if (isDependentAddressEdited(draft, snapshot)) {
     touched.add(DependentField.address);
   }
+  if (normalizeDocument(draft.document) !=
+      normalizeDocument(snapshot.document)) {
+    touched.add(DependentField.document);
+  }
+  if (normalizeOptional(draft.schoolToken) !=
+      normalizeOptional(snapshot.school?.token)) {
+    touched.add(DependentField.school);
+  }
   return DependentChanges(draft: draft, touchedFields: touched);
 }
 
 bool hasText(String? value) => value != null && value.trim().isNotEmpty;
+
+String? normalizeDocument(String? value) {
+  if (!hasText(value)) return null;
+  return extractCpfDigits(value!);
+}
 
 String? normalizeOptional(String? value) {
   if (!hasText(value)) return null;

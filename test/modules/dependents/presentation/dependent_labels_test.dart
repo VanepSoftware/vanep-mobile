@@ -40,6 +40,23 @@ void main() {
         l10n.dependentFailureUnexpected,
       );
     });
+
+    test('a rejection shows the message the backend sent', () {
+      expect(
+        dependentFailureLabel(
+          l10n,
+          const DependentRejectedFailure(detail: 'Escola não encontrada.'),
+        ),
+        'Escola não encontrada.',
+      );
+    });
+
+    test('a rejection without a message falls back to the generic one', () {
+      expect(
+        dependentFailureLabel(l10n, const DependentRejectedFailure(detail: '')),
+        l10n.dependentFailureUnexpected,
+      );
+    });
   });
 
   group('shouldShowDependentFailureFeedback', () {

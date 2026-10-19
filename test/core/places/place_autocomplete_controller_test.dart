@@ -170,4 +170,30 @@ void main() {
 
     expect(failure, PlaceAutocompleteFailure.rejectedKey);
   });
+
+  test('searches without a place type filter by default', () async {
+    when(() => datasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([suggestion]));
+
+    controller.search('qnl 5', (_) {});
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+
+    verify(() => datasource.findSuggestions('qnl 5', any(), includedPrimaryTypes: const [])).called(1);
+  });
+
+  test('forwards its place types to every search', () async {
+    final schoolController = PlaceAutocompleteController(
+      datasource: datasource,
+      debounce: const Duration(milliseconds: 10),
+      includedPrimaryTypes: const ['school'],
+    );
+    addTearDown(schoolController.dispose);
+    when(() => datasource.findSuggestions(any(), any(), includedPrimaryTypes: any(named: 'includedPrimaryTypes')))
+        .thenAnswer((_) async => const Ok([suggestion]));
+
+    schoolController.search('escola classe', (_) {});
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+
+    verify(() => datasource.findSuggestions('escola classe', any(), includedPrimaryTypes: const ['school'])).called(1);
+  });
 }

@@ -17,6 +17,8 @@ String dependentFailureLabel(AppLocalizations l10n, DependentFailure failure) {
     DependentNotFoundFailure() => l10n.dependentFailureNotFound,
     DependentNetworkFailure() => l10n.dependentFailureNetwork,
     DependentUnexpectedFailure() => l10n.dependentFailureUnexpected,
+    DependentRejectedFailure(:final detail) =>
+      detail.trim().isEmpty ? l10n.dependentFailureUnexpected : detail,
   };
 }
 
@@ -28,6 +30,7 @@ String dependentDraftErrorLabel(
     DependentDraftError.nameRequired => l10n.dependentErrorNameRequired,
     DependentDraftError.birthDateInFuture => l10n.dependentErrorBirthDateFuture,
     DependentDraftError.birthDateInvalid => l10n.dependentErrorBirthDateInvalid,
+    DependentDraftError.documentInvalid => l10n.accountIssueDocumentInvalid,
   };
 }
 

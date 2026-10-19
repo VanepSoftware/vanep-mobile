@@ -110,4 +110,23 @@ void main() {
     expect(dependent.address?.number, isNull);
     expect(dependent.address?.complement, isNull);
   });
+
+  test('reads the school and the document', () {
+    final dependent = DependentDto.fromJson({
+      ...dependentPayload(),
+      'school': {'token': 'school-delta', 'name': 'Colégio Delta'},
+      'document': '52998224725',
+    });
+
+    expect(dependent.school?.token, 'school-delta');
+    expect(dependent.school?.name, 'Colégio Delta');
+    expect(dependent.document, '52998224725');
+  });
+
+  test('a dependent without school or document reads both as null', () {
+    final dependent = DependentDto.fromJson(dependentPayload());
+
+    expect(dependent.school, isNull);
+    expect(dependent.document, isNull);
+  });
 }
