@@ -621,5 +621,45 @@
   "assistantShiftMorning": "Morning",
   "assistantShiftAfternoon": "Afternoon",
   "assistantShiftNight": "Night",
-  "unauthorizedAccess": "Unauthorized access."
+  "unauthorizedAccess": "Unauthorized access.",
+  "assistantRouteEmpty": "No stops scheduled for this route today.",
+  "assistantRouteProgress": "{completed} of {total} students handled",
+  "@assistantRouteProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantConfirmBoarding": "Confirm boarding",
+  "assistantMarkNoShow": "No-show",
+  "assistantBulkDropOff": "Bulk drop-off ({count})",
+  "@assistantBulkDropOff": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantSelectAllStop": "Select all at stop",
+  "assistantStatusPending": "Pending",
+  "assistantStatusBoarded": "Boarded",
+  "assistantStatusDroppedOff": "Dropped off",
+  "assistantStatusNoShow": "No-show",
+  "assistantConfirmedByAssistant": "Confirmed by assistant",
+  "assistantConfirmedByDriver": "Confirmed by driver",
+  "assistantNoShowModalTitle": "Record no-show",
+  "assistantNoShowModalSubtitle": "Select why the student did not board:",
+  "assistantNoShowReasonNotified": "Notified by guardian",
+  "assistantNoShowReasonNotAtLocation": "Not at pick-up location",
+  "assistantNoShowReasonOther": "Other reason",
+  "assistantNoShowConfirm": "Confirm no-show",
+  "assistantStudentsSearchHint": "Search student or school...",
+  "assistantFilterAll": "All",
+  "assistantStudentsEmpty": "No students found.",
+  "assistantLinkRevokedTitle": "Access revoked",
+  "assistantLinkRevokedMessage": "The driver removed your link to this van."
 }

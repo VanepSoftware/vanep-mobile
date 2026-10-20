@@ -472,5 +472,45 @@
   "assistantShiftMorning": "Manhã",
   "assistantShiftAfternoon": "Tarde",
   "assistantShiftNight": "Noite",
-  "unauthorizedAccess": "Acesso não autorizado."
+  "unauthorizedAccess": "Acesso não autorizado.",
+  "assistantRouteEmpty": "Nenhuma parada programada para esta rota hoje.",
+  "assistantRouteProgress": "{completed} de {total} alunos atendidos",
+  "@assistantRouteProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantConfirmBoarding": "Confirmar embarque",
+  "assistantMarkNoShow": "Não compareceu",
+  "assistantBulkDropOff": "Dar baixa em lote ({count})",
+  "@assistantBulkDropOff": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantSelectAllStop": "Selecionar todos da parada",
+  "assistantStatusPending": "Aguardando",
+  "assistantStatusBoarded": "Embarcado",
+  "assistantStatusDroppedOff": "Entregue",
+  "assistantStatusNoShow": "Não compareceu",
+  "assistantConfirmedByAssistant": "Confirmado por assistente",
+  "assistantConfirmedByDriver": "Confirmado por motorista",
+  "assistantNoShowModalTitle": "Registrar ausência",
+  "assistantNoShowModalSubtitle": "Selecione o motivo pelo qual o aluno não embarcou:",
+  "assistantNoShowReasonNotified": "Avisado pelo responsável",
+  "assistantNoShowReasonNotAtLocation": "Não estava no local",
+  "assistantNoShowReasonOther": "Outro motivo",
+  "assistantNoShowConfirm": "Confirmar ausência",
+  "assistantStudentsSearchHint": "Buscar aluno ou escola...",
+  "assistantFilterAll": "Todos",
+  "assistantStudentsEmpty": "Nenhum aluno encontrado.",
+  "assistantLinkRevokedTitle": "Acesso revogado",
+  "assistantLinkRevokedMessage": "O motorista removeu seu vínculo com esta van."
 }
