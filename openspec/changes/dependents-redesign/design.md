@@ -119,7 +119,7 @@ A taxonomia atual de `DependentFailure` continua. Um `DependentRejectedFailure(d
 
 ## Migration Plan
 
-Só mobile, sem migração de dados. As telas antigas continuam ligadas até a fase que troca as entradas delas (fase 5), então todo build intermediário mantém um fluxo de dependentes funcionando. Rollback é reverter o PR da fase.
+Só mobile, sem migração de dados. As telas antigas continuam ligadas até a fase que troca as entradas delas (fase 4), então todo build intermediário mantém um fluxo de dependentes funcionando. A exceção é o endereço: a fase 3 move a metade de endereço do `DependentFormCubit` para o `DependentPickupCubit` sem religar a tela antiga, que é apagada. Entre as fases 3 e 4, o formulário antigo edita só nome, nascimento e gênero, e o app não tem como editar o endereço de um dependente. Rollback é reverter o PR da fase.
 
 ### Phased delivery (R16–R23)
 
@@ -127,11 +127,10 @@ Só mobile, sem migração de dados. As telas antigas continuam ligadas até a f
 |---|---|---|---|
 | 1 | Core (`SchoolShift`, CPF movido, `VanepMapPlaceholder`, extensão do `VanepMenuItem`, legenda e ações no `VanepAppBar`, `VanepSection`, filtro de tipo no Places) e contratos e value objects de domínio (`Dependent` + escola/documento, `Weekday`, `SchoolWeek`, contrato `DependentSchoolDaysRepository`, falhas; domínio de `schools` e `contract_readiness`) | — | — |
 | 2 | Dados dos três módulos (DTOs, datasources, implementações de repositório, endpoints no `Environment`), use cases e containers | Fase 1 mergeada; PR 3 do back para o QA manual | — |
-| 3 | Cubits: mudanças no `DependentsCubit`, `DependentDetailCubit` e os quatro cubits de editor | Fase 2 mergeada | — |
-| 4 | Lista, detalhe e as quatro telas de editor, `describeSchoolWeekBar`, `dependentReadinessItems`, l10n | Fase 3 mergeada | — |
-| 5 | `DependentWizardCubit`, rota do wizard, modo de completar, troca das entradas, remoção do código antigo | Fase 4 mergeada | — |
+| 3 | Cubits: mudanças no `DependentsCubit`, `DependentDetailCubit` e os quatro cubits de editor; a metade de endereço sai do `DependentFormCubit` para o `DependentPickupCubit`, e a tela de endereço antiga é apagada | Fase 2 mergeada | — |
+| 4 | Lista, detalhe e as quatro telas de editor, `describeSchoolWeekBar`, `dependentReadinessItems`, `DependentWizardCubit`, rota do wizard, modo de completar, troca das entradas, remoção do código antigo, l10n | Fase 3 mergeada | — |
 
-Nesta change, o desenvolvedor aceitou PRs de cerca de 1000 linhas produtivas, em vez das 600 da R23. As fases 1 e 2 juntam, cada uma, duas camadas vizinhas num PR. A R20 continua valendo: toda interface entra uma fase antes da implementação dela.
+Nesta change, o desenvolvedor aceitou PRs de cerca de 1000 linhas produtivas, em vez das 600 da R23. As fases 1 e 2 juntam, cada uma, duas camadas vizinhas num PR. A fase 4 junta as telas, o wizard e a limpeza num PR só, acima desse teto, por decisão do desenvolvedor. A R20 continua valendo: toda interface entra uma fase antes da implementação dela.
 
 ## Open Questions
 

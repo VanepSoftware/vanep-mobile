@@ -17,7 +17,6 @@ import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_d
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
-import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_address_card.dart';
 
 const int maxDependentNameLength = 255;
 
@@ -111,7 +110,6 @@ class DependentFormViewState extends State<DependentFormView> {
                   onChanged: cubit.changeGender,
                   enabled: !state.isSaving,
                 ),
-                DependentAddressCard(state: state),
               ], 20),
             ],
           ),
