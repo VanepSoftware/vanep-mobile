@@ -17,12 +17,13 @@ enum SchoolShift {
     };
   }
 
-  static String toApi(SchoolShift shift) {
+  static String? toApi(SchoolShift? shift) {
     return switch (shift) {
       SchoolShift.morning => 'MORNING',
       SchoolShift.afternoon => 'AFTERNOON',
       SchoolShift.night => 'NIGHT',
       SchoolShift.fullTime => 'FULLTIME',
+      null => null,
     };
   }
 }

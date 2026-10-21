@@ -86,4 +86,55 @@ void main() {
 
     expect(body, isEmpty);
   });
+
+  group('document and school', () {
+    const pedro = TestDependent(
+      token: 'dep-pedro',
+      name: 'Pedro Oliveira',
+      document: '52998224725',
+      school: TestDependentSchool(),
+    );
+
+    test('a masked CPF is sent with digits only', () {
+      final body = dependentChangesToJson(
+        buildDependentChangesForCreate(
+          const DependentDraft(
+            name: 'Pedro',
+            document: '529.982.247-25',
+            schoolToken: 'school-delta',
+          ),
+        ),
+      );
+
+      expect(body, {
+        'name': 'Pedro',
+        'document': '52998224725',
+        'schoolToken': 'school-delta',
+      });
+    });
+
+    test('a cleared CPF is sent as an explicit null', () {
+      final body = dependentChangesToJson(
+        buildDependentChangesForUpdate(
+          draft: DependentDraft.fromDependent(pedro).withDocument(''),
+          snapshot: pedro,
+        ),
+      );
+
+      expect(body, {'document': null});
+    });
+
+    test('another school is sent by its token alone', () {
+      final body = dependentChangesToJson(
+        buildDependentChangesForUpdate(
+          draft: DependentDraft.fromDependent(
+            pedro,
+          ).withSchoolToken('school-horizonte'),
+          snapshot: pedro,
+        ),
+      );
+
+      expect(body, {'schoolToken': 'school-horizonte'});
+    });
+  });
 }

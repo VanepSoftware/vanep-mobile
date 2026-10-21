@@ -100,7 +100,15 @@ class Environment {
 
   String get clientsMeEndpoint => '$clientsEndpoint/me';
 
+  String get contractReadinessEndpoint =>
+      '$clientsMeEndpoint/contract-readiness';
+
   String get dependentsEndpoint => '$authBaseUrl/api/dependent';
+
+  String dependentSchoolDaysEndpoint(String dependentToken) =>
+      '$dependentsEndpoint/${Uri.encodeComponent(dependentToken)}/school-days';
+
+  String get schoolResolveEndpoint => '$authBaseUrl/api/schools/resolve';
 
   String get driversMeEndpoint => '$authBaseUrl/api/drivers/me';
 
