@@ -16,5 +16,5 @@ enum Weekday {
     return null;
   }
 
-  static String toApi(Weekday day) => day.name.toUpperCase();
+  static String? toApi(Weekday? day) => day?.name.toUpperCase();
 }
