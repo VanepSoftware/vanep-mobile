@@ -13,6 +13,7 @@ import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource
 import 'package:vanep_mobile/modules/assistant/assistant_container.dart';
 import 'package:vanep_mobile/modules/client_home/client_home_container.dart';
 import 'package:vanep_mobile/modules/client_proposals/client_proposals_container.dart';
+import 'package:vanep_mobile/modules/contract_readiness/contract_readiness_container.dart';
 import 'package:vanep_mobile/modules/conversations/conversations_container.dart';
 import 'package:vanep_mobile/modules/dependents/dependents_container.dart';
 import 'package:vanep_mobile/modules/driver/driver_container.dart';
@@ -22,6 +23,7 @@ import 'package:vanep_mobile/modules/drivers/drivers_container.dart';
 import 'package:vanep_mobile/modules/driver_search/driver_search_container.dart';
 import 'package:vanep_mobile/modules/ibge_locations/ibge_locations_container.dart';
 import 'package:vanep_mobile/modules/profile/profile_container.dart';
+import 'package:vanep_mobile/modules/schools/schools_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +42,8 @@ Future<void> main() async {
   registerDriverServiceAreasDependencies(getIt);
   registerDriverSearchDependencies(getIt);
   registerIbgeLocationsDependencies(getIt);
+  registerSchoolsDependencies(getIt);
+  registerContractReadinessDependencies(getIt);
   registerDependentsDependencies(getIt);
   registerAssistantDependencies(getIt);
   registerDriverVansDependencies(getIt);

@@ -30,5 +30,11 @@ Map<String, Object?> dependentChangesToJson(DependentChanges changes) {
   if (changes.touches(DependentField.address)) {
     body['address'] = dependentAddressToJson(changes.draft.address);
   }
+  if (changes.touches(DependentField.document)) {
+    body['document'] = normalizeDocument(changes.draft.document);
+  }
+  if (changes.touches(DependentField.school)) {
+    body['schoolToken'] = normalizeOptional(changes.draft.schoolToken);
+  }
   return body;
 }

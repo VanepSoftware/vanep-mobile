@@ -3,8 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
 import 'package:vanep_mobile/modules/dependents/data/dtos/dependent_dto.dart';
 import 'package:vanep_mobile/modules/dependents/data/dtos/dependent_request_body.dart';
+import 'package:vanep_mobile/modules/dependents/data/dtos/school_day_dto.dart';
 
 class DependentRemoteDataSource {
   DependentRemoteDataSource({required this.dio, required this.environment});
@@ -44,6 +46,28 @@ class DependentRemoteDataSource {
       data: const {'isDefault': true},
     );
     return readDependent(response.data);
+  }
+
+  Future<void> removeDependent(String token) async {
+    await dio.delete<void>('$endpoint/$token');
+  }
+
+  Future<SchoolWeek> fetchSchoolDays(String token) async {
+    final response = await dio.get<List<dynamic>>(
+      environment.dependentSchoolDaysEndpoint(token),
+    );
+    return schoolWeekFromJson(response.data);
+  }
+
+  Future<SchoolWeek> replaceSchoolDays({
+    required String token,
+    required SchoolWeek week,
+  }) async {
+    final response = await dio.put<List<dynamic>>(
+      environment.dependentSchoolDaysEndpoint(token),
+      data: schoolWeekToJson(week),
+    );
+    return schoolWeekFromJson(response.data);
   }
 }
 
