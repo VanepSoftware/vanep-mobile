@@ -8,7 +8,7 @@ import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
-import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_field_error.dart';
 
 String dependentFailureLabel(AppLocalizations l10n, DependentFailure failure) {
   return switch (failure) {
