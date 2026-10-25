@@ -27,6 +27,10 @@ List<DateTime> nextWeekdays(DateTime day, int count) {
   return weekdays;
 }
 
+// TODO(VAN-41): mocked data for development only. Every overview below is
+// fake and must be replaced by the remote data source as each endpoint lands
+// (see tasks 6.1–6.4); delete this class, ClientHomeScenario and
+// CLIENT_HOME_SCENARIO once all of them are wired.
 class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
   const ScenarioDailyOverviewDataSource({
     required this.scenario,
@@ -51,6 +55,8 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     };
   }
 
+  // TODO(VAN-41): mocked negotiation and proposals; replace with the
+  // proposals endpoint (api-java #30).
   DailyOverview negotiatingOverview(DateTime now) {
     return DailyOverview(
       today: const NegotiatingSection(
@@ -70,6 +76,9 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
+  // TODO(VAN-41): mocked route, live trip, payment, proposal and contract;
+  // replace with the daily route, payments (#17), proposals (#30) and
+  // contract (#31/#32) endpoints.
   DailyOverview everythingAtOnceOverview(DateTime now) {
     return DailyOverview(
       today: VanDaySection(
@@ -107,6 +116,8 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
+  // TODO(VAN-41): mocked vans, absence, stop change and payment; replace with
+  // the daily route and payments (#17) endpoints.
   DailyOverview beforeRouteOverview(DateTime now) {
     return DailyOverview(
       today: VanDaySection(
@@ -140,6 +151,8 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
+  // TODO(VAN-41): mocked live trip and child day; replace with the daily route
+  // and live trip endpoints.
   DailyOverview vanArrivingOverview(DateTime now) {
     return DailyOverview(
       today: VanDaySection(
@@ -179,6 +192,8 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
+  // TODO(VAN-41): mocked arrival and day events; replace with the daily route
+  // and live trip endpoints.
   DailyOverview arrivedAtSchoolOverview(DateTime now) {
     return DailyOverview(
       today: ArrivedSection(
@@ -213,6 +228,9 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
+  // TODO(VAN-41): mocked week plan, rating, renewal and inspection items;
+  // replace with the daily route endpoint and the driver/contract endpoints
+  // that will serve these items.
   DailyOverview noRouteTodayOverview(DateTime now) {
     final weekdays = nextWeekdays(now, 5);
     return DailyOverview(
@@ -234,6 +252,8 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
+  // TODO(VAN-41): mocked live trip shared by everythingAtOnce and
+  // vanArriving; replace with the live trip endpoint.
   LiveTrip liveTrip(DateTime now, {bool approaching = false}) {
     return LiveTrip(
       leg: TripLeg.going,
@@ -246,6 +266,8 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
+  // TODO(VAN-41): mocked van shared by everythingAtOnce, beforeRoute and
+  // vanArriving; replace with the daily route endpoint.
   VanDay carlosMorningVan(
     DateTime now, {
     String? absentRider,
@@ -276,6 +298,8 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
+  // TODO(VAN-41): mocked van used by beforeRoute; replace with the daily route
+  // endpoint.
   VanDay ritaAfternoonVan(DateTime now) {
     return VanDay(
       driverName: 'Rita',

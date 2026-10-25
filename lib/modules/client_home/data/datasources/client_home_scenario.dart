@@ -1,3 +1,5 @@
+// TODO(VAN-41): selects mocked data in ScenarioDailyOverviewDataSource; delete
+// together with it once the real endpoints are wired.
 enum ClientHomeScenario {
   firstAccess,
   negotiating,

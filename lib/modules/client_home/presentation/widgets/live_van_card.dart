@@ -260,6 +260,8 @@ class LiveRidersSummary extends StatelessWidget {
   }
 }
 
+// TODO(VAN-41): mocked map with fixed van and stop pins; replace with the real
+// map fed by the live trip endpoint.
 class IllustrativeMap extends StatelessWidget {
   const IllustrativeMap({super.key});
 

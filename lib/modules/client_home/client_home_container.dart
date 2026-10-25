@@ -16,6 +16,9 @@ import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_section
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
 
+// TODO(VAN-41): switches between empty and mocked data via
+// CLIENT_HOME_SCENARIO; register the remote data source here once the API
+// serves the daily overview.
 DailyOverviewDataSource dailyOverviewDataSourceFor(String scenarioName) {
   final scenario = ClientHomeScenario.fromName(scenarioName);
   if (scenario == null) return const EmptyDailyOverviewDataSource();
