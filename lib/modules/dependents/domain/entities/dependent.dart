@@ -22,6 +22,8 @@ abstract class DependentSchool {
   String get token;
 
   String get name;
+
+  DependentAddress? get address;
 }
 
 abstract class DependentAddress {

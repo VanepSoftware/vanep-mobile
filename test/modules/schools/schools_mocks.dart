@@ -22,8 +22,6 @@ const deltaSchoolJson = <String, Object?>{
   'googlePlaceId': 'place-delta',
   'cityName': 'Brasília',
   'cityToken': 'city-brasilia',
-  'districtName': null,
-  'districtToken': null,
   'address': null,
   'active': true,
   'createdAt': '2026-10-01T12:00:00Z',

@@ -6,12 +6,13 @@ A lista de dependentes e o detalhe de cada dependente no app do cliente: o lugar
 
 ### Requirement: Lista de dependentes
 
-A aba Dependentes e a entrada "Gerenciar dependentes" do perfil SHALL abrir a lista de dependentes, carregada de `GET /api/dependent`. Cada dependente SHALL ser uma linha que mostra, nesta ordem:
+A aba Dependentes SHALL abrir a lista de dependentes, carregada de `GET /api/dependent`. O cabeçalho SHALL mostrar o título "Dependentes", o subtítulo "Gerencie quem viaja na van" e o botão de adicionar. Cada dependente SHALL ser uma linha que mostra, nesta ordem:
 
 - um avatar com a primeira letra do nome;
 - o primeiro nome, seguido de `· Padrão` quando é o dependente padrão;
-- um subtítulo com a idade em anos (só quando o nascimento é conhecido) e o nome da escola (só quando há escola), unidos por ` · `;
-- uma linha âmbar "Cadastro incompleto" quando a capability `dependent-readiness` informa que o dependente não está pronto.
+- embaixo do nome, uma de duas coisas:
+  - a linha âmbar "Cadastro incompleto", quando a capability `dependent-readiness` informa que o dependente não está pronto. Nesse caso a linha SHALL NOT mostrar idade nem escola;
+  - nos outros casos, um subtítulo com a idade em anos (só quando o nascimento é conhecido) e o nome da escola (só quando há escola), unidos por ` · `.
 
 As linhas SHALL manter a ordem do back. Tocar numa linha SHALL abrir o detalhe daquele dependente. O botão de adicionar do cabeçalho e o botão "Adicionar dependente" embaixo da lista SHALL abrir o wizard de criação (`dependent-creation-wizard`).
 
@@ -33,7 +34,8 @@ As linhas SHALL manter a ordem do back. Tocar numa linha SHALL abrir o detalhe d
 #### Scenario: Dependente incompleto
 
 - **WHEN** a prontidão informa pelo menos um item faltando para um dependente
-- **THEN** a linha dele mostra a linha âmbar "Cadastro incompleto"
+- **THEN** a linha dele mostra só o nome e, embaixo, a linha âmbar "Cadastro incompleto"
+- **AND** a linha não mostra a idade nem a escola
 
 #### Scenario: Adicionar pela lista
 
@@ -62,7 +64,7 @@ Enquanto a primeira carga está em andamento, a lista SHALL mostrar linhas em sk
 
 ### Requirement: Detalhe do dependente
 
-O detalhe SHALL ter um cabeçalho com o botão de voltar, o primeiro nome do dependente com a legenda "Dependente", e um menu ⋮. O corpo SHALL mostrar, nesta ordem:
+O detalhe SHALL ter um cabeçalho com o botão de voltar, o primeiro nome do dependente com a legenda "Dependente", e um menu ⋮ quando ele tem alguma opção (hoje, só "Definir como padrão"). O corpo SHALL mostrar, nesta ordem:
 
 1. um card de cabeçalho com o avatar, o nome completo e a idade (com "dependente padrão" no fim quando é o padrão);
 2. o card "Cadastro incompleto" definido em `dependent-readiness`, só quando o dependente não está pronto;
@@ -71,15 +73,22 @@ O detalhe SHALL ter um cabeçalho com o botão de voltar, o primeiro nome do dep
 5. o grupo **Cadastro** com a linha Dados pessoais;
 6. o botão "Remover dependente".
 
-As linhas Escola, Embarque e Dados pessoais SHALL mostrar só o título quando o dado existe. Quando o dado falta, SHALL mostrar o subtítulo âmbar "Não informado": Escola quando não há escola, Embarque quando não há endereço, Dados pessoais quando não há data de nascimento. A linha Dias e turnos SHALL mostrar a barra da semana definida abaixo, embaixo do título, quando a grade tem pelo menos um dia, e "Não informado" quando está vazia.
+Quando o dependente tem escola, a linha Escola SHALL mostrar o nome da escola embaixo do título, sem o endereço, que fica só no editor de Escola. Quando o dependente tem endereço, a linha Embarque SHALL mostrar embaixo do título um resumo com a rua com o número e o bairro, unidos por ` · `, sem complemento, cidade nem CEP. O nome da escola e o resumo do embarque SHALL ocupar uma linha só, cortados com reticências quando não cabem. A linha Dados pessoais SHALL mostrar só o título quando o dado existe. Quando o dado falta, SHALL mostrar o subtítulo âmbar "Não informado": Escola quando não há escola, Embarque quando não há endereço, Dados pessoais quando não há data de nascimento. A linha Dias e turnos SHALL mostrar a barra da semana definida abaixo, embaixo do título, quando a grade tem pelo menos um dia, e "Não informado" quando está vazia.
 
 Tocar em Escola, Dias e turnos, Embarque ou Dados pessoais SHALL abrir o editor correspondente. Quando um editor salva, o detalhe SHALL mostrar o dado atualizado, e a lista SHALL estar atualizada quando o responsável voltar para ela.
 
 #### Scenario: Dependente completo
 
 - **WHEN** o detalhe abre para um dependente com nascimento, escola, endereço e grade preenchida
-- **THEN** as linhas Escola, Embarque e Dados pessoais não mostram subtítulo
+- **THEN** a linha Dados pessoais não mostra subtítulo
+- **AND** a linha Escola mostra o nome da escola
+- **AND** a linha Embarque mostra o endereço resumido
 - **AND** Dias e turnos mostra o título com a barra da semana
+
+#### Scenario: Embarque resumido
+
+- **WHEN** o endereço do dependente é "QNL 5 Conjunto A", número 12, complemento "Casa", bairro "Taguatinga", em Brasília/DF
+- **THEN** a linha Embarque mostra "QNL 5 Conjunto A, 12 · Taguatinga"
 
 #### Scenario: Sem escola e sem grade
 
@@ -89,7 +98,7 @@ Tocar em Escola, Dias e turnos, Embarque ou Dados pessoais SHALL abrir o editor 
 #### Scenario: O detalhe reflete uma edição
 
 - **WHEN** o responsável salva uma escola nova no editor de Escola e volta
-- **THEN** o detalhe não mostra mais "Não informado" em Escola
+- **THEN** o detalhe não mostra mais "Não informado" em Escola e mostra o nome da escola nova
 - **AND** a linha da lista mostra o nome da escola nova
 
 ### Requirement: Barra da semana no detalhe
@@ -118,7 +127,7 @@ Enquanto a grade carrega, a barra SHALL aparecer em skeleton. Se a grade não ca
 
 ### Requirement: Dependente padrão pelo detalhe
 
-Quando o cliente tem dois ou mais dependentes e o dependente aberto não é o padrão, o menu ⋮ SHALL oferecer "Definir como padrão". Escolher essa opção SHALL enviar `PATCH /api/dependent/{token}` com `isDefault: true`. Com sucesso, o detalhe e a lista SHALL mostrar o novo padrão, e o padrão anterior SHALL deixar de mostrar `· Padrão`. Quando o cliente tem um dependente só, ou o dependente aberto já é o padrão, a opção SHALL NOT aparecer.
+Quando o cliente tem dois ou mais dependentes e o dependente aberto não é o padrão, o menu ⋮ SHALL oferecer "Definir como padrão". Escolher essa opção SHALL enviar `PATCH /api/dependent/{token}` com `isDefault: true`. Com sucesso, o detalhe e a lista SHALL mostrar o novo padrão, e o padrão anterior SHALL deixar de mostrar `· Padrão`. Quando o cliente tem um dependente só, ou o dependente aberto já é o padrão, a opção SHALL NOT aparecer e, sem nenhuma opção, o cabeçalho SHALL NOT mostrar o menu ⋮.
 
 #### Scenario: Escolher um novo padrão
 
@@ -129,7 +138,12 @@ Quando o cliente tem dois ou mais dependentes e o dependente aberto não é o pa
 #### Scenario: Um dependente só
 
 - **WHEN** o cliente tem um único dependente
-- **THEN** o menu ⋮ não oferece "Definir como padrão"
+- **THEN** o cabeçalho do detalhe não mostra o menu ⋮
+
+#### Scenario: Dependente que já é o padrão
+
+- **WHEN** o detalhe abre para o dependente padrão
+- **THEN** o cabeçalho do detalhe não mostra o menu ⋮
 
 ### Requirement: Remover dependente
 

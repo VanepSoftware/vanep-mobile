@@ -23,7 +23,6 @@ import 'package:vanep_mobile/modules/dependents/domain/usecases/replace_school_d
 import 'package:vanep_mobile/modules/dependents/domain/usecases/set_default_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_detail_cubit.dart';
-import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_pickup_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_school_cubit.dart';
@@ -77,13 +76,6 @@ void registerDependentsDependencies(GetIt getIt) {
         setDefaultDependent: getIt<SetDefaultDependent>(),
         deleteDependent: getIt<RemoveDependent>(),
         findContractReadiness: getIt<FindContractReadiness>(),
-      ),
-    )
-    ..registerFactoryParam<DependentFormCubit, Dependent?, void>(
-      (dependent, _) => DependentFormCubit(
-        createDependent: getIt<CreateDependent>(),
-        updateDependent: getIt<UpdateDependent>(),
-        dependent: dependent,
       ),
     )
     ..registerFactoryParam<DependentDetailCubit, String, void>(

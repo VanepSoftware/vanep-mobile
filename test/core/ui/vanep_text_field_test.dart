@@ -284,4 +284,23 @@ void main() {
       expect(tester.widget<TextField>(find.byType(TextField)).enabled, isTrue);
     });
   });
+
+  testWidgets('a suffix is shown at the end of the field', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'Data de nascimento',
+            controller: controller,
+            onChanged: (_) {},
+            suffix: const Icon(Icons.calendar_today_outlined),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.calendar_today_outlined), findsOneWidget);
+  });
 }

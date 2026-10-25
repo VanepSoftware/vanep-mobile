@@ -277,7 +277,7 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Dependentes'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Gerenciar dependentes'), findsOneWidget);
+    expect(find.text('Gerencie quem viaja na van'), findsOneWidget);
     verify(dependentsCubit.loadDependents).called(1);
 
     await tester.tap(find.bySemanticsLabel('Início'));

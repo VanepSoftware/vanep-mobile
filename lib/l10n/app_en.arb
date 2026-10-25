@@ -224,7 +224,6 @@
   "profilePersonalData": "Personal data",
   "personalDataSubtitle": "Review and update your account details and your home address.",
   "profilePaymentMethods": "Payment methods",
-  "profileDependents": "Manage dependents",
   "profileProfessionalData": "Professional data",
   "profileAssistantInvite": "Driver invite",
   "profileSettings": "Settings",
@@ -353,8 +352,8 @@
   "driverSearchNetworkError": "No connection to the server. Please try again.",
   "driverSearchUnexpectedError": "Something went wrong. Please try again.",
   "driverSearchCoversWholeCity": "Covers the whole city",
-  "dependentsSubtitle": "Add and manage the people who ride the van.",
-  "dependentsEmpty": "You have not added any dependents yet.",
+  "dependentsSubtitle": "Manage who rides the van",
+  "dependentsEmpty": "Dependents are the people who ride the van, like your children. Add the first one to request a quote.",
   "dependentsAdd": "Add dependent",
   "dependentsRetry": "Try again",
   "dependentsLoadError": "Could not load your dependents.",
@@ -370,14 +369,8 @@
       }
     }
   },
-  "dependentFormNewTitle": "New dependent",
-  "dependentFormEditTitle": "Edit dependent",
-  "dependentFormSave": "Save",
-  "dependentFormSaved": "Dependent saved.",
   "dependentFieldName": "Name",
   "dependentFieldBirthDate": "Date of birth",
-  "dependentFieldBirthDateEmpty": "Pick a date",
-  "dependentFieldBirthDateClear": "Clear date",
   "dependentFieldGender": "Gender",
   "dependentErrorNameRequired": "Enter the dependent's name.",
   "dependentErrorBirthDateFuture": "The date of birth cannot be in the future.",
@@ -386,19 +379,7 @@
   "dependentFailureNotFound": "This dependent no longer exists.",
   "dependentFailureNetwork": "No connection to the server. Please try again.",
   "dependentFailureUnexpected": "Something went wrong. Please try again.",
-  "dependentFormSubtitle": "Enter the details of who rides the van. Only the name is required.",
   "dependentFailureCityNotFound": "We could not find that city. Choose the municipality again.",
-  "dependentFieldAddress": "Address",
-  "dependentFieldAddressEmpty": "No address set.",
-  "dependentFieldAddressRemove": "Clear address",
-  "dependentAddressRegisterAction": "Add address",
-  "dependentAddressEditAction": "Edit address",
-  "dependentAddressMenuTooltip": "More options",
-  "dependentAddressFormTitleNew": "Add address",
-  "dependentAddressFormTitleEdit": "Edit address",
-  "dependentAddressFormSubtitle": "Enter the ZIP code and complete the dependent's address details.",
-  "dependentAddressConfirmAction": "Confirm address",
-  "dependentAddressIncomplete": "Complete the address to save.",
   "profileGenderUnspecified": "Prefer not to say",
   "personalAddressCardTitle": "Address",
   "personalAddressEmpty": "No home address registered yet.",
@@ -611,5 +592,152 @@
   "conversationsInboxLoadError": "Could not load your conversations.",
   "conversationsInboxEmptyClient": "No conversations yet. To talk to a driver, open their profile in Vans and tap “Chat with the driver”.",
   "mapPlaceholderSemantics": "Illustrative map",
-  "mapAdjustAction": "Adjust on map"
+  "mapAdjustAction": "Adjust on map",
+  "dependentsAddTooltip": "Add dependent",
+  "dependentsIncomplete": "Incomplete profile",
+  "dependentsTitleWithDefault": "{name} · {badge}",
+  "@dependentsTitleWithDefault": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "badge": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentDetailCaption": "Dependent",
+  "dependentDetailMoreOptions": "More options",
+  "dependentDetailDefaultNote": "default dependent",
+  "dependentDetailGroupSchool": "School and routine",
+  "dependentDetailGroupVan": "Van and contract",
+  "dependentDetailGroupRegistration": "Registration",
+  "dependentRowSchool": "School",
+  "dependentRowSchoolDays": "Days and shifts",
+  "dependentRowPickup": "Pickup",
+  "dependentRowVan": "Van",
+  "dependentRowContract": "Contract",
+  "dependentRowPersonalData": "Personal data",
+  "dependentNotInformed": "Not provided",
+  "dependentSchoolDayCount": "{count, plural, =1{1 day} other{{count} days}}",
+  "@dependentSchoolDayCount": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "dependentSchoolDaysSemantics": "Days and shifts, {days}",
+  "@dependentSchoolDaysSemantics": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentRemove": "Remove dependent",
+  "dependentRemoveTitle": "Remove {name}?",
+  "@dependentRemoveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentRemoveMessage": "{name} will leave your list of dependents.",
+  "@dependentRemoveMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentRemoveConfirm": "Remove",
+  "dependentRemoveCancel": "Cancel",
+  "dependentRemoved": "{name} was removed.",
+  "@dependentRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentReadinessCount": "{done} of {total}",
+  "@dependentReadinessCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "dependentReadinessTitle": "Complete the profile to request a quote",
+  "dependentReadinessAction": "Complete profile",
+  "dependentEditorSave": "Save",
+  "dependentFieldBirthDateHint": "dd/mm/yyyy",
+  "dependentFieldBirthDatePick": "Pick on the calendar",
+  "dependentFieldDocument": "CPF (optional)",
+  "dependentFieldDocumentHint": "000.000.000-00",
+  "dependentSchoolSearchHint": "Search school",
+  "dependentSchoolSearchPrompt": "Search for the school by its name.",
+  "dependentSchoolSearchEmpty": "No school found with this name.",
+  "dependentSchoolSearchUnavailable": "School search is unavailable. Try again in a moment.",
+  "dependentSchoolDaysWeek": "Week",
+  "dependentSchoolDaysLoadError": "Could not load the school days.",
+  "dependentSchoolDayHasClass": "{day}: has class",
+  "@dependentSchoolDayHasClass": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentSchoolDayOff": "No class",
+  "dependentSchoolDayShift": "{day} shift: {shift}",
+  "@dependentSchoolDayShift": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "weekdayMonday": "Monday",
+  "weekdayTuesday": "Tuesday",
+  "weekdayWednesday": "Wednesday",
+  "weekdayThursday": "Thursday",
+  "weekdayFriday": "Friday",
+  "weekdaySaturday": "Saturday",
+  "weekdaySunday": "Sunday",
+  "weekdayInitialMonday": "M",
+  "weekdayInitialTuesday": "T",
+  "weekdayInitialWednesday": "W",
+  "weekdayInitialThursday": "T",
+  "weekdayInitialFriday": "F",
+  "weekdayInitialSaturday": "S",
+  "weekdayInitialSunday": "S",
+  "schoolShiftMorning": "Morning",
+  "schoolShiftAfternoon": "Afternoon",
+  "schoolShiftNight": "Night",
+  "schoolShiftFullTime": "Full time",
+  "dependentWizardStepCaption": "Step {number} of {total}",
+  "@dependentWizardStepCaption": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "dependentWizardContinue": "Continue",
+  "dependentWizardFinish": "Finish",
+  "dependentWizardSkip": "Skip",
+  "dependentsTitle": "Dependents"
 }
