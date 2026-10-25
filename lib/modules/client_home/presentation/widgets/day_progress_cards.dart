@@ -4,6 +4,7 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/day_event.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
@@ -24,7 +25,7 @@ class ChildDayCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              PersonAvatar(name: plan.childName, size: 32),
+              VanepPersonAvatar(name: plan.childName, size: 32),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(

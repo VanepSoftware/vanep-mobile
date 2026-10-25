@@ -2,21 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
-import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
 
 class NegotiatingCard extends StatelessWidget {
   const NegotiatingCard({
     required this.section,
     required this.onSearchVansTapped,
+    required this.onSeeProposalsTapped,
     super.key,
   });
 
   final NegotiatingSection section;
   final VoidCallback onSearchVansTapped;
+
+  final VoidCallback onSeeProposalsTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class NegotiatingCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              AvatarStack(names: section.childNames),
+              VanepAvatarStack(names: section.childNames),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -53,10 +56,7 @@ class NegotiatingCard extends StatelessWidget {
               Expanded(
                 child: VanepSecondaryButton(
                   label: l10n.clientHomeSeeProposals,
-                  onPressed: () => openUnavailableFeature(
-                    context,
-                    l10n.clientHomeShortcutProposals,
-                  ),
+                  onPressed: onSeeProposalsTapped,
                 ),
               ),
               const SizedBox(width: 10),

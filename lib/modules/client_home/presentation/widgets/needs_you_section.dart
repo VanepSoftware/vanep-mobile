@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/domain/calendar_days.dart';
+import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_greeting_header.dart';
+import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -31,10 +34,16 @@ String tripLabel(AppLocalizations l10n, {required bool roundTrip}) =>
     roundTrip ? l10n.clientHomeRoundTrip : l10n.clientHomeOneWay;
 
 class NeedsYouSection extends StatelessWidget {
-  const NeedsYouSection({required this.summary, required this.now, super.key});
+  const NeedsYouSection({
+    required this.summary,
+    required this.now,
+    required this.onProposalsTapped,
+    super.key,
+  });
 
   final NeedsYouSummary summary;
   final DateTime now;
+  final VoidCallback onProposalsTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +63,23 @@ class NeedsYouSection extends StatelessWidget {
         if (featured is ContractToSignItem)
           ContractToSignCard(item: featured, now: now),
         if (featured is NewProposalItem)
-          FeaturedProposalCard(item: featured, now: now),
+          FeaturedProposalCard(
+            item: featured,
+            now: now,
+            onSeeProposalTapped: onProposalsTapped,
+          ),
         if (featured != null && rows.isNotEmpty)
           const SizedBox(height: homeCardSpacing),
         if (rows.isNotEmpty)
           HomeRowsCard(
-            rows: [for (final item in rows) NeedsYouRow(item: item, now: now)],
+            rows: [
+              for (final item in rows)
+                NeedsYouRow(
+                  item: item,
+                  now: now,
+                  onProposalsTapped: onProposalsTapped,
+                ),
+            ],
           ),
       ],
     );
@@ -204,11 +224,13 @@ class FeaturedProposalCard extends StatelessWidget {
   const FeaturedProposalCard({
     required this.item,
     required this.now,
+    required this.onSeeProposalTapped,
     super.key,
   });
 
   final NewProposalItem item;
   final DateTime now;
+  final VoidCallback onSeeProposalTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +260,7 @@ class FeaturedProposalCard extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             children: [
-              PersonAvatar(name: item.driverName),
+              VanepPersonAvatar(name: item.driverName),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -286,10 +308,7 @@ class FeaturedProposalCard extends StatelessWidget {
               Expanded(
                 child: VanepPrimaryButton(
                   label: l10n.clientHomeSeeProposal,
-                  onPressed: () => openUnavailableFeature(
-                    context,
-                    l10n.clientHomeShortcutProposals,
-                  ),
+                  onPressed: onSeeProposalTapped,
                 ),
               ),
             ],
@@ -301,10 +320,16 @@ class FeaturedProposalCard extends StatelessWidget {
 }
 
 class NeedsYouRow extends StatelessWidget {
-  const NeedsYouRow({required this.item, required this.now, super.key});
+  const NeedsYouRow({
+    required this.item,
+    required this.now,
+    required this.onProposalsTapped,
+    super.key,
+  });
 
   final NeedsYouItem item;
   final DateTime now;
+  final VoidCallback onProposalsTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -326,17 +351,16 @@ class NeedsYouRow extends StatelessWidget {
             openUnavailableFeature(context, l10n.clientHomeShortcutContracts),
       ),
       NewProposalItem() => HomeRowTile(
-        leading: PersonAvatar(name: item.driverName),
+        leading: VanepPersonAvatar(name: item.driverName),
         title: l10n.clientHomeNewProposalFor(joinNames(l10n, item.childNames)),
         subtitle: l10n.clientHomeDriverAndMonthlyFee(
           item.driverName,
           formatMoney(l10n, item.monthlyFeeCents),
         ),
-        onTap: () =>
-            openUnavailableFeature(context, l10n.clientHomeShortcutProposals),
+        onTap: onProposalsTapped,
       ),
       ExpiredRequestItem() => HomeRowTile(
-        leading: PersonAvatar(name: item.driverName),
+        leading: VanepPersonAvatar(name: item.driverName),
         title: l10n.clientHomeRequestExpired(firstNameOf(item.driverName)),
         subtitle: l10n.clientHomeSeeSimilarDrivers,
         onTap: () =>
@@ -365,7 +389,7 @@ class NeedsYouRow extends StatelessWidget {
             openUnavailableFeature(context, l10n.clientHomeInspectionExpired),
       ),
       RateDriverItem() => HomeRowTile(
-        leading: PersonAvatar(name: item.driverName),
+        leading: VanepPersonAvatar(name: item.driverName),
         title: l10n.clientHomeRateVan(firstNameOf(item.driverName)),
         subtitle: l10n.clientHomeRatingIsAnonymous,
         footer: RateStars(driverName: item.driverName),

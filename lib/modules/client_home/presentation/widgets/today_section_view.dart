@@ -27,6 +27,7 @@ class TodaySectionView extends StatelessWidget {
     required this.onFindVanTapped,
     required this.onAddAddressTapped,
     required this.onAddDependentTapped,
+    required this.onProposalsTapped,
     super.key,
   });
 
@@ -35,6 +36,7 @@ class TodaySectionView extends StatelessWidget {
   final VoidCallback onFindVanTapped;
   final VoidCallback onAddAddressTapped;
   final VoidCallback onAddDependentTapped;
+  final VoidCallback onProposalsTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,11 @@ class TodaySectionView extends StatelessWidget {
       ],
       NegotiatingSection() => [
         todayHeader,
-        NegotiatingCard(section: section, onSearchVansTapped: onFindVanTapped),
+        NegotiatingCard(
+          section: section,
+          onSearchVansTapped: onFindVanTapped,
+          onSeeProposalsTapped: onProposalsTapped,
+        ),
       ],
       VanDaySection() => [todayHeader, ...withSpacing(vanDayCards(section))],
       ArrivedSection() => [

@@ -1,0 +1,1 @@
+enum SchoolShift { morning, afternoon }

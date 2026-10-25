@@ -33,6 +33,7 @@ class ClientShell extends StatefulWidget {
     required this.openDriverSearch,
     required this.openDriverProfile,
     required this.openConversationChat,
+    required this.openClientProposals,
     super.key,
   });
 
@@ -45,6 +46,8 @@ class ClientShell extends StatefulWidget {
 
   final Future<void> Function(BuildContext context, Conversation conversation)
   openConversationChat;
+
+  final Future<void> Function(BuildContext context) openClientProposals;
 
   @override
   State<ClientShell> createState() => ClientShellState();
@@ -79,6 +82,7 @@ class ClientShellState extends State<ClientShell> {
             onAddAddressTapped: () => openAddressFormFromHome(context),
             onAddDependentTapped: () =>
                 selectShellTab(clientShellDependentsTabIndex),
+            onProposalsTapped: () => widget.openClientProposals(context),
           ),
           FindVansTab(
             onSearchTapped: () => widget.openDriverSearch(context),

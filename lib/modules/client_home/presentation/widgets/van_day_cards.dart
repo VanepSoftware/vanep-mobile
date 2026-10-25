@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
@@ -33,7 +35,7 @@ class VanDayCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              AvatarStack(
+              VanepAvatarStack(
                 names: riderNames(van),
                 dimmedNames: {for (final rider in van.absentRiders) rider.name},
               ),
@@ -217,8 +219,8 @@ class VanDayRow extends StatelessWidget {
       rows: [
         HomeRowTile(
           leading: names.length == 1
-              ? PersonAvatar(name: names.single)
-              : AvatarStack(names: names),
+              ? VanepPersonAvatar(name: names.single)
+              : VanepAvatarStack(names: names),
           title: vanTitle(l10n, van),
           subtitle: l10n.clientHomeVanRowSubtitle(
             joinNames(l10n, names),
@@ -265,8 +267,8 @@ class ChildrenWithoutRouteRow extends StatelessWidget {
       rows: [
         HomeRowTile(
           leading: single != null
-              ? PersonAvatar(name: single.name)
-              : AvatarStack(names: names),
+              ? VanepPersonAvatar(name: single.name)
+              : VanepAvatarStack(names: names),
           title:
               single?.name ??
               l10n.clientHomeChildrenWithoutRoute(joinNames(l10n, names)),

@@ -56,3 +56,4 @@ app.*.map.json
 *.g.dart
 lib/l10n/app_localizations*.dart
 
+workspace.code-workspace

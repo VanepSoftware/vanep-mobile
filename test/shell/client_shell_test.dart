@@ -85,6 +85,7 @@ Widget _harness(
         profile: const FakeUserProfile(),
         openDriverSearch: openDriverSearch ?? (_) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
+        openClientProposals: (_) async {},
       ),
     ),
   );

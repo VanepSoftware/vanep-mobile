@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -134,7 +135,7 @@ class LiveVanHeader extends StatelessWidget {
             style: VanepTypography.cardSubtitle.copyWith(color: onBrandMuted),
           )
         else if (present.length == 1) ...[
-          PersonAvatar(name: present.single.name, size: 24),
+          VanepPersonAvatar(name: present.single.name, size: 24),
           const SizedBox(width: 6),
           Text(
             present.single.name,
@@ -231,7 +232,7 @@ class LiveRidersSummary extends StatelessWidget {
       children: [
         Row(
           children: [
-            AvatarStack(
+            VanepAvatarStack(
               names: riderNames(van),
               dimmedNames: {for (final rider in van.absentRiders) rider.name},
               size: 30,
@@ -244,7 +245,7 @@ class LiveRidersSummary extends StatelessWidget {
           Divider(height: 24, color: onBrandFaint),
           Row(
             children: [
-              AvatarStack(names: crew, size: 30),
+              VanepAvatarStack(names: crew, size: 30),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
