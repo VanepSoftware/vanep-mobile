@@ -8,9 +8,10 @@ import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locatio
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor_status.dart';
 
-class DependentPickupState extends Equatable {
+class DependentPickupState extends Equatable implements DependentEditorState {
   const DependentPickupState({
     required this.snapshot,
     required this.draft,
@@ -54,7 +55,11 @@ class DependentPickupState extends Equatable {
 
   final Dependent? saved;
 
+  @override
   bool get isSaving => status == DependentEditorStatus.saving;
+
+  @override
+  bool get isSaved => status == DependentEditorStatus.saved;
 
   bool get isAddressBlockingSave =>
       isLookingUpCep || draft.address.isZipCodeUnknown;
@@ -66,6 +71,7 @@ class DependentPickupState extends Equatable {
 
   bool get hasChanges => isDependentAddressEdited(draft, snapshot);
 
+  @override
   bool get canSave => !isSaving && !isAddressBlockingSave && hasChanges;
 
   DependentPickupState copyWith({

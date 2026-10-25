@@ -4,10 +4,11 @@ import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor_status.dart';
 import 'package:vanep_mobile/modules/schools/domain/failures/school_failure.dart';
 
-class DependentSchoolState extends Equatable {
+class DependentSchoolState extends Equatable implements DependentEditorState {
   const DependentSchoolState({
     required this.snapshot,
     this.suggestions = const [],
@@ -35,7 +36,11 @@ class DependentSchoolState extends Equatable {
 
   final Dependent? saved;
 
+  @override
   bool get isSaving => status == DependentEditorStatus.saving;
+
+  @override
+  bool get isSaved => status == DependentEditorStatus.saved;
 
   bool get isCurrentSchoolSelected =>
       selectedPlace == null && snapshot.school != null;
@@ -43,6 +48,7 @@ class DependentSchoolState extends Equatable {
   String? get selectedName =>
       selectedPlace?.primaryText ?? snapshot.school?.name;
 
+  @override
   bool get canSave => !isSaving && selectedPlace != null;
 
   DependentSchoolState copyWith({
