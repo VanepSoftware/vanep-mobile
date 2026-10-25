@@ -18,6 +18,7 @@ class Environment {
     this.placesAndroidPackage = '',
     this.placesAndroidCertSha1 = '',
     this.placesIosBundleId = '',
+    this.clientHomeScenario = '',
   });
 
   factory Environment.fromDotEnv(DotEnv env) {
@@ -32,6 +33,7 @@ class Environment {
       placesAndroidCertSha1:
           env.maybeGet('GOOGLE_PLACES_ANDROID_CERT_SHA1') ?? '',
       placesIosBundleId: env.maybeGet('GOOGLE_PLACES_IOS_BUNDLE_ID') ?? '',
+      clientHomeScenario: env.maybeGet('CLIENT_HOME_SCENARIO') ?? '',
     );
   }
 
@@ -52,6 +54,8 @@ class Environment {
   final String placesAndroidCertSha1;
 
   final String placesIosBundleId;
+
+  final String clientHomeScenario;
 
   String get tokenEndpoint => '$authBaseUrl/oauth2/token';
 
