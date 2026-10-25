@@ -10,6 +10,8 @@ O editor de Dias e turnos SHALL ter um cabeçalho com o botão de voltar, o tít
 
 Cada linha SHALL ter um switch de liga/desliga com o rótulo de acessibilidade "<dia>: tem aula" e o nome completo do dia. Uma linha ligada SHALL mostrar um seletor com o turno atual. Uma linha desligada SHALL mostrar "Sem aula" e o nome do dia apagado. O seletor SHALL oferecer Manhã (`MORNING`), Tarde (`AFTERNOON`), Noite (`NIGHT`) e Integral (`FULLTIME`).
 
+Quando a grade carregada está vazia, o editor SHALL abrir com segunda a sexta ligadas em `MORNING` como sugestão, sem salvar nada. Como o back não diferencia uma grade nunca salva de uma grade limpa, a sugestão também aparece depois que o responsável limpa a grade.
+
 Enquanto a grade carrega, o editor SHALL mostrar linhas em skeleton. Se a carga falhar, SHALL mostrar uma tela de erro com a ação de tentar de novo e nenhuma linha editável.
 
 #### Scenario: Grade existente
@@ -21,7 +23,8 @@ Enquanto a grade carrega, o editor SHALL mostrar linhas em skeleton. Se a carga 
 #### Scenario: Grade vazia
 
 - **WHEN** o dependente não tem grade
-- **THEN** todas as linhas aparecem desligadas e o contador mostra "0 dias"
+- **THEN** segunda a sexta aparecem ligadas com "Manhã", sábado e domingo desligados com "Sem aula", e o contador mostra "5 dias"
+- **AND** "Salvar" já fica habilitado, sem nada enviado até o responsável salvar
 
 ### Requirement: Editar dias e turnos
 

@@ -25,14 +25,6 @@ void main() {
       isNot(fakePersonalAddress()),
     );
     expect(
-      fakePersonalAddress(districtName: 'Asa Norte'),
-      isNot(fakePersonalAddress()),
-    );
-    expect(
-      fakePersonalAddress(districtToken: 'dist-asa-norte'),
-      isNot(fakePersonalAddress()),
-    );
-    expect(
       fakePersonalAddress(cityName: 'Goiânia'),
       isNot(fakePersonalAddress()),
     );
@@ -48,11 +40,8 @@ void main() {
   });
 
   group('toDraft', () {
-    test('carries the postal fields and drops the display-only ones', () {
-      final draft = fakePersonalAddress(
-        districtName: 'Asa Norte',
-        districtToken: 'dist-asa-norte',
-      ).toDraft();
+    test('carries the postal fields', () {
+      final draft = fakePersonalAddress().toDraft();
 
       expect(
         draft,

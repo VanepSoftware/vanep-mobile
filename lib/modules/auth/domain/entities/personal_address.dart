@@ -10,8 +10,6 @@ class PersonalAddress extends Equatable {
     this.complement,
     this.zipCode,
     this.neighborhood,
-    this.districtName,
-    this.districtToken,
     required this.cityName,
     required this.cityToken,
     required this.stateUf,
@@ -29,10 +27,6 @@ class PersonalAddress extends Equatable {
   final String? zipCode;
 
   final String? neighborhood;
-
-  final String? districtName;
-
-  final String? districtToken;
 
   final String cityName;
 
@@ -63,8 +57,6 @@ class PersonalAddress extends Equatable {
     complement,
     zipCode,
     neighborhood,
-    districtName,
-    districtToken,
     cityName,
     cityToken,
     stateUf,

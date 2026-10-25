@@ -8,7 +8,7 @@ Permite ao responsável definir a escola em que o dependente estuda, buscando es
 
 O editor de Escola SHALL ter um cabeçalho com o botão de voltar, o título "Escola" e o primeiro nome do dependente como legenda. SHALL mostrar um campo de busca, o mapa estático (definido em `dependent-pickup`) e uma lista de resultados. Digitar no campo SHALL buscar no autocomplete do Google Places limitado ao Brasil e a lugares do tipo escola, com o debounce e o tamanho mínimo que o app já usa. Cada resultado SHALL mostrar o texto principal do lugar como título e o texto secundário como legenda. A lista de resultados SHALL ser substituída a cada nova busca.
 
-Quando o dependente já tem escola, o editor SHALL abrir com essa escola marcada como selecionada antes de qualquer busca, e o rótulo do mapa SHALL mostrar o nome dela.
+Quando o dependente já tem escola, o editor SHALL abrir com essa escola marcada como selecionada antes de qualquer busca, e o rótulo do mapa SHALL mostrar o nome dela. Quando a escola tem endereço, o item SHALL mostrar embaixo do nome a rua com o número, o bairro e a cidade/UF, unidos por ` · `. Sem endereço, o item SHALL mostrar só o nome.
 
 #### Scenario: Buscar uma escola
 
@@ -19,6 +19,11 @@ Quando o dependente já tem escola, o editor SHALL abrir com essa escola marcada
 
 - **WHEN** o editor abre para um dependente cuja escola é "Colégio Horizonte"
 - **THEN** "Colégio Horizonte" aparece como o item selecionado
+
+#### Scenario: Escola já definida com endereço
+
+- **WHEN** a escola do dependente tem o endereço "SGAS 605, 1", bairro "Asa Sul", em Brasília/DF
+- **THEN** o item selecionado mostra "SGAS 605, 1 · Asa Sul · Brasília/DF" embaixo do nome
 
 #### Scenario: Places indisponível
 

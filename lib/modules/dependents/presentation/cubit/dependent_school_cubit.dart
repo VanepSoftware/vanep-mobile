@@ -7,6 +7,7 @@ import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor_status.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_school_state.dart';
 import 'package:vanep_mobile/modules/schools/domain/usecases/resolve_school.dart';
@@ -17,7 +18,8 @@ const schoolPlacePrimaryTypes = [
   'secondary_school',
 ];
 
-class DependentSchoolCubit extends Cubit<DependentSchoolState> {
+class DependentSchoolCubit extends Cubit<DependentSchoolState>
+    implements DependentEditorCubit<DependentSchoolState> {
   DependentSchoolCubit({
     required Dependent dependent,
     required this.autocomplete,
@@ -49,6 +51,7 @@ class DependentSchoolCubit extends Cubit<DependentSchoolState> {
     emit(state.copyWith(selectedPlace: suggestion, clearSaveFailures: true));
   }
 
+  @override
   Future<void> save() async {
     final place = state.selectedPlace;
     if (!state.canSave || place == null) return;

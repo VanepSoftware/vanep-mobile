@@ -13,6 +13,7 @@ class VanepMenuItem {
     this.warningSubtitle,
     this.trailingIcon = Icons.chevron_right,
     this.content,
+    this.semanticsLabel,
     this.onTap,
   });
 
@@ -23,6 +24,7 @@ class VanepMenuItem {
   final String? warningSubtitle;
   final IconData trailingIcon;
   final Widget? content;
+  final String? semanticsLabel;
   final VoidCallback? onTap;
 }
 
@@ -84,7 +86,7 @@ class VanepMenuTile extends StatelessWidget {
     final warningSubtitle = item.warningSubtitle;
     final content = item.content;
 
-    return InkWell(
+    final tile = InkWell(
       onTap: enabled ? item.onTap : null,
       borderRadius: BorderRadius.circular(16),
       child: Opacity(
@@ -134,6 +136,16 @@ class VanepMenuTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+    final semanticsLabel = item.semanticsLabel;
+    if (semanticsLabel == null) return tile;
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: semanticsLabel,
+      onTap: enabled ? item.onTap : null,
+      excludeSemantics: true,
+      child: tile,
     );
   }
 }
