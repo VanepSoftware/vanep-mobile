@@ -1,22 +1,31 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dio/dio.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/dependents/data/datasources/dependent_remote_datasource.dart';
 import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_repository.dart';
+import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_school_days_repository.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/create_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/set_default_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 
 import 'dependents_fixtures.dart';
 
+class MockDio extends Mock implements Dio {}
+
 class MockDependentRemoteDataSource extends Mock
     implements DependentRemoteDataSource {}
 
 class MockDependentRepository extends Mock implements DependentRepository {}
+
+class MockDependentSchoolDaysRepository extends Mock
+    implements DependentSchoolDaysRepository {}
 
 class MockFindMyDependents extends Mock implements FindMyDependents {}
 
@@ -29,10 +38,30 @@ class MockSetDefaultDependent extends Mock implements SetDefaultDependent {}
 class MockDependentsCubit extends MockCubit<DependentsState>
     implements DependentsCubit {}
 
+DioException dioFailure(int? status, {Object? body}) {
+  final requestOptions = RequestOptions(path: '/api/dependent');
+  return DioException(
+    requestOptions: requestOptions,
+    response: status == null
+        ? null
+        : Response<Object?>(
+            requestOptions: requestOptions,
+            statusCode: status,
+            data: body,
+          ),
+  );
+}
+
+const testDependentsEnvironment = Environment(
+  authBaseUrl: 'http://10.0.2.2:8080',
+  oauthClientId: 'vanep-mobile',
+);
+
 void registerDependentFallbackValues() {
   registerFallbackValue(
     const DependentChanges(draft: DependentDraft(), touchedFields: {}),
   );
   registerFallbackValue(const DependentDraft());
   registerFallbackValue(testHelenaDependent);
+  registerFallbackValue(const SchoolWeek.empty());
 }
