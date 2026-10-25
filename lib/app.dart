@@ -202,7 +202,11 @@ Future<void> openConversationChat(
     MaterialPageRoute<void>(
       builder: (_) => BlocProvider<ChatCubit>(
         create: (_) => getIt<ChatCubit>(param2: conversation)..start(),
-        child: ChatPage(viewerSide: viewerSide),
+        child: ChatPage(
+          viewerSide: viewerSide,
+          onDriverProfileTapped: (driverToken) =>
+              openDriverProfile(context, driverToken),
+        ),
       ),
     ),
   );
@@ -213,7 +217,11 @@ Future<void> openDriverChat(BuildContext context, String driverToken) {
     MaterialPageRoute<void>(
       builder: (_) => BlocProvider<ChatCubit>(
         create: (_) => getIt<ChatCubit>(param1: driverToken)..start(),
-        child: const ChatPage(viewerSide: ConversationParticipant.client),
+        child: ChatPage(
+          viewerSide: ConversationParticipant.client,
+          onDriverProfileTapped: (driverToken) =>
+              openDriverProfile(context, driverToken),
+        ),
       ),
     ),
   );

@@ -4,10 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
+import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_failure.dart';
+import 'package:vanep_mobile/modules/conversations/domain/usecases/find_conversation_negotiation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_conversation_messages.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/open_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/watch_conversation.dart';
+import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_negotiation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_realtime_event.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_state.dart';
 
@@ -17,6 +20,7 @@ class ChatCubit extends Cubit<ChatState> {
     required this.listConversationMessages,
     required this.sendConversationMessage,
     required this.watchConversation,
+    required this.findConversationNegotiation,
     this.driverToken,
     Conversation? conversation,
   }) : assert(driverToken != null || conversation != null),
@@ -26,6 +30,7 @@ class ChatCubit extends Cubit<ChatState> {
   final ListConversationMessages listConversationMessages;
   final SendConversationMessage sendConversationMessage;
   final WatchConversation watchConversation;
+  final FindConversationNegotiation findConversationNegotiation;
   final String? driverToken;
 
   StreamSubscription<ConversationRealtimeEvent>? realtimeSubscription;
@@ -35,8 +40,22 @@ class ChatCubit extends Cubit<ChatState> {
     final conversation =
         state.conversation ?? await openConversationWithDriver();
     if (conversation == null) return;
+    final negotiationLoad = findConversationNegotiation(conversation.token);
     await loadLatestMessages();
+    applyNegotiation(await negotiationLoad);
     if (state.isReady) watchConversationEvents(conversation);
+  }
+
+  void applyNegotiation(
+    Result<ConversationFailure, ConversationNegotiation> result,
+  ) {
+    if (isClosed || !state.isReady) return;
+    emit(
+      result.fold(
+        (failure) => state.copyWith(failure: failure),
+        (negotiation) => state.copyWith(negotiation: negotiation),
+      ),
+    );
   }
 
   Future<Conversation?> openConversationWithDriver() async {
@@ -116,9 +135,8 @@ class ChatCubit extends Cubit<ChatState> {
 
   void watchConversationEvents(Conversation conversation) {
     if (realtimeSubscription != null) return;
-    realtimeSubscription = watchConversation(
-      conversation.token,
-    ).listen(applyRealtimeEvent);
+    realtimeSubscription = watchConversation(conversation.token)
+        .listen(applyRealtimeEvent);
   }
 
   void applyRealtimeEvent(ConversationRealtimeEvent event) {

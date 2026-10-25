@@ -4,9 +4,12 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
 class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const VanepAppBar({this.title, this.actions, super.key});
+  const VanepAppBar({this.title, this.titleContent, this.actions, super.key})
+    : assert(title == null || titleContent == null);
 
   final String? title;
+
+  final Widget? titleContent;
 
   final List<Widget>? actions;
 
@@ -16,15 +19,19 @@ class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final title = this.title;
+    final titleContent = this.titleContent;
     return AppBar(
       backgroundColor: VanepColors.card,
       foregroundColor: VanepColors.textPrimary,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       scrolledUnderElevation: 0,
-      title: title == null
-          ? null
-          : Text(title, style: VanepTypography.cardTitle),
+      titleSpacing: titleContent == null ? null : 0,
+      title:
+          titleContent ??
+          (title == null
+              ? null
+              : Text(title, style: VanepTypography.cardTitle)),
       actions: actions,
     );
   }

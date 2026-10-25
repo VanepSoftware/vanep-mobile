@@ -3,48 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
+import 'package:vanep_mobile/core/formatters/calendar_labels.dart';
 import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposal.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposals.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/proposal_child.dart';
-
-String withoutAbbreviationDot(String text) => text.replaceAll('.', '');
-
-String capitalizeFirst(String text) {
-  if (text.isEmpty) return text;
-  return '${text[0].toUpperCase()}${text.substring(1)}';
-}
-
-String formatProposalWeekdays(AppLocalizations l10n, List<int> weekdays) {
-  final sorted = [...weekdays]..sort();
-  if (sorted.length == weekdaysMondayToFriday.length &&
-      sorted.indexed.every(
-        (entry) => entry.$2 == weekdaysMondayToFriday[entry.$1],
-      )) {
-    return l10n.clientProposalsMondayToFriday;
-  }
-  final weekdayFormat = DateFormat.E(l10n.localeName);
-  final referenceMonday = DateTime(2024, 1, 1);
-  final names = sorted.map(
-    (weekday) => withoutAbbreviationDot(
-      weekdayFormat.format(referenceMonday.add(Duration(days: weekday - 1))),
-    ),
-  );
-  return capitalizeFirst(names.join(', '));
-}
-
-String formatProposalStartDate(AppLocalizations l10n, DateTime startsOn) {
-  final day = startsOn.day == 1
-      ? l10n.clientProposalsFirstDayOfMonth
-      : '${startsOn.day}';
-  final month = withoutAbbreviationDot(
-    DateFormat.MMM(l10n.localeName).format(startsOn),
-  );
-  return l10n.clientProposalsStartingOn(
-    l10n.clientProposalsDayMonth(day, month),
-  );
-}
 
 String formatProposalRating(AppLocalizations l10n, double rating) {
   return NumberFormat('0.0', l10n.localeName).format(rating);
@@ -72,8 +36,8 @@ String formatProposalChildAndSchool(
 }
 
 String formatProposalSchedule(AppLocalizations l10n, PendingProposal proposal) {
-  final weekdays = formatProposalWeekdays(l10n, proposal.weekdays);
-  return '$weekdays · ${formatProposalStartDate(l10n, proposal.startsOn)}';
+  final weekdays = formatWeekdays(l10n, proposal.weekdays);
+  return '$weekdays · ${formatStartingOn(l10n, proposal.startsOn)}';
 }
 
 String formatProposalExpiry(

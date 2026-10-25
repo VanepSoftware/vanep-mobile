@@ -35,6 +35,11 @@ class VanepTypography {
     fontWeight: FontWeight.w600,
   );
 
+  static const TextStyle buttonCompact = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+  );
+
   static const TextStyle pageTitle = TextStyle(
     fontSize: 26,
     fontWeight: FontWeight.w800,

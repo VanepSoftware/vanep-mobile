@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposal.dart';

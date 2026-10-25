@@ -1330,5 +1330,124 @@
   "clientProposalsEmptyClosedTitle": "No closed proposals",
   "clientProposalsEmptyClosedMessage": "Accepted, declined and expired proposals show up here.",
   "clientProposalsLoadError": "We couldn't load your proposals.",
-  "clientProposalsRetry": "Try again"
+  "clientProposalsRetry": "Try again",
+  "conversationRoleDriver": "Driver",
+  "conversationRoleClient": "Guardian",
+  "conversationDriverProfileTooltip": "See the driver's profile",
+  "conversationAdjustmentTooltip": "Ask to adjust the proposal",
+  "conversationNegotiationBannerTitle": "Proposal v{version}",
+  "@conversationNegotiationBannerTitle": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationNegotiationBannerExpiry": "expires on {date}",
+  "@conversationNegotiationBannerExpiry": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationNegotiationBannerAction": "See",
+  "conversationNegotiationQuoteRequestTitle": "Quote request",
+  "conversationNegotiationChildWithAge": "{name}, {age}",
+  "@conversationNegotiationChildWithAge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationNegotiationWeekday": "{weekday, select, monday{Monday} tuesday{Tuesday} wednesday{Wednesday} thursday{Thursday} friday{Friday} saturday{Saturday} other{Sunday}}",
+  "@conversationNegotiationWeekday": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationNegotiationOneWayOn": "{days} one way only",
+  "@conversationNegotiationOneWayOn": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationNegotiationBoardingAt": "Pickup at {place}",
+  "@conversationNegotiationBoardingAt": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationNegotiationSentByYou": "You · {time}",
+  "@conversationNegotiationSentByYou": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationNegotiationProposalTitle": "Proposal · version {version}",
+  "@conversationNegotiationProposalTitle": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationNegotiationProposalCurrent": "Current",
+  "conversationNegotiationProposalReplaced": "Replaced",
+  "conversationNegotiationInstallments": "{count, plural, =1{1 installment} other{{count} installments}} · due on day {day}",
+  "@conversationNegotiationInstallments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationNegotiationPeriod": "{start} to {end}",
+  "@conversationNegotiationPeriod": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationNegotiationExpiresOn": "Expires on {date}",
+  "@conversationNegotiationExpiresOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationNegotiationSeeProposal": "See proposal",
+  "conversationNegotiationAccept": "Accept",
+  "conversationNegotiationAdjustmentTitle": "Adjustment request",
+  "conversationNegotiationSuggestedFee": "Suggested fee:",
+  "conversationNegotiationQuotedNote": "“{note}”",
+  "@conversationNegotiationQuotedNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationNegotiationPrivacyNotice": "The driver only sees the neighborhood and the first name until acceptance.",
+  "conversationNegotiationAgreementNotice": "Agreements made in the chat only count if included in a new version of the proposal."
 }

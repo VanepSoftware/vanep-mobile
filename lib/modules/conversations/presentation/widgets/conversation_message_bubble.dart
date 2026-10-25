@@ -29,8 +29,16 @@ class ConversationMessageBubble extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
           decoration: BoxDecoration(
-            color: sentByViewer ? VanepColors.action : VanepColors.surface,
-            borderRadius: BorderRadius.circular(16),
+            color: sentByViewer ? VanepColors.action : VanepColors.card,
+            border: sentByViewer
+                ? null
+                : Border.all(color: VanepColors.cardBorder),
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(16),
+              topRight: const Radius.circular(16),
+              bottomLeft: Radius.circular(sentByViewer ? 16 : 4),
+              bottomRight: Radius.circular(sentByViewer ? 4 : 16),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,

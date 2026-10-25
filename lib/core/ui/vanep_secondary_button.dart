@@ -11,6 +11,7 @@ class VanepSecondaryButton extends StatelessWidget {
     this.icon,
     this.leading,
     this.onBrand = false,
+    this.compact = false,
     super.key,
   }) : assert(icon == null || leading == null);
 
@@ -24,10 +25,12 @@ class VanepSecondaryButton extends StatelessWidget {
 
   final bool onBrand;
 
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 52,
+      height: compact ? 44 : 52,
       width: double.infinity,
       child: OutlinedButton(
         onPressed: isLoading ? null : onPressed,
@@ -42,6 +45,7 @@ class VanepSecondaryButton extends StatelessWidget {
           backgroundColor: onBrand
               ? VanepColors.onBrand.withValues(alpha: 0.14)
               : VanepColors.card,
+          padding: compact ? const EdgeInsets.symmetric(horizontal: 12) : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -65,7 +69,9 @@ class VanepSecondaryButton extends StatelessWidget {
                   Flexible(
                     child: Text(
                       label,
-                      style: VanepTypography.button,
+                      style: compact
+                          ? VanepTypography.buttonCompact
+                          : VanepTypography.button,
                       textAlign: TextAlign.center,
                     ),
                   ),

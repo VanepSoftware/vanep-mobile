@@ -60,4 +60,23 @@ void main() {
     final button = tester.widget<OutlinedButton>(find.byType(OutlinedButton));
     expect(button.onPressed, isNull);
   });
+
+  testWidgets('the compact variant is shorter with a smaller label', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepSecondaryButton(
+            label: 'Ver proposta',
+            compact: true,
+            onPressed: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.getSize(find.byType(OutlinedButton)).height, 44);
+    expect(tester.widget<Text>(find.text('Ver proposta')).style?.fontSize, 14);
+  });
 }

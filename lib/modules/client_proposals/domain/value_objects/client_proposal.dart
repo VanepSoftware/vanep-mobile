@@ -5,14 +5,6 @@ import 'package:vanep_mobile/core/domain/school_shift.dart';
 
 enum ProposalOutcome { accepted, declined, expired, cancelled }
 
-const weekdaysMondayToFriday = [
-  DateTime.monday,
-  DateTime.tuesday,
-  DateTime.wednesday,
-  DateTime.thursday,
-  DateTime.friday,
-];
-
 sealed class ChildProposalEntry extends Equatable {
   const ChildProposalEntry();
 

@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_failure.dart';
+import 'package:vanep_mobile/modules/conversations/domain/value_objects/chat_timeline.dart';
+import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_negotiation.dart';
 
 enum ChatStatus { initial, loading, ready, loadFailed }
 
@@ -27,6 +29,7 @@ class ChatState extends Equatable {
     this.status = ChatStatus.initial,
     this.conversation,
     this.messages = const [],
+    this.negotiation = ConversationNegotiation.none,
     this.hasMore = false,
     this.nextPage = 1,
     this.isLoadingOlder = false,
@@ -39,6 +42,8 @@ class ChatState extends Equatable {
   final Conversation? conversation;
 
   final List<ConversationMessage> messages;
+
+  final ConversationNegotiation negotiation;
 
   final bool hasMore;
 
@@ -57,12 +62,16 @@ class ChatState extends Equatable {
 
   bool get isReady => status == ChatStatus.ready;
 
-  bool get isEmpty => isReady && messages.isEmpty;
+  bool get isEmpty => isReady && messages.isEmpty && negotiation.isEmpty;
+
+  List<ChatTimelineEntry> get timeline =>
+      buildChatTimeline(messages: messages, negotiation: negotiation);
 
   ChatState copyWith({
     ChatStatus? status,
     Conversation? conversation,
     List<ConversationMessage>? messages,
+    ConversationNegotiation? negotiation,
     bool? hasMore,
     int? nextPage,
     bool? isLoadingOlder,
@@ -74,6 +83,7 @@ class ChatState extends Equatable {
       status: status ?? this.status,
       conversation: conversation ?? this.conversation,
       messages: messages ?? this.messages,
+      negotiation: negotiation ?? this.negotiation,
       hasMore: hasMore ?? this.hasMore,
       nextPage: nextPage ?? this.nextPage,
       isLoadingOlder: isLoadingOlder ?? this.isLoadingOlder,
@@ -87,6 +97,7 @@ class ChatState extends Equatable {
     status,
     conversation,
     messages,
+    negotiation,
     hasMore,
     nextPage,
     isLoadingOlder,

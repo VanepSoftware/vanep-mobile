@@ -20,6 +20,7 @@ class Environment {
     this.placesIosBundleId = '',
     this.clientHomeScenario = '',
     this.clientProposalsScenario = '',
+    this.conversationNegotiationScenario = '',
   });
 
   factory Environment.fromDotEnv(DotEnv env) {
@@ -36,6 +37,8 @@ class Environment {
       placesIosBundleId: env.maybeGet('GOOGLE_PLACES_IOS_BUNDLE_ID') ?? '',
       clientHomeScenario: env.maybeGet('CLIENT_HOME_SCENARIO') ?? '',
       clientProposalsScenario: env.maybeGet('CLIENT_PROPOSALS_SCENARIO') ?? '',
+      conversationNegotiationScenario:
+          env.maybeGet('CONVERSATION_NEGOTIATION_SCENARIO') ?? '',
     );
   }
 
@@ -60,6 +63,8 @@ class Environment {
   final String clientHomeScenario;
 
   final String clientProposalsScenario;
+
+  final String conversationNegotiationScenario;
 
   String get tokenEndpoint => '$authBaseUrl/oauth2/token';
 

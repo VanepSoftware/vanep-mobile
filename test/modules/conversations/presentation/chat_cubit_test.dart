@@ -6,6 +6,7 @@ import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_failure.dart';
+import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_negotiation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_realtime_event.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_state.dart';
@@ -37,6 +38,7 @@ void main() {
   late MockListConversationMessages listMessages;
   late MockSendConversationMessage sendMessage;
   late MockWatchConversation watchConversation;
+  late MockFindConversationNegotiation findNegotiation;
   late StreamController<ConversationRealtimeEvent> realtime;
   late bool realtimeCancelled;
 
@@ -45,6 +47,7 @@ void main() {
     listConversationMessages: listMessages,
     sendConversationMessage: sendMessage,
     watchConversation: watchConversation,
+    findConversationNegotiation: findNegotiation,
     driverToken: 'driver-1',
   );
 
@@ -53,6 +56,7 @@ void main() {
     listConversationMessages: listMessages,
     sendConversationMessage: sendMessage,
     watchConversation: watchConversation,
+    findConversationNegotiation: findNegotiation,
     conversation: testConversation,
   );
 
@@ -60,9 +64,8 @@ void main() {
     int page,
     Result<ConversationFailure, ConversationMessagePage> result,
   ) {
-    when(
-      () => listMessages(conversationToken: 'conversation-1', page: page),
-    ).thenAnswer((_) async => result);
+    when(() => listMessages(conversationToken: 'conversation-1', page: page))
+        .thenAnswer((_) async => result);
   }
 
   setUp(() {
@@ -70,13 +73,18 @@ void main() {
     listMessages = MockListConversationMessages();
     sendMessage = MockSendConversationMessage();
     watchConversation = MockWatchConversation();
+    findNegotiation = MockFindConversationNegotiation();
+    when(() => findNegotiation('conversation-1')).thenAnswer(
+      (_) async => const Ok<ConversationFailure, ConversationNegotiation>(
+        ConversationNegotiation.none,
+      ),
+    );
     realtimeCancelled = false;
     realtime = StreamController<ConversationRealtimeEvent>(
       onCancel: () => realtimeCancelled = true,
     );
-    when(
-      () => watchConversation('conversation-1'),
-    ).thenAnswer((_) => realtime.stream);
+    when(() => watchConversation('conversation-1'))
+        .thenAnswer((_) => realtime.stream);
     when(() => openConversation('driver-1')).thenAnswer(
       (_) async =>
           const Ok<ConversationFailure, Conversation>(testConversation),
@@ -100,6 +108,60 @@ void main() {
       await cubit.close();
     },
   );
+
+  test('the negotiation is loaded with the messages', () async {
+    when(() => findNegotiation('conversation-1')).thenAnswer(
+      (_) async =>
+          Ok<ConversationFailure, ConversationNegotiation>(fullNegotiation),
+    );
+    final cubit = clientChat();
+
+    await cubit.start();
+
+    expect(cubit.state.status, ChatStatus.ready);
+    expect(cubit.state.negotiation, fullNegotiation);
+    expect(cubit.state.failure, isNull);
+    await cubit.close();
+  });
+
+  test('a negotiation failure keeps the chat usable', () async {
+    when(() => findNegotiation('conversation-1')).thenAnswer(
+      (_) async => const Err<ConversationFailure, ConversationNegotiation>(
+        ConversationUnexpectedFailure(),
+      ),
+    );
+    final cubit = driverChat();
+
+    await cubit.start();
+
+    expect(cubit.state.status, ChatStatus.ready);
+    expect(cubit.state.messages, hasLength(2));
+    expect(cubit.state.negotiation, ConversationNegotiation.none);
+    expect(cubit.state.failure, const ConversationUnexpectedFailure());
+    await cubit.close();
+  });
+
+  test('the negotiation waits for the conversation to open', () async {
+    when(() => openConversation('driver-1')).thenAnswer(
+      (_) async => const Err<ConversationFailure, Conversation>(
+        ConversationNetworkFailure(),
+      ),
+    );
+    final cubit = clientChat();
+
+    await cubit.start();
+
+    verifyNever(() => findNegotiation(any()));
+
+    when(() => openConversation('driver-1')).thenAnswer(
+      (_) async =>
+          const Ok<ConversationFailure, Conversation>(testConversation),
+    );
+    await cubit.start();
+
+    verify(() => findNegotiation('conversation-1')).called(1);
+    await cubit.close();
+  });
 
   test('the driver route loads without opening', () async {
     final cubit = driverChat();
@@ -148,9 +210,8 @@ void main() {
 
     await cubit.loadOlderMessages();
 
-    verify(
-      () => listMessages(conversationToken: 'conversation-1', page: 1),
-    ).called(1);
+    verify(() => listMessages(conversationToken: 'conversation-1', page: 1))
+        .called(1);
     await cubit.close();
   });
 
@@ -174,13 +235,12 @@ void main() {
   test(
     'a failed send keeps the conversation and reports the failure',
     () async {
-      when(
-        () => sendMessage(conversationToken: 'conversation-1', body: 'Oi'),
-      ).thenAnswer(
-        (_) async => const Err<ConversationFailure, ConversationMessage>(
-          ConversationNetworkFailure(),
-        ),
-      );
+      when(() => sendMessage(conversationToken: 'conversation-1', body: 'Oi'))
+          .thenAnswer(
+            (_) async => const Err<ConversationFailure, ConversationMessage>(
+              ConversationNetworkFailure(),
+            ),
+          );
       final cubit = driverChat();
       await cubit.start();
 

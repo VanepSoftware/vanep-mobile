@@ -10,6 +10,7 @@ class VanepPrimaryButton extends StatelessWidget {
     this.isLoading = false,
     this.onBrand = false,
     this.trailingIcon,
+    this.compact = false,
     super.key,
   });
 
@@ -19,13 +20,15 @@ class VanepPrimaryButton extends StatelessWidget {
   final bool onBrand;
   final IconData? trailingIcon;
 
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     final background = onBrand ? VanepColors.card : VanepColors.action;
     final foreground = onBrand ? VanepColors.brandNavy : VanepColors.card;
 
     return SizedBox(
-      height: 52,
+      height: compact ? 44 : 52,
       width: double.infinity,
       child: FilledButton(
         onPressed: isLoading ? null : onPressed,
@@ -37,6 +40,7 @@ class VanepPrimaryButton extends StatelessWidget {
           ),
           disabledForegroundColor: foreground,
           elevation: 0,
+          padding: compact ? const EdgeInsets.symmetric(horizontal: 12) : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -56,7 +60,9 @@ class VanepPrimaryButton extends StatelessWidget {
                   Flexible(
                     child: Text(
                       label,
-                      style: VanepTypography.button,
+                      style: compact
+                          ? VanepTypography.buttonCompact
+                          : VanepTypography.button,
                       textAlign: TextAlign.center,
                     ),
                   ),
