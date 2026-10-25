@@ -460,5 +460,7 @@
   "conversationsInboxTitle": "Mensagens",
   "conversationsInboxEmpty": "Nenhuma conversa ainda. Quando um cliente escrever, ela aparece aqui.",
   "conversationsInboxLoadError": "Não foi possível carregar suas conversas.",
-  "conversationsInboxEmptyClient": "Nenhuma conversa ainda. Para falar com um motorista, abra o perfil dele em Vans e toque em “Conversar com o motorista”."
+  "conversationsInboxEmptyClient": "Nenhuma conversa ainda. Para falar com um motorista, abra o perfil dele em Vans e toque em “Conversar com o motorista”.",
+  "mapPlaceholderSemantics": "Mapa ilustrativo",
+  "mapAdjustAction": "Ajustar no mapa"
 }

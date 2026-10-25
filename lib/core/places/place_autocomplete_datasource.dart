@@ -56,8 +56,9 @@ class PlaceAutocompleteDataSource {
 
   Future<Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>> findSuggestions(
     String input,
-    String sessionToken,
-  ) async {
+    String sessionToken, {
+    List<String> includedPrimaryTypes = const [],
+  }) async {
     try {
       final response = await dio.post<Map<String, dynamic>>(
         environment.placesAutocompleteEndpoint,
@@ -65,6 +66,8 @@ class PlaceAutocompleteDataSource {
           'input': input,
           'sessionToken': sessionToken,
           'includedRegionCodes': [placesRegionCode],
+          if (includedPrimaryTypes.isNotEmpty)
+            'includedPrimaryTypes': includedPrimaryTypes,
         },
         options: Options(
           headers: {

@@ -27,6 +27,19 @@ abstract class DependentAddressDto
 }
 
 @freezed
+abstract class DependentSchoolDto
+    with _$DependentSchoolDto
+    implements DependentSchool {
+  const factory DependentSchoolDto({
+    @Default('') String token,
+    @Default('') String name,
+  }) = _DependentSchoolDto;
+
+  factory DependentSchoolDto.fromJson(Map<String, Object?> json) =>
+      _$DependentSchoolDtoFromJson(json);
+}
+
+@freezed
 abstract class DependentDto with _$DependentDto implements Dependent {
   const factory DependentDto({
     @Default('') String token,
@@ -35,6 +48,8 @@ abstract class DependentDto with _$DependentDto implements Dependent {
     @JsonKey(fromJson: Gender.fromApi, toJson: Gender.toApi) Gender? gender,
     @Default(false) bool isDefault,
     DependentAddressDto? address,
+    DependentSchoolDto? school,
+    String? document,
   }) = _DependentDto;
 
   factory DependentDto.fromJson(Map<String, Object?> json) =>

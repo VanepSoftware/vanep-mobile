@@ -609,5 +609,7 @@
   "conversationsInboxTitle": "Messages",
   "conversationsInboxEmpty": "No conversations yet. When a client writes to you, it shows up here.",
   "conversationsInboxLoadError": "Could not load your conversations.",
-  "conversationsInboxEmptyClient": "No conversations yet. To talk to a driver, open their profile in Vans and tap “Chat with the driver”."
+  "conversationsInboxEmptyClient": "No conversations yet. To talk to a driver, open their profile in Vans and tap “Chat with the driver”.",
+  "mapPlaceholderSemantics": "Illustrative map",
+  "mapAdjustAction": "Adjust on map"
 }

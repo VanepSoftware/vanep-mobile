@@ -32,7 +32,7 @@ As mensagens de validação SHALL aparecer embaixo do campo depois que o respons
 
 ### Requirement: Salvar os dados pessoais
 
-Na edição, "Salvar" SHALL enviar `PATCH /api/dependent/{token}` só com os campos que mudaram: `name`, `birthDate` (ISO `yyyy-mm-dd`, ou `null` quando foi apagada), `gender` (ou `null` para Prefiro não informar), `document` (os 11 dígitos do CPF, ou `null` quando foi apagado). "Salvar" SHALL ficar desabilitado enquanto nada mudou. Na criação, o mesmo formulário SHALL enviar `POST /api/dependent` com os campos preenchidos. Com sucesso, o editor SHALL devolver o dependente salvo para quem abriu. Com falha, SHALL continuar aberto com o que foi digitado e mostrar a mensagem do back, ou uma genérica quando não há.
+Na edição, "Salvar" SHALL enviar `PATCH /api/dependent/{token}` só com os campos que mudaram: `name`, `birthDate` (ISO `yyyy-mm-dd`, ou `null` quando foi apagada), `gender` (ou `null` para Prefiro não informar), `document` (os 11 dígitos do CPF, sem máscara, ou `null` quando foi apagado). "Salvar" SHALL ficar desabilitado enquanto nada mudou. Na criação, o mesmo formulário SHALL enviar `POST /api/dependent` com os campos preenchidos. Com sucesso, o editor SHALL devolver o dependente salvo para quem abriu. Com falha, SHALL continuar aberto com o que foi digitado e mostrar a mensagem do back, ou uma genérica quando não há.
 
 #### Scenario: Mudar só o nome
 
@@ -43,6 +43,12 @@ Na edição, "Salvar" SHALL enviar `PATCH /api/dependent/{token}` só com os cam
 
 - **WHEN** o responsável apaga um CPF que estava salvo e salva
 - **THEN** o body do `PATCH` tem `"document": null`
+
+#### Scenario: CPF já usado por outro dependente
+
+- **WHEN** o back responde HTTP 409 porque o CPF já pertence a outro dependente
+- **THEN** o editor continua aberto com o que foi digitado
+- **AND** mostra a mensagem do back, "Já existe um dependente cadastrado com este documento."
 
 #### Scenario: Gênero não informado
 

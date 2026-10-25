@@ -62,8 +62,10 @@ Os dois últimos são os padrões de cabeçalho e de seção que as outras telas
 | Necessidade | Situação no back | Efeito aqui |
 |---|---|---|
 | `GET`/`PUT /api/dependent/{token}/school-days`, sem `shift` | PR 3 da `service-request-proposal`, em andamento | O teste manual de Dias e turnos precisa do back local nessa branch |
-| `GET /api/clients/me/contract-readiness` | PR 7 da `service-request-proposal`, não começou | Sem ele, os sinais de prontidão simplesmente não aparecem; as fases anteriores usam stubs (R21) |
-| `POST /api/schools/resolve`, `schoolToken` e `school` no dependente | Já na `main` | Nenhum |
+| `GET /api/clients/me/contract-readiness` | Implementado na branch do PR 3 da `service-request-proposal`, ainda sem commit | Sem ele, os sinais de prontidão simplesmente não aparecem; o QA manual da prontidão usa o back local nessa branch |
+| `POST /api/schools/resolve`, `schoolToken` e `school` no dependente | Já na `main`; a branch do PR 3 passa a aceitar também `primary_school` e `secondary_school` | O filtro do Places e a validação do back usam os mesmos tipos |
+| `document` validado como CPF, guardado só com dígitos, CPF repetido em outro dependente → 409 | Branch do PR 3, ainda sem commit | O app valida o CPF antes de enviar e mostra a mensagem do back no 409 |
+| Remoção bloqueada com pedido de orçamento aberto (422 `dependent.open_negotiation`) | Na spec do back, ainda sem código (vem com as solicitações) | O app mostra a mensagem do back no 422 |
 | Trava por contrato em escola, grade e remoção ("guardas no dependente contratado") | Fora da `service-request-proposal`; listada lá como fase 5 | Os artboards 5 e 7 e a regra de trava ficam **fora desta change** |
 | Coordenadas em `address` e `school` | Não planejado | O mapa continua um placeholder estático com `TODO` |
 
