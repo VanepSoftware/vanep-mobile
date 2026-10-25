@@ -65,7 +65,6 @@ void main() {
     test('starts blank and can save', () {
       final cubit = buildCubit();
 
-      expect(cubit.state.isCreating, isTrue);
       expect(cubit.state.draft, const DependentDraft());
       expect(cubit.state.canSave, isTrue);
     });

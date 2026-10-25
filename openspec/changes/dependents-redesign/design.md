@@ -11,7 +11,7 @@ Estado atual de `lib/modules/dependents/`:
 
 Fatos do back em que este design se apoia (vanep-api-java, branch `feat/service-request-proposal-school-days`):
 
-- `DependentResponseDTO` devolve `school: {token, name}` e `document`. `DependentUpdateDTO` aceita `schoolToken` e `document` como `JsonNullable`.
+- `DependentResponseDTO` devolve `school: {token, name, address}` e `document`. O `address` da escola tem o mesmo formato do endereço do dependente e vem nulo quando a escola não tem endereço (o resolve só grava endereço quando o lugar do Google tem rua). `DependentUpdateDTO` aceita `schoolToken` e `document` como `JsonNullable`.
 - `document` agora é validado como CPF (`@Cpf`, com ou sem máscara, 400 `dependent.document.invalid`) e guardado só com dígitos; `null` no `PATCH` apaga. Um CPF já usado por outro dependente ativo dá 409 com o `detail` "Já existe um dependente cadastrado com este documento.".
 - `DELETE /api/dependent/{token}` vai devolver 422 `dependent.open_negotiation` quando o dependente estiver num pedido de orçamento aberto. Está na spec do back; o código vem com as solicitações.
 - `GET`/`PUT /api/dependent/{token}/school-days` recebem e devolvem `[{weekday: "MONDAY", schoolShift: "MORNING"}]`, com `SchoolShift` = `MORNING | AFTERNOON | NIGHT | FULLTIME`. O body do `PUT` é `{"days": [...]}`.

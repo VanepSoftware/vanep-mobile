@@ -42,6 +42,7 @@ class TestDependentSchool implements DependentSchool {
   const TestDependentSchool({
     this.token = 'school-delta',
     this.name = 'Colégio Delta',
+    this.address,
   });
 
   @override
@@ -49,6 +50,9 @@ class TestDependentSchool implements DependentSchool {
 
   @override
   final String name;
+
+  @override
+  final DependentAddress? address;
 }
 
 class TestDependentAddress implements DependentAddress {

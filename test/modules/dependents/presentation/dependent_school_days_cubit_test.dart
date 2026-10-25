@@ -66,11 +66,34 @@ void main() {
     );
 
     blocTest<DependentSchoolDaysCubit, DependentSchoolDaysState>(
+      'an empty week starts from Monday to Friday in the morning',
+      setUp: () {
+        when(() => findSchoolDays(any()))
+            .thenAnswer((_) async => const Ok(SchoolWeek.empty()));
+      },
+      build: buildCubit,
+      act: (cubit) => cubit.load(),
+      expect: () => [
+        const DependentSchoolDaysState(),
+        editing(const SchoolWeek.empty(), suggestedSchoolWeek),
+      ],
+      verify: (cubit) {
+        expect(cubit.state.week.dayCount, 5);
+        expect(cubit.state.week.isOn(Weekday.saturday), isFalse);
+        expect(
+          cubit.state.week.days.map((day) => day.shift).toSet(),
+          {SchoolShift.morning},
+        );
+        expect(cubit.state.canSave, isTrue);
+      },
+    );
+
+    blocTest<DependentSchoolDaysCubit, DependentSchoolDaysState>(
       'a failure leaves nothing to edit and can be retried',
       setUp: () {
         final results = <Result<DependentFailure, SchoolWeek>>[
           const Err(DependentNetworkFailure()),
-          const Ok(SchoolWeek.empty()),
+          Ok(mondayMorning),
         ];
         when(() => findSchoolDays(any()))
             .thenAnswer((_) async => results.removeAt(0));
@@ -83,7 +106,7 @@ void main() {
       },
       verify: (cubit) {
         expect(cubit.state.status, DependentSchoolDaysStatus.editing);
-        expect(cubit.state.week, const SchoolWeek.empty());
+        expect(cubit.state.week, mondayMorning);
       },
     );
   });

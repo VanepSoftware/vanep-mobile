@@ -7,11 +7,13 @@ import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failur
 import 'package:vanep_mobile/modules/dependents/domain/usecases/create_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor_status.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_field_error.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_personal_data_state.dart';
 
-class DependentPersonalDataCubit extends Cubit<DependentPersonalDataState> {
+class DependentPersonalDataCubit extends Cubit<DependentPersonalDataState>
+    implements DependentEditorCubit<DependentPersonalDataState> {
   DependentPersonalDataCubit({
     required this.createDependent,
     required this.updateDependent,
@@ -62,6 +64,7 @@ class DependentPersonalDataCubit extends Cubit<DependentPersonalDataState> {
     );
   }
 
+  @override
   Future<void> save() async {
     if (!state.canSave) return;
 

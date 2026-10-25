@@ -54,8 +54,8 @@ void main() {
       'dep-helena',
     );
     expect(
-      getIt<DependentPersonalDataCubit>(param1: null).state.isCreating,
-      isTrue,
+      getIt<DependentPersonalDataCubit>(param1: null).state.snapshot,
+      isNull,
     );
     expect(
       getIt<DependentPersonalDataCubit>(param1: testHelenaDependent)

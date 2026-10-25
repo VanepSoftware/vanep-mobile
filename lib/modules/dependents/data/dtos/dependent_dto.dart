@@ -33,6 +33,7 @@ abstract class DependentSchoolDto
   const factory DependentSchoolDto({
     @Default('') String token,
     @Default('') String name,
+    DependentAddressDto? address,
   }) = _DependentSchoolDto;
 
   factory DependentSchoolDto.fromJson(Map<String, Object?> json) =>

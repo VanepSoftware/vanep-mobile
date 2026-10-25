@@ -4,10 +4,12 @@ import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor_status.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_field_error.dart';
 
-class DependentPersonalDataState extends Equatable {
+class DependentPersonalDataState extends Equatable
+    implements DependentEditorState {
   const DependentPersonalDataState({
     this.snapshot,
     this.draft = const DependentDraft(),
@@ -36,9 +38,11 @@ class DependentPersonalDataState extends Equatable {
 
   final Dependent? saved;
 
-  bool get isCreating => snapshot == null;
-
+  @override
   bool get isSaving => status == DependentEditorStatus.saving;
+
+  @override
+  bool get isSaved => status == DependentEditorStatus.saved;
 
   bool get hasChanges {
     final snapshot = this.snapshot;
@@ -49,6 +53,7 @@ class DependentPersonalDataState extends Equatable {
     ).isEmpty;
   }
 
+  @override
   bool get canSave => !isSaving && hasChanges;
 
   DependentFieldError? errorOf(DependentField field) => fieldErrors[field];

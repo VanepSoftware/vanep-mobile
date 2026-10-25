@@ -25,6 +25,7 @@ class VanepTextField extends StatefulWidget {
     this.isLoading = false,
     this.loadingLabel,
     this.labelTrailing,
+    this.suffix,
     this.onTap,
     this.onSubmitted,
     super.key,
@@ -48,6 +49,7 @@ class VanepTextField extends StatefulWidget {
   final bool isLoading;
   final String? loadingLabel;
   final Widget? labelTrailing;
+  final Widget? suffix;
   final VoidCallback? onTap;
   final ValueChanged<String>? onSubmitted;
 
@@ -101,7 +103,7 @@ class _VanepTextFieldState extends State<VanepTextField> {
                   )
                 : (widget.isLoading
                       ? VanepFieldSpinner(label: widget.loadingLabel)
-                      : null),
+                      : widget.suffix),
           ),
         ),
       ],

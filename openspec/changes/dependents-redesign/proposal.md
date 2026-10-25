@@ -6,7 +6,7 @@ O redesenho no canvas "Vanep — Início, Vans e Propostas" (página Responsáve
 
 ## What Changes
 
-- **Lista nova (artboard 1).** Uma linha por dependente com a inicial no avatar, o nome, `· Padrão` no dependente padrão e um subtítulo com a idade e o nome da escola. Um dependente que não está pronto para contrato mostra uma linha âmbar "Cadastro incompleto". O botão `+` do cabeçalho e o botão "Adicionar dependente" embaixo da lista abrem o wizard de criação.
+- **Lista nova (artboard 1).** Cabeçalho "Dependentes" com o subtítulo "Gerencie quem viaja na van". Uma linha por dependente com a inicial no avatar, o nome, `· Padrão` no dependente padrão e um subtítulo com a idade e o nome da escola. Um dependente que não está pronto para contrato mostra só o nome e uma linha âmbar "Cadastro incompleto" no lugar do subtítulo. O botão `+` do cabeçalho e o botão "Adicionar dependente" embaixo da lista abrem o wizard de criação.
 - **Detalhe central novo (artboards 2 e 3).** Um card de cabeçalho (inicial, nome completo, idade, marcador de padrão), um card "Cadastro incompleto" com o checklist do que falta (`n de 4`) e o botão "Completar cadastro". Depois, três grupos: **Escola e rotina** (Escola, Dias e turnos com uma barra de sete dias embaixo do título, Embarque), **Van e contrato** (Van, Contrato) e **Cadastro** (Dados pessoais). Um item que falta mostra "Não informado" em âmbar. O detalhe também oferece "Definir como padrão" e "Remover dependente".
 - **Um editor por assunto, cada um com o próprio "Salvar":**
   - **Escola (artboard 4):** busca por nome no Google Places, restrita a escolas. O lugar escolhido vira uma escola da Vanep por `POST /api/schools/resolve`, e o `schoolToken` dela é salvo.
