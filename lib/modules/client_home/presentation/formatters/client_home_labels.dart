@@ -4,17 +4,6 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
 
-String initialsOf(String name) {
-  final words = name
-      .trim()
-      .split(RegExp(r'\s+'))
-      .where((word) => word.isNotEmpty)
-      .toList();
-  if (words.isEmpty) return '';
-  if (words.length == 1) return words.single[0].toUpperCase();
-  return '${words.first[0]}${words.last[0]}'.toUpperCase();
-}
-
 String joinNames(AppLocalizations l10n, List<String> names) {
   if (names.isEmpty) return '';
   if (names.length == 1) return names.single;
@@ -73,21 +62,6 @@ String formatMonthName(AppLocalizations l10n, DateTime date) {
   return DateFormat.MMMM(l10n.localeName).format(date);
 }
 
-String formatMoney(AppLocalizations l10n, int cents) {
-  final format = NumberFormat.currency(
-    locale: l10n.localeName,
-    symbol: r'R$',
-    decimalDigits: cents % 100 == 0 ? 0 : 2,
-  );
-  return format.format(cents / 100);
-}
-
-int calendarDaysBetween(DateTime from, DateTime to) {
-  final fromDay = DateTime.utc(from.year, from.month, from.day);
-  final toDay = DateTime.utc(to.year, to.month, to.day);
-  return toDay.difference(fromDay).inDays;
-}
-
 String formatHeadline(
   AppLocalizations l10n,
   HomeHeadline headline,
@@ -101,13 +75,6 @@ String formatHeadline(
     HomeHeadline.goodWeekend => l10n.clientHomeGoodWeekend,
     HomeHeadline.vanArriving => l10n.clientHomeVanArriving,
     HomeHeadline.allGood => l10n.clientHomeAllGood,
-  };
-}
-
-String formatShift(AppLocalizations l10n, SchoolShift shift) {
-  return switch (shift) {
-    SchoolShift.morning => l10n.clientHomeShiftMorning,
-    SchoolShift.afternoon => l10n.clientHomeShiftAfternoon,
   };
 }
 

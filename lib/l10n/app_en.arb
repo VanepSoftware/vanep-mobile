@@ -1162,5 +1162,173 @@
         "type": "int"
       }
     }
-  }
+  },
+  "clientProposalsTitle": "Proposals",
+  "clientProposalsSearchVans": "Search more vans",
+  "clientProposalsAllChildren": "All children",
+  "clientProposalsFilterByChild": "Filter by child: {name}",
+  "@clientProposalsFilterByChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsFilterSheetTitle": "See proposals of",
+  "clientProposalsTabOpen": "Open",
+  "clientProposalsTabClosed": "Closed",
+  "clientProposalsOpenRequests": "{count} of {limit} open requests",
+  "@clientProposalsOpenRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsPendingTitle": "Pending",
+  "clientProposalsAwaitingTitle": "Awaiting reply",
+  "clientProposalsNewOnVanep": "{gender, select, female{New on Vanep} other{New on Vanep}}",
+  "@clientProposalsNewOnVanep": {
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsForChild": "For {name}",
+  "@clientProposalsForChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsSchoolAndShift": "{school}, {shift}",
+  "@clientProposalsSchoolAndShift": {
+    "placeholders": {
+      "school": {
+        "type": "String"
+      },
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsMondayToFriday": "Mon to Fri",
+  "clientProposalsStartingOn": "from {date}",
+  "@clientProposalsStartingOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsDayMonth": "{month} {day}",
+  "@clientProposalsDayMonth": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsFirstDayOfMonth": "1",
+  "clientProposalsPerMonth": "/mo",
+  "clientProposalsPreviousFee": "before {amount}",
+  "@clientProposalsPreviousFee": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsExpiresIn": "{count, plural, =0{Expires today} =1{Expires tomorrow} other{Expires in {count} days}}",
+  "@clientProposalsExpiresIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsChat": "Chat",
+  "clientProposalsSeeProposal": "See proposal",
+  "clientProposalsSentSummary": "For {name} · {sent}",
+  "@clientProposalsSentSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "sent": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsSentDaysAgo": "{count, plural, =0{sent today} =1{sent yesterday} other{sent {count} days ago}}",
+  "@clientProposalsSentDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsHoursLeft": "{count, plural, =0{Less than 1h left} =1{1h left} other{{count}h left}}",
+  "@clientProposalsHoursLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsCancelRequest": "Cancel request",
+  "clientProposalsSeeRequest": "See request",
+  "clientProposalsClosedSummary": "For {name} · {amount}/mo",
+  "@clientProposalsClosedSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsOutcomeAccepted": "Accepted",
+  "clientProposalsOutcomeDeclined": "Declined",
+  "clientProposalsOutcomeExpired": "Expired",
+  "clientProposalsOutcomeCancelled": "Cancelled",
+  "clientProposalsOpenCount": "{count, plural, =0{None open} other{{count} open}}",
+  "@clientProposalsOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsToAnswer": "{count} to answer",
+  "@clientProposalsToAnswer": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsAwaitingCount": "{count} awaiting",
+  "@clientProposalsAwaitingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsEmptyOpenTitle": "No open proposals",
+  "clientProposalsEmptyOpenMessage": "When a driver answers your request, the proposal shows up here.",
+  "clientProposalsEmptyClosedTitle": "No closed proposals",
+  "clientProposalsEmptyClosedMessage": "Accepted, declined and expired proposals show up here.",
+  "clientProposalsLoadError": "We couldn't load your proposals.",
+  "clientProposalsRetry": "Try again"
 }

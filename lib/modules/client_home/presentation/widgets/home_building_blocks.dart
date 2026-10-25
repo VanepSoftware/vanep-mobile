@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
-import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
 
 const homeBlockSpacing = 24.0;
 
@@ -28,96 +26,6 @@ Future<void> openUnavailableFeature(BuildContext context, String title) {
     title: title,
     message: AppLocalizations.of(context)!.comingSoon,
   );
-}
-
-class AvatarTone {
-  const AvatarTone(this.background, this.foreground);
-
-  final Color background;
-
-  final Color foreground;
-}
-
-const avatarTones = [
-  AvatarTone(VanepColors.actionSurface, VanepColors.action),
-  AvatarTone(VanepColors.warningSurface, VanepColors.warning),
-  AvatarTone(Color(0x1A1E8E5A), VanepColors.success),
-];
-
-AvatarTone avatarToneFor(String name) {
-  final seed = name.codeUnits.fold<int>(0, (sum, unit) => sum + unit);
-  return avatarTones[seed % avatarTones.length];
-}
-
-class PersonAvatar extends StatelessWidget {
-  const PersonAvatar({
-    required this.name,
-    this.size = 40,
-    this.dimmed = false,
-    super.key,
-  });
-
-  final String name;
-  final double size;
-  final bool dimmed;
-
-  @override
-  Widget build(BuildContext context) {
-    final tone = avatarToneFor(name);
-    return Opacity(
-      opacity: dimmed ? 0.4 : 1,
-      child: VanepAvatar(
-        size: size,
-        initials: initialsOf(name),
-        backgroundColor: tone.background,
-        foregroundColor: tone.foreground,
-      ),
-    );
-  }
-}
-
-class AvatarStack extends StatelessWidget {
-  const AvatarStack({
-    required this.names,
-    this.dimmedNames = const {},
-    this.size = 36,
-    super.key,
-  });
-
-  final List<String> names;
-  final Set<String> dimmedNames;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final step = size * 0.62;
-    return SizedBox(
-      width: size + step * (names.length - 1),
-      height: size,
-      child: Stack(
-        children: [
-          for (final (index, name) in names.indexed)
-            Positioned(
-              left: step * index,
-              child: DecoratedBox(
-                decoration: const BoxDecoration(
-                  color: VanepColors.card,
-                  shape: BoxShape.circle,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(1.5),
-                  child: PersonAvatar(
-                    name: name,
-                    size: size - 3,
-                    dimmed: dimmedNames.contains(name),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
 }
 
 class HomeSectionHeader extends StatelessWidget {

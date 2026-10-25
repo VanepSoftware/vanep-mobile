@@ -25,6 +25,7 @@ class ClientHomeTab extends StatelessWidget {
     required this.onFindVanTapped,
     required this.onAddAddressTapped,
     required this.onAddDependentTapped,
+    required this.onProposalsTapped,
     super.key,
   });
 
@@ -34,6 +35,7 @@ class ClientHomeTab extends StatelessWidget {
   final VoidCallback onFindVanTapped;
   final VoidCallback onAddAddressTapped;
   final VoidCallback onAddDependentTapped;
+  final VoidCallback onProposalsTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +64,7 @@ class ClientHomeTab extends StatelessWidget {
                     onFindVanTapped: onFindVanTapped,
                     onAddAddressTapped: onAddAddressTapped,
                     onAddDependentTapped: onAddDependentTapped,
+                    onProposalsTapped: onProposalsTapped,
                   )
                 else if (state.hasLoadFailed)
                   VanepErrorView(
@@ -112,6 +115,7 @@ class ClientHomeBlocks extends StatelessWidget {
     required this.onFindVanTapped,
     required this.onAddAddressTapped,
     required this.onAddDependentTapped,
+    required this.onProposalsTapped,
     super.key,
   });
 
@@ -119,6 +123,7 @@ class ClientHomeBlocks extends StatelessWidget {
   final VoidCallback onFindVanTapped;
   final VoidCallback onAddAddressTapped;
   final VoidCallback onAddDependentTapped;
+  final VoidCallback onProposalsTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -132,17 +137,23 @@ class ClientHomeBlocks extends StatelessWidget {
           onFindVanTapped: onFindVanTapped,
           onAddAddressTapped: onAddAddressTapped,
           onAddDependentTapped: onAddDependentTapped,
+          onProposalsTapped: onProposalsTapped,
         ),
         if (!home.needsYou.isEmpty) ...[
           const SizedBox(height: homeBlockSpacing),
-          NeedsYouSection(summary: home.needsYou, now: home.date),
+          NeedsYouSection(
+            summary: home.needsYou,
+            now: home.date,
+            onProposalsTapped: onProposalsTapped,
+          ),
         ],
         const SizedBox(height: homeBlockSpacing),
         HomeSectionHeader(title: l10n.clientHomeShortcutsTitle),
         HomeShortcutsGrid(
           enabledShortcuts: home.enabledShortcuts,
-          onShortcutTapped: (shortcut) =>
-              openUnavailableFeature(context, formatShortcut(l10n, shortcut)),
+          onShortcutTapped: (shortcut) => shortcut == HomeShortcut.proposals
+              ? onProposalsTapped()
+              : openUnavailableFeature(context, formatShortcut(l10n, shortcut)),
         ),
         if (home.today is FirstStepsSection) ...[
           const SizedBox(height: homeBlockSpacing),

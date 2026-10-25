@@ -27,6 +27,7 @@ class HomeCallbacks {
   int findVan = 0;
   int addAddress = 0;
   int addDependent = 0;
+  int proposals = 0;
 }
 
 Widget clientHomeHarness(ClientHomeCubit cubit, HomeCallbacks callbacks) {
@@ -41,6 +42,7 @@ Widget clientHomeHarness(ClientHomeCubit cubit, HomeCallbacks callbacks) {
           onFindVanTapped: () => callbacks.findVan++,
           onAddAddressTapped: () => callbacks.addAddress++,
           onAddDependentTapped: () => callbacks.addDependent++,
+          onProposalsTapped: () => callbacks.proposals++,
         ),
       ),
     ),
@@ -190,6 +192,11 @@ void main() {
 
     await tester.tap(find.text('Buscar vans'));
     expect(callbacks.findVan, 1);
+
+    await tester.tap(find.text('Ver propostas'));
+    await tester.tap(find.text('Ver proposta'));
+    await tester.tap(find.text('Pedido para Rita expirou'));
+    expect(callbacks.proposals, 2);
   });
 
   testWidgets('blocks keep the order Today, Needs you, Shortcuts', (
@@ -403,12 +410,27 @@ void main() {
     testWidgets('an enabled shortcut without screen opens coming soon', (
       tester,
     ) async {
+      await pumpReady(
+        tester,
+        testClientHome(enabledShortcuts: HomeShortcut.values.toSet()),
+      );
+
+      await tester.tap(find.text('Pagamentos'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(VanepComingSoonPage), findsOneWidget);
+    });
+
+    testWidgets('the proposals shortcut opens the proposals list', (
+      tester,
+    ) async {
       await pumpReady(tester, testClientHome());
 
       await tester.tap(find.text('Propostas'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(VanepComingSoonPage), findsOneWidget);
+      expect(callbacks.proposals, 1);
+      expect(find.byType(VanepComingSoonPage), findsNothing);
     });
   });
 }

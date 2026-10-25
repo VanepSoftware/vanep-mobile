@@ -85,21 +85,6 @@ String dependentCatalogFailureLabel(
   };
 }
 
-int? findAgeInYears(String? birthDate, {DateTime? today}) {
-  final parsed = parseIsoCalendarDate(birthDate);
-  if (parsed == null) return null;
-  final reference = today ?? DateTime.now();
-  final todayDate = DateTime(reference.year, reference.month, reference.day);
-  if (parsed.isAfter(todayDate)) return null;
-
-  var years = todayDate.year - parsed.year;
-  final hadBirthdayThisYear =
-      todayDate.month > parsed.month ||
-      (todayDate.month == parsed.month && todayDate.day >= parsed.day);
-  if (!hadBirthdayThisYear) years -= 1;
-  return years;
-}
-
 bool shouldShowDependentFailureFeedback(DependentFailure? failure) {
   if (failure == null) return false;
   if (failure is DependentCityNotFoundFailure) return false;

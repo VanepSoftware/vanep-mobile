@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum SchoolShift { morning, afternoon }
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 
 enum TripLeg { going, returning }
 

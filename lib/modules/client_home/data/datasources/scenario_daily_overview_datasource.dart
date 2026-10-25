@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/client_home/data/datasources/client_home_scenario.dart';
 import 'package:vanep_mobile/modules/client_home/data/datasources/daily_overview_datasource.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
