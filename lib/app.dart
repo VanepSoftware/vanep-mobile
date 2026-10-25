@@ -17,6 +17,7 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
@@ -115,6 +116,9 @@ class AuthGate extends StatelessWidget {
                 ),
                 BlocProvider<ConversationsInboxCubit>(
                   create: (_) => getIt<ConversationsInboxCubit>(),
+                ),
+                BlocProvider<ClientHomeCubit>(
+                  create: (_) => getIt<ClientHomeCubit>()..loadHome(),
                 ),
               ],
               child: ClientShell(
