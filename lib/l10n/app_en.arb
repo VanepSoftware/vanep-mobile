@@ -610,6 +610,18 @@
   "conversationsInboxEmpty": "No conversations yet. When a client writes to you, it shows up here.",
   "conversationsInboxLoadError": "Could not load your conversations.",
   "conversationsInboxEmptyClient": "No conversations yet. To talk to a driver, open their profile in Vans and tap “Chat with the driver”.",
+  "navRoute": "Route",
+  "navTodayRoute": "Today's route",
+  "navAssistantProfile": "My profile",
+  "assistantActiveVan": "Active van",
+  "assistantSwitchVan": "Switch van",
+  "assistantSelectVanTitle": "Select active van",
+  "assistantSelectVanSubtitle": "Choose which van you will accompany today",
+  "assistantNoVansLinked": "No vans linked at the moment.",
+  "assistantShiftMorning": "Morning",
+  "assistantShiftAfternoon": "Afternoon",
+  "assistantShiftNight": "Night",
+  "unauthorizedAccess": "Unauthorized access.",
   "clientHomeGoodMorning": "Good morning, {name}!",
   "@clientHomeGoodMorning": {
     "placeholders": {
