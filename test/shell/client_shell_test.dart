@@ -18,6 +18,9 @@ import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
+import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
+import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_state.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
@@ -26,6 +29,8 @@ import 'package:vanep_mobile/shell/client_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
+import '../modules/client_home/client_home_fixtures.dart';
+import '../modules/client_home/client_home_mocks.dart';
 import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
 import '../modules/dependents/dependents_mocks.dart';
@@ -53,6 +58,7 @@ Widget _harness(
   ProfileSummaryCubit profileSummaryCubit,
   DependentsCubit dependentsCubit,
   ConversationsInboxCubit conversationsCubit,
+  ClientHomeCubit clientHomeCubit,
   Future<void> Function(BuildContext)? openDriverSearch,
   Future<void> Function(BuildContext, Conversation)? openConversationChat,
 ) {
@@ -72,12 +78,14 @@ Widget _harness(
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
         BlocProvider<DependentsCubit>.value(value: dependentsCubit),
         BlocProvider<ConversationsInboxCubit>.value(value: conversationsCubit),
+        BlocProvider<ClientHomeCubit>.value(value: clientHomeCubit),
       ],
       child: ClientShell(
         openDriverProfile: (_, _) async {},
         profile: const FakeUserProfile(),
         openDriverSearch: openDriverSearch ?? (_) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
+        openClientProposals: (_) async {},
       ),
     ),
   );
@@ -94,6 +102,7 @@ void main() {
   late MockProfileSummaryCubit profileSummaryCubit;
   late MockDependentsCubit dependentsCubit;
   late MockConversationsInboxCubit conversationsCubit;
+  late MockClientHomeCubit clientHomeCubit;
 
   Widget harness({
     Future<void> Function(BuildContext)? openDriverSearch,
@@ -105,6 +114,7 @@ void main() {
       profileSummaryCubit,
       dependentsCubit,
       conversationsCubit,
+      clientHomeCubit,
       openDriverSearch,
       openConversationChat,
     );
@@ -120,6 +130,16 @@ void main() {
     profileSummaryCubit = MockProfileSummaryCubit();
     dependentsCubit = MockDependentsCubit();
     conversationsCubit = readyConversationsCubit([testConversation]);
+    clientHomeCubit = MockClientHomeCubit();
+    whenListen(
+      clientHomeCubit,
+      const Stream<ClientHomeState>.empty(),
+      initialState: ClientHomeState(
+        status: ClientHomeStatus.ready,
+        home: testClientHome(),
+      ),
+    );
+    when(clientHomeCubit.loadHome).thenAnswer((_) async {});
     whenListen(
       driversCubit,
       const Stream<DriversState>.empty(),
@@ -286,5 +306,42 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(dependentsCubit.loadDependents).called(1);
+  });
+
+  testWidgets('returning to the home tab reloads the home', (tester) async {
+    await tester.pumpWidget(harness());
+
+    await tester.tap(find.bySemanticsLabel('Vans'));
+    await tester.pumpAndSettle();
+    verifyNever(clientHomeCubit.loadHome);
+
+    await tester.tap(find.bySemanticsLabel('Início'));
+    await tester.pumpAndSettle();
+
+    verify(clientHomeCubit.loadHome).called(1);
+  });
+
+  testWidgets('the dependents step on home opens the Dependentes tab', (
+    tester,
+  ) async {
+    whenListen(
+      clientHomeCubit,
+      const Stream<ClientHomeState>.empty(),
+      initialState: ClientHomeState(
+        status: ClientHomeStatus.ready,
+        home: testClientHome(
+          today: const FirstStepsSection(
+            hasAddress: true,
+            hasDependents: false,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpWidget(harness());
+
+    await tester.tap(find.text('Cadastrar dependente'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Gerenciar dependentes'), findsOneWidget);
   });
 }

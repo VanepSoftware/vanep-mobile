@@ -621,5 +621,726 @@
   "assistantShiftMorning": "Morning",
   "assistantShiftAfternoon": "Afternoon",
   "assistantShiftNight": "Night",
-  "unauthorizedAccess": "Unauthorized access."
+  "unauthorizedAccess": "Unauthorized access.",
+  "clientHomeGoodMorning": "Good morning, {name}!",
+  "@clientHomeGoodMorning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeGoodAfternoon": "Good afternoon, {name}!",
+  "@clientHomeGoodAfternoon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeGoodEvening": "Good evening, {name}!",
+  "@clientHomeGoodEvening": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeGoodWeekend": "Have a good weekend!",
+  "clientHomeVanArriving": "The van is arriving",
+  "clientHomeAllGood": "All good here",
+  "clientHomeFirstAccessSubtitle": "Let's get everything ready for the first ride.",
+  "clientHomeDateLine": "{weekday}, {month} {day}",
+  "@clientHomeDateLine": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeTimeOfDay": "{hour}:{minute}",
+  "@clientHomeTimeOfDay": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeWeekdayMonday": "Monday",
+  "clientHomeWeekdayTuesday": "Tuesday",
+  "clientHomeWeekdayWednesday": "Wednesday",
+  "clientHomeWeekdayThursday": "Thursday",
+  "clientHomeWeekdayFriday": "Friday",
+  "clientHomeWeekdaySaturday": "Saturday",
+  "clientHomeWeekdaySunday": "Sunday",
+  "clientHomeWeekdayShortMonday": "mon",
+  "clientHomeWeekdayShortTuesday": "tue",
+  "clientHomeWeekdayShortWednesday": "wed",
+  "clientHomeWeekdayShortThursday": "thu",
+  "clientHomeWeekdayShortFriday": "fri",
+  "clientHomeWeekdayShortSaturday": "sat",
+  "clientHomeWeekdayShortSunday": "sun",
+  "clientHomeNamesListLastSeparator": " and ",
+  "clientHomeTodayTitle": "Today",
+  "clientHomeNeedsYouTitle": "Needs you",
+  "clientHomeShortcutsTitle": "Shortcuts",
+  "clientHomeSeeAll": "See all",
+  "clientHomeLoadError": "We couldn't load your home.",
+  "clientHomeRetry": "Try again",
+  "clientHomeShortcutReportAbsence": "Report absence",
+  "clientHomeShortcutSeeOnMap": "See on map",
+  "clientHomeShortcutAdjustStop": "Adjust stop",
+  "clientHomeShortcutPayments": "Payments",
+  "clientHomeShortcutProposals": "Proposals",
+  "clientHomeShortcutContracts": "Contracts",
+  "clientHomeFirstStepsProgress": "First steps · {done} of {total}",
+  "@clientHomeFirstStepsProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "clientHomeFirstStepsTitle": "Find the right van for your child",
+  "clientHomeFirstStepsMessage": "With your address and a dependent registered, you can already ask for quotes.",
+  "clientHomeFirstStepAccount": "Account created",
+  "clientHomeFirstStepAddress": "Your address",
+  "clientHomeFirstStepAddressHint": "To find drivers near you",
+  "clientHomeFirstStepDependents": "Who rides the van",
+  "clientHomeFirstStepDependentsHint": "School, shift and pick-up address",
+  "clientHomeFirstStepNow": "Now",
+  "clientHomeFirstStepAddressAction": "Add my address",
+  "clientHomeFirstStepDependentsAction": "Add a dependent",
+  "clientHomeDriverInviteTitle": "I got an invite from a driver",
+  "clientHomeDriverInviteMessage": "Join through the link they sent.",
+  "clientHomeHowItWorksTitle": "How Vanep works",
+  "clientHomeHowItWorksRequest": "Request",
+  "clientHomeHowItWorksRequestHint": "Ask for a quote without showing your address.",
+  "clientHomeHowItWorksProposal": "Proposal",
+  "clientHomeHowItWorksProposalHint": "Accept, decline or ask for changes.",
+  "clientHomeHowItWorksContract": "Digital contract",
+  "clientHomeHowItWorksContractHint": "Signed right in the app.",
+  "clientHomeHowItWorksLive": "Follow it live",
+  "clientHomeHowItWorksLiveHint": "Boarding and arrival alerts and the van on the map.",
+  "clientHomeNoVanYet": "{names} still without a van",
+  "@clientHomeNoVanYet": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeOpenNegotiations": "{count, plural, =1{1 negotiation in progress} other{{count} negotiations in progress}}",
+  "@clientHomeOpenNegotiations": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientHomeSeeProposals": "See proposals",
+  "clientHomeSearchVans": "Search vans",
+  "clientHomeShiftMorning": "morning",
+  "clientHomeShiftAfternoon": "afternoon",
+  "clientHomeVanTitle": "{driver}'s van · {shift}",
+  "@clientHomeVanTitle": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeVanSubtitle": "{model} {plate} · leaves at {time}",
+  "@clientHomeVanSubtitle": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "plate": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeVanRowSubtitle": "{names} · boarding {time}",
+  "@clientHomeVanRowSubtitle": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeBoarding": "Boarding",
+  "clientHomeArrival": "Arrival",
+  "clientHomeDeparture": "Departure",
+  "clientHomeNotGoingToday": "{name} is not going today",
+  "@clientHomeNotGoingToday": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeUndo": "Undo",
+  "clientHomeStopChangeReturning": "On the way back, {name} gets off at {place}",
+  "@clientHomeStopChangeReturning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeStopChangeGoing": "On the way there, {name} boards at {place}",
+  "@clientHomeStopChangeGoing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeNotGoingTodayAction": "Not going today",
+  "clientHomeTalkTo": "Talk to {name}",
+  "@clientHomeTalkTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeChildrenWithoutRoute": "{names} without a route today",
+  "@clientHomeChildrenWithoutRoute": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeGoesWithGuardian": "{name} goes with you",
+  "@clientHomeGoesWithGuardian": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeStillWithoutVan": "{name} still without a van",
+  "@clientHomeStillWithoutVan": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeGoesWithGuardianSingle": "Goes with you",
+  "clientHomeStillWithoutVanSingle": "Still without a van",
+  "clientHomeLiveLeg": "Live · {leg}",
+  "@clientHomeLiveLeg": {
+    "placeholders": {
+      "leg": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeLegGoing": "going",
+  "clientHomeLegReturning": "returning",
+  "clientHomeEtaMinutes": "{minutes} min",
+  "@clientHomeEtaMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "clientHomeEtaToYourStop": "to your stop · ~{time}",
+  "@clientHomeEtaToYourStop": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeStageBoarding": "Boarding",
+  "clientHomeStageSchool": "School",
+  "clientHomeStageDeparture": "Departure",
+  "clientHomeStageHome": "Home",
+  "clientHomeLiveMap": "Live map",
+  "clientHomeUpdatedSecondsAgo": "updated {seconds} s ago",
+  "@clientHomeUpdatedSecondsAgo": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "clientHomeIllustrativeMap": "Illustrative map",
+  "clientHomeBoardsAtThisStop": "{count, plural, =1{{names} boards at this stop} other{{names} board at this stop}}",
+  "@clientHomeBoardsAtThisStop": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeCrewOnBoard": "{names} on the van",
+  "@clientHomeCrewOnBoard": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeChildDayTitle": "{name}'s day",
+  "@clientHomeChildDayTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeHistory": "History",
+  "clientHomeMilestoneHomeBoarding": "Boarding at home",
+  "clientHomeMilestoneSchoolArrival": "Arrival at school",
+  "clientHomeMilestoneSchoolDeparture": "Leaving school",
+  "clientHomeMilestoneHomeArrival": "Arrival at home",
+  "clientHomeTodayPlace": "Today: {place}",
+  "@clientHomeTodayPlace": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeApproximateTime": "~{time}",
+  "@clientHomeApproximateTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeConfirmedAt": "Confirmed at {time}",
+  "@clientHomeConfirmedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeArrivedAtSchool": "{name} arrived at school",
+  "@clientHomeArrivedAtSchool": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeSchoolDepartureAt": "Leaves at {time}",
+  "@clientHomeSchoolDepartureAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeReturnsTo": " · back to {place}",
+  "@clientHomeReturnsTo": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeEventDroppedAtSchool": "Got off at school",
+  "clientHomeEventBoardedAtHome": "Boarded at home",
+  "clientHomeEventRouteStarted": "Route started",
+  "clientHomeEventBy": "by {name}",
+  "@clientHomeEventBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeAlertsTitle": "Alerts you receive",
+  "clientHomeAlertsMessage": "Boarding, arrival and van approaching",
+  "clientHomeNoRouteToday": "No route today",
+  "clientHomeNextRoute": "Next: {weekday}, {time}",
+  "@clientHomeNextRoute": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeReturnWithYou": "{weekday}: the way back is with you",
+  "@clientHomeReturnWithYou": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeContractReady": "{name}'s contract is ready",
+  "@clientHomeContractReady": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeDriverAndMonthlyFee": "{driver} · {price}/month",
+  "@clientHomeDriverAndMonthlyFee": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeHoursLeft": "{hours}h left",
+  "@clientHomeHoursLeft": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "clientHomeUntilDate": "Until {date}",
+  "@clientHomeUntilDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeContractStepAccepted": "Accepted",
+  "clientHomeContractStepYou": "You",
+  "clientHomeContractStepDriver": "Driver",
+  "clientHomeContractStepStart": "Start",
+  "clientHomeReviewAndSign": "Review and sign",
+  "clientHomeNewProposal": "New proposal",
+  "clientHomeExpiresIn": "{count, plural, =0{Expires today} =1{Expires in 1 day} other{Expires in {count} days}}",
+  "@clientHomeExpiresIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientHomeRoundTrip": "round trip",
+  "clientHomeOneWay": "one way",
+  "clientHomeNamesAndTrip": "{names} · {trip}",
+  "@clientHomeNamesAndTrip": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "trip": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomePerMonth": "/month",
+  "clientHomeChat": "Chat",
+  "clientHomeSeeProposal": "See proposal",
+  "clientHomeNewProposalFor": "New proposal for {names}",
+  "@clientHomeNewProposalFor": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeRequestExpired": "Request to {driver} expired",
+  "@clientHomeRequestExpired": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeSeeSimilarDrivers": "See similar drivers",
+  "clientHomeMonthlyFeeOf": "{name}'s monthly fee",
+  "@clientHomeMonthlyFeeOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeMonthlyFeeFor": "{month} monthly fee",
+  "@clientHomeMonthlyFeeFor": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeAwaitingConfirmation": "{amount} · awaiting confirmation from {driver}",
+  "@clientHomeAwaitingConfirmation": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeDueIn": "{count, plural, =0{Due today} =1{Due tomorrow} other{Due in {count} days}}",
+  "@clientHomeDueIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientHomeOverdue": "Overdue",
+  "clientHomeRenewalFor": "Renewal for {year}",
+  "@clientHomeRenewalFor": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeDriverSentProposal": "{driver} sent the proposal",
+  "@clientHomeDriverSentProposal": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeInspectionExpired": "Van inspection expired",
+  "clientHomeInspectionDeadline": "{driver} has until {date} to fix it",
+  "@clientHomeInspectionDeadline": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeRateVan": "How is {driver}'s van?",
+  "@clientHomeRateVan": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomeRatingIsAnonymous": "Your rating is anonymous.",
+  "clientHomeRateStars": "{count, plural, =1{1 star} other{{count} stars}}",
+  "@clientHomeRateStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsTitle": "Proposals",
+  "clientProposalsSearchVans": "Search more vans",
+  "clientProposalsAllChildren": "All children",
+  "clientProposalsFilterByChild": "Filter by child: {name}",
+  "@clientProposalsFilterByChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsFilterSheetTitle": "See proposals of",
+  "clientProposalsTabOpen": "Open",
+  "clientProposalsTabClosed": "Closed",
+  "clientProposalsOpenRequests": "{count} of {limit} open requests",
+  "@clientProposalsOpenRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsPendingTitle": "Pending",
+  "clientProposalsAwaitingTitle": "Awaiting reply",
+  "clientProposalsNewOnVanep": "{gender, select, female{New on Vanep} other{New on Vanep}}",
+  "@clientProposalsNewOnVanep": {
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsForChild": "For {name}",
+  "@clientProposalsForChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsSchoolAndShift": "{school}, {shift}",
+  "@clientProposalsSchoolAndShift": {
+    "placeholders": {
+      "school": {
+        "type": "String"
+      },
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsMondayToFriday": "Mon to Fri",
+  "clientProposalsStartingOn": "from {date}",
+  "@clientProposalsStartingOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsDayMonth": "{month} {day}",
+  "@clientProposalsDayMonth": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsFirstDayOfMonth": "1",
+  "clientProposalsPerMonth": "/mo",
+  "clientProposalsPreviousFee": "before {amount}",
+  "@clientProposalsPreviousFee": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsExpiresIn": "{count, plural, =0{Expires today} =1{Expires tomorrow} other{Expires in {count} days}}",
+  "@clientProposalsExpiresIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsChat": "Chat",
+  "clientProposalsSeeProposal": "See proposal",
+  "clientProposalsSentSummary": "For {name} · {sent}",
+  "@clientProposalsSentSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "sent": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsSentDaysAgo": "{count, plural, =0{sent today} =1{sent yesterday} other{sent {count} days ago}}",
+  "@clientProposalsSentDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsHoursLeft": "{count, plural, =0{Less than 1h left} =1{1h left} other{{count}h left}}",
+  "@clientProposalsHoursLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsCancelRequest": "Cancel request",
+  "clientProposalsSeeRequest": "See request",
+  "clientProposalsClosedSummary": "For {name} · {amount}/mo",
+  "@clientProposalsClosedSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsOutcomeAccepted": "Accepted",
+  "clientProposalsOutcomeDeclined": "Declined",
+  "clientProposalsOutcomeExpired": "Expired",
+  "clientProposalsOutcomeCancelled": "Cancelled",
+  "clientProposalsOpenCount": "{count, plural, =0{None open} other{{count} open}}",
+  "@clientProposalsOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsToAnswer": "{count} to answer",
+  "@clientProposalsToAnswer": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsAwaitingCount": "{count} awaiting",
+  "@clientProposalsAwaitingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientProposalsEmptyOpenTitle": "No open proposals",
+  "clientProposalsEmptyOpenMessage": "When a driver answers your request, the proposal shows up here.",
+  "clientProposalsEmptyClosedTitle": "No closed proposals",
+  "clientProposalsEmptyClosedMessage": "Accepted, declined and expired proposals show up here.",
+  "clientProposalsLoadError": "We couldn't load your proposals.",
+  "clientProposalsRetry": "Try again"
 }

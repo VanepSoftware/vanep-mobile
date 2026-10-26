@@ -9,13 +9,20 @@ class VanepSecondaryButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.leading,
+    this.onBrand = false,
     super.key,
-  });
+  }) : assert(icon == null || leading == null);
 
   final String label;
   final VoidCallback? onPressed;
   final bool isLoading;
   final IconData? icon;
+
+  // For marks that are not an icon font glyph, such as a brand logo.
+  final Widget? leading;
+
+  final bool onBrand;
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +32,16 @@ class VanepSecondaryButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: VanepColors.textPrimary,
+          foregroundColor: onBrand
+              ? VanepColors.onBrand
+              : VanepColors.textPrimary,
           disabledForegroundColor: VanepColors.textMuted,
-          side: const BorderSide(color: VanepColors.inputBorder),
-          backgroundColor: VanepColors.card,
+          side: onBrand
+              ? BorderSide.none
+              : const BorderSide(color: VanepColors.inputBorder),
+          backgroundColor: onBrand
+              ? VanepColors.onBrand.withValues(alpha: 0.14)
+              : VanepColors.card,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -45,11 +58,17 @@ class VanepSecondaryButton extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (icon != null) ...[
-                    Icon(icon, size: 20),
+                  if (icon != null || leading != null) ...[
+                    leading ?? Icon(icon, size: 20),
                     const SizedBox(width: 10),
                   ],
-                  Text(label, style: VanepTypography.button),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: VanepTypography.button,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ],
               ),
       ),

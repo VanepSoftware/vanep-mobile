@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vanep_mobile/core/ui/google_logo.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 
 void main() {
@@ -16,6 +17,27 @@ void main() {
     await tester.tap(find.text('Google'));
 
     expect(taps, 1);
+  });
+
+  testWidgets('shows a leading widget before the label', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepSecondaryButton(
+            label: 'Google',
+            onPressed: () {},
+            leading: const GoogleLogo(),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(GoogleLogo), findsOneWidget);
+    expect(find.byType(Icon), findsNothing);
+    expect(
+      tester.getCenter(find.byType(GoogleLogo)).dx,
+      lessThan(tester.getTopLeft(find.text('Google')).dx),
+    );
   });
 
   testWidgets('shows progress instead of the label while loading', (
