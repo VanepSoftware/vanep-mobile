@@ -18,6 +18,7 @@ class VanepColors {
   static const Color action = Color(0xFF0B6BD3);
   static const Color actionSurface = Color(0x140B6BD3);
   static const Color success = Color(0xFF1E8E5A);
+  static const Color successSurface = Color(0x141E8E5A);
   static const Color inputBorder = Color(0xFFDFE3E7);
   static const Color cardBorder = Color(0xFFE4E5E7);
   static const Color placeholder = Color(0xFF9AA0A6);
