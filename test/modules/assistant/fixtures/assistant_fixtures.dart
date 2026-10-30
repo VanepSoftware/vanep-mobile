@@ -1,5 +1,6 @@
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_invite.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_students_overview.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 
 final testAssistantInvite = AssistantInvite(
@@ -77,4 +78,43 @@ final testAssistantVansOverview = AssistantVansOverview(
     testAssistantVanSummaryWithoutRoute,
   ],
   formerVanCount: 1,
+);
+
+const testAssistantStudentAna = AssistantStudentSummary(
+  token: 'student-ana',
+  name: 'Ana Oliveira',
+  stopNumber: 3,
+  placeName: 'Col. Horizonte',
+  isAbsentToday: true,
+);
+
+const testAssistantStudentLais = AssistantStudentSummary(
+  token: 'student-lais',
+  name: 'Laís Teixeira',
+  stopNumber: 7,
+  placeName: 'Escola Classe 10',
+);
+
+const testAssistantStudentBeatriz = AssistantStudentSummary(
+  token: 'student-beatriz',
+  name: 'Beatriz Santos',
+  stopNumber: 5,
+  placeName: 'Jd. das Flores',
+);
+
+const testAssistantStudentsOverview = AssistantStudentsOverview(
+  rosters: [
+    AssistantStudentsRoster(
+      van: testAssistantVanPrimary,
+      students: [
+        testAssistantStudentLais,
+        testAssistantStudentAna,
+        testAssistantStudentBeatriz,
+      ],
+    ),
+    AssistantStudentsRoster(
+      van: testAssistantVanSecondary,
+      students: [testAssistantStudentBeatriz],
+    ),
+  ],
 );

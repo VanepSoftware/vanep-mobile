@@ -609,6 +609,26 @@
   "assistantVansShiftAfternoon": "afternoon",
   "assistantVansShiftNight": "night",
   "assistantVansShiftFullTime": "full time",
+  "assistantStudentsTitle": "Students",
+  "assistantStudentsSubtitle": "{name}'s van · {shift} · {count, plural, =1{1 student} other{{count} students}}",
+  "assistantStudentsSearchHint": "Search student",
+  "assistantStudentsStop": "Stop {number} · {place}",
+  "assistantStudentsAbsentToday": "Not going today",
+  "assistantStudentsNoResults": "No students found.",
+  "assistantStudentsEmpty": "This van has no students yet.",
+  "@assistantStudentsSubtitle": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "shift": {"type": "String"},
+      "count": {"type": "int"}
+    }
+  },
+  "@assistantStudentsStop": {
+    "placeholders": {
+      "number": {"type": "int"},
+      "place": {"type": "String"}
+    }
+  },
   "assistantSignupTitle": "Assistant registration",
   "assistantSignupSubtitle": "Fill in your details to start monitoring routes.",
   "assistantSignupInvitedBy": "You were invited by {name}",
