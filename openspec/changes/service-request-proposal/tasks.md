@@ -27,7 +27,7 @@ Por decisão do desenvolvedor, as fases 3 e 4 juntam tudo de cada lado num PR s�
 ## 2. Fase 2 — Dados, use cases e DI (`VAN-78/2-negotiation-data`)
 
 - [ ] 2.1 Testes primeiro para os DTOs com JSON copiado das respostas do back local: as duas visões da solicitação (com e sem `currentProposal`, com `driverRating` `null`, com o `conversationToken`), a proposta (nas duas visões, com `dependentName` `null` para o motorista), slots, veículo e ajustes; valores em centavos; datas, horas e instantes. E para o JSON de envio: solicitação (sem período escolar), proposta (centavos → número com duas casas, horários `"HH:mm"`), ajuste, recusas. Depois criar os DTOs e rodar o `build_runner` até passarem
-- [ ] 2.2 Testes primeiro para os datasources: caminho e método de cada operação da tabela das specs do back; `status` como lista separada por vírgula; `page`, `size` e `sort`; os erros 404, 409, 422 e 400 com `detail` e sem resposta viram as falhas do D10. Depois adicionar os endpoints no `Environment` (D11), os dois datasources e as duas implementações de repositório até passarem
+- [ ] 2.2 Testes primeiro para os datasources: caminho e método de cada operação da tabela das specs do back; `status` como lista separada por vírgula; `conversationToken` opcional; `page` e `size`; os erros 404, 409, 422 e 400 com `detail` e sem resposta viram as falhas do D10. Depois adicionar os endpoints no `Environment` (D11), os dois datasources e as duas implementações de repositório até passarem
 - [ ] 2.3 Testes primeiro para os use cases (`SendServiceRequest`, `ListMyServiceRequests`, `FindServiceRequest`, `WithdrawServiceRequest`, `DeclineServiceRequest`, `ListProposalVersions`, `FindProposal`, `AcceptProposal`, `DeclineProposal`, `RequestProposalAdjustment`, `SendProposal`, `WithdrawProposal`): cada um repassa ao repositório e devolve o `Result` dele. Depois implementá-los até passarem
 - [ ] 2.4 Adicionar `negotiations_container.dart` e registrá-lo no `main.dart`; conferir com um teste do service locator que cada use case é resolvido
 - [ ] 2.5 Rodar `make lint` e `make test`; conferir as leituras e uma escrita de cada superfície contra o back local da pilha VAN-30 com os usuários do seed
@@ -69,7 +69,7 @@ Por decisão do desenvolvedor, as fases 3 e 4 juntam tudo de cada lado num PR s�
 
 ### Conversa (VAN-44)
 
-- [ ] 3.21 Testes primeiro para o `NegotiationTimelineCubit`: acha a negociação mais recente da conversa pelo `conversationToken`, lendo a página seguinte enquanto não acha e a lista não acabou; sem negociação (conversa antiga) → nada; carrega a cadeia de versões; recarrega depois de uma ação. E para a mistura de mensagens e eventos por data com separador por dia. Depois implementar até passarem
+- [ ] 3.21 Testes primeiro para o `NegotiationTimelineCubit`: lê a negociação mais recente da conversa pela lista filtrada por `conversationToken` (primeiro item); sem negociação (conversa antiga) → nada; carrega a cadeia de versões; recarrega depois de uma ação. E para a mistura de mensagens e eventos por data com separador por dia. Depois implementar até passarem
 - [ ] 3.22 Testes de widget primeiro para a conversa: faixa da proposta vigente, cartões do pedido (embarque só com o bairro), das versões ("Substituída" e "Atual") e do ajuste, os dois avisos, "Ver proposta", "Aceitar" e o botão de ajuste, conversa sem negociação igual a hoje. Depois implementar até passarem
 - [ ] 3.23 Ligar as ações dos cartões às telas do `client_proposals` por callback do `app.dart`; conferir com o teste do `ChatPage`
 
@@ -100,7 +100,7 @@ Por decisão do desenvolvedor, as fases 3 e 4 juntam tudo de cada lado num PR s�
 
 ### Conversa (VAN-62)
 
-- [ ] 4.8 Testes primeiro para a linha do tempo do lado do motorista (acha a negociação pelo `conversationToken` na lista do motorista; faixa "Ajuste solicitado" com "Responder"; cartão do ajuste com "Nova versão"; aviso "Endereço e nome completo disponíveis após o aceite."). Depois implementar reaproveitando o `NegotiationTimelineCubit` até passarem
+- [ ] 4.8 Testes primeiro para a linha do tempo do lado do motorista (lê a negociação pela lista do motorista filtrada por `conversationToken`; faixa "Ajuste solicitado" com "Responder"; cartão do ajuste com "Nova versão"; aviso "Endereço e nome completo disponíveis após o aceite."). Depois implementar reaproveitando o `NegotiationTimelineCubit` até passarem
 - [ ] 4.9 Ligar "Responder" e "Nova versão" ao montar proposta por callback do `app.dart`; conferir com o teste do `ChatPage` do motorista
 
 ### Fechamento

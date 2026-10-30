@@ -15,7 +15,7 @@ Fatos do back em que o desenho se apoia (vanep-api-java, pilha `VAN-30/*`, vers�
 - A solicitação nas duas visões traz `currentProposal` (`token`, `version`, `status`, `totalAmount`, `installments`, `installmentAmount`, `validUntil`, `startsOn`, `hasPendingAdjustment`), `null` fora de `ANSWERED` e `CONVERTED`. A visão do cliente traz `driverRating`.
 - O filtro `status` das listas aceita vários valores (`?status=OPEN,ANSWERED`). As listas são `Page` do Spring (20 por página), sempre ordenadas por `createdAt` decrescente: a ordem está fixa na consulta, e um `sort` mandado pelo app só entraria como critério de desempate.
 - A proposta traz `installmentAmount`, os itens com `slots` (`weekday`, `leg` `OUTBOUND`/`RETURN`, `shift` `MORNING`/`AFTERNOON`/`NIGHT`, `windowStart`, `windowEnd`), o veículo (placa, marca, modelo, ano, cor e capacidade, sem foto) e os `adjustments`. Na visão do motorista, `dependentName` vem `null` e só `dependentFirstName` vem preenchido.
-- A conversa do par nasce com a primeira solicitação (PR 12 da pilha, `VAN-30/12-conversation-on-request`, D23 do back). As duas visões da solicitação trazem `conversationToken`, a mesma para todas as solicitações do par, e ela continua aberta depois que a solicitação se encerra. O `POST /api/conversations` saiu, e o `ConversationResponseDTO` não mudou.
+- A conversa do par nasce com a primeira solicitação (PR 12 da pilha, `VAN-30/12-conversation-on-request`, D23 do back). As duas visões da solicitação trazem `conversationToken`, a mesma para todas as solicitações do par, e ela continua aberta depois que a solicitação se encerra. As duas listas aceitam `?conversationToken=`, combinável com `status`, que devolve só as solicitações do par daquela conversa, da mais nova para a mais antiga; a conversa de outro par ou um token desconhecido devolvem página vazia. O `POST /api/conversations` saiu, e o `ConversationResponseDTO` não mudou.
 - Os erros são `ResponseStatusException` com o `detail` traduzido, sem código: 404, 409 (corrida e prazo: `open_exists`, `service_request.not_open`, `not_current`, `expired`, `accept.stale`, `sent_conflict`, `proposal.request.not_open`), 422 (regra: `not_ready`, `open_limit`, `driver.not_available`, `day.no_school`, `link.blocked`, `link.has_contract`, `period.*`, `items.mismatch`, `adjustment.empty`) e 400 (Bean Validation).
 
 ## Goals / Non-Goals
@@ -108,7 +108,7 @@ O `Weekday` sai de `dependents/domain/value_objects/` e vai para `core/domain/`,
 
 ### D8. Negociação na conversa
 
-O `ChatPage` ganha a faixa da proposta vigente e os cartões da negociação, num cubit próprio (`NegotiationTimelineCubit`, em `conversations`), separado do `ChatCubit` das mensagens. Ele procura a negociação mais recente da conversa (lista da parte que está vendo, todos os status, na ordem do back, filtrando pelo `conversationToken`, e lê a página seguinte enquanto não acha e a lista não acabou) e a cadeia de versões. O mesmo cubit serve às duas partes; o lado muda a lista lida e os rótulos. A mistura de mensagens e eventos por data é uma função de apresentação. As ações dos cartões ("Ver proposta", "Aceitar", "Pedir ajuste") chegam por callback do `app.dart` e abrem as telas do `client_proposals`, sem importar um módulo de tela no outro (R02).
+O `ChatPage` ganha a faixa da proposta vigente e os cartões da negociação, num cubit próprio (`NegotiationTimelineCubit`, em `conversations`), separado do `ChatCubit` das mensagens. Ele lê a negociação mais recente da conversa (lista da parte que está vendo, todos os status, `conversationToken` da conversa, primeiro item da primeira página) e a cadeia de versões. O mesmo cubit serve às duas partes; o lado muda a lista lida e os rótulos. A mistura de mensagens e eventos por data é uma função de apresentação. As ações dos cartões ("Ver proposta", "Aceitar", "Pedir ajuste") chegam por callback do `app.dart` e abrem as telas do `client_proposals`, sem importar um módulo de tela no outro (R02).
 
 ### D9. Motorista em um módulo de tela novo
 
@@ -131,7 +131,7 @@ O `DriverShell` troca o `VanepComingSoon` pela aba. O `ProposalDraft` nasce vazi
 
 ### D11. Endpoints
 
-O `Environment` ganha `clientServiceRequestsEndpoint`, `clientProposalsEndpoint`, `driverServiceRequestsEndpoint` e `driverProposalsEndpoint`. Os caminhos com token (`/{token}/withdraw`, `/{token}/proposals`, `/{token}/accept`, `/{token}/decline`, `/{token}/adjustments`) são montados a partir deles, como `dependentSchoolDaysEndpoint`. O filtro de status vai como lista separada por vírgula.
+O `Environment` ganha `clientServiceRequestsEndpoint`, `clientProposalsEndpoint`, `driverServiceRequestsEndpoint` e `driverProposalsEndpoint`. Os caminhos com token (`/{token}/withdraw`, `/{token}/proposals`, `/{token}/accept`, `/{token}/decline`, `/{token}/adjustments`) são montados a partir deles, como `dependentSchoolDaysEndpoint`. O filtro de status vai como lista separada por vírgula, e o `conversationToken` como parâmetro opcional das duas listas.
 
 ### D12. A conversa começa pelo pedido
 
@@ -151,7 +151,7 @@ A abertura pelo token e a saída da abertura pelo perfil entram na fase 3, a mes
 - [O texto "Em caso de aceite, o contrato é gerado" é falso até a fase 3 do back] → Decisão do desenvolvedor, porque não há usuário real. Fica listado para revisar antes de produção.
 - [O responsável pode aceitar propostas de dois motoristas para o mesmo filho até a fase 5] → Risco assumido pelo desenvolvedor.
 - [A tela de pedir orçamento lê a grade de cada dependente] → Uma chamada por dependente, só ao abrir. Responsável com muitos dependentes é raro; se pesar, o back pode mandar a grade na lista de dependentes.
-- [As listas do back vêm sempre por `createdAt` e não têm filtro por conversa] → A Início lê só a primeira página das `EXPIRED` e filtra pelo `updatedAt` dos últimos 7 dias; um pedido criado antes de outros 20 expirados e expirado depois deles fica de fora, o que é raro. A conversa percorre as páginas até achar a negociação, o que pesa só para um motorista com muitos pedidos antigos; se pesar, o back ganha o filtro `conversationToken`.
+- [As listas do back vêm sempre por `createdAt`] → A Início lê só a primeira página das `EXPIRED` e filtra pelo `updatedAt` dos últimos 7 dias; um pedido criado antes de outros 20 expirados e expirado depois deles fica de fora, o que é raro.
 - [O prefixo do turno da rota (`deriveOperationShift`) pode não refletir a rota real do motorista] → É só o rótulo do trecho, que o back exige; os horários são do motorista. A regra fica numa função só, fácil de trocar.
 - [As fases 3 e 4 juntam cubits e telas de um lado inteiro, contra a R19, e passam muito da R23] → Decisão do desenvolvedor no plano (R17), como na `client-home-screen`: PRs maiores e menos pilha. Dentro de cada fase, a ordem segue a R24 e os testes vêm primeiro; a revisão pode seguir as seções do `tasks.md`.
 

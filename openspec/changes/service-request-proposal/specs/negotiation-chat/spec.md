@@ -6,7 +6,7 @@ Mostra a negociação do par dentro da conversa entre o responsável e o motoris
 
 ### Requirement: Linha do tempo da negociação
 
-A conversa SHALL juntar, em ordem de data e com um separador por dia, as mensagens e os eventos da negociação mais recente da conversa, achada pelo `conversationToken` das solicitações da parte que está vendo: o pedido de orçamento, cada versão da proposta e cada pedido de ajuste. As versões substituídas SHALL aparecer apagadas com "Substituída", e a vigente com "Atual". O app SHALL montar a linha do tempo a partir da solicitação e da cadeia de versões; nada disso é gravado no chat.
+A conversa SHALL juntar, em ordem de data e com um separador por dia, as mensagens e os eventos da negociação mais recente da conversa, lida na lista de solicitações da parte que está vendo, filtrada pelo `conversationToken` da conversa: o pedido de orçamento, cada versão da proposta e cada pedido de ajuste. As versões substituídas SHALL aparecer apagadas com "Substituída", e a vigente com "Atual". O app SHALL montar a linha do tempo a partir da solicitação e da cadeia de versões; nada disso é gravado no chat.
 
 #### Scenario: Negociação com ajuste
 
