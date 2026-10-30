@@ -61,7 +61,7 @@ Nenhuma. `openspec/specs/` ainda está vazio. Esta change substitui os requisito
 
 | Necessidade | Situação | Efeito aqui |
 |---|---|---|
-| Pilha VAN-30 do back | PRs #293 a #304 abertas, fora da main e de `api.vanep.com.br`; o PR 12 (`VAN-30/12-conversation-on-request`: a solicitação abre a conversa e traz o `conversationToken`) existe só no back local | O app só vai para a main depois do back na main e em `api.vanep.com.br`; o QA manual usa o back local; a fase 3 entra na main junto com o PR 12 |
+| Pilha VAN-30 do back | PRs #293 a #304 abertas, fora da main e de `api.vanep.com.br`; o PR 12 (`VAN-30/12-conversation-on-request`: a solicitação abre a conversa, traz o `conversationToken` e as listas filtram por ele) existe só no back local | O app só vai para a main depois do back na main e em `api.vanep.com.br`; o QA manual usa o back local; a fase 3 entra na main junto com o PR 12 |
 | VAN-39 (redesign de dependentes) | PRs #113 e #117 a #120 abertas, rebaseadas na main | Pedir orçamento usa a grade, a prontidão e o `SchoolShift` com 4 valores da VAN-39 |
 | Contrato no aceite (fase 3), assinatura (fase 4), retirada das outras negociações (fase 5) | Fora da VAN-30 | O texto "Em caso de aceite, o contrato é gerado" fica e é revisto antes de usuário real; "Revisar e assinar" abre "Em breve" |
 
