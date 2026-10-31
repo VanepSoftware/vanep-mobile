@@ -23,6 +23,7 @@ import 'package:vanep_mobile/modules/driver_vans/driver_vans_container.dart';
 import 'package:vanep_mobile/modules/drivers/drivers_container.dart';
 import 'package:vanep_mobile/modules/driver_search/driver_search_container.dart';
 import 'package:vanep_mobile/modules/ibge_locations/ibge_locations_container.dart';
+import 'package:vanep_mobile/modules/negotiations/negotiations_container.dart';
 import 'package:vanep_mobile/modules/profile/profile_container.dart';
 import 'package:vanep_mobile/modules/schools/schools_container.dart';
 
@@ -45,6 +46,7 @@ Future<void> main() async {
   registerIbgeLocationsDependencies(getIt);
   registerSchoolsDependencies(getIt);
   registerContractReadinessDependencies(getIt);
+  registerNegotiationsDependencies(getIt);
   registerDependentsDependencies(getIt);
   registerAssistantDependencies(getIt);
   registerDriverVansDependencies(getIt);

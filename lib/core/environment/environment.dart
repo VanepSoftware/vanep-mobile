@@ -111,6 +111,11 @@ class Environment {
   String get contractReadinessEndpoint =>
       '$clientsMeEndpoint/contract-readiness';
 
+  String get clientServiceRequestsEndpoint =>
+      '$clientsMeEndpoint/service-requests';
+
+  String get clientProposalsEndpoint => '$clientsMeEndpoint/proposals';
+
   String get dependentsEndpoint => '$authBaseUrl/api/dependent';
 
   String dependentSchoolDaysEndpoint(String dependentToken) =>
@@ -123,6 +128,11 @@ class Environment {
   String get driverOccupancyEndpoint => '$driversMeEndpoint/occupancy';
 
   String get driverAvailabilityEndpoint => '$driversMeEndpoint/availability';
+
+  String get driverServiceRequestsEndpoint =>
+      '$driversMeEndpoint/service-requests';
+
+  String get driverProposalsEndpoint => '$driversMeEndpoint/proposals';
 
   String get vehiclesEndpoint => '$authBaseUrl/api/vehicles';
 
