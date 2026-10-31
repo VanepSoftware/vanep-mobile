@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/dependents/data/dtos/school_day_dto.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
-import 'package:vanep_mobile/modules/dependents/domain/value_objects/weekday.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
 
 void main() {
   test('a school day is read from weekday and schoolShift', () {

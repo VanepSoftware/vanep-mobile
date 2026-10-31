@@ -49,12 +49,17 @@ Para cada aluno, a grade "Dias e trechos" SHALL começar igual ao pedido ("Confo
 
 ### Requirement: Van
 
-A proposta SHALL levar uma van do motorista. Com uma van, ela SHALL ser escolhida sem perguntar. Com mais de uma, a tela SHALL mostrar um seletor. Sem nenhuma, a tela SHALL avisar e levar para o cadastro de van, e o envio SHALL ficar desativado.
+A proposta SHALL levar uma van do motorista. Com uma van, ela SHALL ser escolhida sem perguntar. Com mais de uma, a tela SHALL mostrar um seletor. Sem nenhuma, a tela SHALL avisar e levar para o cadastro de van, e o envio SHALL ficar desativado. Numa nova versão, a van da versão anterior SHALL vir escolhida; se ela não está mais entre as vans do motorista, a tela SHALL pedir outra.
 
 #### Scenario: Duas vans
 
 - **WHEN** o motorista tem uma Sprinter e uma Master
 - **THEN** a tela pede para escolher uma
+
+#### Scenario: Nova versão com a van removida
+
+- **WHEN** o motorista removeu a Master da versão 1 e abre "Nova versão"
+- **THEN** a tela pede para escolher outra van
 
 ### Requirement: Condições, validade e mensagem
 

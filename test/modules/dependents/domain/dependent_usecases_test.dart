@@ -14,7 +14,7 @@ import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
-import 'package:vanep_mobile/modules/dependents/domain/value_objects/weekday.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
 
 import '../dependents_fixtures.dart';
 import '../dependents_mocks.dart';
