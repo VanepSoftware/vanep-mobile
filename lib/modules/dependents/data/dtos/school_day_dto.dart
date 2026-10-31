@@ -2,7 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
-import 'package:vanep_mobile/modules/dependents/domain/value_objects/weekday.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
 
 part 'school_day_dto.freezed.dart';
 part 'school_day_dto.g.dart';

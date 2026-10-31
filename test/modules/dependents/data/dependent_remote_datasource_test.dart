@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/dependents/data/datasources/dependent_remote_datasource.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
-import 'package:vanep_mobile/modules/dependents/domain/value_objects/weekday.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
 
 import '../dependents_mocks.dart';
 

@@ -5,7 +5,7 @@ import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_days.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/replace_school_days.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
-import 'package:vanep_mobile/modules/dependents/domain/value_objects/weekday.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_school_days_state.dart';
 
