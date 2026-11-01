@@ -6,7 +6,6 @@ import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
 import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
@@ -21,7 +20,11 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/client_proposals_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_accepted_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_detail_page.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
@@ -176,16 +179,8 @@ Route<void> clientProposalsRoute(BuildContext context) {
       child: ClientProposalsPage(
         actions: ClientProposalsActions(
           onSearchVansTapped: () => openDriverSearch(context),
-          onSeeProposal: (_) => openComingSoonPage(
-            context,
-            title: AppLocalizations.of(context)!.clientProposalsSeeProposal,
-            message: AppLocalizations.of(context)!.comingSoon,
-          ),
-          onSeeRequest: (_) => openComingSoonPage(
-            context,
-            title: AppLocalizations.of(context)!.clientProposalsSeeRequest,
-            message: AppLocalizations.of(context)!.comingSoon,
-          ),
+          onSeeProposal: (request) => openProposalDetail(context, request),
+          onSeeRequest: (request) => openProposalDetail(context, request),
           onChat: (request) => openClientNegotiationChat(context, request),
         ),
       ),
@@ -195,6 +190,59 @@ Route<void> clientProposalsRoute(BuildContext context) {
 
 Future<void> openClientProposals(BuildContext context) {
   return Navigator.of(context).push(clientProposalsRoute(context));
+}
+
+Route<void> proposalDetailRoute(
+  BuildContext context,
+  ClientServiceRequest request, {
+  String? proposalToken,
+  bool acceptsOnOpen = false,
+}) {
+  return MaterialPageRoute<void>(
+    builder: (_) => BlocProvider<ProposalDetailCubit>(
+      create: (_) {
+        final cubit = getIt<ProposalDetailCubit>(
+          param1: request.token,
+          param2: proposalToken,
+        );
+        acceptsOnOpen ? cubit.loadAndAccept() : cubit.load();
+        return cubit;
+      },
+      child: ProposalDetailPage(
+        actions: ProposalDetailActions(
+          onChat: (request) => openClientNegotiationChat(context, request),
+          onAccepted: (request, proposal) =>
+              openProposalAccepted(context, request, proposal),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openProposalDetail(
+  BuildContext context,
+  ClientServiceRequest request,
+) {
+  return Navigator.of(context).push(
+    proposalDetailRoute(
+      context,
+      request,
+      proposalToken: request.currentProposal?.token,
+    ),
+  );
+}
+
+Future<void> openProposalAccepted(
+  BuildContext context,
+  ClientServiceRequest request,
+  Proposal proposal,
+) {
+  return Navigator.of(context).pushReplacement(
+    MaterialPageRoute<void>(
+      builder: (_) =>
+          ProposalAcceptedPage(request: request, proposal: proposal),
+    ),
+  );
 }
 
 Future<void> openDriverProfile(BuildContext context, String driverToken) {

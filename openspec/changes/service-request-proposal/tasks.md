@@ -70,10 +70,10 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 6. Fase 6 — Detalhe da proposta e aceite (`VAN-78/6-proposal-detail`)
 
-- [ ] 6.1 Testes primeiro para o `ProposalDetailCubit`: carrega proposta, solicitação e versões em paralelo; modo pedido carrega só a solicitação; aceitar com sucesso; 409 mostra o `detail` e recarrega; 404 sai. Depois implementá-lo até passarem
-- [ ] 6.2 Testes de widget primeiro para o detalhe: cada bloco da spec `client-proposal-detail`, horários por dia quando variam, taxa só quando existe, mudança de preço e link de comparação da versão 2, rodapé só em `SENT`, confirmação do aceite, versão substituída com link para a vigente, modo pedido com "Cancelar pedido". Depois implementar a página e a comparação até passarem
-- [ ] 6.3 Testes de widget primeiro para "Proposta aceita": resumo, etapas com a data do aceite e sem prazos, aviso de encerramento ao assinar, "Revisar e assinar contrato" abre "Em breve", "Assinar depois" fecha. Depois implementar até passarem
-- [ ] 6.4 Ligar "Ver proposta" e "Ver pedido" da lista ao detalhe; conferir com o teste da lista
+- [x] 6.1 Testes primeiro para o `ProposalDetailCubit`: carrega proposta, solicitação e versões em paralelo; modo pedido carrega só a solicitação; aceitar com sucesso; 409 mostra o `detail` e recarrega; 404 sai. Depois implementá-lo até passarem
+- [x] 6.2 Testes de widget primeiro para o detalhe: cada bloco da spec `client-proposal-detail`, horários por dia quando variam, taxa só quando existe, mudança de preço e link de comparação da versão 2, rodapé só em `SENT`, confirmação do aceite, versão substituída com link para a vigente, modo pedido com "Cancelar pedido". Depois implementar a página e a comparação até passarem
+- [x] 6.3 Testes de widget primeiro para "Proposta aceita": resumo, etapas com a data do aceite e sem prazos, aviso de encerramento ao assinar, "Revisar e assinar contrato" abre "Em breve", "Assinar depois" fecha. Depois implementar até passarem
+- [x] 6.4 Ligar "Ver proposta" e "Ver pedido" da lista ao detalhe; conferir com o teste da lista
 - [ ] 6.5 Rodar `make lint` e `make test`; testar no aparelho contra o back local: aceitar, versão substituída, aceite com cadastro mudado (409), comparação entre versões
 - [ ] 6.6 Abrir o PR
 
