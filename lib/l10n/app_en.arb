@@ -1584,6 +1584,8 @@
   "proposalDetailMessageTitle": "Message from the driver",
   "proposalDetailHistoryTitle": "History",
   "proposalDetailContractNotice": "If you accept, the contract is generated for review and signature.",
+  "proposalDetailDecline": "Decline",
+  "proposalDetailAskAdjustment": "Ask for a change",
   "proposalDetailAccept": "Accept",
   "proposalDetailSuperseded": "This version was replaced by a newer one.",
   "proposalDetailSeeCurrent": "See the current version",
@@ -1652,6 +1654,70 @@
     }
   },
   "proposalComparisonVehicle": "Vehicle",
+  "proposalAdjustmentCurrentVersion": "Version {version} · {installments}",
+  "@proposalAdjustmentCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      },
+      "installments": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAdjustmentValidUntil": "Version {version} stays valid until {date}.",
+  "@proposalAdjustmentValidUntil": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAdjustmentChangesTitle": "Changes",
+  "proposalAdjustmentSuggestedValue": "Suggested value",
+  "proposalAdjustmentPricePerInstallment": "Monthly fee",
+  "proposalAdjustmentMessage": "Message",
+  "proposalAdjustmentOptional": "Optional",
+  "proposalAdjustmentSend": "Send change request",
+  "proposalAdjustmentSent": "Change request sent.",
+  "proposalDeclineTitle": "Decline proposal",
+  "proposalDeclineSummary": "{installments} · For {names}",
+  "@proposalDeclineSummary": {
+    "placeholders": {
+      "installments": {
+        "type": "String"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDeclineReasonTitle": "Reason",
+  "proposalDeclineReasonPriceTooHigh": "Price above what I expected",
+  "proposalDeclineReasonScheduleDoesNotFit": "The times don't work for me",
+  "proposalDeclineReasonChoseAnotherVan": "I chose another van",
+  "proposalDeclineReasonNoLongerNeeded": "I no longer need transport",
+  "proposalDeclineReasonOther": "Another reason",
+  "proposalDeclineClosesNegotiation": "The negotiation with {driver} is closed.",
+  "@proposalDeclineClosesNegotiation": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDeclineConfirmTitle": "Decline the proposal?",
+  "proposalDeclineConfirmMessage": "This closes the negotiation with {driver} and can't be undone.",
+  "@proposalDeclineConfirmMessage": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
   "proposalAcceptedTitle": "Proposal accepted",
   "proposalAcceptedContract": "Contract for {names} with {driver} generated for signature.",
   "@proposalAcceptedContract": {

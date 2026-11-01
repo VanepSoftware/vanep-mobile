@@ -21,3 +21,18 @@ Future<bool> confirmProposalAcceptance(
     cancelLabel: l10n.proposalConfirmBack,
   );
 }
+
+Future<bool> confirmProposalDecline(
+  BuildContext context,
+  ClientServiceRequest request,
+) {
+  final l10n = AppLocalizations.of(context)!;
+  return showVanepConfirmDialog(
+    context: context,
+    title: l10n.proposalDeclineConfirmTitle,
+    message: l10n.proposalDeclineConfirmMessage(request.driverName),
+    confirmLabel: l10n.proposalDetailDecline,
+    cancelLabel: l10n.proposalConfirmBack,
+    isDestructive: true,
+  );
+}
