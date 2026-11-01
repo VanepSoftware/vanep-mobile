@@ -52,7 +52,7 @@ Para cada aluno marcado, a tela SHALL mostrar uma grade "Dias e trechos" com uma
 
 ### Requirement: Trajeto, início e mensagem
 
-A tela SHALL mostrar o embarque (endereço do dependente) e o destino (escola dele), com o aviso "O motorista vê só o bairro e o primeiro nome até o aceite". O início desejado SHALL ser obrigatório e de hoje em diante. A mensagem SHALL ser opcional, com até 1000 caracteres.
+A tela SHALL mostrar o embarque (endereço do dependente, numa linha só) e o destino (escola dele), sem aviso de privacidade. O início desejado SHALL ser obrigatório e de hoje em diante. A mensagem SHALL ser opcional, com até 1000 caracteres.
 
 #### Scenario: Data no passado
 
@@ -61,12 +61,12 @@ A tela SHALL mostrar o embarque (endereço do dependente) e o destino (escola de
 
 ### Requirement: Limite de pedidos abertos
 
-O rodapé SHALL mostrar "Resposta em até 72 h · n de 5 pedidos abertos", com n igual ao número de negociações `OPEN` e `ANSWERED` do responsável. Com 5 abertas, o envio SHALL ficar desativado e o rodapé SHALL dizer que o limite foi atingido.
+O rodapé SHALL mostrar "Resposta em até 72 h", sem a contagem de pedidos abertos. O app SHALL contar as negociações `OPEN` e `ANSWERED` do responsável e, com 5 abertas, o envio SHALL ficar desativado e o rodapé SHALL dizer que o limite foi atingido.
 
 #### Scenario: Quinto pedido
 
 - **WHEN** o responsável tem 4 negociações abertas
-- **THEN** o rodapé mostra "4 de 5" e o envio está disponível
+- **THEN** o rodapé mostra só "Resposta em até 72 h" e o envio está disponível
 
 ### Requirement: Envio
 

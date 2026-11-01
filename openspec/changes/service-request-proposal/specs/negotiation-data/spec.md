@@ -58,12 +58,12 @@ Cada solicitação SHALL trazer o `conversationToken` da conversa do par, nas du
 
 ### Requirement: Valores vêm do back
 
-O valor de uma proposta SHALL ser mostrado como as parcelas que o back calcula: `installments` vezes `installmentAmount` ("12x de R$ 300" ou "R$ 300 x12"), e o total como `totalAmount`. O app SHALL NOT calcular a parcela a partir do total nem o total a partir dos valores dos alunos, com uma única exceção: a prévia da tela de montar proposta, antes do envio, aplica a mesma regra do back (total dividido pelas parcelas, centavos truncados). O preço base do motorista na busca SHALL aparecer sem parcelas ("a partir de R$ 320").
+O valor de uma proposta SHALL ser mostrado como as parcelas que o back calcula: `installments` vezes `installmentAmount` ("R$ 300/mês · 12x"; com uma parcela só, "R$ 3.600 à vista"), e o total como `totalAmount`. A última parcela vem em `lastInstallmentAmount`, que leva o resto da divisão. As parcelas vencem todo mês no dia de vencimento, então o "/mês" diz quanto a família paga por mês e o "12x", por quantos meses. Os dois SHALL aparecer sempre juntos, para que duas propostas com números de parcelas diferentes não sejam comparadas só pela mensalidade. O app SHALL NOT calcular a parcela a partir do total nem o total a partir dos valores dos alunos, com uma única exceção: a prévia da tela de montar proposta, antes do envio, aplica a mesma regra do back (total dividido pelas parcelas, centavos truncados). O preço base do motorista na busca SHALL aparecer sem parcelas ("a partir de R$ 320").
 
 #### Scenario: Total que não divide exato
 
 - **WHEN** o back devolve `totalAmount = 1000.00`, `installments = 3` e `installmentAmount = 333.33`
-- **THEN** o card mostra "3x de R$ 333,33"
+- **THEN** o card mostra "R$ 333,33/mês · 3x"
 
 ### Requirement: Prazos
 

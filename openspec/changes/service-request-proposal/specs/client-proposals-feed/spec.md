@@ -62,6 +62,11 @@ O controle Em aberto / Encerradas SHALL mostrar a quantidade de cada aba no filt
 - **WHEN** o responsável filtra pelo Pedro, que tem 1 de 3 negociações abertas
 - **THEN** a aba mostra 1 e a linha continua "3 de 5 solicitações abertas"
 
+#### Scenario: Encerradas de um filho em várias páginas
+
+- **WHEN** o responsável tem 30 encerradas e filtra pela Ana, que tem 2 delas, uma na segunda página
+- **THEN** o app carrega as páginas de encerradas até o fim e a aba Encerradas mostra 2
+
 ### Requirement: Filtro por filho
 
 Com mais de um dependente, a tela SHALL mostrar o botão "Todos os filhos" com a gaveta "Ver propostas de", uma opção por dependente com a idade e o resumo ("2 para responder · 1 aguardando", "Nenhuma em aberto"). Uma negociação SHALL aparecer no filtro de um filho quando qualquer item dela é daquele filho. Negociações de um dependente que foi removido SHALL aparecer só em "Todos os filhos". Com um dependente ou nenhum, o botão SHALL NOT aparecer.
@@ -73,7 +78,7 @@ Com mais de um dependente, a tela SHALL mostrar o botão "Todos os filhos" com a
 
 ### Requirement: Cancelar pedido
 
-"Cancelar pedido" SHALL pedir confirmação e então retirar o pedido. No sucesso, ele SHALL sair de Em aberto e aparecer em Encerradas como "Encerrada por você".
+"Cancelar pedido" SHALL pedir confirmação e então retirar o pedido. No sucesso, ele SHALL sair de Em aberto e aparecer em Encerradas como "Encerrada por você", e a lista SHALL ser recarregada do back.
 
 #### Scenario: Cancelamento confirmado
 

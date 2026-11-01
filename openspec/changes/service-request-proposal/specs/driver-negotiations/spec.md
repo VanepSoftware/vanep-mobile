@@ -48,7 +48,14 @@ O pedido SHALL mostrar o responsável (primeiro nome), quando o pedido chegou e 
 
 ### Requirement: Ajuste solicitado
 
-A tela do ajuste SHALL mostrar "Conversar", o pedido de ajuste (assunto, valor sugerido e mensagem, com a data), a versão atual (versão, valor, dias, embarque e validade), "Ver proposta completa" e o histórico, com a linha "Uma nova versão substitui a anterior.". O rodapé SHALL ter "Recusar" (recusa o pedido) e "Nova versão" (abre o montar proposta preenchido com a versão atual). "Manter atual" e "você receberia" SHALL NOT aparecer.
+A tela do ajuste SHALL mostrar "Conversar", o pedido de ajuste, a versão atual (versão, valor, dias, embarque e validade), "Ver proposta completa" e o histórico, com a linha "Uma nova versão substitui a anterior.". O rodapé SHALL ter "Recusar" (recusa o pedido) e "Nova versão" (abre o montar proposta preenchido com a versão atual). "Manter atual" e "você receberia" SHALL NOT aparecer.
+
+O pedido de ajuste SHALL ser um card com borda azul que começa com "AJUSTE SOLICITADO · <ASSUNTO>" e, à direita, quando foi enviado ("hoje, 9h40", "ontem, 18h05" ou "30/09, 7h00"). No meio, o valor da versão vigente ("Versão n") SHALL aparecer à esquerda e o valor sugerido ("Sugerido"), em azul, à direita, com uma seta entre os dois, quando o assunto é valor, parcelas ou período. Nos dias e horários e em "Outro", só "Sugerido" aparece. Sem valor sugerido, o meio SHALL NOT aparecer. A mensagem SHALL aparecer num bloco cinza no fim. Os rótulos "Assunto" e "Enviado em" SHALL NOT aparecer.
+
+#### Scenario: Valor sugerido comparado
+
+- **WHEN** a parcela da versão 1 é R$ 340 e a família sugere R$ 290
+- **THEN** o card mostra "AJUSTE SOLICITADO · VALOR", "Versão 1: R$ 340" e "Sugerido: R$ 290"
 
 #### Scenario: Responder com nova versão
 
