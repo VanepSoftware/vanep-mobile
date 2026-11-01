@@ -6,12 +6,17 @@ Faz os itens de negociação da Início do responsável (proposta nova, pedido e
 
 ### Requirement: Proposta nova em "Precisa de você"
 
-Cada negociação em que o responsável precisa responder a uma proposta SHALL virar um item "Proposta nova" com o motorista, os filhos, os trechos ("ida e volta", "só ida", "só volta" ou "ida e volta em alguns dias"), o valor em parcelas e "Expira em n dias" pela validade. Tocar no item SHALL abrir o detalhe da proposta, e "Conversar" SHALL abrir a conversa com o motorista. Uma proposta com ajuste pedido SHALL NOT virar item.
+Cada negociação em que o responsável precisa responder a uma proposta SHALL virar um item "Proposta nova" com o motorista, os filhos, a parcela com a quantidade ("R$ 650/mês · 12x") e o selo "Expira em n dias" pela validade ("Expira hoje", "Expira amanhã"), em âmbar quando faltam até 2 dias. Em destaque, o card SHALL ter fundo branco e borda azul suave. Tocar no item SHALL abrir o detalhe da proposta, e "Conversar" SHALL abrir a conversa com o motorista. Uma proposta com ajuste pedido SHALL NOT virar item.
 
 #### Scenario: Proposta para os dois irmãos
 
-- **WHEN** Carlos mandou 12x de R$ 650 para Ana e Pedro, ida e volta, válida por mais 6 dias
-- **THEN** o item mostra "Carlos Souza", "Ana e Pedro · ida e volta", "12x de R$ 650" e "Expira em 6 dias"
+- **WHEN** Carlos mandou R$ 650/mês · 12x para Ana e Pedro, válida por mais 6 dias
+- **THEN** o item mostra "Carlos Souza", "Ana e Pedro", "R$ 650/mês · 12x" e o selo cinza "Expira em 6 dias"
+
+#### Scenario: Proposta perto de vencer
+
+- **WHEN** a proposta vence amanhã
+- **THEN** o selo diz "Expira amanhã" em âmbar
 
 ### Requirement: Pedido expirado
 
