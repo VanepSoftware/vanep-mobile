@@ -45,10 +45,10 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 3. Fase 3 — Core do responsável (`VAN-78/3-client-core`)
 
-- [ ] 3.1 Testes primeiro para `formatInstallments` e os outros formatadores do `core/formatters/` (datas, `joinNames`, `firstNameOf`, `joinFirstNames`, dias da semana, campo de dinheiro) (D7); depois implementá-los até passarem
-- [ ] 3.2 Testes de widget primeiro para `VanepWeekLegsGrid` em `core/ui/` (só leitura; editável; trecho não permitido desativado; sábado e domingo só quando existem; semântica de cada célula); depois implementá-lo até passarem
-- [ ] 3.3 Testes de widget primeiro para os componentes novos do `core/ui/` (`VanepChip`, `VanepExpiryChip`, `VanepCurrentDot`, `VanepInstallmentPrice`) e para o botão secundário de perigo; depois implementá-los até passarem
-- [ ] 3.4 Rodar `make lint` e `make test`
+- [x] 3.1 Testes primeiro para `formatInstallments` e os outros formatadores do `core/formatters/` (datas, `joinNames`, `firstNameOf`, `joinFirstNames`, dias da semana, campo de dinheiro) (D7); depois implementá-los até passarem
+- [x] 3.2 Testes de widget primeiro para `VanepWeekLegsGrid` em `core/ui/` (só leitura; editável; trecho não permitido desativado; sábado e domingo só quando existem; semântica de cada célula); depois implementá-lo até passarem
+- [x] 3.3 Testes de widget primeiro para os componentes novos do `core/ui/` (`VanepChip`, `VanepExpiryChip`, `VanepCurrentDot`, `VanepInstallmentPrice`) e para o botão secundário de perigo; depois implementá-los até passarem
+- [x] 3.4 Rodar `make lint` e `make test`
 - [ ] 3.5 Abrir o PR
 
 ## 4. Fase 4 — Regras e rótulos da negociação (`VAN-78/4-negotiation-rules`)

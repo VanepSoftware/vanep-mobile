@@ -8,7 +8,6 @@ import 'package:vanep_mobile/modules/schools/domain/failures/school_failure.dart
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
-import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_field_error.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_wizard_step.dart';
 
@@ -163,30 +162,6 @@ String dependentReadinessItemLabel(
     DependentWizardStep.school => l10n.dependentRowSchool,
     DependentWizardStep.schoolDays => l10n.dependentRowSchoolDays,
     DependentWizardStep.pickup => l10n.dependentRowPickup,
-  };
-}
-
-String weekdayLabel(AppLocalizations l10n, Weekday day) {
-  return switch (day) {
-    Weekday.monday => l10n.weekdayMonday,
-    Weekday.tuesday => l10n.weekdayTuesday,
-    Weekday.wednesday => l10n.weekdayWednesday,
-    Weekday.thursday => l10n.weekdayThursday,
-    Weekday.friday => l10n.weekdayFriday,
-    Weekday.saturday => l10n.weekdaySaturday,
-    Weekday.sunday => l10n.weekdaySunday,
-  };
-}
-
-String weekdayInitial(AppLocalizations l10n, Weekday day) {
-  return switch (day) {
-    Weekday.monday => l10n.weekdayInitialMonday,
-    Weekday.tuesday => l10n.weekdayInitialTuesday,
-    Weekday.wednesday => l10n.weekdayInitialWednesday,
-    Weekday.thursday => l10n.weekdayInitialThursday,
-    Weekday.friday => l10n.weekdayInitialFriday,
-    Weekday.saturday => l10n.weekdayInitialSaturday,
-    Weekday.sunday => l10n.weekdayInitialSunday,
   };
 }
 

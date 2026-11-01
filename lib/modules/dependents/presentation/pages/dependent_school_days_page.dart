@@ -16,6 +16,7 @@ import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_school_days_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_school_days_state.dart';
+import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_editor_frame.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependents_list_card.dart';

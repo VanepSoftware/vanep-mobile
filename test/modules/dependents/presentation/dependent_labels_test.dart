@@ -4,7 +4,6 @@ import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/l10n/app_localizations_pt.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
-import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_wizard_step.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
@@ -242,15 +241,7 @@ void main() {
       expect(dependentPickupSummary(null), isNull);
     });
 
-    test('the week days, their initials and the shifts', () {
-      expect(
-        [for (final day in Weekday.values) weekdayLabel(l10n, day)],
-        ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-      );
-      expect(
-        [for (final day in Weekday.values) weekdayInitial(l10n, day)],
-        ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-      );
+    test('the shifts', () {
       expect(
         [for (final shift in SchoolShift.values) schoolShiftLabel(l10n, shift)],
         ['Manhã', 'Tarde', 'Noite', 'Integral'],

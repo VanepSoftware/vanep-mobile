@@ -659,6 +659,7 @@
   "clientHomeWeekdayShortSaturday": "sat",
   "clientHomeWeekdayShortSunday": "sun",
   "clientHomeNamesListLastSeparator": " and ",
+  "namesListLastSeparator": " and ",
   "clientHomeTodayTitle": "Today",
   "clientHomeNeedsYouTitle": "Needs you",
   "clientHomeShortcutsTitle": "Shortcuts",
@@ -1024,28 +1025,6 @@
   "clientHomeContractStepStart": "Start",
   "clientHomeReviewAndSign": "Review and sign",
   "clientHomeNewProposal": "New proposal",
-  "clientHomeExpiresIn": "{count, plural, =0{Expires today} =1{Expires in 1 day} other{Expires in {count} days}}",
-  "@clientHomeExpiresIn": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "clientHomeRoundTrip": "round trip",
-  "clientHomeOneWay": "one way",
-  "clientHomeNamesAndTrip": "{names} · {trip}",
-  "@clientHomeNamesAndTrip": {
-    "placeholders": {
-      "names": {
-        "type": "String"
-      },
-      "trip": {
-        "type": "String"
-      }
-    }
-  },
-  "clientHomePerMonth": "/month",
   "clientHomeChat": "Chat",
   "clientHomeSeeProposal": "See proposal",
   "clientHomeNewProposalFor": "New proposal for {names}",
@@ -1146,6 +1125,28 @@
       }
     }
   },
+  "clientHomeExpiresIn": "{count, plural, =0{Expires today} =1{Expires in 1 day} other{Expires in {count} days}}",
+  "@clientHomeExpiresIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientHomeRoundTrip": "round trip",
+  "clientHomeOneWay": "one way",
+  "clientHomeNamesAndTrip": "{names} · {trip}",
+  "@clientHomeNamesAndTrip": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "trip": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomePerMonth": "/month",
   "clientProposalsTitle": "Proposals",
   "clientProposalsSearchVans": "Search more vans",
   "clientProposalsAllChildren": "All children",
@@ -1201,6 +1202,7 @@
     }
   },
   "clientProposalsMondayToFriday": "Mon to Fri",
+  "weekdayRangeMondayToFriday": "Mon to Fri",
   "clientProposalsStartingOn": "from {date}",
   "@clientProposalsStartingOn": {
     "placeholders": {
@@ -1590,6 +1592,13 @@
   "weekdayInitialFriday": "F",
   "weekdayInitialSaturday": "S",
   "weekdayInitialSunday": "S",
+  "weekdayShortMonday": "Mon",
+  "weekdayShortTuesday": "Tue",
+  "weekdayShortWednesday": "Wed",
+  "weekdayShortThursday": "Thu",
+  "weekdayShortFriday": "Fri",
+  "weekdayShortSaturday": "Sat",
+  "weekdayShortSunday": "Sun",
   "schoolShiftMorning": "Morning",
   "schoolShiftAfternoon": "Afternoon",
   "schoolShiftNight": "Night",
@@ -1608,5 +1617,47 @@
   "dependentWizardContinue": "Continue",
   "dependentWizardFinish": "Finish",
   "dependentWizardSkip": "Skip",
-  "dependentsTitle": "Dependents"
+  "dependentsTitle": "Dependents",
+  "negotiationInstallments": "{count, plural, =1{{amount} upfront} other{{amount}/month · {count}x}}",
+  "@negotiationInstallments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "weekLegsCellLabel": "{day}, {leg}",
+  "@weekLegsCellLabel": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "leg": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarDateRange": "{start} to {end}",
+  "@calendarDateRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "installmentPriceMonthly": "/month · {count}x",
+  "@installmentPriceMonthly": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "installmentPriceUpfront": "upfront"
 }

@@ -12,6 +12,9 @@ class VanepColors {
   static const Color ratingStar = Color(0xFFF5A623);
   static const Color avatarPlaceholder = Color(0xFFE8EAED);
   static const Color danger = Color(0xFFC4564A);
+  static const Color dangerSurface = Color(0xFFFDF3F2);
+  static const Color dangerBorder = Color(0xFFF0CDC8);
+  static const Color dangerText = Color(0xFFB3443A);
   static const Color warning = Color(0xFFC98A1F);
   static const Color warningSurface = Color(0xFFFBF0DA);
   static const Color warningSurfaceSoft = Color(0xFFFFFAEE);
@@ -20,6 +23,9 @@ class VanepColors {
 
   static const Color action = Color(0xFF0B6BD3);
   static const Color actionSurface = Color(0x140B6BD3);
+  static const Color actionHalo = Color(0x2E0B6BD3);
+  static const Color actionTint = Color(0xFFF5F9FE);
+  static const Color actionBorder = Color(0xFFB9D3F2);
   static const Color success = Color(0xFF1E8E5A);
   static const Color inputBorder = Color(0xFFDFE3E7);
   static const Color cardBorder = Color(0xFFE4E5E7);
