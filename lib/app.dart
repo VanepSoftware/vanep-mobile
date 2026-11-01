@@ -29,6 +29,13 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/pages/client_
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_accepted_page.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_adjustment_page.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_detail_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/quote_request_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_request_cubit.dart';
+import 'package:vanep_mobile/modules/contract_readiness/domain/entities/contract_readiness.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_wizard_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_address_form_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_decline_sheet.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
@@ -177,6 +184,8 @@ Future<void> openDriverSearch(BuildContext context) async {
           autocomplete: autocomplete,
           onDriverSelected: (driverToken) =>
               openDriverProfile(context, driverToken),
+          onQuoteRequested: (driverToken) =>
+              openQuoteRequest(context, driverToken),
         ),
       ),
     ),
@@ -202,6 +211,57 @@ Route<void> clientProposalsRoute(BuildContext context) {
 
 Future<void> openClientProposals(BuildContext context) {
   return Navigator.of(context).push(clientProposalsRoute(context));
+}
+
+Future<void> openQuoteRequest(BuildContext context, String driverToken) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<QuoteRequestCubit>(
+        create: (_) => getIt<QuoteRequestCubit>(param1: driverToken)..load(),
+        child: QuoteRequestPage(
+          actions: QuoteRequestActions(
+            onCompleteStudent: (dependent, gaps) =>
+                openDependentCompletionWizard(
+                  context,
+                  dependent: dependent,
+                  gaps: gaps,
+                ),
+            onCompleteClientField: (field) =>
+                openClientReadinessField(context, field),
+            onSent: (_) =>
+                Navigator.of(context)
+                    .pushReplacement(clientProposalsRoute(context)),
+            onOpenNegotiation: (request) =>
+                openProposalDetail(context, request),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openClientReadinessField(
+  BuildContext context,
+  ContractReadinessField field,
+) async {
+  final syncProfile = context.read<AuthCubit>().syncProfile;
+  final Widget page;
+  switch (field) {
+    case ContractReadinessField.phone:
+      page = const PersonalDataPage();
+    case ContractReadinessField.address:
+      page = const PersonalAddressFormPage();
+    default:
+      return;
+  }
+  await Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<PersonalDataCubit>(
+        create: (_) => getIt<PersonalDataCubit>(param1: syncProfile)..load(),
+        child: page,
+      ),
+    ),
+  );
 }
 
 Route<void> proposalDetailRoute(
@@ -302,7 +362,10 @@ Future<void> openDriverProfile(BuildContext context, String driverToken) {
       builder: (_) => BlocProvider<DriverProfileCubit>(
         create: (_) =>
             getIt<DriverProfileCubit>(param1: driverToken)..loadProfile(),
-        child: const DriverProfilePage(),
+        child: DriverProfilePage(
+          onQuoteRequested: (driverToken) =>
+              openQuoteRequest(context, driverToken),
+        ),
       ),
     ),
   );

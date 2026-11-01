@@ -87,9 +87,9 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 8. Fase 8 — Pedir orçamento (`VAN-78/8-quote-request`)
 
-- [ ] 8.1 Testes primeiro para o `QuoteRequestCubit`: carrega motorista, dependentes, prontidão, a grade de cada dependente e as abertas; dependente incompleto desativado; lacunas do responsável desativam o envio; grade inicial com todos os trechos; "Completar" e a volta consultam a prontidão de novo; limite de 5; envio com sucesso; 409 de pedido aberto oferece a negociação existente; 422 mantém o rascunho. Depois implementá-lo até passarem
-- [ ] 8.2 Testes de widget primeiro para a tela: cabeçalho com e sem nota, alunos com caixa e "Completar", uma grade por aluno marcado, trajeto, início sem datas passadas, mensagem, rodapé "n de 5" e o aviso de lacuna do responsável (telefone e endereço com destino, CPF sem link). Depois implementar a página até passarem
-- [ ] 8.3 Adicionar "Pedir orçamento" ao `DriverCard` da busca e ao `DriverProfilePage` (desativado com aviso quando `available = false`), o preço base sem parcelas no card, e a rota `openQuoteRequest` no `app.dart`; conferir com os testes de widget da busca e do perfil
+- [x] 8.1 Testes primeiro para o `QuoteRequestCubit`: carrega motorista, dependentes, prontidão, a grade de cada dependente e as abertas; dependente incompleto desativado; lacunas do responsável desativam o envio; grade inicial com todos os trechos; "Completar" e a volta consultam a prontidão de novo; limite de 5; envio com sucesso; 409 de pedido aberto oferece a negociação existente; 422 mantém o rascunho. Depois implementá-lo até passarem
+- [x] 8.2 Testes de widget primeiro para a tela: cabeçalho com e sem nota, alunos com caixa e "Completar", uma grade por aluno marcado, trajeto, início sem datas passadas, mensagem, rodapé "n de 5" e o aviso de lacuna do responsável (telefone e endereço com destino, CPF sem link). Depois implementar a página até passarem
+- [x] 8.3 Adicionar "Pedir orçamento" ao `DriverCard` da busca e ao `DriverProfilePage` (desativado com aviso quando `available = false`), o preço base sem parcelas no card, e a rota `openQuoteRequest` no `app.dart`; conferir com os testes de widget da busca e do perfil
 - [ ] 8.4 Rodar `make lint` e `make test`; testar no aparelho contra o back local: pedido para um filho, para dois, com dependente incompleto, com o responsável sem telefone, quinto e sexto pedido, pedido repetido para o mesmo motorista; o pedido abre a conversa, que aparece na caixa de entrada das duas partes
 - [ ] 8.5 Abrir o PR
 

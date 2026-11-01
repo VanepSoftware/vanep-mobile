@@ -6,6 +6,7 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/phone_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
@@ -14,7 +15,9 @@ import 'package:vanep_mobile/modules/drivers/presentation/formatters/driver_prof
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_profile_sections.dart';
 
 class DriverProfilePage extends StatelessWidget {
-  const DriverProfilePage({super.key});
+  const DriverProfilePage({this.onQuoteRequested, super.key});
+
+  final ValueChanged<String>? onQuoteRequested;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +57,32 @@ class DriverProfilePage extends StatelessWidget {
               DriverProfileBody(profile: profile),
             DriverProfileStatus.loaded => const SizedBox.shrink(),
           },
+          bottomNavigationBar: profile == null
+              ? null
+              : SafeArea(
+                  minimum: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (!profile.available) ...[
+                        Text(
+                          l10n.quoteRequestDriverUnavailable,
+                          textAlign: TextAlign.center,
+                          style: VanepTypography.cardSubtitle,
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                      VanepPrimaryButton(
+                        label: l10n.driverRequestQuoteButton,
+                        onPressed:
+                            onQuoteRequested == null || !profile.available
+                            ? null
+                            : () => onQuoteRequested!(profile.token),
+                      ),
+                    ],
+                  ),
+                ),
         );
       },
     );

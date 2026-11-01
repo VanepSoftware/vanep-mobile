@@ -503,6 +503,15 @@
   "driverVanFailureNetwork": "No connection to the server. Try again.",
   "driverVanFailureUnexpected": "Something went wrong. Try again.",
   "driverVansLoadError": "Could not load your van.",
+  "driverBasePriceFrom": "from {price}",
+  "@driverBasePriceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "driverRequestQuoteButton": "Request a quote",
   "assistantEnterWithInvite": "Enter as assistant",
   "assistantInviteTitle": "Assistant invitation",
   "assistantInviteSubtitle": "Enter the code shared with you by the driver.",
@@ -1906,6 +1915,31 @@
     }
   },
   "proposalConfirmBack": "Back",
+  "quoteRequestTitle": "Request a quote",
+  "quoteRequestLoadError": "Could not open the quote request.",
+  "quoteRequestStudentsTitle": "Students",
+  "quoteRequestNoStudents": "Add a dependent to request a quote.",
+  "quoteRequestIncomplete": "Incomplete profile",
+  "quoteRequestComplete": "Complete",
+  "quoteRequestRouteTitle": "Route",
+  "quoteRequestPickup": "Pickup",
+  "quoteRequestDestination": "Destination",
+  "quoteRequestLimitReached": "You reached the limit of {limit} open requests.",
+  "@quoteRequestLimitReached": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "quoteRequestClientGapsTitle": "To request a quote, complete your profile:",
+  "quoteRequestGapPhone": "Phone",
+  "quoteRequestGapAddress": "Address",
+  "quoteRequestGapDocument": "CPF",
+  "quoteRequestSend": "Send request",
+  "quoteRequestSeeNegotiation": "See negotiation",
+  "quoteRequestDriverUnavailable": "This driver is not taking new students.",
+  "quoteRequestFooter": "Reply within 72 h",
   "calendarDateRange": "{start} to {end}",
   "@calendarDateRange": {
     "placeholders": {
