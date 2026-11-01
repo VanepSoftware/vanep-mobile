@@ -12,6 +12,10 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_state.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_state.dart';
+import 'package:vanep_mobile/modules/conversations/domain/usecases/find_conversation_negotiation.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiation_timeline_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiation_timeline_state.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_proposal_versions.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_service_requests.dart';
 
@@ -39,6 +43,13 @@ class MockListClientServiceRequests extends Mock
 
 class MockListClientProposalVersions extends Mock
     implements ListClientProposalVersions {}
+
+class MockFindConversationNegotiation extends Mock
+    implements FindConversationNegotiation<ClientServiceRequest> {}
+
+class MockNegotiationTimelineCubit
+    extends MockCubit<NegotiationTimelineState<ClientServiceRequest>>
+    implements NegotiationTimelineCubit<ClientServiceRequest> {}
 
 class MockListMyConversations extends Mock implements ListMyConversations {}
 

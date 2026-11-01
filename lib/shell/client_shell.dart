@@ -18,6 +18,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_pa
 import 'package:vanep_mobile/modules/drivers/presentation/pages/find_vans_tab.dart';
 import 'package:vanep_mobile/shell/client_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 
 const clientShellHomeTabIndex = 0;
 
@@ -34,6 +35,8 @@ class ClientShell extends StatefulWidget {
     required this.openDriverProfile,
     required this.openConversationChat,
     required this.openClientProposals,
+    required this.openProposalDetail,
+    required this.openNegotiationChat,
     super.key,
   });
 
@@ -48,6 +51,18 @@ class ClientShell extends StatefulWidget {
   openConversationChat;
 
   final Future<void> Function(BuildContext context) openClientProposals;
+
+  final Future<void> Function(
+    BuildContext context,
+    ClientServiceRequest request,
+  )
+  openProposalDetail;
+
+  final Future<void> Function(
+    BuildContext context,
+    ClientServiceRequest request,
+  )
+  openNegotiationChat;
 
   @override
   State<ClientShell> createState() => ClientShellState();
@@ -83,6 +98,10 @@ class ClientShellState extends State<ClientShell> {
             onAddDependentTapped: () =>
                 selectShellTab(clientShellDependentsTabIndex),
             onProposalsTapped: () => widget.openClientProposals(context),
+            onProposalTapped: (request) =>
+                openProposalAndReloadHome(context, request),
+            onNegotiationChatTapped: (request) =>
+                widget.openNegotiationChat(context, request),
           ),
           FindVansTab(
             onSearchTapped: () => widget.openDriverSearch(context),
@@ -115,6 +134,15 @@ class ClientShellState extends State<ClientShell> {
     if (index == clientShellDependentsTabIndex) {
       context.read<DependentsCubit>().loadDependents();
     }
+  }
+
+  Future<void> openProposalAndReloadHome(
+    BuildContext context,
+    ClientServiceRequest request,
+  ) async {
+    final homeCubit = context.read<ClientHomeCubit>();
+    await widget.openProposalDetail(context, request);
+    await homeCubit.loadHome();
   }
 
   Future<void> openAddressFormFromHome(BuildContext context) async {

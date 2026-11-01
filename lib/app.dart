@@ -19,6 +19,7 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_
 import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiation_timeline_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_cubit.dart';
@@ -36,6 +37,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_wiz
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_address_form_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_confirmations.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_decline_sheet.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
@@ -153,6 +155,8 @@ class AuthGate extends StatelessWidget {
                       viewerSide: ConversationParticipant.client,
                     ),
                 openClientProposals: openClientProposals,
+                openProposalDetail: openProposalDetail,
+                openNegotiationChat: openClientNegotiationChat,
               ),
             ),
           },
@@ -302,6 +306,23 @@ Future<void> openProposalDetail(
   );
 }
 
+Future<void> openProposalAcceptance(
+  BuildContext context,
+  ClientServiceRequest request,
+  Proposal proposal,
+) async {
+  if (!await confirmProposalAcceptance(context, request)) return;
+  if (!context.mounted) return;
+  await Navigator.of(context).push(
+    proposalDetailRoute(
+      context,
+      request,
+      proposalToken: proposal.token,
+      acceptsOnOpen: true,
+    ),
+  );
+}
+
 Future<bool> openProposalAdjustment(
   BuildContext context,
   ClientServiceRequest request,
@@ -386,14 +407,48 @@ Future<void> openConversationChat(
 }) {
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => BlocProvider<ChatCubit>(
-        create: (_) => getIt<ChatCubit>(param1: conversationToken)..start(),
-        child: ChatPage(
-          counterpartName: counterpartName,
-          viewerSide: viewerSide,
+      builder: (_) => switch (viewerSide) {
+        ConversationParticipant.client => MultiBlocProvider(
+          providers: [
+            BlocProvider<ChatCubit>(
+              create: (_) =>
+                  getIt<ChatCubit>(param1: conversationToken)..start(),
+            ),
+            BlocProvider<NegotiationTimelineCubit<ClientServiceRequest>>(
+              create: (_) =>
+                  getIt<NegotiationTimelineCubit<ClientServiceRequest>>(
+                    param1: conversationToken,
+                  )..load(),
+            ),
+          ],
+          child: ChatPage<ClientServiceRequest>(
+            counterpartName: counterpartName,
+            viewerSide: ConversationParticipant.client,
+            negotiationActions: clientNegotiationChatActions(context),
+          ),
         ),
-      ),
+        ConversationParticipant.driver => BlocProvider<ChatCubit>(
+          create: (_) => getIt<ChatCubit>(param1: conversationToken)..start(),
+          child: ChatPage(
+            counterpartName: counterpartName,
+            viewerSide: ConversationParticipant.driver,
+          ),
+        ),
+      },
     ),
+  );
+}
+
+NegotiationChatActions<ClientServiceRequest> clientNegotiationChatActions(
+  BuildContext context,
+) {
+  return NegotiationChatActions(
+    onSeeProposal: (request) => openProposalDetail(context, request),
+    onAccept: (request, proposal) =>
+        openProposalAcceptance(context, request, proposal),
+    onAskAdjustment: (request, proposal) async {
+      await openProposalAdjustment(context, request, proposal);
+    },
   );
 }
 

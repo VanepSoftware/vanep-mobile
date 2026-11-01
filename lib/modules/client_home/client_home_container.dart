@@ -8,6 +8,7 @@ import 'package:vanep_mobile/modules/client_home/data/datasources/empty_daily_ov
 import 'package:vanep_mobile/modules/client_home/data/datasources/scenario_daily_overview_datasource.dart';
 import 'package:vanep_mobile/modules/client_home/data/repositories/client_home_repository_impl.dart';
 import 'package:vanep_mobile/modules/client_home/domain/repositories/client_home_repository.dart';
+import 'package:vanep_mobile/modules/client_home/domain/usecases/find_negotiation_highlights.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/load_client_home.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/prioritize_needs_you_items.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_enabled_shortcuts.dart';
@@ -15,6 +16,7 @@ import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_home_he
 import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_section_without_van.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_service_requests.dart';
 
 // TODO(VAN-41): switches between empty and mocked data via
 // CLIENT_HOME_SCENARIO; register the remote data source here once the API
@@ -39,10 +41,16 @@ void registerClientHomeDependencies(GetIt getIt) {
         findMyDependents: getIt<FindMyDependents>(),
       ),
     )
+    ..registerFactory<FindNegotiationHighlights>(
+      () => FindNegotiationHighlights(
+        listServiceRequests: getIt<ListClientServiceRequests>(),
+      ),
+    )
     ..registerFactory<LoadClientHome>(
       () => LoadClientHome(
         repository: getIt<ClientHomeRepository>(),
         resolveSectionWithoutVan: getIt<ResolveSectionWithoutVan>(),
+        findNegotiationHighlights: getIt<FindNegotiationHighlights>(),
         prioritizeNeedsYouItems: const PrioritizeNeedsYouItems(),
         resolveEnabledShortcuts: const ResolveEnabledShortcuts(),
         resolveHomeHeadline: const ResolveHomeHeadline(),
