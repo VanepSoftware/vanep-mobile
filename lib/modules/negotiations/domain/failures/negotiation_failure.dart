@@ -40,3 +40,8 @@ final class NegotiationInvalidFailure extends NegotiationFailure {
 final class NegotiationUnexpectedFailure extends NegotiationFailure {
   const NegotiationUnexpectedFailure();
 }
+
+bool isNegotiationOutdated(NegotiationFailure failure) {
+  return failure is NegotiationConflictFailure ||
+      failure is NegotiationNotFoundFailure;
+}

@@ -53,8 +53,6 @@ void main() {
         at: versionOneSentAt,
         proposalToken: 'proposal-v1',
         version: 1,
-        installments: 12,
-        installmentAmountCents: 34000,
         isOpen: false,
       ),
       AdjustmentRequestedEvent(
@@ -66,8 +64,6 @@ void main() {
         at: versionTwoSentAt,
         proposalToken: 'proposal-v2',
         version: 2,
-        installments: 12,
-        installmentAmountCents: 30000,
         isOpen: true,
       ),
     ]);

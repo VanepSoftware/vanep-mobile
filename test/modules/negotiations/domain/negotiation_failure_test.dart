@@ -45,4 +45,17 @@ void main() {
       isNot(equals(const NegotiationNetworkFailure())),
     );
   });
+
+  test('a conflict or a missing negotiation means it changed elsewhere', () {
+    expect(
+      isNegotiationOutdated(const NegotiationConflictFailure(detail: '')),
+      isTrue,
+    );
+    expect(isNegotiationOutdated(const NegotiationNotFoundFailure()), isTrue);
+    expect(
+      isNegotiationOutdated(const NegotiationRejectedFailure(detail: '')),
+      isFalse,
+    );
+    expect(isNegotiationOutdated(const NegotiationNetworkFailure()), isFalse);
+  });
 }

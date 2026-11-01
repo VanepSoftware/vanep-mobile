@@ -53,9 +53,9 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 4. Fase 4 — Regras e rótulos da negociação (`VAN-78/4-negotiation-rules`)
 
-- [ ] 4.1 Testes primeiro para as regras novas de `negotiations/domain`: comparação de versões, horários que mudaram, mudança de preço pelo total, grupos de itens por horário e por dias, horários por trecho, escolas da solicitação e o limite do motivo com a mensagem da recusa; depois implementá-las até passarem
-- [ ] 4.2 Testes primeiro para os rótulos dos enums da negociação e do histórico em `negotiations/presentation/formatters/` (D7); depois implementá-los até passarem
-- [ ] 4.3 Rodar `make lint` e `make test`
+- [x] 4.1 Testes primeiro para as regras novas de `negotiations/domain`: comparação de versões, horários que mudaram, mudança de preço pelo total, grupos de itens por horário e por dias, horários por trecho, escolas da solicitação e o limite do motivo com a mensagem da recusa; depois implementá-las até passarem
+- [x] 4.2 Testes primeiro para os rótulos dos enums da negociação e do histórico em `negotiations/presentation/formatters/` (D7); depois implementá-los até passarem
+- [x] 4.3 Rodar `make lint` e `make test`
 - [ ] 4.4 Abrir o PR
 
 ## 5. Fase 5 — Lista de propostas (`VAN-78/5-client-proposals-list`)

@@ -127,4 +127,33 @@ void main() {
       expect(summarizeLegs([]), isNull);
     });
   });
+
+  group('summarizeSlots', () {
+    test('the slots of a proposal summarize like the requested days', () {
+      expect(
+        summarizeSlots(roundTripSlotsOn(weekdaysMondayToFriday)),
+        LegsSummary.roundTrip,
+      );
+      expect(
+        summarizeSlots([
+          ...roundTripSlotsOn([Weekday.monday]),
+          const TestScheduleSlot(
+            weekday: Weekday.wednesday,
+            leg: RouteLeg.outbound,
+          ),
+        ]),
+        LegsSummary.mixed,
+      );
+      expect(
+        summarizeSlots([
+          const TestScheduleSlot(
+            weekday: Weekday.friday,
+            leg: RouteLeg.homebound,
+          ),
+        ]),
+        LegsSummary.homeboundOnly,
+      );
+      expect(summarizeSlots([]), isNull);
+    });
+  });
 }

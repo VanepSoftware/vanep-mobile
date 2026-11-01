@@ -18,3 +18,15 @@ enum ServiceRequestStatus {
 
   static String? toApi(ServiceRequestStatus? value) => value?.apiName;
 }
+
+const openServiceRequestStatuses = {
+  ServiceRequestStatus.open,
+  ServiceRequestStatus.answered,
+};
+
+const closedServiceRequestStatuses = {
+  ServiceRequestStatus.converted,
+  ServiceRequestStatus.declined,
+  ServiceRequestStatus.expired,
+  ServiceRequestStatus.withdrawn,
+};
