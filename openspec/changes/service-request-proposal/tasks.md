@@ -79,9 +79,9 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 7. Fase 7 — Pedir ajuste e recusar (`VAN-78/7-proposal-adjustment-decline`)
 
-- [ ] 7.1 Testes primeiro para o `ProposalAdjustmentCubit` e a tela de pedir ajuste: as cinco opções com escolha única, mensalidade para Valor, texto livre nas outras, exige valor ou mensagem, limites de 100 e 500, sucesso volta ao detalhe com o ajuste no histórico. Depois implementar até passarem
-- [ ] 7.2 Testes primeiro para o `ProposalDeclineCubit` e a gaveta de recusa: cinco motivos, mensagem opcional, motivo e mensagem juntos em até 500 caracteres, confirmação, sucesso encerra a negociação, 409 recarrega o detalhe. Depois implementar até passarem
-- [ ] 7.3 Ligar "Pedir ajuste" e "Recusar proposta" do detalhe às duas telas por callback do `app.dart`; conferir com o teste do detalhe
+- [x] 7.1 Testes primeiro para o `ProposalAdjustmentCubit` e a tela de pedir ajuste: as cinco opções com escolha única, mensalidade para Valor, texto livre nas outras, exige valor ou mensagem, limites de 100 e 500, sucesso volta ao detalhe com o ajuste no histórico. Depois implementar até passarem
+- [x] 7.2 Testes primeiro para o `ProposalDeclineCubit` e a gaveta de recusa: cinco motivos, mensagem opcional, motivo e mensagem juntos em até 500 caracteres, confirmação, sucesso encerra a negociação, 409 recarrega o detalhe. Depois implementar até passarem
+- [x] 7.3 Ligar "Pedir ajuste" e "Recusar proposta" do detalhe às duas telas por callback do `app.dart`; conferir com o teste do detalhe
 - [ ] 7.4 Rodar `make lint` e `make test`; testar no aparelho contra o back local: pedir ajuste e recusar
 - [ ] 7.5 Abrir o PR
 

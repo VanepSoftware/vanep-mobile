@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
@@ -20,10 +21,15 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_state.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/client_proposals_page.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_accepted_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_adjustment_page.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_detail_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_decline_sheet.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
@@ -217,6 +223,10 @@ Route<void> proposalDetailRoute(
       child: ProposalDetailPage(
         actions: ProposalDetailActions(
           onChat: (request) => openClientNegotiationChat(context, request),
+          onAskAdjustment: (request, proposal) =>
+              openProposalAdjustment(context, request, proposal),
+          onDecline: (request, proposal) =>
+              showProposalDecline(context, request, proposal),
           onAccepted: (request, proposal) =>
               openProposalAccepted(context, request, proposal),
         ),
@@ -234,6 +244,41 @@ Future<void> openProposalDetail(
       context,
       request,
       proposalToken: request.currentProposal?.token,
+    ),
+  );
+}
+
+Future<bool> openProposalAdjustment(
+  BuildContext context,
+  ClientServiceRequest request,
+  Proposal proposal,
+) async {
+  final asked = await Navigator.of(context).push<bool>(
+    MaterialPageRoute<bool>(
+      builder: (_) => BlocProvider<ProposalAdjustmentCubit>(
+        create: (_) => getIt<ProposalAdjustmentCubit>(param1: proposal.token),
+        child: ProposalAdjustmentPage(request: request, proposal: proposal),
+      ),
+    ),
+  );
+  return asked ?? false;
+}
+
+Future<ProposalDeclineOutcome?> showProposalDecline(
+  BuildContext context,
+  ClientServiceRequest request,
+  Proposal proposal,
+) {
+  return showModalBottomSheet<ProposalDeclineOutcome>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: VanepColors.card,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (_) => BlocProvider<ProposalDeclineCubit>(
+      create: (_) => getIt<ProposalDeclineCubit>(param1: proposal.token),
+      child: ProposalDeclineSheet(request: request, proposal: proposal),
     ),
   );
 }
