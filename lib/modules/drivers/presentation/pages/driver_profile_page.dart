@@ -6,7 +6,6 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/phone_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
-import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
@@ -15,9 +14,7 @@ import 'package:vanep_mobile/modules/drivers/presentation/formatters/driver_prof
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_profile_sections.dart';
 
 class DriverProfilePage extends StatelessWidget {
-  const DriverProfilePage({this.onChatTapped, super.key});
-
-  final ValueChanged<String>? onChatTapped;
+  const DriverProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,17 +54,6 @@ class DriverProfilePage extends StatelessWidget {
               DriverProfileBody(profile: profile),
             DriverProfileStatus.loaded => const SizedBox.shrink(),
           },
-          bottomNavigationBar: profile == null
-              ? null
-              : SafeArea(
-                  minimum: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                  child: VanepPrimaryButton(
-                    label: l10n.driverProfileChatButton,
-                    onPressed: onChatTapped == null
-                        ? null
-                        : () => onChatTapped!(profile.token),
-                  ),
-                ),
         );
       },
     );

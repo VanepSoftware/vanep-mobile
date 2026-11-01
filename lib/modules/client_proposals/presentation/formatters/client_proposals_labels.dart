@@ -1,37 +1,38 @@
 import 'package:intl/intl.dart';
 
+import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
-import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
-import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
+import 'package:vanep_mobile/core/formatters/names_formatter.dart';
+import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposal.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposals.dart';
-import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/proposal_child.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/request_schools.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 
-String withoutAbbreviationDot(String text) => text.replaceAll('.', '');
-
-String capitalizeFirst(String text) {
-  if (text.isEmpty) return text;
-  return '${text[0].toUpperCase()}${text.substring(1)}';
+String formatRequestChildren(
+  AppLocalizations l10n,
+  ClientServiceRequest request,
+) {
+  return joinFirstNames(l10n, request.items.map((item) => item.dependentName));
 }
 
-String formatProposalWeekdays(AppLocalizations l10n, List<int> weekdays) {
-  final sorted = [...weekdays]..sort();
-  if (sorted.length == weekdaysMondayToFriday.length &&
-      sorted.indexed.every(
-        (entry) => entry.$2 == weekdaysMondayToFriday[entry.$1],
-      )) {
-    return l10n.clientProposalsMondayToFriday;
-  }
-  final weekdayFormat = DateFormat.E(l10n.localeName);
-  final referenceMonday = DateTime(2024, 1, 1);
-  final names = sorted.map(
-    (weekday) => withoutAbbreviationDot(
-      weekdayFormat.format(referenceMonday.add(Duration(days: weekday - 1))),
-    ),
+String formatSchoolGroupLine(
+  AppLocalizations l10n,
+  SchoolGroup<ClientRequestItem> group,
+) {
+  final children = l10n.clientProposalsForChild(
+    joinFirstNames(l10n, group.items.map((item) => item.dependentName)),
   );
-  return capitalizeFirst(names.join(', '));
+  final school = group.schoolName;
+  if (school == null) return children;
+  final shift = formatSchoolShift(l10n, group);
+  final schoolAndShift = shift == null
+      ? school
+      : l10n.clientProposalsSchoolAndShift(school, shift);
+  return '$children · $schoolAndShift';
 }
 
 String formatProposalStartDate(AppLocalizations l10n, DateTime startsOn) {
@@ -46,73 +47,47 @@ String formatProposalStartDate(AppLocalizations l10n, DateTime startsOn) {
   );
 }
 
+String formatRequestedDaysAndStart(
+  AppLocalizations l10n,
+  ClientServiceRequest request,
+  DateTime startsOn,
+) {
+  final weekdays = formatWeekdayList(l10n, requestedWeekdays(request.items));
+  return '$weekdays · ${formatProposalStartDate(l10n, startsOn)}';
+}
+
 String formatProposalRating(AppLocalizations l10n, double rating) {
   return NumberFormat('0.0', l10n.localeName).format(rating);
 }
 
-String formatDriverReputation(AppLocalizations l10n, ProposalDriver driver) {
-  final rating = driver.rating;
-  final vehicle = '${driver.vehicleModel} ${driver.vehicleYear}';
-  if (rating == null) {
-    final gender = driver.gender == Gender.female ? 'female' : 'other';
-    return '${l10n.clientProposalsNewOnVanep(gender)} · $vehicle';
-  }
-  return '${formatProposalRating(l10n, rating)} · $vehicle';
-}
-
-String formatProposalChildAndSchool(
-  AppLocalizations l10n,
-  PendingProposal proposal,
-) {
-  final school = l10n.clientProposalsSchoolAndShift(
-    proposal.schoolName,
-    formatShift(l10n, proposal.shift),
-  );
-  return '${l10n.clientProposalsForChild(proposal.childName)} · $school';
-}
-
-String formatProposalSchedule(AppLocalizations l10n, PendingProposal proposal) {
-  final weekdays = formatProposalWeekdays(l10n, proposal.weekdays);
-  return '$weekdays · ${formatProposalStartDate(l10n, proposal.startsOn)}';
-}
-
 String formatProposalExpiry(
   AppLocalizations l10n,
-  DateTime expiresAt,
+  DateTime validUntil,
   DateTime now,
 ) {
-  final daysLeft = calendarDaysBetween(now, expiresAt);
+  final daysLeft = calendarDaysBetween(now, validUntil.toLocal());
   return l10n.clientProposalsExpiresIn(daysLeft < 0 ? 0 : daysLeft);
 }
 
 String formatSentRequestSummary(
   AppLocalizations l10n,
-  SentRequest request,
+  ClientServiceRequest request,
   DateTime now,
 ) {
-  final daysAgo = calendarDaysBetween(request.sentAt, now);
+  final daysAgo = calendarDaysBetween(request.createdAt.toLocal(), now);
   return l10n.clientProposalsSentSummary(
-    request.childName,
+    formatRequestChildren(l10n, request),
     l10n.clientProposalsSentDaysAgo(daysAgo < 0 ? 0 : daysAgo),
   );
 }
 
 String formatAnswerHoursLeft(
   AppLocalizations l10n,
-  DateTime answerBy,
+  DateTime expiresAt,
   DateTime now,
 ) {
-  final hoursLeft = answerBy.difference(now).inHours;
+  final hoursLeft = expiresAt.difference(now).inHours;
   return l10n.clientProposalsHoursLeft(hoursLeft < 0 ? 0 : hoursLeft);
-}
-
-String formatProposalOutcome(AppLocalizations l10n, ProposalOutcome outcome) {
-  return switch (outcome) {
-    ProposalOutcome.accepted => l10n.clientProposalsOutcomeAccepted,
-    ProposalOutcome.declined => l10n.clientProposalsOutcomeDeclined,
-    ProposalOutcome.expired => l10n.clientProposalsOutcomeExpired,
-    ProposalOutcome.cancelled => l10n.clientProposalsOutcomeCancelled,
-  };
 }
 
 String formatChildOpenSummary(AppLocalizations l10n, ProposalsFeed feed) {
@@ -125,11 +100,7 @@ String formatChildOpenSummary(AppLocalizations l10n, ProposalsFeed feed) {
   ].join(' · ');
 }
 
-String? formatChildAge(
-  AppLocalizations l10n,
-  ProposalChild child,
-  DateTime today,
-) {
+String? formatChildAge(AppLocalizations l10n, Dependent child, DateTime today) {
   final years = findAgeInYears(child.birthDate, today: today);
   return years == null ? null : l10n.dependentsAgeYears(years);
 }

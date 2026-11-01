@@ -38,19 +38,6 @@ void main() {
     remote = ConversationRemoteDataSource(dio: dio, environment: environment);
   });
 
-  test('openConversation posts the driver token', () async {
-    when(
-      () => dio.post<Map<String, dynamic>>(
-        'http://localhost:8080/api/conversations',
-        data: {'driverToken': 'driver-1'},
-      ),
-    ).thenAnswer((_) async => okResponse(conversationJson));
-
-    final conversation = await remote.openConversation('driver-1');
-
-    expect(conversation.token, 'conversation-1');
-  });
-
   test('listMyConversations reads the driver list', () async {
     when(
       () =>
@@ -101,11 +88,11 @@ void main() {
     expect(message.body, 'Tem vaga?');
   });
 
-  test('an empty payload is a format error', () async {
+  test('an empty history is a format error', () async {
     when(
-      () => dio.post<Map<String, dynamic>>(
-        'http://localhost:8080/api/conversations',
-        data: {'driverToken': 'driver-1'},
+      () => dio.get<Map<String, dynamic>>(
+        'http://localhost:8080/api/conversations/conversation-1/messages',
+        queryParameters: {'page': 0, 'size': conversationHistoryPageSize},
       ),
     ).thenAnswer(
       (_) async => Response<Map<String, dynamic>>(
@@ -114,6 +101,9 @@ void main() {
       ),
     );
 
-    expect(() => remote.openConversation('driver-1'), throwsFormatException);
+    expect(
+      () => remote.listMessages(conversationToken: 'conversation-1', page: 0),
+      throwsFormatException,
+    );
   });
 }

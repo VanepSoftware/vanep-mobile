@@ -17,8 +17,13 @@ import 'package:vanep_mobile/modules/conversations/presentation/widgets/conversa
 const olderMessagesTriggerExtent = 300.0;
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({required this.viewerSide, super.key});
+  const ChatPage({
+    required this.counterpartName,
+    required this.viewerSide,
+    super.key,
+  });
 
+  final String counterpartName;
   final ConversationParticipant viewerSide;
 
   @override
@@ -35,14 +40,9 @@ class ChatPage extends StatelessWidget {
         conversationFailureLabel(l10n, state.failure!),
       ),
       builder: (context, state) {
-        final conversation = state.conversation;
         return Scaffold(
           backgroundColor: VanepColors.card,
-          appBar: VanepAppBar(
-            title: conversation == null
-                ? l10n.conversationTitle
-                : conversationCounterpartName(conversation, viewerSide),
-          ),
+          appBar: VanepAppBar(title: counterpartName),
           body: ChatBody(state: state, viewerSide: viewerSide),
         );
       },
