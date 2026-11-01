@@ -128,7 +128,7 @@ void main() {
 
     expect(
       find.text(
-        'Nenhuma conversa ainda. Para falar com um motorista, abra o perfil dele em Vans e toque em “Conversar com o motorista”.',
+        'Nenhuma conversa ainda. A conversa com um motorista começa quando você pede um orçamento a ele.',
       ),
       findsOneWidget,
     );

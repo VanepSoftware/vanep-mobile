@@ -6,7 +6,6 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_
 import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_failure.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_conversation_messages.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_my_conversations.dart';
-import 'package:vanep_mobile/modules/conversations/domain/usecases/open_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/watch_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_realtime_event.dart';
@@ -19,29 +18,6 @@ void main() {
 
   setUp(() {
     repository = MockConversationRepository();
-  });
-
-  test('OpenConversation opens the conversation with the driver', () async {
-    when(() => repository.openConversation('driver-1')).thenAnswer(
-      (_) async =>
-          const Ok<ConversationFailure, Conversation>(testConversation),
-    );
-
-    final result = await OpenConversation(repository)('driver-1');
-
-    expect(result.valueOrNull, testConversation);
-  });
-
-  test('OpenConversation forwards a failure', () async {
-    when(() => repository.openConversation('driver-1')).thenAnswer(
-      (_) async => const Err<ConversationFailure, Conversation>(
-        ConversationDriverUnavailableFailure(),
-      ),
-    );
-
-    final result = await OpenConversation(repository)('driver-1');
-
-    expect(result.errorOrNull, const ConversationDriverUnavailableFailure());
   });
 
   test('ListMyConversations returns what the repository returns', () async {

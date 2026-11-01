@@ -28,10 +28,3 @@ List<Conversation> readConversations(List<dynamic>? payload) {
       )
       .toList();
 }
-
-Conversation readConversation(Map<String, dynamic>? payload) {
-  if (payload == null) {
-    throw const FormatException('Empty conversation payload.');
-  }
-  return ConversationDto.fromJson(Map<String, Object?>.from(payload));
-}
