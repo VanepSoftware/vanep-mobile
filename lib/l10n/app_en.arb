@@ -658,7 +658,6 @@
   "clientHomeWeekdayShortFriday": "fri",
   "clientHomeWeekdayShortSaturday": "sat",
   "clientHomeWeekdayShortSunday": "sun",
-  "clientHomeNamesListLastSeparator": " and ",
   "namesListLastSeparator": " and ",
   "clientHomeTodayTitle": "Today",
   "clientHomeNeedsYouTitle": "Needs you",
@@ -1462,6 +1461,7 @@
   "vanCentralBasePriceNone": "No price set",
   "vanCentralLoadError": "Could not load the van hub.",
   "vanCentralAttendanceError": "Could not change whether you accept new students. Try again.",
+  "negotiationShiftVaries": "shift varies",
   "mapPlaceholderSemantics": "Illustrative map",
   "mapAdjustAction": "Adjust on map",
   "dependentsAddTooltip": "Add dependent",
@@ -1629,6 +1629,64 @@
       }
     }
   },
+  "negotiationAdjustmentPolicyNone": "No adjustment",
+  "negotiationAdjustmentPolicyIpcaAtRenewal": "IPCA at renewal",
+  "negotiationAdjustmentFieldPrice": "Price",
+  "negotiationAdjustmentFieldInstallments": "Installments",
+  "negotiationAdjustmentFieldSchedule": "Days and times",
+  "negotiationAdjustmentFieldPeriod": "Contract period",
+  "negotiationAdjustmentFieldOther": "Other",
+  "negotiationCancellationNotice30Days": "30 days' notice",
+  "negotiationCancellationNotice30DaysWithFee": "30 days' notice + 10%",
+  "negotiationClientTurnRequestSent": "Request sent",
+  "negotiationClientTurnProposalReceived": "Proposal received",
+  "negotiationClientTurnAdjustmentRequested": "Adjustment requested",
+  "negotiationClientTurnAccepted": "Accepted",
+  "negotiationClientTurnDeclinedByDriver": "Declined by the driver",
+  "negotiationClientTurnClosedByClient": "Closed by you",
+  "negotiationClientTurnExpired": "Expired",
+  "negotiationLegOutbound": "Outbound",
+  "negotiationLegHomebound": "Return",
+  "negotiationLegsRoundTrip": "round trip",
+  "negotiationLegsOutboundOnly": "outbound only",
+  "negotiationLegsHomeboundOnly": "return only",
+  "negotiationLegsMixed": "round trip on some days",
+  "negotiationFailureNetwork": "No connection. Check the internet and try again.",
+  "negotiationFailureNotFound": "This negotiation is no longer available.",
+  "negotiationFailureInvalid": "Check the details and try again.",
+  "negotiationFailureUnexpected": "Could not finish right now. Try again.",
+  "negotiationProposalStatusSent": "Open",
+  "negotiationProposalStatusAccepted": "Accepted",
+  "negotiationProposalStatusSuperseded": "Replaced",
+  "negotiationProposalStatusDeclined": "Declined",
+  "negotiationProposalStatusExpired": "Expired",
+  "negotiationProposalStatusWithdrawn": "Withdrawn by the driver",
+  "negotiationVehicle": "{model} {year} · {capacity} seats",
+  "@negotiationVehicle": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "negotiationHistoryRequestSent": "Quote request",
+  "negotiationHistoryRequestDeclined": "Request declined by the driver",
+  "negotiationHistoryAdjustment": "Change asked · {subject}",
+  "@negotiationHistoryAdjustment": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationHistoryAccepted": "Proposal accepted",
+  "negotiationHistoryDeclined": "Proposal declined",
   "weekLegsCellLabel": "{day}, {leg}",
   "@weekLegsCellLabel": {
     "placeholders": {
@@ -1637,6 +1695,14 @@
       },
       "leg": {
         "type": "String"
+      }
+    }
+  },
+  "proposalDetailVersion": "Version {version}",
+  "@proposalDetailVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
       }
     }
   },

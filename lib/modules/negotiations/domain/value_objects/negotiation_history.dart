@@ -24,8 +24,6 @@ final class ProposalSentEvent extends NegotiationEvent {
     required super.at,
     required this.proposalToken,
     required this.version,
-    required this.installments,
-    required this.installmentAmountCents,
     required this.isOpen,
   });
 
@@ -33,21 +31,10 @@ final class ProposalSentEvent extends NegotiationEvent {
 
   final int version;
 
-  final int installments;
-
-  final int installmentAmountCents;
-
   final bool isOpen;
 
   @override
-  List<Object?> get props => [
-    at,
-    proposalToken,
-    version,
-    installments,
-    installmentAmountCents,
-    isOpen,
-  ];
+  List<Object?> get props => [at, proposalToken, version, isOpen];
 }
 
 final class AdjustmentRequestedEvent extends NegotiationEvent {
@@ -111,8 +98,6 @@ List<NegotiationEvent> eventsOfVersion(Proposal proposal) {
       at: proposal.createdAt,
       proposalToken: proposal.token,
       version: proposal.version,
-      installments: proposal.installments,
-      installmentAmountCents: proposal.installmentAmountCents,
       isOpen: proposal.status == ProposalStatus.sent,
     ),
     for (final adjustment in proposal.adjustments)
