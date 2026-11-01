@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
+import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_greeting_header.dart';
 import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';

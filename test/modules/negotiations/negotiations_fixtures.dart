@@ -14,14 +14,6 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_r
 
 final requestCreatedAt = DateTime.utc(2026, 10, 1, 12);
 
-const weekdaysMondayToFriday = [
-  Weekday.monday,
-  Weekday.tuesday,
-  Weekday.wednesday,
-  Weekday.thursday,
-  Weekday.friday,
-];
-
 class TestRequestedDay implements RequestedDay {
   const TestRequestedDay({
     required this.weekday,

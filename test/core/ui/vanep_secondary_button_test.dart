@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/google_logo.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 
@@ -59,5 +60,26 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     final button = tester.widget<OutlinedButton>(find.byType(OutlinedButton));
     expect(button.onPressed, isNull);
+  });
+
+  testWidgets('a destructive button uses the danger colors', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepSecondaryButton(
+            label: 'Recusar proposta',
+            onPressed: () {},
+            isDestructive: true,
+          ),
+        ),
+      ),
+    );
+
+    final style = tester
+        .widget<OutlinedButton>(find.byType(OutlinedButton))
+        .style!;
+    expect(style.backgroundColor!.resolve({}), VanepColors.dangerSurface);
+    expect(style.foregroundColor!.resolve({}), VanepColors.dangerText);
+    expect(style.side!.resolve({})!.color, VanepColors.dangerBorder);
   });
 }

@@ -303,4 +303,26 @@ void main() {
 
     expect(find.byIcon(Icons.calendar_today_outlined), findsOneWidget);
   });
+
+  testWidgets('a long text field grows over several lines', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'Mensagem',
+            controller: controller,
+            onChanged: (_) {},
+            minLines: 3,
+            maxLines: 6,
+          ),
+        ),
+      ),
+    );
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.minLines, 3);
+    expect(field.maxLines, 6);
+  });
 }
