@@ -8,23 +8,57 @@ import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
+import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_negotiation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_state.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiation_timeline_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiation_timeline_state.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/formatters/chat_timeline.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/formatters/negotiation_chat_labels.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/widgets/conversation_input_bar.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/widgets/conversation_message_bubble.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/widgets/negotiation_chat_cards.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_history.dart';
 
 const olderMessagesTriggerExtent = 300.0;
 
-class ChatPage extends StatelessWidget {
+class NegotiationChatActions<R extends ServiceRequest> {
+  const NegotiationChatActions({
+    required this.onSeeProposal,
+    required this.onAccept,
+    required this.onAskAdjustment,
+  });
+
+  final Future<void> Function(R request) onSeeProposal;
+  final Future<void> Function(R request, Proposal proposal) onAccept;
+  final Future<void> Function(R request, Proposal proposal) onAskAdjustment;
+}
+
+Future<void> runNegotiationAction<R extends ServiceRequest>(
+  BuildContext context,
+  Future<void> Function() action,
+) async {
+  final timeline = context.read<NegotiationTimelineCubit<R>>();
+  await action();
+  await timeline.load();
+}
+
+class ChatPage<R extends ServiceRequest> extends StatelessWidget {
   const ChatPage({
     required this.counterpartName,
     required this.viewerSide,
+    this.negotiationActions,
+    this.clock = DateTime.now,
     super.key,
   });
 
   final String counterpartName;
   final ConversationParticipant viewerSide;
+  final NegotiationChatActions<R>? negotiationActions;
+  final DateTime Function() clock;
 
   @override
   Widget build(BuildContext context) {
@@ -40,26 +74,60 @@ class ChatPage extends StatelessWidget {
         conversationFailureLabel(l10n, state.failure!),
       ),
       builder: (context, state) {
+        final actions = negotiationActions;
         return Scaffold(
           backgroundColor: VanepColors.card,
           appBar: VanepAppBar(title: counterpartName),
-          body: ChatBody(state: state, viewerSide: viewerSide),
+          body: actions == null
+              ? ChatBody<R>(
+                  state: state,
+                  viewerSide: viewerSide,
+                  today: clock(),
+                )
+              : BlocBuilder<
+                  NegotiationTimelineCubit<R>,
+                  NegotiationTimelineState<R>
+                >(
+                  builder: (context, timeline) => ChatBody<R>(
+                    state: state,
+                    viewerSide: viewerSide,
+                    today: clock(),
+                    negotiation: timeline.negotiation,
+                    hasNegotiationLoadFailed: timeline.hasLoadFailed,
+                    actions: actions,
+                  ),
+                ),
         );
       },
     );
   }
 }
 
-class ChatBody extends StatelessWidget {
-  const ChatBody({required this.state, required this.viewerSide, super.key});
+class ChatBody<R extends ServiceRequest> extends StatelessWidget {
+  const ChatBody({
+    required this.state,
+    required this.viewerSide,
+    required this.today,
+    this.negotiation,
+    this.hasNegotiationLoadFailed = false,
+    this.actions,
+    super.key,
+  });
 
   final ChatState state;
   final ConversationParticipant viewerSide;
+  final DateTime today;
+  final ConversationNegotiation<R>? negotiation;
+  final bool hasNegotiationLoadFailed;
+  final NegotiationChatActions<R>? actions;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final cubit = context.read<ChatCubit>();
+    final negotiation = this.negotiation;
+    final actions = this.actions;
+    final openProposal = negotiation?.openProposal;
 
     if (state.isLoading) {
       return const Center(
@@ -78,38 +146,153 @@ class ChatBody extends StatelessWidget {
     }
     return Column(
       children: [
+        if (hasNegotiationLoadFailed)
+          NegotiationLoadFailedBanner(
+            onRetry: context.read<NegotiationTimelineCubit<R>>().load,
+          ),
+        if (negotiation != null && actions != null && openProposal != null)
+          OpenProposalBanner(
+            proposal: openProposal,
+            onSee: () => runNegotiationAction<R>(
+              context,
+              () => actions.onSeeProposal(negotiation.request),
+            ),
+          ),
         Expanded(
-          child: state.isEmpty
+          child: state.isEmpty && negotiation == null
               ? Center(
                   child: Text(
                     l10n.conversationEmpty,
                     style: VanepTypography.cardSubtitle,
                   ),
                 )
-              : ChatMessageList(state: state, viewerSide: viewerSide),
+              : ChatMessageList<R>(
+                  state: state,
+                  viewerSide: viewerSide,
+                  today: today,
+                  negotiation: negotiation,
+                  actions: actions,
+                ),
         ),
         ConversationInputBar(
           isSending: state.isSending,
           onSend: cubit.sendMessage,
+          leading:
+              negotiation != null && actions != null && openProposal != null
+              ? IconButton(
+                  tooltip: l10n.proposalDetailAskAdjustment,
+                  color: VanepColors.action,
+                  icon: const Icon(Icons.tune),
+                  onPressed: () => runNegotiationAction<R>(
+                    context,
+                    () => actions.onAskAdjustment(
+                      negotiation.request,
+                      openProposal,
+                    ),
+                  ),
+                )
+              : null,
         ),
       ],
     );
   }
 }
 
-class ChatMessageList extends StatelessWidget {
+class ChatMessageList<R extends ServiceRequest> extends StatelessWidget {
   const ChatMessageList({
     required this.state,
     required this.viewerSide,
+    required this.today,
+    this.negotiation,
+    this.actions,
     super.key,
   });
 
   final ChatState state;
   final ConversationParticipant viewerSide;
+  final DateTime today;
+  final ConversationNegotiation<R>? negotiation;
+  final NegotiationChatActions<R>? actions;
+
+  List<ChatTimelineEntry> buildEntries() {
+    final negotiation = this.negotiation;
+    if (negotiation == null) {
+      return [for (final message in state.messages) ChatMessageEntry(message)];
+    }
+    return buildChatTimeline(
+      messages: state.messages,
+      events: negotiation.events,
+    );
+  }
+
+  Widget buildEntry(BuildContext context, ChatTimelineEntry entry) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (entry) {
+      ChatDayEntry(:final day) => ChatDayDivider(
+        label: formatChatDay(l10n, day, today),
+      ),
+      ChatMessageEntry(:final message) => ConversationMessageBubble(
+        key: ValueKey(message.token),
+        message: message,
+        sentByViewer: isSentByViewer(message, viewerSide),
+      ),
+      ChatEventEntry(:final event) => buildEventCard(context, event),
+    };
+  }
+
+  Widget buildEventCard(BuildContext context, NegotiationEvent event) {
+    final l10n = AppLocalizations.of(context)!;
+    final negotiation = this.negotiation!;
+    final actions = this.actions;
+    final viewerIsClient = viewerSide == ConversationParticipant.client;
+    return switch (event) {
+      RequestSentEvent() => NegotiationRequestCard(
+        request: negotiation.request,
+        at: event.at,
+        today: today,
+        sentByViewer: viewerIsClient,
+      ),
+      ProposalSentEvent(:final proposalToken, :final isOpen) =>
+        switch (negotiation.versionWithToken(proposalToken)) {
+          final proposal? => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              NegotiationVersionCard(
+                proposal: proposal,
+                at: event.at,
+                sentByViewer: !viewerIsClient,
+                onSeeProposal: isOpen && actions != null
+                    ? () => runNegotiationAction<R>(
+                        context,
+                        () => actions.onSeeProposal(negotiation.request),
+                      )
+                    : null,
+                onAccept: isOpen && actions != null
+                    ? () => runNegotiationAction<R>(
+                        context,
+                        () => actions.onAccept(negotiation.request, proposal),
+                      )
+                    : null,
+              ),
+              if (isOpen) ...[
+                const SizedBox(height: negotiationCardSpacing / 2),
+                NegotiationNotice(text: l10n.negotiationChatAgreementsNotice),
+              ],
+            ],
+          ),
+          null => const SizedBox.shrink(),
+        },
+      AdjustmentRequestedEvent() => NegotiationAdjustmentCard(
+        event: event,
+        sentByViewer: viewerIsClient,
+      ),
+      _ => const SizedBox.shrink(),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
-    final newestFirst = state.messages.reversed.toList();
+    final newestFirst = buildEntries().reversed.toList();
     final cubit = context.read<ChatCubit>();
 
     return NotificationListener<ScrollNotification>(
@@ -119,10 +302,17 @@ class ChatMessageList extends StatelessWidget {
         }
         return false;
       },
-      child: ListView.builder(
+      child: ListView.separated(
         reverse: true,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         itemCount: newestFirst.length + (state.isLoadingOlder ? 1 : 0),
+        separatorBuilder: (_, index) => SizedBox(
+          height:
+              index < newestFirst.length &&
+                  newestFirst[index] is! ChatMessageEntry
+              ? negotiationCardSpacing / 2
+              : 0,
+        ),
         itemBuilder: (context, index) {
           if (index == newestFirst.length) {
             return const Padding(
@@ -132,12 +322,7 @@ class ChatMessageList extends StatelessWidget {
               ),
             );
           }
-          final message = newestFirst[index];
-          return ConversationMessageBubble(
-            key: ValueKey(message.token),
-            message: message,
-            sentByViewer: isSentByViewer(message, viewerSide),
-          );
+          return buildEntry(context, newestFirst[index]);
         },
       ),
     );

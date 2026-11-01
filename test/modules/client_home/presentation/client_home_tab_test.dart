@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
+import 'package:vanep_mobile/core/ui/vanep_expiry_chip.dart';
 import 'package:vanep_mobile/modules/client_home/domain/failures/client_home_failure.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/prioritize_needs_you_items.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
@@ -28,6 +31,8 @@ class HomeCallbacks {
   int addAddress = 0;
   int addDependent = 0;
   int proposals = 0;
+  final openedRequests = <String>[];
+  final chats = <String>[];
 }
 
 Widget clientHomeHarness(ClientHomeCubit cubit, HomeCallbacks callbacks) {
@@ -43,6 +48,10 @@ Widget clientHomeHarness(ClientHomeCubit cubit, HomeCallbacks callbacks) {
           onAddAddressTapped: () => callbacks.addAddress++,
           onAddDependentTapped: () => callbacks.addDependent++,
           onProposalsTapped: () => callbacks.proposals++,
+          onProposalTapped: (request) =>
+              callbacks.openedRequests.add(request.token),
+          onNegotiationChatTapped: (request) =>
+              callbacks.chats.add(request.token),
         ),
       ),
     ),
@@ -186,17 +195,56 @@ void main() {
 
     expect(find.text('Ana e Pedro ainda sem van'), findsOneWidget);
     expect(find.text('3 negociações em andamento'), findsOneWidget);
-    expect(find.text('Proposta nova'), findsOneWidget);
-    expect(find.text('Expira em 2 dias'), findsOneWidget);
+    expect(find.text('PROPOSTA NOVA'), findsOneWidget);
+    expect(find.text('Carlos Souza'), findsOneWidget);
+    expect(find.text('Ana e Pedro'), findsOneWidget);
+    expect(find.textContaining('ida e volta'), findsNothing);
+    expect(
+      find.text('R\$\u00a0650/mês · 12x', findRichText: true),
+      findsOneWidget,
+    );
+    final expiry = tester.widget<VanepExpiryChip>(find.byType(VanepExpiryChip));
+    expect(expiry.label, 'Expira em 2 dias');
+    expect(expiry.isUrgent, isTrue);
+    final card = tester.widget<VanepCard>(
+      find.ancestor(
+        of: find.text('PROPOSTA NOVA'),
+        matching: find.byType(VanepCard),
+      ),
+    );
+    expect(card.highlighted, isFalse);
+    expect(card.borderColor, VanepColors.actionBorder);
     expect(find.text('Pedido para Rita expirou'), findsOneWidget);
 
-    await tester.tap(find.text('Buscar vans'));
-    expect(callbacks.findVan, 1);
-
     await tester.tap(find.text('Ver propostas'));
+    expect(callbacks.proposals, 1);
+
     await tester.tap(find.text('Ver proposta'));
+    await tester.tap(find.text('Conversar'));
+    expect(callbacks.openedRequests, ['request-carlos']);
+    expect(callbacks.chats, ['request-carlos']);
+
     await tester.tap(find.text('Pedido para Rita expirou'));
-    expect(callbacks.proposals, 2);
+    expect(callbacks.findVan, 1);
+  });
+
+  testWidgets('a new proposal row shows the installments and opens it', (
+    tester,
+  ) async {
+    await pumpReady(
+      tester,
+      testClientHome(
+        today: testLiveSection(),
+        needsYou: prioritized([testContractToSign, testRitaProposal]),
+      ),
+    );
+
+    expect(find.text('Nova proposta para Pedro'), findsOneWidget);
+    expect(find.text('Rita Alves · R\$\u00a0320/mês · 12x'), findsOneWidget);
+
+    await tester.tap(find.text('Nova proposta para Pedro'));
+
+    expect(callbacks.openedRequests, ['request-rita']);
   });
 
   testWidgets('blocks keep the order Today, Needs you, Shortcuts', (

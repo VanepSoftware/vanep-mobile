@@ -1009,6 +1009,17 @@
       }
     }
   },
+  "clientHomeDriverAndInstallments": "{driver} · {installments}",
+  "@clientHomeDriverAndInstallments": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "installments": {
+        "type": "String"
+      }
+    }
+  },
   "clientHomeHoursLeft": "{hours}h left",
   "@clientHomeHoursLeft": {
     "placeholders": {
@@ -1049,7 +1060,6 @@
       }
     }
   },
-  "clientHomeSeeSimilarDrivers": "See similar drivers",
   "clientHomeMonthlyFeeOf": "{name}'s monthly fee",
   "@clientHomeMonthlyFeeOf": {
     "placeholders": {
@@ -1131,7 +1141,7 @@
       }
     }
   },
-  "clientHomeExpiresIn": "{count, plural, =0{Expires today} =1{Expires in 1 day} other{Expires in {count} days}}",
+  "clientHomeExpiresIn": "{count, plural, =0{Expires today} =1{Expires tomorrow} other{Expires in {count} days}}",
   "@clientHomeExpiresIn": {
     "placeholders": {
       "count": {
@@ -1139,20 +1149,6 @@
       }
     }
   },
-  "clientHomeRoundTrip": "round trip",
-  "clientHomeOneWay": "one way",
-  "clientHomeNamesAndTrip": "{names} · {trip}",
-  "@clientHomeNamesAndTrip": {
-    "placeholders": {
-      "names": {
-        "type": "String"
-      },
-      "trip": {
-        "type": "String"
-      }
-    }
-  },
-  "clientHomePerMonth": "/month",
   "clientProposalsTitle": "Proposals",
   "clientProposalsSearchVans": "Search more vans",
   "clientProposalsAllChildren": "All children",
@@ -1672,6 +1668,80 @@
   "negotiationHistoryAccepted": "Proposal accepted",
   "negotiationHistoryDeclined": "Proposal declined",
   "negotiationHistoryCurrent": "Current version",
+  "negotiationChatChildWithAge": "{name}, {age}",
+  "@negotiationChatChildWithAge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatStartsOn": "Starts on {date}",
+  "@negotiationChatStartsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatPickupIn": "Pickup in {neighborhood}",
+  "@negotiationChatPickupIn": {
+    "placeholders": {
+      "neighborhood": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatAgreementsNotice": "Agreements made in the chat only count if included in a new version of the proposal.",
+  "negotiationChatVersion": "Proposal · version {version}",
+  "@negotiationChatVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "negotiationChatBanner": "Proposal v{version} · {installments} · expires {date}",
+  "@negotiationChatBanner": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      },
+      "installments": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatSee": "See",
+  "negotiationChatToday": "Today",
+  "negotiationChatYesterday": "Yesterday",
+  "negotiationChatAdjustmentTitle": "Change request",
+  "negotiationChatSuggestion": "{field}: {value}",
+  "@negotiationChatSuggestion": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatDueDay": "Due on day {day}",
+  "@negotiationChatDueDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "negotiationChatLoadError": "Couldn't load the negotiation.",
   "weekLegsCellLabel": "{day}, {leg}",
   "@weekLegsCellLabel": {
     "placeholders": {
