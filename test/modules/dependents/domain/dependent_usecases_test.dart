@@ -1,14 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/create_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_days.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/remove_dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/replace_school_days.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/set_default_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/weekday.dart';
 
 import '../dependents_fixtures.dart';
 import '../dependents_mocks.dart';
@@ -110,5 +116,69 @@ void main() {
     await SetDefaultDependent(repository)('dep-miguel');
 
     verify(() => repository.markAsDefault('dep-miguel')).called(1);
+  });
+
+  test('RemoveDependent forwards the result of the repository', () async {
+    when(() => repository.removeDependent(any())).thenAnswer(
+      (_) async => const Err<DependentFailure, void>(
+        DependentRejectedFailure(detail: 'Pedido de orçamento aberto.'),
+      ),
+    );
+
+    final result = await RemoveDependent(repository)('dep-miguel');
+
+    expect(
+      result.errorOrNull,
+      const DependentRejectedFailure(detail: 'Pedido de orçamento aberto.'),
+    );
+    verify(() => repository.removeDependent('dep-miguel')).called(1);
+  });
+
+  group('school days', () {
+    late MockDependentSchoolDaysRepository schoolDays;
+
+    final week = SchoolWeek.fromDays(const [
+      SchoolDay(weekday: Weekday.monday, shift: SchoolShift.morning),
+    ]);
+
+    setUp(() {
+      schoolDays = MockDependentSchoolDaysRepository();
+    });
+
+    test('FindSchoolDays forwards the result of the repository', () async {
+      when(
+        () => schoolDays.findSchoolDays(any()),
+      ).thenAnswer((_) async => Ok<DependentFailure, SchoolWeek>(week));
+
+      final result = await FindSchoolDays(schoolDays)('dep-helena');
+
+      expect(result.valueOrNull, week);
+      verify(() => schoolDays.findSchoolDays('dep-helena')).called(1);
+    });
+
+    test('ReplaceSchoolDays forwards the result of the repository', () async {
+      when(
+        () => schoolDays.replaceSchoolDays(
+          dependentToken: any(named: 'dependentToken'),
+          week: any(named: 'week'),
+        ),
+      ).thenAnswer(
+        (_) async =>
+            const Err<DependentFailure, SchoolWeek>(DependentNetworkFailure()),
+      );
+
+      final result = await ReplaceSchoolDays(schoolDays)(
+        dependentToken: 'dep-helena',
+        week: week,
+      );
+
+      expect(result.errorOrNull, const DependentNetworkFailure());
+      verify(
+        () => schoolDays.replaceSchoolDays(
+          dependentToken: 'dep-helena',
+          week: week,
+        ),
+      ).called(1);
+    });
   });
 }
