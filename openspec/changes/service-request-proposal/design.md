@@ -123,12 +123,13 @@ O `ChatPage` ganha a faixa da proposta vigente e os cartões da negociação, nu
 
 | Tela | Cubit | Usa |
 |---|---|---|
-| Negociações | `DriverNegotiationsCubit` | `ListDriverServiceRequests` (`OPEN,ANSWERED`) e `driverTurnOf` |
-| Pedido | `DriverServiceRequestCubit` | `FindDriverServiceRequest`, `DeclineServiceRequest` |
-| Ajuste e proposta só leitura | `DriverProposalCubit` | `FindDriverProposal`, `ListDriverProposalVersions`, `buildNegotiationHistory` |
-| Montar proposta | `ProposalComposerCubit` | `ListMyVans` (`driver_vans`), `ProposalDraft`, `deriveOperationShift`, `previewInstallmentAmount`, `SendProposal` |
+| Negociações | `DriverNegotiationsCubit` | `ListDriverServiceRequests` (`OPEN,ANSWERED`, páginas ao rolar) e `DriverNegotiations` (agrupa por `driverTurnOf`) |
+| Pedido | `DriverServiceRequestCubit` | `FindDriverServiceRequest` |
+| Recusar o pedido (gaveta, aberta do pedido e do ajuste) | `RequestDeclineCubit` | `DeclineServiceRequest` |
+| Ajuste e proposta só leitura | `DriverProposalCubit` | `LoadDriverProposal`: `FindDriverProposal`, `FindDriverServiceRequest` e `ListDriverProposalVersions` em paralelo; `DriverProposalDetail` (ajuste pendente e histórico) |
+| Montar proposta | `ProposalComposerCubit` | `LoadProposalComposer`: pedido, versão anterior e `ListMyVans` (`driver_vans`) em paralelo; `ProposalComposerSetup` (rascunho e van), `ProposalDraft`, `previewInstallmentAmount`, `SendProposal` |
 
-O `DriverShell` troca o `VanepComingSoon` pela aba. O `ProposalDraft` nasce vazio a partir do pedido (dias e trechos pedidos, início desejado, validade 7, reajuste "IPCA na renovação" e cancelamento "aviso de 30 dias + 10%" como no canvas) ou preenchido a partir de uma `Proposal` (nova versão), já com a van da versão anterior pelo `token` da visão do motorista; se essa van não está mais entre as do `ListMyVans`, o seletor pede outra. O rascunho só deixa ligar trechos que a família pediu, a mesma regra que o back aplica no envio (`422 proposal.slots.not_requested`).
+O `DriverShell` troca o `VanepComingSoon` pela aba. O `ProposalDraft` nasce vazio a partir do pedido (dias e trechos pedidos, início desejado, validade 7, reajuste "IPCA na renovação" e cancelamento "aviso de 30 dias + 10%" como no canvas) ou preenchido a partir de uma `Proposal` (nova versão), já com a van da versão anterior pelo `token` da visão do motorista; se essa van não está mais entre as do `ListMyVans`, o seletor pede outra (com uma van só, ela é escolhida). Ao voltar do cadastro de van, o montar proposta relê as vans sem perder o rascunho. As telas do motorista recebem as ações (conversar, recusar, montar proposta, cadastrar van) por callback do `app.dart`, como as do responsável; enviar ou recusar volta para a lista, e um 409 ou 404 recarrega a tela de onde saiu. O rascunho só deixa ligar trechos que a família pediu, a mesma regra que o back aplica no envio (`422 proposal.slots.not_requested`).
 
 ### D10. Erros
 

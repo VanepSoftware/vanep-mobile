@@ -12,9 +12,10 @@ import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/proposal_detail_labels.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_detail_sections.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
 
 class ProposalAcceptedPage extends StatelessWidget {
   const ProposalAcceptedPage({
