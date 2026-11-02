@@ -206,11 +206,7 @@ void paintVanepWheel(
   canvas
     ..save()
     ..translate(center.dx, center.dy)
-    ..drawCircle(
-      Offset.zero,
-      10,
-      Paint()..color = VanepColors.brandNavyDeep,
-    )
+    ..drawCircle(Offset.zero, 10, Paint()..color = VanepColors.brandNavyDeep)
     ..drawCircle(Offset.zero, 4.2, hubPaint)
     ..rotate(turn)
     ..drawRect(const Rect.fromLTWH(-1, -8.5, 2, 4), hubPaint)

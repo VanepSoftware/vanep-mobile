@@ -12,9 +12,8 @@ Widget introGateHarness({bool disableAnimations = false}) {
   return localizedHarness(
     Builder(
       builder: (context) => MediaQuery(
-        data: MediaQuery.of(
-          context,
-        ).copyWith(disableAnimations: disableAnimations),
+        data: MediaQuery.of(context)
+            .copyWith(disableAnimations: disableAnimations),
         child: const VanepIntroGate(child: appBehindIntro),
       ),
     ),

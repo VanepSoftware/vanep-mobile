@@ -32,6 +32,8 @@ import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_sea
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_van_registration_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_page.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
@@ -89,11 +91,15 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<ConversationsInboxCubit>(
                   create: (_) => getIt<ConversationsInboxCubit>(),
                 ),
+                BlocProvider<VanCentralCubit>(
+                  create: (_) => getIt<VanCentralCubit>()..load(),
+                ),
               ],
               child: DriverShell(
                 profile: session.profile,
                 openServiceAreas: openDriverServiceAreas,
                 openMyVans: openDriverVans,
+                openVanRegistration: openDriverVanRegistration,
                 openConversationChat: (context, conversation) =>
                     openConversationChat(
                       context,
@@ -225,6 +231,17 @@ Future<void> openDriverVans(BuildContext context) {
       builder: (_) => BlocProvider<DriverVansCubit>(
         create: (_) => getIt<DriverVansCubit>()..loadVans(),
         child: const DriverVansPage(),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverVanRegistration(BuildContext context) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverVansCubit>(
+        create: (_) => getIt<DriverVansCubit>()..loadVans(),
+        child: const DriverVanRegistrationPage(),
       ),
     ),
   );
