@@ -5,6 +5,7 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
@@ -80,7 +81,14 @@ class DriverServiceRequestPage extends StatelessWidget {
           },
           bottomNavigationBar: request != null && state.canAnswer
               ? DriverAnswerFooter(
+                  primaryLabel: l10n.driverRequestComposeProposal,
                   onDecline: () => declineAndLeave(
+                    context,
+                    actions: actions,
+                    request: request,
+                    reload: cubit.load,
+                  ),
+                  onPrimary: () => composeAndLeave(
                     context,
                     actions: actions,
                     request: request,
@@ -139,9 +147,16 @@ class DriverServiceRequestBody extends StatelessWidget {
 }
 
 class DriverAnswerFooter extends StatelessWidget {
-  const DriverAnswerFooter({required this.onDecline, super.key});
+  const DriverAnswerFooter({
+    required this.primaryLabel,
+    required this.onDecline,
+    required this.onPrimary,
+    super.key,
+  });
 
+  final String primaryLabel;
   final VoidCallback onDecline;
+  final VoidCallback onPrimary;
 
   @override
   Widget build(BuildContext context) {
@@ -153,10 +168,23 @@ class DriverAnswerFooter extends StatelessWidget {
           color: VanepColors.card,
           border: Border(top: BorderSide(color: VanepColors.divider)),
         ),
-        child: VanepSecondaryButton(
-          label: l10n.proposalDetailDecline,
-          isDestructive: true,
-          onPressed: onDecline,
+        child: Row(
+          children: [
+            Expanded(
+              child: VanepSecondaryButton(
+                label: l10n.proposalDetailDecline,
+                isDestructive: true,
+                onPressed: onDecline,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: VanepPrimaryButton(
+                label: primaryLabel,
+                onPressed: onPrimary,
+              ),
+            ),
+          ],
         ),
       ),
     );

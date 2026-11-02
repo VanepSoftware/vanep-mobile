@@ -57,11 +57,14 @@ import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposal_page.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_service_request_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/proposal_composer_page.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/request_decline_sheet.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
@@ -489,6 +492,11 @@ DriverNegotiationActions driverNegotiationActions(BuildContext context) {
   return DriverNegotiationActions(
     onChat: (request) => openDriverNegotiationChat(context, request),
     onDecline: (request) => showRequestDecline(context, request),
+    onComposeProposal: (request, previousVersion) => openProposalComposer(
+      context,
+      request,
+      previousVersion: previousVersion,
+    ),
   );
 }
 
@@ -542,6 +550,28 @@ Future<RequestDeclineOutcome?> showRequestDecline(
     builder: (_) => BlocProvider<RequestDeclineCubit>(
       create: (_) => getIt<RequestDeclineCubit>(param1: request.token),
       child: RequestDeclineSheet(request: request),
+    ),
+  );
+}
+
+Future<ProposalComposerOutcome?> openProposalComposer(
+  BuildContext context,
+  DriverServiceRequest request, {
+  Proposal? previousVersion,
+}) {
+  return Navigator.of(context).push<ProposalComposerOutcome>(
+    MaterialPageRoute<ProposalComposerOutcome>(
+      builder: (_) => BlocProvider<ProposalComposerCubit>(
+        create: (_) => getIt<ProposalComposerCubit>(
+          param1: request.token,
+          param2: previousVersion?.token,
+        )..load(),
+        child: ProposalComposerPage(
+          actions: ProposalComposerActions(
+            onRegisterVan: () => openDriverVans(context),
+          ),
+        ),
+      ),
     ),
   );
 }

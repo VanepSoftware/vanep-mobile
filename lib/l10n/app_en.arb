@@ -1919,6 +1919,7 @@
   },
   "driverRequestAddressNotice": "Full address after acceptance.",
   "driverRequestFamilyMessage": "Message from the family",
+  "driverRequestComposeProposal": "Build proposal",
   "driverRequestDeclineTitle": "Decline request?",
   "driverRequestDeclineMessage": "{client}'s request is closed and leaves your negotiations.",
   "@driverRequestDeclineMessage": {
@@ -1989,5 +1990,74 @@
     }
   },
   "driverAdjustmentSeeFullProposal": "See full proposal",
-  "driverAdjustmentReplacesNotice": "A new version replaces the previous one."
+  "driverAdjustmentReplacesNotice": "A new version replaces the previous one.",
+  "driverProposalsNewVersion": "New version",
+  "proposalComposerTitle": "New proposal",
+  "proposalComposerLoadError": "Couldn't open the proposal.",
+  "proposalComposerValuesTitle": "Amounts",
+  "proposalComposerTotal": "Contract total",
+  "proposalComposerDueDay": "Due day",
+  "proposalComposerStartsOn": "Start",
+  "proposalComposerEndsOn": "End",
+  "proposalComposerAsRequested": "As requested",
+  "proposalComposerSetTime": "Set",
+  "proposalComposerTimeLabel": "{leg} time, {day}",
+  "@proposalComposerTimeLabel": {
+    "placeholders": {
+      "leg": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalComposerApplyToAll": "Apply to every day",
+  "proposalComposerVanTitle": "Van",
+  "proposalComposerNoVan": "Register a van to send the proposal.",
+  "proposalComposerRegisterVan": "Register van",
+  "proposalComposerChooseVan": "Choose the van for this proposal.",
+  "proposalComposerValidityTitle": "Proposal validity",
+  "proposalComposerValidityHint": "How long the family has to accept. After that, the proposal expires. Up to {max} days.",
+  "@proposalComposerValidityHint": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComposerValidDays": "Days for the family to answer",
+  "proposalComposerFooter": "{count, plural, =1{Proposal valid for 1 day.} other{Proposal valid for {count} days.}} If accepted, the contract is generated.",
+  "@proposalComposerFooter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComposerSend": "Send proposal",
+  "proposalComposerSent": "Proposal sent.",
+  "proposalComposerErrorStartInPast": "The start must be today or later.",
+  "proposalComposerErrorEndNotAfterStart": "The end must be after the start.",
+  "proposalComposerErrorPeriodTooLong": "The period can last up to {months} months.",
+  "@proposalComposerErrorPeriodTooLong": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComposerErrorBelowOneCent": "At least 1 cent per installment",
+  "proposalComposerErrorRange": "From {min} to {max}",
+  "@proposalComposerErrorRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComposerErrorStudentWithoutLeg": "Keep at least one leg for each student."
 }
