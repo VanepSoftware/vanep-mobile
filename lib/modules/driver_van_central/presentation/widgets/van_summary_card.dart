@@ -26,12 +26,14 @@ class VanSummaryCard extends StatelessWidget {
   const VanSummaryCard({
     required this.van,
     required this.occupancy,
+    this.occupancyUnavailableMessage,
     required this.withAssistant,
     super.key,
   });
 
   final DriverVan van;
   final DriverOccupancy? occupancy;
+  final String? occupancyUnavailableMessage;
   final bool withAssistant;
 
   @override
@@ -53,7 +55,7 @@ class VanSummaryCard extends StatelessWidget {
               VanSummaryHeader(van: van, withAssistant: withAssistant),
               const SizedBox(height: 16),
               if (occupancy == null)
-                const VanOccupancyUnavailable()
+                VanOccupancyUnavailable(message: occupancyUnavailableMessage)
               else
                 VanShiftMeters(occupancy: occupancy, capacity: van.capacity),
             ],
@@ -256,14 +258,16 @@ class VanShiftMeter extends StatelessWidget {
 }
 
 class VanOccupancyUnavailable extends StatelessWidget {
-  const VanOccupancyUnavailable({super.key});
+  const VanOccupancyUnavailable({this.message, super.key});
+
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return Text(
-      l10n.vanCentralOccupancyUnavailable,
+      message ?? l10n.vanCentralOccupancyUnavailable,
       style: VanepTypography.cardSubtitle.copyWith(
         color: VanepColors.onBrand.withValues(alpha: 0.72),
       ),

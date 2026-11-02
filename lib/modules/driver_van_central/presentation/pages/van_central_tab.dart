@@ -154,7 +154,10 @@ class VanCentralBody extends StatelessWidget {
           ],
           VanSummaryCard(
             van: selectedVan!,
-            occupancy: state.occupancy,
+            occupancy: state.selectedVanOccupancy,
+            occupancyUnavailableMessage: state.vans.length > 1
+                ? l10n.vanCentralOccupancyPerVanUnavailable
+                : null,
             withAssistant: state.hasWorkingAssistant,
           ),
           const SizedBox(height: 18),

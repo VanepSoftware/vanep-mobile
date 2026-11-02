@@ -13,11 +13,12 @@ import '../test/modules/driver_van_central/driver_van_central_mocks.dart';
 
 void main() {
   const empty = bool.fromEnvironment('VAN56_PREVIEW_EMPTY');
+  const multi = bool.fromEnvironment('VAN56_PREVIEW_MULTI');
   final cubit = MockVanCentralCubit();
   whenListen(cubit, const Stream<VanCentralState>.empty(),
       initialState: empty ? const VanCentralState(status: VanCentralStatus.loaded) : const VanCentralState(
         status: VanCentralStatus.loaded,
-        vans: [firstVan, secondVan],
+        vans: multi ? [firstVan, secondVan] : [firstVan],
         occupancy: testOccupancy,
         attendance: testAttendance,
         assistants: testAssistants,

@@ -59,7 +59,7 @@ class VanCentralMenus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final occupancy = state.occupancy;
+    final occupancy = state.selectedVanOccupancy;
     final assistants = state.assistants;
     final serviceAreas = state.serviceAreas;
     final attendance = state.attendance;

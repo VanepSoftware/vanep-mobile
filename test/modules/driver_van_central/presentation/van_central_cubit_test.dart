@@ -188,6 +188,14 @@ void main() {
       isFalse,
     );
   });
+
+  test('driver totals are not assigned to one of several vans', () {
+    expect(loadedCentral.selectedVanOccupancy, isNull);
+    expect(
+      loadedCentral.copyWith(vans: const [firstVan]).selectedVanOccupancy,
+      testOccupancy,
+    );
+  });
 }
 
 const loadedCentral = VanCentralState(

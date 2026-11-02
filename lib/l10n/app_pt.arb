@@ -672,6 +672,7 @@
   "vanCentralShiftSeats": "{passengers} de {capacity} lugares",
   "vanCentralShiftMeterLabel": "{shift}: {passengers} de {capacity}",
   "vanCentralOccupancyUnavailable": "Não foi possível carregar a ocupação agora.",
+  "vanCentralOccupancyPerVanUnavailable": "A ocupação total do motorista não pode ser atribuída a esta van.",
   "vanCentralOperation": "Operação",
   "vanCentralTeam": "Equipe",
   "vanCentralVan": "Van",

@@ -1413,6 +1413,7 @@
     }
   },
   "vanCentralOccupancyUnavailable": "Could not load the occupancy right now.",
+  "vanCentralOccupancyPerVanUnavailable": "The driver's total occupancy cannot be attributed to this van.",
   "vanCentralOperation": "Operation",
   "vanCentralTeam": "Team",
   "vanCentralVan": "Van",
