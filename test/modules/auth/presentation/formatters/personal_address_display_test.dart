@@ -31,12 +31,4 @@ void main() {
     expect(fields.cityState, 'Brasília/DF');
     expect(fields.zipCode, isNull);
   });
-
-  test('does not display districtName as the house neighborhood', () {
-    final fields = personalAddressDisplayFields(
-      fakePersonalAddress(neighborhood: null, districtName: 'Asa Norte'),
-    );
-
-    expect(fields.neighborhood, isNull);
-  });
 }

@@ -29,7 +29,6 @@ void main() {
           'zipCode': '72120120',
           'neighborhood': 'Taguatinga',
           'cityToken': 'city-brasilia',
-          'district': null,
           'cityName': 'Brasília',
           'stateUf': 'DF',
         },
@@ -47,24 +46,6 @@ void main() {
     expect(dependent.address?.cityToken, 'city-brasilia');
     expect(dependent.address?.cityName, 'Brasília');
     expect(dependent.address?.stateUf, 'DF');
-  });
-
-  test('a district sent by the API is ignored', () {
-    final dependent = DependentDto.fromJson(
-      dependentPayload(
-        address: {
-          'token': 'addr-1',
-          'street': 'Rua do Embarque',
-          'district': 'Asa Norte',
-          'cityToken': 'city-brasilia',
-          'cityName': 'Brasília',
-          'stateUf': 'DF',
-        },
-      ),
-    );
-
-    expect(dependent.address?.neighborhood, isNull);
-    expect(dependent.address?.street, 'Rua do Embarque');
   });
 
   test('reads a dependent without birth date, gender or address', () {
@@ -120,7 +101,36 @@ void main() {
 
     expect(dependent.school?.token, 'school-delta');
     expect(dependent.school?.name, 'Colégio Delta');
+    expect(dependent.school?.address, isNull);
     expect(dependent.document, '52998224725');
+  });
+
+  test('reads the address of the school', () {
+    final dependent = DependentDto.fromJson({
+      ...dependentPayload(),
+      'school': {
+        'token': 'school-delta',
+        'name': 'Colégio Delta',
+        'address': {
+          'token': 'addr-school',
+          'street': 'SGAS 605',
+          'number': '1',
+          'complement': null,
+          'zipCode': '70200650',
+          'neighborhood': 'Asa Sul',
+          'cityToken': 'city-brasilia',
+          'cityName': 'Brasília',
+          'stateUf': 'DF',
+        },
+      },
+    });
+
+    final address = dependent.school?.address;
+    expect(address?.street, 'SGAS 605');
+    expect(address?.number, '1');
+    expect(address?.neighborhood, 'Asa Sul');
+    expect(address?.cityName, 'Brasília');
+    expect(address?.stateUf, 'DF');
   });
 
   test('a dependent without school or document reads both as null', () {

@@ -14,12 +14,14 @@ import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor_status.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_pickup_state.dart';
 
 const dependentCepLookupDebounce = Duration(milliseconds: 400);
 
-class DependentPickupCubit extends Cubit<DependentPickupState> {
+class DependentPickupCubit extends Cubit<DependentPickupState>
+    implements DependentEditorCubit<DependentPickupState> {
   DependentPickupCubit({
     required Dependent dependent,
     required this.updateDependent,
@@ -193,6 +195,7 @@ class DependentPickupCubit extends Cubit<DependentPickupState> {
     );
   }
 
+  @override
   Future<void> save() async {
     if (!state.canSave) return;
 

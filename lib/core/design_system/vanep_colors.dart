@@ -14,6 +14,9 @@ class VanepColors {
   static const Color danger = Color(0xFFC4564A);
   static const Color warning = Color(0xFFC98A1F);
   static const Color warningSurface = Color(0xFFFBF0DA);
+  static const Color warningSurfaceSoft = Color(0xFFFFFAEE);
+  static const Color warningBorder = Color(0xFFF1DDB3);
+  static const Color warningText = Color(0xFF8A5A00);
 
   static const Color action = Color(0xFF0B6BD3);
   static const Color actionSurface = Color(0x140B6BD3);
@@ -21,6 +24,19 @@ class VanepColors {
   static const Color inputBorder = Color(0xFFDFE3E7);
   static const Color cardBorder = Color(0xFFE4E5E7);
   static const Color placeholder = Color(0xFF9AA0A6);
+
+  static const Color avatarAmberSurface = Color(0xFFFBF0DA);
+  static const Color avatarAmberText = Color(0xFF8A5A00);
+  static const Color avatarBlueSurface = Color(0xFFDCE6F5);
+  static const Color avatarBlueText = Color(0xFF022856);
+  static const Color avatarGreenSurface = Color(0xFFE3F3EA);
+  static const Color avatarGreenText = Color(0xFF187A4C);
+  static const Color avatarGraySurface = Color(0xFFEDF0F3);
+  static const Color avatarGrayText = Color(0xFF4A5867);
+
+  static const Color scheduleEmpty = Color(0xFFE7EBEF);
+  static const Color schedulePartTime = Color(0xFF0B6BD3);
+  static const Color scheduleFullTime = Color(0xFF022856);
 
   static const Color skeletonBase = Color(0xFFE6EAEF);
   static const Color skeletonHighlight = Color(0xFFF5F7F9);
