@@ -20,8 +20,6 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_r
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/quote_request_setup.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_request_state.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_detail_sections.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_building_blocks.dart';
 import 'package:vanep_mobile/modules/contract_readiness/domain/entities/contract_readiness.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
@@ -29,6 +27,8 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/service_reques
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_draft.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 
 const quoteStartDateWindow = Duration(days: 366);
 

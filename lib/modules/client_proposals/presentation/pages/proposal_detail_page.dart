@@ -19,13 +19,14 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/cl
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_comparison_page.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_confirmations.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_detail_sections.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_building_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/item_groups.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_status.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 
 typedef ProposalActionCallback = Future<bool> Function(
   ClientServiceRequest request,
@@ -268,7 +269,7 @@ class ProposalDetailBody extends StatelessWidget {
         ),
         const SizedBox(height: detailSectionSpacing),
         if (proposal != null) ...[
-          DetailScheduleSection(proposal: proposal, request: request),
+          DetailScheduleSection(proposal: proposal),
           const SizedBox(height: detailSectionSpacing),
           DetailConditionsSection(proposal: proposal),
           const SizedBox(height: detailSectionSpacing),

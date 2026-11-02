@@ -1,10 +1,8 @@
 import 'package:intl/intl.dart';
 
-import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
-import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposals.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
@@ -35,38 +33,8 @@ String formatSchoolGroupLine(
   return '$children · $schoolAndShift';
 }
 
-String formatProposalStartDate(AppLocalizations l10n, DateTime startsOn) {
-  final day = startsOn.day == 1
-      ? l10n.clientProposalsFirstDayOfMonth
-      : '${startsOn.day}';
-  final month = withoutAbbreviationDot(
-    DateFormat.MMM(l10n.localeName).format(startsOn),
-  );
-  return l10n.clientProposalsStartingOn(
-    l10n.clientProposalsDayMonth(day, month),
-  );
-}
-
-String formatRequestedDaysAndStart(
-  AppLocalizations l10n,
-  ClientServiceRequest request,
-  DateTime startsOn,
-) {
-  final weekdays = formatWeekdayList(l10n, requestedWeekdays(request.items));
-  return '$weekdays · ${formatProposalStartDate(l10n, startsOn)}';
-}
-
 String formatProposalRating(AppLocalizations l10n, double rating) {
   return NumberFormat('0.0', l10n.localeName).format(rating);
-}
-
-String formatProposalExpiry(
-  AppLocalizations l10n,
-  DateTime validUntil,
-  DateTime now,
-) {
-  final daysLeft = calendarDaysBetween(now, validUntil.toLocal());
-  return l10n.clientProposalsExpiresIn(daysLeft < 0 ? 0 : daysLeft);
 }
 
 String formatSentRequestSummary(

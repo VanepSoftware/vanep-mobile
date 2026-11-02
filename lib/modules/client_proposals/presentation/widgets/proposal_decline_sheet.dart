@@ -13,15 +13,15 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposa
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_state.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/proposal_detail_labels.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_choice_option.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_confirmations.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_detail_sections.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_building_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/decline_reason.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 
 class ProposalDeclineSheet extends StatefulWidget {
   const ProposalDeclineSheet({
