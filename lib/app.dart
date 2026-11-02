@@ -33,7 +33,9 @@ import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/dri
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/shell/assistant_shell.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
@@ -101,6 +103,17 @@ class AuthGate extends StatelessWidget {
                       viewerSide: ConversationParticipant.driver,
                     ),
               ),
+            ),
+            UserType.assistant => MultiBlocProvider(
+              providers: [
+                BlocProvider<AssistantVanSelectorCubit>(
+                  create: (_) => getIt<AssistantVanSelectorCubit>()..loadVans(),
+                ),
+                BlocProvider<ProfileSummaryCubit>(
+                  create: (_) => getIt<ProfileSummaryCubit>(),
+                ),
+              ],
+              child: AssistantShell(profile: session.profile),
             ),
             _ => MultiBlocProvider(
               providers: [
