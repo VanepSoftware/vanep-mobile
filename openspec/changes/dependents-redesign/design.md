@@ -12,9 +12,11 @@ Estado atual de `lib/modules/dependents/`:
 Fatos do back em que este design se apoia (vanep-api-java, branch `feat/service-request-proposal-school-days`):
 
 - `DependentResponseDTO` devolve `school: {token, name}` e `document`. `DependentUpdateDTO` aceita `schoolToken` e `document` como `JsonNullable`.
+- `document` agora é validado como CPF (`@Cpf`, com ou sem máscara, 400 `dependent.document.invalid`) e guardado só com dígitos; `null` no `PATCH` apaga. Um CPF já usado por outro dependente ativo dá 409 com o `detail` "Já existe um dependente cadastrado com este documento.".
+- `DELETE /api/dependent/{token}` vai devolver 422 `dependent.open_negotiation` quando o dependente estiver num pedido de orçamento aberto. Está na spec do back; o código vem com as solicitações.
 - `GET`/`PUT /api/dependent/{token}/school-days` recebem e devolvem `[{weekday: "MONDAY", schoolShift: "MORNING"}]`, com `SchoolShift` = `MORNING | AFTERNOON | NIGHT | FULLTIME`. O body do `PUT` é `{"days": [...]}`.
-- `POST /api/schools/resolve` (`isAuthenticated()`) recebe `{placeId, sessionToken}`. Aceita só lugares do tipo `school` ou `educational_institution` e devolve um `SchoolResponseDTO` (201 quando cria a escola, 200 quando ela já existe). O cliente não tem a permissão `list_schools`, então não existe busca no catálogo: o Places é o catálogo.
-- `GET /api/clients/me/contract-readiness?dependentTokens=…` (PR 7, ainda não escrito) devolve `{ready, missing: [{subject, dependentToken?, field}]}`.
+- `POST /api/schools/resolve` (`isAuthenticated()`) recebe `{placeId, sessionToken}`. Aceita lugares do tipo `school`, `primary_school`, `secondary_school` ou `educational_institution` e devolve um `SchoolResponseDTO` (201 quando cria a escola, 200 quando ela já existe). O cliente não tem a permissão `list_schools`, então não existe busca no catálogo: o Places é o catálogo.
+- `GET /api/clients/me/contract-readiness?dependentTokens=…` devolve `{ready, missing: [{subject, dependentToken?, field}]}`; `dependentToken` só vem nas entradas `DEPENDENT`. `dependentTokens` é opcional e um token repetido é checado uma vez. Já está implementado na branch do PR 3 do back, ainda sem commit.
 
 ## Goals / Non-Goals
 
@@ -104,13 +106,13 @@ Codificação da query: `dependentTokens` vai como parâmetro repetido (`ListFor
 
 ### D10. Erros
 
-A taxonomia atual de `DependentFailure` continua. Um `DependentRejectedFailure(detail)` novo carrega o `detail` do `ProblemDetail` quando um 4xx não é atribuído a um campo, lido pelo `readProblemDetail` que já existe. `SchoolFailure` (módulo schools) cobre `rejected(detail)`, `network` e `unexpected`. `ContractReadinessFailure` nunca é mostrado ao usuário: o cubit transforma qualquer falha em `readinessByToken = null`.
+A taxonomia atual de `DependentFailure` continua. Um `DependentRejectedFailure(detail)` novo carrega o `detail` do `ProblemDetail` quando um 4xx não é atribuído a um campo, lido pelo `readProblemDetail` que já existe. É o caso do 409 de CPF repetido e do 422 de remoção com pedido aberto; hoje o repositório trata qualquer status fora de 400 e 404 como erro genérico. `SchoolFailure` (módulo schools) cobre `rejected(detail)`, `network` e `unexpected`. `ContractReadinessFailure` nunca é mostrado ao usuário: o cubit transforma qualquer falha em `readinessByToken = null`.
 
 ## Risks / Trade-offs
 
-- [Endpoint de prontidão ainda não mergeado (PR 7 do back)] → Pela spec, falhas de prontidão são silenciosas, então o detalhe, os editores e o wizard funcionam sem ele. Só os marcadores âmbar, o card de checklist e o modo de completar ficam apagados até o PR 7 entrar. A fase 2 testa a camada de dados contra o contrato da spec.
+- [Endpoint de prontidão ainda sem commit no back] → Pela spec, falhas de prontidão são silenciosas, então o detalhe, os editores e o wizard funcionam sem ele. Só os marcadores âmbar, o card de checklist e o modo de completar ficam apagados enquanto o back não estiver rodando com ele. A fase 2 testa a camada de dados contra o contrato da spec.
 - [Endpoint de school-days numa branch do back que não foi mergeada] → Os testes manuais das fases que mexem na grade precisam do back local em `feat/service-request-proposal-school-days` ou numa branch posterior.
-- [O filtro de tipo do Places deixa escolas de fora] → Usar três tipos primários, o máximo que cobre escolas sem pegar universidades. O back ainda valida o lugar. Uma escola que não aparece não gera resultado, nunca um salvamento errado.
+- [O filtro de tipo do Places deixa escolas de fora] → Usar três tipos primários, o máximo que cobre escolas sem pegar universidades. O back aceita os mesmos três tipos (mais `educational_institution`) e ainda valida o lugar. Uma escola que não aparece não gera resultado, nunca um salvamento errado.
 - [O mapa estático parece real] → O leitor de tela o anuncia como ilustrativo, e ele nunca mostra uma posição real. O `TODO` mantém a troca visível na revisão de código.
 - [É possível editar um dependente com contrato] → O back também não impõe a trava (fase 5 de lá). Contratos ainda não nascem de propostas (fase 3 de lá), então hoje nenhum dependente real tem contrato. Revisitar quando a fase 5 do back entrar.
 - [A regra de turno padrão surpreende o usuário] → O turno aparece na hora no seletor, e nada é salvo antes de "Salvar".
@@ -123,7 +125,7 @@ Só mobile, sem migração de dados. As telas antigas continuam ligadas até a f
 
 | Fase | Conteúdo | Depende de | Em paralelo com |
 |---|---|---|---|
-| 1 | Core (`SchoolShift`, CPF movido, `VanepMapPlaceholder`, extensão do `VanepMenuItem`, legenda e ações no `VanepAppBar`, `VanepSection`, filtro de tipo no Places) e contratos e value objects de domínio (`Dependent` + escola/documento, `Weekday`, `SchoolWeek`, adições ao repositório, falhas; domínio de `schools` e `contract_readiness`) | — | — |
+| 1 | Core (`SchoolShift`, CPF movido, `VanepMapPlaceholder`, extensão do `VanepMenuItem`, legenda e ações no `VanepAppBar`, `VanepSection`, filtro de tipo no Places) e contratos e value objects de domínio (`Dependent` + escola/documento, `Weekday`, `SchoolWeek`, contrato `DependentSchoolDaysRepository`, falhas; domínio de `schools` e `contract_readiness`) | — | — |
 | 2 | Dados dos três módulos (DTOs, datasources, implementações de repositório, endpoints no `Environment`), use cases e containers | Fase 1 mergeada; PR 3 do back para o QA manual | — |
 | 3 | Cubits: mudanças no `DependentsCubit`, `DependentDetailCubit` e os quatro cubits de editor | Fase 2 mergeada | — |
 | 4 | Lista, detalhe e as quatro telas de editor, `describeSchoolWeekBar`, `dependentReadinessItems`, l10n | Fase 3 mergeada | — |

@@ -133,7 +133,7 @@ Quando o cliente tem dois ou mais dependentes e o dependente aberto não é o pa
 
 ### Requirement: Remover dependente
 
-"Remover dependente" SHALL pedir confirmação num diálogo destrutivo que cita o nome do dependente. Com a confirmação, o app SHALL enviar `DELETE /api/dependent/{token}`. Com sucesso, SHALL voltar para a lista, que não mostra mais o dependente e mostra o padrão que o back promoveu, e SHALL mostrar uma mensagem de sucesso. Com falha, SHALL ficar no detalhe e mostrar uma mensagem de erro. Cancelar o diálogo SHALL NOT mudar nada.
+"Remover dependente" SHALL pedir confirmação num diálogo destrutivo que cita o nome do dependente. Com a confirmação, o app SHALL enviar `DELETE /api/dependent/{token}`. Com sucesso, SHALL voltar para a lista, que não mostra mais o dependente e mostra o padrão que o back promoveu, e SHALL mostrar uma mensagem de sucesso. Com falha, SHALL ficar no detalhe e mostrar a mensagem do back quando ela existir, ou uma genérica. Cancelar o diálogo SHALL NOT mudar nada.
 
 #### Scenario: Remoção confirmada
 
@@ -145,6 +145,12 @@ Quando o cliente tem dois ou mais dependentes e o dependente aberto não é o pa
 
 - **WHEN** a requisição `DELETE` falha
 - **THEN** o detalhe continua aberto e aparece uma mensagem de erro
+
+#### Scenario: Dependente com pedido de orçamento aberto
+
+- **WHEN** o back responde HTTP 422 porque o dependente está num pedido de orçamento aberto
+- **THEN** o detalhe continua aberto
+- **AND** a mensagem mostrada é a que o back mandou
 
 ### Requirement: Linhas Van e Contrato sem destino
 

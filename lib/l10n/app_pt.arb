@@ -525,6 +525,8 @@
   "clientHomeSearchVans": "Buscar vans",
   "clientHomeShiftMorning": "manhã",
   "clientHomeShiftAfternoon": "tarde",
+  "clientHomeShiftNight": "noite",
+  "clientHomeShiftFullTime": "integral",
   "clientHomeVanTitle": "Van de {driver} · {shift}",
   "clientHomeVanSubtitle": "{model} {plate} · sai às {time}",
   "clientHomeVanRowSubtitle": "{names} · embarque {time}",
@@ -649,5 +651,7 @@
   "clientProposalsEmptyClosedTitle": "Nenhuma proposta encerrada",
   "clientProposalsEmptyClosedMessage": "Propostas aceitas, recusadas e expiradas aparecem aqui.",
   "clientProposalsLoadError": "Não foi possível carregar suas propostas.",
-  "clientProposalsRetry": "Tentar novamente"
+  "clientProposalsRetry": "Tentar novamente",
+  "mapPlaceholderSemantics": "Mapa ilustrativo",
+  "mapAdjustAction": "Ajustar no mapa"
 }
