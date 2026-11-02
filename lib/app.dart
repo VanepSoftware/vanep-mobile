@@ -449,11 +449,23 @@ Future<void> openConversationChat(
             negotiationActions: clientNegotiationChatActions(context),
           ),
         ),
-        ConversationParticipant.driver => BlocProvider<ChatCubit>(
-          create: (_) => getIt<ChatCubit>(param1: conversationToken)..start(),
-          child: ChatPage(
+        ConversationParticipant.driver => MultiBlocProvider(
+          providers: [
+            BlocProvider<ChatCubit>(
+              create: (_) =>
+                  getIt<ChatCubit>(param1: conversationToken)..start(),
+            ),
+            BlocProvider<NegotiationTimelineCubit<DriverServiceRequest>>(
+              create: (_) =>
+                  getIt<NegotiationTimelineCubit<DriverServiceRequest>>(
+                    param1: conversationToken,
+                  )..load(),
+            ),
+          ],
+          child: ChatPage<DriverServiceRequest>(
             counterpartName: counterpartName,
             viewerSide: ConversationParticipant.driver,
+            negotiationActions: driverNegotiationChatActions(context),
           ),
         ),
       },
@@ -573,6 +585,17 @@ Future<ProposalComposerOutcome?> openProposalComposer(
         ),
       ),
     ),
+  );
+}
+
+NegotiationChatActions<DriverServiceRequest> driverNegotiationChatActions(
+  BuildContext context,
+) {
+  return NegotiationChatActions(
+    onSeeProposal: (request) => openDriverProposal(context, request),
+    onNewVersion: (request, proposal) async {
+      await openProposalComposer(context, request, previousVersion: proposal);
+    },
   );
 }
 

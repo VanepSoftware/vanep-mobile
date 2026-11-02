@@ -72,6 +72,56 @@ void main() {
     expect(find.text('Carlos Souza'), findsOneWidget);
   });
 
+  testWidgets('opens the chat of the negotiation as the driver', (
+    tester,
+  ) async {
+    final chat = MockChatCubit();
+    whenListen(
+      chat,
+      const Stream<ChatState>.empty(),
+      initialState: const ChatState(status: ChatStatus.ready),
+    );
+    when(chat.start).thenAnswer((_) async {});
+    getIt.registerFactoryParam<ChatCubit, String, void>((_, _) => chat);
+    final timeline = MockDriverNegotiationTimelineCubit();
+    whenListen(
+      timeline,
+      const Stream<NegotiationTimelineState<DriverServiceRequest>>.empty(),
+      initialState: const NegotiationTimelineState<DriverServiceRequest>(
+        status: NegotiationTimelineStatus.none,
+      ),
+    );
+    when(timeline.load).thenAnswer((_) async {});
+    final timelineTokens = <String>[];
+    getIt.registerFactoryParam<
+      NegotiationTimelineCubit<DriverServiceRequest>,
+      String,
+      void
+    >((conversationToken, _) {
+      timelineTokens.add(conversationToken);
+      return timeline;
+    });
+    addTearDown(getIt.reset);
+
+    await tester.pumpWidget(
+      localizedHarness(
+        Builder(
+          builder: (context) => TextButton(
+            onPressed: () =>
+                openDriverNegotiationChat(context, TestDriverServiceRequest()),
+            child: const Text('Conversar'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Conversar'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ChatPage<DriverServiceRequest>), findsOneWidget);
+    expect(timelineTokens, ['conversation-1']);
+    expect(find.text('Maria'), findsOneWidget);
+  });
+
   testWidgets('a request without a conversation opens nothing', (tester) async {
     await tester.pumpWidget(
       localizedHarness(

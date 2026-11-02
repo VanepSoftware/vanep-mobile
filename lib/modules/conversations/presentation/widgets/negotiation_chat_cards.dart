@@ -322,11 +322,13 @@ class NegotiationAdjustmentCard extends StatelessWidget {
   const NegotiationAdjustmentCard({
     required this.event,
     required this.sentByViewer,
+    this.onNewVersion,
     super.key,
   });
 
   final AdjustmentRequestedEvent event;
   final bool sentByViewer;
+  final VoidCallback? onNewVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -334,6 +336,7 @@ class NegotiationAdjustmentCard extends StatelessWidget {
     final field = adjustmentFieldLabel(l10n, event.field);
     final suggestion = event.suggestedValue?.trim() ?? '';
     final note = event.note?.trim() ?? '';
+    final onNewVersion = this.onNewVersion;
     return NegotiationChatCard(
       icon: Icons.tune,
       title: l10n.negotiationChatAdjustmentTitle,
@@ -357,6 +360,13 @@ class NegotiationAdjustmentCard extends StatelessWidget {
               ),
             ),
           ),
+        if (onNewVersion != null) ...[
+          const SizedBox(height: 10),
+          VanepPrimaryButton(
+            label: l10n.driverProposalsNewVersion,
+            onPressed: onNewVersion,
+          ),
+        ],
       ],
     );
   }
@@ -505,6 +515,46 @@ class NegotiationLoadFailedBanner extends StatelessWidget {
               ),
             ),
             TextButton(onPressed: onRetry, child: Text(l10n.conversationRetry)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AdjustmentRequestedBanner extends StatelessWidget {
+  const AdjustmentRequestedBanner({required this.onRespond, super.key});
+
+  final VoidCallback onRespond;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Material(
+      color: VanepColors.warningSurfaceSoft,
+      shape: const Border(
+        top: BorderSide(color: VanepColors.divider),
+        bottom: BorderSide(color: VanepColors.warningBorder),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
+        child: Row(
+          children: [
+            const Icon(Icons.tune, size: 20, color: VanepColors.warning),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                l10n.driverProposalsAdjustmentRequested,
+                style: VanepTypography.cardSubtitle.copyWith(
+                  color: VanepColors.warningText,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: onRespond,
+              child: Text(l10n.negotiationChatRespond),
+            ),
           ],
         ),
       ),
