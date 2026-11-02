@@ -54,10 +54,8 @@ class PlaceAutocompleteDataSource {
   final Environment environment;
   final TargetPlatform platform;
 
-  Future<Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>> findSuggestions(
-    String input,
-    String sessionToken,
-  ) async {
+  Future<Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>>
+  findSuggestions(String input, String sessionToken) async {
     try {
       final response = await dio.post<Map<String, dynamic>>(
         environment.placesAutocompleteEndpoint,

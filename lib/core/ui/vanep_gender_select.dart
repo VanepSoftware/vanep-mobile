@@ -40,9 +40,8 @@ class VanepGenderSelect extends StatelessWidget {
             ),
           ),
           child: Theme(
-            data: Theme.of(
-              context,
-            ).copyWith(disabledColor: VanepColors.textMuted),
+            data: Theme.of(context)
+                .copyWith(disabledColor: VanepColors.textMuted),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<Gender?>(
                 value: value,

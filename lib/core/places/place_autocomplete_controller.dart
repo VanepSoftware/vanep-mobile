@@ -27,7 +27,8 @@ class PlaceAutocompleteController {
 
   void search(
     String input,
-    void Function(Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>) onResult,
+    void Function(Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>)
+    onResult,
   ) {
     _pending?.cancel();
     if (input.trim().length < minimumCharacters) {
@@ -42,10 +43,14 @@ class PlaceAutocompleteController {
 
   Future<void> _dispatch(
     String input,
-    void Function(Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>) onResult,
+    void Function(Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>)
+    onResult,
   ) async {
     final sequence = ++_requestSequence;
-    final result = await datasource.findSuggestions(input, session.currentToken());
+    final result = await datasource.findSuggestions(
+      input,
+      session.currentToken(),
+    );
     if (sequence != _requestSequence) return;
     onResult(result);
   }

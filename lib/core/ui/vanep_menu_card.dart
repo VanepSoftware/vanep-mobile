@@ -10,7 +10,9 @@ class VanepMenuItem {
     required this.icon,
     this.enabled = true,
     this.isDestructive = false,
+    this.subtitle,
     this.warningSubtitle,
+    this.trailing,
     this.onTap,
   });
 
@@ -18,7 +20,9 @@ class VanepMenuItem {
   final IconData icon;
   final bool enabled;
   final bool isDestructive;
+  final String? subtitle;
   final String? warningSubtitle;
+  final Widget? trailing;
   final VoidCallback? onTap;
 }
 
@@ -77,7 +81,9 @@ class VanepMenuTile extends StatelessWidget {
     final iconBackground = item.isDestructive && enabled
         ? VanepColors.danger.withValues(alpha: 0.10)
         : VanepColors.surface;
+    final subtitle = item.subtitle;
     final warningSubtitle = item.warningSubtitle;
+    final trailing = item.trailing;
 
     return InkWell(
       onTap: enabled ? item.onTap : null,
@@ -109,6 +115,10 @@ class VanepMenuTile extends StatelessWidget {
                         color: foreground,
                       ),
                     ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(subtitle, style: VanepTypography.cardSubtitle),
+                    ],
                     if (warningSubtitle != null) ...[
                       const SizedBox(height: 3),
                       VanepMenuWarningSubtitle(text: warningSubtitle),
@@ -116,7 +126,9 @@ class VanepMenuTile extends StatelessWidget {
                   ],
                 ),
               ),
-              if (!item.isDestructive)
+              if (trailing != null)
+                trailing
+              else if (!item.isDestructive)
                 Icon(
                   Icons.chevron_right,
                   color: enabled ? VanepColors.textMuted : VanepColors.divider,

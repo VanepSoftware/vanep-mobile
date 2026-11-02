@@ -13,7 +13,9 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
-import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
@@ -22,6 +24,8 @@ import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
+import '../modules/driver_van_central/driver_van_central_mocks.dart';
+import '../modules/driver_van_central/driver_van_central_fixtures.dart';
 
 Widget harness(
   DriverHomeCubit cubit,
@@ -45,6 +49,7 @@ Widget harness(
       providers: [
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<DriverHomeCubit>.value(value: cubit),
+        BlocProvider<VanCentralCubit>.value(value: readyVanCentralCubit()),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
         BlocProvider<ConversationsInboxCubit>.value(
           value: conversationsCubit ?? readyConversationsCubit(),
@@ -54,10 +59,25 @@ Widget harness(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
         openServiceAreas: openServiceAreas ?? (_) async {},
         openMyVans: (_) async {},
+        openVanRegistration: (_) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
       ),
     ),
   );
+}
+
+VanCentralCubit readyVanCentralCubit() {
+  final cubit = MockVanCentralCubit();
+  whenListen(cubit, const Stream<VanCentralState>.empty(),
+      initialState: const VanCentralState(
+        status: VanCentralStatus.loaded,
+        vans: [firstVan],
+        occupancy: testOccupancy,
+        attendance: testAttendance,
+        serviceAreas: testServiceAreas,
+      ));
+  when(() => cubit.refresh()).thenAnswer((_) async {});
+  return cubit;
 }
 
 List<String> bottomNavLabels(WidgetTester tester) {
@@ -110,8 +130,8 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Vans'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(DriverVansTab), findsOneWidget);
-    expect(find.text('Minhas vans'), findsOneWidget);
+    expect(find.byType(VanCentralTab), findsOneWidget);
+    expect(find.text('Vans'), findsWidgets);
   });
 
   testWidgets('where you operate opens service areas and rereads profile', (
@@ -129,7 +149,9 @@ void main() {
 
     await tester.tap(find.bySemanticsLabel('Vans'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Onde você atende'));
+    await tester.ensureVisible(find.text('Áreas de atendimento'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Áreas de atendimento'));
     await tester.pumpAndSettle();
 
     expect(opened, isTrue);
@@ -154,6 +176,8 @@ void main() {
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
 
     await tester.tap(find.bySemanticsLabel('Vans'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Alunos'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Alunos'));
     await tester.pumpAndSettle();

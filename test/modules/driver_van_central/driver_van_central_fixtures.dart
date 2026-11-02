@@ -1,7 +1,9 @@
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_attendance.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/van_assistant.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/modules/driver_vans/data/dtos/driver_van_dto.dart';
 
 class TestShiftOccupancy implements ShiftOccupancy {
   const TestShiftOccupancy(this.shift, this.passengers);
@@ -95,5 +97,43 @@ const testAssistants = [
     token: 'assistant-2',
     name: 'Rita Souza',
     status: VanAssistantStatus.pending,
+  ),
+];
+
+const firstVan = DriverVanDto(
+  token: 'van-1',
+  plate: 'SDF4E21',
+  brand: 'Mercedes-Benz',
+  model: 'Sprinter 415',
+  manufactureYear: 2021,
+  color: 'Branca',
+  capacity: 16,
+);
+
+const secondVan = DriverVanDto(
+  token: 'van-2',
+  plate: 'RTA3B45',
+  brand: 'Renault',
+  model: 'Master',
+  manufactureYear: 2019,
+  color: 'Prata',
+  capacity: 12,
+  active: false,
+);
+
+const testServiceAreas = [
+  ServiceArea(
+    token: 'area-1',
+    name: 'Taguatinga',
+    cityName: 'Brasília',
+    stateUf: 'DF',
+    coversWholeCity: false,
+  ),
+  ServiceArea(
+    token: 'area-2',
+    name: 'Águas Claras',
+    cityName: 'Brasília',
+    stateUf: 'DF',
+    coversWholeCity: false,
   ),
 ];

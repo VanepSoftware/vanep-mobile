@@ -22,6 +22,8 @@ import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
@@ -42,6 +44,7 @@ import 'modules/conversations/conversations_mocks.dart';
 import 'modules/drivers/drivers_fixtures.dart';
 import 'modules/drivers/presentation/drivers_presentation_mocks.dart';
 import 'modules/profile/profile_mocks.dart';
+import 'modules/driver_van_central/driver_van_central_mocks.dart';
 
 Widget _harness(AuthCubit cubit) {
   return MaterialApp(
@@ -62,6 +65,14 @@ class MockDriverSearchCubit extends MockCubit<DriverSearchState>
 
 class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
+
+void registerVanCentralCubit() {
+  final vanCentralCubit = MockVanCentralCubit();
+  whenListen(vanCentralCubit, const Stream<VanCentralState>.empty(),
+      initialState: const VanCentralState(status: VanCentralStatus.loaded));
+  when(() => vanCentralCubit.load()).thenAnswer((_) async {});
+  getIt.registerFactory<VanCentralCubit>(() => vanCentralCubit);
+}
 
 void main() {
   late MockAuthCubit cubit;
@@ -159,6 +170,7 @@ void main() {
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
+    registerVanCentralCubit();
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(
@@ -194,6 +206,7 @@ void main() {
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
+    registerVanCentralCubit();
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(
@@ -232,6 +245,7 @@ void main() {
       ..registerFactory<ConversationsInboxCubit>(
         () => readyConversationsCubit(),
       );
+    registerVanCentralCubit();
     addTearDown(getIt.reset);
     final authenticated = AuthAuthenticated(
       FakeAuthSession(profile: const FakeUserProfile(type: UserType.driver)),

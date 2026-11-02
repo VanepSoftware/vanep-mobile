@@ -1330,5 +1330,150 @@
   "clientProposalsEmptyClosedTitle": "No closed proposals",
   "clientProposalsEmptyClosedMessage": "Accepted, declined and expired proposals show up here.",
   "clientProposalsLoadError": "We couldn't load your proposals.",
-  "clientProposalsRetry": "Try again"
+  "clientProposalsRetry": "Try again",
+  "vanCentralNoVanSubtitle": "Your whole operation starts with the van",
+  "vanCentralRegisterTitle": "Register your van",
+  "vanCentralRegisterHint": "Plate, model, capacity and two photos.",
+  "vanCentralRegisterAction": "Register van",
+  "vanCentralAddVan": "Register another van",
+  "vanCentralChooseVan": "Choose van",
+  "vanCentralLockedSection": "Opens once the van is registered",
+  "vanCentralReadySection": "You can already set up",
+  "vanCentralVanPill": "{model} · {plate}",
+  "vanCentralVanTitle": "{model} · {year}",
+  "@vanCentralVanTitle": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralVanDetails": "{color} · {capacity} seats",
+  "@vanCentralVanDetails": {
+    "placeholders": {
+      "color": {
+        "type": "String"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralVanDetailsWithAssistant": "{color} · {capacity} seats · with assistant",
+  "@vanCentralVanDetailsWithAssistant": {
+    "placeholders": {
+      "color": {
+        "type": "String"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralInOperation": "In operation",
+  "vanCentralOutOfOperation": "Out of operation",
+  "vanCentralShiftMorning": "Morning",
+  "vanCentralShiftAfternoon": "Afternoon",
+  "vanCentralShiftNight": "Night",
+  "vanCentralShiftFull": "full",
+  "vanCentralShiftVacancies": "{count, plural, =1{1 seat left} other{{count} seats left}}",
+  "@vanCentralShiftVacancies": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralShiftSeats": "{passengers} of {capacity} seats",
+  "@vanCentralShiftSeats": {
+    "placeholders": {
+      "passengers": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralShiftMeterLabel": "{shift}: {passengers} of {capacity}",
+  "@vanCentralShiftMeterLabel": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      },
+      "passengers": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralOccupancyUnavailable": "Could not load the occupancy right now.",
+  "vanCentralOperation": "Operation",
+  "vanCentralTeam": "Team",
+  "vanCentralVan": "Van",
+  "vanCentralAttendance": "Service",
+  "vanCentralRoute": "Route and stops",
+  "vanCentralRouteHint": "Stop order per shift",
+  "vanCentralStudents": "Students",
+  "vanCentralStudentsHint": "Seats come from the van capacity",
+  "vanCentralStudentsCount": "{count, plural, =0{No students yet} =1{1 student} other{{count} students}}",
+  "@vanCentralStudentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralStudentsWithFamily": "{count} with family on the app",
+  "@vanCentralStudentsWithFamily": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralAbsences": "Absences and changes",
+  "vanCentralAbsencesHint": "Today's absences and change requests",
+  "vanCentralHistory": "Trip history",
+  "vanCentralHistoryHint": "Check-offs, times and reports",
+  "vanCentralAssistants": "Assistants",
+  "vanCentralAssistantsHint": "Who checks students off with you",
+  "vanCentralAssistantsNone": "No assistants yet",
+  "vanCentralAssistantsPending": "{count, plural, =1{1 pending invite} other{{count} pending invites}}",
+  "@vanCentralAssistantsPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vanCentralVanData": "Details and photos",
+  "vanCentralVanDataHint": "Plate, model, capacity",
+  "vanCentralVanDocuments": "Van documents",
+  "vanCentralVanDocumentsHint": "Registration and inspection",
+  "vanCentralAccepting": "Accepting new students",
+  "vanCentralAcceptingOneShift": "Only {shift} has seats",
+  "vanCentralAcceptingSeveralShifts": "Seats {shifts}",
+  "vanCentralAcceptingFull": "Every shift is full",
+  "vanCentralNotAccepting": "You don't show up in new searches",
+  "vanCentralShiftArticleMorning": "the morning",
+  "vanCentralShiftArticleAfternoon": "the afternoon",
+  "vanCentralShiftArticleNight": "the night",
+  "vanCentralShiftPrepositionMorning": "in the morning",
+  "vanCentralShiftPrepositionAfternoon": "in the afternoon",
+  "vanCentralShiftPrepositionNight": "at night",
+  "vanCentralListJoin": "{first} and {last}",
+  "vanCentralServiceAreas": "Service areas",
+  "vanCentralServiceAreasHint": "Neighborhoods and schools you serve",
+  "vanCentralServiceAreasNone": "No areas yet",
+  "vanCentralBasePrice": "\"Starting at\" price",
+  "vanCentralBasePriceValue": "{price}/month in search",
+  "vanCentralBasePriceNone": "No price set",
+  "vanCentralLoadError": "Could not load the van hub.",
+  "vanCentralAttendanceError": "Could not change whether you accept new students. Try again."
 }

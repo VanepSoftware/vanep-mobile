@@ -32,6 +32,9 @@ class VanepColors {
   static const Color brandNavyBright = Color(0xFF023A76);
   static const Color brandSheen = Color(0xFF5AA0FF);
   static const Color onBrand = Color(0xFFFFFFFF);
+  static const Color brandMeter = Color(0xFF8EC5FF);
+  static const Color successOnBrand = Color(0xFF9BE3BE);
+  static const Color successDotOnBrand = Color(0xFF5FD39A);
 
   static const Color vanWindow = Color(0xFF0E3F7E);
   static const Color vanHeadlight = Color(0xFFFFD45A);
