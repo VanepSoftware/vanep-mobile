@@ -164,6 +164,6 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 14. Fase 14 — Testes do motorista (`VAN-78/14-driver-negotiations-tests`)
 
-- [ ] 14.1 Trazer os arquivos de teste novos das fases 11 a 13 (domínio, use cases, container, cubits e telas do `driver_proposals`, conversa do motorista) e os mocks do montar proposta
+- [x] 14.1 Trazer os arquivos de teste novos das fases 11 a 13 (domínio, use cases, container, cubits e telas do `driver_proposals`, conversa do motorista) e os mocks do montar proposta
 - [ ] 14.2 Rodar `make lint` e `make test`
 - [ ] 14.3 Abrir o PR

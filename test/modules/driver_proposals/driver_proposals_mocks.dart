@@ -1,12 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_driver_proposal.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_proposal_composer.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_state.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_state.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/decline_service_request.dart';
@@ -14,6 +17,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/usecases/find_driver_pr
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/find_driver_service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_driver_proposal_versions.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_driver_service_requests.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/send_proposal.dart';
 
 import 'driver_proposals_fixtures.dart';
 
@@ -30,7 +34,11 @@ class MockListDriverProposalVersions extends Mock
 
 class MockDeclineServiceRequest extends Mock implements DeclineServiceRequest {}
 
+class MockSendProposal extends Mock implements SendProposal {}
+
 class MockLoadDriverProposal extends Mock implements LoadDriverProposal {}
+
+class MockLoadProposalComposer extends Mock implements LoadProposalComposer {}
 
 class MockDriverNegotiationsCubit extends MockCubit<DriverNegotiationsState>
     implements DriverNegotiationsCubit {}
@@ -40,6 +48,9 @@ class MockDriverServiceRequestCubit extends MockCubit<DriverServiceRequestState>
 
 class MockDriverProposalCubit extends MockCubit<DriverProposalState>
     implements DriverProposalCubit {}
+
+class MockProposalComposerCubit extends MockCubit<ProposalComposerState>
+    implements ProposalComposerCubit {}
 
 class MockRequestDeclineCubit extends MockCubit<RequestDeclineState>
     implements RequestDeclineCubit {}
