@@ -968,5 +968,7 @@
   "proposalComposerErrorPeriodTooLong": "O período pode ter até {months} meses.",
   "proposalComposerErrorBelowOneCent": "Pelo menos 1 centavo por parcela",
   "proposalComposerErrorRange": "De {min} a {max}",
-  "proposalComposerErrorStudentWithoutLeg": "Deixe pelo menos um trecho para cada aluno."
+  "proposalComposerErrorStudentWithoutLeg": "Deixe pelo menos um trecho para cada aluno.",
+  "negotiationChatRespond": "Responder",
+  "negotiationChatDriverPrivacyNotice": "Endereço e nome completo disponíveis após o aceite."
 }

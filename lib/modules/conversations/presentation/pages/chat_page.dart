@@ -22,19 +22,22 @@ import 'package:vanep_mobile/modules/conversations/presentation/widgets/negotiat
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_history.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_turn.dart';
 
 const olderMessagesTriggerExtent = 300.0;
 
 class NegotiationChatActions<R extends ServiceRequest> {
   const NegotiationChatActions({
     required this.onSeeProposal,
-    required this.onAccept,
-    required this.onAskAdjustment,
+    this.onAccept,
+    this.onAskAdjustment,
+    this.onNewVersion,
   });
 
   final Future<void> Function(R request) onSeeProposal;
-  final Future<void> Function(R request, Proposal proposal) onAccept;
-  final Future<void> Function(R request, Proposal proposal) onAskAdjustment;
+  final Future<void> Function(R request, Proposal proposal)? onAccept;
+  final Future<void> Function(R request, Proposal proposal)? onAskAdjustment;
+  final Future<void> Function(R request, Proposal proposal)? onNewVersion;
 }
 
 Future<void> runNegotiationAction<R extends ServiceRequest>(
@@ -128,6 +131,12 @@ class ChatBody<R extends ServiceRequest> extends StatelessWidget {
     final negotiation = this.negotiation;
     final actions = this.actions;
     final openProposal = negotiation?.openProposal;
+    final onAskAdjustment = actions?.onAskAdjustment;
+    final onNewVersion = actions?.onNewVersion;
+    final respondsToAdjustment =
+        negotiation != null &&
+        onNewVersion != null &&
+        isAdjustmentPending(negotiation.request);
 
     if (state.isLoading) {
       return const Center(
@@ -150,7 +159,17 @@ class ChatBody<R extends ServiceRequest> extends StatelessWidget {
           NegotiationLoadFailedBanner(
             onRetry: context.read<NegotiationTimelineCubit<R>>().load,
           ),
-        if (negotiation != null && actions != null && openProposal != null)
+        if (negotiation != null &&
+            onNewVersion != null &&
+            openProposal != null &&
+            respondsToAdjustment)
+          AdjustmentRequestedBanner(
+            onRespond: () => runNegotiationAction<R>(
+              context,
+              () => onNewVersion(negotiation.request, openProposal),
+            ),
+          )
+        else if (negotiation != null && actions != null && openProposal != null)
           OpenProposalBanner(
             proposal: openProposal,
             onSee: () => runNegotiationAction<R>(
@@ -178,17 +197,16 @@ class ChatBody<R extends ServiceRequest> extends StatelessWidget {
           isSending: state.isSending,
           onSend: cubit.sendMessage,
           leading:
-              negotiation != null && actions != null && openProposal != null
+              negotiation != null &&
+                  onAskAdjustment != null &&
+                  openProposal != null
               ? IconButton(
                   tooltip: l10n.proposalDetailAskAdjustment,
                   color: VanepColors.action,
                   icon: const Icon(Icons.tune),
                   onPressed: () => runNegotiationAction<R>(
                     context,
-                    () => actions.onAskAdjustment(
-                      negotiation.request,
-                      openProposal,
-                    ),
+                    () => onAskAdjustment(negotiation.request, openProposal),
                   ),
                 )
               : null,
@@ -245,12 +263,28 @@ class ChatMessageList<R extends ServiceRequest> extends StatelessWidget {
     final negotiation = this.negotiation!;
     final actions = this.actions;
     final viewerIsClient = viewerSide == ConversationParticipant.client;
+    final onAccept = actions?.onAccept;
+    final onNewVersion = actions?.onNewVersion;
+    final openProposal = negotiation.openProposal;
     return switch (event) {
-      RequestSentEvent() => NegotiationRequestCard(
+      RequestSentEvent() when viewerIsClient => NegotiationRequestCard(
         request: negotiation.request,
         at: event.at,
         today: today,
-        sentByViewer: viewerIsClient,
+        sentByViewer: true,
+      ),
+      RequestSentEvent() => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          NegotiationRequestCard(
+            request: negotiation.request,
+            at: event.at,
+            today: today,
+            sentByViewer: false,
+          ),
+          const SizedBox(height: negotiationCardSpacing / 2),
+          NegotiationNotice(text: l10n.negotiationChatDriverPrivacyNotice),
+        ],
       ),
       ProposalSentEvent(:final proposalToken, :final isOpen) =>
         switch (negotiation.versionWithToken(proposalToken)) {
@@ -261,16 +295,16 @@ class ChatMessageList<R extends ServiceRequest> extends StatelessWidget {
                 proposal: proposal,
                 at: event.at,
                 sentByViewer: !viewerIsClient,
-                onSeeProposal: isOpen && actions != null
+                onSeeProposal: isOpen && viewerIsClient && actions != null
                     ? () => runNegotiationAction<R>(
                         context,
                         () => actions.onSeeProposal(negotiation.request),
                       )
                     : null,
-                onAccept: isOpen && actions != null
+                onAccept: isOpen && viewerIsClient && onAccept != null
                     ? () => runNegotiationAction<R>(
                         context,
-                        () => actions.onAccept(negotiation.request, proposal),
+                        () => onAccept(negotiation.request, proposal),
                       )
                     : null,
               ),
@@ -285,6 +319,19 @@ class ChatMessageList<R extends ServiceRequest> extends StatelessWidget {
       AdjustmentRequestedEvent() => NegotiationAdjustmentCard(
         event: event,
         sentByViewer: viewerIsClient,
+        onNewVersion:
+            onNewVersion != null &&
+                openProposal != null &&
+                isAdjustmentPending(negotiation.request) &&
+                event ==
+                    negotiation.events
+                        .whereType<AdjustmentRequestedEvent>()
+                        .lastOrNull
+            ? () => runNegotiationAction<R>(
+                context,
+                () => onNewVersion(negotiation.request, openProposal),
+              )
+            : null,
       ),
       _ => const SizedBox.shrink(),
     };

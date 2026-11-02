@@ -71,3 +71,7 @@ MockConversationsInboxCubit readyConversationsCubit([
   when(() => cubit.loadConversations()).thenAnswer((_) async {});
   return cubit;
 }
+
+class MockDriverNegotiationTimelineCubit
+    extends MockCubit<NegotiationTimelineState<DriverServiceRequest>>
+    implements NegotiationTimelineCubit<DriverServiceRequest> {}

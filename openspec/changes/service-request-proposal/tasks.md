@@ -157,8 +157,8 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 13. Fase 13 — Negociação na conversa do motorista (`VAN-78/13-driver-chat-negotiation`, VAN-62)
 
-- [ ] 13.1 Testes primeiro para a linha do tempo do lado do motorista (lê a negociação pela lista do motorista filtrada por `conversationToken`; faixa "Ajuste solicitado" com "Responder"; cartão do ajuste com "Nova versão"; aviso "Endereço e nome completo disponíveis após o aceite."). Depois implementar reaproveitando o `NegotiationTimelineCubit` até passarem
-- [ ] 13.2 Ligar "Responder" e "Nova versão" ao montar proposta por callback do `app.dart`; conferir com o teste do `ChatPage` do motorista
+- [x] 13.1 Testes primeiro para a linha do tempo do lado do motorista (lê a negociação pela lista do motorista filtrada por `conversationToken`; faixa "Ajuste solicitado" com "Responder"; cartão do ajuste com "Nova versão"; aviso "Endereço e nome completo disponíveis após o aceite."). Depois implementar reaproveitando o `NegotiationTimelineCubit` até passarem
+- [x] 13.2 Ligar "Responder" e "Nova versão" ao montar proposta por callback do `app.dart`; conferir com o teste do `ChatPage` do motorista
 - [ ] 13.3 Rodar `make lint` e `make test`; testar no aparelho as duas pontas da mesma conversa
 - [ ] 13.4 Abrir o PR
 
