@@ -2,8 +2,10 @@ import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_turn.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_draft.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/request_schools.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 
@@ -100,4 +102,37 @@ String formatDriverStudentDetail(
   DriverRequestItem item,
 ) {
   return formatStudentDetail(l10n, item, ageInYears: item.dependentAge);
+}
+
+String? proposalDraftErrorLabel(
+  AppLocalizations l10n,
+  ProposalDraftError error,
+) {
+  return switch (error) {
+    ProposalDraftError.totalBelowOneCentPerInstallment =>
+      l10n.proposalComposerErrorBelowOneCent,
+    ProposalDraftError.installmentsOutOfRange =>
+      l10n.proposalComposerErrorRange(1, proposalMaxInstallments),
+    ProposalDraftError.dueDayOutOfRange => l10n.proposalComposerErrorRange(
+      1,
+      proposalMaxDueDay,
+    ),
+    ProposalDraftError.validDaysOutOfRange => l10n.proposalComposerErrorRange(
+      1,
+      proposalMaxValidDays,
+    ),
+    ProposalDraftError.startDateInPast => l10n.proposalComposerErrorStartInPast,
+    ProposalDraftError.endNotAfterStart =>
+      l10n.proposalComposerErrorEndNotAfterStart,
+    ProposalDraftError.periodTooLong => l10n.proposalComposerErrorPeriodTooLong(
+      proposalMaxPeriodMonths,
+    ),
+    ProposalDraftError.studentWithoutLeg =>
+      l10n.proposalComposerErrorStudentWithoutLeg,
+    _ => null,
+  };
+}
+
+String formatDriverVan(AppLocalizations l10n, DriverVan van) {
+  return '${l10n.negotiationVehicle(van.model, van.manufactureYear, van.capacity)} · ${van.plate}';
 }

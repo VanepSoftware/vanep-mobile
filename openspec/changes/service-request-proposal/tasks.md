@@ -149,9 +149,9 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 12. Fase 12 — Montar proposta e nova versão (`VAN-78/12-proposal-composer`, VAN-60 e VAN-61)
 
-- [ ] 12.1 Testes primeiro para `LoadProposalComposer`, `ProposalComposerSetup` (rascunho a partir do pedido e de uma proposta; vans: uma escolhida, várias com seletor, nenhuma bloqueia, a van anterior removida pede outra) e o `ProposalComposerCubit` (horários com "aplicar a todos"; prévia da parcela; validação do `ProposalDraft`, com um centavo por parcela; envio com sucesso; 409 recarrega; 422 e 400 mantêm o rascunho). Depois implementá-los até passarem
-- [ ] 12.2 Testes de widget primeiro para a tela: total, parcelas e vencimento, período do contrato, grade com trechos não pedidos desativados, horários numa tabela com uma linha por dia e as colunas Ida e Volta, seletor de van, condições, "Validade da proposta" numa seção própria, mensagem, rodapé com a prévia, sem comissão. Depois implementar até passarem
-- [ ] 12.3 Ligar "Montar proposta" do pedido e "Nova versão" do ajuste ao montar proposta; conferir com os testes das duas telas
+- [x] 12.1 Testes primeiro para `LoadProposalComposer`, `ProposalComposerSetup` (rascunho a partir do pedido e de uma proposta; vans: uma escolhida, várias com seletor, nenhuma bloqueia, a van anterior removida pede outra) e o `ProposalComposerCubit` (horários com "aplicar a todos"; prévia da parcela; validação do `ProposalDraft`, com um centavo por parcela; envio com sucesso; 409 recarrega; 422 e 400 mantêm o rascunho). Depois implementá-los até passarem
+- [x] 12.2 Testes de widget primeiro para a tela: total, parcelas e vencimento, período do contrato, grade com trechos não pedidos desativados, horários numa tabela com uma linha por dia e as colunas Ida e Volta, seletor de van, condições, "Validade da proposta" numa seção própria, mensagem, rodapé com a prévia, sem comissão. Depois implementar até passarem
+- [x] 12.3 Ligar "Montar proposta" do pedido e "Nova versão" do ajuste ao montar proposta; conferir com os testes das duas telas
 - [ ] 12.4 Rodar `make lint` e `make test`; testar no aparelho: primeira proposta, nova versão depois de um ajuste, duas versões ao mesmo tempo (409), período de 12 meses e um dia, sem van cadastrada
 - [ ] 12.5 Abrir o PR
 
