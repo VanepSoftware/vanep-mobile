@@ -15,8 +15,9 @@ Highlight the main changes and their purpose.
 ## Screenshots and video
 
 <!--
-Required (constitution R13a): screenshots AND a screen recording of the real run
-(emulator/simulator/device/browser, or the QA run for backend-only changes).
+Required (constitution R13a): screenshots AND a screen recording of a real run of
+the app on an Android emulator (e.g. Pixel_9a), an iOS simulator or a device.
+No mockups or design exports.
 Host the files on the `pr-assets` branch under `van-<N>/` and link them here.
 -->
 
