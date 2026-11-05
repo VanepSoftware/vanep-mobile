@@ -1,32 +1,32 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+
 enum DriverShift { off, on }
 
 class DriverHomeState extends Equatable {
-  const DriverHomeState({
-    this.shift = DriverShift.off,
-    this.sharingLocation = false,
-    this.shiftStartTime = '',
-  });
+  const DriverHomeState({this.data, this.loading = false, this.busy = false,
+    this.error, this.sharingLocation = false, this.shiftStartTime = ''});
 
-  final DriverShift shift;
+  final DriverHomeData? data;
+  final bool loading;
+  final bool busy;
+  final String? error;
   final bool sharingLocation;
   final String shiftStartTime;
 
-  bool get onShift => shift == DriverShift.on;
+  bool get onShift => data?.isOperating ?? false;
+  DriverShift get shift => onShift ? DriverShift.on : DriverShift.off;
 
-  DriverHomeState copyWith({
-    DriverShift? shift,
-    bool? sharingLocation,
-    String? shiftStartTime,
-  }) {
-    return DriverHomeState(
-      shift: shift ?? this.shift,
+  DriverHomeState copyWith({DriverHomeData? data, bool? loading, bool? busy,
+    String? error, bool clearError = false,
+    bool? sharingLocation, String? shiftStartTime}) => DriverHomeState(
+      data: data ?? this.data, loading: loading ?? this.loading,
+      busy: busy ?? this.busy, error: clearError ? null : error ?? this.error,
       sharingLocation: sharingLocation ?? this.sharingLocation,
-      shiftStartTime: shiftStartTime ?? this.shiftStartTime,
-    );
-  }
+      shiftStartTime: shiftStartTime ?? this.shiftStartTime);
 
   @override
-  List<Object?> get props => [shift, sharingLocation, shiftStartTime];
+  List<Object?> get props =>
+      [data, loading, busy, error, sharingLocation, shiftStartTime];
 }

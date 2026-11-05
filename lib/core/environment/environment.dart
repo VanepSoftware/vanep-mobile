@@ -112,6 +112,16 @@ class Environment {
 
   String get driversMeEndpoint => '$authBaseUrl/api/drivers/me';
 
+  String get driverOnboardingEndpoint => '$driversMeEndpoint/onboarding';
+
+  String get driverTripsTodayEndpoint => '$driversMeEndpoint/trips/today';
+
+  String get driverTripsStartEndpoint => '$driversMeEndpoint/trips/start';
+
+  String get driverTripsFinishEndpoint => '$driversMeEndpoint/trips/finish';
+
+  String get clientDriversMeEndpoint => '$authBaseUrl/api/client-drivers/me';
+
   String get vehiclesEndpoint => '$authBaseUrl/api/vehicles';
 
   String get myVehiclesEndpoint => '$vehiclesEndpoint/me';

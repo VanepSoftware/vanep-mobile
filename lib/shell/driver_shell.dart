@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
@@ -14,6 +13,7 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversati
 import 'package:vanep_mobile/modules/conversations/presentation/pages/conversations_inbox_tab.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_home_tab.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_main_card.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/shell/driver_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
@@ -26,10 +26,12 @@ class DriverShell extends StatefulWidget {
     required this.openServiceAreas,
     required this.openMyVans,
     required this.openConversationChat,
+    this.homeNavigation,
     super.key,
   });
 
   final UserProfile profile;
+  final DriverHomeNavigation? homeNavigation;
 
   final Future<void> Function(BuildContext context) openServiceAreas;
 
@@ -82,6 +84,7 @@ class DriverShellState extends State<DriverShell> {
               children: [
                 DriverHomeTab(
                   displayName: displayName,
+                  navigation: widget.homeNavigation,
                   onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
                   onNotificationsTapped: () => openNotifications(context),
                 ),
