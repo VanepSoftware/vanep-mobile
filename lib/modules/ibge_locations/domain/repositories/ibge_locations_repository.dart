@@ -1,10 +1,10 @@
-import '../../../../core/result/result.dart';
-import '../entities/brazilian_city.dart';
-import '../entities/brazilian_state.dart';
-import '../entities/cep_lookup.dart';
-import '../entities/ibge_locations_page.dart';
-import '../failures/cep_failure.dart';
-import '../failures/ibge_locations_failure.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_state.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
 
 abstract class IbgeLocationsRepository {
   Future<Result<CepFailure, CepLookup>> lookupCep(String cep);

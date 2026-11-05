@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/ui/vanep_bottom_nav.dart';
-import '../l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/ui/vanep_bottom_nav.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
 
 class DriverBottomNav extends StatelessWidget {
   const DriverBottomNav({
@@ -37,9 +37,9 @@ class DriverBottomNav extends StatelessWidget {
           label: l10n.navProposals,
         ),
         VanepNavItem(
-          icon: Icons.groups_outlined,
-          selectedIcon: Icons.groups_rounded,
-          label: l10n.navStudents,
+          icon: Icons.chat_bubble_outline_rounded,
+          selectedIcon: Icons.chat_bubble_rounded,
+          label: l10n.conversationsInboxTitle,
         ),
       ],
     );

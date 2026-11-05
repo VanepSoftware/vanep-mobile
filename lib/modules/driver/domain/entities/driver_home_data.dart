@@ -1,7 +1,7 @@
-import '../value_objects/home_phase.dart';
-import '../value_objects/registration_status.dart';
-import '../value_objects/stop_action.dart';
-import '../value_objects/trip_status.dart';
+import 'package:vanep_mobile/modules/driver/domain/value_objects/home_phase.dart';
+import 'package:vanep_mobile/modules/driver/domain/value_objects/registration_status.dart';
+import 'package:vanep_mobile/modules/driver/domain/value_objects/stop_action.dart';
+import 'package:vanep_mobile/modules/driver/domain/value_objects/trip_status.dart';
 
 export '../value_objects/home_phase.dart';
 export '../value_objects/registration_status.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../design_system/vanep_colors.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 
 const BoxConstraints _edgeAlignedTapTarget = BoxConstraints(
   minWidth: kMinInteractiveDimension,

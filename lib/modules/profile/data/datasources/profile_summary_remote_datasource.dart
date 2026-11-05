@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../../../../core/media/picked_photo.dart';
-import '../../../../core/network/photo_uploader.dart';
-import '../../../auth/domain/value_objects/user_type.dart';
-import '../../domain/entities/profile_summary.dart';
-import '../dtos/profile_summary_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/media/picked_photo.dart';
+import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/profile/domain/entities/profile_summary.dart';
+import 'package:vanep_mobile/modules/profile/data/dtos/profile_summary_dto.dart';
 
 class ProfileSummaryRemoteDataSource {
   ProfileSummaryRemoteDataSource({

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/auth_session.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
 
 sealed class AuthState extends Equatable {
   const AuthState();

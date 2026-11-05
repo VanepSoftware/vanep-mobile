@@ -1,9 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../domain/entities/driver_home_data.dart';
-import '../../domain/repositories/driver_home_repository.dart';
-import '../../domain/usecases/driver_home_rules.dart';
-import 'driver_home_state.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/domain/repositories/driver_home_repository.dart';
+import 'package:vanep_mobile/modules/driver/domain/usecases/driver_home_rules.dart';
+import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_state.dart';
 
 class DriverHomeCubit extends Cubit<DriverHomeState> {
   DriverHomeCubit({this.repository, this.rules = const DriverHomeRules()})

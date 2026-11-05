@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../design_system/vanep_colors.dart';
-import '../design_system/vanep_typography.dart';
-import '../domain/gender.dart';
-import '../formatters/gender_label.dart';
-import 'vanep_text_field.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/formatters/gender_label.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 
 class VanepGenderSelect extends StatelessWidget {
   const VanepGenderSelect({

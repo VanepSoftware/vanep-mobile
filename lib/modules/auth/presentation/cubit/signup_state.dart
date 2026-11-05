@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/failures/account_failure.dart';
-import '../../domain/value_objects/account_field.dart';
-import '../../domain/value_objects/google_signup_ticket.dart';
-import '../../domain/value_objects/signup_form.dart';
-import '../../domain/value_objects/user_type.dart';
-import 'signup_steps.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_steps.dart';
 
 enum SignupStatus {
   editing,

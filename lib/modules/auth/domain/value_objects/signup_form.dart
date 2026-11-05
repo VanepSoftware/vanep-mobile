@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/domain/gender.dart';
-import 'account_field.dart';
-import 'password_policy.dart';
-import 'user_type.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/password_policy.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 class SignupForm extends Equatable {
   const SignupForm({

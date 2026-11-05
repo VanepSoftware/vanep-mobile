@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_photo_slot.dart';
-import '../../../../core/ui/vanep_photo_source_sheet.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/driver_van.dart';
-import '../../domain/value_objects/van_photo_side.dart';
-import '../../domain/value_objects/van_photo_target.dart';
-import '../cubit/driver_vans_cubit.dart';
-import '../formatters/driver_van_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_photo_slot.dart';
+import 'package:vanep_mobile/core/ui/vanep_photo_source_sheet.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_side.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_target.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/formatters/driver_van_labels.dart';
 
 class DriverVanPhotosEditor extends StatelessWidget {
   const DriverVanPhotosEditor({required this.van, super.key});

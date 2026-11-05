@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/formatters/upper_case_input_formatter.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_text_field.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/value_objects/van_registration.dart';
-import '../cubit/driver_vans_cubit.dart';
-import '../cubit/driver_vans_state.dart';
-import '../formatters/driver_van_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/formatters/upper_case_input_formatter.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_registration.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_state.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/formatters/driver_van_labels.dart';
 
 const int maxVanPlateLength = 8;
 

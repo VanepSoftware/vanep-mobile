@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/ui/vanep_greeting_header.dart';
-import '../../../../core/ui/vanep_home_top_bar.dart';
-import '../../../../core/ui/vanep_coming_soon_page.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/driver_home_data.dart';
-import '../cubit/driver_home_cubit.dart';
-import '../cubit/driver_home_state.dart';
-import '../widgets/driver_home_main_card.dart';
-import '../widgets/driver_home_shortcuts.dart';
-import '../widgets/driver_location_sharing_tile.dart';
-import '../widgets/driver_shift_badge.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
+import 'package:vanep_mobile/core/ui/vanep_greeting_header.dart';
+import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_state.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_main_card.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_shortcuts.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_location_sharing_tile.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_shift_badge.dart';
 
 class DriverHomeTab extends StatefulWidget {
   const DriverHomeTab({required this.displayName, required this.onMenuTapped,

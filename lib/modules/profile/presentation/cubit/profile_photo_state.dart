@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/media/photo_failure.dart';
+import 'package:vanep_mobile/core/media/photo_failure.dart';
 
 enum ProfilePhotoStatus { idle, uploading, uploaded, failed }
 

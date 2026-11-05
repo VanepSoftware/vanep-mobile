@@ -45,6 +45,7 @@ cp .env.example .env
 | `AUTH_URL` | Base URL of the Vanep backend (Spring Authorization Server), **without** `/api`. Android emulator: `http://10.0.2.2:8080` (host's `localhost`). Physical device: your machine's LAN IP (e.g. `http://192.168.0.10:8080`). |
 | `OAUTH_CLIENT_ID` | Public OAuth client id (no secret). Must match `VANEP_OAUTH_MOBILE_CLIENT_ID` in `vanep-api-java`. Default: `vanep-mobile`. |
 | `GOOGLE_SERVER_CLIENT_ID` | Google **Web** client ID used as `serverClientId` by native Google sign-in. Must be the same value as `GOOGLE_CLIENT_ID` in `vanep-api-java`; the Android OAuth client (package + SHA-1) must also exist in the same Google Cloud project. |
+| `GOOGLE_IOS_CLIENT_ID` | Google **iOS** client ID (bundle `com.vanep.vanepMobile`). Also set `GOOGLE_IOS_CLIENT_ID` and `GOOGLE_IOS_REVERSED_CLIENT_ID` in `ios/Flutter/GoogleSignIn.xcconfig`. |
 
 #### Where the OAuth values come from (backend)
 

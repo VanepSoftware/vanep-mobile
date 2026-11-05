@@ -2,21 +2,21 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/domain/gender.dart';
-import '../../../../core/domain/postal_address_draft.dart';
-import '../../../../core/result/result.dart';
-import '../../../ibge_locations/domain/entities/brazilian_city.dart';
-import '../../../ibge_locations/domain/entities/cep_lookup.dart';
-import '../../../ibge_locations/domain/failures/cep_failure.dart';
-import '../../../ibge_locations/domain/usecases/list_cities.dart';
-import '../../../ibge_locations/domain/usecases/list_states.dart';
-import '../../../ibge_locations/domain/usecases/lookup_cep.dart';
-import '../../domain/entities/dependent.dart';
-import '../../domain/failures/dependent_failure.dart';
-import '../../domain/usecases/create_dependent.dart';
-import '../../domain/usecases/update_dependent.dart';
-import '../../domain/value_objects/dependent_draft.dart';
-import 'dependent_form_state.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/lookup_cep.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/create_dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
 
 const dependentCepLookupDebounce = Duration(milliseconds: 400);
 

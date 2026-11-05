@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 
 /// Shimmering placeholder zone shown while an API response is pending.
 ///

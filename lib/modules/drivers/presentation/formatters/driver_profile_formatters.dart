@@ -1,6 +1,6 @@
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/driver_profile.dart';
-import '../../domain/failures/driver_failure.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
+import 'package:vanep_mobile/modules/drivers/domain/failures/driver_failure.dart';
 
 String formatVanTitle(AppLocalizations l10n, DriverProfileVehicle vehicle) {
   return l10n.driverProfileVanTitle(

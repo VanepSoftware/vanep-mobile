@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import '../result/result.dart';
-import 'place_autocomplete_datasource.dart';
-import 'place_autocomplete_failure.dart';
-import 'place_search_session.dart';
-import 'place_suggestion.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
+import 'package:vanep_mobile/core/places/place_search_session.dart';
+import 'package:vanep_mobile/core/places/place_suggestion.dart';
 
 const placeAutocompleteMinimumCharacters = 3;
 const placeAutocompleteDebounce = Duration(milliseconds: 350);

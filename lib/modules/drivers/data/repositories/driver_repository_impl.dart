@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/result/result.dart';
-import '../../domain/entities/driver.dart';
-import '../../domain/entities/driver_profile.dart';
-import '../../domain/failures/driver_failure.dart';
-import '../../domain/repositories/driver_repository.dart';
-import '../datasources/driver_remote_datasource.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
+import 'package:vanep_mobile/modules/drivers/domain/failures/driver_failure.dart';
+import 'package:vanep_mobile/modules/drivers/domain/repositories/driver_repository.dart';
+import 'package:vanep_mobile/modules/drivers/data/datasources/driver_remote_datasource.dart';
 
 class DriverRepositoryImpl implements DriverRepository {
   DriverRepositoryImpl({required this.remote});

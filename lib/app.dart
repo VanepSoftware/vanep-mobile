@@ -2,32 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'core/design_system/vanep_colors.dart';
-import 'core/design_system/vanep_theme.dart';
-import 'core/di/service_locator.dart';
-import 'core/network/api_image_loader.dart';
-import 'core/ui/vanep_wordmark.dart';
-import 'l10n/app_localizations.dart';
-import 'modules/auth/presentation/cubit/auth_cubit.dart';
-import 'modules/auth/presentation/cubit/auth_state.dart';
-import 'modules/auth/presentation/cubit/login_cubit.dart';
-import 'modules/auth/presentation/pages/login_page.dart';
-import 'modules/auth/domain/value_objects/user_type.dart';
-import 'modules/dependents/presentation/cubit/dependents_cubit.dart';
-import 'modules/driver/presentation/cubit/driver_home_cubit.dart';
-import 'core/places/place_autocomplete_controller.dart';
-import 'modules/drivers/presentation/cubit/driver_profile_cubit.dart';
-import 'modules/drivers/presentation/cubit/drivers_cubit.dart';
-import 'modules/drivers/presentation/pages/driver_profile_page.dart';
-import 'modules/driver_search/presentation/cubit/driver_search_cubit.dart';
-import 'modules/driver_search/presentation/pages/driver_search_page.dart';
-import 'modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
-import 'modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
-import 'modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
-import 'modules/driver_vans/presentation/pages/driver_vans_page.dart';
-import 'modules/profile/presentation/cubit/profile_summary_cubit.dart';
-import 'shell/client_shell.dart';
-import 'shell/driver_shell.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/network/api_image_loader.dart';
+import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
+import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/login_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/client_proposals_page.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
+import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_page.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/shell/client_shell.dart';
+import 'package:vanep_mobile/shell/driver_shell.dart';
 
 class VanepApp extends StatelessWidget {
   const VanepApp({super.key});
@@ -49,7 +57,7 @@ class VanepApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const AuthGate(),
+          home: const VanepIntroGate(child: AuthGate()),
         ),
       ),
     );
@@ -78,11 +86,20 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<ProfileSummaryCubit>(
                   create: (_) => getIt<ProfileSummaryCubit>(),
                 ),
+                BlocProvider<ConversationsInboxCubit>(
+                  create: (_) => getIt<ConversationsInboxCubit>(),
+                ),
               ],
               child: DriverShell(
                 profile: session.profile,
                 openServiceAreas: openDriverServiceAreas,
                 openMyVans: openDriverVans,
+                openConversationChat: (context, conversation) =>
+                    openConversationChat(
+                      context,
+                      conversation,
+                      viewerSide: ConversationParticipant.driver,
+                    ),
               ),
             ),
             _ => MultiBlocProvider(
@@ -99,11 +116,24 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<DependentsCubit>(
                   create: (_) => getIt<DependentsCubit>(),
                 ),
+                BlocProvider<ConversationsInboxCubit>(
+                  create: (_) => getIt<ConversationsInboxCubit>(),
+                ),
+                BlocProvider<ClientHomeCubit>(
+                  create: (_) => getIt<ClientHomeCubit>()..loadHome(),
+                ),
               ],
               child: ClientShell(
                 profile: session.profile,
                 openDriverSearch: openDriverSearch,
                 openDriverProfile: openDriverProfile,
+                openConversationChat: (context, conversation) =>
+                    openConversationChat(
+                      context,
+                      conversation,
+                      viewerSide: ConversationParticipant.client,
+                    ),
+                openClientProposals: openClientProposals,
               ),
             ),
           },
@@ -136,13 +166,54 @@ Future<void> openDriverSearch(BuildContext context) async {
   autocomplete.dispose();
 }
 
+Future<void> openClientProposals(BuildContext context) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<ClientProposalsCubit>(
+        create: (_) => getIt<ClientProposalsCubit>()..loadProposals(),
+        child: ClientProposalsPage(
+          onSearchVansTapped: () => openDriverSearch(context),
+        ),
+      ),
+    ),
+  );
+}
+
 Future<void> openDriverProfile(BuildContext context, String driverToken) {
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => BlocProvider<DriverProfileCubit>(
         create: (_) =>
             getIt<DriverProfileCubit>(param1: driverToken)..loadProfile(),
-        child: const DriverProfilePage(),
+        child: DriverProfilePage(
+          onChatTapped: (driverToken) => openDriverChat(context, driverToken),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openConversationChat(
+  BuildContext context,
+  Conversation conversation, {
+  required ConversationParticipant viewerSide,
+}) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<ChatCubit>(
+        create: (_) => getIt<ChatCubit>(param2: conversation)..start(),
+        child: ChatPage(viewerSide: viewerSide),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverChat(BuildContext context, String driverToken) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<ChatCubit>(
+        create: (_) => getIt<ChatCubit>(param1: driverToken)..start(),
+        child: const ChatPage(viewerSide: ConversationParticipant.client),
       ),
     ),
   );
@@ -177,9 +248,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: VanepColors.card,
-      body: Center(child: VanepWordmark()),
-    );
+    return const VanepBrandSplash();
   }
 }

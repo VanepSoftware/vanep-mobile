@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../design_system/vanep_colors.dart';
-import '../design_system/vanep_typography.dart';
-import '../media/photo_source.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/media/photo_source.dart';
 
 Future<PhotoSource?> showVanepPhotoSourceSheet(
   BuildContext context, {

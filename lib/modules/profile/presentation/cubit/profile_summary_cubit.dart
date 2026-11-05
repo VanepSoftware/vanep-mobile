@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../auth/domain/value_objects/user_type.dart';
-import '../../domain/entities/profile_summary.dart';
-import '../../domain/failures/profile_summary_failure.dart';
-import '../../domain/profile_summary_support.dart';
-import '../../domain/usecases/get_profile_summary.dart';
-import '../../domain/value_objects/assistant_status.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/profile/domain/entities/profile_summary.dart';
+import 'package:vanep_mobile/modules/profile/domain/failures/profile_summary_failure.dart';
+import 'package:vanep_mobile/modules/profile/domain/profile_summary_support.dart';
+import 'package:vanep_mobile/modules/profile/domain/usecases/get_profile_summary.dart';
+import 'package:vanep_mobile/modules/profile/domain/value_objects/assistant_status.dart';
 
 enum ProfileSummaryStatus { initial, loading, loaded }
 

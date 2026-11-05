@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../../domain/value_objects/personal_address_write.dart';
-import '../dtos/personal_address_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/personal_address_write.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/personal_address_dto.dart';
 
 class PersonalAddressRemoteDataSource {
   PersonalAddressRemoteDataSource({

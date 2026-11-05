@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/result/result.dart';
-import '../../domain/entities/personal_address.dart';
-import '../../domain/failures/personal_address_failure.dart';
-import '../../domain/repositories/personal_address_repository.dart';
-import '../../domain/value_objects/personal_address_write.dart';
-import '../datasources/personal_address_remote_datasource.dart';
-import '../dtos/personal_address_dto.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/personal_address_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/personal_address_repository.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/personal_address_write.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/personal_address_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/personal_address_dto.dart';
 
 bool isPersonalAddressAbsent(DioException exception) {
   return exception.response?.statusCode == 404;

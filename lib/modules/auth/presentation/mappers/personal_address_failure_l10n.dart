@@ -1,7 +1,7 @@
-import '../../../../l10n/app_localizations.dart';
-import '../../../ibge_locations/domain/failures/cep_failure.dart';
-import '../../../ibge_locations/domain/failures/ibge_locations_failure.dart';
-import '../../domain/failures/personal_address_failure.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/personal_address_failure.dart';
 
 String personalAddressFailureMessage(
   AppLocalizations l10n,

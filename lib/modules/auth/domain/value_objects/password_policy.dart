@@ -1,4 +1,4 @@
-import 'account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
 
 abstract final class PasswordPolicy {
   static const int minLength = 6;

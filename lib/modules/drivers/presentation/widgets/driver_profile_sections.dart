@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_avatar.dart';
-import '../../../../core/ui/vanep_cover_background.dart';
-import '../../../../core/ui/vanep_photo_slot.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/driver_profile.dart';
-import '../formatters/driver_profile_formatters.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
+import 'package:vanep_mobile/core/ui/vanep_cover_background.dart';
+import 'package:vanep_mobile/core/ui/vanep_photo_slot.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/formatters/driver_profile_formatters.dart';
 
 class DriverProfileHeader extends StatelessWidget {
   const DriverProfileHeader({required this.profile, super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/ui/vanep_bottom_nav.dart';
-import '../l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/ui/vanep_bottom_nav.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
 
 class ClientBottomNav extends StatelessWidget {
   const ClientBottomNav({
@@ -32,9 +32,9 @@ class ClientBottomNav extends StatelessWidget {
           label: l10n.navVans,
         ),
         VanepNavItem(
-          icon: Icons.description_outlined,
-          selectedIcon: Icons.description_rounded,
-          label: l10n.navContracts,
+          icon: Icons.chat_bubble_outline_rounded,
+          selectedIcon: Icons.chat_bubble_rounded,
+          label: l10n.conversationsInboxTitle,
         ),
         VanepNavItem(
           icon: Icons.family_restroom_outlined,

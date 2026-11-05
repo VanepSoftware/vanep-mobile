@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/failures/account_failure.dart';
-import '../../domain/usecases/request_password_reset.dart';
-import '../../domain/usecases/reset_password_with_code.dart';
-import '../../domain/usecases/verify_email_code.dart';
-import '../../domain/value_objects/account_field.dart';
-import '../../domain/value_objects/signup_form.dart';
-import 'code_resend_cooldown.dart';
-import 'email_code_verification_state.dart';
-import 'password_reset_state.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/request_password_reset.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/reset_password_with_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/verify_email_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/code_resend_cooldown.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/password_reset_state.dart';
 
 class PasswordResetCubit extends Cubit<PasswordResetState> {
   PasswordResetCubit({

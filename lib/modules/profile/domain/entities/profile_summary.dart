@@ -1,7 +1,7 @@
-import '../../../auth/domain/entities/user_profile.dart';
-import '../value_objects/assistant_status.dart';
-import '../value_objects/driver_approval_status.dart';
-import 'pending_invite.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/profile/domain/value_objects/assistant_status.dart';
+import 'package:vanep_mobile/modules/profile/domain/value_objects/driver_approval_status.dart';
+import 'package:vanep_mobile/modules/profile/domain/entities/pending_invite.dart';
 
 sealed class ProfileSummary {
   String get token;

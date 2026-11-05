@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/domain/gender.dart';
-import '../../../../core/domain/iso_calendar_date.dart';
-import '../../../../core/domain/postal_address_draft.dart';
-import '../entities/dependent.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 
 enum DependentField { name, birthDate, gender, address }
 

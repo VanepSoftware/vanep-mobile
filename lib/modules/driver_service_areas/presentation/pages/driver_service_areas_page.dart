@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/places/place_autocomplete_controller.dart';
-import '../../../../core/ui/vanep_card.dart';
-import '../../../../core/ui/vanep_place_autocomplete_field.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_skeleton.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/service_area_draft.dart';
-import '../cubit/driver_service_areas_cubit.dart';
-import '../cubit/driver_service_areas_state.dart';
-import '../formatters/service_area_failure_label.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_state.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/formatters/service_area_failure_label.dart';
 
 class DriverServiceAreasPage extends StatelessWidget {
   const DriverServiceAreasPage({required this.autocomplete, super.key});

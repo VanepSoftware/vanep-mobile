@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../dtos/auth_session_dto.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/auth_session_dto.dart';
 
 class AuthLocalDataSource {
   AuthLocalDataSource(this._storage);

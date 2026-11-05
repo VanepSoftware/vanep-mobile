@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/failures/auth_failure.dart';
-import '../../domain/usecases/sign_in_with_google.dart';
-import '../../domain/usecases/sign_in_with_password.dart';
-import 'login_state.dart';
-import 'start_session.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_google.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/login_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({

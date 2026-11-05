@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_avatar.dart';
-import '../../../../core/ui/vanep_skeleton.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
+import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({

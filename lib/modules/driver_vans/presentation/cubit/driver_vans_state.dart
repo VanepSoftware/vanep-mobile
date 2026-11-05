@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/media/photo_failure.dart';
-import '../../domain/entities/driver_van.dart';
-import '../../domain/failures/driver_van_failure.dart';
-import '../../domain/value_objects/van_photo_target.dart';
-import '../../domain/value_objects/van_registration.dart';
+import 'package:vanep_mobile/core/media/photo_failure.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/failures/driver_van_failure.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_target.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_registration.dart';
 
 enum DriverVansStatus { loading, loaded, loadFailed }
 

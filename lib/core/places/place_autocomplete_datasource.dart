@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../environment/environment.dart';
-import '../result/result.dart';
-import 'place_autocomplete_failure.dart';
-import 'place_suggestion.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
+import 'package:vanep_mobile/core/places/place_suggestion.dart';
 
 const placesRegionCode = 'br';
 

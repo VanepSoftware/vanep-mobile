@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/value_objects/assistant_status.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/profile/domain/value_objects/assistant_status.dart';
 
 String? assistantStatusLabel(AppLocalizations l10n, AssistantStatus? status) {
   return switch (status) {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/ui/vanep_card.dart';
-import '../../domain/entities/driver_home_data.dart';
-import '../cubit/driver_home_cubit.dart';
-import 'slide_stop_confirmation.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/slide_stop_confirmation.dart';
 
 // Destinos do card são injetados pela navegação; regras ficam no domínio.
 abstract interface class DriverHomeNavigation {

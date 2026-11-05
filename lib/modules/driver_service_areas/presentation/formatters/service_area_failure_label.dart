@@ -1,5 +1,5 @@
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/failures/service_area_failure.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/failures/service_area_failure.dart';
 
 String serviceAreaFailureLabel(
   AppLocalizations l10n,

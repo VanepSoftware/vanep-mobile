@@ -10,6 +10,8 @@ import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
 import 'package:vanep_mobile/modules/driver/domain/repositories/driver_home_repository.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
@@ -19,6 +21,8 @@ import 'package:vanep_mobile/shell/driver_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
+import '../modules/conversations/conversations_fixtures.dart';
+import '../modules/conversations/conversations_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 
 class _StubHomeRepository implements DriverHomeRepository {
@@ -38,6 +42,8 @@ Widget harness(
   ProfileSummaryCubit profileSummaryCubit, {
   List<OnboardingStep> pendingSteps = const [],
   Future<void> Function(BuildContext)? openServiceAreas,
+  ConversationsInboxCubit? conversationsCubit,
+  Future<void> Function(BuildContext, Conversation)? openConversationChat,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -53,11 +59,15 @@ Widget harness(
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<DriverHomeCubit>.value(value: cubit),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
+        BlocProvider<ConversationsInboxCubit>.value(
+          value: conversationsCubit ?? readyConversationsCubit(),
+        ),
       ],
       child: DriverShell(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
         openServiceAreas: openServiceAreas ?? (_) async {},
         openMyVans: (_) async {},
+        openConversationChat: openConversationChat ?? (_, _) async {},
       ),
     ),
   );
@@ -94,7 +104,7 @@ void main() {
     expect(find.text('Olá, Ana!'), findsOneWidget);
   });
 
-  testWidgets('bottom bar offers home, vans, proposals and students', (
+  testWidgets('bottom bar offers home, vans, proposals and messages', (
     tester,
   ) async {
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
@@ -103,7 +113,7 @@ void main() {
       'Início',
       'Vans',
       'Propostas',
-      'Alunos',
+      'Mensagens',
     ]);
   });
 
@@ -151,15 +161,18 @@ void main() {
     expect(find.text('Em breve'), findsOneWidget);
   });
 
-  testWidgets('switches to the Alunos tab showing the coming soon view', (
+  testWidgets('students live in the Vans hub and are coming soon', (
     tester,
   ) async {
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
 
-    await tester.tap(find.bySemanticsLabel('Alunos'));
+    await tester.tap(find.bySemanticsLabel('Vans'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Alunos'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Em breve'), findsOneWidget);
+    expect(find.byType(VanepComingSoonPage), findsOneWidget);
+    expect(find.text('Alunos'), findsWidgets);
   });
 
   testWidgets('the menu button opens the account drawer and refreshes it', (
@@ -174,6 +187,32 @@ void main() {
     expect(find.text('Dados profissionais'), findsOneWidget);
     verify(() => authCubit.refreshSessionProfile()).called(1);
     verify(() => profileSummaryCubit.refresh(any())).called(1);
+  });
+
+  testWidgets('the Mensagens tab loads the conversations and opens a chat', (
+    tester,
+  ) async {
+    final conversationsCubit = readyConversationsCubit([testConversation]);
+    final opened = <Conversation>[];
+    await tester.pumpWidget(
+      harness(
+        cubit,
+        authCubit,
+        profileSummaryCubit,
+        conversationsCubit: conversationsCubit,
+        openConversationChat: (_, conversation) async =>
+            opened.add(conversation),
+      ),
+    );
+
+    await tester.tap(find.bySemanticsLabel('Mensagens'));
+    await tester.pumpAndSettle();
+    verify(() => conversationsCubit.loadConversations()).called(1);
+
+    await tester.tap(find.text('Ana Cliente'));
+    await tester.pumpAndSettle();
+
+    expect(opened, [testConversation]);
   });
 
   testWidgets('the bell opens the notifications coming soon page', (
@@ -262,7 +301,7 @@ void main() {
     verify(() => authCubit.refreshSessionProfile()).called(1);
   });
 
-  testWidgets('tapping Adicionar alunos on home switches to Alunos tab', (
+  testWidgets('tapping Adicionar alunos on home opens Alunos coming soon page', (
     tester,
   ) async {
     final approvedCubit = DriverHomeCubit(
@@ -281,7 +320,6 @@ void main() {
     await tester.tap(find.text('Adicionar alunos'));
     await tester.pumpAndSettle();
 
-    final nav = tester.widget<VanepBottomNav>(find.byType(VanepBottomNav));
-    expect(nav.currentIndex, 3);
+    expect(find.byType(VanepComingSoonPage), findsOneWidget);
   });
 }

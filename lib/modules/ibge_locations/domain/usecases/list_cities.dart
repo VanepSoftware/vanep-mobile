@@ -1,8 +1,8 @@
-import '../../../../core/result/result.dart';
-import '../entities/brazilian_city.dart';
-import '../entities/ibge_locations_page.dart';
-import '../failures/ibge_locations_failure.dart';
-import '../repositories/ibge_locations_repository.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/repositories/ibge_locations_repository.dart';
 
 class ListCities {
   const ListCities(this.repository);

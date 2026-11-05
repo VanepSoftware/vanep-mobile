@@ -1,6 +1,6 @@
-import '../../../../core/result/result.dart';
-import '../failures/account_failure.dart';
-import '../repositories/account_repository.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/account_repository.dart';
 
 class ResendEmailVerificationCode {
   const ResendEmailVerificationCode(this._repository);

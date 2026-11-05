@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/cep_lookup.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
 
 part 'cep_lookup_dto.freezed.dart';
 part 'cep_lookup_dto.g.dart';

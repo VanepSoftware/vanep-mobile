@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../entities/dependent.dart';
-import 'dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 
 class DependentChanges extends Equatable {
   const DependentChanges({required this.draft, required this.touchedFields});

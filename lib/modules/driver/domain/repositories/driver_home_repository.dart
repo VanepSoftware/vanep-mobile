@@ -1,4 +1,4 @@
-import '../entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
 
 abstract interface class DriverHomeRepository {
   Future<DriverHomeData> load();

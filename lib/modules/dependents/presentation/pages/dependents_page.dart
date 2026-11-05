@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_page_chrome.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_skeleton.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/dependent.dart';
-import '../cubit/dependents_cubit.dart';
-import '../cubit/dependents_state.dart';
-import '../formatters/dependent_labels.dart';
-import '../widgets/dependent_card.dart';
-import 'dependent_form_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_card.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_form_page.dart';
 
 class DependentsPage extends StatelessWidget {
   const DependentsPage({super.key});

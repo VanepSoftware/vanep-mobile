@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/formatters/photo_failure_label.dart';
-import '../../../../core/ui/vanep_card.dart';
-import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../cubit/driver_vans_cubit.dart';
-import '../cubit/driver_vans_state.dart';
-import '../formatters/driver_van_labels.dart';
-import 'driver_van_photos_editor.dart';
-import 'van_registration_form.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/formatters/photo_failure_label.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_state.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/formatters/driver_van_labels.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/widgets/driver_van_photos_editor.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/widgets/van_registration_form.dart';
 
 class DriverVansSection extends StatelessWidget {
   const DriverVansSection({super.key});

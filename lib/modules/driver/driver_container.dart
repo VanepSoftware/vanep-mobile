@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-
-import '../../core/environment/environment.dart';
-import '../../core/network/dio_client.dart';
-import 'data/datasources/driver_home_remote_datasource.dart';
-import 'data/repositories/driver_home_repository_impl.dart';
-import 'domain/repositories/driver_home_repository.dart';
-import 'presentation/cubit/driver_home_cubit.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/modules/driver/data/datasources/driver_home_remote_datasource.dart';
+import 'package:vanep_mobile/modules/driver/data/repositories/driver_home_repository_impl.dart';
+import 'package:vanep_mobile/modules/driver/domain/repositories/driver_home_repository.dart';
+import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 
 void registerDriverHomeDependencies(GetIt getIt) {
   if (!getIt.isRegistered<DriverHomeRepository>() &&

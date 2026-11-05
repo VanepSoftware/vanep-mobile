@@ -20,9 +20,15 @@ import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.d
 import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/password_reset_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_state.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_invite_code_page.dart';
 
 import '../account_fixtures.dart';
 import 'auth_presentation_mocks.dart';
+
+class MockAssistantInviteCubit extends MockCubit<AssistantInviteState>
+    implements AssistantInviteCubit {}
 
 Widget loginHarness(LoginCubit cubit, {AuthCubit? authCubit}) {
   return BlocProvider<AuthCubit>.value(
@@ -245,5 +251,29 @@ void main() {
 
     expect(find.byType(PasswordResetPage), findsOneWidget);
     expect(initialEmails, ['ana@vanep.com.br']);
+  });
+
+  testWidgets('Entrar como assistente button opens the assistant invite page', (
+    tester,
+  ) async {
+    final inviteCubit = MockAssistantInviteCubit();
+    whenListen(
+      inviteCubit,
+      const Stream<AssistantInviteState>.empty(),
+      initialState: const AssistantInviteState(),
+    );
+    getIt.registerFactoryParam<AssistantInviteCubit, String?, void>(
+      (code, _) => inviteCubit,
+    );
+    addTearDown(getIt.reset);
+    givenState(filled);
+
+    await tester.pumpWidget(loginHarness(cubit));
+    await tester.ensureVisible(find.text('Entrar como assistente'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Entrar como assistente'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AssistantInviteCodePage), findsOneWidget);
   });
 }

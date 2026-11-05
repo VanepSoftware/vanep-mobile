@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../value_objects/google_signup_ticket.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/google_signup_ticket.dart';
 
 sealed class AuthFailure extends Equatable {
   const AuthFailure();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-import '../design_system/vanep_colors.dart';
-import '../design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
 /// Matches [VanepColors.actionSurface] (`0x14` alpha) so the selected pill
 /// keeps the same tint the cards and badges use.

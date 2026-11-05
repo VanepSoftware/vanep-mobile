@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/formatters/postal_address_display.dart';
-import '../../../../core/ui/vanep_address_card.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/failures/dependent_failure.dart';
-import '../cubit/dependent_form_cubit.dart';
-import '../cubit/dependent_form_state.dart';
-import '../pages/dependent_address_form_page.dart';
+import 'package:vanep_mobile/core/formatters/postal_address_display.dart';
+import 'package:vanep_mobile/core/ui/vanep_address_card.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_address_form_page.dart';
 
 class DependentAddressCard extends StatelessWidget {
   const DependentAddressCard({required this.state, super.key});

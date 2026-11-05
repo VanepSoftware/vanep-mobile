@@ -1,21 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../core/environment/environment.dart';
-import '../../core/network/dio_client.dart';
-import '../ibge_locations/domain/usecases/list_cities.dart';
-import '../ibge_locations/domain/usecases/list_states.dart';
-import '../ibge_locations/domain/usecases/lookup_cep.dart';
-import 'data/datasources/dependent_remote_datasource.dart';
-import 'data/repositories/dependent_repository_impl.dart';
-import 'domain/entities/dependent.dart';
-import 'domain/repositories/dependent_repository.dart';
-import 'domain/usecases/create_dependent.dart';
-import 'domain/usecases/find_my_dependents.dart';
-import 'domain/usecases/set_default_dependent.dart';
-import 'domain/usecases/update_dependent.dart';
-import 'presentation/cubit/dependent_form_cubit.dart';
-import 'presentation/cubit/dependents_cubit.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';
+import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/lookup_cep.dart';
+import 'package:vanep_mobile/modules/dependents/data/datasources/dependent_remote_datasource.dart';
+import 'package:vanep_mobile/modules/dependents/data/repositories/dependent_repository_impl.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_repository.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/create_dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/set_default_dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 
 void registerDependentsDependencies(GetIt getIt) {
   final environment = getIt<Environment>();

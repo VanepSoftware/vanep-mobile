@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/environment/environment.dart';
-import '../../domain/entities/driver_home_data.dart';
-import '../dtos/driver_home_dto.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/data/dtos/driver_home_dto.dart';
 
 class DriverHomeRemoteDataSource {
   DriverHomeRemoteDataSource({

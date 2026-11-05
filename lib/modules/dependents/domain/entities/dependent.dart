@@ -1,4 +1,4 @@
-import '../../../../core/domain/gender.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
 
 abstract class Dependent {
   String get token;

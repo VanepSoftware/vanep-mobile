@@ -1,5 +1,5 @@
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
 
 String authFailureMessage(AppLocalizations l10n, AuthFailure failure) {
   return switch (failure) {

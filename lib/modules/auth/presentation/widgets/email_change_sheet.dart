@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../core/ui/vanep_text_field.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/value_objects/profile_field_limits.dart';
-import '../cubit/personal_data_cubit.dart';
-import '../cubit/personal_data_state.dart';
-import '../mappers/profile_edit_failure_l10n.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_field_limits.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/mappers/profile_edit_failure_l10n.dart';
 
 Future<void> showEmailChangeSheet(BuildContext context) {
   final cubit = context.read<PersonalDataCubit>();

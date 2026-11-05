@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/media/photo_picker.dart';
-import '../../../../core/media/photo_source.dart';
-import '../../domain/entities/profile_summary.dart';
-import '../../domain/usecases/change_profile_photo.dart';
-import 'profile_photo_state.dart';
+import 'package:vanep_mobile/core/media/photo_picker.dart';
+import 'package:vanep_mobile/core/media/photo_source.dart';
+import 'package:vanep_mobile/modules/profile/domain/entities/profile_summary.dart';
+import 'package:vanep_mobile/modules/profile/domain/usecases/change_profile_photo.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_photo_state.dart';
 
 class ProfilePhotoCubit extends Cubit<ProfilePhotoState> {
   ProfilePhotoCubit({

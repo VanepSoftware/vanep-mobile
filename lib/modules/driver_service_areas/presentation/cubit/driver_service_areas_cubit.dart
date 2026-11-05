@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/entities/service_area.dart';
-import '../../domain/entities/service_area_draft.dart';
-import '../../domain/usecases/find_my_service_areas.dart';
-import '../../domain/usecases/replace_my_service_areas.dart';
-import 'driver_service_areas_state.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/usecases/find_my_service_areas.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/usecases/replace_my_service_areas.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_state.dart';
 
 ServiceAreaDraft draftFromSavedArea(ServiceArea area) {
   return ServiceAreaDraft(

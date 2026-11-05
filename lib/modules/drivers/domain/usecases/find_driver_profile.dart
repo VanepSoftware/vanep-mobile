@@ -1,7 +1,7 @@
-import '../../../../core/result/result.dart';
-import '../entities/driver_profile.dart';
-import '../failures/driver_failure.dart';
-import '../repositories/driver_repository.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
+import 'package:vanep_mobile/modules/drivers/domain/failures/driver_failure.dart';
+import 'package:vanep_mobile/modules/drivers/domain/repositories/driver_repository.dart';
 
 class FindDriverProfile {
   const FindDriverProfile(this.repository);

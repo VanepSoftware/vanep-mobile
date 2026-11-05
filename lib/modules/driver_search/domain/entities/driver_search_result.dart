@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../drivers/domain/entities/driver.dart';
+import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
 
 class DriverSearchResult extends Equatable implements Driver {
   const DriverSearchResult({

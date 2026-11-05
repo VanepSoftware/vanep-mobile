@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../core/network/postal_address_body.dart';
-import '../../domain/entities/personal_address.dart';
-import '../../domain/value_objects/personal_address_write.dart';
+import 'package:vanep_mobile/core/network/postal_address_body.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/personal_address_write.dart';
 
 part 'personal_address_dto.freezed.dart';
 part 'personal_address_dto.g.dart';

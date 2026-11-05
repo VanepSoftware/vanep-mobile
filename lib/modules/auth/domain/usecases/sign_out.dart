@@ -1,6 +1,6 @@
-import '../../../../core/result/result.dart';
-import '../failures/auth_failure.dart';
-import '../repositories/auth_repository.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/auth_repository.dart';
 
 class SignOut {
   const SignOut(this._repository);

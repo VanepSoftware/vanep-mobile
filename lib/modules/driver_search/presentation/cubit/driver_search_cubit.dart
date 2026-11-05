@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/usecases/search_drivers_by_place.dart';
-import 'driver_search_state.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/usecases/search_drivers_by_place.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 
 class DriverSearchCubit extends Cubit<DriverSearchState> {
   DriverSearchCubit({required this.searchDriversByPlace})

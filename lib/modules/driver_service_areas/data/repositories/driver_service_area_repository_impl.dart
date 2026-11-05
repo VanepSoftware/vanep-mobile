@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/network/city_unmatched_problem.dart';
-import '../../../../core/network/problem_detail.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/service_area.dart';
-import '../../domain/entities/service_area_draft.dart';
-import '../../domain/failures/service_area_failure.dart';
-import '../../domain/repositories/driver_service_area_repository.dart';
-import '../datasources/driver_service_area_remote_datasource.dart';
+import 'package:vanep_mobile/core/network/city_unmatched_problem.dart';
+import 'package:vanep_mobile/core/network/problem_detail.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/failures/service_area_failure.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/domain/repositories/driver_service_area_repository.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/data/datasources/driver_service_area_remote_datasource.dart';
 
 const districtRequiredMarker = 'bairro';
 const tooManyAreasMarker = 'máximo';

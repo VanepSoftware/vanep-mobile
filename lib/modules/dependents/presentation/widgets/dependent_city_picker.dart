@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/ui/vanep_city_picker_sheet.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../cubit/dependent_form_cubit.dart';
-import '../cubit/dependent_form_state.dart';
-import '../formatters/dependent_labels.dart';
+import 'package:vanep_mobile/core/ui/vanep_city_picker_sheet.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
 
 class DependentCityPicker extends StatelessWidget {
   const DependentCityPicker({super.key});

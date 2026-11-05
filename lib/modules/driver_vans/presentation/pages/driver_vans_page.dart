@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../widgets/driver_vans_section.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/widgets/driver_vans_section.dart';
 
 class DriverVansPage extends StatelessWidget {
   const DriverVansPage({super.key});

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 
 sealed class DependentFailure extends Equatable {
   const DependentFailure();

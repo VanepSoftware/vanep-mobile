@@ -1,6 +1,6 @@
-import '../../../../core/result/result.dart';
-import '../failures/account_failure.dart';
-import '../value_objects/signup_form.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
 
 abstract class AccountRepository {
   Future<Result<AccountFailure, void>> signUp(SignupForm form);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/driver_home_data.dart';
-import '../../domain/usecases/driver_home_rules.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/domain/usecases/driver_home_rules.dart';
 
 class DriverHomeShortcuts extends StatelessWidget {
   const DriverHomeShortcuts({super.key, required this.data, required this.rules,

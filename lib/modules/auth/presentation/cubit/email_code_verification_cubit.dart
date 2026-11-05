@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/failures/account_failure.dart';
-import '../../domain/usecases/resend_email_verification_code.dart';
-import '../../domain/usecases/sign_in_with_password.dart';
-import '../../domain/usecases/verify_email_code.dart';
-import '../../domain/value_objects/signup_form.dart';
-import 'code_resend_cooldown.dart';
-import 'email_code_verification_state.dart';
-import 'start_session.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/resend_email_verification_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/verify_email_code.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/code_resend_cooldown.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verification_state.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart';
 
 class EmailCodeVerificationCubit extends Cubit<EmailCodeVerificationState> {
   EmailCodeVerificationCubit({

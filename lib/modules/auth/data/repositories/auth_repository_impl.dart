@@ -1,21 +1,21 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/result/result.dart';
-import '../../domain/entities/auth_session.dart';
-import '../../domain/entities/user_profile.dart';
-import '../../domain/failures/auth_failure.dart';
-import '../../domain/failures/profile_edit_failure.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../domain/value_objects/profile_patch_request.dart';
-import '../datasources/auth_local_datasource.dart';
-import '../datasources/google_id_token_source.dart';
-import '../datasources/oauth_remote_datasource.dart';
-import '../datasources/user_profile_remote_datasource.dart';
-import '../dtos/auth_session_dto.dart';
-import '../dtos/token_response_dto.dart';
-import '../dtos/user_profile_dto.dart';
-import '../mappers/profile_edit_failure_mapper.dart';
-import '../mappers/token_endpoint_failure_mapper.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/auth_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/repositories/auth_repository.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_patch_request.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/google_id_token_source.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/oauth_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/datasources/user_profile_remote_datasource.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/auth_session_dto.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/token_response_dto.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
+import 'package:vanep_mobile/modules/auth/data/mappers/profile_edit_failure_mapper.dart';
+import 'package:vanep_mobile/modules/auth/data/mappers/token_endpoint_failure_mapper.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({

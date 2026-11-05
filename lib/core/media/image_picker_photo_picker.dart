@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../result/result.dart';
-import 'photo_failure.dart';
-import 'photo_picker.dart';
-import 'photo_source.dart';
-import 'picked_photo.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/core/media/photo_failure.dart';
+import 'package:vanep_mobile/core/media/photo_picker.dart';
+import 'package:vanep_mobile/core/media/photo_source.dart';
+import 'package:vanep_mobile/core/media/picked_photo.dart';
 
 const double maxPickedPhotoDimension = 1600;
 

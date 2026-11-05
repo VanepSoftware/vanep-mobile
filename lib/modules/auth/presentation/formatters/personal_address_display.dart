@@ -1,5 +1,5 @@
-import '../../../../core/formatters/postal_address_display.dart';
-import '../../domain/entities/personal_address.dart';
+import 'package:vanep_mobile/core/formatters/postal_address_display.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
 
 PostalAddressDisplayFields personalAddressDisplayFields(
   PersonalAddress address,

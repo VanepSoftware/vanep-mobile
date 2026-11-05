@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../media/photo_failure.dart';
-import '../media/picked_photo.dart';
+import 'package:vanep_mobile/core/media/photo_failure.dart';
+import 'package:vanep_mobile/core/media/picked_photo.dart';
 
 class PhotoUploader {
   const PhotoUploader({required this.dio});

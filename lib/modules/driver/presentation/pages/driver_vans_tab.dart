@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/design_system/vanep_typography.dart';
-import '../../../../core/ui/vanep_menu_card.dart';
-import '../../../../l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
 
 class DriverVansTab extends StatelessWidget {
   const DriverVansTab({
     required this.onOpenMyVans,
     required this.onOpenServiceAreas,
+    required this.onOpenStudents,
     super.key,
   });
 
   final VoidCallback onOpenMyVans;
   final VoidCallback onOpenServiceAreas;
+  final VoidCallback onOpenStudents;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,11 @@ class DriverVansTab extends StatelessWidget {
                 label: l10n.serviceAreasTitle,
                 icon: Icons.map_outlined,
                 onTap: onOpenServiceAreas,
+              ),
+              VanepMenuItem(
+                label: l10n.navStudents,
+                icon: Icons.groups_outlined,
+                onTap: onOpenStudents,
               ),
             ],
           ),

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/design_system/vanep_colors.dart';
-import '../../../../core/domain/postal_address_draft.dart';
-import '../../../../core/ui/vanep_city_picker_sheet.dart';
-import '../../../../core/ui/vanep_page_chrome.dart';
-import '../../../../core/ui/vanep_postal_address_form.dart';
-import '../../../../core/ui/vanep_primary_button.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/failures/dependent_failure.dart';
-import '../cubit/dependent_form_cubit.dart';
-import '../cubit/dependent_form_state.dart';
-import '../formatters/dependent_labels.dart';
-import '../widgets/dependent_city_picker.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/core/ui/vanep_city_picker_sheet.dart';
+import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/ui/vanep_postal_address_form.dart';
+import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_form_state.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_city_picker.dart';
 
 Future<void> openDependentAddressFormPage(BuildContext context) {
   final cubit = context.read<DependentFormCubit>();

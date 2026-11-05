@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/domain/gender.dart';
-import '../../../../core/environment/environment.dart';
-import '../../domain/value_objects/signup_form.dart';
-import '../../domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 class AccountRemoteDataSource {
   AccountRemoteDataSource({required this.dio, required this.environment});

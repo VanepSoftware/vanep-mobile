@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/ui/vanep_address_card.dart';
-import '../../../../core/ui/vanep_confirm_dialog.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../domain/entities/personal_address.dart';
-import '../cubit/personal_data_cubit.dart';
-import '../formatters/personal_address_display.dart';
-import '../pages/personal_address_form_page.dart';
+import 'package:vanep_mobile/core/ui/vanep_address_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/formatters/personal_address_display.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_address_form_page.dart';
 
 Future<void> openPersonalAddressFormPage(BuildContext context) async {
   final cubit = context.read<PersonalDataCubit>();

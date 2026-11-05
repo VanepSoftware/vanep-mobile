@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/formatters/photo_failure_label.dart';
-import '../../../../core/ui/vanep_editable_avatar.dart';
-import '../../../../core/ui/vanep_feedback.dart';
-import '../../../../core/ui/vanep_photo_source_sheet.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../auth/domain/value_objects/user_type.dart';
-import '../../domain/entities/profile_summary.dart';
-import '../cubit/profile_photo_cubit.dart';
-import '../cubit/profile_photo_state.dart';
-import '../cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/core/formatters/photo_failure_label.dart';
+import 'package:vanep_mobile/core/ui/vanep_editable_avatar.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/core/ui/vanep_photo_source_sheet.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/profile/domain/entities/profile_summary.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_photo_cubit.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_photo_state.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 
 class ProfilePhotoEditor extends StatelessWidget {
   const ProfilePhotoEditor({required this.userType, super.key});

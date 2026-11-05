@@ -1,5 +1,5 @@
-import '../../l10n/app_localizations.dart';
-import '../media/photo_failure.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/media/photo_failure.dart';
 
 String photoFailureLabel(AppLocalizations l10n, PhotoFailure failure) {
   return switch (failure) {

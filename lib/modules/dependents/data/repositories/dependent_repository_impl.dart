@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/network/problem_detail.dart';
-import '../../../../core/result/result.dart';
-import '../../domain/entities/dependent.dart';
-import '../../domain/failures/dependent_failure.dart';
-import '../../domain/repositories/dependent_repository.dart';
-import '../../domain/value_objects/dependent_changes.dart';
-import '../../domain/value_objects/dependent_draft.dart';
-import '../datasources/dependent_remote_datasource.dart';
+import 'package:vanep_mobile/core/network/problem_detail.dart';
+import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_repository.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
+import 'package:vanep_mobile/modules/dependents/data/datasources/dependent_remote_datasource.dart';
 
 const Map<String, DependentField> dependentFieldsByApiName = {
   'name': DependentField.name,

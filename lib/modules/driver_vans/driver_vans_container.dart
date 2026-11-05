@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../core/environment/environment.dart';
-import '../../core/media/photo_picker.dart';
-import '../../core/network/dio_client.dart';
-import '../../core/network/photo_uploader.dart';
-import 'data/datasources/driver_van_remote_datasource.dart';
-import 'data/repositories/driver_van_repository_impl.dart';
-import 'domain/repositories/driver_van_repository.dart';
-import 'domain/usecases/change_van_photo.dart';
-import 'domain/usecases/list_my_vans.dart';
-import 'domain/usecases/register_van.dart';
-import 'presentation/cubit/driver_vans_cubit.dart';
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/media/photo_picker.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/modules/driver_vans/data/datasources/driver_van_remote_datasource.dart';
+import 'package:vanep_mobile/modules/driver_vans/data/repositories/driver_van_repository_impl.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/repositories/driver_van_repository.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/usecases/change_van_photo.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/usecases/list_my_vans.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/usecases/register_van.dart';
+import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
 
 void registerDriverVansDependencies(GetIt getIt) {
   getIt

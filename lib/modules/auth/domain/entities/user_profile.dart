@@ -1,6 +1,6 @@
-import '../../../../core/domain/gender.dart';
-import '../value_objects/onboarding_step.dart';
-import '../value_objects/user_type.dart';
+import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 
 abstract class UserProfile {
   String get token;

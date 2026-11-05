@@ -1,10 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../auth/data/dtos/user_profile_dto.dart';
-import '../../domain/entities/pending_invite.dart';
-import '../../domain/entities/profile_summary.dart';
-import '../../domain/value_objects/assistant_status.dart';
-import '../../domain/value_objects/driver_approval_status.dart';
+import 'package:vanep_mobile/modules/auth/data/dtos/user_profile_dto.dart';
+import 'package:vanep_mobile/modules/profile/domain/entities/pending_invite.dart';
+import 'package:vanep_mobile/modules/profile/domain/entities/profile_summary.dart';
+import 'package:vanep_mobile/modules/profile/domain/value_objects/assistant_status.dart';
+import 'package:vanep_mobile/modules/profile/domain/value_objects/driver_approval_status.dart';
 
 part 'profile_summary_dto.freezed.dart';
 part 'profile_summary_dto.g.dart';
