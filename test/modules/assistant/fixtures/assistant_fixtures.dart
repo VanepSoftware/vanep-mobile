@@ -1,5 +1,6 @@
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_invite.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 
 final testAssistantInvite = AssistantInvite(
   token: 'invite-tok-12345678901234567890',
@@ -27,4 +28,53 @@ const testAssistantVanSecondary = AssistantVan(
   plate: 'XYZ-9876',
   model: 'Renault Master 2023',
   shift: 'AFTERNOON',
+);
+
+AssistantInvite buildAssistantPendingInvite({required Duration expiresIn}) {
+  return AssistantInvite(
+    token: 'invite-tok-vans-12345678901234567890',
+    driverName: 'João Pedro Lima',
+    vehicleDescription: 'Master 2019 · tarde',
+    expiresAt: DateTime.now().add(expiresIn),
+    status: 'PENDING',
+  );
+}
+
+const testAssistantVanSummaryWithRoute = AssistantVanSummary(
+  van: AssistantVan(
+    token: 'van-token-carlos',
+    driverToken: 'driver-token-carlos',
+    driverName: 'Carlos Mendes',
+    plate: 'SDF4E21',
+    model: 'Sprinter',
+    shift: 'MORNING',
+  ),
+  departureMinutes: 380,
+  studentCount: 16,
+  hasRouteToday: true,
+);
+
+const testAssistantVanSummaryWithoutRoute = AssistantVanSummary(
+  van: AssistantVan(
+    token: 'van-token-rita',
+    driverToken: 'driver-token-rita',
+    driverName: 'Rita Souza',
+    plate: 'PBX7C19',
+    model: 'Ducato',
+    shift: 'AFTERNOON',
+  ),
+  departureMinutes: 700,
+  studentCount: 1,
+  hasRouteToday: false,
+);
+
+final testAssistantVansOverview = AssistantVansOverview(
+  pendingInvite: buildAssistantPendingInvite(
+    expiresIn: const Duration(days: 3, hours: 1),
+  ),
+  activeVans: const [
+    testAssistantVanSummaryWithRoute,
+    testAssistantVanSummaryWithoutRoute,
+  ],
+  formerVanCount: 1,
 );
