@@ -10,6 +10,8 @@ import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/domain/repositories/driver_home_repository.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
@@ -18,6 +20,17 @@ import 'package:vanep_mobile/shell/driver_shell.dart';
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
+
+class _StubHomeRepository implements DriverHomeRepository {
+  _StubHomeRepository(this.data);
+  final DriverHomeData data;
+  @override
+  Future<DriverHomeData> load() async => data;
+  @override
+  Future<void> startTrip(String tripId) async {}
+  @override
+  Future<void> confirmStop(StopConfirmation confirmation) async {}
+}
 
 Widget harness(
   DriverHomeCubit cubit,
@@ -247,5 +260,28 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(() => authCubit.refreshSessionProfile()).called(1);
+  });
+
+  testWidgets('tapping Adicionar alunos on home switches to Alunos tab', (
+    tester,
+  ) async {
+    final approvedCubit = DriverHomeCubit(
+      repository: _StubHomeRepository(
+        const DriverHomeData(registration: RegistrationStatus.approved),
+      ),
+    );
+    addTearDown(approvedCubit.close);
+
+    await tester.pumpWidget(
+      harness(approvedCubit, authCubit, profileSummaryCubit),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Adicionar alunos'));
+    await tester.tap(find.text('Adicionar alunos'));
+    await tester.pumpAndSettle();
+
+    final nav = tester.widget<VanepBottomNav>(find.byType(VanepBottomNav));
+    expect(nav.currentIndex, 3);
   });
 }

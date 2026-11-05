@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/design_system/vanep_colors.dart';
 import '../core/ui/vanep_coming_soon.dart';
+import '../core/ui/vanep_coming_soon_page.dart';
 import '../l10n/app_localizations.dart';
 import '../modules/auth/domain/entities/user_profile.dart';
 import '../modules/auth/domain/value_objects/onboarding_step.dart';
 import '../modules/auth/presentation/cubit/auth_cubit.dart';
+import '../modules/driver/domain/entities/driver_home_data.dart';
 import '../modules/driver/presentation/pages/driver_home_tab.dart';
+import '../modules/driver/presentation/widgets/driver_home_main_card.dart';
 import '../modules/driver/presentation/pages/driver_vans_tab.dart';
 import '../modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'driver_bottom_nav.dart';
@@ -18,10 +21,12 @@ class DriverShell extends StatefulWidget {
     required this.profile,
     required this.openServiceAreas,
     required this.openMyVans,
+    this.homeNavigation,
     super.key,
   });
 
   final UserProfile profile;
+  final DriverHomeNavigation? homeNavigation;
 
   final Future<void> Function(BuildContext context) openServiceAreas;
 
@@ -71,6 +76,12 @@ class DriverShellState extends State<DriverShell> {
               children: [
                 DriverHomeTab(
                   displayName: displayName,
+                  navigation:
+                      widget.homeNavigation ??
+                      _DriverShellHomeNavigation(
+                        context: context,
+                        onSelectTab: selectShellTab,
+                      ),
                   onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
                   onNotificationsTapped: () => openNotifications(context),
                 ),
@@ -108,4 +119,54 @@ class DriverShellState extends State<DriverShell> {
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);
   }
+}
+
+class _DriverShellHomeNavigation implements DriverHomeNavigation {
+  const _DriverShellHomeNavigation({
+    required this.context,
+    required this.onSelectTab,
+  });
+
+  static const int _studentsTabIndex = 3;
+
+  final BuildContext context;
+  final ValueChanged<int> onSelectTab;
+
+  void _openComingSoon(String title) {
+    openComingSoonPage(
+      context,
+      title: title,
+      message: AppLocalizations.of(context)!.comingSoon,
+    );
+  }
+
+  @override
+  void openShortcut(Shortcut shortcut) {
+    switch (shortcut) {
+      case Shortcut.students:
+        onSelectTab(_studentsTabIndex);
+      case Shortcut.route:
+        _openComingSoon('Rota e paradas');
+      case Shortcut.absences:
+        _openComingSoon('Ausências e ajustes');
+      case Shortcut.financial:
+        _openComingSoon('Financeiro');
+      case Shortcut.assistants:
+        _openComingSoon('Auxiliares');
+      case Shortcut.documents:
+        _openComingSoon('Documentos');
+    }
+  }
+
+  @override
+  void openRegularization() => _openComingSoon('Regularização');
+
+  @override
+  void correctAndResubmit() => openShortcut(Shortcut.documents);
+
+  @override
+  void openChecklist(String tripId) => _openComingSoon('Checklist');
+
+  @override
+  void callContact(String tripId) => _openComingSoon('Contato da parada');
 }
