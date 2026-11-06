@@ -16,6 +16,7 @@ import 'package:vanep_mobile/modules/client_proposals/client_proposals_container
 import 'package:vanep_mobile/modules/conversations/conversations_container.dart';
 import 'package:vanep_mobile/modules/dependents/dependents_container.dart';
 import 'package:vanep_mobile/modules/driver/driver_container.dart';
+import 'package:vanep_mobile/modules/driver_proposals/driver_proposals_container.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/driver_service_areas_container.dart';
 import 'package:vanep_mobile/modules/driver_vans/driver_vans_container.dart';
 import 'package:vanep_mobile/modules/drivers/drivers_container.dart';
@@ -35,6 +36,7 @@ Future<void> main() async {
   registerMediaDependencies(getIt);
   registerDriverDependencies(getIt);
   registerDriverHomeDependencies(getIt);
+  registerDriverProposalDependencies(getIt);
   registerProfileDependencies(getIt);
   registerPlacesDependencies(getIt);
   registerDriverServiceAreasDependencies(getIt);

@@ -23,6 +23,7 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/pages/client_
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_compose_cubit.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
@@ -88,6 +89,9 @@ class AuthGate extends StatelessWidget {
                 ),
                 BlocProvider<ConversationsInboxCubit>(
                   create: (_) => getIt<ConversationsInboxCubit>(),
+                ),
+                BlocProvider<ProposalComposeCubit>(
+                  create: (_) => getIt<ProposalComposeCubit>(),
                 ),
               ],
               child: DriverShell(

@@ -14,6 +14,8 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_compose_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/proposal_compose_page.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
@@ -21,6 +23,7 @@ import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
+import '../modules/driver_proposals/driver_proposals_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 
 Widget harness(
@@ -48,6 +51,9 @@ Widget harness(
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
         BlocProvider<ConversationsInboxCubit>.value(
           value: conversationsCubit ?? readyConversationsCubit(),
+        ),
+        BlocProvider<ProposalComposeCubit>.value(
+          value: readyProposalComposeCubit(),
         ),
       ],
       child: DriverShell(
@@ -136,16 +142,18 @@ void main() {
     verify(() => authCubit.refreshSessionProfile()).called(1);
   });
 
-  testWidgets('the Propostas tab shows proposals and contracts coming soon', (
-    tester,
-  ) async {
+  testWidgets('the Propostas tab opens build proposal', (tester) async {
+    tester.view.physicalSize = const Size(430, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
 
     await tester.tap(find.bySemanticsLabel('Propostas'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Propostas e contratos'), findsOneWidget);
-    expect(find.text('Em breve'), findsOneWidget);
+    expect(find.byType(ProposalComposePage), findsOneWidget);
+    expect(find.text('Montar proposta'), findsOneWidget);
+    expect(find.text('Família Silva'), findsOneWidget);
   });
 
   testWidgets('students live in the Vans hub and are coming soon', (
