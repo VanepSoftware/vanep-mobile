@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
@@ -12,15 +13,7 @@ String joinNames(AppLocalizations l10n, List<String> names) {
 }
 
 String formatWeekday(AppLocalizations l10n, DateTime date) {
-  return switch (date.weekday) {
-    DateTime.monday => l10n.clientHomeWeekdayMonday,
-    DateTime.tuesday => l10n.clientHomeWeekdayTuesday,
-    DateTime.wednesday => l10n.clientHomeWeekdayWednesday,
-    DateTime.thursday => l10n.clientHomeWeekdayThursday,
-    DateTime.friday => l10n.clientHomeWeekdayFriday,
-    DateTime.saturday => l10n.clientHomeWeekdaySaturday,
-    _ => l10n.clientHomeWeekdaySunday,
-  };
+  return formatWeekdayName(l10n, date.weekday);
 }
 
 String formatShortWeekday(AppLocalizations l10n, DateTime date) {
