@@ -123,10 +123,18 @@ class DriverProposalPage extends StatelessWidget {
           },
           bottomNavigationBar: detail != null && adjustment != null
               ? DriverAnswerFooter(
+                  primaryLabel: l10n.driverProposalsNewVersion,
                   onDecline: () => declineAndLeave(
                     context,
                     actions: actions,
                     request: detail.request,
+                    reload: cubit.load,
+                  ),
+                  onPrimary: () => composeAndLeave(
+                    context,
+                    actions: actions,
+                    request: detail.request,
+                    previousVersion: detail.proposal,
                     reload: cubit.load,
                   ),
                 )
