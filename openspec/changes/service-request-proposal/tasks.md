@@ -115,8 +115,8 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ## 10. Fase 10 — Testes do responsável (`VAN-78/10-client-negotiations-tests`)
 
-- [ ] 10.1 Trazer os arquivos de teste novos das fases 3 a 9 (core, regras e rótulos, lista, detalhe, ajuste e recusa, pedir orçamento, conversa e Início, rotas do `app.dart`)
-- [ ] 10.2 Rodar `make lint` e `make test`
+- [x] 10.1 Trazer os arquivos de teste novos das fases 3 a 9 (core, regras e rótulos, lista, detalhe, ajuste e recusa, pedir orçamento, conversa e Início, rotas do `app.dart`)
+- [x] 10.2 Rodar `make lint` e `make test`
 - [ ] 10.3 Abrir o PR
 
 ## 11. Fase 11 — Negociações do motorista (`VAN-78/11-driver-negotiations`, VAN-58, VAN-59 e VAN-61)

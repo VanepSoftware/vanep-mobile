@@ -3,6 +3,14 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/usecases/load_client_proposals.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_request_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_request_state.dart';
 import 'package:vanep_mobile/modules/contract_readiness/domain/usecases/find_contract_readiness.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_days.dart';
@@ -45,6 +53,15 @@ class MockDeclineProposal extends Mock implements DeclineProposal {}
 class MockRequestProposalAdjustment extends Mock
     implements RequestProposalAdjustment {}
 
+class MockProposalDetailCubit extends MockCubit<ProposalDetailState>
+    implements ProposalDetailCubit {}
+
+class MockProposalAdjustmentCubit extends MockCubit<ProposalAdjustmentState>
+    implements ProposalAdjustmentCubit {}
+
+class MockProposalDeclineCubit extends MockCubit<ProposalDeclineState>
+    implements ProposalDeclineCubit {}
+
 class MockFindDriverProfile extends Mock implements FindDriverProfile {}
 
 class MockFindSchoolDays extends Mock implements FindSchoolDays {}
@@ -53,3 +70,5 @@ class MockFindContractReadiness extends Mock implements FindContractReadiness {}
 
 class MockSendServiceRequest extends Mock implements SendServiceRequest {}
 
+class MockQuoteRequestCubit extends MockCubit<QuoteRequestState>
+    implements QuoteRequestCubit {}
