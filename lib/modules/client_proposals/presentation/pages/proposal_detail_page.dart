@@ -10,7 +10,9 @@ import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_state.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_state.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
@@ -25,10 +27,26 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_status.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 
+typedef ProposalActionCallback = Future<bool> Function(
+  ClientServiceRequest request,
+  Proposal proposal,
+);
+
 class ProposalDetailActions {
-  const ProposalDetailActions({required this.onChat, required this.onAccepted});
+  const ProposalDetailActions({
+    required this.onChat,
+    required this.onAskAdjustment,
+    required this.onDecline,
+    required this.onAccepted,
+  });
 
   final void Function(ClientServiceRequest request) onChat;
+  final ProposalActionCallback onAskAdjustment;
+  final Future<ProposalDeclineOutcome?> Function(
+    ClientServiceRequest request,
+    Proposal proposal,
+  )
+  onDecline;
   final void Function(ClientServiceRequest request, Proposal proposal)
   onAccepted;
 }
@@ -61,6 +79,24 @@ void openProposalComparison(
           ProposalComparisonPage(previous: previous, current: current),
     ),
   );
+}
+
+Future<void> declineFromDetail(
+  BuildContext context, {
+  required ProposalDetailActions actions,
+  required ClientServiceRequest request,
+  required Proposal proposal,
+}) async {
+  final navigator = Navigator.of(context);
+  final cubit = context.read<ProposalDetailCubit>();
+  switch (await actions.onDecline(request, proposal)) {
+    case ProposalDeclineOutcome.declined:
+      navigator.pop(true);
+    case ProposalDeclineOutcome.outdated:
+      await cubit.load();
+    case null:
+      return;
+  }
 }
 
 Future<void> acceptFromDetail(
@@ -259,6 +295,19 @@ class ProposalDetailBody extends StatelessWidget {
           const SizedBox(height: detailSectionSpacing),
           DetailNotice(text: l10n.proposalDetailContractNotice),
         ],
+        if (proposal != null && state.canAct) ...[
+          const SizedBox(height: detailSectionSpacing),
+          VanepSecondaryButton(
+            label: l10n.proposalDeclineTitle,
+            isDestructive: true,
+            onPressed: () => declineFromDetail(
+              context,
+              actions: actions,
+              request: request,
+              proposal: proposal,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -347,16 +396,36 @@ class DetailFooter extends StatelessWidget {
   final ClientServiceRequest request;
   final ProposalDetailActions actions;
 
+  Future<void> askAdjustment(BuildContext context, Proposal proposal) async {
+    final cubit = context.read<ProposalDetailCubit>();
+    final asked = await actions.onAskAdjustment(request, proposal);
+    if (asked) await cubit.load();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final proposal = state.proposal;
     final Widget? content;
     if (proposal != null && state.canAct) {
-      content = VanepPrimaryButton(
-        label: l10n.proposalDetailAccept,
-        isLoading: state.isAccepting,
-        onPressed: () => acceptFromDetail(context, request),
+      content = Row(
+        children: [
+          Expanded(
+            child: VanepSecondaryButton(
+              label: l10n.proposalDetailAskAdjustment,
+              icon: Icons.tune,
+              onPressed: () => askAdjustment(context, proposal),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: VanepPrimaryButton(
+              label: l10n.proposalDetailAccept,
+              isLoading: state.isAccepting,
+              onPressed: () => acceptFromDetail(context, request),
+            ),
+          ),
+        ],
       );
     } else if (state.isRequestMode &&
         request.status == ServiceRequestStatus.open) {

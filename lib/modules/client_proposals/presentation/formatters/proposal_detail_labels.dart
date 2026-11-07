@@ -6,6 +6,7 @@ import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/proposal_decline_reason.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/legs_summary.dart';
@@ -175,5 +176,19 @@ String formatComparisonValue(
       final vehicle? => formatProposalVehicle(l10n, vehicle),
       null => l10n.proposalComparisonNoVehicle,
     },
+  };
+}
+
+String declineReasonLabel(AppLocalizations l10n, ProposalDeclineReason reason) {
+  return switch (reason) {
+    ProposalDeclineReason.priceTooHigh =>
+      l10n.proposalDeclineReasonPriceTooHigh,
+    ProposalDeclineReason.scheduleDoesNotFit =>
+      l10n.proposalDeclineReasonScheduleDoesNotFit,
+    ProposalDeclineReason.choseAnotherVan =>
+      l10n.proposalDeclineReasonChoseAnotherVan,
+    ProposalDeclineReason.noLongerNeeded =>
+      l10n.proposalDeclineReasonNoLongerNeeded,
+    ProposalDeclineReason.other => l10n.proposalDeclineReasonOther,
   };
 }
