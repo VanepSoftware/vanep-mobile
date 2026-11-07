@@ -193,7 +193,7 @@ void main() {
       ).called(1);
     });
 
-    testWidgets('the route shows the pickup in one line and the school', (
+    testWidgets('the route shows the whole pickup and the school', (
       tester,
     ) async {
       await pumpQuote(tester, readyState(draft: biaSelected));
@@ -202,7 +202,11 @@ void main() {
       expect(find.text('Colégio Delta'), findsOneWidget);
       expect(find.textContaining('O motorista vê'), findsNothing);
       final pickup = tester.widget<Text>(find.text('QNL 5 Conjunto A, 12'));
-      expect(pickup.maxLines, 1);
+      expect(pickup.maxLines, isNull);
+      expect(pickup.overflow, isNull);
+      expect(find.text('Taguatinga · Brasília/DF'), findsOneWidget);
+      expect(find.byIcon(Icons.home_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.school_outlined), findsOneWidget);
     });
   });
 
