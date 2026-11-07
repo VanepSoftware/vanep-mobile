@@ -8,7 +8,7 @@ import 'package:vanep_mobile/modules/schools/domain/failures/school_failure.dart
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
-import 'package:vanep_mobile/modules/dependents/domain/value_objects/weekday.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_field_error.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_wizard_step.dart';
 

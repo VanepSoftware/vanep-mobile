@@ -14,9 +14,9 @@ Fatos do back em que o desenho se apoia (vanep-api-java, pilha `VAN-30/*`, vers�
 
 - A solicitação nas duas visões traz `currentProposal` (`token`, `version`, `status`, `totalAmount`, `installments`, `installmentAmount`, `validUntil`, `startsOn`, `hasPendingAdjustment`), `null` fora de `ANSWERED` e `CONVERTED`. A visão do cliente traz `driverRating`.
 - O filtro `status` das listas aceita vários valores (`?status=OPEN,ANSWERED`). As listas são `Page` do Spring (20 por página), sempre ordenadas por `createdAt` decrescente: a ordem está fixa na consulta, e um `sort` mandado pelo app só entraria como critério de desempate.
-- A proposta traz `installmentAmount` e `lastInstallmentAmount` (a última parcela leva o resto da divisão, para as parcelas fecharem o total), os itens com `slots` (`weekday`, `leg` `OUTBOUND`/`RETURN`, `shift` `MORNING`/`AFTERNOON`/`NIGHT` e `pickupTime`, um horário só por trecho: o embarque em casa na ida e na escola na volta), o veículo (placa, marca, modelo, ano, cor e capacidade, sem foto) e os `adjustments`. Na visão do motorista, `dependentName` vem `null` e só `dependentFirstName` vem preenchido.
+- A proposta traz `installmentAmount` e `lastInstallmentAmount` (a última parcela leva o resto da divisão, para as parcelas fecharem o total), os itens com `slots` (`weekday`, `leg` `OUTBOUND`/`RETURN`, `shift` `MORNING`/`AFTERNOON`/`NIGHT` e `pickupTime`, um horário só por trecho: o embarque em casa na ida e na escola na volta), o veículo (placa, marca, modelo, ano, cor e capacidade, sem foto; na visão do motorista, também o `token` da van, mesmo removida) e os `adjustments`. Na visão do motorista, `dependentName` vem `null` e só `dependentFirstName` vem preenchido.
 - A conversa do par nasce com a primeira solicitação (PR 12 da pilha, `VAN-30/12-conversation-on-request`, D23 do back). As duas visões da solicitação trazem `conversationToken`, a mesma para todas as solicitações do par, e ela continua aberta depois que a solicitação se encerra. As duas listas aceitam `?conversationToken=`, combinável com `status`, que devolve só as solicitações do par daquela conversa, da mais nova para a mais antiga; a conversa de outro par ou um token desconhecido devolvem página vazia. O `POST /api/conversations` saiu, e o `ConversationResponseDTO` não mudou.
-- Os erros são `ResponseStatusException` com o `detail` traduzido, sem código: 404, 409 (corrida e prazo: `open_exists`, `service_request.not_open`, `not_current`, `expired`, `accept.stale`, `sent_conflict`, `proposal.request.not_open`), 422 (regra: `not_ready`, `open_limit`, `driver.not_available`, `day.no_school`, `link.blocked`, `link.has_contract`, `period.*`, `items.mismatch`, `adjustment.empty`) e 400 (Bean Validation).
+- Os erros são `ResponseStatusException` com o `detail` traduzido, sem código: 404, 409 (corrida e prazo: `open_exists`, `service_request.not_open`, `not_current`, `expired`, `accept.stale`, `sent_conflict`, `proposal.request.not_open`), 422 (regra: `not_ready`, `open_limit`, `driver.not_available`, `day.no_school`, `link.blocked`, `link.has_contract`, `period.*`, `items.mismatch`, `slots.not_requested`, `adjustment.empty`) e 400 (Bean Validation).
 
 ## Goals / Non-Goals
 
@@ -60,7 +60,7 @@ Funções puras no domínio de `negotiations`, testadas sozinhas e usadas por to
 
 ### D3. Dinheiro em centavos, datas e horas sem fuso
 
-Os valores viram `int` em centavos na borda (DTO), como o `formatMoney` já espera. A leitura arredonda `valor × 100` (o back manda no máximo duas casas e até dez dígitos inteiros), e a escrita manda `centavos / 100` como número. `LocalDate` fica como data sem hora, no mesmo padrão que os dependentes usam. `LocalTime` (`"12:05:00"`) vira `ClockTime`. `Instant` vira `DateTime` em UTC, mostrado no fuso do aparelho.
+Os valores viram `int` em centavos na borda (DTO), como o `formatMoney` já espera. A leitura arredonda `valor × 100` (o back manda no máximo duas casas e até dez dígitos inteiros), e a escrita manda `centavos / 100` como número. `LocalDate` vira `DateTime` local sem hora, lido pelo `parseIsoCalendarDate` que os dependentes já usam; só a data de nascimento do dependente fica como texto ISO, como no `Dependent`, para reaproveitar o `findAgeInYears`. `LocalTime` (`"12:05:00"`) vira `ClockTime`. `Instant` vira `DateTime` em UTC, mostrado no fuso do aparelho.
 
 ### D4. `client_proposals` reescrito sobre `negotiations`
 
@@ -128,7 +128,7 @@ O `ChatPage` ganha a faixa da proposta vigente e os cartões da negociação, nu
 | Ajuste e proposta só leitura | `DriverProposalCubit` | `FindProposal`, `ListProposalVersions`, `buildNegotiationHistory` |
 | Montar proposta | `ProposalComposerCubit` | `ListMyVans` (`driver_vans`), `ProposalDraft`, `deriveOperationShift`, `previewInstallmentAmount`, `SendProposal` |
 
-O `DriverShell` troca o `VanepComingSoon` pela aba. O `ProposalDraft` nasce vazio a partir do pedido (dias e trechos pedidos, início desejado, validade 7, reajuste "IPCA na renovação" e cancelamento "aviso de 30 dias + 10%" como no canvas) ou preenchido a partir de uma `Proposal` (nova versão). O rascunho só deixa ligar trechos que a família pediu.
+O `DriverShell` troca o `VanepComingSoon` pela aba. O `ProposalDraft` nasce vazio a partir do pedido (dias e trechos pedidos, início desejado, validade 7, reajuste "IPCA na renovação" e cancelamento "aviso de 30 dias + 10%" como no canvas) ou preenchido a partir de uma `Proposal` (nova versão), já com a van da versão anterior pelo `token` da visão do motorista; se essa van não está mais entre as do `ListMyVans`, o seletor pede outra. O rascunho só deixa ligar trechos que a família pediu, a mesma regra que o back aplica no envio (`422 proposal.slots.not_requested`).
 
 ### D10. Erros
 

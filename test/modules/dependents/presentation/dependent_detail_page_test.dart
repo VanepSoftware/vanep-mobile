@@ -13,7 +13,7 @@ import 'package:vanep_mobile/modules/contract_readiness/domain/entities/contract
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
-import 'package:vanep_mobile/modules/dependents/domain/value_objects/weekday.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_detail_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_personal_data_page.dart';
