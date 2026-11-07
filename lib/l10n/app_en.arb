@@ -193,7 +193,6 @@
   "comingSoon": "Coming soon",
   "navDependents": "Dependents",
   "navProposals": "Proposals",
-  "navProposalsAndContracts": "Proposals & contracts",
   "clientHomeNoLinkedVanTitle": "No linked van",
   "clientHomeNoLinkedVanMessage": "You don't have a van yet. Find one that serves your area.",
   "clientHomeFindVanButton": "Find a van",
@@ -1891,5 +1890,104 @@
         "type": "int"
       }
     }
-  }
+  },
+  "driverProposalsTabNegotiations": "Negotiations",
+  "driverProposalsTabContracts": "Contracts",
+  "driverProposalsNewRequest": "New request",
+  "driverProposalsAdjustmentRequested": "Adjustment requested",
+  "driverProposalsClientAndChildren": "{client} · {children}",
+  "@driverProposalsClientAndChildren": {
+    "placeholders": {
+      "client": {
+        "type": "String"
+      },
+      "children": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalsEmptyTitle": "No open negotiations",
+  "driverProposalsEmptyMessage": "When a family asks for a quote, the request shows up here.",
+  "driverProposalsLoadError": "Couldn't load your negotiations.",
+  "driverRequestReceived": "{count, plural, =0{Arrived today} =1{Arrived yesterday} other{Arrived {count} days ago}}",
+  "@driverRequestReceived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverRequestAddressNotice": "Full address after acceptance.",
+  "driverRequestFamilyMessage": "Message from the family",
+  "driverRequestDeclineTitle": "Decline request?",
+  "driverRequestDeclineMessage": "{client}'s request is closed and leaves your negotiations.",
+  "@driverRequestDeclineMessage": {
+    "placeholders": {
+      "client": {
+        "type": "String"
+      }
+    }
+  },
+  "driverRequestDeclineConfirm": "Decline request",
+  "driverRequestDeclined": "Request declined.",
+  "driverAdjustmentHeader": "Adjustment requested · {field}",
+  "@driverAdjustmentHeader": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentTime": "{hour}:{minute}",
+  "@driverAdjustmentTime": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSentToday": "today, {time}",
+  "@driverAdjustmentSentToday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSentYesterday": "yesterday, {time}",
+  "@driverAdjustmentSentYesterday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSentOn": "{date}, {time}",
+  "@driverAdjustmentSentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSuggested": "Suggested",
+  "driverAdjustmentFromTo": "From {current} to {suggested}",
+  "@driverAdjustmentFromTo": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "suggested": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSeeFullProposal": "See full proposal",
+  "driverAdjustmentReplacesNotice": "A new version replaces the previous one."
 }

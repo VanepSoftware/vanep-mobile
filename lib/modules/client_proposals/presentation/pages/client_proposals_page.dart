@@ -18,10 +18,10 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/child
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/client_proposals_skeleton.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/closed_proposal_card.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/pending_proposal_card.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_building_blocks.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_empty_state.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposals_empty_state.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 
 typedef ProposalRequestCallback = Future<void> Function(
   ClientServiceRequest request,

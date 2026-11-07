@@ -22,6 +22,7 @@ import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
@@ -39,6 +40,7 @@ import 'modules/client_home/client_home_fixtures.dart';
 import 'modules/client_home/client_home_mocks.dart';
 import 'modules/dependents/dependents_mocks.dart';
 import 'modules/conversations/conversations_mocks.dart';
+import 'modules/driver_proposals/driver_proposals_mocks.dart';
 import 'modules/drivers/drivers_fixtures.dart';
 import 'modules/drivers/presentation/drivers_presentation_mocks.dart';
 import 'modules/profile/profile_mocks.dart';
@@ -191,6 +193,7 @@ void main() {
       ..registerFactory<ConversationsInboxCubit>(
         () => readyConversationsCubit(),
       )
+      ..registerFactory<DriverNegotiationsCubit>(readyNegotiationsCubit)
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
@@ -231,7 +234,8 @@ void main() {
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
       ..registerFactory<ConversationsInboxCubit>(
         () => readyConversationsCubit(),
-      );
+      )
+      ..registerFactory<DriverNegotiationsCubit>(readyNegotiationsCubit);
     addTearDown(getIt.reset);
     final authenticated = AuthAuthenticated(
       FakeAuthSession(profile: const FakeUserProfile(type: UserType.driver)),

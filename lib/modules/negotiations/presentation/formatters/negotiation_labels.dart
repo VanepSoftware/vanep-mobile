@@ -1,3 +1,11 @@
+import 'package:intl/intl.dart';
+
+import 'package:vanep_mobile/core/domain/calendar_days.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
+import 'package:vanep_mobile/core/formatters/weekday_label.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/leg_times.dart';
+import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
@@ -106,6 +114,10 @@ String proposalStatusLabel(AppLocalizations l10n, ProposalStatus status) {
   };
 }
 
+String formatProposalPeriod(AppLocalizations l10n, Proposal proposal) {
+  return formatCalendarRange(l10n, proposal.startsOn, proposal.endsOn);
+}
+
 String formatClockTime(ClockTime time) {
   final hour = time.hour.toString().padLeft(2, '0');
   final minute = time.minute.toString().padLeft(2, '0');
@@ -140,4 +152,77 @@ String? formatSchoolShift(AppLocalizations l10n, SchoolGroup group) {
   final shift = group.shift;
   if (shift != null) return formatShift(l10n, shift);
   return group.hasVaryingShift ? l10n.negotiationShiftVaries : null;
+}
+
+String formatProposalStartDate(AppLocalizations l10n, DateTime startsOn) {
+  final day = startsOn.day == 1
+      ? l10n.clientProposalsFirstDayOfMonth
+      : '${startsOn.day}';
+  final month = withoutAbbreviationDot(
+    DateFormat.MMM(l10n.localeName).format(startsOn),
+  );
+  return l10n.clientProposalsStartingOn(
+    l10n.clientProposalsDayMonth(day, month),
+  );
+}
+
+String formatRequestedDaysAndStart(
+  AppLocalizations l10n,
+  ServiceRequest request,
+  DateTime startsOn,
+) {
+  final weekdays = formatWeekdayList(l10n, requestedWeekdays(request.items));
+  return '$weekdays · ${formatProposalStartDate(l10n, startsOn)}';
+}
+
+String formatProposalExpiry(
+  AppLocalizations l10n,
+  DateTime validUntil,
+  DateTime now,
+) {
+  final daysLeft = calendarDaysBetween(now, validUntil.toLocal());
+  return l10n.clientProposalsExpiresIn(daysLeft < 0 ? 0 : daysLeft);
+}
+
+String formatWeekdayTime(
+  AppLocalizations l10n,
+  Weekday weekday,
+  ClockTime time,
+) {
+  return '${weekdayShortLabel(l10n, weekday)} · ${formatClockTime(time)}';
+}
+
+List<String> formatLegTimes(AppLocalizations l10n, LegTimes times) {
+  final shared = times.shared;
+  if (shared != null) return [formatClockTime(shared)];
+  return [
+    for (final MapEntry(key: weekday, value: time) in times.byDay.entries)
+      formatWeekdayTime(l10n, weekday, time),
+  ];
+}
+
+String formatSlotsDaysAndLegs(AppLocalizations l10n, List<ScheduleSlot> slots) {
+  final weekdays = [
+    for (final weekday in Weekday.values)
+      if (slots.any((slot) => slot.weekday == weekday)) weekday,
+  ];
+  final legs = summarizeSlots(slots);
+  final days = formatWeekdayList(l10n, weekdays);
+  return legs == null ? days : '$days · ${legsSummaryLabel(l10n, legs)}';
+}
+
+String formatStudentDetail(
+  AppLocalizations l10n,
+  RequestItem item, {
+  required int? ageInYears,
+}) {
+  final group = groupItemsBySchool([item]).single;
+  return [
+    if (ageInYears != null) l10n.dependentsAgeYears(ageInYears),
+    if (group.schoolName case final school?)
+      switch (formatSchoolShift(l10n, group)) {
+        final shift? => l10n.clientProposalsSchoolAndShift(school, shift),
+        null => school,
+      },
+  ].join(' · ');
 }

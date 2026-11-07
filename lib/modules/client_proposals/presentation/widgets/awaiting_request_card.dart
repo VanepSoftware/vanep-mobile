@@ -8,6 +8,7 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/propo
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_turn.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 
 class AwaitingRequestCard extends StatelessWidget {
   const AwaitingRequestCard({

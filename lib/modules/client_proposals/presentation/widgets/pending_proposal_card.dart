@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_installment_price.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -11,6 +10,8 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/cl
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_building_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/request_schools.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 
 class PendingProposalCard extends StatelessWidget {
   const PendingProposalCard({
@@ -97,45 +98,6 @@ class PendingProposalCard extends StatelessWidget {
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProposalTermsBox extends StatelessWidget {
-  const ProposalTermsBox({required this.lines, super.key});
-
-  final List<(IconData, String)> lines;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: VanepColors.surface,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (final (index, (icon, text)) in lines.indexed) ...[
-            if (index > 0) const SizedBox(height: 6),
-            Row(
-              children: [
-                Icon(icon, size: 17, color: VanepColors.textSecondary),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    text,
-                    style: VanepTypography.cardSubtitle.copyWith(
-                      color: VanepColors.textPrimary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
         ],
       ),
     );

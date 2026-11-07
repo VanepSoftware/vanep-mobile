@@ -1,6 +1,4 @@
-import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
-import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
@@ -9,51 +7,10 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/proposal_decline_reason.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/legs_summary.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/leg_times.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_comparison.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/request_schools.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
-
-String formatProposalPeriod(AppLocalizations l10n, Proposal proposal) {
-  return formatCalendarRange(l10n, proposal.startsOn, proposal.endsOn);
-}
-
-String formatStudentDetail(
-  AppLocalizations l10n,
-  ClientRequestItem item,
-  DateTime today,
-) {
-  final years = findAgeInYears(item.dependentBirthDate, today: today);
-  final group = groupItemsBySchool([item]).single;
-  return [
-    if (years != null) l10n.dependentsAgeYears(years),
-    if (group.schoolName case final school?)
-      switch (formatSchoolShift(l10n, group)) {
-        final shift? => l10n.clientProposalsSchoolAndShift(school, shift),
-        null => school,
-      },
-  ].join(' · ');
-}
-
-String formatWeekdayTime(
-  AppLocalizations l10n,
-  Weekday weekday,
-  ClockTime time,
-) {
-  return '${weekdayShortLabel(l10n, weekday)} · ${formatClockTime(time)}';
-}
-
-List<String> formatLegTimes(AppLocalizations l10n, LegTimes times) {
-  final shared = times.shared;
-  if (shared != null) return [formatClockTime(shared)];
-  return [
-    for (final MapEntry(key: weekday, value: time) in times.byDay.entries)
-      formatWeekdayTime(l10n, weekday, time),
-  ];
-}
 
 String comparisonFieldLabel(
   AppLocalizations l10n,
@@ -85,16 +42,6 @@ List<String> proposalDaysAndLegsLines(
 
 String formatProposalDaysAndLegs(AppLocalizations l10n, Proposal proposal) {
   return proposalDaysAndLegsLines(l10n, proposal).join(' / ');
-}
-
-String formatSlotsDaysAndLegs(AppLocalizations l10n, List<ScheduleSlot> slots) {
-  final weekdays = [
-    for (final weekday in Weekday.values)
-      if (slots.any((slot) => slot.weekday == weekday)) weekday,
-  ];
-  final legs = summarizeSlots(slots);
-  final days = formatWeekdayList(l10n, weekdays);
-  return legs == null ? days : '$days · ${legsSummaryLabel(l10n, legs)}';
 }
 
 List<String> proposalScheduleLines(AppLocalizations l10n, Proposal proposal) {
@@ -191,4 +138,16 @@ String declineReasonLabel(AppLocalizations l10n, ProposalDeclineReason reason) {
       l10n.proposalDeclineReasonNoLongerNeeded,
     ProposalDeclineReason.other => l10n.proposalDeclineReasonOther,
   };
+}
+
+String formatClientStudentDetail(
+  AppLocalizations l10n,
+  ClientRequestItem item,
+  DateTime today,
+) {
+  return formatStudentDetail(
+    l10n,
+    item,
+    ageInYears: findAgeInYears(item.dependentBirthDate, today: today),
+  );
 }

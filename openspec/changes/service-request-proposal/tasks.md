@@ -123,24 +123,24 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ### Peças comuns
 
-- [ ] 11.1 Mover do `client_proposals` para o `negotiations` as peças de leitura da proposta (`proposal_sections.dart`, `negotiation_blocks.dart`, estado vazio) e os formatadores que os dois lados usam (prazo, início, dias e trechos, horários por trecho, linha do aluno) (D7), sem mudar o responsável; os testes do responsável que mudam de import vão junto
+- [x] 11.1 Mover do `client_proposals` para o `negotiations` as peças de leitura da proposta (`proposal_sections.dart`, `negotiation_blocks.dart`, estado vazio) e os formatadores que os dois lados usam (prazo, início, dias e trechos, horários por trecho, linha do aluno) (D7), sem mudar o responsável; os testes do responsável que mudam de import vão junto
 
 ### Aba e lista (VAN-58)
 
-- [ ] 11.2 Testes primeiro para `driverNegotiationsOf` (pendentes e aguardando pela `driverTurnOf`, encerradas fora, próxima página) e o `DriverNegotiationsCubit` (abertas, puxar para atualizar, próxima página, falha). Depois criar o módulo `driver_proposals` com eles e o container, registrado no `main.dart`, até passarem
-- [ ] 11.3 Testes de widget primeiro para a aba (Negociações com a contagem, Contratos abre "Em breve") e a lista ("Maria · Theo e Alice", pedido novo, ajuste solicitado sem valor, aguardando com "R$ 340/mês · 12x", estado vazio). Depois implementar até passarem
-- [ ] 11.4 Trocar o `VanepComingSoon` da aba Propostas do `DriverShell` pela aba nova; conferir com o teste do `DriverShell`
+- [x] 11.2 Testes primeiro para `driverNegotiationsOf` (pendentes e aguardando pela `driverTurnOf`, encerradas fora, próxima página) e o `DriverNegotiationsCubit` (abertas, puxar para atualizar, próxima página, falha). Depois criar o módulo `driver_proposals` com eles e o container, registrado no `main.dart`, até passarem
+- [x] 11.3 Testes de widget primeiro para a aba (Negociações com a contagem, Contratos abre "Em breve") e a lista ("Maria · Theo e Alice", pedido novo, ajuste solicitado sem valor, aguardando com "R$ 340/mês · 12x", estado vazio). Depois implementar até passarem
+- [x] 11.4 Trocar o `VanepComingSoon` da aba Propostas do `DriverShell` pela aba nova; conferir com o teste do `DriverShell`
 
 ### Pedido de orçamento e recusa (VAN-59)
 
-- [ ] 11.5 Testes primeiro para o `DriverServiceRequestCubit` (carrega, 404 sai) e o `RequestDeclineCubit` (motivo opcional, até 500, 409 recarrega). Depois implementá-los até passarem
-- [ ] 11.6 Testes de widget primeiro para o pedido (alunos com primeiro nome e idade, trajeto pelo bairro, dias e trechos, mensagem, "Recusar" com a gaveta e "Conversar" abre a conversa do pedido). Depois implementar até passarem, com a rota da conversa do motorista no `app.dart`
+- [x] 11.5 Testes primeiro para o `DriverServiceRequestCubit` (carrega, 404 sai) e o `RequestDeclineCubit` (motivo opcional, até 500, 409 recarrega). Depois implementá-los até passarem
+- [x] 11.6 Testes de widget primeiro para o pedido (alunos com primeiro nome e idade, trajeto pelo bairro, dias e trechos, mensagem, "Recusar" com a gaveta e "Conversar" abre a conversa do pedido). Depois implementar até passarem, com a rota da conversa do motorista no `app.dart`
 
 ### Ajuste solicitado e proposta só leitura (VAN-61)
 
-- [ ] 11.7 Testes primeiro para `LoadDriverProposal`, `DriverProposalDetail` (ajuste pendente só na versão aberta) e o `DriverProposalCubit` (carrega, 404 sai). Depois implementá-los até passarem
-- [ ] 11.8 Testes de widget primeiro para o ajuste (card "AJUSTE SOLICITADO · <assunto>" com a hora, a versão contra o sugerido e a mensagem; card da versão com "R$ 340/mês · 12x" e o total; histórico; "Recusar"; "Conversar"; sem "Manter atual") e para a proposta só leitura (os mesmos dados que o responsável vê, alunos pelo primeiro nome, sem ações). Depois implementar até passarem
-- [ ] 11.9 Ligar os itens da lista ao pedido, ao ajuste e à proposta só leitura; conferir com o teste da lista. "Montar proposta" e "Nova versão" entram na fase 12
+- [x] 11.7 Testes primeiro para `LoadDriverProposal`, `DriverProposalDetail` (ajuste pendente só na versão aberta) e o `DriverProposalCubit` (carrega, 404 sai). Depois implementá-los até passarem
+- [x] 11.8 Testes de widget primeiro para o ajuste (card "AJUSTE SOLICITADO · <assunto>" com a hora, a versão contra o sugerido e a mensagem; card da versão com "R$ 340/mês · 12x" e o total; histórico; "Recusar"; "Conversar"; sem "Manter atual") e para a proposta só leitura (os mesmos dados que o responsável vê, alunos pelo primeiro nome, sem ações). Depois implementar até passarem
+- [x] 11.9 Ligar os itens da lista ao pedido, ao ajuste e à proposta só leitura; conferir com o teste da lista. "Montar proposta" e "Nova versão" entram na fase 12
 
 ### Fechamento
 

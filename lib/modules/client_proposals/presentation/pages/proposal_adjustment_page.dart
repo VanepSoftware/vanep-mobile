@@ -16,8 +16,6 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_state.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_choice_option.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_detail_sections.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_building_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
@@ -25,6 +23,8 @@ import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_fa
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_draft.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_field.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 
 class ProposalAdjustmentPage extends StatefulWidget {
   const ProposalAdjustmentPage({

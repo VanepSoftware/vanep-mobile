@@ -6,10 +6,10 @@ import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/proposal_detail_labels.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_detail_sections.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_comparison.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
 
 const comparisonArrowWidth = 32.0;
 

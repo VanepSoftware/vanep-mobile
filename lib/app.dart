@@ -54,6 +54,16 @@ import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/dri
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_state.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposal_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_service_request_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_negotiation_actions.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/request_decline_sheet.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
@@ -110,6 +120,9 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<ConversationsInboxCubit>(
                   create: (_) => getIt<ConversationsInboxCubit>(),
                 ),
+                BlocProvider<DriverNegotiationsCubit>(
+                  create: (_) => getIt<DriverNegotiationsCubit>(),
+                ),
               ],
               child: DriverShell(
                 profile: session.profile,
@@ -121,6 +134,12 @@ class AuthGate extends StatelessWidget {
                       conversation,
                       viewerSide: ConversationParticipant.driver,
                     ),
+                proposalsActions: DriverProposalsTabActions(
+                  onOpenRequest: (request) =>
+                      openDriverServiceRequest(context, request),
+                  onOpenProposal: (request) =>
+                      openDriverProposal(context, request),
+                ),
               ),
             ),
             _ => MultiBlocProvider(
@@ -463,6 +482,81 @@ Future<void> openClientNegotiationChat(
     conversationToken: conversationToken,
     counterpartName: request.driverName,
     viewerSide: ConversationParticipant.client,
+  );
+}
+
+DriverNegotiationActions driverNegotiationActions(BuildContext context) {
+  return DriverNegotiationActions(
+    onChat: (request) => openDriverNegotiationChat(context, request),
+    onDecline: (request) => showRequestDecline(context, request),
+  );
+}
+
+Future<void> openDriverServiceRequest(
+  BuildContext context,
+  DriverServiceRequest request,
+) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverServiceRequestCubit>(
+        create: (_) =>
+            getIt<DriverServiceRequestCubit>(param1: request.token)..load(),
+        child: DriverServiceRequestPage(
+          actions: driverNegotiationActions(context),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverProposal(
+  BuildContext context,
+  DriverServiceRequest request,
+) {
+  final proposalToken = request.currentProposal?.token;
+  if (proposalToken == null) return openDriverServiceRequest(context, request);
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverProposalCubit>(
+        create: (_) => getIt<DriverProposalCubit>(
+          param1: request.token,
+          param2: proposalToken,
+        )..load(),
+        child: DriverProposalPage(actions: driverNegotiationActions(context)),
+      ),
+    ),
+  );
+}
+
+Future<RequestDeclineOutcome?> showRequestDecline(
+  BuildContext context,
+  DriverServiceRequest request,
+) {
+  return showModalBottomSheet<RequestDeclineOutcome>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: VanepColors.card,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (_) => BlocProvider<RequestDeclineCubit>(
+      create: (_) => getIt<RequestDeclineCubit>(param1: request.token),
+      child: RequestDeclineSheet(request: request),
+    ),
+  );
+}
+
+Future<void> openDriverNegotiationChat(
+  BuildContext context,
+  DriverServiceRequest request,
+) async {
+  final conversationToken = request.conversationToken;
+  if (conversationToken == null) return;
+  await openConversationChat(
+    context,
+    conversationToken: conversationToken,
+    counterpartName: request.clientFirstName,
+    viewerSide: ConversationParticipant.driver,
   );
 }
 
