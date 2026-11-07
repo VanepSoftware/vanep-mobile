@@ -583,14 +583,14 @@
   "conversationLoadError": "Could not open the conversation.",
   "conversationRetry": "Try again",
   "conversationFailureNetwork": "No connection to the server. Try again.",
-  "conversationFailureDriverUnavailable": "This driver is no longer available.",
+  "conversationFailureNotFound": "This conversation is no longer available.",
   "conversationFailureRejected": "This message could not be sent.",
   "conversationFailureForbidden": "You are not part of this conversation.",
   "conversationFailureUnexpected": "Something went wrong. Try again.",
   "conversationsInboxTitle": "Messages",
   "conversationsInboxEmpty": "No conversations yet. When a client writes to you, it shows up here.",
   "conversationsInboxLoadError": "Could not load your conversations.",
-  "conversationsInboxEmptyClient": "No conversations yet. To talk to a driver, open their profile in Vans and tap “Chat with the driver”.",
+  "conversationsInboxEmptyClient": "No conversations yet. A conversation with a driver starts when you request a quote from them.",
   "clientHomeGoodMorning": "Good morning, {name}!",
   "@clientHomeGoodMorning": {
     "placeholders": {
@@ -1173,14 +1173,6 @@
   },
   "clientProposalsPendingTitle": "Pending",
   "clientProposalsAwaitingTitle": "Awaiting reply",
-  "clientProposalsNewOnVanep": "{gender, select, female{New on Vanep} other{New on Vanep}}",
-  "@clientProposalsNewOnVanep": {
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
   "clientProposalsForChild": "For {name}",
   "@clientProposalsForChild": {
     "placeholders": {
@@ -1200,7 +1192,6 @@
       }
     }
   },
-  "clientProposalsMondayToFriday": "Mon to Fri",
   "weekdayRangeMondayToFriday": "Mon to Fri",
   "clientProposalsStartingOn": "from {date}",
   "@clientProposalsStartingOn": {
@@ -1222,15 +1213,6 @@
     }
   },
   "clientProposalsFirstDayOfMonth": "1",
-  "clientProposalsPerMonth": "/mo",
-  "clientProposalsPreviousFee": "before {amount}",
-  "@clientProposalsPreviousFee": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
   "clientProposalsExpiresIn": "{count, plural, =0{Expires today} =1{Expires tomorrow} other{Expires in {count} days}}",
   "@clientProposalsExpiresIn": {
     "placeholders": {
@@ -1269,22 +1251,17 @@
     }
   },
   "clientProposalsCancelRequest": "Cancel request",
-  "clientProposalsSeeRequest": "See request",
-  "clientProposalsClosedSummary": "For {name} · {amount}/mo",
-  "@clientProposalsClosedSummary": {
+  "clientProposalsCancelTitle": "Cancel request?",
+  "clientProposalsCancelMessage": "The request to {driver} is closed and moves to Closed.",
+  "@clientProposalsCancelMessage": {
     "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "amount": {
+      "driver": {
         "type": "String"
       }
     }
   },
-  "clientProposalsOutcomeAccepted": "Accepted",
-  "clientProposalsOutcomeDeclined": "Declined",
-  "clientProposalsOutcomeExpired": "Expired",
-  "clientProposalsOutcomeCancelled": "Cancelled",
+  "clientProposalsCancelKeep": "Back",
+  "clientProposalsSeeRequest": "See request",
   "clientProposalsOpenCount": "{count, plural, =0{None open} other{{count} open}}",
   "@clientProposalsOpenCount": {
     "placeholders": {

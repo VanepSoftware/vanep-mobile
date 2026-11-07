@@ -6,6 +6,7 @@ import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
 import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
@@ -15,11 +16,13 @@ import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/client_proposals_page.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
@@ -95,7 +98,7 @@ class AuthGate extends StatelessWidget {
                 openServiceAreas: openDriverServiceAreas,
                 openMyVans: openDriverVans,
                 openConversationChat: (context, conversation) =>
-                    openConversationChat(
+                    openInboxConversation(
                       context,
                       conversation,
                       viewerSide: ConversationParticipant.driver,
@@ -128,7 +131,7 @@ class AuthGate extends StatelessWidget {
                 openDriverSearch: openDriverSearch,
                 openDriverProfile: openDriverProfile,
                 openConversationChat: (context, conversation) =>
-                    openConversationChat(
+                    openInboxConversation(
                       context,
                       conversation,
                       viewerSide: ConversationParticipant.client,
@@ -166,17 +169,32 @@ Future<void> openDriverSearch(BuildContext context) async {
   autocomplete.dispose();
 }
 
-Future<void> openClientProposals(BuildContext context) {
-  return Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) => BlocProvider<ClientProposalsCubit>(
-        create: (_) => getIt<ClientProposalsCubit>()..loadProposals(),
-        child: ClientProposalsPage(
+Route<void> clientProposalsRoute(BuildContext context) {
+  return MaterialPageRoute<void>(
+    builder: (_) => BlocProvider<ClientProposalsCubit>(
+      create: (_) => getIt<ClientProposalsCubit>()..loadProposals(),
+      child: ClientProposalsPage(
+        actions: ClientProposalsActions(
           onSearchVansTapped: () => openDriverSearch(context),
+          onSeeProposal: (_) => openComingSoonPage(
+            context,
+            title: AppLocalizations.of(context)!.clientProposalsSeeProposal,
+            message: AppLocalizations.of(context)!.comingSoon,
+          ),
+          onSeeRequest: (_) => openComingSoonPage(
+            context,
+            title: AppLocalizations.of(context)!.clientProposalsSeeRequest,
+            message: AppLocalizations.of(context)!.comingSoon,
+          ),
+          onChat: (request) => openClientNegotiationChat(context, request),
         ),
       ),
     ),
   );
+}
+
+Future<void> openClientProposals(BuildContext context) {
+  return Navigator.of(context).push(clientProposalsRoute(context));
 }
 
 Future<void> openDriverProfile(BuildContext context, String driverToken) {
@@ -185,37 +203,55 @@ Future<void> openDriverProfile(BuildContext context, String driverToken) {
       builder: (_) => BlocProvider<DriverProfileCubit>(
         create: (_) =>
             getIt<DriverProfileCubit>(param1: driverToken)..loadProfile(),
-        child: DriverProfilePage(
-          onChatTapped: (driverToken) => openDriverChat(context, driverToken),
+        child: const DriverProfilePage(),
+      ),
+    ),
+  );
+}
+
+Future<void> openInboxConversation(
+  BuildContext context,
+  Conversation conversation, {
+  required ConversationParticipant viewerSide,
+}) {
+  return openConversationChat(
+    context,
+    conversationToken: conversation.token,
+    counterpartName: conversationCounterpartName(conversation, viewerSide),
+    viewerSide: viewerSide,
+  );
+}
+
+Future<void> openConversationChat(
+  BuildContext context, {
+  required String conversationToken,
+  required String counterpartName,
+  required ConversationParticipant viewerSide,
+}) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<ChatCubit>(
+        create: (_) => getIt<ChatCubit>(param1: conversationToken)..start(),
+        child: ChatPage(
+          counterpartName: counterpartName,
+          viewerSide: viewerSide,
         ),
       ),
     ),
   );
 }
 
-Future<void> openConversationChat(
+Future<void> openClientNegotiationChat(
   BuildContext context,
-  Conversation conversation, {
-  required ConversationParticipant viewerSide,
-}) {
-  return Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) => BlocProvider<ChatCubit>(
-        create: (_) => getIt<ChatCubit>(param2: conversation)..start(),
-        child: ChatPage(viewerSide: viewerSide),
-      ),
-    ),
-  );
-}
-
-Future<void> openDriverChat(BuildContext context, String driverToken) {
-  return Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) => BlocProvider<ChatCubit>(
-        create: (_) => getIt<ChatCubit>(param1: driverToken)..start(),
-        child: const ChatPage(viewerSide: ConversationParticipant.client),
-      ),
-    ),
+  ClientServiceRequest request,
+) async {
+  final conversationToken = request.conversationToken;
+  if (conversationToken == null) return;
+  await openConversationChat(
+    context,
+    conversationToken: conversationToken,
+    counterpartName: request.driverName,
+    viewerSide: ConversationParticipant.client,
   );
 }
 

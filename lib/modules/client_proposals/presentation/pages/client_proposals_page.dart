@@ -3,13 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_segmented_control.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposals.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/awaiting_request_card.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/child_filter_button.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/child_filter_sheet.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/client_proposals_skeleton.dart';
@@ -17,12 +20,65 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/close
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/pending_proposal_card.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_building_blocks.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_empty_state.dart';
-import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/sent_request_card.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 
-class ClientProposalsPage extends StatelessWidget {
-  const ClientProposalsPage({required this.onSearchVansTapped, super.key});
+typedef ProposalRequestCallback = Future<void> Function(
+  ClientServiceRequest request,
+);
+
+const closedPrefetchExtent = 320.0;
+
+Future<void> confirmCancelRequest(
+  BuildContext context,
+  ClientServiceRequest request,
+) async {
+  final l10n = AppLocalizations.of(context)!;
+  final cubit = context.read<ClientProposalsCubit>();
+  final confirmed = await showVanepConfirmDialog(
+    context: context,
+    title: l10n.clientProposalsCancelTitle,
+    message: l10n.clientProposalsCancelMessage(request.driverName),
+    confirmLabel: l10n.clientProposalsCancelRequest,
+    cancelLabel: l10n.clientProposalsCancelKeep,
+    isDestructive: true,
+  );
+  if (confirmed) await cubit.cancelRequest(request.token);
+}
+
+class ClientProposalsActions {
+  const ClientProposalsActions({
+    required this.onSearchVansTapped,
+    required this.onSeeProposal,
+    required this.onSeeRequest,
+    required this.onChat,
+  });
 
   final VoidCallback onSearchVansTapped;
+  final ProposalRequestCallback onSeeProposal;
+  final ProposalRequestCallback onSeeRequest;
+  final ProposalRequestCallback onChat;
+
+  VoidCallback? chatWith(ClientServiceRequest request) {
+    if (request.conversationToken == null) return null;
+    return () => onChat(request);
+  }
+}
+
+Future<void> openAndReloadProposals(
+  BuildContext context,
+  ProposalRequestCallback open,
+  ClientServiceRequest request,
+) async {
+  final cubit = context.read<ClientProposalsCubit>();
+  await open(request);
+  await cubit.loadProposals();
+}
+
+class ClientProposalsPage extends StatelessWidget {
+  const ClientProposalsPage({required this.actions, super.key});
+
+  final ClientProposalsActions actions;
 
   @override
   Widget build(BuildContext context) {
@@ -37,33 +93,49 @@ class ClientProposalsPage extends StatelessWidget {
           IconButton(
             tooltip: l10n.clientProposalsSearchVans,
             icon: const Icon(Icons.search),
-            onPressed: onSearchVansTapped,
+            onPressed: actions.onSearchVansTapped,
           ),
         ],
       ),
-      body: BlocBuilder<ClientProposalsCubit, ClientProposalsState>(
+      body: BlocConsumer<ClientProposalsCubit, ClientProposalsState>(
+        listenWhen: (previous, current) =>
+            current.actionFailure != null &&
+            current.actionFailure != previous.actionFailure,
+        listener: (context, state) => VanepFeedback.showError(
+          context,
+          negotiationFailureMessage(l10n, state.actionFailure!),
+        ),
         builder: (context, state) {
           final proposals = state.proposals;
           return RefreshIndicator(
             onRefresh: cubit.loadProposals,
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
-              children: [
-                if (proposals != null)
-                  ClientProposalsContent(
-                    state: state,
-                    proposals: proposals,
-                    onSearchVansTapped: onSearchVansTapped,
-                  )
-                else if (state.hasLoadFailed)
-                  VanepErrorView(
-                    message: l10n.clientProposalsLoadError,
-                    retryLabel: l10n.clientProposalsRetry,
-                    onRetry: cubit.loadProposals,
-                  )
-                else
-                  const ClientProposalsSkeleton(),
-              ],
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (state.tab == ProposalsTab.closed &&
+                    notification.metrics.extentAfter < closedPrefetchExtent) {
+                  cubit.loadMoreClosed();
+                }
+                return false;
+              },
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+                children: [
+                  if (proposals != null)
+                    ClientProposalsContent(
+                      state: state,
+                      proposals: proposals,
+                      actions: actions,
+                    )
+                  else if (state.hasLoadFailed)
+                    VanepErrorView(
+                      message: l10n.clientProposalsLoadError,
+                      retryLabel: l10n.clientProposalsRetry,
+                      onRetry: cubit.loadProposals,
+                    )
+                  else
+                    const ClientProposalsSkeleton(),
+                ],
+              ),
             ),
           );
         },
@@ -76,13 +148,13 @@ class ClientProposalsContent extends StatelessWidget {
   const ClientProposalsContent({
     required this.state,
     required this.proposals,
-    required this.onSearchVansTapped,
+    required this.actions,
     super.key,
   });
 
   final ClientProposalsState state;
   final ClientProposals proposals;
-  final VoidCallback onSearchVansTapped;
+  final ClientProposalsActions actions;
 
   @override
   Widget build(BuildContext context) {
@@ -127,10 +199,14 @@ class ClientProposalsContent extends StatelessWidget {
           OpenProposalsTab(
             proposals: proposals,
             feed: feed,
-            onSearchVansTapped: onSearchVansTapped,
+            actions: actions,
+            cancellingRequestToken: state.cancellingRequestToken,
           )
         else
-          ClosedProposalsTab(feed: feed),
+          ClosedProposalsTab(
+            feed: feed,
+            isLoadingMore: state.isLoadingMoreClosed,
+          ),
       ],
     );
   }
@@ -169,13 +245,15 @@ class OpenProposalsTab extends StatelessWidget {
   const OpenProposalsTab({
     required this.proposals,
     required this.feed,
-    required this.onSearchVansTapped,
+    required this.actions,
+    this.cancellingRequestToken,
     super.key,
   });
 
   final ClientProposals proposals;
   final ProposalsFeed feed;
-  final VoidCallback onSearchVansTapped;
+  final ClientProposalsActions actions;
+  final String? cancellingRequestToken;
 
   @override
   Widget build(BuildContext context) {
@@ -193,12 +271,21 @@ class OpenProposalsTab extends StatelessWidget {
             title: l10n.clientProposalsEmptyOpenTitle,
             message: l10n.clientProposalsEmptyOpenMessage,
             actionLabel: l10n.clientHomeFindVanButton,
-            onAction: onSearchVansTapped,
+            onAction: actions.onSearchVansTapped,
           ),
         if (feed.pending.isNotEmpty) ...[
           ProposalsSectionTitle(title: l10n.clientProposalsPendingTitle),
-          for (final proposal in feed.pending) ...[
-            PendingProposalCard(proposal: proposal, now: now),
+          for (final request in feed.pending) ...[
+            PendingProposalCard(
+              request: request,
+              now: now,
+              onSeeProposal: () => openAndReloadProposals(
+                context,
+                actions.onSeeProposal,
+                request,
+              ),
+              onChat: actions.chatWith(request),
+            ),
             const SizedBox(height: proposalsCardSpacing),
           ],
         ],
@@ -209,7 +296,22 @@ class OpenProposalsTab extends StatelessWidget {
         if (feed.awaiting.isNotEmpty) ...[
           ProposalsSectionTitle(title: l10n.clientProposalsAwaitingTitle),
           for (final request in feed.awaiting) ...[
-            SentRequestCard(request: request, now: now),
+            AwaitingRequestCard(
+              request: request,
+              now: now,
+              isCancelling: cancellingRequestToken == request.token,
+              onCancel: () => confirmCancelRequest(context, request),
+              onSeeRequest: () => openAndReloadProposals(
+                context,
+                actions.onSeeRequest,
+                request,
+              ),
+              onSeeProposal: () => openAndReloadProposals(
+                context,
+                actions.onSeeProposal,
+                request,
+              ),
+            ),
             const SizedBox(height: proposalsCardSpacing),
           ],
         ],
@@ -219,14 +321,19 @@ class OpenProposalsTab extends StatelessWidget {
 }
 
 class ClosedProposalsTab extends StatelessWidget {
-  const ClosedProposalsTab({required this.feed, super.key});
+  const ClosedProposalsTab({
+    required this.feed,
+    this.isLoadingMore = false,
+    super.key,
+  });
 
   final ProposalsFeed feed;
+  final bool isLoadingMore;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    if (feed.closed.isEmpty) {
+    if (feed.closed.isEmpty && !isLoadingMore) {
       return ProposalsEmptyState(
         icon: Icons.inventory_2_outlined,
         title: l10n.clientProposalsEmptyClosedTitle,
@@ -236,10 +343,17 @@ class ClosedProposalsTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (final proposal in feed.closed) ...[
-          ClosedProposalCard(proposal: proposal),
+        for (final request in feed.closed) ...[
+          ClosedProposalCard(request: request),
           const SizedBox(height: proposalsCardSpacing),
         ],
+        if (isLoadingMore)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: CircularProgressIndicator(),
+            ),
+          ),
       ],
     );
   }

@@ -11,8 +11,7 @@ String conversationFailureLabel(
 ) {
   return switch (failure) {
     ConversationNetworkFailure() => l10n.conversationFailureNetwork,
-    ConversationDriverUnavailableFailure() =>
-      l10n.conversationFailureDriverUnavailable,
+    ConversationNotFoundFailure() => l10n.conversationFailureNotFound,
     ConversationMessageRejectedFailure() => l10n.conversationFailureRejected,
     ConversationForbiddenFailure() => l10n.conversationFailureForbidden,
     ConversationUnexpectedFailure() => l10n.conversationFailureUnexpected,

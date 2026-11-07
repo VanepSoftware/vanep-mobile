@@ -29,21 +29,11 @@ void main() {
     repository = ConversationRepositoryImpl(remote: remote, realtime: realtime);
   });
 
-  test('a successful open is returned as Ok', () async {
-    when(
-      () => remote.openConversation('driver-1'),
-    ).thenAnswer((_) async => testConversation);
-
-    final result = await repository.openConversation('driver-1');
-
-    expect(result.valueOrNull, testConversation);
-  });
-
   final failuresByStatus = <int?, ConversationFailure>{
     null: const ConversationNetworkFailure(),
     400: const ConversationMessageRejectedFailure(),
     403: const ConversationForbiddenFailure(),
-    404: const ConversationDriverUnavailableFailure(),
+    404: const ConversationNotFoundFailure(),
     500: const ConversationUnexpectedFailure(),
   };
   for (final entry in failuresByStatus.entries) {

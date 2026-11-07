@@ -2,91 +2,97 @@ import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
-import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
-import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
+import 'package:vanep_mobile/core/ui/vanep_installment_price.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposal.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposals_building_blocks.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/request_schools.dart';
 
 class PendingProposalCard extends StatelessWidget {
   const PendingProposalCard({
-    required this.proposal,
+    required this.request,
     required this.now,
+    required this.onSeeProposal,
+    this.onChat,
     super.key,
   });
 
-  final PendingProposal proposal;
+  final ClientServiceRequest request;
   final DateTime now;
+  final VoidCallback onSeeProposal;
+  final VoidCallback? onChat;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final driver = proposal.driver;
+    final proposal = request.currentProposal;
+    final onChat = this.onChat;
 
     return VanepCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ProposalPersonHeader(
-            avatar: VanepPersonAvatar(name: driver.name),
-            name: driver.name,
-            subtitle: formatDriverReputation(l10n, driver),
-            subtitleLeading: driver.isNewOnVanep
-                ? null
-                : const Icon(
-                    Icons.star_rounded,
-                    size: 15,
-                    color: VanepColors.warning,
-                  ),
-          ),
+          ProposalDriverHeader(request: request),
           const SizedBox(height: 14),
           ProposalTermsBox(
             lines: [
-              (
-                Icons.person_outline,
-                formatProposalChildAndSchool(l10n, proposal),
-              ),
-              (
-                Icons.event_repeat_outlined,
-                formatProposalSchedule(l10n, proposal),
-              ),
+              for (final group in groupItemsBySchool(request.items))
+                (Icons.person_outline, formatSchoolGroupLine(l10n, group)),
+              if (proposal != null)
+                (
+                  Icons.event_repeat_outlined,
+                  formatRequestedDaysAndStart(l10n, request, proposal.startsOn),
+                ),
             ],
           ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(child: ProposalPrice(proposal: proposal)),
-              const SizedBox(width: 12),
-              ProposalStatusText(
-                text: formatProposalExpiry(l10n, proposal.expiresAt, now),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: VanepSecondaryButton(
-                  label: l10n.clientProposalsChat,
-                  icon: Icons.chat_bubble_outline,
-                  onPressed: () => openUnavailableProposalAction(
-                    context,
-                    l10n.clientProposalsChat,
+          if (proposal != null) ...[
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: VanepInstallmentPrice(
+                    amountCents: proposal.installmentAmountCents,
+                    installments: proposal.installments,
+                    amountStyle: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: VanepColors.textPrimary,
+                    ),
+                    countStyle: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: VanepColors.textSecondary,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
+                const SizedBox(width: 12),
+                ProposalStatusText(
+                  text: formatProposalExpiry(l10n, proposal.validUntil, now),
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              if (onChat != null) ...[
+                Expanded(
+                  child: VanepSecondaryButton(
+                    label: l10n.clientProposalsChat,
+                    icon: Icons.chat_bubble_outline,
+                    onPressed: onChat,
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
               Expanded(
                 child: VanepPrimaryButton(
                   label: l10n.clientProposalsSeeProposal,
-                  onPressed: () => openUnavailableProposalAction(
-                    context,
-                    l10n.clientProposalsSeeProposal,
-                  ),
+                  onPressed: onSeeProposal,
                 ),
               ),
             ],
@@ -132,48 +138,6 @@ class ProposalTermsBox extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-}
-
-class ProposalPrice extends StatelessWidget {
-  const ProposalPrice({required this.proposal, super.key});
-
-  final PendingProposal proposal;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final previousFee = proposal.previousMonthlyFeeCents;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: formatMoney(l10n, proposal.monthlyFeeCents),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: VanepColors.textPrimary,
-                ),
-              ),
-              TextSpan(
-                text: l10n.clientProposalsPerMonth,
-                style: VanepTypography.cardSubtitle.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (previousFee != null)
-          Text(
-            l10n.clientProposalsPreviousFee(formatMoney(l10n, previousFee)),
-            style: VanepTypography.cardSubtitle.copyWith(fontSize: 12),
-          ),
-      ],
     );
   }
 }
