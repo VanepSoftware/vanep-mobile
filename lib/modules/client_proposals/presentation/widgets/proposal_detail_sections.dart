@@ -112,16 +112,10 @@ class DetailSection extends StatelessWidget {
 }
 
 class DetailInfoRow extends StatelessWidget {
-  const DetailInfoRow({
-    required this.label,
-    required this.values,
-    this.maxLines,
-    super.key,
-  });
+  const DetailInfoRow({required this.label, required this.values, super.key});
 
   final String label;
   final List<String> values;
-  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +134,6 @@ class DetailInfoRow extends StatelessWidget {
                   Text(
                     value,
                     textAlign: TextAlign.end,
-                    maxLines: maxLines,
-                    overflow: maxLines == null ? null : TextOverflow.ellipsis,
                     style: VanepTypography.cardSubtitle.copyWith(
                       color: VanepColors.textPrimary,
                       fontWeight: FontWeight.w600,

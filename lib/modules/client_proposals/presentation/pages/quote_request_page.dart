@@ -395,33 +395,127 @@ class QuoteRouteSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (final student in students) ...[
+          for (final (index, student) in students.indexed) ...[
+            if (index > 0) const SizedBox(height: 20),
             if (showsNames)
-              Text(
-                joinFirstNames(l10n, [student.dependent.name]),
-                style: VanepTypography.fieldLabel,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  joinFirstNames(l10n, [student.dependent.name]),
+                  style: VanepTypography.fieldLabel,
+                ),
               ),
-            if (student.dependent.address case final address?)
-              DetailInfoRow(
-                label: l10n.quoteRequestPickup,
-                maxLines: 1,
-                values: [
-                  postalAddressDisplayFields(
-                    street: address.street,
-                    number: address.number,
-                    complement: address.complement,
-                    neighborhood: address.neighborhood,
-                    cityName: address.cityName,
-                    uf: address.stateUf,
-                  ).street,
+            ...buildStops(l10n, student.dependent),
+          ],
+        ],
+      ),
+    );
+  }
+
+  List<Widget> buildStops(AppLocalizations l10n, Dependent dependent) {
+    final pickup = dependent.address;
+    final school = dependent.school;
+    return [
+      if (pickup != null)
+        QuoteRouteStop(
+          icon: Icons.home_outlined,
+          label: l10n.quoteRequestPickup,
+          title: displayAddress(pickup).street,
+          details: displayAddress(pickup).details,
+          isLast: school == null,
+        ),
+      if (school != null)
+        QuoteRouteStop(
+          icon: Icons.school_outlined,
+          label: l10n.quoteRequestDestination,
+          title: school.name,
+          details: switch (school.address) {
+            final address? => displayAddress(address).details,
+            null => '',
+          },
+          isLast: true,
+        ),
+    ];
+  }
+
+  PostalAddressDisplayFields displayAddress(DependentAddress address) {
+    return postalAddressDisplayFields(
+      street: address.street,
+      number: address.number,
+      complement: address.complement,
+      neighborhood: address.neighborhood,
+      cityName: address.cityName,
+      uf: address.stateUf,
+    );
+  }
+}
+
+class QuoteRouteStop extends StatelessWidget {
+  const QuoteRouteStop({
+    required this.icon,
+    required this.label,
+    required this.title,
+    required this.details,
+    required this.isLast,
+    super.key,
+  });
+
+  final IconData icon;
+  final String label;
+  final String title;
+  final String details;
+  final bool isLast;
+
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Column(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: const BoxDecoration(
+                  color: VanepColors.actionSurface,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 18, color: VanepColors.action),
+              ),
+              if (!isLast)
+                Expanded(
+                  child: Container(
+                    width: 2,
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    color: VanepColors.divider,
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: VanepTypography.cardSubtitle.copyWith(
+                      color: VanepColors.textMuted,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(title, style: VanepTypography.fieldLabel),
+                  if (details.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(details, style: VanepTypography.cardSubtitle),
+                  ],
                 ],
               ),
-            if (student.dependent.school case final school?)
-              DetailInfoRow(
-                label: l10n.quoteRequestDestination,
-                values: [school.name],
-              ),
-          ],
+            ),
+          ),
         ],
       ),
     );

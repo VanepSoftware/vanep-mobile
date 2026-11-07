@@ -52,7 +52,7 @@ Para cada aluno marcado, a tela SHALL mostrar uma grade "Dias e trechos" com uma
 
 ### Requirement: Trajeto, início e mensagem
 
-A tela SHALL mostrar o embarque (endereço do dependente, numa linha só) e o destino (escola dele), sem aviso de privacidade. O início desejado SHALL ser obrigatório e de hoje em diante. A mensagem SHALL ser opcional, com até 1000 caracteres.
+A tela SHALL mostrar o trajeto como dois pontos ligados por uma linha: o embarque (casa, com o endereço do dependente inteiro, quebrando linha quando não cabe, sem reticências, e o bairro e a cidade abaixo) e o destino (escola, com o nome dela e o bairro e a cidade abaixo) e o destino (escola dele), sem aviso de privacidade. O início desejado SHALL ser obrigatório e de hoje em diante. A mensagem SHALL ser opcional, com até 1000 caracteres.
 
 #### Scenario: Data no passado
 
