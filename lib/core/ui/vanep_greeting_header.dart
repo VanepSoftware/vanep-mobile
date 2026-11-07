@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
-
-String firstNameOf(String value) {
-  final trimmed = value.trim();
-  if (trimmed.isEmpty) return trimmed;
-  return trimmed.split(RegExp(r'\s+')).first;
-}
+import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 
 class VanepGreetingHeader extends StatelessWidget {
   const VanepGreetingHeader({

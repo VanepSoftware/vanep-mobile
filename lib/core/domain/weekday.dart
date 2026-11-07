@@ -18,3 +18,11 @@ enum Weekday {
 
   static String? toApi(Weekday? day) => day?.name.toUpperCase();
 }
+
+const weekdaysMondayToFriday = [
+  Weekday.monday,
+  Weekday.tuesday,
+  Weekday.wednesday,
+  Weekday.thursday,
+  Weekday.friday,
+];

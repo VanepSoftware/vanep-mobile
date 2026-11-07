@@ -11,6 +11,7 @@ class VanepSecondaryButton extends StatelessWidget {
     this.icon,
     this.leading,
     this.onBrand = false,
+    this.isDestructive = false,
     super.key,
   }) : assert(icon == null || leading == null);
 
@@ -24,6 +25,8 @@ class VanepSecondaryButton extends StatelessWidget {
 
   final bool onBrand;
 
+  final bool isDestructive;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -34,14 +37,20 @@ class VanepSecondaryButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: onBrand
               ? VanepColors.onBrand
-              : VanepColors.textPrimary,
+              : (isDestructive
+                    ? VanepColors.dangerText
+                    : VanepColors.textPrimary),
           disabledForegroundColor: VanepColors.textMuted,
           side: onBrand
               ? BorderSide.none
-              : const BorderSide(color: VanepColors.inputBorder),
+              : BorderSide(
+                  color: isDestructive
+                      ? VanepColors.dangerBorder
+                      : VanepColors.inputBorder,
+                ),
           backgroundColor: onBrand
               ? VanepColors.onBrand.withValues(alpha: 0.14)
-              : VanepColors.card,
+              : (isDestructive ? VanepColors.dangerSurface : VanepColors.card),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

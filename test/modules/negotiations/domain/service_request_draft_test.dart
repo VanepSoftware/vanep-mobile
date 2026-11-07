@@ -3,8 +3,6 @@ import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_draft.dart';
 
-import '../negotiations_fixtures.dart';
-
 final today = DateTime(2026, 10, 1);
 
 ServiceRequestDraft draftForBia() {

@@ -20,6 +20,8 @@ class VanepTextField extends StatefulWidget {
     this.autofillHints,
     this.inputFormatters,
     this.maxLength,
+    this.minLines,
+    this.maxLines = 1,
     this.obscureText = false,
     this.readOnly = false,
     this.isLoading = false,
@@ -44,6 +46,8 @@ class VanepTextField extends StatefulWidget {
   final Iterable<String>? autofillHints;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
+  final int? minLines;
+  final int maxLines;
   final bool obscureText;
   final bool readOnly;
   final bool isLoading;
@@ -81,6 +85,8 @@ class _VanepTextFieldState extends State<VanepTextField> {
           autofillHints: widget.autofillHints,
           inputFormatters: widget.inputFormatters,
           maxLength: widget.maxLength,
+          minLines: widget.minLines,
+          maxLines: widget.maxLines,
           obscureText: _textHidden,
           readOnly: widget.readOnly,
           onTap: widget.onTap,
