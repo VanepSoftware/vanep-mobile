@@ -472,7 +472,6 @@
   "driverProfileVanPhotos": "Van photos",
   "driverProfileNoVan": "This driver has not registered a van yet.",
   "driverProfileAbout": "About",
-  "driverProfileChatButton": "Chat with the driver",
   "driverProfileNotFound": "This driver is no longer available.",
   "driverProfileLoadError": "Could not load this driver. Try again.",
   "photoSourceGallery": "Choose from gallery",
@@ -576,7 +575,6 @@
   "assistantSignupErrorPasswordRequired": "Create a password.",
   "assistantSignupErrorPasswordMismatch": "Passwords do not match.",
   "assistantSignupErrorTermsRequired": "You must accept the terms of service to continue.",
-  "conversationTitle": "Chat",
   "conversationInputHint": "Write a message",
   "conversationSend": "Send",
   "conversationEmpty": "No messages yet. Say hi!",
@@ -1518,6 +1516,7 @@
   },
   "negotiationHistoryAccepted": "Proposal accepted",
   "negotiationHistoryDeclined": "Proposal declined",
+  "negotiationHistoryCurrent": "Current version",
   "weekLegsCellLabel": "{day}, {leg}",
   "@weekLegsCellLabel": {
     "placeholders": {
@@ -1529,6 +1528,9 @@
       }
     }
   },
+  "proposalDetailTitle": "Proposal",
+  "proposalDetailRequestTitle": "Request",
+  "proposalDetailLoadError": "Could not load the negotiation.",
   "proposalDetailVersion": "Version {version}",
   "@proposalDetailVersion": {
     "placeholders": {
@@ -1537,6 +1539,161 @@
       }
     }
   },
+  "proposalDetailExpiresOn": "Expires on {date}",
+  "@proposalDetailExpiresOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailTotal": "{amount} in total",
+  "@proposalDetailTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailStudentsTitle": "{count, plural, =1{Student} other{Students}}",
+  "@proposalDetailStudentsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailDaysTitle": "Days and legs",
+  "proposalDetailScheduleTitle": "Times",
+  "proposalDetailPickupAtHome": "Pickup at home",
+  "proposalDetailLeaveSchool": "Leaving school",
+  "proposalDetailConditionsTitle": "Terms",
+  "proposalDetailPeriod": "Contract period",
+  "proposalDetailDueDay": "Due date",
+  "proposalDetailDueDayValue": "Day {day}",
+  "@proposalDetailDueDayValue": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailEnrollmentFee": "Reservation fee",
+  "proposalDetailAdjustment": "Price adjustment",
+  "proposalDetailCancellation": "Cancellation",
+  "proposalDetailMessageTitle": "Message from the driver",
+  "proposalDetailHistoryTitle": "History",
+  "proposalDetailContractNotice": "If you accept, the contract is generated for review and signature.",
+  "proposalDetailAccept": "Accept",
+  "proposalDetailSuperseded": "This version was replaced by a newer one.",
+  "proposalDetailSeeCurrent": "See the current version",
+  "proposalDetailClosed": "Status: {outcome}",
+  "@proposalDetailClosed": {
+    "placeholders": {
+      "outcome": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailDesiredStart": "Desired start",
+  "proposalDetailYourMessage": "Your message",
+  "proposalDetailAnswerBy": "Reply deadline",
+  "proposalDetailCompare": "Compare",
+  "proposalDetailCheaperBy": "{amount} less in total",
+  "@proposalDetailCheaperBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailPricierBy": "{amount} more in total",
+  "@proposalDetailPricierBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailInstallmentsChanged": "From {before} to {after} installments",
+  "@proposalDetailInstallmentsChanged": {
+    "placeholders": {
+      "before": {
+        "type": "int"
+      },
+      "after": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComparisonTitle": "Compare versions",
+  "proposalComparisonVersions": "Version {previous} → version {current}",
+  "@proposalComparisonVersions": {
+    "placeholders": {
+      "previous": {
+        "type": "int"
+      },
+      "current": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComparisonNoChanges": "Nothing changed between the two versions.",
+  "proposalComparisonNoFee": "No fee",
+  "proposalComparisonNoVehicle": "No van given",
+  "proposalComparisonAmount": "Price",
+  "proposalComparisonInstallments": "Installments",
+  "proposalComparisonInstallmentsValue": "{count, plural, =1{1 installment} other{{count} installments}}",
+  "@proposalComparisonInstallmentsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComparisonVehicle": "Vehicle",
+  "proposalAcceptedTitle": "Proposal accepted",
+  "proposalAcceptedContract": "Contract for {names} with {driver} generated for signature.",
+  "@proposalAcceptedContract": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAcceptedSummaryTitle": "Summary",
+  "proposalAcceptedDays": "Days",
+  "proposalAcceptedNextStepsTitle": "Next steps",
+  "proposalAcceptedStepAccepted": "Proposal accepted",
+  "proposalAcceptedStepYourSignature": "Your signature",
+  "proposalAcceptedStepDriverSignature": "Driver's signature",
+  "proposalAcceptedStepTripsStart": "Trips start",
+  "proposalAcceptedOtherNegotiations": "When you sign the contract, the other negotiations for {names} are closed.",
+  "@proposalAcceptedOtherNegotiations": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAcceptedReviewAndSign": "Review and sign contract",
+  "proposalAcceptedSignLater": "Sign later",
+  "proposalAcceptConfirmTitle": "Accept the proposal?",
+  "proposalAcceptConfirmMessage": "The contract for {names} with {driver} is generated for review and signature.",
+  "@proposalAcceptConfirmMessage": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalConfirmBack": "Back",
   "calendarDateRange": "{start} to {end}",
   "@calendarDateRange": {
     "placeholders": {
@@ -1556,5 +1713,13 @@
       }
     }
   },
-  "installmentPriceUpfront": "upfront"
+  "installmentPriceUpfront": "upfront",
+  "installmentsCount": "{count}x",
+  "@installmentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
