@@ -115,4 +115,21 @@ void main() {
       toApi: OperationShift.toApi,
     );
   });
+
+  test('the open and the closed statuses split every status', () {
+    expect(openServiceRequestStatuses, {
+      ServiceRequestStatus.open,
+      ServiceRequestStatus.answered,
+    });
+    expect(closedServiceRequestStatuses, {
+      ServiceRequestStatus.converted,
+      ServiceRequestStatus.declined,
+      ServiceRequestStatus.expired,
+      ServiceRequestStatus.withdrawn,
+    });
+    expect({
+      ...openServiceRequestStatuses,
+      ...closedServiceRequestStatuses,
+    }, ServiceRequestStatus.values.toSet());
+  });
 }

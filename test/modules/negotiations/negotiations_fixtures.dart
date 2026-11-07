@@ -186,6 +186,112 @@ class TestDriverServiceRequest implements DriverServiceRequest {
   final DateTime updatedAt;
 }
 
+class TestClientRequestItem implements ClientRequestItem {
+  TestClientRequestItem({
+    this.dependentToken = 'dep-theo',
+    this.dependentName = 'Theo Souza',
+    this.dependentBirthDate = '2017-03-22',
+    this.schoolName = 'Colégio Delta',
+    this.pickupCityName = 'Brasília',
+    this.pickupStateUf = 'DF',
+    this.pickupNeighborhood = 'Taguatinga',
+    List<RequestedDay>? days,
+  }) : days = days ?? roundTripOn(weekdaysMondayToFriday);
+
+  @override
+  final String dependentToken;
+
+  @override
+  final String dependentName;
+
+  @override
+  final String? dependentBirthDate;
+
+  @override
+  final String? schoolName;
+
+  @override
+  final String? pickupCityName;
+
+  @override
+  final String? pickupStateUf;
+
+  @override
+  final String? pickupNeighborhood;
+
+  @override
+  final List<RequestedDay> days;
+}
+
+class TestClientServiceRequest implements ClientServiceRequest {
+  TestClientServiceRequest({
+    this.token = 'request-1',
+    this.clientDriverToken = 'link-1',
+    this.conversationToken = 'conversation-1',
+    this.status = ServiceRequestStatus.open,
+    DateTime? desiredStartDate,
+    this.notes,
+    this.declineReason,
+    DateTime? expiresAt,
+    this.currentProposal,
+    this.driverToken = 'driver-carlos',
+    this.driverName = 'Carlos Souza',
+    this.driverRating = 4.8,
+    List<ClientRequestItem>? items,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) : desiredStartDate = desiredStartDate ?? DateTime(2027, 2, 1),
+       expiresAt = expiresAt ?? DateTime.utc(2026, 10, 4, 12),
+       items = items ?? [TestClientRequestItem()],
+       createdAt = createdAt ?? requestCreatedAt,
+       updatedAt = updatedAt ?? requestCreatedAt;
+
+  @override
+  final String token;
+
+  @override
+  final String clientDriverToken;
+
+  @override
+  final String? conversationToken;
+
+  @override
+  final ServiceRequestStatus status;
+
+  @override
+  final DateTime desiredStartDate;
+
+  @override
+  final String? notes;
+
+  @override
+  final String? declineReason;
+
+  @override
+  final DateTime expiresAt;
+
+  @override
+  final ProposalSummary? currentProposal;
+
+  @override
+  final String driverToken;
+
+  @override
+  final String driverName;
+
+  @override
+  final double? driverRating;
+
+  @override
+  final List<ClientRequestItem> items;
+
+  @override
+  final DateTime createdAt;
+
+  @override
+  final DateTime updatedAt;
+}
+
 class TestScheduleSlot implements ScheduleSlot {
   const TestScheduleSlot({
     required this.weekday,

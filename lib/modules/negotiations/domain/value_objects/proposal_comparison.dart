@@ -1,4 +1,8 @@
+import 'package:equatable/equatable.dart';
+
+import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/weekday_leg.dart';
 
@@ -56,6 +60,44 @@ bool hasFieldChanged(
   };
 }
 
+class PriceChange extends Equatable {
+  const PriceChange({
+    required this.totalDifferenceCents,
+    required this.previousInstallments,
+    required this.currentInstallments,
+  });
+
+  final int totalDifferenceCents;
+
+  final int previousInstallments;
+
+  final int currentInstallments;
+
+  bool get hasTotalChanged => totalDifferenceCents != 0;
+
+  bool get isCheaper => totalDifferenceCents < 0;
+
+  bool get hasInstallmentsChanged =>
+      previousInstallments != currentInstallments;
+
+  bool get isEmpty => !hasTotalChanged && !hasInstallmentsChanged;
+
+  @override
+  List<Object?> get props => [
+    totalDifferenceCents,
+    previousInstallments,
+    currentInstallments,
+  ];
+}
+
+PriceChange comparePrices(Proposal previous, Proposal current) {
+  return PriceChange(
+    totalDifferenceCents: current.totalAmountCents - previous.totalAmountCents,
+    previousInstallments: previous.installments,
+    currentInstallments: current.installments,
+  );
+}
+
 bool hasAmountChanged(Proposal previous, Proposal current) {
   return previous.totalAmountCents != current.totalAmountCents ||
       previous.installmentAmountCents != current.installmentAmountCents;
@@ -70,11 +112,111 @@ Map<DependentSlot, ClockTime> findTimesByDependentSlot(Proposal proposal) {
 }
 
 bool hasScheduleChanged(Proposal previous, Proposal current) {
-  final before = findTimesByDependentSlot(previous);
-  final after = findTimesByDependentSlot(current);
-  return before.keys.any(
-    (key) => after.containsKey(key) && after[key] != before[key],
-  );
+  return findScheduleChanges(previous, current).isNotEmpty;
+}
+
+typedef TimeChange = (ClockTime before, ClockTime after);
+
+class ScheduleChange extends Equatable {
+  const ScheduleChange({
+    required this.dependentFirstNames,
+    required this.leg,
+    required this.weekdays,
+    required this.before,
+    required this.after,
+  });
+
+  final List<String> dependentFirstNames;
+
+  final RouteLeg leg;
+
+  final List<Weekday> weekdays;
+
+  final ClockTime before;
+
+  final ClockTime after;
+
+  bool isSameChangeAs(ScheduleChange other) {
+    return leg == other.leg &&
+        before == other.before &&
+        after == other.after &&
+        haveSameWeekdays(weekdays, other.weekdays);
+  }
+
+  ScheduleChange withDependent(String firstName) {
+    return ScheduleChange(
+      dependentFirstNames: [...dependentFirstNames, firstName],
+      leg: leg,
+      weekdays: weekdays,
+      before: before,
+      after: after,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    dependentFirstNames,
+    leg,
+    weekdays,
+    before,
+    after,
+  ];
+}
+
+bool haveSameWeekdays(List<Weekday> first, List<Weekday> second) {
+  if (first.length != second.length) return false;
+  for (var index = 0; index < first.length; index++) {
+    if (first[index] != second[index]) return false;
+  }
+  return true;
+}
+
+Map<TimeChange, List<Weekday>> findLegChangesOfItem(
+  ProposalItem item,
+  RouteLeg leg,
+  Map<DependentSlot, ClockTime> previousTimes,
+) {
+  final weekdaysByChange = <TimeChange, List<Weekday>>{};
+  for (final weekday in Weekday.values) {
+    final slot = item.slots.where(
+      (slot) => slot.weekday == weekday && slot.leg == leg,
+    );
+    if (slot.isEmpty) continue;
+    final before = previousTimes[(item.dependentToken, (weekday, leg))];
+    final after = slot.first.pickupTime;
+    if (before == null || before == after) continue;
+    weekdaysByChange.putIfAbsent((before, after), () => []).add(weekday);
+  }
+  return weekdaysByChange;
+}
+
+List<ScheduleChange> findScheduleChanges(Proposal previous, Proposal current) {
+  final previousTimes = findTimesByDependentSlot(previous);
+  final changes = <ScheduleChange>[];
+  for (final leg in RouteLeg.values) {
+    for (final item in current.items) {
+      final legChanges = findLegChangesOfItem(item, leg, previousTimes);
+      for (final MapEntry(key: (before, after), value: weekdays)
+          in legChanges.entries) {
+        final change = ScheduleChange(
+          dependentFirstNames: [item.dependentFirstName],
+          leg: leg,
+          weekdays: weekdays,
+          before: before,
+          after: after,
+        );
+        final index = changes.indexWhere(change.isSameChangeAs);
+        if (index < 0) {
+          changes.add(change);
+        } else {
+          changes[index] = changes[index].withDependent(
+            item.dependentFirstName,
+          );
+        }
+      }
+    }
+  }
+  return changes;
 }
 
 bool haveSameKeys<K, V>(Map<K, V> first, Map<K, V> second) {
