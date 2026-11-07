@@ -64,7 +64,7 @@ Os valores viram `int` em centavos na borda (DTO), como o `formatMoney` já espe
 
 ### D4. `client_proposals` reescrito sobre `negotiations`
 
-O `ClientProposalsRepository`, os datasources de cenário, o `EmptyProposalsDataSource` e os value objects do mock saem (R43). O cubit da lista passa a usar os use cases de `negotiations` (`ListMyServiceRequests` com os status de cada aba, `WithdrawServiceRequest`) e o `FindMyDependents`, que já alimentava o filtro. O agrupamento sai de `clientTurnOf` (D2). O feed guarda as negociações abertas (uma página, porque são no máximo 5) e as encerradas paginadas. O filtro casa um filho com qualquer item da negociação.
+O `ClientProposalsRepository`, os datasources de cenário, o `EmptyProposalsDataSource` e os value objects do mock saem (R43). O cubit da lista passa a usar os use cases de `negotiations` (`ListClientServiceRequests` com os status de cada aba, `WithdrawServiceRequest`) e o `FindMyDependents`, que já alimentava o filtro. O agrupamento sai de `clientTurnOf` (D2). O feed guarda as negociações abertas (uma página, porque são no máximo 5) e as encerradas paginadas. O filtro casa um filho com qualquer item da negociação.
 
 Ficam e são ajustados: a gaveta do filtro, o botão de filtro, o `VanepSegmentedControl`, o skeleton, o estado vazio. Os três cards são refeitos: vários filhos, nota sem veículo, parcelas, sem "antes".
 
@@ -123,9 +123,9 @@ O `ChatPage` ganha a faixa da proposta vigente e os cartões da negociação, nu
 
 | Tela | Cubit | Usa |
 |---|---|---|
-| Negociações | `DriverNegotiationsCubit` | `ListMyServiceRequests` (motorista, `OPEN,ANSWERED`) e `driverTurnOf` |
-| Pedido | `DriverServiceRequestCubit` | `FindServiceRequest`, `DeclineServiceRequest` |
-| Ajuste e proposta só leitura | `DriverProposalCubit` | `FindProposal`, `ListProposalVersions`, `buildNegotiationHistory` |
+| Negociações | `DriverNegotiationsCubit` | `ListDriverServiceRequests` (`OPEN,ANSWERED`) e `driverTurnOf` |
+| Pedido | `DriverServiceRequestCubit` | `FindDriverServiceRequest`, `DeclineServiceRequest` |
+| Ajuste e proposta só leitura | `DriverProposalCubit` | `FindDriverProposal`, `ListDriverProposalVersions`, `buildNegotiationHistory` |
 | Montar proposta | `ProposalComposerCubit` | `ListMyVans` (`driver_vans`), `ProposalDraft`, `deriveOperationShift`, `previewInstallmentAmount`, `SendProposal` |
 
 O `DriverShell` troca o `VanepComingSoon` pela aba. O `ProposalDraft` nasce vazio a partir do pedido (dias e trechos pedidos, início desejado, validade 7, reajuste "IPCA na renovação" e cancelamento "aviso de 30 dias + 10%" como no canvas) ou preenchido a partir de uma `Proposal` (nova versão), já com a van da versão anterior pelo `token` da visão do motorista; se essa van não está mais entre as do `ListMyVans`, o seletor pede outra. O rascunho só deixa ligar trechos que a família pediu, a mesma regra que o back aplica no envio (`422 proposal.slots.not_requested`).
