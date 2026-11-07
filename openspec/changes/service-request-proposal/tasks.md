@@ -97,16 +97,16 @@ As branches ficam empilhadas na ordem dos números. As fases 1 e 2 seguem a R20 
 
 ### Conversa (VAN-44)
 
-- [ ] 9.1 Testes primeiro para o `NegotiationTimelineCubit`: lê a negociação mais recente da conversa pela lista filtrada por `conversationToken` (primeiro item); sem negociação (conversa antiga) → nada; carrega a cadeia de versões; recarrega depois de uma ação; falha na primeira leitura mostra a faixa com "Tentar novamente". E para a mistura de mensagens e eventos por data com separador por dia. Depois implementar até passarem
-- [ ] 9.2 Testes de widget primeiro para a conversa: faixa da proposta vigente, cartões do pedido (embarque só com o bairro), das versões ("Substituída" e a bolinha azul) e do ajuste, o aviso sobre acordos, "Ver proposta", "Aceitar" e o botão de ajuste, conversa sem negociação igual a hoje. Depois implementar até passarem
-- [ ] 9.3 Ligar as ações dos cartões às telas do `client_proposals` por callback do `app.dart`; conferir com o teste do `ChatPage`
+- [x] 9.1 Testes primeiro para o `NegotiationTimelineCubit`: lê a negociação mais recente da conversa pela lista filtrada por `conversationToken` (primeiro item); sem negociação (conversa antiga) → nada; carrega a cadeia de versões; recarrega depois de uma ação; falha na primeira leitura mostra a faixa com "Tentar novamente". E para a mistura de mensagens e eventos por data com separador por dia. Depois implementar até passarem
+- [x] 9.2 Testes de widget primeiro para a conversa: faixa da proposta vigente, cartões do pedido (embarque só com o bairro), das versões ("Substituída" e a bolinha azul) e do ajuste, o aviso sobre acordos, "Ver proposta", "Aceitar" e o botão de ajuste, conversa sem negociação igual a hoje. Depois implementar até passarem
+- [x] 9.3 Ligar as ações dos cartões às telas do `client_proposals` por callback do `app.dart`; conferir com o teste do `ChatPage`
 
 ### Início (VAN-41)
 
-- [ ] 9.4 Testes primeiro para `FindNegotiationHighlights`: proposta nova só na vez do responsável; ajuste pedido não vira item; expirado nos últimos 7 dias entra e o de 8 dias não; contagem e filhos das abertas; falha → nenhum item. Depois implementá-lo até passarem
-- [ ] 9.5 Testes primeiro para o `LoadClientHome` e o `ResolveSectionWithoutVan` com os itens reais junto do cenário (prioridade e limite de 3 mantidos; `NegotiatingSection` pela contagem real). Depois ajustar os dois e o `NewProposalItem` (D6) até passarem
-- [ ] 9.6 Tirar do `ScenarioDailyOverviewDataSource` os itens de proposta nova e de pedido expirado e a contagem de negociações, e atualizar o `TODO(VAN-41)` (R40b); conferir com os testes de dados da Início
-- [ ] 9.7 Testes de widget primeiro para os itens: "Proposta nova" com o selo de validade, tocar abre o detalhe, "Conversar" abre a conversa, "Pedido expirou" com "Buscar vans". Depois ajustar os widgets até passarem
+- [x] 9.4 Testes primeiro para `FindNegotiationHighlights`: proposta nova só na vez do responsável; ajuste pedido não vira item; expirado nos últimos 7 dias entra e o de 8 dias não; contagem e filhos das abertas; falha → nenhum item. Depois implementá-lo até passarem
+- [x] 9.5 Testes primeiro para o `LoadClientHome` e o `ResolveSectionWithoutVan` com os itens reais junto do cenário (prioridade e limite de 3 mantidos; `NegotiatingSection` pela contagem real). Depois ajustar os dois e o `NewProposalItem` (D6) até passarem
+- [x] 9.6 Tirar do `ScenarioDailyOverviewDataSource` os itens de proposta nova e de pedido expirado e a contagem de negociações, e atualizar o `TODO(VAN-41)` (R40b); conferir com os testes de dados da Início
+- [x] 9.7 Testes de widget primeiro para os itens: "Proposta nova" com o selo de validade, tocar abre o detalhe, "Conversar" abre a conversa, "Pedido expirou" com "Buscar vans". Depois ajustar os widgets até passarem
 
 ### Fechamento
 

@@ -86,6 +86,8 @@ Widget _harness(
         openDriverSearch: openDriverSearch ?? (_) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
         openClientProposals: (_) async {},
+        openProposalDetail: (_, _) async {},
+        openNegotiationChat: (_, _) async {},
       ),
     ),
   );
