@@ -2059,5 +2059,7 @@
       }
     }
   },
-  "proposalComposerErrorStudentWithoutLeg": "Keep at least one leg for each student."
+  "proposalComposerErrorStudentWithoutLeg": "Keep at least one leg for each student.",
+  "negotiationChatRespond": "Respond",
+  "negotiationChatDriverPrivacyNotice": "Full address and name available after acceptance."
 }

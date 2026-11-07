@@ -19,6 +19,8 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiatio
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_proposal_versions.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_service_requests.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_driver_proposal_versions.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_driver_service_requests.dart';
 
 void registerConversationsDependencies(GetIt getIt) {
   final environment = getIt<Environment>();
@@ -77,6 +79,23 @@ void registerConversationsDependencies(GetIt getIt) {
         conversationToken: conversationToken,
         findNegotiation:
             getIt<FindConversationNegotiation<ClientServiceRequest>>(),
+      ),
+    )
+    ..registerFactory<FindConversationNegotiation<DriverServiceRequest>>(
+      () => FindConversationNegotiation(
+        listRequests: getIt<ListDriverServiceRequests>().call,
+        listVersions: getIt<ListDriverProposalVersions>().call,
+      ),
+    )
+    ..registerFactoryParam<
+      NegotiationTimelineCubit<DriverServiceRequest>,
+      String,
+      void
+    >(
+      (conversationToken, _) => NegotiationTimelineCubit(
+        conversationToken: conversationToken,
+        findNegotiation:
+            getIt<FindConversationNegotiation<DriverServiceRequest>>(),
       ),
     )
     ..registerFactory<ConversationsInboxCubit>(
