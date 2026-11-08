@@ -79,6 +79,7 @@ Widget drawerHarness(
   String? statusLabel,
   Color? statusColor,
   bool isSummaryLoading = false,
+  Future<void> Function(BuildContext context)? openSettings,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -100,6 +101,7 @@ Widget drawerHarness(
           statusLabel: statusLabel,
           statusColor: statusColor,
           isSummaryLoading: isSummaryLoading,
+          openSettings: openSettings,
         ),
       ),
     ),
@@ -182,6 +184,22 @@ void main() {
     expect(find.byType(VanepSkeleton), findsNothing);
     expect(find.text('4.8'), findsOneWidget);
     expect(find.byType(VanepAvatar), findsOneWidget);
+  });
+
+  testWidgets('settings entry opens the settings page', (tester) async {
+    var openedSettings = 0;
+    await tester.pumpWidget(
+      drawerHarness(
+        cubit,
+        const ClientProfile(),
+        openSettings: (_) async => openedSettings++,
+      ),
+    );
+
+    await tester.tap(find.text('Configurações'));
+    await tester.pumpAndSettle();
+
+    expect(openedSettings, 1);
   });
 
   testWidgets('disabled menu items do not navigate', (tester) async {

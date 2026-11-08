@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepComingSoonPage extends StatelessWidget {
   const VanepComingSoonPage({
@@ -16,7 +16,7 @@ class VanepComingSoonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       appBar: AppBar(),
       body: VanepComingSoon(title: title, message: message),
     );

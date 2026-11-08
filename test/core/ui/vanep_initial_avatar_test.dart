@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 import 'package:vanep_mobile/core/ui/vanep_initial_avatar.dart';
 
 void main() {
@@ -11,12 +12,19 @@ void main() {
 
   test('the same seed always gets the same colors', () {
     expect(
-      vanepInitialAvatarColors('dep-ana'),
-      vanepInitialAvatarColors('dep-ana'),
+      vanepInitialAvatarColors(VanepPalette.light, 'dep-ana'),
+      vanepInitialAvatarColors(VanepPalette.light, 'dep-ana'),
     );
     expect(
-      vanepInitialAvatarPalette,
-      contains(vanepInitialAvatarColors('dep-pedro')),
+      vanepInitialAvatarTones(VanepPalette.light),
+      contains(vanepInitialAvatarColors(VanepPalette.light, 'dep-pedro')),
+    );
+  });
+
+  test('avatar tones follow the palette', () {
+    expect(
+      vanepInitialAvatarTones(VanepPalette.dark).first.surface,
+      VanepPalette.dark.avatarAmberSurface,
     );
   });
 

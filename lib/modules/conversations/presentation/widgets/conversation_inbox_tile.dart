@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ConversationInboxTile extends StatelessWidget {
   const ConversationInboxTile({
@@ -33,14 +33,14 @@ class ConversationInboxTile extends StatelessWidget {
           Expanded(
             child: Text(
               conversationCounterpartName(conversation, viewerSide),
-              style: VanepTypography.cardTitle,
+              style: context.typography.cardTitle,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           if (lastMessageAt != null)
             Text(
               formatConversationListTime(lastMessageAt),
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
         ],
       ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/formatters/van_central_labels.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanSelector extends StatelessWidget {
   const VanSelector({
@@ -62,10 +62,12 @@ class VanSelectorPill extends StatelessWidget {
       selected: selected,
       button: true,
       child: Material(
-        color: selected ? VanepColors.brandNavy : VanepColors.card,
+        color: selected ? VanepColors.brandNavy : context.palette.card,
         shape: StadiumBorder(
           side: BorderSide(
-            color: selected ? VanepColors.brandNavy : VanepColors.inputBorder,
+            color: selected
+                ? VanepColors.brandNavy
+                : context.palette.inputBorder,
           ),
         ),
         child: InkWell(
@@ -77,9 +79,11 @@ class VanSelectorPill extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               label,
-              style: VanepTypography.fieldLabel.copyWith(
+              style: context.typography.fieldLabel.copyWith(
                 fontSize: 14,
-                color: selected ? VanepColors.onBrand : VanepColors.textPrimary,
+                color: selected
+                    ? VanepColors.onBrand
+                    : context.palette.textPrimary,
               ),
             ),
           ),

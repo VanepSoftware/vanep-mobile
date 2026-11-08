@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/postal_address_display.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 enum VanepAddressCardAction { edit, clear }
 
@@ -47,7 +46,7 @@ class VanepAddressCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(title, style: VanepTypography.cardTitle)),
+              Expanded(child: Text(title, style: context.typography.cardTitle)),
               if (summary != null)
                 VanepAddressCardMenu(
                   tooltip: menuTooltip,
@@ -71,8 +70,8 @@ class VanepAddressCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               errorText,
-              style: VanepTypography.cardSubtitle.copyWith(
-                color: VanepColors.danger,
+              style: context.typography.cardSubtitle.copyWith(
+                color: context.palette.danger,
               ),
             ),
           ],
@@ -101,13 +100,15 @@ class VanepAddressEmpty extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(
+            Icon(
               Icons.home_outlined,
-              color: VanepColors.textMuted,
+              color: context.palette.textMuted,
               size: 20,
             ),
             const SizedBox(width: 10),
-            Expanded(child: Text(label, style: VanepTypography.cardSubtitle)),
+            Expanded(
+              child: Text(label, style: context.typography.cardSubtitle),
+            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -131,11 +132,11 @@ class VanepAddressSummary extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 2),
           child: Icon(
             Icons.home_outlined,
-            color: VanepColors.textSecondary,
+            color: context.palette.textSecondary,
             size: 20,
           ),
         ),
@@ -144,9 +145,9 @@ class VanepAddressSummary extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(fields.street, style: VanepTypography.fieldValue),
+              Text(fields.street, style: context.typography.fieldValue),
               const SizedBox(height: 2),
-              Text(fields.details, style: VanepTypography.cardSubtitle),
+              Text(fields.details, style: context.typography.cardSubtitle),
             ],
           ),
         ),
@@ -175,8 +176,8 @@ class VanepAddressCardMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<VanepAddressCardAction>(
       tooltip: tooltip,
-      icon: const Icon(Icons.more_vert, color: VanepColors.textSecondary),
-      color: VanepColors.card,
+      icon: Icon(Icons.more_vert, color: context.palette.textSecondary),
+      color: context.palette.card,
       padding: EdgeInsets.zero,
       onSelected: (action) {
         switch (action) {
@@ -199,7 +200,7 @@ class VanepAddressCardMenu extends StatelessWidget {
           child: VanepAddressMenuItem(
             icon: Icons.delete_outline,
             label: clearLabel,
-            color: VanepColors.danger,
+            color: context.palette.danger,
           ),
         ),
       ],
@@ -211,16 +212,17 @@ class VanepAddressMenuItem extends StatelessWidget {
   const VanepAddressMenuItem({
     required this.icon,
     required this.label,
-    this.color = VanepColors.textPrimary,
+    this.color,
     super.key,
   });
 
   final IconData icon;
   final String label;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final color = this.color ?? context.palette.textPrimary;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -230,7 +232,7 @@ class VanepAddressMenuItem extends StatelessWidget {
           child: Text(
             label,
             overflow: TextOverflow.ellipsis,
-            style: VanepTypography.fieldValue.copyWith(color: color),
+            style: context.typography.fieldValue.copyWith(color: color),
           ),
         ),
       ],

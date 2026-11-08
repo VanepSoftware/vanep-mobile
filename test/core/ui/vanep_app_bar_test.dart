@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 Widget appBarHost(VanepAppBar appBar) {
   return MaterialApp(home: Scaffold(appBar: appBar));
@@ -20,7 +21,7 @@ void main() {
     await tester.pumpWidget(appBarHost(const VanepAppBar(title: 'Escola')));
 
     final title = tester.widget<Text>(find.text('Escola'));
-    expect(title.style, VanepTypography.cardTitle);
+    expect(title.style, const VanepTypography(VanepPalette.light).cardTitle);
     expect(find.byType(Text), findsOneWidget);
   });
 

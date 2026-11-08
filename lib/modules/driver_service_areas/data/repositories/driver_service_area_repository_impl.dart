@@ -21,7 +21,9 @@ ServiceAreaFailure serviceAreaFailureFrom(DioException exception) {
     return ServiceAreaFailure.cityUnmatched;
   }
   final detail = readProblemDetail(exception.response?.data).toLowerCase();
-  if (detail.contains(tooManyAreasMarker)) return ServiceAreaFailure.tooManyAreas;
+  if (detail.contains(tooManyAreasMarker)) {
+    return ServiceAreaFailure.tooManyAreas;
+  }
   if (detail.contains(districtRequiredMarker)) {
     return ServiceAreaFailure.districtRequired;
   }

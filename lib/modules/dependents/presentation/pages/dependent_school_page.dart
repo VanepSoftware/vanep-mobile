@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
@@ -17,6 +15,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_sch
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_editor_frame.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependents_list_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<Dependent?> openDependentSchool(
   BuildContext context, {
@@ -108,9 +107,10 @@ class DependentSchoolBodyState extends State<DependentSchoolBody> {
               onChanged: search,
               enabled: !state.isSaving,
               textInputAction: TextInputAction.search,
-              cursorColor: VanepColors.action,
-              style: VanepTypography.fieldValue,
+              cursorColor: context.palette.action,
+              style: context.typography.fieldValue,
               decoration: vanepInputDecoration(
+                context,
                 hintText: l10n.dependentSchoolSearchHint,
                 prefixIcon: Icons.search,
               ),
@@ -228,12 +228,14 @@ class DependentSchoolOption extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: VanepTypography.cardTitle.copyWith(fontSize: 15),
+                      style: context.typography.cardTitle.copyWith(
+                        fontSize: 15,
+                      ),
                     ),
                     if (subtitle != null && subtitle.isNotEmpty)
                       Text(
                         subtitle,
-                        style: VanepTypography.cardSubtitle.copyWith(
+                        style: context.typography.cardSubtitle.copyWith(
                           fontSize: 12,
                         ),
                       ),
@@ -244,7 +246,9 @@ class DependentSchoolOption extends StatelessWidget {
               Icon(
                 isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
                 size: 22,
-                color: isSelected ? VanepColors.action : VanepColors.divider,
+                color: isSelected
+                    ? context.palette.action
+                    : context.palette.divider,
               ),
             ],
           ),
@@ -267,16 +271,20 @@ class DependentSchoolSearchMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isWarning
-        ? VanepColors.warningText
-        : VanepColors.textSecondary;
+        ? context.palette.warningText
+        : context.palette.textSecondary;
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isWarning ? VanepColors.warningSurfaceSoft : VanepColors.card,
+        color: isWarning
+            ? context.palette.warningSurfaceSoft
+            : context.palette.card,
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
         border: Border.all(
-          color: isWarning ? VanepColors.warningBorder : VanepColors.cardBorder,
+          color: isWarning
+              ? context.palette.warningBorder
+              : context.palette.cardBorder,
         ),
       ),
       child: Row(
@@ -290,7 +298,7 @@ class DependentSchoolSearchMessage extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: VanepTypography.cardSubtitle.copyWith(color: color),
+              style: context.typography.cardSubtitle.copyWith(color: color),
             ),
           ),
         ],

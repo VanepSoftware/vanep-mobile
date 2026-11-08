@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
@@ -22,6 +20,7 @@ import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposals
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 typedef ProposalRequestCallback = Future<void> Function(
   ClientServiceRequest request,
@@ -86,7 +85,7 @@ class ClientProposalsPage extends StatelessWidget {
     final cubit = context.read<ClientProposalsCubit>();
 
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       appBar: VanepAppBar(
         title: l10n.clientProposalsTitle,
         actions: [
@@ -221,8 +220,8 @@ class OpenRequestsLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final color = proposals.hasReachedOpenRequestsLimit
-        ? VanepColors.warning
-        : VanepColors.textSecondary;
+        ? context.palette.warning
+        : context.palette.textSecondary;
     return Row(
       children: [
         Icon(Icons.info_outline, size: 18, color: color),
@@ -233,7 +232,7 @@ class OpenRequestsLine extends StatelessWidget {
               proposals.openRequestsCount,
               openRequestsLimit,
             ),
-            style: VanepTypography.cardSubtitle.copyWith(color: color),
+            style: context.typography.cardSubtitle.copyWith(color: color),
           ),
         ),
       ],

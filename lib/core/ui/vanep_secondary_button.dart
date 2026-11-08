@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepSecondaryButton extends StatelessWidget {
   const VanepSecondaryButton({
@@ -38,30 +38,32 @@ class VanepSecondaryButton extends StatelessWidget {
           foregroundColor: onBrand
               ? VanepColors.onBrand
               : (isDestructive
-                    ? VanepColors.dangerText
-                    : VanepColors.textPrimary),
-          disabledForegroundColor: VanepColors.textMuted,
+                    ? context.palette.dangerText
+                    : context.palette.textPrimary),
+          disabledForegroundColor: context.palette.textMuted,
           side: onBrand
               ? BorderSide.none
               : BorderSide(
                   color: isDestructive
-                      ? VanepColors.dangerBorder
-                      : VanepColors.inputBorder,
+                      ? context.palette.dangerBorder
+                      : context.palette.inputBorder,
                 ),
           backgroundColor: onBrand
               ? VanepColors.onBrand.withValues(alpha: 0.14)
-              : (isDestructive ? VanepColors.dangerSurface : VanepColors.card),
+              : (isDestructive
+                    ? context.palette.dangerSurface
+                    : context.palette.card),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 22,
                 width: 22,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.2,
-                  color: VanepColors.action,
+                  color: context.palette.action,
                 ),
               )
             : Row(
@@ -74,7 +76,7 @@ class VanepSecondaryButton extends StatelessWidget {
                   Flexible(
                     child: Text(
                       label,
-                      style: VanepTypography.button,
+                      style: context.typography.button,
                       textAlign: TextAlign.center,
                     ),
                   ),

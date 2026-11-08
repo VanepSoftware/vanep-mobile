@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepPrimaryButton extends StatelessWidget {
   const VanepPrimaryButton({
@@ -21,8 +21,10 @@ class VanepPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final background = onBrand ? VanepColors.card : VanepColors.action;
-    final foreground = onBrand ? VanepColors.brandNavy : VanepColors.card;
+    final background = onBrand ? VanepColors.onBrand : context.palette.action;
+    final foreground = onBrand
+        ? VanepColors.brandNavy
+        : context.palette.onAction;
 
     return SizedBox(
       height: 52,
@@ -56,7 +58,7 @@ class VanepPrimaryButton extends StatelessWidget {
                   Flexible(
                     child: Text(
                       label,
-                      style: VanepTypography.button,
+                      style: context.typography.button,
                       textAlign: TextAlign.center,
                     ),
                   ),

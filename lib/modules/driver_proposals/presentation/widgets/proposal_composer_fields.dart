@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/money_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 int? parseNumberInput(String text) => int.tryParse(text.trim());
 
@@ -248,15 +247,17 @@ class ComposerTimeButton extends StatelessWidget {
           minimumSize: const Size(72, 40),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           foregroundColor: time == null
-              ? VanepColors.action
-              : VanepColors.textPrimary,
-          side: const BorderSide(color: VanepColors.inputBorder),
+              ? context.palette.action
+              : context.palette.textPrimary,
+          side: BorderSide(color: context.palette.inputBorder),
         ),
         child: Text(
           time == null ? l10n.proposalComposerSetTime : formatClockTime(time),
-          style: VanepTypography.cardSubtitle.copyWith(
+          style: context.typography.cardSubtitle.copyWith(
             fontWeight: FontWeight.w700,
-            color: time == null ? VanepColors.action : VanepColors.textPrimary,
+            color: time == null
+                ? context.palette.action
+                : context.palette.textPrimary,
           ),
         ),
       ),
@@ -275,7 +276,9 @@ class ComposerFieldError extends StatelessWidget {
       padding: const EdgeInsets.only(top: 6),
       child: Text(
         text,
-        style: VanepTypography.cardSubtitle.copyWith(color: VanepColors.danger),
+        style: context.typography.cardSubtitle.copyWith(
+          color: context.palette.danger,
+        ),
       ),
     );
   }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 import 'package:vanep_mobile/core/ui/vanep_cep_address_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
 import 'package:vanep_mobile/core/ui/vanep_postal_address_form.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 import '../domain/postal_address_draft_fixture.dart';
 import 'localized_host.dart';
@@ -579,7 +579,7 @@ void main() {
         );
 
         final text = tester.widget<Text>(find.text('GO'));
-        expect(text.style?.color, VanepColors.textMuted);
+        expect(text.style?.color, VanepPalette.light.textMuted);
         expect(text.style!.color!.a, 1);
       },
     );

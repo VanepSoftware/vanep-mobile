@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepSegment<T> {
   const VanepSegment({required this.value, required this.label, this.count});
@@ -30,7 +30,7 @@ class VanepSegmentedControl<T> extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: VanepColors.divider,
+        color: context.palette.divider,
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
       ),
       child: Row(
@@ -73,9 +73,9 @@ class VanepSegmentButton extends StatelessWidget {
       button: true,
       selected: isSelected,
       child: Material(
-        color: isSelected ? VanepColors.card : Colors.transparent,
+        color: isSelected ? context.palette.raisedSurface : Colors.transparent,
         elevation: isSelected ? 1 : 0,
-        shadowColor: VanepColors.textPrimary.withValues(alpha: 0.2),
+        shadowColor: context.palette.shadow.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(9),
         child: InkWell(
           onTap: onTap,
@@ -93,8 +93,8 @@ class VanepSegmentButton extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: isSelected
-                          ? VanepColors.textPrimary
-                          : VanepColors.textSecondary,
+                          ? context.palette.textPrimary
+                          : context.palette.textSecondary,
                     ),
                   ),
                 ),
@@ -106,8 +106,8 @@ class VanepSegmentButton extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: isSelected
-                          ? VanepColors.action
-                          : VanepColors.textSecondary,
+                          ? context.palette.action
+                          : context.palette.textSecondary,
                     ),
                   ),
                 ],

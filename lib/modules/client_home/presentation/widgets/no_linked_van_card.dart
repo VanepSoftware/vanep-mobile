@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class NoLinkedVanCard extends StatelessWidget {
   const NoLinkedVanCard({required this.onFindVanTapped, super.key});
@@ -22,26 +21,26 @@ class NoLinkedVanCard extends StatelessWidget {
           Container(
             width: 56,
             height: 56,
-            decoration: const BoxDecoration(
-              color: VanepColors.actionSurface,
+            decoration: BoxDecoration(
+              color: context.palette.actionSurface,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.airport_shuttle_outlined,
-              color: VanepColors.action,
+              color: context.palette.action,
               size: 28,
             ),
           ),
           const SizedBox(height: 14),
           Text(
             l10n.clientHomeNoLinkedVanTitle,
-            style: VanepTypography.cardTitle,
+            style: context.typography.cardTitle,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 6),
           Text(
             l10n.clientHomeNoLinkedVanMessage,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),

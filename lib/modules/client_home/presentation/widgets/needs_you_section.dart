@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
@@ -17,6 +15,8 @@ import 'package:vanep_mobile/modules/client_home/domain/value_objects/needs_you_
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const hoursLeftThreshold = 48;
 
@@ -103,14 +103,14 @@ class ContractToSignCard extends StatelessWidget {
                   children: [
                     Text(
                       l10n.clientHomeContractReady(item.childName),
-                      style: VanepTypography.cardTitle,
+                      style: context.typography.cardTitle,
                     ),
                     Text(
                       l10n.clientHomeDriverAndMonthlyFee(
                         item.driverName,
                         formatMoney(l10n, item.monthlyFeeCents),
                       ),
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                   ],
                 ),
@@ -170,8 +170,8 @@ class ContractStepsIndicator extends StatelessWidget {
                         color: index == 0
                             ? Colors.transparent
                             : index <= currentIndex
-                            ? VanepColors.action
-                            : VanepColors.divider,
+                            ? context.palette.action
+                            : context.palette.divider,
                       ),
                     ),
                     Icon(
@@ -180,8 +180,8 @@ class ContractStepsIndicator extends StatelessWidget {
                           : Icons.radio_button_unchecked,
                       size: 14,
                       color: index <= currentIndex
-                          ? VanepColors.action
-                          : VanepColors.textMuted,
+                          ? context.palette.action
+                          : context.palette.textMuted,
                     ),
                     Expanded(
                       child: Container(
@@ -189,8 +189,8 @@ class ContractStepsIndicator extends StatelessWidget {
                         color: index == labels.length - 1
                             ? Colors.transparent
                             : index < currentIndex
-                            ? VanepColors.action
-                            : VanepColors.divider,
+                            ? context.palette.action
+                            : context.palette.divider,
                       ),
                     ),
                   ],
@@ -198,11 +198,11 @@ class ContractStepsIndicator extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   label,
-                  style: VanepTypography.cardSubtitle.copyWith(
+                  style: context.typography.cardSubtitle.copyWith(
                     fontSize: 12,
                     color: index == currentIndex
-                        ? VanepColors.textPrimary
-                        : VanepColors.textSecondary,
+                        ? context.palette.textPrimary
+                        : context.palette.textSecondary,
                   ),
                 ),
               ],
@@ -213,17 +213,17 @@ class ContractStepsIndicator extends StatelessWidget {
   }
 }
 
-const featuredPriceStyle = TextStyle(
+TextStyle featuredPriceStyle(VanepPalette palette) => TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w800,
-  color: VanepColors.textPrimary,
+  color: palette.textPrimary,
   fontFeatures: [FontFeature.tabularFigures()],
 );
 
-const featuredInstallmentsStyle = TextStyle(
+TextStyle featuredInstallmentsStyle(VanepPalette palette) => TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w600,
-  color: VanepColors.textSecondary,
+  color: palette.textSecondary,
 );
 
 class FeaturedProposalCard extends StatelessWidget {
@@ -244,7 +244,7 @@ class FeaturedProposalCard extends StatelessWidget {
     final expiresAt = item.expiresAt;
     final request = item.request;
     return VanepCard(
-      borderColor: VanepColors.actionBorder,
+      borderColor: context.palette.actionBorder,
       onTap: () => actions.onProposalTapped(request),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -254,7 +254,7 @@ class FeaturedProposalCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.clientHomeNewProposal.toUpperCase(),
-                  style: VanepTypography.overline,
+                  style: context.typography.overline,
                 ),
               ),
               if (expiresAt != null)
@@ -277,13 +277,13 @@ class FeaturedProposalCard extends StatelessWidget {
                   children: [
                     Text(
                       item.driverName,
-                      style: VanepTypography.cardTitle,
+                      style: context.typography.cardTitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       joinFirstNames(l10n, item.childNames),
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -294,8 +294,8 @@ class FeaturedProposalCard extends StatelessWidget {
               VanepInstallmentPrice(
                 amountCents: item.installmentAmountCents,
                 installments: item.installments,
-                amountStyle: featuredPriceStyle,
-                countStyle: featuredInstallmentsStyle,
+                amountStyle: featuredPriceStyle(context.palette),
+                countStyle: featuredInstallmentsStyle(context.palette),
               ),
             ],
           ),
@@ -387,10 +387,10 @@ class NeedsYouRow extends StatelessWidget {
             openUnavailableFeature(context, l10n.clientHomeShortcutContracts),
       ),
       VehicleInspectionExpiredItem() => HomeRowTile(
-        leading: const HomeIconBubble(
+        leading: HomeIconBubble(
           icon: Icons.assignment_late_outlined,
-          background: VanepColors.warningSurface,
-          foreground: VanepColors.warning,
+          background: context.palette.warningSurface,
+          foreground: context.palette.warning,
         ),
         title: l10n.clientHomeInspectionExpired,
         subtitle: l10n.clientHomeInspectionDeadline(
@@ -425,10 +425,10 @@ class PaymentRow extends StatelessWidget {
     final daysLeft = calendarDaysBetween(now, item.dueAt);
 
     return HomeRowTile(
-      leading: const HomeIconBubble(
+      leading: HomeIconBubble(
         icon: Icons.payments_outlined,
-        background: VanepColors.warningSurface,
-        foreground: VanepColors.warning,
+        background: context.palette.warningSurface,
+        foreground: context.palette.warning,
       ),
       title: childName != null
           ? l10n.clientHomeMonthlyFeeOf(childName)
@@ -442,7 +442,9 @@ class PaymentRow extends StatelessWidget {
               text: daysLeft < 0
                   ? l10n.clientHomeOverdue
                   : l10n.clientHomeDueIn(daysLeft),
-              color: daysLeft < 0 ? VanepColors.danger : VanepColors.warning,
+              color: daysLeft < 0
+                  ? context.palette.danger
+                  : context.palette.warning,
             ),
       onTap: () =>
           openUnavailableFeature(context, l10n.clientHomeShortcutPayments),
@@ -470,9 +472,9 @@ class RateStars extends StatelessWidget {
                 context,
                 l10n.clientHomeRateVan(firstNameOf(driverName)),
               ),
-              icon: const Icon(
+              icon: Icon(
                 Icons.star_border_rounded,
-                color: VanepColors.textMuted,
+                color: context.palette.textMuted,
                 size: 30,
               ),
             ),

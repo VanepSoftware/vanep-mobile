@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -12,6 +11,7 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/email_code_verifica
 import 'package:vanep_mobile/modules/auth/presentation/mappers/account_failure_l10n.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/verification_code_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> openEmailCodeVerification(
   BuildContext context, {
@@ -58,7 +58,7 @@ class EmailCodeVerificationPage extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<EmailCodeVerificationCubit>();
         return Scaffold(
-          backgroundColor: VanepColors.card,
+          backgroundColor: context.palette.card,
           appBar: const VanepAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -134,8 +134,8 @@ class ResendCodeButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        foregroundColor: VanepColors.action,
-        disabledForegroundColor: VanepColors.textMuted,
+        foregroundColor: context.palette.action,
+        disabledForegroundColor: context.palette.textMuted,
       ),
       child: Text(
         secondsLeft > 0 ? l10n.resendCodeIn(secondsLeft) : l10n.resendCode,

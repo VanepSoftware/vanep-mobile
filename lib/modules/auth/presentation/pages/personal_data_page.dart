@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/birth_date_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
@@ -25,6 +23,7 @@ import 'package:vanep_mobile/modules/auth/presentation/mappers/personal_address_
 import 'package:vanep_mobile/modules/auth/presentation/mappers/profile_edit_failure_l10n.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/email_change_sheet.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/personal_address_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class PersonalDataPage extends StatefulWidget {
   const PersonalDataPage({this.slots = const PersonalDataSlots(), super.key});
@@ -104,7 +103,7 @@ class _PersonalDataPageState extends State<PersonalDataPage>
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: VanepColors.card,
+          backgroundColor: context.palette.card,
           appBar: const VanepAppBar(),
           body: buildPersonalDataBody(
             context: context,
@@ -145,7 +144,7 @@ Widget buildPersonalDataBody({
             Text(
               l10n.profileEditLoadError,
               textAlign: TextAlign.center,
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
             const SizedBox(height: 16),
             VanepPrimaryButton(
@@ -423,24 +422,24 @@ class PendingEmailBanner extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
-        color: VanepColors.warningSurface,
+        color: context.palette.warningSurface,
         borderRadius: BorderRadius.circular(12),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
+          Icon(
             Icons.mark_email_unread_outlined,
-            color: VanepColors.warning,
+            color: context.palette.warning,
             size: 20,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               l10n.profilePendingEmailBanner(email),
-              style: VanepTypography.cardSubtitle.copyWith(
-                color: VanepColors.textPrimary,
+              style: context.typography.cardSubtitle.copyWith(
+                color: context.palette.textPrimary,
                 height: 1.35,
               ),
             ),
@@ -461,18 +460,18 @@ class CooldownBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: VanepColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.history, size: 14, color: VanepColors.textMuted),
+          Icon(Icons.history, size: 14, color: context.palette.textMuted),
           const SizedBox(width: 5),
           Text(
             text,
-            style: VanepTypography.cardSubtitle.copyWith(
-              color: VanepColors.textMuted,
+            style: context.typography.cardSubtitle.copyWith(
+              color: context.palette.textMuted,
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_initial_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DependentsListCard extends StatelessWidget {
   const DependentsListCard({required this.rows, super.key});
@@ -18,21 +17,17 @@ class DependentsListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: VanepColors.card,
+      color: context.palette.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-        side: const BorderSide(color: VanepColors.cardBorder),
+        side: BorderSide(color: context.palette.cardBorder),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           for (var index = 0; index < rows.length; index++) ...[
             if (index > 0)
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: VanepColors.divider,
-              ),
+              Divider(height: 1, thickness: 1, color: context.palette.divider),
             rows[index],
           ],
         ],
@@ -78,19 +73,19 @@ class DependentListRow extends StatelessWidget {
                             l10n.dependentsDefaultBadge,
                           )
                         : firstName,
-                    style: VanepTypography.cardTitle.copyWith(fontSize: 15),
+                    style: context.typography.cardTitle.copyWith(fontSize: 15),
                   ),
                   if (isIncomplete) ...[
                     const SizedBox(height: 3),
                     VanepMenuWarningSubtitle(text: l10n.dependentsIncomplete),
                   ] else if (subtitle != null) ...[
                     const SizedBox(height: 3),
-                    Text(subtitle, style: VanepTypography.cardSubtitle),
+                    Text(subtitle, style: context.typography.cardSubtitle),
                   ],
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: VanepColors.textMuted),
+            Icon(Icons.chevron_right, color: context.palette.textMuted),
           ],
         ),
       ),

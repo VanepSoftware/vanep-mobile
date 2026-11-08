@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
@@ -26,6 +24,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const proposalLatestEndWindow = Duration(days: 800);
 
@@ -100,7 +99,7 @@ class ProposalComposerPage extends StatelessWidget {
       builder: (context, state) {
         final setup = state.setup;
         return Scaffold(
-          backgroundColor: VanepColors.surface,
+          backgroundColor: context.palette.surface,
           appBar: VanepAppBar(
             title: l10n.proposalComposerTitle,
             caption: setup == null
@@ -119,8 +118,8 @@ class ProposalComposerPage extends StatelessWidget {
               retryLabel: l10n.clientProposalsRetry,
               onRetry: cubit.load,
             ),
-            _ => const Center(
-              child: CircularProgressIndicator(color: VanepColors.action),
+            _ => Center(
+              child: CircularProgressIndicator(color: context.palette.action),
             ),
           },
           bottomNavigationBar: state.isReady
@@ -248,14 +247,14 @@ class ProposalComposerBody extends StatelessWidget {
             children: [
               Text(
                 l10n.proposalComposerAsRequested,
-                style: VanepTypography.cardSubtitle,
+                style: context.typography.cardSubtitle,
               ),
               const SizedBox(height: 8),
               for (final item in draft.items) ...[
                 if (showsNames)
                   Text(
                     names[item.dependentToken] ?? '',
-                    style: VanepTypography.fieldLabel,
+                    style: context.typography.fieldLabel,
                   ),
                 VanepWeekLegsGrid<RouteLeg>(
                   rows: weekLegsRowsOfDraftItem(l10n, item),
@@ -282,7 +281,7 @@ class ProposalComposerBody extends StatelessWidget {
                 if (showsNames)
                   Text(
                     names[item.dependentToken] ?? '',
-                    style: VanepTypography.fieldLabel,
+                    style: context.typography.fieldLabel,
                   ),
                 ComposerSchedule(item: item),
               ],
@@ -350,7 +349,7 @@ class ComposerSchedule extends StatelessWidget {
                 Text(
                   routeLegLabel(l10n, leg),
                   textAlign: TextAlign.center,
-                  style: VanepTypography.cardTitle,
+                  style: context.typography.cardTitle,
                 ),
             ],
           ),
@@ -360,7 +359,7 @@ class ComposerSchedule extends StatelessWidget {
               child: ComposerScheduleRow(
                 leading: Text(
                   weekdayShortLabel(l10n, weekday),
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 ),
                 cells: [
                   for (final leg in legs)
@@ -382,8 +381,8 @@ class ComposerSchedule extends StatelessWidget {
                       Text(
                         '—',
                         textAlign: TextAlign.center,
-                        style: VanepTypography.cardSubtitle.copyWith(
-                          color: VanepColors.textMuted,
+                        style: context.typography.cardSubtitle.copyWith(
+                          color: context.palette.textMuted,
                         ),
                       ),
                 ],
@@ -510,7 +509,7 @@ class ComposerConditionsSection extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             l10n.proposalDetailAdjustment,
-            style: VanepTypography.fieldLabel,
+            style: context.typography.fieldLabel,
           ),
           for (final policy in ProposalAdjustmentPolicy.values)
             ProposalChoiceOption(
@@ -521,7 +520,7 @@ class ComposerConditionsSection extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             l10n.proposalDetailCancellation,
-            style: VanepTypography.fieldLabel,
+            style: context.typography.fieldLabel,
           ),
           for (final policy in ProposalCancellationPolicy.values)
             ProposalChoiceOption(
@@ -556,7 +555,7 @@ class ComposerValiditySection extends StatelessWidget {
         children: [
           Text(
             l10n.proposalComposerValidityHint(proposalMaxValidDays),
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           const SizedBox(height: 12),
           ComposerNumberField(
@@ -623,9 +622,9 @@ class ProposalComposerFooter extends StatelessWidget {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-        decoration: const BoxDecoration(
-          color: VanepColors.card,
-          border: Border(top: BorderSide(color: VanepColors.divider)),
+        decoration: BoxDecoration(
+          color: context.palette.card,
+          border: Border(top: BorderSide(color: context.palette.divider)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -636,8 +635,10 @@ class ProposalComposerFooter extends StatelessWidget {
                 child: VanepInstallmentPrice(
                   amountCents: preview,
                   installments: installments,
-                  amountStyle: VanepTypography.heading.copyWith(fontSize: 20),
-                  countStyle: VanepTypography.cardSubtitle.copyWith(
+                  amountStyle: context.typography.heading.copyWith(
+                    fontSize: 20,
+                  ),
+                  countStyle: context.typography.cardSubtitle.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -651,7 +652,7 @@ class ProposalComposerFooter extends StatelessWidget {
                     : proposalMaxValidDays,
               ),
               textAlign: TextAlign.center,
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
             const SizedBox(height: 8),
             VanepPrimaryButton(

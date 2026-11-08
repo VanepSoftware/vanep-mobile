@@ -4,9 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const vanepCityPickerMaxHeight = 360.0;
 const vanepCitySearchMinLength = 2;
@@ -29,7 +28,7 @@ Future<void> showVanepCityPickerSheet(
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: VanepColors.card,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -93,16 +92,17 @@ class _VanepCityPickerSheetState extends State<VanepCityPickerSheet> {
           children: [
             Text(
               l10n.postalAddressCityPickerTitle,
-              style: VanepTypography.cardTitle,
+              style: context.typography.cardTitle,
             ),
             const SizedBox(height: 16),
             TextField(
               onChanged: handleSearch,
               autofocus: true,
               textInputAction: TextInputAction.search,
-              cursorColor: VanepColors.action,
-              style: VanepTypography.fieldValue,
+              cursorColor: context.palette.action,
+              style: context.typography.fieldValue,
               decoration: vanepInputDecoration(
+                context,
                 hintText: l10n.postalAddressCitySearchHint,
                 prefixIcon: Icons.search,
               ),
@@ -144,8 +144,8 @@ class CityPickerResults extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Text(
           error,
-          style: VanepTypography.cardSubtitle.copyWith(
-            color: VanepColors.danger,
+          style: context.typography.cardSubtitle.copyWith(
+            color: context.palette.danger,
           ),
         ),
       );
@@ -156,7 +156,7 @@ class CityPickerResults extends StatelessWidget {
         child: Center(
           child: Text(
             l10n.postalAddressNoCitiesFound,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
             textAlign: TextAlign.center,
           ),
         ),
@@ -168,7 +168,7 @@ class CityPickerResults extends StatelessWidget {
         shrinkWrap: true,
         itemCount: options.length,
         separatorBuilder: (_, _) =>
-            const Divider(height: 1, color: VanepColors.divider),
+            Divider(height: 1, color: context.palette.divider),
         itemBuilder: (context, index) {
           final option = options[index];
           return InkWell(
@@ -178,14 +178,13 @@ class CityPickerResults extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(option.name, style: VanepTypography.fieldValue),
+                    child: Text(
+                      option.name,
+                      style: context.typography.fieldValue,
+                    ),
                   ),
                   if (option.token == selectedToken)
-                    const Icon(
-                      Icons.check,
-                      color: VanepColors.action,
-                      size: 18,
-                    ),
+                    Icon(Icons.check, color: context.palette.action, size: 18),
                 ],
               ),
             ),

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/school_week_bar.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
-Color schoolWeekSegmentColor(SchoolWeekSegment segment) {
+Color schoolWeekSegmentColor(VanepPalette palette, SchoolWeekSegment segment) {
   return switch (segment) {
-    SchoolWeekSegment.none => VanepColors.scheduleEmpty,
-    SchoolWeekSegment.partTime => VanepColors.schedulePartTime,
-    SchoolWeekSegment.fullTime => VanepColors.scheduleFullTime,
+    SchoolWeekSegment.none => palette.scheduleEmpty,
+    SchoolWeekSegment.partTime => palette.schedulePartTime,
+    SchoolWeekSegment.fullTime => palette.scheduleFullTime,
   };
 }
 
@@ -40,14 +40,17 @@ class DependentSchoolWeekBar extends StatelessWidget {
                     Container(
                       height: 6,
                       decoration: BoxDecoration(
-                        color: schoolWeekSegmentColor(segments[day.index]),
+                        color: schoolWeekSegmentColor(
+                          context.palette,
+                          segments[day.index],
+                        ),
                         borderRadius: BorderRadius.circular(999),
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       weekdayInitial(l10n, day),
-                      style: VanepTypography.cardSubtitle.copyWith(
+                      style: context.typography.cardSubtitle.copyWith(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                       ),

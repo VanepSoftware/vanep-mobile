@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const double vanepMapPlaceholderHeight = 168;
 
@@ -37,7 +38,7 @@ class VanepMapPlaceholder extends StatelessWidget {
           position: DecorationPosition.foreground,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-            border: Border.all(color: VanepColors.cardBorder),
+            border: Border.all(color: context.palette.cardBorder),
           ),
           child: Stack(
             fit: StackFit.expand,
@@ -50,7 +51,9 @@ class VanepMapPlaceholder extends StatelessWidget {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        const CustomPaint(painter: VanepMapStreetsPainter()),
+                        CustomPaint(
+                          painter: VanepMapStreetsPainter(context.palette),
+                        ),
                         Center(child: VanepMapPin(icon: pinIcon)),
                         if (label != null)
                           Positioned(
@@ -88,11 +91,11 @@ class VanepMapPin extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: VanepColors.action,
+        color: context.palette.action,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: VanepColors.action.withValues(alpha: 0.18),
+            color: context.palette.action.withValues(alpha: 0.18),
             spreadRadius: 4,
           ),
         ],
@@ -113,15 +116,15 @@ class VanepMapLabel extends StatelessWidget {
       height: 32,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        color: VanepColors.card,
+      decoration: BoxDecoration(
+        color: context.palette.card,
         borderRadius: BorderRadius.all(Radius.circular(999)),
       ),
       child: Text(
         text,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: VanepTypography.cardTitle.copyWith(fontSize: 13),
+        style: context.typography.cardTitle.copyWith(fontSize: 13),
       ),
     );
   }
@@ -135,7 +138,7 @@ class VanepMapAdjustChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: VanepColors.card,
+      color: context.palette.card,
       shape: const StadiumBorder(),
       child: InkWell(
         customBorder: const StadiumBorder(),
@@ -146,15 +149,15 @@ class VanepMapAdjustChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.open_with,
                 size: 18,
-                color: VanepColors.textPrimary,
+                color: context.palette.textPrimary,
               ),
               const SizedBox(width: 6),
               Text(
                 label,
-                style: VanepTypography.cardTitle.copyWith(fontSize: 13),
+                style: context.typography.cardTitle.copyWith(fontSize: 13),
               ),
             ],
           ),
@@ -165,26 +168,25 @@ class VanepMapAdjustChip extends StatelessWidget {
 }
 
 class VanepMapStreetsPainter extends CustomPainter {
-  const VanepMapStreetsPainter();
+  const VanepMapStreetsPainter(this.palette);
+
+  final VanepPalette palette;
 
   @override
   void paint(Canvas canvas, Size size) {
     final width = size.width;
     final height = size.height;
-    canvas.drawRect(
-      Offset.zero & size,
-      Paint()..color = VanepColors.skeletonBase,
-    );
+    canvas.drawRect(Offset.zero & size, Paint()..color = palette.skeletonBase);
     canvas.drawRect(
       Rect.fromLTWH(width * 0.62, height * 0.08, width * 0.22, height * 0.3),
-      Paint()..color = VanepColors.vanHub,
+      Paint()..color = palette.avatarBlueSurface,
     );
-    final street = Paint()..color = VanepColors.card;
+    final street = Paint()..color = palette.card;
     canvas
       ..drawRect(Rect.fromLTWH(width * 0.3, 0, width * 0.07, height), street)
       ..drawRect(Rect.fromLTWH(0, height * 0.56, width, height * 0.07), street);
     final avenue = Paint()
-      ..color = VanepColors.card
+      ..color = palette.card
       ..strokeWidth = 10;
     canvas.drawLine(
       Offset(width * 0.45, height),
@@ -194,5 +196,6 @@ class VanepMapStreetsPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(VanepMapStreetsPainter oldDelegate) => false;
+  bool shouldRepaint(VanepMapStreetsPainter oldDelegate) =>
+      oldDelegate.palette != palette;
 }

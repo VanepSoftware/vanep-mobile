@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
@@ -27,6 +26,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_r
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 typedef ProposalActionCallback = Future<bool> Function(
   ClientServiceRequest request,
@@ -153,7 +153,7 @@ class ProposalDetailPage extends StatelessWidget {
       builder: (context, state) {
         final request = state.request;
         return Scaffold(
-          backgroundColor: VanepColors.surface,
+          backgroundColor: context.palette.surface,
           appBar: VanepAppBar(
             title: state.isRequestMode
                 ? l10n.proposalDetailRequestTitle
@@ -187,8 +187,8 @@ class ProposalDetailPage extends StatelessWidget {
               retryLabel: l10n.clientProposalsRetry,
               onRetry: cubit.load,
             ),
-            _ => const Center(
-              child: CircularProgressIndicator(color: VanepColors.action),
+            _ => Center(
+              child: CircularProgressIndicator(color: context.palette.action),
             ),
           },
           bottomNavigationBar: request == null
@@ -432,7 +432,7 @@ class DetailFooter extends StatelessWidget {
         request.status == ServiceRequestStatus.open) {
       content = ProposalLinkButton(
         label: l10n.clientProposalsCancelRequest,
-        color: VanepColors.danger,
+        color: context.palette.danger,
         onPressed: state.isCancelling
             ? null
             : () => confirmCancelDetailRequest(context, request),
@@ -444,9 +444,9 @@ class DetailFooter extends StatelessWidget {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-        decoration: const BoxDecoration(
-          color: VanepColors.card,
-          border: Border(top: BorderSide(color: VanepColors.divider)),
+        decoration: BoxDecoration(
+          color: context.palette.card,
+          border: Border(top: BorderSide(color: context.palette.divider)),
         ),
         child: content,
       ),

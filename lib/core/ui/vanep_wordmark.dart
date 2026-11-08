@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepWordmark extends StatelessWidget {
-  const VanepWordmark({
-    this.color = VanepColors.textPrimary,
-    this.fontSize,
-    super.key,
-  });
+  const VanepWordmark({this.color, this.fontSize, super.key});
 
-  final Color color;
+  final Color? color;
   final double? fontSize;
 
   @override
@@ -20,14 +14,14 @@ class VanepWordmark extends StatelessWidget {
         children: [
           TextSpan(
             text: 'vanep',
-            style: TextStyle(color: color),
+            style: TextStyle(color: color ?? context.palette.textPrimary),
           ),
-          const TextSpan(
+          TextSpan(
             text: '.',
-            style: TextStyle(color: VanepColors.action),
+            style: TextStyle(color: context.palette.action),
           ),
         ],
-        style: VanepTypography.wordmark.copyWith(fontSize: fontSize),
+        style: context.typography.wordmark.copyWith(fontSize: fontSize),
       ),
     );
   }
