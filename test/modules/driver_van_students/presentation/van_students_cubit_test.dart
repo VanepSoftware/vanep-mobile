@@ -65,6 +65,20 @@ void main() {
   );
 
   blocTest<VanStudentsCubit, VanStudentsState>(
+    'an empty list is loaded, not a failure',
+    setUp: () => answerStudents(const []),
+    build: buildCubit,
+    act: (cubit) => cubit.load(),
+    expect: () => [
+      const VanStudentsState(),
+      const VanStudentsState(
+        status: VanStudentsStatus.loaded,
+        occupancy: studentsOccupancy,
+      ),
+    ],
+  );
+
+  blocTest<VanStudentsCubit, VanStudentsState>(
     'a failed first load shows the error',
     setUp: () =>
         when(() => listDriverStudents(vehicleToken: 'van-1'))
@@ -270,7 +284,7 @@ void main() {
   }
 
   blocTest<VanStudentsCubit, VanStudentsState>(
-    'an occupancy failure fails the initial load instead of inventing progress',
+    'an occupancy failure still shows the students',
     setUp: () =>
         when(() => findDriverOccupancy())
             .thenAnswer((_) async => const Err(VanCentralFailure.network)),
@@ -278,8 +292,12 @@ void main() {
     act: (cubit) => cubit.load(),
     expect: () => [
       const VanStudentsState(),
-      const VanStudentsState(status: VanStudentsStatus.loadFailed),
+      VanStudentsState(status: VanStudentsStatus.loaded, students: vanStudents),
     ],
+    verify: (cubit) {
+      expect(cubit.state.progress.withFamily, 1);
+      expect(cubit.state.progress.total, 5);
+    },
   );
 
   blocTest<VanStudentsCubit, VanStudentsState>(

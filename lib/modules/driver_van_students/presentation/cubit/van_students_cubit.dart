@@ -44,14 +44,20 @@ class VanStudentsCubit extends Cubit<VanStudentsState> {
     final students = await studentsFuture;
     final occupancy = await occupancyFuture;
     if (isClosed) return;
-    emit(switch ((students, occupancy)) {
-      (Ok(value: final students), Ok(value: final occupancy)) => state.copyWith(
+    emit(switch (students) {
+      Ok(value: final students) => state.copyWith(
         status: VanStudentsStatus.loaded,
         students: students,
-        occupancy: occupancy,
+        occupancy: switch (occupancy) {
+          Ok(value: final occupancy) => occupancy,
+          Err() => state.occupancy,
+        },
       ),
-      _ when state.status == VanStudentsStatus.loaded => state,
-      _ => state.copyWith(status: VanStudentsStatus.loadFailed),
+      Err()
+          when state.students.isNotEmpty ||
+              state.status == VanStudentsStatus.loaded =>
+        state,
+      Err() => state.copyWith(status: VanStudentsStatus.loadFailed),
     });
   }
 

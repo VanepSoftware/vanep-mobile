@@ -73,6 +73,16 @@ Map<StudentFamilyFilter, int> countByFamilyFilter(
   };
 }
 
+FamilyProgress familyProgressOf(List<DriverStudent> students) {
+  return FamilyProgress(
+    withFamily: [
+      for (final student in students)
+        if (student.familyStatus == FamilyStatus.withFamily) student,
+    ].length,
+    total: students.length,
+  );
+}
+
 DriverStudent? firstPendingMatch(List<DriverStudent> students) {
   for (final student in students) {
     if (student.familyStatus == FamilyStatus.familyJoined &&

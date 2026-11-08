@@ -92,10 +92,16 @@ class VanStudentsState extends Equatable {
 
   DriverStudent? get pendingMatch => firstPendingMatch(students);
 
-  FamilyProgress get progress => FamilyProgress(
-    withFamily: occupancy?.studentsWithFamily ?? 0,
-    total: occupancy?.students ?? 0,
-  );
+  FamilyProgress get progress {
+    final occupancy = this.occupancy;
+    if (occupancy != null) {
+      return FamilyProgress(
+        withFamily: occupancy.studentsWithFamily,
+        total: occupancy.students,
+      );
+    }
+    return familyProgressOf(students);
+  }
 
   bool isBusy(String studentToken) => busyStudentToken == studentToken;
 
