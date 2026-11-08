@@ -193,7 +193,6 @@
   "comingSoon": "Coming soon",
   "navDependents": "Dependents",
   "navProposals": "Proposals",
-  "navProposalsAndContracts": "Proposals & contracts",
   "clientHomeNoLinkedVanTitle": "No linked van",
   "clientHomeNoLinkedVanMessage": "You don't have a van yet. Find one that serves your area.",
   "clientHomeFindVanButton": "Find a van",
@@ -224,7 +223,6 @@
   "profilePersonalData": "Personal data",
   "personalDataSubtitle": "Review and update your account details and your home address.",
   "profilePaymentMethods": "Payment methods",
-  "profileDependents": "Manage dependents",
   "profileProfessionalData": "Professional data",
   "profileAssistantInvite": "Driver invite",
   "profileSettings": "Settings",
@@ -353,8 +351,8 @@
   "driverSearchNetworkError": "No connection to the server. Please try again.",
   "driverSearchUnexpectedError": "Something went wrong. Please try again.",
   "driverSearchCoversWholeCity": "Covers the whole city",
-  "dependentsSubtitle": "Add and manage the people who ride the van.",
-  "dependentsEmpty": "You have not added any dependents yet.",
+  "dependentsSubtitle": "Manage who rides the van",
+  "dependentsEmpty": "Dependents are the people who ride the van, like your children. Add the first one to request a quote.",
   "dependentsAdd": "Add dependent",
   "dependentsRetry": "Try again",
   "dependentsLoadError": "Could not load your dependents.",
@@ -370,14 +368,8 @@
       }
     }
   },
-  "dependentFormNewTitle": "New dependent",
-  "dependentFormEditTitle": "Edit dependent",
-  "dependentFormSave": "Save",
-  "dependentFormSaved": "Dependent saved.",
   "dependentFieldName": "Name",
   "dependentFieldBirthDate": "Date of birth",
-  "dependentFieldBirthDateEmpty": "Pick a date",
-  "dependentFieldBirthDateClear": "Clear date",
   "dependentFieldGender": "Gender",
   "dependentErrorNameRequired": "Enter the dependent's name.",
   "dependentErrorBirthDateFuture": "The date of birth cannot be in the future.",
@@ -386,19 +378,7 @@
   "dependentFailureNotFound": "This dependent no longer exists.",
   "dependentFailureNetwork": "No connection to the server. Please try again.",
   "dependentFailureUnexpected": "Something went wrong. Please try again.",
-  "dependentFormSubtitle": "Enter the details of who rides the van. Only the name is required.",
   "dependentFailureCityNotFound": "We could not find that city. Choose the municipality again.",
-  "dependentFieldAddress": "Address",
-  "dependentFieldAddressEmpty": "No address set.",
-  "dependentFieldAddressRemove": "Clear address",
-  "dependentAddressRegisterAction": "Add address",
-  "dependentAddressEditAction": "Edit address",
-  "dependentAddressMenuTooltip": "More options",
-  "dependentAddressFormTitleNew": "Add address",
-  "dependentAddressFormTitleEdit": "Edit address",
-  "dependentAddressFormSubtitle": "Enter the ZIP code and complete the dependent's address details.",
-  "dependentAddressConfirmAction": "Confirm address",
-  "dependentAddressIncomplete": "Complete the address to save.",
   "profileGenderUnspecified": "Prefer not to say",
   "personalAddressCardTitle": "Address",
   "personalAddressEmpty": "No home address registered yet.",
@@ -491,7 +471,6 @@
   "driverProfileVanPhotos": "Van photos",
   "driverProfileNoVan": "This driver has not registered a van yet.",
   "driverProfileAbout": "About",
-  "driverProfileChatButton": "Chat with the driver",
   "driverProfileNotFound": "This driver is no longer available.",
   "driverProfileLoadError": "Could not load this driver. Try again.",
   "photoSourceGallery": "Choose from gallery",
@@ -523,6 +502,15 @@
   "driverVanFailureNetwork": "No connection to the server. Try again.",
   "driverVanFailureUnexpected": "Something went wrong. Try again.",
   "driverVansLoadError": "Could not load your van.",
+  "driverBasePriceFrom": "from {price}",
+  "@driverBasePriceFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "driverRequestQuoteButton": "Request a quote",
   "assistantEnterWithInvite": "Enter as assistant",
   "assistantInviteTitle": "Assistant invitation",
   "assistantInviteSubtitle": "Enter the code shared with you by the driver.",
@@ -595,21 +583,20 @@
   "assistantSignupErrorPasswordRequired": "Create a password.",
   "assistantSignupErrorPasswordMismatch": "Passwords do not match.",
   "assistantSignupErrorTermsRequired": "You must accept the terms of service to continue.",
-  "conversationTitle": "Chat",
   "conversationInputHint": "Write a message",
   "conversationSend": "Send",
   "conversationEmpty": "No messages yet. Say hi!",
   "conversationLoadError": "Could not open the conversation.",
   "conversationRetry": "Try again",
   "conversationFailureNetwork": "No connection to the server. Try again.",
-  "conversationFailureDriverUnavailable": "This driver is no longer available.",
+  "conversationFailureNotFound": "This conversation is no longer available.",
   "conversationFailureRejected": "This message could not be sent.",
   "conversationFailureForbidden": "You are not part of this conversation.",
   "conversationFailureUnexpected": "Something went wrong. Try again.",
   "conversationsInboxTitle": "Messages",
   "conversationsInboxEmpty": "No conversations yet. When a client writes to you, it shows up here.",
   "conversationsInboxLoadError": "Could not load your conversations.",
-  "conversationsInboxEmptyClient": "No conversations yet. To talk to a driver, open their profile in Vans and tap “Chat with the driver”.",
+  "conversationsInboxEmptyClient": "No conversations yet. A conversation with a driver starts when you request a quote from them.",
   "clientHomeGoodMorning": "Good morning, {name}!",
   "@clientHomeGoodMorning": {
     "placeholders": {
@@ -677,7 +664,7 @@
   "clientHomeWeekdayShortFriday": "fri",
   "clientHomeWeekdayShortSaturday": "sat",
   "clientHomeWeekdayShortSunday": "sun",
-  "clientHomeNamesListLastSeparator": " and ",
+  "namesListLastSeparator": " and ",
   "clientHomeTodayTitle": "Today",
   "clientHomeNeedsYouTitle": "Needs you",
   "clientHomeShortcutsTitle": "Shortcuts",
@@ -742,6 +729,8 @@
   "clientHomeSearchVans": "Search vans",
   "clientHomeShiftMorning": "morning",
   "clientHomeShiftAfternoon": "afternoon",
+  "clientHomeShiftNight": "night",
+  "clientHomeShiftFullTime": "full-time",
   "clientHomeVanTitle": "{driver}'s van · {shift}",
   "@clientHomeVanTitle": {
     "placeholders": {
@@ -1019,6 +1008,17 @@
       }
     }
   },
+  "clientHomeDriverAndInstallments": "{driver} · {installments}",
+  "@clientHomeDriverAndInstallments": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "installments": {
+        "type": "String"
+      }
+    }
+  },
   "clientHomeHoursLeft": "{hours}h left",
   "@clientHomeHoursLeft": {
     "placeholders": {
@@ -1041,28 +1041,6 @@
   "clientHomeContractStepStart": "Start",
   "clientHomeReviewAndSign": "Review and sign",
   "clientHomeNewProposal": "New proposal",
-  "clientHomeExpiresIn": "{count, plural, =0{Expires today} =1{Expires in 1 day} other{Expires in {count} days}}",
-  "@clientHomeExpiresIn": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "clientHomeRoundTrip": "round trip",
-  "clientHomeOneWay": "one way",
-  "clientHomeNamesAndTrip": "{names} · {trip}",
-  "@clientHomeNamesAndTrip": {
-    "placeholders": {
-      "names": {
-        "type": "String"
-      },
-      "trip": {
-        "type": "String"
-      }
-    }
-  },
-  "clientHomePerMonth": "/month",
   "clientHomeChat": "Chat",
   "clientHomeSeeProposal": "See proposal",
   "clientHomeNewProposalFor": "New proposal for {names}",
@@ -1081,7 +1059,6 @@
       }
     }
   },
-  "clientHomeSeeSimilarDrivers": "See similar drivers",
   "clientHomeMonthlyFeeOf": "{name}'s monthly fee",
   "@clientHomeMonthlyFeeOf": {
     "placeholders": {
@@ -1163,6 +1140,14 @@
       }
     }
   },
+  "clientHomeExpiresIn": "{count, plural, =0{Expires today} =1{Expires tomorrow} other{Expires in {count} days}}",
+  "@clientHomeExpiresIn": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "clientProposalsTitle": "Proposals",
   "clientProposalsSearchVans": "Search more vans",
   "clientProposalsAllChildren": "All children",
@@ -1190,14 +1175,6 @@
   },
   "clientProposalsPendingTitle": "Pending",
   "clientProposalsAwaitingTitle": "Awaiting reply",
-  "clientProposalsNewOnVanep": "{gender, select, female{New on Vanep} other{New on Vanep}}",
-  "@clientProposalsNewOnVanep": {
-    "placeholders": {
-      "gender": {
-        "type": "String"
-      }
-    }
-  },
   "clientProposalsForChild": "For {name}",
   "@clientProposalsForChild": {
     "placeholders": {
@@ -1217,7 +1194,7 @@
       }
     }
   },
-  "clientProposalsMondayToFriday": "Mon to Fri",
+  "weekdayRangeMondayToFriday": "Mon to Fri",
   "clientProposalsStartingOn": "from {date}",
   "@clientProposalsStartingOn": {
     "placeholders": {
@@ -1238,15 +1215,6 @@
     }
   },
   "clientProposalsFirstDayOfMonth": "1",
-  "clientProposalsPerMonth": "/mo",
-  "clientProposalsPreviousFee": "before {amount}",
-  "@clientProposalsPreviousFee": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
   "clientProposalsExpiresIn": "{count, plural, =0{Expires today} =1{Expires tomorrow} other{Expires in {count} days}}",
   "@clientProposalsExpiresIn": {
     "placeholders": {
@@ -1285,22 +1253,17 @@
     }
   },
   "clientProposalsCancelRequest": "Cancel request",
-  "clientProposalsSeeRequest": "See request",
-  "clientProposalsClosedSummary": "For {name} · {amount}/mo",
-  "@clientProposalsClosedSummary": {
+  "clientProposalsCancelTitle": "Cancel request?",
+  "clientProposalsCancelMessage": "The request to {driver} is closed and moves to Closed.",
+  "@clientProposalsCancelMessage": {
     "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "amount": {
+      "driver": {
         "type": "String"
       }
     }
   },
-  "clientProposalsOutcomeAccepted": "Accepted",
-  "clientProposalsOutcomeDeclined": "Declined",
-  "clientProposalsOutcomeExpired": "Expired",
-  "clientProposalsOutcomeCancelled": "Cancelled",
+  "clientProposalsCancelKeep": "Back",
+  "clientProposalsSeeRequest": "See request",
   "clientProposalsOpenCount": "{count, plural, =0{None open} other{{count} open}}",
   "@clientProposalsOpenCount": {
     "placeholders": {
@@ -1476,5 +1439,773 @@
   "vanCentralBasePriceValue": "{price}/month in search",
   "vanCentralBasePriceNone": "No price set",
   "vanCentralLoadError": "Could not load the van hub.",
-  "vanCentralAttendanceError": "Could not change whether you accept new students. Try again."
+  "vanCentralAttendanceError": "Could not change whether you accept new students. Try again.",
+  "negotiationShiftVaries": "shift varies",
+  "mapPlaceholderSemantics": "Illustrative map",
+  "mapAdjustAction": "Adjust on map",
+  "dependentsAddTooltip": "Add dependent",
+  "dependentsIncomplete": "Incomplete profile",
+  "dependentsTitleWithDefault": "{name} · {badge}",
+  "@dependentsTitleWithDefault": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "badge": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentDetailCaption": "Dependent",
+  "dependentDetailMoreOptions": "More options",
+  "dependentDetailDefaultNote": "default dependent",
+  "dependentDetailGroupSchool": "School and routine",
+  "dependentDetailGroupVan": "Van and contract",
+  "dependentDetailGroupRegistration": "Registration",
+  "dependentRowSchool": "School",
+  "dependentRowSchoolDays": "Days and shifts",
+  "dependentRowPickup": "Pickup",
+  "dependentRowVan": "Van",
+  "dependentRowContract": "Contract",
+  "dependentRowPersonalData": "Personal data",
+  "dependentNotInformed": "Not provided",
+  "dependentSchoolDayCount": "{count, plural, =1{1 day} other{{count} days}}",
+  "@dependentSchoolDayCount": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "dependentSchoolDaysSemantics": "Days and shifts, {days}",
+  "@dependentSchoolDaysSemantics": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentRemove": "Remove dependent",
+  "dependentRemoveTitle": "Remove {name}?",
+  "@dependentRemoveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentRemoveMessage": "{name} will leave your list of dependents.",
+  "@dependentRemoveMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentRemoveConfirm": "Remove",
+  "dependentRemoveCancel": "Cancel",
+  "dependentRemoved": "{name} was removed.",
+  "@dependentRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentReadinessCount": "{done} of {total}",
+  "@dependentReadinessCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "dependentReadinessTitle": "Complete the profile to request a quote",
+  "dependentReadinessAction": "Complete profile",
+  "dependentEditorSave": "Save",
+  "dependentFieldBirthDateHint": "dd/mm/yyyy",
+  "dependentFieldBirthDatePick": "Pick on the calendar",
+  "dependentFieldDocument": "CPF (optional)",
+  "dependentFieldDocumentHint": "000.000.000-00",
+  "dependentSchoolSearchHint": "Search school",
+  "dependentSchoolSearchPrompt": "Search for the school by its name.",
+  "dependentSchoolSearchEmpty": "No school found with this name.",
+  "dependentSchoolSearchUnavailable": "School search is unavailable. Try again in a moment.",
+  "dependentSchoolDaysWeek": "Week",
+  "dependentSchoolDaysLoadError": "Could not load the school days.",
+  "dependentSchoolDayHasClass": "{day}: has class",
+  "@dependentSchoolDayHasClass": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "dependentSchoolDayOff": "No class",
+  "dependentSchoolDayShift": "{day} shift: {shift}",
+  "@dependentSchoolDayShift": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "weekdayMonday": "Monday",
+  "weekdayTuesday": "Tuesday",
+  "weekdayWednesday": "Wednesday",
+  "weekdayThursday": "Thursday",
+  "weekdayFriday": "Friday",
+  "weekdaySaturday": "Saturday",
+  "weekdaySunday": "Sunday",
+  "weekdayInitialMonday": "M",
+  "weekdayInitialTuesday": "T",
+  "weekdayInitialWednesday": "W",
+  "weekdayInitialThursday": "T",
+  "weekdayInitialFriday": "F",
+  "weekdayInitialSaturday": "S",
+  "weekdayInitialSunday": "S",
+  "weekdayShortMonday": "Mon",
+  "weekdayShortTuesday": "Tue",
+  "weekdayShortWednesday": "Wed",
+  "weekdayShortThursday": "Thu",
+  "weekdayShortFriday": "Fri",
+  "weekdayShortSaturday": "Sat",
+  "weekdayShortSunday": "Sun",
+  "schoolShiftMorning": "Morning",
+  "schoolShiftAfternoon": "Afternoon",
+  "schoolShiftNight": "Night",
+  "schoolShiftFullTime": "Full time",
+  "dependentWizardStepCaption": "Step {number} of {total}",
+  "@dependentWizardStepCaption": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "dependentWizardContinue": "Continue",
+  "dependentWizardFinish": "Finish",
+  "dependentWizardSkip": "Skip",
+  "dependentsTitle": "Dependents",
+  "negotiationInstallments": "{count, plural, =1{{amount} upfront} other{{amount}/month · {count}x}}",
+  "@negotiationInstallments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationAdjustmentPolicyNone": "No adjustment",
+  "negotiationAdjustmentPolicyIpcaAtRenewal": "IPCA at renewal",
+  "negotiationAdjustmentFieldPrice": "Price",
+  "negotiationAdjustmentFieldInstallments": "Installments",
+  "negotiationAdjustmentFieldSchedule": "Days and times",
+  "negotiationAdjustmentFieldPeriod": "Contract period",
+  "negotiationAdjustmentFieldOther": "Other",
+  "negotiationCancellationNotice30Days": "30 days' notice",
+  "negotiationCancellationNotice30DaysWithFee": "30 days' notice + 10%",
+  "negotiationClientTurnRequestSent": "Request sent",
+  "negotiationClientTurnProposalReceived": "Proposal received",
+  "negotiationClientTurnAdjustmentRequested": "Adjustment requested",
+  "negotiationClientTurnAccepted": "Accepted",
+  "negotiationClientTurnDeclinedByDriver": "Declined by the driver",
+  "negotiationClientTurnClosedByClient": "Closed by you",
+  "negotiationClientTurnExpired": "Expired",
+  "negotiationLegOutbound": "Outbound",
+  "negotiationLegHomebound": "Return",
+  "negotiationLegsRoundTrip": "round trip",
+  "negotiationLegsOutboundOnly": "outbound only",
+  "negotiationLegsHomeboundOnly": "return only",
+  "negotiationLegsMixed": "round trip on some days",
+  "negotiationFailureNetwork": "No connection. Check the internet and try again.",
+  "negotiationFailureNotFound": "This negotiation is no longer available.",
+  "negotiationFailureInvalid": "Check the details and try again.",
+  "negotiationFailureUnexpected": "Could not finish right now. Try again.",
+  "negotiationProposalStatusSent": "Open",
+  "negotiationProposalStatusAccepted": "Accepted",
+  "negotiationProposalStatusSuperseded": "Replaced",
+  "negotiationProposalStatusDeclined": "Declined",
+  "negotiationProposalStatusExpired": "Expired",
+  "negotiationProposalStatusWithdrawn": "Withdrawn by the driver",
+  "negotiationVehicle": "{model} {year} · {capacity} seats",
+  "@negotiationVehicle": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "negotiationHistoryRequestSent": "Quote request",
+  "negotiationHistoryRequestDeclined": "Request declined by the driver",
+  "negotiationHistoryAdjustment": "Change asked · {subject}",
+  "@negotiationHistoryAdjustment": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationHistoryAccepted": "Proposal accepted",
+  "negotiationHistoryDeclined": "Proposal declined",
+  "negotiationHistoryCurrent": "Current version",
+  "negotiationChatChildWithAge": "{name}, {age}",
+  "@negotiationChatChildWithAge": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatStartsOn": "Starts on {date}",
+  "@negotiationChatStartsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatPickupIn": "Pickup in {neighborhood}",
+  "@negotiationChatPickupIn": {
+    "placeholders": {
+      "neighborhood": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatAgreementsNotice": "Agreements made in the chat only count if included in a new version of the proposal.",
+  "negotiationChatVersion": "Proposal · version {version}",
+  "@negotiationChatVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "negotiationChatBanner": "Proposal v{version} · {installments} · expires {date}",
+  "@negotiationChatBanner": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      },
+      "installments": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatSee": "See",
+  "negotiationChatToday": "Today",
+  "negotiationChatYesterday": "Yesterday",
+  "negotiationChatAdjustmentTitle": "Change request",
+  "negotiationChatSuggestion": "{field}: {value}",
+  "@negotiationChatSuggestion": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "negotiationChatDueDay": "Due on day {day}",
+  "@negotiationChatDueDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "negotiationChatLoadError": "Couldn't load the negotiation.",
+  "weekLegsCellLabel": "{day}, {leg}",
+  "@weekLegsCellLabel": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "leg": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailTitle": "Proposal",
+  "proposalDetailRequestTitle": "Request",
+  "proposalDetailLoadError": "Could not load the negotiation.",
+  "proposalDetailVersion": "Version {version}",
+  "@proposalDetailVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailExpiresOn": "Expires on {date}",
+  "@proposalDetailExpiresOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailTotal": "{amount} in total",
+  "@proposalDetailTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailStudentsTitle": "{count, plural, =1{Student} other{Students}}",
+  "@proposalDetailStudentsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailDaysTitle": "Days and legs",
+  "proposalDetailScheduleTitle": "Times",
+  "proposalDetailPickupAtHome": "Pickup at home",
+  "proposalDetailLeaveSchool": "Leaving school",
+  "proposalDetailConditionsTitle": "Terms",
+  "proposalDetailPeriod": "Contract period",
+  "proposalDetailDueDay": "Due date",
+  "proposalDetailDueDayValue": "Day {day}",
+  "@proposalDetailDueDayValue": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailEnrollmentFee": "Reservation fee",
+  "proposalDetailAdjustment": "Price adjustment",
+  "proposalDetailCancellation": "Cancellation",
+  "proposalDetailMessageTitle": "Message from the driver",
+  "proposalDetailHistoryTitle": "History",
+  "proposalDetailContractNotice": "If you accept, the contract is generated for review and signature.",
+  "proposalDetailDecline": "Decline",
+  "proposalDetailAskAdjustment": "Ask for a change",
+  "proposalDetailAccept": "Accept",
+  "proposalDetailSuperseded": "This version was replaced by a newer one.",
+  "proposalDetailSeeCurrent": "See the current version",
+  "proposalDetailClosed": "Status: {outcome}",
+  "@proposalDetailClosed": {
+    "placeholders": {
+      "outcome": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailDesiredStart": "Desired start",
+  "proposalDetailYourMessage": "Your message",
+  "proposalDetailAnswerBy": "Reply deadline",
+  "proposalDetailCompare": "Compare",
+  "proposalDetailCheaperBy": "{amount} less in total",
+  "@proposalDetailCheaperBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailPricierBy": "{amount} more in total",
+  "@proposalDetailPricierBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDetailInstallmentsChanged": "From {before} to {after} installments",
+  "@proposalDetailInstallmentsChanged": {
+    "placeholders": {
+      "before": {
+        "type": "int"
+      },
+      "after": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComparisonTitle": "Compare versions",
+  "proposalComparisonVersions": "Version {previous} → version {current}",
+  "@proposalComparisonVersions": {
+    "placeholders": {
+      "previous": {
+        "type": "int"
+      },
+      "current": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComparisonNoChanges": "Nothing changed between the two versions.",
+  "proposalComparisonNoFee": "No fee",
+  "proposalComparisonNoVehicle": "No van given",
+  "proposalComparisonAmount": "Price",
+  "proposalComparisonInstallments": "Installments",
+  "proposalComparisonInstallmentsValue": "{count, plural, =1{1 installment} other{{count} installments}}",
+  "@proposalComparisonInstallmentsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComparisonVehicle": "Vehicle",
+  "proposalAdjustmentCurrentVersion": "Version {version} · {installments}",
+  "@proposalAdjustmentCurrentVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      },
+      "installments": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAdjustmentValidUntil": "Version {version} stays valid until {date}.",
+  "@proposalAdjustmentValidUntil": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAdjustmentChangesTitle": "Changes",
+  "proposalAdjustmentSuggestedValue": "Suggested value",
+  "proposalAdjustmentPricePerInstallment": "Monthly fee",
+  "proposalAdjustmentMessage": "Message",
+  "proposalAdjustmentOptional": "Optional",
+  "proposalAdjustmentSend": "Send change request",
+  "proposalAdjustmentSent": "Change request sent.",
+  "proposalDeclineTitle": "Decline proposal",
+  "proposalDeclineSummary": "{installments} · For {names}",
+  "@proposalDeclineSummary": {
+    "placeholders": {
+      "installments": {
+        "type": "String"
+      },
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDeclineReasonTitle": "Reason",
+  "proposalDeclineReasonPriceTooHigh": "Price above what I expected",
+  "proposalDeclineReasonScheduleDoesNotFit": "The times don't work for me",
+  "proposalDeclineReasonChoseAnotherVan": "I chose another van",
+  "proposalDeclineReasonNoLongerNeeded": "I no longer need transport",
+  "proposalDeclineReasonOther": "Another reason",
+  "proposalDeclineClosesNegotiation": "The negotiation with {driver} is closed.",
+  "@proposalDeclineClosesNegotiation": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalDeclineConfirmTitle": "Decline the proposal?",
+  "proposalDeclineConfirmMessage": "This closes the negotiation with {driver} and can't be undone.",
+  "@proposalDeclineConfirmMessage": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAcceptedTitle": "Proposal accepted",
+  "proposalAcceptedContract": "Contract for {names} with {driver} generated for signature.",
+  "@proposalAcceptedContract": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAcceptedSummaryTitle": "Summary",
+  "proposalAcceptedDays": "Days",
+  "proposalAcceptedNextStepsTitle": "Next steps",
+  "proposalAcceptedStepAccepted": "Proposal accepted",
+  "proposalAcceptedStepYourSignature": "Your signature",
+  "proposalAcceptedStepDriverSignature": "Driver's signature",
+  "proposalAcceptedStepTripsStart": "Trips start",
+  "proposalAcceptedOtherNegotiations": "When you sign the contract, the other negotiations for {names} are closed.",
+  "@proposalAcceptedOtherNegotiations": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalAcceptedReviewAndSign": "Review and sign contract",
+  "proposalAcceptedSignLater": "Sign later",
+  "proposalAcceptConfirmTitle": "Accept the proposal?",
+  "proposalAcceptConfirmMessage": "The contract for {names} with {driver} is generated for review and signature.",
+  "@proposalAcceptConfirmMessage": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalConfirmBack": "Back",
+  "quoteRequestTitle": "Request a quote",
+  "quoteRequestLoadError": "Could not open the quote request.",
+  "quoteRequestStudentsTitle": "Students",
+  "quoteRequestNoStudents": "Add a dependent to request a quote.",
+  "quoteRequestIncomplete": "Incomplete profile",
+  "quoteRequestComplete": "Complete",
+  "quoteRequestRouteTitle": "Route",
+  "quoteRequestPickup": "Pickup",
+  "quoteRequestDestination": "Destination",
+  "quoteRequestLimitReached": "You reached the limit of {limit} open requests.",
+  "@quoteRequestLimitReached": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "quoteRequestClientGapsTitle": "To request a quote, complete your profile:",
+  "quoteRequestGapPhone": "Phone",
+  "quoteRequestGapAddress": "Address",
+  "quoteRequestGapDocument": "CPF",
+  "quoteRequestSend": "Send request",
+  "quoteRequestSeeNegotiation": "See negotiation",
+  "quoteRequestDriverUnavailable": "This driver is not taking new students.",
+  "quoteRequestFooter": "Reply within 72 h",
+  "calendarDateRange": "{start} to {end}",
+  "@calendarDateRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "installmentPriceMonthly": "/month · {count}x",
+  "@installmentPriceMonthly": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "installmentPriceUpfront": "upfront",
+  "installmentsCount": "{count}x",
+  "@installmentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalsTabNegotiations": "Negotiations",
+  "driverProposalsTabContracts": "Contracts",
+  "driverProposalsNewRequest": "New request",
+  "driverProposalsAdjustmentRequested": "Adjustment requested",
+  "driverProposalsClientAndChildren": "{client} · {children}",
+  "@driverProposalsClientAndChildren": {
+    "placeholders": {
+      "client": {
+        "type": "String"
+      },
+      "children": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalsEmptyTitle": "No open negotiations",
+  "driverProposalsEmptyMessage": "When a family asks for a quote, the request shows up here.",
+  "driverProposalsLoadError": "Couldn't load your negotiations.",
+  "driverRequestReceived": "{count, plural, =0{Arrived today} =1{Arrived yesterday} other{Arrived {count} days ago}}",
+  "@driverRequestReceived": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverRequestAddressNotice": "Full address after acceptance.",
+  "driverRequestFamilyMessage": "Message from the family",
+  "driverRequestComposeProposal": "Build proposal",
+  "driverRequestDeclineTitle": "Decline request?",
+  "driverRequestDeclineMessage": "{client}'s request is closed and leaves your negotiations.",
+  "@driverRequestDeclineMessage": {
+    "placeholders": {
+      "client": {
+        "type": "String"
+      }
+    }
+  },
+  "driverRequestDeclineConfirm": "Decline request",
+  "driverRequestDeclined": "Request declined.",
+  "driverAdjustmentHeader": "Adjustment requested · {field}",
+  "@driverAdjustmentHeader": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentTime": "{hour}:{minute}",
+  "@driverAdjustmentTime": {
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      },
+      "minute": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSentToday": "today, {time}",
+  "@driverAdjustmentSentToday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSentYesterday": "yesterday, {time}",
+  "@driverAdjustmentSentYesterday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSentOn": "{date}, {time}",
+  "@driverAdjustmentSentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSuggested": "Suggested",
+  "driverAdjustmentFromTo": "From {current} to {suggested}",
+  "@driverAdjustmentFromTo": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "suggested": {
+        "type": "String"
+      }
+    }
+  },
+  "driverAdjustmentSeeFullProposal": "See full proposal",
+  "driverAdjustmentReplacesNotice": "A new version replaces the previous one.",
+  "driverProposalsNewVersion": "New version",
+  "proposalComposerTitle": "New proposal",
+  "proposalComposerLoadError": "Couldn't open the proposal.",
+  "proposalComposerValuesTitle": "Amounts",
+  "proposalComposerTotal": "Contract total",
+  "proposalComposerDueDay": "Due day",
+  "proposalComposerStartsOn": "Start",
+  "proposalComposerEndsOn": "End",
+  "proposalComposerAsRequested": "As requested",
+  "proposalComposerSetTime": "Set",
+  "proposalComposerTimeLabel": "{leg} time, {day}",
+  "@proposalComposerTimeLabel": {
+    "placeholders": {
+      "leg": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "proposalComposerApplyToAll": "Apply to every day",
+  "proposalComposerVanTitle": "Van",
+  "proposalComposerNoVan": "Register a van to send the proposal.",
+  "proposalComposerRegisterVan": "Register van",
+  "proposalComposerChooseVan": "Choose the van for this proposal.",
+  "proposalComposerValidityTitle": "Proposal validity",
+  "proposalComposerValidityHint": "How long the family has to accept. After that, the proposal expires. Up to {max} days.",
+  "@proposalComposerValidityHint": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComposerValidDays": "Days for the family to answer",
+  "proposalComposerFooter": "{count, plural, =1{Proposal valid for 1 day.} other{Proposal valid for {count} days.}} If accepted, the contract is generated.",
+  "@proposalComposerFooter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComposerSend": "Send proposal",
+  "proposalComposerSent": "Proposal sent.",
+  "proposalComposerErrorStartInPast": "The start must be today or later.",
+  "proposalComposerErrorEndNotAfterStart": "The end must be after the start.",
+  "proposalComposerErrorPeriodTooLong": "The period can last up to {months} months.",
+  "@proposalComposerErrorPeriodTooLong": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComposerErrorBelowOneCent": "At least 1 cent per installment",
+  "proposalComposerErrorRange": "From {min} to {max}",
+  "@proposalComposerErrorRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalComposerErrorStudentWithoutLeg": "Keep at least one leg for each student.",
+  "negotiationChatRespond": "Respond",
+  "negotiationChatDriverPrivacyNotice": "Full address and name available after acceptance."
 }

@@ -284,4 +284,45 @@ void main() {
       expect(tester.widget<TextField>(find.byType(TextField)).enabled, isTrue);
     });
   });
+
+  testWidgets('a suffix is shown at the end of the field', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'Data de nascimento',
+            controller: controller,
+            onChanged: (_) {},
+            suffix: const Icon(Icons.calendar_today_outlined),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.calendar_today_outlined), findsOneWidget);
+  });
+
+  testWidgets('a long text field grows over several lines', (tester) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: VanepTextField(
+            label: 'Mensagem',
+            controller: controller,
+            onChanged: (_) {},
+            minLines: 3,
+            maxLines: 6,
+          ),
+        ),
+      ),
+    );
+
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.minLines, 3);
+    expect(field.maxLines, 6);
+  });
 }

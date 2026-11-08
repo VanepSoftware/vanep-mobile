@@ -112,4 +112,78 @@ void main() {
     expect(find.byIcon(Icons.lock_outline), findsOneWidget);
     expect(find.byIcon(Icons.chevron_right), findsNothing);
   });
+
+  testWidgets('a trailing icon replaces the chevron', (tester) async {
+    await tester.pumpWidget(
+      menuHarness(const [
+        VanepMenuItem(
+          label: 'Escola',
+          icon: Icons.school_outlined,
+          trailingIcon: Icons.lock_outline,
+        ),
+      ]),
+    );
+
+    expect(find.byIcon(Icons.lock_outline), findsOneWidget);
+    expect(find.byIcon(Icons.chevron_right), findsNothing);
+  });
+
+  testWidgets('content is shown under the label', (tester) async {
+    await tester.pumpWidget(
+      menuHarness(const [
+        VanepMenuItem(
+          label: 'Dias e turnos',
+          icon: Icons.calendar_month_outlined,
+          content: Text('barra da semana'),
+        ),
+      ]),
+    );
+
+    final labelBottom = tester.getBottomLeft(find.text('Dias e turnos')).dy;
+    final contentTop = tester.getTopLeft(find.text('barra da semana')).dy;
+    expect(contentTop, greaterThanOrEqualTo(labelBottom));
+    expect(find.byIcon(Icons.chevron_right), findsOneWidget);
+  });
+
+  testWidgets('tapping the content taps the item', (tester) async {
+    var taps = 0;
+    await tester.pumpWidget(
+      menuHarness([
+        VanepMenuItem(
+          label: 'Dias e turnos',
+          icon: Icons.calendar_month_outlined,
+          content: const Text('barra da semana'),
+          onTap: () => taps++,
+        ),
+      ]),
+    );
+
+    await tester.tap(find.text('barra da semana'));
+
+    expect(taps, 1);
+  });
+
+  testWidgets('a semantics label replaces what the row reads out', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    var taps = 0;
+    await tester.pumpWidget(
+      menuHarness([
+        VanepMenuItem(
+          label: 'Dias e turnos',
+          icon: Icons.calendar_month_outlined,
+          content: const Text('barra da semana'),
+          semanticsLabel: 'Dias e turnos, 5 dias',
+          onTap: () => taps++,
+        ),
+      ]),
+    );
+
+    expect(find.bySemanticsLabel('Dias e turnos, 5 dias'), findsOneWidget);
+    expect(find.bySemanticsLabel('barra da semana'), findsNothing);
+    await tester.tap(find.text('Dias e turnos'));
+    expect(taps, 1);
+    semantics.dispose();
+  });
 }

@@ -84,6 +84,13 @@ class VanepTypography {
     color: VanepColors.textPrimary,
   );
 
+  static const TextStyle overline = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 0.9,
+    color: VanepColors.action,
+  );
+
   static const TextStyle linkAction = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w600,

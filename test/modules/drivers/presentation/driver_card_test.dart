@@ -17,7 +17,9 @@ Widget _harness(Driver driver, {VoidCallback? onTap}) {
     ],
     supportedLocales: AppLocalizations.supportedLocales,
     locale: const Locale('pt'),
-    home: Scaffold(body: DriverCard(driver: driver, onTap: onTap)),
+    home: Scaffold(
+      body: DriverCard(driver: driver, onTap: onTap),
+    ),
   );
 }
 
@@ -40,9 +42,48 @@ void main() {
 
   testWidgets('invokes onTap when tapped', (tester) async {
     var tapped = false;
-    await tester.pumpWidget(_harness(testDriverDto, onTap: () => tapped = true));
+    await tester.pumpWidget(
+      _harness(testDriverDto, onTap: () => tapped = true),
+    );
 
     await tester.tap(find.byType(DriverCard));
     expect(tapped, isTrue);
+  });
+
+  testWidgets('offers to request a quote with the base price', (tester) async {
+    var requested = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('pt'),
+        home: Scaffold(
+          body: DriverCard(
+            driver: testDriverDto,
+            basePriceCents: 32000,
+            onQuoteRequested: () => requested = true,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('a partir de R\$\u00a0320'), findsOneWidget);
+    expect(find.textContaining('x de'), findsNothing);
+
+    await tester.tap(find.text('Pedir orçamento'));
+    expect(requested, isTrue);
+  });
+
+  testWidgets('without a quote action there is no quote button', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_harness(testDriverDto));
+
+    expect(find.text('Pedir orçamento'), findsNothing);
   });
 }

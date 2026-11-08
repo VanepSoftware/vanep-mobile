@@ -86,6 +86,8 @@ Widget _harness(
         openDriverSearch: openDriverSearch ?? (_) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
         openClientProposals: (_) async {},
+        openProposalDetail: (_, _) async {},
+        openNegotiationChat: (_, _) async {},
       ),
     ),
   );
@@ -297,7 +299,7 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Dependentes'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Gerenciar dependentes'), findsOneWidget);
+    expect(find.text('Gerencie quem viaja na van'), findsOneWidget);
     verify(dependentsCubit.loadDependents).called(1);
 
     await tester.tap(find.bySemanticsLabel('Início'));
@@ -342,6 +344,7 @@ void main() {
     await tester.tap(find.text('Cadastrar dependente'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Gerenciar dependentes'), findsOneWidget);
+    expect(find.text('Gerencie quem viaja na van'), findsOneWidget);
+    verify(dependentsCubit.loadDependents).called(1);
   });
 }

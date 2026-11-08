@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
@@ -15,11 +16,31 @@ import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiation_timeline_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/client_proposals_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_accepted_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_adjustment_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_detail_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/quote_request_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_request_cubit.dart';
+import 'package:vanep_mobile/modules/contract_readiness/domain/entities/contract_readiness.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_wizard_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_address_form_page.dart';
+import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_confirmations.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_decline_sheet.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
@@ -35,6 +56,19 @@ import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_van_registration_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_state.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_state.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposal_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_service_request_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/proposal_composer_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_negotiation_actions.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/request_decline_sheet.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
@@ -94,6 +128,9 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<VanCentralCubit>(
                   create: (_) => getIt<VanCentralCubit>()..load(),
                 ),
+                BlocProvider<DriverNegotiationsCubit>(
+                  create: (_) => getIt<DriverNegotiationsCubit>(),
+                ),
               ],
               child: DriverShell(
                 profile: session.profile,
@@ -101,11 +138,17 @@ class AuthGate extends StatelessWidget {
                 openMyVans: openDriverVans,
                 openVanRegistration: openDriverVanRegistration,
                 openConversationChat: (context, conversation) =>
-                    openConversationChat(
+                    openInboxConversation(
                       context,
                       conversation,
                       viewerSide: ConversationParticipant.driver,
                     ),
+                proposalsActions: DriverProposalsTabActions(
+                  onOpenRequest: (request) =>
+                      openDriverServiceRequest(context, request),
+                  onOpenProposal: (request) =>
+                      openDriverProposal(context, request),
+                ),
               ),
             ),
             _ => MultiBlocProvider(
@@ -134,12 +177,14 @@ class AuthGate extends StatelessWidget {
                 openDriverSearch: openDriverSearch,
                 openDriverProfile: openDriverProfile,
                 openConversationChat: (context, conversation) =>
-                    openConversationChat(
+                    openInboxConversation(
                       context,
                       conversation,
                       viewerSide: ConversationParticipant.client,
                     ),
                 openClientProposals: openClientProposals,
+                openProposalDetail: openProposalDetail,
+                openNegotiationChat: openClientNegotiationChat,
               ),
             ),
           },
@@ -165,6 +210,8 @@ Future<void> openDriverSearch(BuildContext context) async {
           autocomplete: autocomplete,
           onDriverSelected: (driverToken) =>
               openDriverProfile(context, driverToken),
+          onQuoteRequested: (driverToken) =>
+              openQuoteRequest(context, driverToken),
         ),
       ),
     ),
@@ -172,15 +219,182 @@ Future<void> openDriverSearch(BuildContext context) async {
   autocomplete.dispose();
 }
 
-Future<void> openClientProposals(BuildContext context) {
-  return Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) => BlocProvider<ClientProposalsCubit>(
-        create: (_) => getIt<ClientProposalsCubit>()..loadProposals(),
-        child: ClientProposalsPage(
+Route<void> clientProposalsRoute(BuildContext context) {
+  return MaterialPageRoute<void>(
+    builder: (_) => BlocProvider<ClientProposalsCubit>(
+      create: (_) => getIt<ClientProposalsCubit>()..loadProposals(),
+      child: ClientProposalsPage(
+        actions: ClientProposalsActions(
           onSearchVansTapped: () => openDriverSearch(context),
+          onSeeProposal: (request) => openProposalDetail(context, request),
+          onSeeRequest: (request) => openProposalDetail(context, request),
+          onChat: (request) => openClientNegotiationChat(context, request),
         ),
       ),
+    ),
+  );
+}
+
+Future<void> openClientProposals(BuildContext context) {
+  return Navigator.of(context).push(clientProposalsRoute(context));
+}
+
+Future<void> openQuoteRequest(BuildContext context, String driverToken) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<QuoteRequestCubit>(
+        create: (_) => getIt<QuoteRequestCubit>(param1: driverToken)..load(),
+        child: QuoteRequestPage(
+          actions: QuoteRequestActions(
+            onCompleteStudent: (dependent, gaps) =>
+                openDependentCompletionWizard(
+                  context,
+                  dependent: dependent,
+                  gaps: gaps,
+                ),
+            onCompleteClientField: (field) =>
+                openClientReadinessField(context, field),
+            onSent: (_) =>
+                Navigator.of(context)
+                    .pushReplacement(clientProposalsRoute(context)),
+            onOpenNegotiation: (request) =>
+                openProposalDetail(context, request),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openClientReadinessField(
+  BuildContext context,
+  ContractReadinessField field,
+) async {
+  final syncProfile = context.read<AuthCubit>().syncProfile;
+  final Widget page;
+  switch (field) {
+    case ContractReadinessField.phone:
+      page = const PersonalDataPage();
+    case ContractReadinessField.address:
+      page = const PersonalAddressFormPage();
+    default:
+      return;
+  }
+  await Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<PersonalDataCubit>(
+        create: (_) => getIt<PersonalDataCubit>(param1: syncProfile)..load(),
+        child: page,
+      ),
+    ),
+  );
+}
+
+Route<void> proposalDetailRoute(
+  BuildContext context,
+  ClientServiceRequest request, {
+  String? proposalToken,
+  bool acceptsOnOpen = false,
+}) {
+  return MaterialPageRoute<void>(
+    builder: (_) => BlocProvider<ProposalDetailCubit>(
+      create: (_) {
+        final cubit = getIt<ProposalDetailCubit>(
+          param1: request.token,
+          param2: proposalToken,
+        );
+        acceptsOnOpen ? cubit.loadAndAccept() : cubit.load();
+        return cubit;
+      },
+      child: ProposalDetailPage(
+        actions: ProposalDetailActions(
+          onChat: (request) => openClientNegotiationChat(context, request),
+          onAskAdjustment: (request, proposal) =>
+              openProposalAdjustment(context, request, proposal),
+          onDecline: (request, proposal) =>
+              showProposalDecline(context, request, proposal),
+          onAccepted: (request, proposal) =>
+              openProposalAccepted(context, request, proposal),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openProposalDetail(
+  BuildContext context,
+  ClientServiceRequest request,
+) {
+  return Navigator.of(context).push(
+    proposalDetailRoute(
+      context,
+      request,
+      proposalToken: request.currentProposal?.token,
+    ),
+  );
+}
+
+Future<void> openProposalAcceptance(
+  BuildContext context,
+  ClientServiceRequest request,
+  Proposal proposal,
+) async {
+  if (!await confirmProposalAcceptance(context, request)) return;
+  if (!context.mounted) return;
+  await Navigator.of(context).push(
+    proposalDetailRoute(
+      context,
+      request,
+      proposalToken: proposal.token,
+      acceptsOnOpen: true,
+    ),
+  );
+}
+
+Future<bool> openProposalAdjustment(
+  BuildContext context,
+  ClientServiceRequest request,
+  Proposal proposal,
+) async {
+  final asked = await Navigator.of(context).push<bool>(
+    MaterialPageRoute<bool>(
+      builder: (_) => BlocProvider<ProposalAdjustmentCubit>(
+        create: (_) => getIt<ProposalAdjustmentCubit>(param1: proposal.token),
+        child: ProposalAdjustmentPage(request: request, proposal: proposal),
+      ),
+    ),
+  );
+  return asked ?? false;
+}
+
+Future<ProposalDeclineOutcome?> showProposalDecline(
+  BuildContext context,
+  ClientServiceRequest request,
+  Proposal proposal,
+) {
+  return showModalBottomSheet<ProposalDeclineOutcome>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: VanepColors.card,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (_) => BlocProvider<ProposalDeclineCubit>(
+      create: (_) => getIt<ProposalDeclineCubit>(param1: proposal.token),
+      child: ProposalDeclineSheet(request: request, proposal: proposal),
+    ),
+  );
+}
+
+Future<void> openProposalAccepted(
+  BuildContext context,
+  ClientServiceRequest request,
+  Proposal proposal,
+) {
+  return Navigator.of(context).pushReplacement(
+    MaterialPageRoute<void>(
+      builder: (_) =>
+          ProposalAcceptedPage(request: request, proposal: proposal),
     ),
   );
 }
@@ -192,36 +406,216 @@ Future<void> openDriverProfile(BuildContext context, String driverToken) {
         create: (_) =>
             getIt<DriverProfileCubit>(param1: driverToken)..loadProfile(),
         child: DriverProfilePage(
-          onChatTapped: (driverToken) => openDriverChat(context, driverToken),
+          onQuoteRequested: (driverToken) =>
+              openQuoteRequest(context, driverToken),
         ),
       ),
     ),
   );
 }
 
-Future<void> openConversationChat(
+Future<void> openInboxConversation(
   BuildContext context,
   Conversation conversation, {
   required ConversationParticipant viewerSide,
 }) {
+  return openConversationChat(
+    context,
+    conversationToken: conversation.token,
+    counterpartName: conversationCounterpartName(conversation, viewerSide),
+    viewerSide: viewerSide,
+  );
+}
+
+Future<void> openConversationChat(
+  BuildContext context, {
+  required String conversationToken,
+  required String counterpartName,
+  required ConversationParticipant viewerSide,
+}) {
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => BlocProvider<ChatCubit>(
-        create: (_) => getIt<ChatCubit>(param2: conversation)..start(),
-        child: ChatPage(viewerSide: viewerSide),
+      builder: (_) => switch (viewerSide) {
+        ConversationParticipant.client => MultiBlocProvider(
+          providers: [
+            BlocProvider<ChatCubit>(
+              create: (_) =>
+                  getIt<ChatCubit>(param1: conversationToken)..start(),
+            ),
+            BlocProvider<NegotiationTimelineCubit<ClientServiceRequest>>(
+              create: (_) =>
+                  getIt<NegotiationTimelineCubit<ClientServiceRequest>>(
+                    param1: conversationToken,
+                  )..load(),
+            ),
+          ],
+          child: ChatPage<ClientServiceRequest>(
+            counterpartName: counterpartName,
+            viewerSide: ConversationParticipant.client,
+            negotiationActions: clientNegotiationChatActions(context),
+          ),
+        ),
+        ConversationParticipant.driver => MultiBlocProvider(
+          providers: [
+            BlocProvider<ChatCubit>(
+              create: (_) =>
+                  getIt<ChatCubit>(param1: conversationToken)..start(),
+            ),
+            BlocProvider<NegotiationTimelineCubit<DriverServiceRequest>>(
+              create: (_) =>
+                  getIt<NegotiationTimelineCubit<DriverServiceRequest>>(
+                    param1: conversationToken,
+                  )..load(),
+            ),
+          ],
+          child: ChatPage<DriverServiceRequest>(
+            counterpartName: counterpartName,
+            viewerSide: ConversationParticipant.driver,
+            negotiationActions: driverNegotiationChatActions(context),
+          ),
+        ),
+      },
+    ),
+  );
+}
+
+NegotiationChatActions<ClientServiceRequest> clientNegotiationChatActions(
+  BuildContext context,
+) {
+  return NegotiationChatActions(
+    onSeeProposal: (request) => openProposalDetail(context, request),
+    onAccept: (request, proposal) =>
+        openProposalAcceptance(context, request, proposal),
+    onAskAdjustment: (request, proposal) async {
+      await openProposalAdjustment(context, request, proposal);
+    },
+  );
+}
+
+Future<void> openClientNegotiationChat(
+  BuildContext context,
+  ClientServiceRequest request,
+) async {
+  final conversationToken = request.conversationToken;
+  if (conversationToken == null) return;
+  await openConversationChat(
+    context,
+    conversationToken: conversationToken,
+    counterpartName: request.driverName,
+    viewerSide: ConversationParticipant.client,
+  );
+}
+
+DriverNegotiationActions driverNegotiationActions(BuildContext context) {
+  return DriverNegotiationActions(
+    onChat: (request) => openDriverNegotiationChat(context, request),
+    onDecline: (request) => showRequestDecline(context, request),
+    onComposeProposal: (request, previousVersion) => openProposalComposer(
+      context,
+      request,
+      previousVersion: previousVersion,
+    ),
+  );
+}
+
+Future<void> openDriverServiceRequest(
+  BuildContext context,
+  DriverServiceRequest request,
+) {
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<DriverServiceRequestCubit>(
+        create: (_) =>
+            getIt<DriverServiceRequestCubit>(param1: request.token)..load(),
+        child: DriverServiceRequestPage(
+          actions: driverNegotiationActions(context),
+        ),
       ),
     ),
   );
 }
 
-Future<void> openDriverChat(BuildContext context, String driverToken) {
+Future<void> openDriverProposal(
+  BuildContext context,
+  DriverServiceRequest request,
+) {
+  final proposalToken = request.currentProposal?.token;
+  if (proposalToken == null) return openDriverServiceRequest(context, request);
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => BlocProvider<ChatCubit>(
-        create: (_) => getIt<ChatCubit>(param1: driverToken)..start(),
-        child: const ChatPage(viewerSide: ConversationParticipant.client),
+      builder: (_) => BlocProvider<DriverProposalCubit>(
+        create: (_) => getIt<DriverProposalCubit>(
+          param1: request.token,
+          param2: proposalToken,
+        )..load(),
+        child: DriverProposalPage(actions: driverNegotiationActions(context)),
       ),
     ),
+  );
+}
+
+Future<RequestDeclineOutcome?> showRequestDecline(
+  BuildContext context,
+  DriverServiceRequest request,
+) {
+  return showModalBottomSheet<RequestDeclineOutcome>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: VanepColors.card,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (_) => BlocProvider<RequestDeclineCubit>(
+      create: (_) => getIt<RequestDeclineCubit>(param1: request.token),
+      child: RequestDeclineSheet(request: request),
+    ),
+  );
+}
+
+Future<ProposalComposerOutcome?> openProposalComposer(
+  BuildContext context,
+  DriverServiceRequest request, {
+  Proposal? previousVersion,
+}) {
+  return Navigator.of(context).push<ProposalComposerOutcome>(
+    MaterialPageRoute<ProposalComposerOutcome>(
+      builder: (_) => BlocProvider<ProposalComposerCubit>(
+        create: (_) => getIt<ProposalComposerCubit>(
+          param1: request.token,
+          param2: previousVersion?.token,
+        )..load(),
+        child: ProposalComposerPage(
+          actions: ProposalComposerActions(
+            onRegisterVan: () => openDriverVans(context),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+NegotiationChatActions<DriverServiceRequest> driverNegotiationChatActions(
+  BuildContext context,
+) {
+  return NegotiationChatActions(
+    onSeeProposal: (request) => openDriverProposal(context, request),
+    onNewVersion: (request, proposal) async {
+      await openProposalComposer(context, request, previousVersion: proposal);
+    },
+  );
+}
+
+Future<void> openDriverNegotiationChat(
+  BuildContext context,
+  DriverServiceRequest request,
+) async {
+  final conversationToken = request.conversationToken;
+  if (conversationToken == null) return;
+  await openConversationChat(
+    context,
+    conversationToken: conversationToken,
+    counterpartName: request.clientFirstName,
+    viewerSide: ConversationParticipant.driver,
   );
 }
 

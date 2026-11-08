@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/dependents/data/repositories/dependent_repository_impl.dart';
@@ -9,20 +8,6 @@ import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_d
 
 import '../dependents_fixtures.dart';
 import '../dependents_mocks.dart';
-
-DioException dioFailure(int? status, {Object? body}) {
-  final requestOptions = RequestOptions(path: '/api/dependent');
-  return DioException(
-    requestOptions: requestOptions,
-    response: status == null
-        ? null
-        : Response<Object?>(
-            requestOptions: requestOptions,
-            statusCode: status,
-            data: body,
-          ),
-  );
-}
 
 void main() {
   late MockDependentRemoteDataSource remote;
@@ -105,7 +90,7 @@ void main() {
     when(() => remote.createDependent(any())).thenThrow(
       dioFailure(
         400,
-        body: const {'detail': 'Documento duplicado.', 'field': 'document'},
+        body: const {'detail': 'Telefone muito longo.', 'field': 'phone'},
       ),
     );
 
@@ -190,16 +175,84 @@ void main() {
     });
   });
 
-  test('409 maps to unexpected', () async {
+  test('409 carries the detail of the back', () async {
     when(() => remote.createDependent(any())).thenThrow(
-      dioFailure(409, body: const {'detail': 'Address already owned.'}),
+      dioFailure(
+        409,
+        body: const {
+          'detail': 'Já existe um dependente cadastrado com este documento.',
+        },
+      ),
     );
 
     final result = await repository.createDependent(
       buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
     );
 
+    expect(
+      result.errorOrNull,
+      const DependentRejectedFailure(
+        detail: 'Já existe um dependente cadastrado com este documento.',
+      ),
+    );
+  });
+
+  test('409 without a detail maps to unexpected', () async {
+    when(() => remote.createDependent(any())).thenThrow(dioFailure(409));
+
+    final result = await repository.createDependent(
+      buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
+    );
+
     expect(result.errorOrNull, const DependentUnexpectedFailure());
+  });
+
+  group('removeDependent', () {
+    test('a removal is returned as Ok', () async {
+      when(() => remote.removeDependent(any())).thenAnswer((_) async {});
+
+      final result = await repository.removeDependent('dep-helena');
+
+      expect(result.isOk, isTrue);
+      verify(() => remote.removeDependent('dep-helena')).called(1);
+    });
+
+    test('422 with an open request carries the detail of the back', () async {
+      when(() => remote.removeDependent(any())).thenThrow(
+        dioFailure(
+          422,
+          body: const {
+            'detail': 'O dependente está em um pedido de orçamento aberto.',
+            'code': 'dependent.open_negotiation',
+          },
+        ),
+      );
+
+      final result = await repository.removeDependent('dep-helena');
+
+      expect(
+        result.errorOrNull,
+        const DependentRejectedFailure(
+          detail: 'O dependente está em um pedido de orçamento aberto.',
+        ),
+      );
+    });
+
+    test('404 maps to not found', () async {
+      when(() => remote.removeDependent(any())).thenThrow(dioFailure(404));
+
+      final result = await repository.removeDependent('dep-helena');
+
+      expect(result.errorOrNull, const DependentNotFoundFailure());
+    });
+
+    test('no response maps to a network failure', () async {
+      when(() => remote.removeDependent(any())).thenThrow(dioFailure(null));
+
+      final result = await repository.removeDependent('dep-helena');
+
+      expect(result.errorOrNull, const DependentNetworkFailure());
+    });
   });
 
   test('an unreadable payload maps to unexpected', () async {

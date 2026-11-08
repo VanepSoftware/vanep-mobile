@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_greeting_header.dart';
 import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
@@ -11,11 +12,13 @@ import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_state.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/client_home_skeleton.dart';
+import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/first_access_extras.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_shortcuts_grid.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/needs_you_section.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/today_section_view.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 
 class ClientHomeTab extends StatelessWidget {
   const ClientHomeTab({
@@ -26,6 +29,8 @@ class ClientHomeTab extends StatelessWidget {
     required this.onAddAddressTapped,
     required this.onAddDependentTapped,
     required this.onProposalsTapped,
+    required this.onProposalTapped,
+    required this.onNegotiationChatTapped,
     super.key,
   });
 
@@ -36,6 +41,8 @@ class ClientHomeTab extends StatelessWidget {
   final VoidCallback onAddAddressTapped;
   final VoidCallback onAddDependentTapped;
   final VoidCallback onProposalsTapped;
+  final void Function(ClientServiceRequest request) onProposalTapped;
+  final void Function(ClientServiceRequest request) onNegotiationChatTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +72,11 @@ class ClientHomeTab extends StatelessWidget {
                     onAddAddressTapped: onAddAddressTapped,
                     onAddDependentTapped: onAddDependentTapped,
                     onProposalsTapped: onProposalsTapped,
+                    negotiationActions: HomeNegotiationActions(
+                      onProposalTapped: onProposalTapped,
+                      onChatTapped: onNegotiationChatTapped,
+                      onFindVanTapped: onFindVanTapped,
+                    ),
                   )
                 else if (state.hasLoadFailed)
                   VanepErrorView(
@@ -116,6 +128,7 @@ class ClientHomeBlocks extends StatelessWidget {
     required this.onAddAddressTapped,
     required this.onAddDependentTapped,
     required this.onProposalsTapped,
+    required this.negotiationActions,
     super.key,
   });
 
@@ -124,6 +137,7 @@ class ClientHomeBlocks extends StatelessWidget {
   final VoidCallback onAddAddressTapped;
   final VoidCallback onAddDependentTapped;
   final VoidCallback onProposalsTapped;
+  final HomeNegotiationActions negotiationActions;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +158,7 @@ class ClientHomeBlocks extends StatelessWidget {
           NeedsYouSection(
             summary: home.needsYou,
             now: home.date,
-            onProposalsTapped: onProposalsTapped,
+            actions: negotiationActions,
           ),
         ],
         const SizedBox(height: homeBlockSpacing),

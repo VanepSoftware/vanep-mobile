@@ -9,6 +9,8 @@ class TestDependent implements Dependent {
     this.gender,
     this.isDefault = false,
     this.address,
+    this.school,
+    this.document,
   });
 
   @override
@@ -25,6 +27,29 @@ class TestDependent implements Dependent {
 
   @override
   final bool isDefault;
+
+  @override
+  final DependentAddress? address;
+
+  @override
+  final DependentSchool? school;
+
+  @override
+  final String? document;
+}
+
+class TestDependentSchool implements DependentSchool {
+  const TestDependentSchool({
+    this.token = 'school-delta',
+    this.name = 'Colégio Delta',
+    this.address,
+  });
+
+  @override
+  final String token;
+
+  @override
+  final String name;
 
   @override
   final DependentAddress? address;

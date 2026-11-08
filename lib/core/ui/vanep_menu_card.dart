@@ -13,6 +13,9 @@ class VanepMenuItem {
     this.subtitle,
     this.warningSubtitle,
     this.trailing,
+    this.trailingIcon = Icons.chevron_right,
+    this.content,
+    this.semanticsLabel,
     this.onTap,
   });
 
@@ -23,6 +26,9 @@ class VanepMenuItem {
   final String? subtitle;
   final String? warningSubtitle;
   final Widget? trailing;
+  final IconData trailingIcon;
+  final Widget? content;
+  final String? semanticsLabel;
   final VoidCallback? onTap;
 }
 
@@ -84,8 +90,9 @@ class VanepMenuTile extends StatelessWidget {
     final subtitle = item.subtitle;
     final warningSubtitle = item.warningSubtitle;
     final trailing = item.trailing;
+    final content = item.content;
 
-    return InkWell(
+    final tile = InkWell(
       onTap: enabled ? item.onTap : null,
       borderRadius: BorderRadius.circular(16),
       child: Opacity(
@@ -123,6 +130,10 @@ class VanepMenuTile extends StatelessWidget {
                       const SizedBox(height: 3),
                       VanepMenuWarningSubtitle(text: warningSubtitle),
                     ],
+                    if (content != null) ...[
+                      const SizedBox(height: 6),
+                      content,
+                    ],
                   ],
                 ),
               ),
@@ -130,13 +141,23 @@ class VanepMenuTile extends StatelessWidget {
                 trailing
               else if (!item.isDestructive)
                 Icon(
-                  Icons.chevron_right,
+                  item.trailingIcon,
                   color: enabled ? VanepColors.textMuted : VanepColors.divider,
                 ),
             ],
           ),
         ),
       ),
+    );
+    final semanticsLabel = item.semanticsLabel;
+    if (semanticsLabel == null) return tile;
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: semanticsLabel,
+      onTap: enabled ? item.onTap : null,
+      excludeSemantics: true,
+      child: tile,
     );
   }
 }

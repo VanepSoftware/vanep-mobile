@@ -16,6 +16,8 @@ import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_state.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
@@ -23,6 +25,7 @@ import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
+import '../modules/driver_proposals/driver_proposals_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 import '../modules/driver_van_central/driver_van_central_mocks.dart';
 import '../modules/driver_van_central/driver_van_central_fixtures.dart';
@@ -35,6 +38,7 @@ Widget harness(
   Future<void> Function(BuildContext)? openServiceAreas,
   ConversationsInboxCubit? conversationsCubit,
   Future<void> Function(BuildContext, Conversation)? openConversationChat,
+  DriverNegotiationsCubit? negotiationsCubit,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -54,6 +58,9 @@ Widget harness(
         BlocProvider<ConversationsInboxCubit>.value(
           value: conversationsCubit ?? readyConversationsCubit(),
         ),
+        BlocProvider<DriverNegotiationsCubit>.value(
+          value: negotiationsCubit ?? readyNegotiationsCubit(),
+        ),
       ],
       child: DriverShell(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
@@ -61,6 +68,10 @@ Widget harness(
         openMyVans: (_) async {},
         openVanRegistration: (_) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
+        proposalsActions: DriverProposalsTabActions(
+          onOpenRequest: (_) async {},
+          onOpenProposal: (_) async {},
+        ),
       ),
     ),
   );
@@ -158,16 +169,27 @@ void main() {
     verify(() => authCubit.refreshSessionProfile()).called(1);
   });
 
-  testWidgets('the Propostas tab shows proposals and contracts coming soon', (
+  testWidgets('the Propostas tab loads and shows the negotiations', (
     tester,
   ) async {
-    await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
+    final negotiationsCubit = readyNegotiationsCubit();
+    await tester.pumpWidget(
+      harness(
+        cubit,
+        authCubit,
+        profileSummaryCubit,
+        negotiationsCubit: negotiationsCubit,
+      ),
+    );
 
     await tester.tap(find.bySemanticsLabel('Propostas'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Propostas e contratos'), findsOneWidget);
-    expect(find.text('Em breve'), findsOneWidget);
+    expect(find.byType(DriverProposalsTab), findsOneWidget);
+    expect(find.text('Negociações'), findsOneWidget);
+    expect(find.text('Maria · Theo e Alice'), findsOneWidget);
+    expect(find.text('Em breve'), findsNothing);
+    verify(() => negotiationsCubit.load()).called(1);
   });
 
   testWidgets('students live in the Vans hub and are coming soon', (

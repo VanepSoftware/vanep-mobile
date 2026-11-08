@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
@@ -13,10 +12,14 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/conversations_inbox_tab.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_home_tab.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/shell/driver_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
+
+const driverShellProposalsTabIndex = 2;
 
 const driverShellConversationsTabIndex = 3;
 
@@ -27,6 +30,7 @@ class DriverShell extends StatefulWidget {
     required this.openMyVans,
     required this.openVanRegistration,
     required this.openConversationChat,
+    required this.proposalsActions,
     super.key,
   });
 
@@ -40,6 +44,8 @@ class DriverShell extends StatefulWidget {
 
   final Future<void> Function(BuildContext context, Conversation conversation)
   openConversationChat;
+
+  final DriverProposalsTabActions proposalsActions;
 
   @override
   State<DriverShell> createState() => DriverShellState();
@@ -99,10 +105,7 @@ class DriverShellState extends State<DriverShell> {
                     message: l10n.comingSoon,
                   ),
                 ),
-                VanepComingSoon(
-                  title: l10n.navProposalsAndContracts,
-                  message: l10n.comingSoon,
-                ),
+                DriverProposalsTab(actions: widget.proposalsActions),
                 ConversationsInboxTab(
                   viewerSide: ConversationParticipant.driver,
                   onConversationTapped: (conversation) =>
@@ -128,7 +131,10 @@ class DriverShellState extends State<DriverShell> {
 
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);
-    if (index != driverShellConversationsTabIndex) return;
-    context.read<ConversationsInboxCubit>().loadConversations();
+    if (index == driverShellProposalsTabIndex) {
+      context.read<DriverNegotiationsCubit>().load();
+    } else if (index == driverShellConversationsTabIndex) {
+      context.read<ConversationsInboxCubit>().loadConversations();
+    }
   }
 }

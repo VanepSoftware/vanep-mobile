@@ -31,7 +31,8 @@ List<DateTime> nextWeekdays(DateTime day, int count) {
 // TODO(VAN-41): mocked data for development only. Every overview below is
 // fake and must be replaced by the remote data source as each endpoint lands
 // (see tasks 6.1–6.4); delete this class, ClientHomeScenario and
-// CLIENT_HOME_SCENARIO once all of them are wired.
+// CLIENT_HOME_SCENARIO once all of them are wired. Proposals, expired requests
+// and the open negotiations already come from the API (VAN-78).
 class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
   const ScenarioDailyOverviewDataSource({
     required this.scenario,
@@ -56,30 +57,10 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     };
   }
 
-  // TODO(VAN-41): mocked negotiation and proposals; replace with the
-  // proposals endpoint (api-java #30).
-  DailyOverview negotiatingOverview(DateTime now) {
-    return DailyOverview(
-      today: const NegotiatingSection(
-        childNames: ['Ana', 'Pedro'],
-        openNegotiations: 3,
-      ),
-      needsYou: [
-        NewProposalItem(
-          driverName: 'Carlos Souza',
-          childNames: const ['Ana', 'Pedro'],
-          roundTrip: true,
-          monthlyFeeCents: 65000,
-          expiresAt: now.add(const Duration(days: 6)),
-        ),
-        const ExpiredRequestItem(driverName: 'Rita Alves'),
-      ],
-    );
-  }
+  DailyOverview negotiatingOverview(DateTime now) => const DailyOverview();
 
-  // TODO(VAN-41): mocked route, live trip, payment, proposal and contract;
-  // replace with the daily route, payments (#17), proposals (#30) and
-  // contract (#31/#32) endpoints.
+  // TODO(VAN-41): mocked route, live trip, payment and contract; replace with
+  // the daily route, payments (#17) and contract (#31/#32) endpoints.
   DailyOverview everythingAtOnceOverview(DateTime now) {
     return DailyOverview(
       today: VanDaySection(
@@ -99,13 +80,6 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
           amountCents: 35000,
           dueAt: now.add(const Duration(days: 1)),
           childName: 'Ana',
-        ),
-        NewProposalItem(
-          driverName: 'Rita Alves',
-          childNames: const ['Pedro'],
-          roundTrip: true,
-          monthlyFeeCents: 32000,
-          expiresAt: now.add(const Duration(days: 7)),
         ),
         ContractToSignItem(
           childName: 'Pedro',

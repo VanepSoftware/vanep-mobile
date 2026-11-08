@@ -4,6 +4,9 @@ import 'package:vanep_mobile/modules/client_home/domain/value_objects/day_event.
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/needs_you_item.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_status.dart';
+
+import '../negotiations/negotiations_fixtures.dart';
 
 final testWednesdayMorning = DateTime(2026, 11, 4, 6, 40);
 
@@ -20,19 +23,42 @@ final testContractToSign = ContractToSignItem(
 );
 
 final testRitaProposal = NewProposalItem(
-  driverName: 'Rita Alves',
-  childNames: const ['Pedro'],
-  roundTrip: true,
-  monthlyFeeCents: 32000,
-  expiresAt: DateTime(2026, 11, 10),
+  request: TestClientServiceRequest(
+    token: 'request-rita',
+    conversationToken: 'conversation-rita',
+    driverToken: 'driver-rita',
+    driverName: 'Rita Alves',
+    status: ServiceRequestStatus.answered,
+    items: [
+      TestClientRequestItem(dependentToken: 'pedro', dependentName: 'Pedro'),
+    ],
+    currentProposal: TestProposalSummary(
+      token: 'proposal-rita',
+      installments: 12,
+      installmentAmountCents: 32000,
+      validUntil: DateTime(2026, 11, 10),
+    ),
+  ),
 );
 
 final testCarlosProposal = NewProposalItem(
-  driverName: 'Carlos Souza',
-  childNames: const ['Ana', 'Pedro'],
-  roundTrip: true,
-  monthlyFeeCents: 65000,
-  expiresAt: DateTime(2026, 11, 6),
+  request: TestClientServiceRequest(
+    token: 'request-carlos',
+    status: ServiceRequestStatus.answered,
+    items: [
+      TestClientRequestItem(dependentToken: 'ana', dependentName: 'Ana Souza'),
+      TestClientRequestItem(
+        dependentToken: 'pedro',
+        dependentName: 'Pedro Souza',
+      ),
+    ],
+    currentProposal: TestProposalSummary(
+      token: 'proposal-carlos',
+      installments: 12,
+      installmentAmountCents: 65000,
+      validUntil: DateTime(2026, 11, 6),
+    ),
+  ),
 );
 
 const testExpiredRequest = ExpiredRequestItem(driverName: 'Rita Alves');

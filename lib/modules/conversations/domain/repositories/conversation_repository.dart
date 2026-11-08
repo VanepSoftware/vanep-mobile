@@ -5,10 +5,6 @@ import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_
 import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_realtime_event.dart';
 
 abstract class ConversationRepository {
-  Future<Result<ConversationFailure, Conversation>> openConversation(
-    String driverToken,
-  );
-
   Future<Result<ConversationFailure, List<Conversation>>> listMyConversations();
 
   Future<Result<ConversationFailure, ConversationMessagePage>> listMessages({

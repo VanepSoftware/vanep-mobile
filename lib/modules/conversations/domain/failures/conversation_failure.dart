@@ -11,8 +11,8 @@ final class ConversationNetworkFailure extends ConversationFailure {
   const ConversationNetworkFailure();
 }
 
-final class ConversationDriverUnavailableFailure extends ConversationFailure {
-  const ConversationDriverUnavailableFailure();
+final class ConversationNotFoundFailure extends ConversationFailure {
+  const ConversationNotFoundFailure();
 }
 
 final class ConversationMessageRejectedFailure extends ConversationFailure {

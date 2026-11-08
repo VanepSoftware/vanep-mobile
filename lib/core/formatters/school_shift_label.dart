@@ -5,5 +5,7 @@ String formatShift(AppLocalizations l10n, SchoolShift shift) {
   return switch (shift) {
     SchoolShift.morning => l10n.clientHomeShiftMorning,
     SchoolShift.afternoon => l10n.clientHomeShiftAfternoon,
+    SchoolShift.night => l10n.clientHomeShiftNight,
+    SchoolShift.fullTime => l10n.clientHomeShiftFullTime,
   };
 }

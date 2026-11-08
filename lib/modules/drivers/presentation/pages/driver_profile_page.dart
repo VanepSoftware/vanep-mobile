@@ -15,9 +15,9 @@ import 'package:vanep_mobile/modules/drivers/presentation/formatters/driver_prof
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_profile_sections.dart';
 
 class DriverProfilePage extends StatelessWidget {
-  const DriverProfilePage({this.onChatTapped, super.key});
+  const DriverProfilePage({this.onQuoteRequested, super.key});
 
-  final ValueChanged<String>? onChatTapped;
+  final ValueChanged<String>? onQuoteRequested;
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +61,26 @@ class DriverProfilePage extends StatelessWidget {
               ? null
               : SafeArea(
                   minimum: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                  child: VanepPrimaryButton(
-                    label: l10n.driverProfileChatButton,
-                    onPressed: onChatTapped == null
-                        ? null
-                        : () => onChatTapped!(profile.token),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (!profile.available) ...[
+                        Text(
+                          l10n.quoteRequestDriverUnavailable,
+                          textAlign: TextAlign.center,
+                          style: VanepTypography.cardSubtitle,
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                      VanepPrimaryButton(
+                        label: l10n.driverRequestQuoteButton,
+                        onPressed:
+                            onQuoteRequested == null || !profile.available
+                            ? null
+                            : () => onQuoteRequested!(profile.token),
+                      ),
+                    ],
                   ),
                 ),
         );

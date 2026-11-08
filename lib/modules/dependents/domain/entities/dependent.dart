@@ -12,6 +12,18 @@ abstract class Dependent {
   bool get isDefault;
 
   DependentAddress? get address;
+
+  DependentSchool? get school;
+
+  String? get document;
+}
+
+abstract class DependentSchool {
+  String get token;
+
+  String get name;
+
+  DependentAddress? get address;
 }
 
 abstract class DependentAddress {

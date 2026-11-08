@@ -7,15 +7,20 @@ import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/modules/conversations/data/datasources/conversation_realtime_datasource.dart';
 import 'package:vanep_mobile/modules/conversations/data/datasources/conversation_remote_datasource.dart';
 import 'package:vanep_mobile/modules/conversations/data/repositories/conversation_repository_impl.dart';
-import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/repositories/conversation_repository.dart';
+import 'package:vanep_mobile/modules/conversations/domain/usecases/find_conversation_negotiation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_conversation_messages.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_my_conversations.dart';
-import 'package:vanep_mobile/modules/conversations/domain/usecases/open_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/watch_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiation_timeline_cubit.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_proposal_versions.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_service_requests.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_driver_proposal_versions.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_driver_service_requests.dart';
 
 void registerConversationsDependencies(GetIt getIt) {
   final environment = getIt<Environment>();
@@ -39,9 +44,6 @@ void registerConversationsDependencies(GetIt getIt) {
         realtime: getIt<ConversationRealtimeDataSource>(),
       ),
     )
-    ..registerFactory<OpenConversation>(
-      () => OpenConversation(getIt<ConversationRepository>()),
-    )
     ..registerFactory<ListMyConversations>(
       () => ListMyConversations(getIt<ConversationRepository>()),
     )
@@ -54,14 +56,46 @@ void registerConversationsDependencies(GetIt getIt) {
     ..registerFactory<WatchConversation>(
       () => WatchConversation(getIt<ConversationRepository>()),
     )
-    ..registerFactoryParam<ChatCubit, String?, Conversation?>(
-      (driverToken, conversation) => ChatCubit(
-        openConversation: getIt<OpenConversation>(),
+    ..registerFactoryParam<ChatCubit, String, void>(
+      (conversationToken, _) => ChatCubit(
         listConversationMessages: getIt<ListConversationMessages>(),
         sendConversationMessage: getIt<SendConversationMessage>(),
         watchConversation: getIt<WatchConversation>(),
-        driverToken: driverToken,
-        conversation: conversation,
+        conversationToken: conversationToken,
+      ),
+    )
+    ..registerFactory<FindConversationNegotiation<ClientServiceRequest>>(
+      () => FindConversationNegotiation(
+        listRequests: getIt<ListClientServiceRequests>().call,
+        listVersions: getIt<ListClientProposalVersions>().call,
+      ),
+    )
+    ..registerFactoryParam<
+      NegotiationTimelineCubit<ClientServiceRequest>,
+      String,
+      void
+    >(
+      (conversationToken, _) => NegotiationTimelineCubit(
+        conversationToken: conversationToken,
+        findNegotiation:
+            getIt<FindConversationNegotiation<ClientServiceRequest>>(),
+      ),
+    )
+    ..registerFactory<FindConversationNegotiation<DriverServiceRequest>>(
+      () => FindConversationNegotiation(
+        listRequests: getIt<ListDriverServiceRequests>().call,
+        listVersions: getIt<ListDriverProposalVersions>().call,
+      ),
+    )
+    ..registerFactoryParam<
+      NegotiationTimelineCubit<DriverServiceRequest>,
+      String,
+      void
+    >(
+      (conversationToken, _) => NegotiationTimelineCubit(
+        conversationToken: conversationToken,
+        findNegotiation:
+            getIt<FindConversationNegotiation<DriverServiceRequest>>(),
       ),
     )
     ..registerFactory<ConversationsInboxCubit>(
