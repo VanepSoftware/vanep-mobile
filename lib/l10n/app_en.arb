@@ -554,6 +554,61 @@
   "assistantFailureUnauthorized": "You do not have permission to access this resource.",
   "assistantFailureNetwork": "No connection to the server. Please try again.",
   "assistantFailureUnexpected": "Something went wrong. Please try again.",
+  "assistantVansTitle": "Vans",
+  "assistantVansSubtitle": "The vans you work on",
+  "assistantVansPendingInviteSection": "Pending invitation",
+  "assistantVansActiveSection": "Active",
+  "assistantVansDecline": "Decline",
+  "assistantVansAccept": "Accept",
+  "assistantVansExpiresInDays": "{count, plural, =1{Expires in 1 day} other{Expires in {count} days}}",
+  "@assistantVansExpiresInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantVansExpiresToday": "Expires today",
+  "assistantVansVanTitle": "{name}'s van",
+  "@assistantVansVanTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantVansDeparture": "Departs {time}",
+  "@assistantVansDeparture": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantVansStudentCount": "{count, plural, =1{1 student} other{{count} students}}",
+  "@assistantVansStudentCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantVansDetails": "Details",
+  "assistantVansRouteToday": "Today's route",
+  "assistantVansFormerLinks": "{count, plural, =1{Previous links · 1 van} other{Previous links · {count} vans}}",
+  "@assistantVansFormerLinks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantVansEmpty": "You have no linked vans yet.",
+  "assistantVansRetry": "Try again",
+  "assistantVansShiftMorning": "morning",
+  "assistantVansShiftAfternoon": "afternoon",
+  "assistantVansShiftNight": "night",
+  "assistantVansShiftFullTime": "full time",
   "assistantSignupTitle": "Assistant registration",
   "assistantSignupSubtitle": "Fill in your details to start monitoring routes.",
   "assistantSignupInvitedBy": "You were invited by {name}",
