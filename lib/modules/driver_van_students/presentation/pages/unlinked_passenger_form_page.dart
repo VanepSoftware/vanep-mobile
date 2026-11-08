@@ -372,8 +372,10 @@ class UnlinkedPassengerScheduleSection extends StatelessWidget {
       isAllowed: (_, _) => true,
       isSelected: draft.isLegSelected,
       timeOf: draft.timeOf,
+      defaultTimeOf: draft.defaultTimeOf,
       onToggled: cubit.toggleLeg,
       onTimePicked: cubit.changeTime,
+      onDefaultTimeChanged: cubit.changeDefaultTime,
       onApplyToEveryDay: cubit.applyTimeToEveryDay,
       layoutBuilder: (days, times) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

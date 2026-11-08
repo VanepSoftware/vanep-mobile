@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/core/places/place_search_session.dart';
@@ -22,6 +23,10 @@ import 'package:vanep_mobile/modules/schools/domain/failures/school_failure.dart
 
 import '../driver_van_students_fixtures.dart';
 import '../driver_van_students_mocks.dart';
+
+const customOutbound = ClockTime(hour: 7, minute: 15);
+
+const laterOutboundDefault = ClockTime(hour: 7, minute: 45);
 
 const schoolSuggestion = PlaceSuggestion(
   placeId: 'place-1',
@@ -81,8 +86,31 @@ void main() {
       final draft = cubit.state.draft;
       expect(draft.name, 'Laura');
       expect(draft.schoolShift, SchoolShift.morning);
-      expect(draft.timeOf(Weekday.tuesday, RouteLeg.outbound), morningPickup);
+      expect(draft.timeOf(Weekday.monday, RouteLeg.outbound), morningPickup);
+      expect(
+        draft.timeOf(Weekday.tuesday, RouteLeg.outbound),
+        defaultOutboundPickupTime,
+      );
       expect(draft.notes, 'Portão azul');
+    },
+  );
+
+  blocTest<UnlinkedPassengerFormCubit, UnlinkedPassengerFormState>(
+    'a new default leaves a custom day and fills the next day',
+    build: buildCubit,
+    act: (cubit) => cubit
+      ..toggleLeg(RouteLeg.outbound, Weekday.monday)
+      ..changeTime(Weekday.monday, RouteLeg.outbound, customOutbound)
+      ..changeDefaultTime(RouteLeg.outbound, laterOutboundDefault)
+      ..toggleLeg(RouteLeg.outbound, Weekday.wednesday),
+    verify: (cubit) {
+      final draft = cubit.state.draft;
+      expect(draft.timeOf(Weekday.monday, RouteLeg.outbound), customOutbound);
+      expect(draft.defaultTimeOf(RouteLeg.outbound), laterOutboundDefault);
+      expect(
+        draft.timeOf(Weekday.wednesday, RouteLeg.outbound),
+        laterOutboundDefault,
+      );
     },
   );
 

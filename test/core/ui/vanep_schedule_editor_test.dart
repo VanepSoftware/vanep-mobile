@@ -39,6 +39,7 @@ void main() {
       (RouteLeg.homebound, Weekday.monday),
     ]);
     expect(find.byType(VanepTimeButton), findsOneWidget);
+    expect(find.text('Horário padrão'), findsNothing);
   });
 
   testWidgets('time button announces its day, leg, value and tap action', (
@@ -92,4 +93,38 @@ void main() {
       ]);
     },
   );
+
+  testWidgets('default times are visible and a picked default is reported', (
+    tester,
+  ) async {
+    final changed = <(RouteLeg, ClockTime)>[];
+    await tester.pumpWidget(
+      localizedHost(
+        VanepScheduleEditor(
+          isAllowed: (_, _) => true,
+          isSelected: (_, _) => false,
+          timeOf: (_, _) => null,
+          defaultTimeOf: (leg) => leg == RouteLeg.outbound
+              ? const ClockTime(hour: 8, minute: 0)
+              : const ClockTime(hour: 18, minute: 0),
+          onToggled: (_, _) {},
+          onTimePicked: (_, _, _) {},
+          onDefaultTimeChanged: (leg, time) => changed.add((leg, time)),
+          onApplyToEveryDay: (_, _) {},
+        ),
+      ),
+    );
+
+    expect(find.text('Horário padrão'), findsOneWidget);
+    expect(find.text('08:00'), findsOneWidget);
+    expect(find.text('18:00'), findsOneWidget);
+    expect(find.byType(VanepLegTimesTable), findsNothing);
+
+    await tester.tap(find.text('08:00'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+
+    expect(changed, [(RouteLeg.outbound, const ClockTime(hour: 8, minute: 0))]);
+  });
 }

@@ -2159,6 +2159,16 @@
     }
   },
   "proposalComposerApplyToAll": "Apply to every day",
+  "scheduleEditorDefaultTimes": "Default time",
+  "scheduleEditorDefaultTimesHint": "Marking a day applies this time.",
+  "scheduleEditorDefaultTimeLabel": "Default {leg} time",
+  "@scheduleEditorDefaultTimeLabel": {
+    "placeholders": {
+      "leg": {
+        "type": "String"
+      }
+    }
+  },
   "proposalComposerVanTitle": "Van",
   "proposalComposerNoVan": "Register a van to send the proposal.",
   "proposalComposerRegisterVan": "Register van",

@@ -15,6 +15,8 @@ class VanepScheduleEditor extends StatelessWidget {
     required this.onToggled,
     required this.onTimePicked,
     required this.onApplyToEveryDay,
+    this.defaultTimeOf,
+    this.onDefaultTimeChanged,
     this.layoutBuilder,
     super.key,
   });
@@ -25,6 +27,8 @@ class VanepScheduleEditor extends StatelessWidget {
   final void Function(RouteLeg, Weekday) onToggled;
   final void Function(Weekday, RouteLeg, ClockTime) onTimePicked;
   final void Function(RouteLeg, ClockTime) onApplyToEveryDay;
+  final ClockTime Function(RouteLeg leg)? defaultTimeOf;
+  final void Function(RouteLeg leg, ClockTime time)? onDefaultTimeChanged;
   final Widget Function(Widget days, Widget? times)? layoutBuilder;
 
   @override
@@ -52,7 +56,15 @@ class VanepScheduleEditor extends StatelessWidget {
     final hasTimes = Weekday.values.any(
       (day) => RouteLeg.values.any((leg) => isEnabled(day, leg)),
     );
-    final times = hasTimes
+    final defaultTimeOf = this.defaultTimeOf;
+    final onDefaultTimeChanged = this.onDefaultTimeChanged;
+    final defaults = defaultTimeOf == null || onDefaultTimeChanged == null
+        ? null
+        : VanepDefaultLegTimes(
+            timeOf: defaultTimeOf,
+            onTimePicked: onDefaultTimeChanged,
+          );
+    final dayTimes = hasTimes
         ? VanepLegTimesTable(
             isEnabled: isEnabled,
             timeOf: timeOf,
@@ -60,6 +72,17 @@ class VanepScheduleEditor extends StatelessWidget {
             onApplyToEveryDay: onApplyToEveryDay,
           )
         : null;
+    final times = defaults == null && dayTimes == null
+        ? null
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ?defaults,
+              if (defaults != null && dayTimes != null)
+                const SizedBox(height: 16),
+              ?dayTimes,
+            ],
+          );
     return layoutBuilder?.call(days, times) ??
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

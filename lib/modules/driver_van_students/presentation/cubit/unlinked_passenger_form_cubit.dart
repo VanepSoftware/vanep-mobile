@@ -89,6 +89,9 @@ class UnlinkedPassengerFormCubit extends Cubit<UnlinkedPassengerFormState>
   void changeTime(Weekday weekday, RouteLeg leg, ClockTime time) =>
       emitDraft(state.draft.changeTime(weekday, leg, time));
 
+  void changeDefaultTime(RouteLeg leg, ClockTime time) =>
+      emitDraft(state.draft.changeDefaultTime(leg, time));
+
   void applyTimeToEveryDay(RouteLeg leg, ClockTime time) =>
       emitDraft(state.draft.applyTimeToEveryDay(leg, time));
 

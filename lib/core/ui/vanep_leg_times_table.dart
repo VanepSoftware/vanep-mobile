@@ -200,3 +200,62 @@ class VanepTimeButton extends StatelessWidget {
     );
   }
 }
+
+class VanepDefaultLegTimes extends StatelessWidget {
+  const VanepDefaultLegTimes({
+    required this.timeOf,
+    required this.onTimePicked,
+    super.key,
+  });
+
+  final ClockTime Function(RouteLeg leg) timeOf;
+  final void Function(RouteLeg leg, ClockTime time) onTimePicked;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l10n.scheduleEditorDefaultTimes,
+          style: VanepTypography.fieldLabel,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          l10n.scheduleEditorDefaultTimesHint,
+          style: VanepTypography.cardSubtitle,
+        ),
+        const SizedBox(height: 8),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final leg in RouteLeg.values) ...[
+              if (leg != RouteLeg.values.first)
+                const SizedBox(width: legTimesColumnGap),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      routeLegLabel(l10n, leg),
+                      textAlign: TextAlign.center,
+                      style: VanepTypography.cardTitle,
+                    ),
+                    const SizedBox(height: 8),
+                    VanepTimeButton(
+                      semanticLabel: l10n.scheduleEditorDefaultTimeLabel(
+                        routeLegLabel(l10n, leg),
+                      ),
+                      time: timeOf(leg),
+                      onPicked: (time) => onTimePicked(leg, time),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+}

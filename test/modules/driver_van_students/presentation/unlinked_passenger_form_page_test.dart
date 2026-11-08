@@ -63,7 +63,10 @@ void main() {
     expect(find.text('Escola'), findsOneWidget);
     expect(find.text('Embarque'), findsOneWidget);
     expect(find.text('Dias e trechos'), findsOneWidget);
-    expect(find.text('Horário de embarque'), findsNothing);
+    expect(find.text('Horário de embarque'), findsOneWidget);
+    expect(find.text('Horário padrão'), findsOneWidget);
+    expect(find.text('08:00'), findsOneWidget);
+    expect(find.text('18:00'), findsOneWidget);
 
     await tester.tap(find.text('Cadastrar aluno'));
 
@@ -91,6 +94,9 @@ void main() {
     await pumpForm(tester, UnlinkedPassengerFormState(draft: completeDraft()));
 
     expect(find.text('Horário de embarque'), findsOneWidget);
+    expect(find.text('Horário padrão'), findsOneWidget);
+    expect(find.text('08:00'), findsOneWidget);
+    expect(find.text('18:00'), findsOneWidget);
     expect(find.text('06:40'), findsOneWidget);
     expect(find.text('12:10'), findsOneWidget);
     expect(find.text('Col. Horizonte'), findsOneWidget);

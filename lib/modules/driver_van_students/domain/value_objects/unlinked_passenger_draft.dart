@@ -26,6 +26,15 @@ enum UnlinkedPassengerDraftError {
 
 typedef WeekdayLeg = (Weekday, RouteLeg);
 
+const defaultOutboundPickupTime = ClockTime(hour: 8, minute: 0);
+
+const defaultHomeboundPickupTime = ClockTime(hour: 18, minute: 0);
+
+const initialLegPickupTimes = {
+  RouteLeg.outbound: defaultOutboundPickupTime,
+  RouteLeg.homebound: defaultHomeboundPickupTime,
+};
+
 class UnlinkedPassengerSlot extends Equatable {
   const UnlinkedPassengerSlot({
     required this.weekday,
@@ -53,6 +62,7 @@ class UnlinkedPassengerDraft extends Equatable {
     this.schoolShift,
     this.address = const PostalAddressDraft(),
     this.legTimes = const {},
+    this.defaultTimes = initialLegPickupTimes,
     this.notes = '',
     this.vehicleToken,
   });
@@ -67,6 +77,8 @@ class UnlinkedPassengerDraft extends Equatable {
 
   final Map<WeekdayLeg, ClockTime?> legTimes;
 
+  final Map<RouteLeg, ClockTime> defaultTimes;
+
   final String notes;
 
   final String? vehicleToken;
@@ -77,22 +89,29 @@ class UnlinkedPassengerDraft extends Equatable {
 
   ClockTime? timeOf(Weekday weekday, RouteLeg leg) => legTimes[(weekday, leg)];
 
+  ClockTime defaultTimeOf(RouteLeg leg) {
+    final saved = defaultTimes[leg];
+    if (saved != null) return saved;
+    return switch (leg) {
+      RouteLeg.outbound => defaultOutboundPickupTime,
+      RouteLeg.homebound => defaultHomeboundPickupTime,
+    };
+  }
+
   UnlinkedPassengerDraft toggleLeg(Weekday weekday, RouteLeg leg) {
     final next = {...legTimes};
-    if (next.containsKey((weekday, leg))) {
-      next.remove((weekday, leg));
+    final slot = (weekday, leg);
+    if (next.containsKey(slot)) {
+      next.remove(slot);
     } else {
-      next[(weekday, leg)] = firstTimeOfLeg(leg);
+      next[slot] = defaultTimeOf(leg);
     }
     return copyWith(legTimes: next);
   }
 
-  ClockTime? firstTimeOfLeg(RouteLeg leg) {
-    for (final weekday in Weekday.values) {
-      final time = legTimes[(weekday, leg)];
-      if (time != null) return time;
-    }
-    return null;
+  UnlinkedPassengerDraft changeDefaultTime(RouteLeg leg, ClockTime time) {
+    if (defaultTimeOf(leg) == time) return this;
+    return copyWith(defaultTimes: {...defaultTimes, leg: time});
   }
 
   UnlinkedPassengerDraft changeTime(
@@ -159,6 +178,7 @@ class UnlinkedPassengerDraft extends Equatable {
     SchoolShift? schoolShift,
     PostalAddressDraft? address,
     Map<WeekdayLeg, ClockTime?>? legTimes,
+    Map<RouteLeg, ClockTime>? defaultTimes,
     String? notes,
   }) {
     return UnlinkedPassengerDraft(
@@ -167,6 +187,7 @@ class UnlinkedPassengerDraft extends Equatable {
       schoolShift: schoolShift ?? this.schoolShift,
       address: address ?? this.address,
       legTimes: legTimes ?? this.legTimes,
+      defaultTimes: defaultTimes ?? this.defaultTimes,
       notes: notes ?? this.notes,
       vehicleToken: vehicleToken,
     );
@@ -179,6 +200,7 @@ class UnlinkedPassengerDraft extends Equatable {
     schoolShift,
     address,
     legTimes,
+    defaultTimes,
     notes,
     vehicleToken,
   ];
