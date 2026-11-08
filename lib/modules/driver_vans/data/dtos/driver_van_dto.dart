@@ -17,6 +17,7 @@ abstract class DriverVanDto with _$DriverVanDto implements DriverVan {
     required int capacity,
     String? photoFrontUrl,
     String? photoSideUrl,
+    @Default(true) bool active,
   }) = _DriverVanDto;
 
   factory DriverVanDto.fromJson(Map<String, Object?> json) =>

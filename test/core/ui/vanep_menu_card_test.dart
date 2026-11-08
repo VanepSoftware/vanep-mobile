@@ -93,4 +93,23 @@ void main() {
     expect(find.text('Confirme'), findsOneWidget);
     expect(find.byIcon(Icons.error_outline), findsOneWidget);
   });
+
+  testWidgets('shows a subtitle and a custom trailing instead of the chevron', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      menuHarness(const [
+        VanepMenuItem(
+          label: 'Alunos',
+          icon: Icons.groups_outlined,
+          subtitle: '28 alunos',
+          trailing: Icon(Icons.lock_outline),
+        ),
+      ]),
+    );
+
+    expect(find.text('28 alunos'), findsOneWidget);
+    expect(find.byIcon(Icons.lock_outline), findsOneWidget);
+    expect(find.byIcon(Icons.chevron_right), findsNothing);
+  });
 }
