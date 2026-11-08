@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/ui/vanep_intro_frame.dart';
 
-const double vanepSheenCenter = 0.78;
 const double vanepSheenHalfWidth = 0.22;
 const double vanepSheenOpacity = 0.10;
 
@@ -21,49 +20,50 @@ class VanepBrandBackdrop extends StatelessWidget {
   const VanepBrandBackdrop({
     required this.child,
     this.gradientOpacity = 1,
+    this.sheenCenter = vanepSheenRestCenter,
     super.key,
   });
 
   final Widget child;
   final double gradientOpacity;
+  final double sheenCenter;
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
-      child: ColoredBox(
-        color: VanepColors.brandNavy,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Opacity(
-              opacity: gradientOpacity,
-              child: const DecoratedBox(
-                decoration: BoxDecoration(gradient: vanepBrandGradient),
-              ),
+    return ColoredBox(
+      color: VanepColors.brandNavy,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Opacity(
+            opacity: gradientOpacity,
+            child: const DecoratedBox(
+              decoration: BoxDecoration(gradient: vanepBrandGradient),
             ),
-            DecoratedBox(
-              decoration: BoxDecoration(gradient: buildVanepSheenGradient()),
+          ),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: buildVanepSheenGradient(sheenCenter),
             ),
-            child,
-          ],
-        ),
+          ),
+          child,
+        ],
       ),
     );
   }
 }
 
-LinearGradient buildVanepSheenGradient() {
+LinearGradient buildVanepSheenGradient(double center) {
   final glow = VanepColors.brandSheen.withValues(alpha: vanepSheenOpacity);
   final clear = VanepColors.brandSheen.withValues(alpha: 0);
   return LinearGradient(
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
     colors: [clear, glow, clear],
-    stops: const [
-      vanepSheenCenter - vanepSheenHalfWidth,
-      vanepSheenCenter,
-      vanepSheenCenter + vanepSheenHalfWidth,
+    stops: [
+      (center - vanepSheenHalfWidth).clamp(0.0, 1.0),
+      center.clamp(0.0, 1.0),
+      (center + vanepSheenHalfWidth).clamp(0.0, 1.0),
     ],
   );
 }

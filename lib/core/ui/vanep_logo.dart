@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/ui/vanep_intro_frame.dart';
 import 'package:vanep_mobile/core/ui/vanep_logo_glyphs.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 
@@ -10,11 +11,13 @@ class VanepLogo extends StatelessWidget {
   const VanepLogo({
     required this.width,
     this.color = VanepColors.onBrand,
+    this.letterReveals,
     super.key,
   });
 
   final double width;
   final Color color;
+  final List<double>? letterReveals;
 
   @override
   Widget build(BuildContext context) {
@@ -23,28 +26,42 @@ class VanepLogo extends StatelessWidget {
       image: true,
       child: CustomPaint(
         size: Size(width, width * vanepLogoHeight / vanepLogoWidth),
-        painter: VanepLogoPainter(color: color),
+        painter: VanepLogoPainter(
+          color: color,
+          letterReveals: letterReveals ?? vanepLogoFullyRevealed,
+        ),
       ),
     );
   }
 }
 
 class VanepLogoPainter extends CustomPainter {
-  VanepLogoPainter({required this.color});
+  VanepLogoPainter({required this.color, required this.letterReveals});
 
   final Color color;
+  final List<double> letterReveals;
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.scale(size.width / vanepLogoWidth);
-    for (final letter in vanepLogoLetters) {
-      paintVanepLetter(canvas, letter: letter, reveal: 1, color: color);
+    for (
+      var letterIndex = 0;
+      letterIndex < vanepLogoLetters.length;
+      letterIndex++
+    ) {
+      paintVanepLetter(
+        canvas,
+        letter: vanepLogoLetters[letterIndex],
+        reveal: letterReveals[letterIndex],
+        color: color,
+      );
     }
   }
 
   @override
   bool shouldRepaint(VanepLogoPainter oldDelegate) {
-    return oldDelegate.color != color;
+    return oldDelegate.color != color ||
+        oldDelegate.letterReveals != letterReveals;
   }
 }
 
