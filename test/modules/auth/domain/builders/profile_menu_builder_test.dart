@@ -74,6 +74,15 @@ void main() {
     expect(enabledById(menu)[ProfileMenuId.assistantInvite], isFalse);
   });
 
+  test('settings is enabled for every user type', () {
+    for (final type in [...UserType.values, null]) {
+      expect(
+        enabledById(buildProfileMenu(type))[ProfileMenuId.settings],
+        isTrue,
+      );
+    }
+  });
+
   test('admin and null type get the base menu only', () {
     for (final type in [UserType.admin, null]) {
       final menu = buildProfileMenu(type);

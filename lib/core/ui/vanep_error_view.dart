@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepErrorView extends StatelessWidget {
   const VanepErrorView({
@@ -23,12 +22,12 @@ class VanepErrorView extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           const SizedBox(height: 16),
           TextButton(
             onPressed: onRetry,
-            child: Text(retryLabel, style: VanepTypography.ratingLabel),
+            child: Text(retryLabel, style: context.typography.ratingLabel),
           ),
         ],
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
@@ -16,6 +15,7 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/drive
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverServiceRequestPage extends StatelessWidget {
   const DriverServiceRequestPage({
@@ -53,7 +53,7 @@ class DriverServiceRequestPage extends StatelessWidget {
       builder: (context, state) {
         final request = state.request;
         return Scaffold(
-          backgroundColor: VanepColors.surface,
+          backgroundColor: context.palette.surface,
           appBar: VanepAppBar(
             title: l10n.negotiationHistoryRequestSent,
             caption: request == null
@@ -75,8 +75,8 @@ class DriverServiceRequestPage extends StatelessWidget {
               retryLabel: l10n.clientProposalsRetry,
               onRetry: cubit.load,
             ),
-            _ => const Center(
-              child: CircularProgressIndicator(color: VanepColors.action),
+            _ => Center(
+              child: CircularProgressIndicator(color: context.palette.action),
             ),
           },
           bottomNavigationBar: request != null && state.canAnswer
@@ -164,9 +164,9 @@ class DriverAnswerFooter extends StatelessWidget {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-        decoration: const BoxDecoration(
-          color: VanepColors.card,
-          border: Border(top: BorderSide(color: VanepColors.divider)),
+        decoration: BoxDecoration(
+          color: context.palette.card,
+          border: Border(top: BorderSide(color: context.palette.divider)),
         ),
         child: Row(
           children: [

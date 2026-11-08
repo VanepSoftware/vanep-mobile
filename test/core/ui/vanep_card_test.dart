@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 Widget cardHarness({bool highlighted = false, VoidCallback? onTap}) {
   return MaterialApp(
@@ -34,9 +34,9 @@ void main() {
     await tester.pumpWidget(cardHarness());
 
     final material = cardMaterial(tester);
-    expect(material.color, VanepColors.card);
+    expect(material.color, VanepPalette.light.card);
     expect(material.elevation, 0);
-    expect(cardShape(tester).side.color, VanepColors.cardBorder);
+    expect(cardShape(tester).side.color, VanepPalette.light.cardBorder);
   });
 
   testWidgets('switches to the action outline when highlighted', (
@@ -44,8 +44,8 @@ void main() {
   ) async {
     await tester.pumpWidget(cardHarness(highlighted: true));
 
-    expect(cardMaterial(tester).color, VanepColors.actionSurface);
-    expect(cardShape(tester).side.color, VanepColors.action);
+    expect(cardMaterial(tester).color, VanepPalette.light.actionSurface);
+    expect(cardShape(tester).side.color, VanepPalette.light.action);
   });
 
   testWidgets('reports taps when a callback is given', (tester) async {

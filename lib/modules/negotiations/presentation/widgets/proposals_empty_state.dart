@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ProposalsEmptyState extends StatelessWidget {
   const ProposalsEmptyState({
@@ -33,13 +33,13 @@ class ProposalsEmptyState extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: VanepTypography.cardTitle,
+            style: context.typography.cardTitle,
           ),
           const SizedBox(height: 4),
           Text(
             message,
             textAlign: TextAlign.center,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           if (actionLabel != null) ...[
             const SizedBox(height: 16),

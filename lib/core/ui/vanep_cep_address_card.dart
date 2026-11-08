@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepCepAddressCard extends StatelessWidget {
   const VanepCepAddressCard({
@@ -22,22 +20,22 @@ class VanepCepAddressCard extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: VanepColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: VanepColors.cardBorder),
+        border: Border.all(color: context.palette.cardBorder),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
+            Icon(
               Icons.location_on_outlined,
               size: 20,
-              color: VanepColors.textSecondary,
+              color: context.palette.textSecondary,
             ),
             const SizedBox(width: 12),
-            Expanded(child: Text(text, style: VanepTypography.fieldValue)),
+            Expanded(child: Text(text, style: context.typography.fieldValue)),
           ],
         ),
       ),

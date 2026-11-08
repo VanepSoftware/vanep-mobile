@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/formatters/upper_case_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
@@ -12,6 +11,7 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invi
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_state.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/mappers/assistant_failure_l10n.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_lean_signup_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> openAssistantInvite(
   BuildContext context, {
@@ -76,7 +76,7 @@ class _AssistantInviteCodePageState extends State<AssistantInviteCodePage> {
             : null;
 
         return Scaffold(
-          backgroundColor: VanepColors.card,
+          backgroundColor: context.palette.card,
           appBar: const VanepAppBar(),
           body: SafeArea(
             child: ListView(

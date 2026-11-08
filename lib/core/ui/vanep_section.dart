@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepSection extends StatelessWidget {
   const VanepSection({
@@ -66,15 +64,15 @@ class VanepSectionHeader extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: VanepTypography.sectionTitle.copyWith(
-              color: VanepColors.textPrimary,
+            style: context.typography.sectionTitle.copyWith(
+              color: context.palette.textPrimary,
             ),
           ),
         ),
         if (note != null)
           Text(
             note,
-            style: VanepTypography.cardSubtitle.copyWith(
+            style: context.typography.cardSubtitle.copyWith(
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
@@ -87,7 +85,7 @@ class VanepSectionHeader extends StatelessWidget {
             ),
             child: Text(
               actionLabel,
-              style: VanepTypography.linkAction.copyWith(fontSize: 14),
+              style: context.typography.linkAction.copyWith(fontSize: 14),
             ),
           ),
       ],

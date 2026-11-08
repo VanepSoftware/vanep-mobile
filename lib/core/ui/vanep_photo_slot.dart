@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/network/api_image_provider.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_edit_badge.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepPhotoSlot extends StatelessWidget {
   const VanepPhotoSlot({
@@ -39,7 +38,7 @@ class VanepPhotoSlot extends StatelessWidget {
             button: onTap != null,
             label: label,
             child: Material(
-              color: VanepColors.avatarPlaceholder,
+              color: context.palette.avatarPlaceholder,
               borderRadius: BorderRadius.circular(10),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
@@ -71,7 +70,7 @@ class VanepPhotoSlot extends StatelessWidget {
         ),
         if (label != null) ...[
           const SizedBox(height: 6),
-          Text(label, style: VanepTypography.cardSubtitle),
+          Text(label, style: context.typography.cardSubtitle),
         ],
       ],
     );
@@ -85,6 +84,8 @@ class VanepPhotoPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Icon(icon, size: 32, color: VanepColors.textMuted));
+    return Center(
+      child: Icon(icon, size: 32, color: context.palette.textMuted),
+    );
   }
 }

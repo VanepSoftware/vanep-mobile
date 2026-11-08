@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
@@ -14,6 +13,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_fa
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/decline_reason.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class RequestDeclineSheet extends StatefulWidget {
   const RequestDeclineSheet({required this.request, super.key});
@@ -75,10 +75,10 @@ class RequestDeclineSheetState extends State<RequestDeclineSheet> {
               children: [
                 Text(
                   l10n.driverRequestDeclineTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
-                    color: VanepColors.textPrimary,
+                    color: context.palette.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 12),

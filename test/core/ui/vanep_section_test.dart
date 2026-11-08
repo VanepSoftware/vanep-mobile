@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_section.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 Widget sectionHost(VanepSection section) {
   return MaterialApp(home: Scaffold(body: section));
@@ -23,8 +24,14 @@ void main() {
     );
 
     final title = tester.widget<Text>(find.text('Semana'));
-    expect(title.style?.fontSize, VanepTypography.sectionTitle.fontSize);
-    expect(title.style?.fontWeight, VanepTypography.sectionTitle.fontWeight);
+    expect(
+      title.style?.fontSize,
+      const VanepTypography(VanepPalette.light).sectionTitle.fontSize,
+    );
+    expect(
+      title.style?.fontWeight,
+      const VanepTypography(VanepPalette.light).sectionTitle.fontWeight,
+    );
     final titleBottom = tester.getBottomLeft(find.text('Semana')).dy;
     final childTop = tester.getTopLeft(find.text('card')).dy;
     expect(childTop, greaterThan(titleBottom));

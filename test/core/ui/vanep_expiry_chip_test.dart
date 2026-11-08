@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_chip.dart';
 import 'package:vanep_mobile/core/ui/vanep_expiry_chip.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 void main() {
   final now = DateTime(2026, 10, 25, 10);
@@ -33,14 +33,14 @@ void main() {
   testWidgets('a distant expiry is gray', (tester) async {
     final chip = await pumpChip(tester, isUrgent: false);
 
-    expect(chip.background, VanepColors.avatarGraySurface);
-    expect(chip.foreground, VanepColors.avatarGrayText);
+    expect(chip.background, VanepPalette.light.avatarGraySurface);
+    expect(chip.foreground, VanepPalette.light.avatarGrayText);
   });
 
   testWidgets('an urgent expiry is amber', (tester) async {
     final chip = await pumpChip(tester, isUrgent: true);
 
-    expect(chip.background, VanepColors.warningSurface);
-    expect(chip.foreground, VanepColors.warningText);
+    expect(chip.background, VanepPalette.light.warningSurface);
+    expect(chip.foreground, VanepPalette.light.warningText);
   });
 }

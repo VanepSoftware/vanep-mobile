@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_home_body.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_search_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class FindVansTab extends StatelessWidget {
   const FindVansTab({
@@ -25,7 +25,7 @@ class FindVansTab extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
         children: [
-          Text(l10n.navVans, style: VanepTypography.pageTitle),
+          Text(l10n.navVans, style: context.typography.pageTitle),
           const SizedBox(height: 20),
           DriversSearchField(
             hint: l10n.driverSearchHint,
@@ -34,7 +34,7 @@ class FindVansTab extends StatelessWidget {
           const SizedBox(height: 24),
           Text(
             l10n.driversSuggestionsNearYou,
-            style: VanepTypography.sectionTitle,
+            style: context.typography.sectionTitle,
           ),
           const SizedBox(height: 12),
           DriversHomeBody(onDriverSelected: onDriverSelected),

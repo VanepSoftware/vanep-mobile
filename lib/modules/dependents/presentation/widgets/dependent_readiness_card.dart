@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/contract_readiness/domain/entities/contract_readiness.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_readiness_items.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DependentReadinessCard extends StatelessWidget {
   const DependentReadinessCard({
@@ -23,16 +22,16 @@ class DependentReadinessCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final items = dependentReadinessItems(gaps);
-    final labelStyle = VanepTypography.ratingLabel.copyWith(
-      color: VanepColors.warningText,
+    final labelStyle = context.typography.ratingLabel.copyWith(
+      color: context.palette.warningText,
     );
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: VanepColors.warningSurfaceSoft,
+        color: context.palette.warningSurfaceSoft,
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-        border: Border.all(color: VanepColors.warningBorder),
+        border: Border.all(color: context.palette.warningBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,7 +62,7 @@ class DependentReadinessCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             l10n.dependentReadinessTitle,
-            style: VanepTypography.cardTitle.copyWith(
+            style: context.typography.cardTitle.copyWith(
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -97,18 +96,20 @@ class DependentReadinessItemRow extends StatelessWidget {
           Icon(
             isDone ? Icons.check_circle : Icons.radio_button_unchecked,
             size: 22,
-            color: isDone ? VanepColors.success : VanepColors.warningText,
+            color: isDone
+                ? context.palette.success
+                : context.palette.warningText,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               dependentReadinessItemLabel(l10n, item.step),
-              style: VanepTypography.body.copyWith(
+              style: context.typography.body.copyWith(
                 fontSize: 14,
                 fontWeight: isDone ? FontWeight.w400 : FontWeight.w700,
                 color: isDone
-                    ? VanepColors.textSecondary
-                    : VanepColors.textPrimary,
+                    ? context.palette.textSecondary
+                    : context.palette.textPrimary,
               ),
             ),
           ),

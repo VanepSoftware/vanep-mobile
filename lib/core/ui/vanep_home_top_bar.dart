@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const BoxConstraints _edgeAlignedTapTarget = BoxConstraints(
   minWidth: kMinInteractiveDimension,
@@ -31,7 +31,7 @@ class VanepHomeTopBar extends StatelessWidget {
           padding: EdgeInsets.zero,
           constraints: _edgeAlignedTapTarget,
           alignment: Alignment.centerLeft,
-          icon: const Icon(Icons.menu_rounded, color: VanepColors.textPrimary),
+          icon: Icon(Icons.menu_rounded, color: context.palette.textPrimary),
         ),
         IconButton(
           tooltip: l10n.navNotifications,
@@ -39,9 +39,9 @@ class VanepHomeTopBar extends StatelessWidget {
           padding: EdgeInsets.zero,
           constraints: _edgeAlignedTapTarget,
           alignment: Alignment.centerRight,
-          icon: const Icon(
+          icon: Icon(
             Icons.notifications_outlined,
-            color: VanepColors.textPrimary,
+            color: context.palette.textPrimary,
           ),
         ),
       ],

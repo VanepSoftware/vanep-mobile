@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
@@ -12,6 +11,7 @@ import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.da
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/van_day_cards.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class LiveVanCard extends StatelessWidget {
   const LiveVanCard({
@@ -48,7 +48,7 @@ class LiveVanCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               l10n.clientHomeEtaMinutes(live.etaMinutes),
-              style: VanepTypography.wordmark.copyWith(
+              style: context.typography.wordmark.copyWith(
                 fontSize: 40,
                 color: VanepColors.onBrand,
               ),
@@ -56,7 +56,7 @@ class LiveVanCard extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               l10n.clientHomeEtaToYourStop(formatTimeOfDay(l10n, live.etaAt)),
-              style: VanepTypography.body.copyWith(color: onBrandMuted),
+              style: context.typography.body.copyWith(color: onBrandMuted),
             ),
             const SizedBox(height: 12),
             if (live.approaching)
@@ -121,7 +121,7 @@ class LiveVanHeader extends StatelessWidget {
         Expanded(
           child: Text(
             l10n.clientHomeLiveLeg(formatLeg(l10n, live.leg)).toUpperCase(),
-            style: VanepTypography.cardSubtitle.copyWith(
+            style: context.typography.cardSubtitle.copyWith(
               color: VanepColors.brandSheen,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.8,
@@ -133,14 +133,16 @@ class LiveVanHeader extends StatelessWidget {
             l10n.clientHomeUpdatedSecondsAgo(
               now.difference(live.updatedAt).inSeconds.clamp(0, 999),
             ),
-            style: VanepTypography.cardSubtitle.copyWith(color: onBrandMuted),
+            style: context.typography.cardSubtitle.copyWith(
+              color: onBrandMuted,
+            ),
           )
         else if (present.length == 1) ...[
           VanepPersonAvatar(name: present.single.name, size: 24),
           const SizedBox(width: 6),
           Text(
             present.single.name,
-            style: VanepTypography.ratingLabel.copyWith(
+            style: context.typography.ratingLabel.copyWith(
               color: VanepColors.onBrand,
             ),
           ),
@@ -182,7 +184,7 @@ class TripStageProgress extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   formatStage(l10n, stage),
-                  style: VanepTypography.cardSubtitle.copyWith(
+                  style: context.typography.cardSubtitle.copyWith(
                     fontSize: 12,
                     color: stage == current
                         ? VanepColors.onBrand
@@ -224,7 +226,7 @@ class LiveRidersSummary extends StatelessWidget {
       for (final rider in van.absentRiders)
         l10n.clientHomeNotGoingToday(rider.name),
     ].join(' · ');
-    final textStyle = VanepTypography.cardSubtitle.copyWith(
+    final textStyle = context.typography.cardSubtitle.copyWith(
       color: VanepColors.onBrand,
       fontSize: 14,
     );
@@ -279,7 +281,7 @@ class IllustrativeMap extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          const Center(
+          Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -292,7 +294,7 @@ class IllustrativeMap extends StatelessWidget {
                 SizedBox(width: 80),
                 HomeIconBubble(
                   icon: Icons.home,
-                  background: VanepColors.action,
+                  background: context.palette.action,
                   foreground: VanepColors.onBrand,
                   size: 32,
                 ),
@@ -310,7 +312,7 @@ class IllustrativeMap extends StatelessWidget {
               ),
               child: Text(
                 l10n.clientHomeIllustrativeMap,
-                style: VanepTypography.cardSubtitle.copyWith(
+                style: context.typography.cardSubtitle.copyWith(
                   color: VanepColors.onBrand,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,

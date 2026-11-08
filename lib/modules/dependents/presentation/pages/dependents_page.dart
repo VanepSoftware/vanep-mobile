@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -15,6 +13,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependen
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_detail_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_wizard_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependents_list_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DependentsPage extends StatelessWidget {
   const DependentsPage({super.key});
@@ -35,7 +34,7 @@ class DependentsPage extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: VanepColors.surface,
+          backgroundColor: context.palette.surface,
           body: SafeArea(bottom: false, child: DependentsBody(state: state)),
         );
       },
@@ -86,7 +85,7 @@ class DependentsBody extends StatelessWidget {
       );
     }
     return RefreshIndicator(
-      color: VanepColors.action,
+      color: context.palette.action,
       onRefresh: cubit.loadDependents,
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -137,11 +136,11 @@ class DependentsHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l10n.dependentsTitle, style: VanepTypography.pageTitle),
+                Text(l10n.dependentsTitle, style: context.typography.pageTitle),
                 const SizedBox(height: 6),
                 Text(
                   l10n.dependentsSubtitle,
-                  style: VanepTypography.cardSubtitle.copyWith(fontSize: 14),
+                  style: context.typography.cardSubtitle.copyWith(fontSize: 14),
                 ),
               ],
             ),
@@ -150,11 +149,11 @@ class DependentsHeader extends StatelessWidget {
             tooltip: l10n.dependentsAddTooltip,
             onPressed: onAdd,
             style: IconButton.styleFrom(
-              backgroundColor: VanepColors.card,
-              side: const BorderSide(color: VanepColors.inputBorder),
+              backgroundColor: context.palette.card,
+              side: BorderSide(color: context.palette.inputBorder),
               minimumSize: const Size(44, 44),
             ),
-            icon: const Icon(Icons.add, color: VanepColors.textPrimary),
+            icon: Icon(Icons.add, color: context.palette.textPrimary),
           ),
         ],
       ),
@@ -175,16 +174,16 @@ class DependentsEmptyState extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 24),
-        const Icon(
+        Icon(
           Icons.family_restroom_outlined,
           size: 48,
-          color: VanepColors.textMuted,
+          color: context.palette.textMuted,
         ),
         const SizedBox(height: 16),
         Text(
           l10n.dependentsEmpty,
           textAlign: TextAlign.center,
-          style: VanepTypography.cardSubtitle.copyWith(
+          style: context.typography.cardSubtitle.copyWith(
             fontSize: 15,
             height: 1.4,
           ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/upper_case_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
@@ -11,6 +10,7 @@ import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_regist
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_state.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/formatters/driver_van_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const int maxVanPlateLength = 8;
 
@@ -78,7 +78,7 @@ class VanRegistrationFormState extends State<VanRegistrationForm> {
           children: [
             Text(
               l10n.driverVansRegisterIntro,
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
             fieldFor(
               VanField.plate,

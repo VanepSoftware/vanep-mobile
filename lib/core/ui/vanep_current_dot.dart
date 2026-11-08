@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const currentDotSize = 10.0;
 
@@ -23,10 +22,10 @@ class VanepCurrentDot extends StatelessWidget {
       height: currentDotSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isCurrent ? VanepColors.action : VanepColors.textMuted,
+        color: isCurrent ? context.palette.action : context.palette.textMuted,
         border: isCurrent
             ? Border.all(
-                color: VanepColors.actionHalo,
+                color: context.palette.actionHalo,
                 width: currentDotHaloWidth,
                 strokeAlign: BorderSide.strokeAlignOutside,
               )

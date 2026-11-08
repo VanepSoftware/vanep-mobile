@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverCard extends StatelessWidget {
   const DriverCard({
@@ -43,12 +43,12 @@ class DriverCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(driver.name, style: VanepTypography.cardTitle),
+              Text(driver.name, style: context.typography.cardTitle),
               if (coverage.isNotEmpty) ...[
                 const SizedBox(height: 4),
                 Text(
                   formatDriverCoverage(coverage),
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -57,7 +57,7 @@ class DriverCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   l10n.driverExperienceYears(driver.experienceYears!),
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 ),
               ],
               const SizedBox(height: 6),
@@ -65,7 +65,7 @@ class DriverCard extends StatelessWidget {
             ],
           ),
         ),
-        const Icon(Icons.chevron_right, color: VanepColors.textMuted),
+        Icon(Icons.chevron_right, color: context.palette.textMuted),
       ],
     );
 
@@ -87,8 +87,8 @@ class DriverCard extends StatelessWidget {
                               l10n.driverBasePriceFrom(
                                 formatMoney(l10n, basePriceCents),
                               ),
-                              style: VanepTypography.cardSubtitle.copyWith(
-                                color: VanepColors.textPrimary,
+                              style: context.typography.cardSubtitle.copyWith(
+                                color: context.palette.textPrimary,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -164,15 +164,18 @@ class DriverRatingRow extends StatelessWidget {
         if (rating != null) ...[
           const Icon(Icons.star, size: 15, color: VanepColors.ratingStar),
           const SizedBox(width: 4),
-          Text(rating!.toStringAsFixed(1), style: VanepTypography.ratingLabel),
+          Text(
+            rating!.toStringAsFixed(1),
+            style: context.typography.ratingLabel,
+          ),
         ],
         if (rating != null && city != null)
-          const Text(' · ', style: TextStyle(color: VanepColors.textMuted)),
+          Text(' · ', style: TextStyle(color: context.palette.textMuted)),
         if (city != null)
           Flexible(
             child: Text(
               city!,
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
               overflow: TextOverflow.ellipsis,
             ),
           ),
