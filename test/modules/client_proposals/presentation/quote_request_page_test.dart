@@ -16,7 +16,7 @@ import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week
 import 'package:vanep_mobile/modules/drivers/data/dtos/driver_profile_dto.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_draft.dart';
 
 import '../../../core/ui/localized_harness.dart';

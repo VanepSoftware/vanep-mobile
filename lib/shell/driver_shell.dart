@@ -16,6 +16,7 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/shell/driver_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 
@@ -29,6 +30,7 @@ class DriverShell extends StatefulWidget {
     required this.openServiceAreas,
     required this.openMyVans,
     required this.openVanRegistration,
+    required this.openVanStudents,
     required this.openConversationChat,
     required this.proposalsActions,
     super.key,
@@ -41,6 +43,9 @@ class DriverShell extends StatefulWidget {
   final Future<void> Function(BuildContext context) openMyVans;
 
   final Future<void> Function(BuildContext context) openVanRegistration;
+
+  final Future<void> Function(BuildContext context, DriverVan van)
+  openVanStudents;
 
   final Future<void> Function(BuildContext context, Conversation conversation)
   openConversationChat;
@@ -99,6 +104,7 @@ class DriverShellState extends State<DriverShell> {
                   onOpenVanDetails: () => widget.openMyVans(context),
                   onOpenServiceAreas: () =>
                       openServiceAreasAndRefreshProfile(context),
+                  onOpenStudents: (van) => widget.openVanStudents(context, van),
                   onOpenComingSoon: (title) => openComingSoonPage(
                     context,
                     title: title,

@@ -16,11 +16,11 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposa
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_comparison_page.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_detail_page.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 
 import '../../../core/ui/localized_harness.dart';
 import '../../negotiations/negotiations_fixtures.dart';

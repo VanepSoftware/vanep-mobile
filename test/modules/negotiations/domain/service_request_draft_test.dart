@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_draft.dart';
 
 final today = DateTime(2026, 10, 1);

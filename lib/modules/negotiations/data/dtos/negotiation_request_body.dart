@@ -7,7 +7,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_draft.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_draft.dart';
 
 Map<String, Object?> serviceRequestDraftToJson(ServiceRequestDraft draft) {

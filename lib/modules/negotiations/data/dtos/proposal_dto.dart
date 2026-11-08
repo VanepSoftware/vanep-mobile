@@ -1,31 +1,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/negotiations/data/dtos/negotiation_json.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/operation_shift.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_field.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/data/schedule_slot_dto.dart';
 
 part 'proposal_dto.freezed.dart';
 part 'proposal_dto.g.dart';
-
-@Freezed(toJson: false)
-abstract class ScheduleSlotDto with _$ScheduleSlotDto implements ScheduleSlot {
-  const factory ScheduleSlotDto({
-    @JsonKey(fromJson: readWeekday) required Weekday weekday,
-    @JsonKey(fromJson: readRouteLeg) required RouteLeg leg,
-    @JsonKey(fromJson: readOperationShift) required OperationShift shift,
-    @JsonKey(fromJson: readClockTime) required ClockTime pickupTime,
-  }) = _ScheduleSlotDto;
-
-  factory ScheduleSlotDto.fromJson(Map<String, Object?> json) =>
-      _$ScheduleSlotDtoFromJson(json);
-}
 
 @Freezed(toJson: false)
 abstract class ProposalItemDto with _$ProposalItemDto implements ProposalItem {

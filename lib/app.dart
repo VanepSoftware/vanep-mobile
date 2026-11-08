@@ -72,6 +72,12 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/reque
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/van_students_page.dart';
+import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/unlinked_passenger_form_page.dart';
+import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/van_students_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/unlinked_passenger_form_cubit.dart';
+import 'package:vanep_mobile/core/share/text_sharer.dart';
 
 class VanepApp extends StatelessWidget {
   const VanepApp({super.key});
@@ -137,6 +143,7 @@ class AuthGate extends StatelessWidget {
                 openServiceAreas: openDriverServiceAreas,
                 openMyVans: openDriverVans,
                 openVanRegistration: openDriverVanRegistration,
+                openVanStudents: openDriverVanStudents,
                 openConversationChat: (context, conversation) =>
                     openInboxConversation(
                       context,
@@ -636,6 +643,43 @@ Future<void> openDriverVanRegistration(BuildContext context) {
       builder: (_) => BlocProvider<DriverVansCubit>(
         create: (_) => getIt<DriverVansCubit>()..loadVans(),
         child: const DriverVanRegistrationPage(),
+      ),
+    ),
+  );
+}
+
+String vanCaptionOf(AppLocalizations l10n, DriverVan van) {
+  return l10n.vanStudentsCaption(van.model, van.plate);
+}
+
+Future<void> openDriverVanStudents(BuildContext context, DriverVan van) {
+  final l10n = AppLocalizations.of(context)!;
+  final vanCaption = vanCaptionOf(l10n, van);
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (pageContext) => BlocProvider<VanStudentsCubit>(
+        create: (_) => getIt<VanStudentsCubit>(param1: van.token)..load(),
+        child: VanStudentsPage(
+          vanCaption: vanCaption,
+          sharer: getIt<TextSharer>(),
+          onAddStudent: () =>
+              openUnlinkedPassengerForm(pageContext, van.token, vanCaption),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<String?> openUnlinkedPassengerForm(
+  BuildContext context,
+  String vehicleToken,
+  String vanCaption,
+) {
+  return Navigator.of(context).push<String>(
+    MaterialPageRoute<String>(
+      builder: (_) => BlocProvider<UnlinkedPassengerFormCubit>(
+        create: (_) => getIt<UnlinkedPassengerFormCubit>(param1: vehicleToken),
+        child: UnlinkedPassengerFormPage(vanCaption: vanCaption),
       ),
     ),
   );

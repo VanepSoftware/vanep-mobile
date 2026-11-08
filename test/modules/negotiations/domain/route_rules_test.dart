@@ -3,8 +3,8 @@ import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/installment_preview.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/legs_summary.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/operation_shift.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 
 import '../negotiations_fixtures.dart';
 

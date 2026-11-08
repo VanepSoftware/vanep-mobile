@@ -12,12 +12,14 @@ import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_register_prompt.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_selector.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_summary_card.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 
 class VanCentralTab extends StatelessWidget {
   const VanCentralTab({
     required this.onRegisterVan,
     required this.onOpenVanDetails,
     required this.onOpenServiceAreas,
+    required this.onOpenStudents,
     required this.onOpenComingSoon,
     super.key,
   });
@@ -25,6 +27,7 @@ class VanCentralTab extends StatelessWidget {
   final Future<void> Function() onRegisterVan;
   final Future<void> Function() onOpenVanDetails;
   final Future<void> Function() onOpenServiceAreas;
+  final Future<void> Function(DriverVan van) onOpenStudents;
   final Future<void> Function(String title) onOpenComingSoon;
 
   @override
@@ -41,6 +44,10 @@ class VanCentralTab extends StatelessWidget {
       onRegisterVan: () => openThenRefresh(onRegisterVan),
       onOpenVanDetails: () => openThenRefresh(onOpenVanDetails),
       onOpenServiceAreas: () => openThenRefresh(onOpenServiceAreas),
+      onOpenStudents: () {
+        final van = cubit.state.selectedVan;
+        if (van != null) openThenRefresh(() => onOpenStudents(van));
+      },
       onOpenComingSoon: onOpenComingSoon,
       onAcceptingStudentsChanged: cubit.setAcceptingStudents,
     );

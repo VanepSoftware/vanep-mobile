@@ -12,6 +12,7 @@ class VanCentralActions {
     required this.onRegisterVan,
     required this.onOpenVanDetails,
     required this.onOpenServiceAreas,
+    required this.onOpenStudents,
     required this.onOpenComingSoon,
     required this.onAcceptingStudentsChanged,
   });
@@ -19,6 +20,7 @@ class VanCentralActions {
   final VoidCallback onRegisterVan;
   final VoidCallback onOpenVanDetails;
   final VoidCallback onOpenServiceAreas;
+  final VoidCallback onOpenStudents;
   final ValueChanged<String> onOpenComingSoon;
   final ValueChanged<bool> onAcceptingStudentsChanged;
 }
@@ -84,12 +86,13 @@ class VanCentralMenus extends StatelessWidget {
               Icons.route_outlined,
               l10n.vanCentralRouteHint,
             ),
-            comingSoonItem(
-              l10n.vanCentralStudents,
-              Icons.groups_outlined,
-              occupancy == null
+            VanepMenuItem(
+              label: l10n.vanCentralStudents,
+              icon: Icons.groups_outlined,
+              subtitle: occupancy == null
                   ? l10n.vanCentralStudentsHint
                   : studentsSummary(l10n, occupancy),
+              onTap: actions.onOpenStudents,
             ),
             comingSoonItem(
               l10n.vanCentralAbsences,

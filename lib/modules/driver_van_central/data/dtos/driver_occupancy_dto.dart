@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
-import 'package:vanep_mobile/modules/driver_van_central/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 
 part 'driver_occupancy_dto.freezed.dart';
 part 'driver_occupancy_dto.g.dart';

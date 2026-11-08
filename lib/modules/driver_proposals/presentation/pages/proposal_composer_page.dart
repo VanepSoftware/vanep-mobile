@@ -3,15 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
-import 'package:vanep_mobile/core/domain/weekday.dart';
-import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_installment_price.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
-import 'package:vanep_mobile/core/ui/vanep_week_legs_grid.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_composer_setup.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_cubit.dart';
@@ -22,10 +19,10 @@ import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_fa
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_draft.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/ui/vanep_schedule_editor.dart';
 
 const proposalLatestEndWindow = Duration(days: 800);
 
@@ -33,25 +30,6 @@ class ProposalComposerActions {
   const ProposalComposerActions({required this.onRegisterVan});
 
   final Future<void> Function() onRegisterVan;
-}
-
-List<VanepWeekLegsRow<RouteLeg>> weekLegsRowsOfDraftItem(
-  AppLocalizations l10n,
-  ProposalDraftItem item,
-) {
-  return [
-    for (final leg in RouteLeg.values)
-      VanepWeekLegsRow(
-        leg: leg,
-        label: routeLegLabel(l10n, leg),
-        cells: {
-          for (final weekday in item.schoolShiftByDay.keys)
-            weekday: item.isRequested(weekday, leg)
-                ? VanepWeekLegCell(isSelected: item.isEnabled(weekday, leg))
-                : VanepWeekLegCell.notAllowed,
-        },
-      ),
-  ];
 }
 
 String? errorTextOf(
@@ -241,55 +219,54 @@ class ProposalComposerBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: detailSectionSpacing),
-        DetailSection(
-          title: l10n.proposalDetailDaysTitle,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                l10n.proposalComposerAsRequested,
-                style: VanepTypography.cardSubtitle,
-              ),
-              const SizedBox(height: 8),
-              for (final item in draft.items) ...[
-                if (showsNames)
-                  Text(
-                    names[item.dependentToken] ?? '',
-                    style: VanepTypography.fieldLabel,
+        for (final item in draft.items) ...[
+          if (showsNames)
+            Text(
+              names[item.dependentToken] ?? '',
+              style: VanepTypography.fieldLabel,
+            ),
+          VanepScheduleEditor(
+            isAllowed: item.isRequested,
+            isSelected: item.isEnabled,
+            timeOf: item.timeOf,
+            onToggled: (leg, day) =>
+                cubit.toggleLeg(item.dependentToken, leg, day),
+            onTimePicked: (day, leg, time) =>
+                cubit.changeTime(item.dependentToken, day, leg, time),
+            onApplyToEveryDay: (leg, time) =>
+                cubit.applyTimeToEveryDay(item.dependentToken, leg, time),
+            layoutBuilder: (days, times) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DetailSection(
+                  title: l10n.proposalDetailDaysTitle,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        l10n.proposalComposerAsRequested,
+                        style: VanepTypography.cardSubtitle,
+                      ),
+                      const SizedBox(height: 8),
+                      days,
+                      if (errorTextOf(l10n, errors, const [
+                            ProposalDraftError.studentWithoutLeg,
+                          ])
+                          case final error?)
+                        ComposerFieldError(text: error),
+                    ],
                   ),
-                VanepWeekLegsGrid<RouteLeg>(
-                  rows: weekLegsRowsOfDraftItem(l10n, item),
-                  onToggled: (leg, weekday) =>
-                      cubit.toggleLeg(item.dependentToken, leg, weekday),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: detailSectionSpacing),
+                DetailSection(
+                  title: l10n.proposalDetailScheduleTitle,
+                  child: times ?? const SizedBox.shrink(),
+                ),
               ],
-              if (errorTextOf(l10n, errors, const [
-                    ProposalDraftError.studentWithoutLeg,
-                  ])
-                  case final error?)
-                ComposerFieldError(text: error),
-            ],
+            ),
           ),
-        ),
-        const SizedBox(height: detailSectionSpacing),
-        DetailSection(
-          title: l10n.proposalDetailScheduleTitle,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              for (final item in draft.items) ...[
-                if (showsNames)
-                  Text(
-                    names[item.dependentToken] ?? '',
-                    style: VanepTypography.fieldLabel,
-                  ),
-                ComposerSchedule(item: item),
-              ],
-            ],
-          ),
-        ),
-        const SizedBox(height: detailSectionSpacing),
+          const SizedBox(height: detailSectionSpacing),
+        ],
         ComposerVanSection(
           setup: setup,
           onRegisterVan: () async {
@@ -303,131 +280,6 @@ class ProposalComposerBody extends StatelessWidget {
         ComposerValiditySection(draft: draft, errors: errors),
         const SizedBox(height: detailSectionSpacing),
         ComposerMessageField(message: draft.message),
-      ],
-    );
-  }
-}
-
-const composerDayColumnWidth = 44.0;
-
-const composerColumnGap = 12.0;
-
-class ComposerSchedule extends StatelessWidget {
-  const ComposerSchedule({required this.item, super.key});
-
-  final ProposalDraftItem item;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final cubit = context.read<ProposalComposerCubit>();
-    final weekdays = [
-      for (final weekday in Weekday.values)
-        if (RouteLeg.values.any((leg) => item.isEnabled(weekday, leg))) weekday,
-    ];
-    if (weekdays.isEmpty) return const SizedBox.shrink();
-    final legs = [
-      for (final leg in RouteLeg.values)
-        if (weekdays.any((weekday) => item.isEnabled(weekday, leg))) leg,
-    ];
-    final firstTimes = {
-      for (final leg in legs)
-        leg: ?item.timeOf(
-          weekdays.firstWhere((weekday) => item.isEnabled(weekday, leg)),
-          leg,
-        ),
-    };
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ComposerScheduleRow(
-            leading: const SizedBox.shrink(),
-            cells: [
-              for (final leg in legs)
-                Text(
-                  routeLegLabel(l10n, leg),
-                  textAlign: TextAlign.center,
-                  style: VanepTypography.cardTitle,
-                ),
-            ],
-          ),
-          for (final weekday in weekdays)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: ComposerScheduleRow(
-                leading: Text(
-                  weekdayShortLabel(l10n, weekday),
-                  style: VanepTypography.cardSubtitle,
-                ),
-                cells: [
-                  for (final leg in legs)
-                    if (item.isEnabled(weekday, leg))
-                      ComposerTimeButton(
-                        semanticLabel: l10n.proposalComposerTimeLabel(
-                          routeLegLabel(l10n, leg),
-                          weekdayLabel(l10n, weekday),
-                        ),
-                        time: item.timeOf(weekday, leg),
-                        onPicked: (time) => cubit.changeTime(
-                          item.dependentToken,
-                          weekday,
-                          leg,
-                          time,
-                        ),
-                      )
-                    else
-                      Text(
-                        '—',
-                        textAlign: TextAlign.center,
-                        style: VanepTypography.cardSubtitle.copyWith(
-                          color: VanepColors.textMuted,
-                        ),
-                      ),
-                ],
-              ),
-            ),
-          if (weekdays.length > 1 && firstTimes.isNotEmpty)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: ProposalLinkButton(
-                label: l10n.proposalComposerApplyToAll,
-                leadingIcon: Icons.copy_all_outlined,
-                onPressed: () {
-                  for (final MapEntry(key: leg, value: time)
-                      in firstTimes.entries) {
-                    cubit.applyTimeToEveryDay(item.dependentToken, leg, time);
-                  }
-                },
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class ComposerScheduleRow extends StatelessWidget {
-  const ComposerScheduleRow({
-    required this.leading,
-    required this.cells,
-    super.key,
-  });
-
-  final Widget leading;
-  final List<Widget> cells;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(width: composerDayColumnWidth, child: leading),
-        for (final cell in cells) ...[
-          const SizedBox(width: composerColumnGap),
-          Expanded(child: cell),
-        ],
       ],
     );
   }
