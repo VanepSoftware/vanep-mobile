@@ -2207,5 +2207,168 @@
   },
   "proposalComposerErrorStudentWithoutLeg": "Keep at least one leg for each student.",
   "negotiationChatRespond": "Respond",
-  "negotiationChatDriverPrivacyNotice": "Full address and name available after acceptance."
+  "negotiationChatDriverPrivacyNotice": "Full address and name available after acceptance.",
+  "vanStudentsTitle": "Students",
+  "vanStudentsCaption": "{model} · {plate}",
+  "@vanStudentsCaption": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "plate": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsSearchAction": "Search student",
+  "vanStudentsSearchHint": "Student name",
+  "vanStudentsSearchClose": "Close search",
+  "vanStudentsProgressTitle": "{withFamily} of {total} with family on the app",
+  "@vanStudentsProgressTitle": {
+    "placeholders": {
+      "withFamily": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "vanStudentsProgressPercent": "{percent}%",
+  "@vanStudentsProgressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "vanStudentsProgressHint": "Without the family on the app, parents get no notices.",
+  "vanStudentsShareGroupLink": "Send link to the parents' group",
+  "vanStudentsMatchTitle": "Is it the same {firstName}?",
+  "@vanStudentsMatchTitle": {
+    "placeholders": {
+      "firstName": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsMatchBody": "The {familyName} family registered {dependentName}, {age, plural, =1{1 year old} other{{age} years old}}. Merging keeps the student's place on the route.",
+  "@vanStudentsMatchBody": {
+    "placeholders": {
+      "familyName": {
+        "type": "String"
+      },
+      "dependentName": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "vanStudentsMatchBodyWithoutAge": "The {familyName} family registered {dependentName}. Merging keeps the student's place on the route.",
+  "@vanStudentsMatchBodyWithoutAge": {
+    "placeholders": {
+      "familyName": {
+        "type": "String"
+      },
+      "dependentName": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsMatchDismiss": "It's not",
+  "vanStudentsMatchConfirm": "Yes, merge",
+  "vanStudentsMergeDialogTitle": "Merge with {dependentName}?",
+  "@vanStudentsMergeDialogTitle": {
+    "placeholders": {
+      "dependentName": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsMergeDialogMessage": "The student moves to \"With family\" and the family starts getting notices. The place on the route stays the same.",
+  "vanStudentsMergeDialogConfirm": "Merge",
+  "vanStudentsFilterLabel": "Filter students",
+  "vanStudentsFilterAll": "All",
+  "vanStudentsFilterWithFamily": "With family",
+  "vanStudentsFilterWithoutFamily": "Without family",
+  "vanStudentsShiftFilterLabel": "Shift",
+  "vanStudentsInvite": "Invite",
+  "vanStudentsResend": "Resend",
+  "vanStudentsInvitedToday": "Invite sent today",
+  "vanStudentsInvitedDaysAgo": "{days, plural, =1{Invite sent 1 day ago} other{Invite sent {days} days ago}}",
+  "@vanStudentsInvitedDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "vanStudentsFamilyJoined": "Family joined · confirm",
+  "vanStudentsListFooter": "Students with family on the app show under \"With family\", with contract and notices.",
+  "vanStudentsEmpty": "No students here yet.",
+  "vanStudentsEmptyFiltered": "No students match these filters.",
+  "vanStudentsAdd": "Add student",
+  "vanStudentsLoadError": "Could not load the students.",
+  "vanStudentsInviteShareText": "Hi! I'm {studentName}'s van driver. Get Vanep to receive the ride notices: {url}",
+  "@vanStudentsInviteShareText": {
+    "placeholders": {
+      "studentName": {
+        "type": "String"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsGroupShareText": "Hi, families! Get Vanep to receive the van notices: {url}",
+  "@vanStudentsGroupShareText": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsMerged": "{studentName} now has the family on the app.",
+  "@vanStudentsMerged": {
+    "placeholders": {
+      "studentName": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsDismissed": "Suggestion dismissed.",
+  "vanStudentsActionError": "Could not finish. Please try again.",
+  "vanStudentsNetworkError": "No connection. Please try again.",
+  "unlinkedPassengerFormTitle": "Add student",
+  "unlinkedPassengerFormIntro": "Register a student you already drive. Then invite the family to the app.",
+  "unlinkedPassengerSectionStudent": "Student",
+  "unlinkedPassengerSectionSchool": "School",
+  "unlinkedPassengerSectionPickup": "Pickup",
+  "unlinkedPassengerSectionDays": "Days and legs",
+  "unlinkedPassengerSectionTimes": "Pickup time",
+  "unlinkedPassengerSectionNotes": "Notes",
+  "unlinkedPassengerNameLabel": "Student name",
+  "unlinkedPassengerSchoolHint": "Search school",
+  "unlinkedPassengerSchoolShiftLabel": "School shift",
+  "unlinkedPassengerDaysHint": "Mark the legs the student rides each day.",
+  "unlinkedPassengerNotesLabel": "Notes (optional)",
+  "unlinkedPassengerNotesHint": "E.g. blue gate, call before arriving",
+  "unlinkedPassengerSubmit": "Register student",
+  "unlinkedPassengerCreated": "{studentName} was registered.",
+  "@unlinkedPassengerCreated": {
+    "placeholders": {
+      "studentName": {
+        "type": "String"
+      }
+    }
+  },
+  "unlinkedPassengerErrorNameRequired": "Enter the student's name.",
+  "unlinkedPassengerErrorNameTooLong": "Use up to 255 characters.",
+  "unlinkedPassengerErrorSchoolRequired": "Choose the school.",
+  "unlinkedPassengerErrorSchoolShiftRequired": "Choose the school shift.",
+  "unlinkedPassengerErrorLegRequired": "Mark at least one leg.",
+  "unlinkedPassengerErrorTimeRequired": "Choose the time of each leg.",
+  "unlinkedPassengerErrorNotesTooLong": "Use up to 500 characters."
 }

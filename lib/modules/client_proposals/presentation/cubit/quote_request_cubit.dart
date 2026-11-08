@@ -8,7 +8,7 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_r
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_service_requests.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/send_service_request.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_draft.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_status.dart';
 

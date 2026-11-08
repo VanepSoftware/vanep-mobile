@@ -1,6 +1,6 @@
 import 'package:vanep_mobile/core/domain/school_shift.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/api_name.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/api_name.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 
 enum OperationShift {
   morning('MORNING'),

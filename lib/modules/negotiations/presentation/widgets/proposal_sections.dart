@@ -18,7 +18,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/item_grou
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/leg_times.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_history.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_comparison.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 

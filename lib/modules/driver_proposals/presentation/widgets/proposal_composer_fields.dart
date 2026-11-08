@@ -7,8 +7,6 @@ import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/money_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
-import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 
 int? parseNumberInput(String text) => int.tryParse(text.trim());
 
@@ -201,65 +199,6 @@ class ComposerDateFieldState extends State<ComposerDateField> {
       onTap: pickDate,
       onChanged: (_) {},
       suffix: const Icon(Icons.calendar_today_outlined),
-    );
-  }
-}
-
-TimeOfDay timeOfDayOf(ClockTime? time) {
-  return time == null
-      ? const TimeOfDay(hour: 7, minute: 0)
-      : TimeOfDay(hour: time.hour, minute: time.minute);
-}
-
-class ComposerTimeButton extends StatelessWidget {
-  const ComposerTimeButton({
-    required this.semanticLabel,
-    required this.time,
-    required this.onPicked,
-    super.key,
-  });
-
-  final String semanticLabel;
-  final ClockTime? time;
-  final ValueChanged<ClockTime> onPicked;
-
-  Future<void> pickTime(BuildContext context) async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: timeOfDayOf(time),
-    );
-    if (picked != null) {
-      onPicked(ClockTime(hour: picked.hour, minute: picked.minute));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final time = this.time;
-    return Semantics(
-      label: semanticLabel,
-      button: true,
-      excludeSemantics: true,
-      onTap: () => pickTime(context),
-      child: OutlinedButton(
-        onPressed: () => pickTime(context),
-        style: OutlinedButton.styleFrom(
-          minimumSize: const Size(72, 40),
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          foregroundColor: time == null
-              ? VanepColors.action
-              : VanepColors.textPrimary,
-          side: const BorderSide(color: VanepColors.inputBorder),
-        ),
-        child: Text(
-          time == null ? l10n.proposalComposerSetTime : formatClockTime(time),
-          style: VanepTypography.cardSubtitle.copyWith(
-            fontWeight: FontWeight.w700,
-            color: time == null ? VanepColors.action : VanepColors.textPrimary,
-          ),
-        ),
-      ),
     );
   }
 }

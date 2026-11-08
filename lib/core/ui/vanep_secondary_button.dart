@@ -12,6 +12,7 @@ class VanepSecondaryButton extends StatelessWidget {
     this.leading,
     this.onBrand = false,
     this.isDestructive = false,
+    this.compact = false,
     super.key,
   }) : assert(icon == null || leading == null);
 
@@ -27,11 +28,13 @@ class VanepSecondaryButton extends StatelessWidget {
 
   final bool isDestructive;
 
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 52,
-      width: double.infinity,
+      height: compact ? 40 : 52,
+      width: compact ? null : double.infinity,
       child: OutlinedButton(
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
@@ -54,6 +57,7 @@ class VanepSecondaryButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          padding: compact ? const EdgeInsets.symmetric(horizontal: 12) : null,
         ),
         child: isLoading
             ? const SizedBox(
@@ -66,10 +70,11 @@ class VanepSecondaryButton extends StatelessWidget {
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: compact ? MainAxisSize.min : MainAxisSize.max,
                 children: [
                   if (icon != null || leading != null) ...[
-                    leading ?? Icon(icon, size: 20),
-                    const SizedBox(width: 10),
+                    leading ?? Icon(icon, size: compact ? 18 : 20),
+                    SizedBox(width: compact ? 6 : 10),
                   ],
                   Flexible(
                     child: Text(

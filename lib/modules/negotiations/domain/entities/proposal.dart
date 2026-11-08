@@ -1,11 +1,10 @@
-import 'package:vanep_mobile/core/domain/weekday.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/schedule_slot.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_field.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+
+export 'package:vanep_mobile/core/domain/schedule/schedule_slot.dart';
 
 abstract class Proposal {
   String get token;
@@ -65,16 +64,6 @@ abstract class ProposalItem {
   String get dependentFirstName;
 
   List<ScheduleSlot> get slots;
-}
-
-abstract class ScheduleSlot {
-  Weekday get weekday;
-
-  RouteLeg get leg;
-
-  OperationShift get shift;
-
-  ClockTime get pickupTime;
 }
 
 abstract class ProposalVehicle {

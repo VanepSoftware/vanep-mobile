@@ -11,8 +11,8 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposa
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/proposal_composer_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 
 import '../../../core/ui/localized_harness.dart';
 import '../../negotiations/negotiations_fixtures.dart';

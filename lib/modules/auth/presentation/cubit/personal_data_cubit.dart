@@ -1,12 +1,9 @@
-import 'dart:async';
-
+import 'package:vanep_mobile/core/address/postal_address_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 import 'package:vanep_mobile/core/result/result.dart';
-import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
-import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';
@@ -30,7 +27,8 @@ typedef SyncProfile = void Function(UserProfile profile);
 
 const personalAddressCepLookupDebounce = Duration(milliseconds: 400);
 
-class PersonalDataCubit extends Cubit<PersonalDataState> {
+class PersonalDataCubit extends Cubit<PersonalDataState>
+    with PostalAddressEditor<PersonalDataState> {
   PersonalDataCubit({
     required this._refreshUserProfile,
     required this._patchUserProfile,
@@ -55,11 +53,34 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
   final ListStates _listStates;
   final ListCities _listCities;
   final SyncProfile _syncProfile;
+  @override
   final Duration cepLookupDebounce;
 
-  Timer? _cepLookupTimer;
-  int _cepLookupGeneration = 0;
-  int _cityListGeneration = 0;
+  @override
+  PostalAddressDraft get editorAddress => state.addressDraft;
+  @override
+  CepFailure? get editorCepFailure => state.cepFailure;
+  @override
+  LookupCep get addressLookupCep => _lookupCep;
+  @override
+  ListStates get addressListStates => _listStates;
+  @override
+  ListCities get addressListCities => _listCities;
+  @override
+  void emitAddressEdit(PostalAddressEdit edit) {
+    emit(
+      state.copyWith(
+        addressDraft: edit.address,
+        isLookingUpCep: edit.isLookingUpCep,
+        cepFailure: edit.cepFailure,
+        clearCepFailure: edit.clearCepFailure,
+        catalogStates: edit.catalogStates,
+        catalogCities: edit.catalogCities,
+        catalogFailure: edit.catalogFailure,
+        clearCatalogFailure: edit.clearCatalogFailure,
+      ),
+    );
+  }
 
   Future<void> load() => refresh();
 
@@ -117,152 +138,10 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     );
   }
 
-  void updateZipCode(String value) {
-    _cepLookupTimer?.cancel();
-    _cepLookupGeneration++;
-    final draft = state.addressDraft.withZipCode(value);
-    final willLookUp = draft.zipCode.length == brazilianZipDigitCount;
-    emit(
-      state.copyWith(
-        addressDraft: draft,
-        clearCepFailure: true,
-        isLookingUpCep: willLookUp,
-      ),
-    );
-    if (!willLookUp) return;
-    final generation = _cepLookupGeneration;
-    _cepLookupTimer = Timer(cepLookupDebounce, () {
-      if (isClosed || generation != _cepLookupGeneration) return;
-      lookupDraftCep();
-    });
-  }
-
-  void updateStreet(String value) {
-    emit(state.copyWith(addressDraft: state.addressDraft.withStreet(value)));
-  }
-
-  void updateNeighborhood(String value) {
-    if (state.addressDraft.isNeighborhoodLocked) return;
-    emit(
-      state.copyWith(addressDraft: state.addressDraft.withNeighborhood(value)),
-    );
-  }
-
-  void updateNumber(String value) {
-    emit(state.copyWith(addressDraft: state.addressDraft.withNumber(value)));
-  }
-
-  void updateComplement(String value) {
-    emit(
-      state.copyWith(addressDraft: state.addressDraft.withComplement(value)),
-    );
-  }
-
-  Future<void> lookupDraftCep() async {
-    final cep = state.addressDraft.zipCode;
-    if (cep.length != brazilianZipDigitCount) return;
-    final generation = _cepLookupGeneration;
-    final result = await _lookupCep(cep);
-    if (isClosed || generation != _cepLookupGeneration) return;
-    switch (result) {
-      case Ok<CepFailure, CepLookup>(value: final lookup):
-        emit(
-          state.copyWith(
-            addressDraft: state.addressDraft.withCepLookup(
-              cityToken: lookup.cityToken,
-              cityName: lookup.cityName,
-              uf: lookup.uf,
-              street: lookup.street,
-              neighborhood: lookup.neighborhood,
-            ),
-            clearCepFailure: true,
-            isLookingUpCep: false,
-          ),
-        );
-      case Err<CepFailure, CepLookup>(error: final failure):
-        await applyCepLookupFailure(failure);
-    }
-  }
-
-  Future<void> applyCepLookupFailure(CepFailure failure) async {
-    if (failure == CepFailure.invalidFormat) {
-      emit(state.copyWith(cepFailure: failure, isLookingUpCep: false));
-      return;
-    }
-    final draft = failure.blocksSave
-        ? state.addressDraft.withCepUnknown()
-        : state.addressDraft.withCepUnavailable();
-    emit(
-      state.copyWith(
-        addressDraft: draft,
-        cepFailure: failure,
-        isLookingUpCep: false,
-      ),
-    );
-    await refreshStates();
-  }
-
   Future<void> openCityPicker() async {
     if (state.addressDraft.isCityLocked) return;
     emit(state.copyWith(addressDraft: state.addressDraft.unlockCity()));
     await refreshStates();
-  }
-
-  Future<void> refreshStates() async {
-    final result = await _listStates();
-    if (isClosed) return;
-    switch (result) {
-      case Ok(:final value):
-        emit(
-          state.copyWith(catalogStates: value.items, clearCatalogFailure: true),
-        );
-      case Err(:final error):
-        emit(state.copyWith(catalogFailure: error));
-    }
-  }
-
-  Future<void> selectUf(String uf) async {
-    if (state.addressDraft.isCityLocked) return;
-    emit(
-      state.copyWith(
-        addressDraft: state.addressDraft.withUf(uf),
-        catalogCities: const [],
-        clearCepFailure: !(state.cepFailure?.blocksSave ?? false),
-        clearCatalogFailure: true,
-      ),
-    );
-    await refreshCities(uf);
-  }
-
-  Future<void> refreshCities(String uf, {String? search}) async {
-    if (uf.isEmpty) return;
-    final generation = ++_cityListGeneration;
-    final result = search == null || search.isEmpty
-        ? await _listCities(uf: uf)
-        : await _listCities(uf: uf, search: search);
-    if (isClosed || generation != _cityListGeneration) return;
-    switch (result) {
-      case Ok(:final value):
-        emit(
-          state.copyWith(catalogCities: value.items, clearCatalogFailure: true),
-        );
-      case Err(:final error):
-        emit(state.copyWith(catalogFailure: error));
-    }
-  }
-
-  void selectCity(BrazilianCity city) {
-    if (state.addressDraft.isCityLocked) return;
-    emit(
-      state.copyWith(
-        addressDraft: state.addressDraft.withCity(
-          token: city.token,
-          name: city.name,
-          uf: city.stateUf,
-        ),
-        clearCepFailure: !(state.cepFailure?.blocksSave ?? false),
-      ),
-    );
   }
 
   Future<void> save() async {
@@ -270,8 +149,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
     final snapshot = state.profile;
     if (snapshot == null) return;
 
-    _cepLookupTimer?.cancel();
-    _cepLookupGeneration++;
+    cancelAddressLookup();
 
     final write = state.isAddressSavable
         ? personalAddressWriteFromDraft(state.addressDraft)
@@ -444,8 +322,7 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
   }
 
   void discardAddressDraft() {
-    _cepLookupTimer?.cancel();
-    _cepLookupGeneration++;
+    cancelAddressLookup();
     emit(
       state.copyWith(
         addressDraft: state.address?.toDraft() ?? const PostalAddressDraft(),
@@ -463,12 +340,6 @@ class PersonalDataCubit extends Cubit<PersonalDataState> {
         feedback: PersonalDataFailureFeedback(failure),
       ),
     );
-  }
-
-  @override
-  Future<void> close() {
-    _cepLookupTimer?.cancel();
-    return super.close();
   }
 }
 
