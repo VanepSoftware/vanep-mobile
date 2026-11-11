@@ -8,7 +8,8 @@ import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit
 class HomeRepository implements DriverHomeRepository {
   DriverHomeData data = const DriverHomeData(
     registration: RegistrationStatus.approved,
-    todayTrip: Trip(id: 'trip', status: TripStatus.notStarted, label: 'Manhã'));
+    todayTrip: Trip(id: 'trip', status: TripStatus.notStarted, label: 'Manhã'),
+  );
   int starts = 0;
   int confirmations = 0;
   bool failLoad = false;
@@ -18,15 +19,25 @@ class HomeRepository implements DriverHomeRepository {
     if (failLoad) throw StateError('offline');
     return data;
   }
+
   @override
   Future<void> startTrip(String tripId) async {
     starts++;
     if (startGate != null) await startGate!.future;
-    data = const DriverHomeData(registration: RegistrationStatus.approved,
-      todayTrip: Trip(id: 'trip', status: TripStatus.inProgress, label: 'Manhã'));
+    data = const DriverHomeData(
+      registration: RegistrationStatus.approved,
+      todayTrip: Trip(
+        id: 'trip',
+        status: TripStatus.inProgress,
+        label: 'Manhã',
+      ),
+    );
   }
+
   @override
-  Future<void> confirmStop(StopConfirmation confirmation) async { confirmations++; }
+  Future<void> confirmStop(StopConfirmation confirmation) async {
+    confirmations++;
+  }
 }
 
 void main() {
@@ -38,17 +49,28 @@ void main() {
   });
   tearDown(() => cubit.close());
 
-  test('RN-02 revalidates approval even when the screen had approved data', () async {
-    await cubit.refresh();
-    repository.data = const DriverHomeData(registration: RegistrationStatus.underReview);
-    await cubit.startRoute();
-    expect(repository.starts, 0);
-    expect(cubit.state.error, contains('aprovado'));
-  });
+  test(
+    'RN-02 revalidates approval even when the screen had approved data',
+    () async {
+      await cubit.refresh();
+      repository.data = const DriverHomeData(
+        registration: RegistrationStatus.underReview,
+      );
+      await cubit.startRoute();
+      expect(repository.starts, 0);
+      expect(cubit.state.error, DriverHomeMessage.approvalRequired);
+    },
+  );
   test('outside working hours warns without denying start', () async {
-    repository.data = const DriverHomeData(registration: RegistrationStatus.approved,
+    repository.data = const DriverHomeData(
+      registration: RegistrationStatus.approved,
       outsideWorkingHours: true,
-      todayTrip: Trip(id: 'trip', status: TripStatus.notStarted, label: 'Manhã'));
+      todayTrip: Trip(
+        id: 'trip',
+        status: TripStatus.notStarted,
+        label: 'Manhã',
+      ),
+    );
     await cubit.startRoute();
     expect(repository.starts, 1);
     expect(cubit.state.onShift, isTrue);
@@ -62,20 +84,42 @@ void main() {
     expect(repository.starts, 1);
   });
   test('a changed stop is rejected before mutation', () async {
-    await cubit.confirmBySlide(const StopConfirmation(tripId: 'trip', stopId: 'old',
-      studentId: 'student', studentName: 'Ana', action: StopAction.boarding));
+    await cubit.confirmBySlide(
+      const StopConfirmation(
+        tripId: 'trip',
+        stopId: 'old',
+        studentId: 'student',
+        studentName: 'Ana',
+        action: StopAction.boarding,
+      ),
+    );
     expect(repository.confirmations, 0);
-    expect(cubit.state.error, contains('parada mudou'));
+    expect(cubit.state.error, DriverHomeMessage.stopChanged);
   });
-  test('blocked active trip still accepts a matching slide confirmation', () async {
-    const next = StopConfirmation(tripId: 'trip', stopId: 'stop', studentId: 's',
-      studentName: 'Ana', action: StopAction.disembarking);
-    repository.data = const DriverHomeData(registration: RegistrationStatus.approved,
-      subscriptionBlocked: true, nextConfirmation: next,
-      todayTrip: Trip(id: 'trip', status: TripStatus.inProgress, label: 'Manhã'));
-    await cubit.confirmBySlide(next);
-    expect(repository.confirmations, 1);
-  });
+  test(
+    'blocked active trip still accepts a matching slide confirmation',
+    () async {
+      const next = StopConfirmation(
+        tripId: 'trip',
+        stopId: 'stop',
+        studentId: 's',
+        studentName: 'Ana',
+        action: StopAction.disembarking,
+      );
+      repository.data = const DriverHomeData(
+        registration: RegistrationStatus.approved,
+        subscriptionBlocked: true,
+        nextConfirmation: next,
+        todayTrip: Trip(
+          id: 'trip',
+          status: TripStatus.inProgress,
+          label: 'Manhã',
+        ),
+      );
+      await cubit.confirmBySlide(next);
+      expect(repository.confirmations, 1);
+    },
+  );
   test('failed refresh preserves the last known trip', () async {
     await cubit.refresh();
     final previous = cubit.state.data;

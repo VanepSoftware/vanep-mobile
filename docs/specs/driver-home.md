@@ -1,103 +1,46 @@
-# Spec — Driver home screen
+# Driver home — VAN-66 / imported VAN-120
 
-## Context
+## Scope
 
-The driver-facing home screen is the first screen an authenticated driver sees.
-It greets the driver, shows the current shift status, offers a primary action to
-start/end the route, a placeholder card for the day's students, and a toggle to
-share live location. Navigation between the driver's main areas is done through a
-bottom navigation bar (Home, Proposals, Students, Profile).
+Implement the base Driver → Home page (`moto-home-1` through `moto-home-8`). The task description supplied by the developer is authoritative. The linked Linear issue is not accessible from this environment, and the design frames have not been supplied; visual fidelity to those frames remains unverified.
 
-It reuses the visual language of the client home (see `client-home-drivers.md`):
-shared bottom navigation, greeting header, a light gradient background and a glass
-card style, all promoted to `lib/core/ui/` so both audiences stay consistent.
+Only the main card changes with the driver's state. Keep these six shortcuts in this order, in two rows: Students, Route and stops, Absences and adjustments / Finances, Assistants, Documents. Route start, checklist and contact actions belong inside the main card. Boarding and disembarking require a complete slide gesture; tapping or a partial drag must not confirm.
 
-## Goals
+Full destination screens are separate features. Existing destinations may remain pending navigation integrations, explicitly recorded as TODO(VAN-66); rendering a pending destination is not evidence that the feature works.
 
-- Greet the signed-in driver by first name, with a shift subtitle.
-- Show the shift status ("off shift" / "on shift").
-- Provide a primary action that toggles the route (Start route / End route).
-- Provide a toggle to share live location in real time.
-- Reserve a card slot for "today's students" (empty for now — see Data source).
-- Provide a bottom navigation bar (Home, Proposals, Students, Profile).
+## State resolution
 
-## Data source
+1. Subscription or expired-document block. During an active trip it becomes a warning banner and must not interrupt operations.
+2. Incomplete registration: only Documents is enabled among the six shortcuts.
+3. UNDER_REVIEW registration.
+4. REJECTED registration: the same card structure as under review, error colors, reason and Correct and resubmit action.
+5. IN_PROGRESS trip.
+6. Today's scheduled trip, before departure.
+7. Completed shift with another shift later today.
+8. Approved registration with no students, building the route.
+9. No route today, business panel.
 
-**Blocked.** There is currently **no backend endpoint** for a driver's students.
-`DependentModel` links a dependent to a `client`, a `school` and an `address`, but
-has **no driver relationship**, and there is no `contract`/`proposal`/`route`
-feature that would connect a driver to the students they transport. The only
-students-like endpoint is `GET /api/dependent`, which returns the **authenticated
-client's** dependents — not a driver's route.
+An active trip keeps its operational card even if stale registration or blocking information is returned. Route start must revalidate APPROVED against fresh data (RN-02). Outside working hours is advisory, never a start prohibition. Show the family counter when known, including 100% (D12); do not fabricate family membership when the API does not provide it.
 
-Consequently, the students card is delivered **empty** and **no data is mocked**.
-The runtime state (shift on/off, location sharing) is local UI state only; the shift
-start time shown in the greeting subtitle is provided by the caller. When the backend
-exposes a driver-students endpoint, a `domain` + `data` layer is added and the card is
-filled with the real count ("X students today"), tappable into a full list.
+## API integration and remaining dependencies
 
-## Non-goals (this change)
+Production uses onboarding, today's trips, route start and client links. Route start accepts the shift associated with the returned trip token; unknown shifts fail before HTTP mutation.
 
-- Proposals, Students and Profile tabs are placeholders (Profile reuses the existing
-  sign-out screen).
-- Any students data (count or list) — blocked on the backend (see Data source).
-- Role-based routing: the real app still routes authenticated users to `ClientShell`;
-  routing a driver to `DriverShell` depends on the profile exposing an account type,
-  which the backend does not return yet. A dev-only preview entrypoint
-  (`lib/main_driver_preview.dart`) renders the shell for manual verification and is
-  **not shipped** in any PR.
+The current TripResponseDTO has no next stop or contact. DriverTripController has only today, start and finish. Stop confirmation, next-stop/contact mapping and real family membership remain backend dependencies. The production UI must not simulate successful confirmation or display invented counts.
 
-## Architecture (R01–R09)
+Active client-link count is currently used as the route-building signal; it is not a verified count of transported children. A driver-students contract is still needed to establish that distinction.
 
-Shared UI promoted to `lib/core/ui/`:
+Google Places setup and full shortcut destinations are outside the base Home acceptance scope.
 
-- `vanep_bottom_nav.dart` — floating pill bottom nav rendered from a list of items.
-- `vanep_greeting_header.dart` — "Olá, {name}" with optional subtitle/emoji.
-- `vanep_screen_background.dart` — light gradient background.
-- `vanep_glass_card.dart` — translucent gradient card with border.
+## Verification
 
-New feature module `lib/modules/driver/`:
+- Domain tests: nine states, active-trip block banner, incomplete-registration shortcuts and D12.
+- Cubit tests: RN-02 fresh-data validation, concurrency, unavailable repository, refresh errors and stop identity validation.
+- Widget tests: all nine card states, shared card structure, fixed shortcut order, contact/slide placement, D12 at 100%, outside-hours advisory and both slide actions.
+- ARB localization for Portuguese and English; generated localization code is not versioned.
+- `test/previews/driver_home_preview.dart` is an explicitly simulated, alternate entrypoint for device validation. It never replaces the production repository and must not be presented as real API evidence.
+- Production evidence: successful login and IN_PROGRESS card verified on USB device. The developer recorded the nine preview states on the device and will attach the video; those scenarios use simulated test data.
 
-- `driver_container.dart` — DI registration (`registerDriverHomeDependencies`).
-- `presentation/cubit/driver_home_state.dart` — `DriverHomeState` (equatable).
-- `presentation/cubit/driver_home_cubit.dart` — shift + location-sharing UI state.
-- `presentation/pages/driver_home_tab.dart` — composes the home content.
-- `presentation/widgets/driver_shift_badge.dart` — shift status pill.
-- `presentation/widgets/driver_location_sharing_tile.dart` — label + `Switch`.
+## Delivery
 
-Shell:
-
-- `shell/driver_shell.dart` — `IndexedStack` of the four tabs + bottom nav.
-- `shell/driver_bottom_nav.dart` — driver nav items over `VanepBottomNav`.
-
-No `domain`/`data` layer yet: there is no external data source (see Data source).
-When the endpoint exists, add `domain/entities`, `domain/repositories`,
-`domain/usecases`, `data/dtos`, `data/datasources`, `data/repositories` and inject the
-use case into the cubit through `driver_container.dart`.
-
-## Localization (R10)
-
-All user-visible copy uses `AppLocalizations` (ARB files under `lib/l10n/`):
-`driverShiftStartsAt`, `driverShiftOff`, `driverShiftOn`, `driverStartRoute`,
-`driverEndRoute`, `driverShareLiveLocation`, `navProposals`, `navStudents`.
-
-## Testing (R05)
-
-- `driver_home_state_test.dart` — defaults, `onShift`, `copyWith`.
-- `driver_home_cubit_test.dart` — `seedToday`, `startRoute`, `endRoute`,
-  `setLocationSharing` (bloc_test).
-- `driver_home_tab_test.dart` — greeting/subtitle, start-route toggles badge + button
-  label, location toggle updates the cubit.
-- `driver_shell_test.dart` — starts on Home, tab switches to Proposals/Students.
-
-## Phased delivery (R16–R23)
-
-Dependency order: shared UI → driver presentation → shell/wiring. Each phase is one PR,
-under the 10-new-files cap, with its own tests. The dev-only preview entrypoint is
-excluded from every PR.
-
-| Phase | Contents | New files | Depends on | Parallel with |
-|-------|----------|-----------|------------|---------------|
-| 1 | Shared `core/ui` widgets (bottom nav, greeting, screen background, glass card) + color tokens; refactor `ClientBottomNav` and `drivers_home_tab` to use them; delete `client_greeting_header.dart` | 4 | — | — |
-| 2 | Driver presentation module (state, cubit, tab, shift badge, location tile) + `driver_container.dart` + driver l10n strings + tests | 6 + 3 tests | Phase 1 merged | — |
-| 3 | `DriverShell` + `DriverBottomNav` + `main.dart` DI wiring + shell test | 2 + 1 test | Phase 2 merged | — |
+Follow the approved domain → data → presentation dependency order recorded in `docs/reviews/VAN-66-pr-146.md`. Each PR must remain within 600 productive lines and 10 new files. Subdivide presentation before publication. No commit/push before manual developer validation (R27a).

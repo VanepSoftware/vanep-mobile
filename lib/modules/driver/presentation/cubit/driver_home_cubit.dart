@@ -6,7 +6,7 @@ import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_state
 
 class DriverHomeCubit extends Cubit<DriverHomeState> {
   DriverHomeCubit({this.repository, this.rules = const DriverHomeRules()})
-      : super(const DriverHomeState());
+    : super(const DriverHomeState());
 
   final DriverHomeRepository? repository;
   final DriverHomeRules rules;
@@ -18,7 +18,7 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
     if (state.loading || state.busy || isClosed) return;
     final source = repository;
     if (source == null) {
-      emit(state.copyWith(error: 'Os dados do início ainda não estão disponíveis.'));
+      emit(state.copyWith(error: DriverHomeMessage.unavailable));
       return;
     }
     emit(state.copyWith(loading: true, clearError: true));
@@ -26,7 +26,9 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
       final data = await source.load();
       if (!isClosed) emit(state.copyWith(data: data));
     } catch (_) {
-      if (!isClosed) emit(state.copyWith(error: 'Não foi possível atualizar o início.'));
+      if (!isClosed) {
+        emit(state.copyWith(error: DriverHomeMessage.refreshFailed));
+      }
     } finally {
       if (!isClosed) emit(state.copyWith(loading: false));
     }
@@ -44,18 +46,23 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
   Future<void> confirmBySlide(StopConfirmation expected) =>
       _command((source, fresh) async {
         if (!rules.canConfirm(fresh, expected)) {
-          return 'A parada mudou. Confira os dados e deslize novamente.';
+          return DriverHomeMessage.stopChanged;
         }
         await source.confirmStop(fresh.nextConfirmation!);
         return null;
       });
 
-  Future<void> _command(Future<String?> Function(
-    DriverHomeRepository source, DriverHomeData fresh) action) async {
+  Future<void> _command(
+    Future<DriverHomeMessage?> Function(
+      DriverHomeRepository source,
+      DriverHomeData fresh,
+    )
+    action,
+  ) async {
     if (state.busy || state.loading || isClosed) return;
     final source = repository;
     if (source == null) {
-      emit(state.copyWith(error: 'Os dados do início ainda não estão disponíveis.'));
+      emit(state.copyWith(error: DriverHomeMessage.unavailable));
       return;
     }
     emit(state.copyWith(busy: true, clearError: true));
@@ -74,11 +81,13 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
         if (!isClosed) emit(state.copyWith(data: data));
       } catch (_) {
         if (!isClosed) {
-          emit(state.copyWith(error: 'Ação concluída. Atualize a tela para ver o estado atual.'));
+          emit(state.copyWith(error: DriverHomeMessage.refreshAfterAction));
         }
       }
     } catch (_) {
-      if (!isClosed) emit(state.copyWith(error: 'Não foi possível concluir a ação. Tente novamente.'));
+      if (!isClosed) {
+        emit(state.copyWith(error: DriverHomeMessage.actionFailed));
+      }
     } finally {
       if (!isClosed) emit(state.copyWith(busy: false));
     }

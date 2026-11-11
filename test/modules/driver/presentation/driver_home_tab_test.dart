@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,16 +12,38 @@ import 'package:vanep_mobile/modules/driver/presentation/widgets/slide_stop_conf
 
 import 'driver_home_cubit_test.dart' show HomeRepository;
 
-Widget harness(DriverHomeCubit cubit) => MaterialApp(
+Widget harness(DriverHomeCubit cubit, {String locale = 'pt'}) => MaterialApp(
   localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales, locale: const Locale('pt'),
-  home: Scaffold(body: BlocProvider.value(value: cubit, child: DriverHomeTab(
-    displayName: 'Carlos Souza', onMenuTapped: () {}, onNotificationsTapped: () {}))));
+  supportedLocales: AppLocalizations.supportedLocales,
+  locale: Locale(locale),
+  home: Scaffold(
+    body: BlocProvider.value(
+      value: cubit,
+      child: DriverHomeTab(
+        displayName: 'Carlos Souza',
+        onMenuTapped: () {},
+        onNotificationsTapped: () {},
+      ),
+    ),
+  ),
+);
 
 void main() {
-  testWidgets('loads repository data and starts the pending trip', (tester) async {
+  testWidgets('English home uses localized labels and errors', (tester) async {
+    final cubit = DriverHomeCubit();
+    addTearDown(cubit.close);
+    await tester.pumpWidget(harness(cubit, locale: 'en'));
+    await tester.pumpAndSettle();
+    expect(find.text('Home data is not available yet.'), findsOneWidget);
+    expect(find.text('Try again'), findsOneWidget);
+  });
+
+  testWidgets('loads repository data and starts the pending trip', (
+    tester,
+  ) async {
     final repository = HomeRepository();
-    final cubit = DriverHomeCubit(repository: repository)..seedToday(shiftStartTime: '6h00');
+    final cubit = DriverHomeCubit(repository: repository)
+      ..seedToday(shiftStartTime: '6h00');
     addTearDown(cubit.close);
     await tester.pumpWidget(harness(cubit));
     await tester.pumpAndSettle();
@@ -32,19 +55,45 @@ void main() {
     expect(repository.starts, 1);
     expect(find.text('Em rota'), findsOneWidget);
   });
-  testWidgets('incomplete state keeps six shortcuts with only Documents enabled', (tester) async {
-    await tester.pumpWidget(MaterialApp(home: Scaffold(body: DriverHomeShortcuts(
-      data: const DriverHomeData(registration: RegistrationStatus.incomplete),
-      rules: const DriverHomeRules(), onOpen: (_) {}))));
-    final buttons = tester.widgetList<OutlinedButton>(find.byType(OutlinedButton)).toList();
-    expect(buttons.length, 6);
-    expect(buttons.take(5).every((button) => button.onPressed == null), isTrue);
-    expect(buttons.last.onPressed, isNotNull);
-    expect(find.text('Documentos'), findsOneWidget);
-  });
-  testWidgets('rejected registration shows reason and resubmission action', (tester) async {
-    final repository = HomeRepository()..data = const DriverHomeData(
-      registration: RegistrationStatus.rejected, rejectionReason: 'CNH ilegível');
+  testWidgets(
+    'incomplete state keeps six shortcuts with only Documents enabled',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('pt'),
+          home: Scaffold(
+            body: DriverHomeShortcuts(
+              data: const DriverHomeData(
+                registration: RegistrationStatus.incomplete,
+              ),
+              rules: const DriverHomeRules(),
+              onOpen: (_) {},
+            ),
+          ),
+        ),
+      );
+      final buttons = tester
+          .widgetList<OutlinedButton>(find.byType(OutlinedButton))
+          .toList();
+      expect(buttons.length, 6);
+      expect(
+        buttons.take(5).every((button) => button.onPressed == null),
+        isTrue,
+      );
+      expect(buttons.last.onPressed, isNotNull);
+      expect(find.text('Documentos'), findsOneWidget);
+    },
+  );
+  testWidgets('rejected registration shows reason and resubmission action', (
+    tester,
+  ) async {
+    final repository = HomeRepository()
+      ..data = const DriverHomeData(
+        registration: RegistrationStatus.rejected,
+        rejectionReason: 'CNH ilegível',
+      );
     final cubit = DriverHomeCubit(repository: repository);
     addTearDown(cubit.close);
     await tester.pumpWidget(harness(cubit));
@@ -52,40 +101,83 @@ void main() {
     expect(find.text('Cadastro rejeitado'), findsOneWidget);
     expect(find.text('CNH ilegível'), findsOneWidget);
     expect(find.text('Corrigir e reenviar'), findsOneWidget);
-    final card = tester.widget<Card>(find.byType(Card));
-    final context = tester.element(find.byType(Card));
-    expect(card.color, Theme.of(context).colorScheme.errorContainer);
+    final card = tester.widget<VanepCard>(find.byType(VanepCard));
+    expect(card.isError, isTrue);
+    final context = tester.element(find.byType(VanepCard));
+    final material = tester.widget<Material>(
+      find
+          .descendant(
+            of: find.byType(VanepCard),
+            matching: find.byType(Material),
+          )
+          .first,
+    );
+    expect(material.color, Theme.of(context).colorScheme.errorContainer);
   });
-  testWidgets('blocked active trip keeps operational card and a warning banner', (tester) async {
-    final repository = HomeRepository()..data = const DriverHomeData(
-      registration: RegistrationStatus.approved, expiredDocument: true,
-      todayTrip: Trip(id: 'trip', status: TripStatus.inProgress, label: 'Manhã'));
-    final cubit = DriverHomeCubit(repository: repository);
-    addTearDown(cubit.close);
-    await tester.pumpWidget(harness(cubit));
-    await tester.pumpAndSettle();
-    expect(find.text('Em rota'), findsOneWidget);
-    expect(find.text('Atualize os documentos vencidos.'), findsOneWidget);
-    expect(find.text('Checklist'), findsOneWidget);
-    expect(find.text('Regularização necessária'), findsNothing);
-  });
+  testWidgets(
+    'blocked active trip keeps operational card and a warning banner',
+    (tester) async {
+      final repository = HomeRepository()
+        ..data = const DriverHomeData(
+          registration: RegistrationStatus.approved,
+          expiredDocument: true,
+          todayTrip: Trip(
+            id: 'trip',
+            status: TripStatus.inProgress,
+            label: 'Manhã',
+          ),
+        );
+      final cubit = DriverHomeCubit(repository: repository);
+      addTearDown(cubit.close);
+      await tester.pumpWidget(harness(cubit));
+      await tester.pumpAndSettle();
+      expect(find.text('Em rota'), findsOneWidget);
+      expect(find.text('Atualize os documentos vencidos.'), findsOneWidget);
+      expect(find.text('Checklist'), findsOneWidget);
+      expect(find.text('Regularização necessária'), findsNothing);
+    },
+  );
   for (final action in StopAction.values) {
-    testWidgets('$action requires full drag; tap and partial drag do not confirm', (tester) async {
-      var confirmations = 0;
-      await tester.pumpWidget(MaterialApp(home: Scaffold(body: SizedBox(width: 320,
-        child: SlideStopConfirmation(confirmation: StopConfirmation(tripId: 't',
-          stopId: 'stop', studentId: 's', studentName: 'Ana', action: action),
-          enabled: true, onConfirmed: () async { confirmations++; })))));
-      final handle = find.byType(GestureDetector);
-      await tester.tap(handle);
-      await tester.pumpAndSettle();
-      expect(confirmations, 0);
-      await tester.drag(handle, const Offset(50, 0));
-      await tester.pumpAndSettle();
-      expect(confirmations, 0);
-      await tester.drag(handle, const Offset(320, 0));
-      await tester.pumpAndSettle();
-      expect(confirmations, 1);
-    });
+    testWidgets(
+      '$action requires full drag; tap and partial drag do not confirm',
+      (tester) async {
+        var confirmations = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('pt'),
+            home: Scaffold(
+              body: SizedBox(
+                width: 320,
+                child: SlideStopConfirmation(
+                  confirmation: StopConfirmation(
+                    tripId: 't',
+                    stopId: 'stop',
+                    studentId: 's',
+                    studentName: 'Ana',
+                    action: action,
+                  ),
+                  enabled: true,
+                  onConfirmed: () async {
+                    confirmations++;
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+        final handle = find.byType(GestureDetector);
+        await tester.tap(handle);
+        await tester.pumpAndSettle();
+        expect(confirmations, 0);
+        await tester.drag(handle, const Offset(50, 0));
+        await tester.pumpAndSettle();
+        expect(confirmations, 0);
+        await tester.drag(handle, const Offset(320, 0));
+        await tester.pumpAndSettle();
+        expect(confirmations, 1);
+      },
+    );
   }
 }

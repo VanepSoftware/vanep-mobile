@@ -20,43 +20,64 @@ void main() {
 
   setUp(() {
     dio = MockDio();
-    remote = DriverHomeRemoteDataSource(
-      dio: dio,
-      environment: testEnvironment,
-    );
+    remote = DriverHomeRemoteDataSource(dio: dio, environment: testEnvironment);
     repository = DriverHomeRepositoryImpl(remote: remote);
   });
 
-  test('load maps incomplete onboarding without calling trips endpoint', () async {
-    when(
-      () => dio.get<Map<String, dynamic>>(
-        testEnvironment.driverOnboardingEndpoint,
+  test('unsupported stop confirmation never sends an HTTP request', () async {
+    await expectLater(
+      remote.confirmStop(
+        const StopConfirmation(
+          tripId: 'trip',
+          stopId: 'stop',
+          studentId: 'student',
+          studentName: 'Ana',
+          action: StopAction.boarding,
+        ),
       ),
-    ).thenAnswer(
-      (_) async => Response(
-        requestOptions: RequestOptions(),
-        statusCode: 200,
-        data: {
-          'driverToken': 'driver-1',
-          'approvalStatus': 'PENDING',
-          'canSubmit': false,
-          'cnhStep': {
-            'completed': false,
-            'pendingItems': ['cnh_expired'],
-          },
-        },
-      ),
+      throwsUnsupportedError,
     );
-
-    final data = await repository.load();
-
-    expect(data.registration, RegistrationStatus.incomplete);
-    expect(data.expiredDocument, isTrue);
-    expect(data.todayTrip, isNull);
-    verifyNever(
-      () => dio.get<List<dynamic>>(testEnvironment.driverTripsTodayEndpoint),
-    );
+    verifyZeroInteractions(dio);
   });
+
+  test('unknown trip cannot start a default morning shift', () async {
+    await expectLater(remote.startTrip('unknown'), throwsStateError);
+    verifyZeroInteractions(dio);
+  });
+
+  test(
+    'load maps incomplete onboarding without calling trips endpoint',
+    () async {
+      when(
+        () => dio.get<Map<String, dynamic>>(
+          testEnvironment.driverOnboardingEndpoint,
+        ),
+      ).thenAnswer(
+        (_) async => Response(
+          requestOptions: RequestOptions(),
+          statusCode: 200,
+          data: {
+            'driverToken': 'driver-1',
+            'approvalStatus': 'PENDING',
+            'canSubmit': false,
+            'cnhStep': {
+              'completed': false,
+              'pendingItems': ['cnh_expired'],
+            },
+          },
+        ),
+      );
+
+      final data = await repository.load();
+
+      expect(data.registration, RegistrationStatus.incomplete);
+      expect(data.expiredDocument, isTrue);
+      expect(data.todayTrip, isNull);
+      verifyNever(
+        () => dio.get<List<dynamic>>(testEnvironment.driverTripsTodayEndpoint),
+      );
+    },
+  );
 
   test('load composes approved driver trips and active client links', () async {
     when(
@@ -76,36 +97,34 @@ void main() {
       ),
     );
 
-    when(
-      () => dio.get<List<dynamic>>(testEnvironment.driverTripsTodayEndpoint),
-    ).thenAnswer(
-      (_) async => Response(
-        requestOptions: RequestOptions(),
-        statusCode: 200,
-        data: [
-          {
-            'token': 'trip-morning-1',
-            'shift': 'MORNING',
-            'status': 'SCHEDULED',
-            'outsideWorkWindow': true,
-          },
-        ],
-      ),
-    );
+    when(() => dio.get<List<dynamic>>(testEnvironment.driverTripsTodayEndpoint))
+        .thenAnswer(
+          (_) async => Response(
+            requestOptions: RequestOptions(),
+            statusCode: 200,
+            data: [
+              {
+                'token': 'trip-morning-1',
+                'shift': 'MORNING',
+                'status': 'SCHEDULED',
+                'outsideWorkWindow': true,
+              },
+            ],
+          ),
+        );
 
-    when(
-      () => dio.get<List<dynamic>>(testEnvironment.clientDriversMeEndpoint),
-    ).thenAnswer(
-      (_) async => Response(
-        requestOptions: RequestOptions(),
-        statusCode: 200,
-        data: [
-          {'token': 'link-1', 'status': 'ACTIVE'},
-          {'token': 'link-2', 'status': 'ACTIVE'},
-          {'token': 'link-3', 'status': 'PENDING'},
-        ],
-      ),
-    );
+    when(() => dio.get<List<dynamic>>(testEnvironment.clientDriversMeEndpoint))
+        .thenAnswer(
+          (_) async => Response(
+            requestOptions: RequestOptions(),
+            statusCode: 200,
+            data: [
+              {'token': 'link-1', 'status': 'ACTIVE'},
+              {'token': 'link-2', 'status': 'ACTIVE'},
+              {'token': 'link-3', 'status': 'PENDING'},
+            ],
+          ),
+        );
 
     when(
       () => dio.post<Map<String, dynamic>>(
@@ -125,10 +144,12 @@ void main() {
     expect(data.registration, RegistrationStatus.approved);
     expect(data.todayTrip?.id, 'trip-morning-1');
     expect(data.todayTrip?.status, TripStatus.notStarted);
-    expect(data.todayTrip?.label, 'Manhã');
+    expect(data.todayTrip?.label, 'MORNING');
     expect(data.outsideWorkingHours, isTrue);
     expect(data.studentCount, 2);
-    expect(data.familiesInApp, 2);
+    expect(data.familiesInApp, isNull);
+    expect(data.nextConfirmation, isNull);
+    expect(data.contactLabel, isNull);
 
     await repository.startTrip('trip-morning-1');
     verify(

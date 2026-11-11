@@ -18,10 +18,9 @@ class DriverOnboardingDto {
     );
 
     final rawReason = json['rejectionReason'];
-    final rejectionReason =
-        rawReason is String && rawReason.trim().isNotEmpty
-            ? rawReason.trim()
-            : null;
+    final rejectionReason = rawReason is String && rawReason.trim().isNotEmpty
+        ? rawReason.trim()
+        : null;
 
     return DriverOnboardingDto(
       registration: RegistrationStatus.fromApi(json['approvalStatus']),
@@ -46,7 +45,7 @@ class DriverTripDto {
   });
 
   factory DriverTripDto.fromJson(Map<String, Object?> json) {
-    final shift = (json['shift'] as String? ?? 'MORNING').trim().toUpperCase();
+    final shift = (json['shift'] as String? ?? '').trim().toUpperCase();
     return DriverTripDto(
       token: (json['token'] as String? ?? shift).trim(),
       shift: shift,
@@ -68,23 +67,10 @@ class DriverTripDto {
     _ => 4,
   };
 
-  String get shiftLabel => switch (shift) {
-    'MORNING' => 'Manhã',
-    'AFTERNOON' => 'Tarde',
-    'NIGHT' => 'Noite',
-    'FULLTIME' => 'Integral',
-    _ => shift,
-  };
-
   Trip? toDomain() {
     final domainStatus = status;
     if (domainStatus == null) return null;
-    return Trip(
-      id: token,
-      status: domainStatus,
-      label: shiftLabel,
-      shift: shift,
-    );
+    return Trip(id: token, status: domainStatus, label: shift, shift: shift);
   }
 }
 
@@ -118,7 +104,7 @@ class DriverHomeDto {
       final lastCompleted = completedList.last;
       if (scheduled.shiftOrder > lastCompleted.shiftOrder) {
         selectedDto = lastCompleted;
-        laterShiftLabel = scheduled.shiftLabel;
+        laterShiftLabel = scheduled.shift;
       } else {
         selectedDto = scheduled;
       }
@@ -141,7 +127,12 @@ class DriverHomeDto {
       todayTrip: selectedDto?.toDomain(),
       laterShiftLabel: laterShiftLabel,
       studentCount: activeStudents,
-      familiesInApp: activeStudents,
+      // TODO(VAN-66): Map family app membership when client links expose it.
+      familiesInApp: null,
+      // TODO(VAN-66): Map nextConfirmation and contactLabel when the API supplies
+      // stops and contact details; enable confirmation after its endpoint exists.
+      nextConfirmation: null,
+      contactLabel: null,
       outsideWorkingHours: selectedDto?.outsideWorkWindow ?? false,
     );
   }

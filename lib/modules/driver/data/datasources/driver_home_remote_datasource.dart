@@ -5,10 +5,7 @@ import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dar
 import 'package:vanep_mobile/modules/driver/data/dtos/driver_home_dto.dart';
 
 class DriverHomeRemoteDataSource {
-  DriverHomeRemoteDataSource({
-    required this.dio,
-    required this.environment,
-  });
+  DriverHomeRemoteDataSource({required this.dio, required this.environment});
 
   final Dio dio;
   final Environment environment;
@@ -55,17 +52,9 @@ class DriverHomeRemoteDataSource {
   }
 
   Future<void> confirmStop(StopConfirmation confirmation) async {
-    final tripSegment = Uri.encodeComponent(confirmation.tripId);
-    final stopSegment = Uri.encodeComponent(confirmation.stopId);
-    await dio.post<Map<String, dynamic>>(
-      '${environment.driversMeEndpoint}/trips/$tripSegment/stops/$stopSegment/confirm',
-      data: {
-        'studentId': confirmation.studentId,
-        'action': confirmation.action == StopAction.boarding
-            ? 'BOARDING'
-            : 'DISEMBARKING',
-      },
-    );
+    // TODO(VAN-66): Replace this guard when the backend exposes stop confirmation.
+    // DriverTripController currently supports only today, start and finish.
+    throw UnsupportedError('Stop confirmation is not supported by the API');
   }
 
   Future<List<DriverTripDto>> _fetchTodayTripsSafe() async {
@@ -90,13 +79,10 @@ class DriverHomeRemoteDataSource {
 
   String _resolveShift(String tripId) {
     final cached = _shiftByTripId[tripId];
-    if (cached != null && cached.isNotEmpty) {
+    if (cached != null &&
+        const {'MORNING', 'AFTERNOON', 'NIGHT', 'FULLTIME'}.contains(cached)) {
       return cached;
     }
-    final normalized = tripId.trim().toUpperCase();
-    return switch (normalized) {
-      'MORNING' || 'AFTERNOON' || 'NIGHT' || 'FULLTIME' => normalized,
-      _ => 'MORNING',
-    };
+    throw StateError('Cannot resolve shift for trip $tripId');
   }
 }

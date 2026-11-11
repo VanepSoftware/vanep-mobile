@@ -649,5 +649,98 @@
   "clientProposalsEmptyClosedTitle": "Nenhuma proposta encerrada",
   "clientProposalsEmptyClosedMessage": "Propostas aceitas, recusadas e expiradas aparecem aqui.",
   "clientProposalsLoadError": "Não foi possível carregar suas propostas.",
-  "clientProposalsRetry": "Tentar novamente"
+  "clientProposalsRetry": "Tentar novamente",
+  "driverHomeUnavailable": "Os dados do início ainda não estão disponíveis.",
+  "driverHomeRefreshFailed": "Não foi possível atualizar o início.",
+  "driverHomeStopChanged": "A parada mudou. Confira os dados e deslize novamente.",
+  "driverHomeRefreshAfterAction": "Ação concluída. Atualize a tela para ver o estado atual.",
+  "driverHomeActionFailed": "Não foi possível concluir a ação. Tente novamente.",
+  "driverHomeApprovalRequired": "Seu cadastro precisa estar aprovado para iniciar a rota.",
+  "driverHomeNoPendingRoute": "Não há rota aguardando início.",
+  "driverHomeSubscription": "Regularize sua assinatura Vanep.",
+  "driverHomeDocuments": "Atualize os documentos vencidos.",
+  "driverHomeBothBlocked": "Regularize sua assinatura Vanep. Atualize os documentos vencidos.",
+  "driverHomeBlockedTitle": "Regularização necessária",
+  "driverHomeIncompleteTitle": "Complete seu cadastro",
+  "driverHomeIncompleteDescription": "Acesse Documentos para concluir as informações pendentes.",
+  "driverHomeReviewTitle": "Cadastro em análise",
+  "driverHomeReviewDescription": "Aguarde a análise dos documentos enviados.",
+  "driverHomeRejectedTitle": "Cadastro rejeitado",
+  "driverHomeRejectedDescription": "Consulte os documentos para verificar o motivo.",
+  "driverHomeInProgress": "Em rota",
+  "driverHomeBeforeDeparture": "Antes de sair",
+  "driverHomeCompleted": "Turno concluído",
+  "driverHomeBuildingTitle": "Vamos montar sua rota",
+  "driverHomeBuildingDescription": "Seu cadastro está aprovado. Adicione alunos para organizar sua rota.",
+  "driverHomeNoRouteTitle": "Sem rota hoje",
+  "driverHomeNoRouteDescription": "Acompanhe e organize seu negócio pelos atalhos abaixo.",
+  "driverHomeRegularize": "Regularizar",
+  "driverHomeCompleteRegistration": "Completar cadastro",
+  "driverHomeResubmit": "Corrigir e reenviar",
+  "driverHomeChecklist": "Checklist",
+  "driverHomeStartRoute": "Iniciar rota",
+  "driverHomeAddStudents": "Adicionar alunos",
+  "driverHomeStudents": "Alunos",
+  "driverHomeRoute": "Rota e paradas",
+  "driverHomeAbsences": "Ausências e ajustes",
+  "driverHomeFinancial": "Financeiro",
+  "driverHomeAssistants": "Auxiliares",
+  "driverHomeDocumentsShortcut": "Documentos",
+  "driverHomeRetry": "Tentar novamente",
+  "driverHomeOutsideHours": "Você está fora do expediente.",
+  "driverHomeRegularization": "Regularização",
+  "driverHomeContact": "Contato da parada",
+  "driverHomeBoarding": "embarque",
+  "driverHomeDisembarking": "desembarque",
+  "driverHomeMorning": "Manhã",
+  "driverHomeAfternoon": "Tarde",
+  "driverHomeNight": "Noite",
+  "driverHomeFulltime": "Integral",
+  "driverHomeNextShift": "Próximo turno: {shift}",
+  "@driverHomeNextShift": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeCall": "Ligar: {contact}",
+  "@driverHomeCall": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeFamilyCounter": "{count} de {total} com família no app",
+  "@driverHomeFamilyCounter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeSlideStudent": "{student}: deslize para confirmar {action}",
+  "@driverHomeSlideStudent": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSlideHint": "Deslize da esquerda até o fim para confirmar {action}",
+  "@driverHomeSlideHint": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomePreviewTitle": "Prévia de teste — dados simulados"
 }

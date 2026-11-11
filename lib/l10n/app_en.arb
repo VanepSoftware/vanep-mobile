@@ -1330,5 +1330,98 @@
   "clientProposalsEmptyClosedTitle": "No closed proposals",
   "clientProposalsEmptyClosedMessage": "Accepted, declined and expired proposals show up here.",
   "clientProposalsLoadError": "We couldn't load your proposals.",
-  "clientProposalsRetry": "Try again"
+  "clientProposalsRetry": "Try again",
+  "driverHomeUnavailable": "Home data is not available yet.",
+  "driverHomeRefreshFailed": "Could not refresh home.",
+  "driverHomeStopChanged": "The stop changed. Check the details and slide again.",
+  "driverHomeRefreshAfterAction": "Action completed. Refresh to see the current status.",
+  "driverHomeActionFailed": "Could not complete the action. Try again.",
+  "driverHomeApprovalRequired": "Your registration must be approved to start the route.",
+  "driverHomeNoPendingRoute": "There is no route waiting to start.",
+  "driverHomeSubscription": "Update your Vanep subscription.",
+  "driverHomeDocuments": "Update expired documents.",
+  "driverHomeBothBlocked": "Update your Vanep subscription and expired documents.",
+  "driverHomeBlockedTitle": "Update required",
+  "driverHomeIncompleteTitle": "Complete your registration",
+  "driverHomeIncompleteDescription": "Open Documents to complete pending information.",
+  "driverHomeReviewTitle": "Registration under review",
+  "driverHomeReviewDescription": "Please wait for your documents to be reviewed.",
+  "driverHomeRejectedTitle": "Registration rejected",
+  "driverHomeRejectedDescription": "Check Documents for the reason.",
+  "driverHomeInProgress": "On route",
+  "driverHomeBeforeDeparture": "Before departure",
+  "driverHomeCompleted": "Shift completed",
+  "driverHomeBuildingTitle": "Let’s build your route",
+  "driverHomeBuildingDescription": "Your registration is approved. Add students to organize your route.",
+  "driverHomeNoRouteTitle": "No route today",
+  "driverHomeNoRouteDescription": "Manage your business using the shortcuts below.",
+  "driverHomeRegularize": "Update",
+  "driverHomeCompleteRegistration": "Complete registration",
+  "driverHomeResubmit": "Correct and resubmit",
+  "driverHomeChecklist": "Checklist",
+  "driverHomeStartRoute": "Start route",
+  "driverHomeAddStudents": "Add students",
+  "driverHomeStudents": "Students",
+  "driverHomeRoute": "Route and stops",
+  "driverHomeAbsences": "Absences and adjustments",
+  "driverHomeFinancial": "Finances",
+  "driverHomeAssistants": "Assistants",
+  "driverHomeDocumentsShortcut": "Documents",
+  "driverHomeRetry": "Try again",
+  "driverHomeOutsideHours": "You are outside working hours.",
+  "driverHomeRegularization": "Updates",
+  "driverHomeContact": "Stop contact",
+  "driverHomeBoarding": "boarding",
+  "driverHomeDisembarking": "disembarking",
+  "driverHomeMorning": "Morning",
+  "driverHomeAfternoon": "Afternoon",
+  "driverHomeNight": "Night",
+  "driverHomeFulltime": "Full day",
+  "driverHomeNextShift": "Next shift: {shift}",
+  "@driverHomeNextShift": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeCall": "Call: {contact}",
+  "@driverHomeCall": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeFamilyCounter": "{count} of {total} with family in the app",
+  "@driverHomeFamilyCounter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeSlideStudent": "{student}: slide to confirm {action}",
+  "@driverHomeSlideStudent": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSlideHint": "Slide from left to right to confirm {action}",
+  "@driverHomeSlideHint": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomePreviewTitle": "Test preview — simulated data"
 }
