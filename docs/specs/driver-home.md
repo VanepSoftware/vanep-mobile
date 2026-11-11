@@ -43,4 +43,4 @@ Google Places setup and full shortcut destinations are outside the base Home acc
 
 ## Delivery
 
-Follow the approved domain → data → presentation dependency order recorded in `docs/reviews/VAN-66-pr-146.md`. Each PR must remain within 600 productive lines and 10 new files. Subdivide presentation before publication. No commit/push before manual developer validation (R27a).
+Follow the approved domain → data → presentation dependency order. Each PR must remain within 600 productive lines and 10 new files. Subdivide presentation before publication. No commit/push before manual developer validation (R27a).
