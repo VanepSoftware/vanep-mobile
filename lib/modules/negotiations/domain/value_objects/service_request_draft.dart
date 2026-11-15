@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/draft_text.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 
 const serviceRequestNotesMaxLength = 1000;
 

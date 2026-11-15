@@ -130,6 +130,22 @@ class Environment {
 
   String get driverProposalsEndpoint => '$driversMeEndpoint/proposals';
 
+  String get driverStudentsEndpoint => '$driversMeEndpoint/students';
+
+  String get driverInviteLinkEndpoint => '$driversMeEndpoint/invite-link';
+
+  String get driverUnlinkedPassengersEndpoint =>
+      '$driversMeEndpoint/unlinked-passengers';
+
+  String unlinkedPassengerInviteEndpoint(String studentToken) =>
+      '$driverUnlinkedPassengersEndpoint/${Uri.encodeComponent(studentToken)}/invite';
+
+  String unlinkedPassengerMergeEndpoint(String studentToken) =>
+      '$driverUnlinkedPassengersEndpoint/${Uri.encodeComponent(studentToken)}/merge';
+
+  String unlinkedPassengerDismissMatchEndpoint(String studentToken) =>
+      '$driverUnlinkedPassengersEndpoint/${Uri.encodeComponent(studentToken)}/family-match/dismiss';
+
   String get vehiclesEndpoint => '$authBaseUrl/api/vehicles';
 
   String get myVehiclesEndpoint => '$vehiclesEndpoint/me';

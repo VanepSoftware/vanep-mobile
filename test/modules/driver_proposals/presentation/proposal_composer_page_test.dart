@@ -11,8 +11,9 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposa
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/proposal_composer_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 
 import '../../../core/ui/localized_harness.dart';
 import '../../negotiations/negotiations_fixtures.dart';
@@ -364,5 +365,46 @@ void main() {
 
     expect(find.text('Horário inválido.'), findsOneWidget);
     expect(find.text('Nova proposta'), findsOneWidget);
+  });
+
+  testWidgets('a student without a leg is the only one who shows that error', (
+    tester,
+  ) async {
+    final setup = ProposalComposerSetup.from(
+      request: newRequestForSiblings,
+      vans: const [masterVan],
+    );
+    final withLeg = setup.draft.items.first;
+    final withoutLeg = setup.draft.items.last.copyWith(timesBySlot: const {});
+    await pumpComposer(
+      tester,
+      ProposalComposerState(
+        today: today,
+        status: ProposalComposerStatus.ready,
+        setup: setup.withDraft(
+          setup.draft.copyWith(items: [withLeg, withoutLeg]),
+        ),
+      ),
+    );
+
+    expect(find.text('Dias e trechos'), findsNothing);
+    expect(find.text('Horários'), findsNothing);
+    expect(find.text('Theo'), findsOneWidget);
+    expect(find.text('Alice'), findsOneWidget);
+    expect(
+      find.text('Deixe pelo menos um trecho para cada aluno.'),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<DetailSection>(
+            find.ancestor(
+              of: find.text('Deixe pelo menos um trecho para cada aluno.'),
+              matching: find.byType(DetailSection),
+            ),
+          )
+          .title,
+      'Alice',
+    );
   });
 }

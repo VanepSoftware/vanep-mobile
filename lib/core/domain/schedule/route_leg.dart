@@ -1,4 +1,4 @@
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/api_name.dart';
+import 'package:vanep_mobile/core/domain/schedule/api_name.dart';
 
 enum RouteLeg {
   outbound('OUTBOUND'),

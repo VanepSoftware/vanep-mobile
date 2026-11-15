@@ -12,12 +12,6 @@ import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_edi
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_school_state.dart';
 import 'package:vanep_mobile/modules/schools/domain/usecases/resolve_school.dart';
 
-const schoolPlacePrimaryTypes = [
-  'school',
-  'primary_school',
-  'secondary_school',
-];
-
 class DependentSchoolCubit extends Cubit<DependentSchoolState>
     implements DependentEditorCubit<DependentSchoolState> {
   DependentSchoolCubit({
