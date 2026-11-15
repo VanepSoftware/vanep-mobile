@@ -9,3 +9,8 @@ String formatShift(AppLocalizations l10n, SchoolShift shift) {
     SchoolShift.fullTime => l10n.clientHomeShiftFullTime,
   };
 }
+
+String formatApiSchoolShift(AppLocalizations l10n, String? raw) {
+  final shift = SchoolShift.fromApi(raw);
+  return shift == null ? raw ?? '' : formatShift(l10n, shift);
+}

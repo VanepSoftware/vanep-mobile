@@ -25,7 +25,7 @@ Host the files on the `pr-assets` branch under `van-<N>/` and link them here.
 |---|---|
 |  |  |
 
-Video: 
+Video:
 
 ## Test Instructions
 
