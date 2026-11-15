@@ -44,6 +44,16 @@ void main() {
     });
   });
 
+  group('assistantInitialOf', () {
+    test('takes the first letter of the name', () {
+      expect(assistantInitialOf('ana oliveira'), 'A');
+    });
+
+    test('falls back to a placeholder for a blank name', () {
+      expect(assistantInitialOf('   '), '?');
+    });
+  });
+
   test('firstNameOf returns the first word', () {
     expect(firstNameOf('Carlos Mendes'), 'Carlos');
   });
