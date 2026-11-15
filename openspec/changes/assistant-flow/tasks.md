@@ -117,5 +117,6 @@
 - [x] Check API contract against backend main: route/checklist endpoints are absent; record this as an unresolved integration dependency in `phase5-validation.md`.
 - [x] Inspect VAN-68 (#121) and VAN-73 overlap; document composition and student-list ownership for dependent work.
 - [x] Run static analysis with pinned Flutter 3.47.2: **No issues found** (15.8s).
-- [ ] Run focused tests outside the sandbox and confirm CI with the updated branch.
-- [ ] Publish the branch updates and obtain review before merging. Developer explicitly authorized publishing the mobile base with the backend dependency documented; device testing is deferred and focused tests remain pending.
+- [x] Run focused tests outside the sandbox: developer reported **105 passed / zero failures** in **2m04s**.
+- [ ] Confirm full CI tests and coverage with the updated branch.
+- [ ] Publish the branch updates and obtain review before merging. Developer explicitly authorized publishing the mobile base with the backend dependency documented; device testing is deferred and focused tests have passed.

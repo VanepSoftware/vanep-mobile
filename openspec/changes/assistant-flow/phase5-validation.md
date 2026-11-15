@@ -2,7 +2,7 @@
 
 ## Scope
 
-The developer explicitly authorized publishing the Phase 5 mobile base with the route/checklist backend dependency documented, while deferring the Android account/email investigation and device validation. This change unblocks dependent mobile development; it does not claim that the route/checklist backend integration is operational. Focused tests remain unexecuted in this sandbox, and CI/reviewer validation must determine merge readiness.
+The developer explicitly authorized publishing the Phase 5 mobile base with the route/checklist backend dependency documented, while deferring the Android account/email investigation and device validation. This change unblocks dependent mobile development; it does not claim that the route/checklist backend integration is operational. The developer subsequently ran the focused tests successfully (105 passed in 2m04s). CI/reviewer validation must still determine merge readiness.
 
 Phase 4 PR #103 is merged into main as `72330c22f0d95d233a41d6522439a1efc57decc9`. This branch integrates that main, including its navigation guards, van load failure handling, shared shift formatter, and theme changes.
 
@@ -38,7 +38,9 @@ The proposed mobile payload uses `student_tokens`, `status`, `confirmed_by` for 
 
 ## Verification
 
-Static analysis passed with **No issues found** using the copied pinned Flutter 3.47.2 SDK in the agent sandbox (15.8s). Flutter test execution is blocked by the sandbox: creating a server socket on `127.0.0.1` fails with `Operation not permitted`. This is not a test pass.
+Static analysis passed with **No issues found** using the copied pinned Flutter 3.47.2 SDK in the agent sandbox (15.8s).
+
+The developer ran the focused command below outside the sandbox and reported **105 passed, zero failures** in **2m04s**. The sandbox itself still blocks the local sockets required by Flutter tests. This focused result does not replace full CI tests/coverage.
 
 Run from the mobile repository in the developer terminal:
 
