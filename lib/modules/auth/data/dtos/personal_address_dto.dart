@@ -20,6 +20,8 @@ abstract class PersonalAddressDto with _$PersonalAddressDto {
     required String cityToken,
     required String stateUf,
     required String countryIsoCode,
+    double? cityLatitude,
+    double? cityLongitude,
   }) = _PersonalAddressDto;
 
   factory PersonalAddressDto.fromJson(Map<String, Object?> json) =>
@@ -38,6 +40,8 @@ PersonalAddress personalAddressFromDto(PersonalAddressDto dto) {
     cityToken: dto.cityToken,
     stateUf: dto.stateUf,
     countryIsoCode: dto.countryIsoCode,
+    cityLatitude: dto.cityLatitude,
+    cityLongitude: dto.cityLongitude,
   );
 }
 

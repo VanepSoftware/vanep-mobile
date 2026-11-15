@@ -112,6 +112,22 @@ void main() {
     expect(find.text('Taguatinga Norte'), findsNWidgets(2));
   });
 
+  testWidgets('each school shows how far it is', (tester) async {
+    const nearby = PlaceSuggestion(
+      placeId: 'place-classe-10',
+      primaryText: 'Escola Classe 10',
+      secondaryText: 'Taguatinga Norte',
+      distanceMeters: 2400,
+    );
+    doubles.searchAnswers(const Ok([nearby, classe08]));
+    await openEditor(tester);
+
+    await search(tester, 'Escola Classe');
+
+    expect(find.text('2,4 km · Taguatinga Norte'), findsOneWidget);
+    expect(find.text('Taguatinga Norte'), findsOneWidget);
+  });
+
   testWidgets('selecting a school names it on the map and enables saving', (
     tester,
   ) async {

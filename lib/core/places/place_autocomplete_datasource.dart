@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
+import 'package:vanep_mobile/core/places/place_search_center.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
 
 const placesRegionCode = 'br';
@@ -34,7 +35,28 @@ PlaceSuggestion? toPlaceSuggestion(Map<String, Object?> prediction) {
     placeId: placeId,
     primaryText: primary ?? readNestedText(prediction['text']) ?? placeId,
     secondaryText: secondary ?? '',
+    distanceMeters: readDistanceMeters(prediction['distanceMeters']),
   );
+}
+
+int? readDistanceMeters(Object? node) {
+  return node is num ? node.round() : null;
+}
+
+Map<String, Object?> toLatLngJson(PlaceSearchCenter center) {
+  return {'latitude': center.latitude, 'longitude': center.longitude};
+}
+
+Map<String, Object?> buildLocationBiasBody(PlaceSearchCenter center) {
+  return {
+    'locationBias': {
+      'circle': {
+        'center': toLatLngJson(center),
+        'radius': placeSearchBiasRadiusMeters,
+      },
+    },
+    'origin': toLatLngJson(center),
+  };
 }
 
 String? readNestedText(Object? node) {
@@ -54,10 +76,12 @@ class PlaceAutocompleteDataSource {
   final Environment environment;
   final TargetPlatform platform;
 
-  Future<Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>> findSuggestions(
+  Future<Result<PlaceAutocompleteFailure, List<PlaceSuggestion>>>
+  findSuggestions(
     String input,
     String sessionToken, {
     List<String> includedPrimaryTypes = const [],
+    PlaceSearchCenter? searchCenter,
   }) async {
     try {
       final response = await dio.post<Map<String, dynamic>>(
@@ -68,6 +92,7 @@ class PlaceAutocompleteDataSource {
           'includedRegionCodes': [placesRegionCode],
           if (includedPrimaryTypes.isNotEmpty)
             'includedPrimaryTypes': includedPrimaryTypes,
+          if (searchCenter != null) ...buildLocationBiasBody(searchCenter),
         },
         options: Options(
           headers: {

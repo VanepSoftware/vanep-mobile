@@ -66,6 +66,8 @@ class TestDependentAddress implements DependentAddress {
     this.cityToken = 'city-brasilia',
     this.cityName = 'Brasília',
     this.stateUf = 'DF',
+    this.cityLatitude,
+    this.cityLongitude,
   });
 
   @override
@@ -94,6 +96,12 @@ class TestDependentAddress implements DependentAddress {
 
   @override
   final String stateUf;
+
+  @override
+  final double? cityLatitude;
+
+  @override
+  final double? cityLongitude;
 }
 
 const testHelenaDependent = TestDependent(
@@ -114,4 +122,19 @@ const testMiguelDependent = TestDependent(
 const testDependentWithoutBirthDate = TestDependent(
   token: 'dep-sem-nascimento',
   name: 'Ana Souza',
+);
+
+const testDependentInBrasilia = TestDependent(
+  token: 'dep-helena',
+  name: 'Helena Souza',
+  address: TestDependentAddress(
+    cityLatitude: -15.7843,
+    cityLongitude: -47.9081,
+  ),
+);
+
+const testDependentWithAddressWithoutCoordinates = TestDependent(
+  token: 'dep-helena',
+  name: 'Helena Souza',
+  address: TestDependentAddress(),
 );

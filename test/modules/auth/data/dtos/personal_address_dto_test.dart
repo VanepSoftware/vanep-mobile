@@ -95,4 +95,27 @@ void main() {
     });
     expect(body.containsKey('placeId'), isFalse);
   });
+
+  test('reads the city coordinates', () {
+    final address = personalAddressFromDto(
+      PersonalAddressDto.fromJson(
+        fakePersonalAddressJson(
+          cityLatitude: -15.7843,
+          cityLongitude: -47.9081,
+        ),
+      ),
+    );
+
+    expect(address.cityLatitude, -15.7843);
+    expect(address.cityLongitude, -47.9081);
+  });
+
+  test('a response without city coordinates reads them as null', () {
+    final address = personalAddressFromDto(
+      PersonalAddressDto.fromJson(fakePersonalAddressJsonWithoutOptionals()),
+    );
+
+    expect(address.cityLatitude, isNull);
+    expect(address.cityLongitude, isNull);
+  });
 }
