@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const shortcutsPerRow = 3;
 
@@ -83,14 +82,14 @@ class HomeShortcutTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final foreground = enabled
-        ? VanepColors.textPrimary
-        : VanepColors.textMuted;
+        ? context.palette.textPrimary
+        : context.palette.textMuted;
 
     return Material(
-      color: enabled ? VanepColors.card : VanepColors.surface,
+      color: enabled ? context.palette.card : context.palette.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-        side: const BorderSide(color: VanepColors.cardBorder),
+        side: BorderSide(color: context.palette.cardBorder),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -104,7 +103,9 @@ class HomeShortcutTile extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: enabled ? VanepColors.surface : VanepColors.card,
+                  color: enabled
+                      ? context.palette.surface
+                      : context.palette.card,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(shortcutIcon(shortcut), color: foreground),
@@ -113,7 +114,7 @@ class HomeShortcutTile extends StatelessWidget {
               Text(
                 formatShortcut(l10n, shortcut),
                 textAlign: TextAlign.center,
-                style: VanepTypography.cardSubtitle.copyWith(
+                style: context.typography.cardSubtitle.copyWith(
                   color: foreground,
                   fontWeight: FontWeight.w600,
                 ),

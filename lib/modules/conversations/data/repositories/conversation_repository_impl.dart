@@ -14,7 +14,7 @@ ConversationFailure conversationFailureFrom(DioException exception) {
     null => const ConversationNetworkFailure(),
     400 => const ConversationMessageRejectedFailure(),
     403 => const ConversationForbiddenFailure(),
-    404 => const ConversationDriverUnavailableFailure(),
+    404 => const ConversationNotFoundFailure(),
     _ => const ConversationUnexpectedFailure(),
   };
 }
@@ -39,13 +39,6 @@ class ConversationRepositoryImpl implements ConversationRepository {
 
   final ConversationRemoteDataSource remote;
   final ConversationRealtimeDataSource realtime;
-
-  @override
-  Future<Result<ConversationFailure, Conversation>> openConversation(
-    String driverToken,
-  ) {
-    return guardConversationCall(() => remote.openConversation(driverToken));
-  }
 
   @override
   Future<Result<ConversationFailure, List<Conversation>>>

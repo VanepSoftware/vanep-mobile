@@ -54,6 +54,7 @@ dependencies:
   sidebarx: ^0.17.2
   image_picker: ^1.2.4
   stomp_dart_client: ^3.0.1
+  share_plus: ^13.3.1
 
 dev_dependencies:
   flutter_test:

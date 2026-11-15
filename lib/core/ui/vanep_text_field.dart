@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepTextField extends StatefulWidget {
   const VanepTextField({
@@ -20,11 +19,14 @@ class VanepTextField extends StatefulWidget {
     this.autofillHints,
     this.inputFormatters,
     this.maxLength,
+    this.minLines,
+    this.maxLines = 1,
     this.obscureText = false,
     this.readOnly = false,
     this.isLoading = false,
     this.loadingLabel,
     this.labelTrailing,
+    this.suffix,
     this.onTap,
     this.onSubmitted,
     super.key,
@@ -43,11 +45,14 @@ class VanepTextField extends StatefulWidget {
   final Iterable<String>? autofillHints;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
+  final int? minLines;
+  final int maxLines;
   final bool obscureText;
   final bool readOnly;
   final bool isLoading;
   final String? loadingLabel;
   final Widget? labelTrailing;
+  final Widget? suffix;
   final VoidCallback? onTap;
   final ValueChanged<String>? onSubmitted;
 
@@ -79,18 +84,21 @@ class _VanepTextFieldState extends State<VanepTextField> {
           autofillHints: widget.autofillHints,
           inputFormatters: widget.inputFormatters,
           maxLength: widget.maxLength,
+          minLines: widget.minLines,
+          maxLines: widget.maxLines,
           obscureText: _textHidden,
           readOnly: widget.readOnly,
           onTap: widget.onTap,
           onChanged: widget.onChanged,
           onSubmitted: widget.onSubmitted,
-          cursorColor: VanepColors.action,
-          style: VanepTypography.fieldValue.copyWith(
+          cursorColor: context.palette.action,
+          style: context.typography.fieldValue.copyWith(
             color: widget.enabled
-                ? VanepColors.textPrimary
-                : VanepColors.textMuted,
+                ? context.palette.textPrimary
+                : context.palette.textMuted,
           ),
           decoration: vanepInputDecoration(
+            context,
             hintText: widget.hintText,
             errorText: widget.errorText,
             prefixIcon: widget.prefixIcon,
@@ -101,7 +109,7 @@ class _VanepTextFieldState extends State<VanepTextField> {
                   )
                 : (widget.isLoading
                       ? VanepFieldSpinner(label: widget.loadingLabel)
-                      : null),
+                      : widget.suffix),
           ),
         ),
       ],
@@ -109,7 +117,8 @@ class _VanepTextFieldState extends State<VanepTextField> {
   }
 }
 
-InputDecoration vanepInputDecoration({
+InputDecoration vanepInputDecoration(
+  BuildContext context, {
   String? hintText,
   String? errorText,
   IconData? prefixIcon,
@@ -124,29 +133,29 @@ InputDecoration vanepInputDecoration({
 
   return InputDecoration(
     filled: true,
-    fillColor: VanepColors.card,
+    fillColor: context.palette.card,
     isDense: true,
     hintText: hintText,
-    hintStyle: VanepTypography.fieldValue.copyWith(
-      color: VanepColors.placeholder,
+    hintStyle: context.typography.fieldValue.copyWith(
+      color: context.palette.placeholder,
     ),
     counterText: '',
     errorText: errorText,
-    errorStyle: VanepTypography.cardSubtitle.copyWith(
-      color: VanepColors.danger,
+    errorStyle: context.typography.cardSubtitle.copyWith(
+      color: context.palette.danger,
       fontSize: 12,
     ),
     prefixIcon: prefixIcon == null
         ? null
-        : Icon(prefixIcon, size: 20, color: VanepColors.textSecondary),
+        : Icon(prefixIcon, size: 20, color: context.palette.textSecondary),
     suffixIcon: suffixIcon,
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-    border: outline(VanepColors.inputBorder),
-    enabledBorder: outline(VanepColors.inputBorder),
-    disabledBorder: outline(VanepColors.divider),
-    focusedBorder: outline(VanepColors.action, width: 1.5),
-    errorBorder: outline(VanepColors.danger),
-    focusedErrorBorder: outline(VanepColors.danger, width: 1.5),
+    border: outline(context.palette.inputBorder),
+    enabledBorder: outline(context.palette.inputBorder),
+    disabledBorder: outline(context.palette.divider),
+    focusedBorder: outline(context.palette.action, width: 1.5),
+    errorBorder: outline(context.palette.danger),
+    focusedErrorBorder: outline(context.palette.danger, width: 1.5),
   );
 }
 
@@ -159,13 +168,13 @@ class VanepFieldSpinner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       label: label,
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsets.all(14),
         child: SizedBox.square(
           dimension: 20,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            color: VanepColors.action,
+            color: context.palette.action,
           ),
         ),
       ),
@@ -189,7 +198,7 @@ class TextVisibilityToggle extends StatelessWidget {
     return IconButton(
       onPressed: onPressed,
       tooltip: textHidden ? l10n?.showPassword : l10n?.hidePassword,
-      color: VanepColors.textSecondary,
+      color: context.palette.textSecondary,
       icon: Icon(
         textHidden ? Icons.visibility_outlined : Icons.visibility_off_outlined,
         size: 20,
@@ -212,7 +221,7 @@ class VanepFieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Text(label, style: VanepTypography.fieldLabel);
+    final text = Text(label, style: context.typography.fieldLabel);
     final title = isRequired
         ? Row(
             mainAxisSize: MainAxisSize.min,
@@ -221,8 +230,8 @@ class VanepFieldLabel extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 '*',
-                style: VanepTypography.fieldLabel.copyWith(
-                  color: VanepColors.danger,
+                style: context.typography.fieldLabel.copyWith(
+                  color: context.palette.danger,
                 ),
               ),
             ],

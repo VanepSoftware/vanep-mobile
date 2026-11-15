@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 String firstStepTitle(AppLocalizations l10n, FirstStep step) {
   return switch (step) {
@@ -66,7 +66,7 @@ class FirstStepsCard extends StatelessWidget {
                     FirstStepsSection.totalSteps,
                   )
                   .toUpperCase(),
-              style: VanepTypography.cardSubtitle.copyWith(
+              style: context.typography.cardSubtitle.copyWith(
                 color: VanepColors.brandSheen,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.8,
@@ -76,14 +76,14 @@ class FirstStepsCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               l10n.clientHomeFirstStepsTitle,
-              style: VanepTypography.heading.copyWith(
+              style: context.typography.heading.copyWith(
                 color: VanepColors.onBrand,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               l10n.clientHomeFirstStepsMessage,
-              style: VanepTypography.body.copyWith(color: onBrandMuted),
+              style: context.typography.body.copyWith(color: onBrandMuted),
             ),
             const SizedBox(height: 16),
             ClipRRect(
@@ -156,7 +156,7 @@ class FirstStepRow extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: VanepTypography.cardTitle.copyWith(
+                  style: context.typography.cardTitle.copyWith(
                     color: titleColor,
                     fontWeight: done ? FontWeight.w500 : FontWeight.w700,
                   ),
@@ -164,7 +164,7 @@ class FirstStepRow extends StatelessWidget {
                 if (hintText != null)
                   Text(
                     hintText,
-                    style: VanepTypography.cardSubtitle.copyWith(
+                    style: context.typography.cardSubtitle.copyWith(
                       color: onBrandMuted,
                     ),
                   ),
@@ -174,7 +174,7 @@ class FirstStepRow extends StatelessWidget {
           if (current)
             Text(
               l10n.clientHomeFirstStepNow,
-              style: VanepTypography.cardSubtitle.copyWith(
+              style: context.typography.cardSubtitle.copyWith(
                 color: VanepColors.brandSheen,
                 fontWeight: FontWeight.w700,
               ),
@@ -208,7 +208,7 @@ class FirstStepMarker extends StatelessWidget {
           ? const Icon(Icons.check, size: 18, color: VanepColors.brandNavyDeep)
           : Text(
               '$number',
-              style: VanepTypography.ratingLabel.copyWith(
+              style: context.typography.ratingLabel.copyWith(
                 color: VanepColors.onBrand,
               ),
             ),

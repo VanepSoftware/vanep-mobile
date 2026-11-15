@@ -29,6 +29,12 @@ DependentFailure dependentFailureFrom(
         ? const DependentCityNotFoundFailure()
         : const DependentNotFoundFailure();
   }
+  if (status == 409 || status == 422) {
+    final detail = readProblemDetail(body);
+    return detail.isEmpty
+        ? const DependentUnexpectedFailure()
+        : DependentRejectedFailure(detail: detail);
+  }
   if (status != 400) return const DependentUnexpectedFailure();
 
   final field = dependentFieldsByApiName[readProblemField(body)];
@@ -71,6 +77,11 @@ class DependentRepositoryImpl implements DependentRepository {
   @override
   Future<Result<DependentFailure, Dependent>> markAsDefault(String token) {
     return guardDependentCall(() => remote.markAsDefault(token));
+  }
+
+  @override
+  Future<Result<DependentFailure, void>> removeDependent(String token) {
+    return guardDependentCall(() => remote.removeDependent(token));
   }
 }
 

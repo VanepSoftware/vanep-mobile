@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepSecondaryButton extends StatelessWidget {
   const VanepSecondaryButton({
@@ -11,6 +11,8 @@ class VanepSecondaryButton extends StatelessWidget {
     this.icon,
     this.leading,
     this.onBrand = false,
+    this.isDestructive = false,
+    this.compact = false,
     super.key,
   }) : assert(icon == null || leading == null);
 
@@ -24,48 +26,62 @@ class VanepSecondaryButton extends StatelessWidget {
 
   final bool onBrand;
 
+  final bool isDestructive;
+
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 52,
-      width: double.infinity,
+      height: compact ? 40 : 52,
+      width: compact ? null : double.infinity,
       child: OutlinedButton(
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
           foregroundColor: onBrand
               ? VanepColors.onBrand
-              : VanepColors.textPrimary,
-          disabledForegroundColor: VanepColors.textMuted,
+              : (isDestructive
+                    ? context.palette.dangerText
+                    : context.palette.textPrimary),
+          disabledForegroundColor: context.palette.textMuted,
           side: onBrand
               ? BorderSide.none
-              : const BorderSide(color: VanepColors.inputBorder),
+              : BorderSide(
+                  color: isDestructive
+                      ? context.palette.dangerBorder
+                      : context.palette.inputBorder,
+                ),
           backgroundColor: onBrand
               ? VanepColors.onBrand.withValues(alpha: 0.14)
-              : VanepColors.card,
+              : (isDestructive
+                    ? context.palette.dangerSurface
+                    : context.palette.card),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          padding: compact ? const EdgeInsets.symmetric(horizontal: 12) : null,
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 22,
                 width: 22,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.2,
-                  color: VanepColors.action,
+                  color: context.palette.action,
                 ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: compact ? MainAxisSize.min : MainAxisSize.max,
                 children: [
                   if (icon != null || leading != null) ...[
-                    leading ?? Icon(icon, size: 20),
-                    const SizedBox(width: 10),
+                    leading ?? Icon(icon, size: compact ? 18 : 20),
+                    SizedBox(width: compact ? 6 : 10),
                   ],
                   Flexible(
                     child: Text(
                       label,
-                      style: VanepTypography.button,
+                      style: context.typography.button,
                       textAlign: TextAlign.center,
                     ),
                   ),

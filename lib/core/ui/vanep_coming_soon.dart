@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepComingSoon extends StatelessWidget {
-  const VanepComingSoon({required this.title, required this.message, super.key});
+  const VanepComingSoon({
+    required this.title,
+    required this.message,
+    super.key,
+  });
 
   final String title;
   final String message;
@@ -16,17 +18,17 @@ class VanepComingSoon extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(title, style: VanepTypography.pageTitle),
+            Text(title, style: context.typography.pageTitle),
             const SizedBox(height: 8),
             Text(
               message,
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            const Icon(
+            Icon(
               Icons.hourglass_empty,
-              color: VanepColors.textMuted,
+              color: context.palette.textMuted,
               size: 32,
             ),
           ],

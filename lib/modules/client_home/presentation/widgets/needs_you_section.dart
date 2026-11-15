@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
+import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
-import 'package:vanep_mobile/core/ui/vanep_greeting_header.dart';
+import 'package:vanep_mobile/core/ui/vanep_expiry_chip.dart';
+import 'package:vanep_mobile/core/ui/vanep_installment_price.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/needs_you_item.dart';
+import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const hoursLeftThreshold = 48;
 
@@ -30,20 +34,17 @@ String signatureDeadlineLabel(
   return l10n.clientHomeUntilDate(formatDayMonth(signBy));
 }
 
-String tripLabel(AppLocalizations l10n, {required bool roundTrip}) =>
-    roundTrip ? l10n.clientHomeRoundTrip : l10n.clientHomeOneWay;
-
 class NeedsYouSection extends StatelessWidget {
   const NeedsYouSection({
     required this.summary,
     required this.now,
-    required this.onProposalsTapped,
+    required this.actions,
     super.key,
   });
 
   final NeedsYouSummary summary;
   final DateTime now;
-  final VoidCallback onProposalsTapped;
+  final HomeNegotiationActions actions;
 
   @override
   Widget build(BuildContext context) {
@@ -63,22 +64,14 @@ class NeedsYouSection extends StatelessWidget {
         if (featured is ContractToSignItem)
           ContractToSignCard(item: featured, now: now),
         if (featured is NewProposalItem)
-          FeaturedProposalCard(
-            item: featured,
-            now: now,
-            onSeeProposalTapped: onProposalsTapped,
-          ),
+          FeaturedProposalCard(item: featured, now: now, actions: actions),
         if (featured != null && rows.isNotEmpty)
           const SizedBox(height: homeCardSpacing),
         if (rows.isNotEmpty)
           HomeRowsCard(
             rows: [
               for (final item in rows)
-                NeedsYouRow(
-                  item: item,
-                  now: now,
-                  onProposalsTapped: onProposalsTapped,
-                ),
+                NeedsYouRow(item: item, now: now, actions: actions),
             ],
           ),
       ],
@@ -110,14 +103,14 @@ class ContractToSignCard extends StatelessWidget {
                   children: [
                     Text(
                       l10n.clientHomeContractReady(item.childName),
-                      style: VanepTypography.cardTitle,
+                      style: context.typography.cardTitle,
                     ),
                     Text(
                       l10n.clientHomeDriverAndMonthlyFee(
                         item.driverName,
                         formatMoney(l10n, item.monthlyFeeCents),
                       ),
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                   ],
                 ),
@@ -177,8 +170,8 @@ class ContractStepsIndicator extends StatelessWidget {
                         color: index == 0
                             ? Colors.transparent
                             : index <= currentIndex
-                            ? VanepColors.action
-                            : VanepColors.divider,
+                            ? context.palette.action
+                            : context.palette.divider,
                       ),
                     ),
                     Icon(
@@ -187,8 +180,8 @@ class ContractStepsIndicator extends StatelessWidget {
                           : Icons.radio_button_unchecked,
                       size: 14,
                       color: index <= currentIndex
-                          ? VanepColors.action
-                          : VanepColors.textMuted,
+                          ? context.palette.action
+                          : context.palette.textMuted,
                     ),
                     Expanded(
                       child: Container(
@@ -196,8 +189,8 @@ class ContractStepsIndicator extends StatelessWidget {
                         color: index == labels.length - 1
                             ? Colors.transparent
                             : index < currentIndex
-                            ? VanepColors.action
-                            : VanepColors.divider,
+                            ? context.palette.action
+                            : context.palette.divider,
                       ),
                     ),
                   ],
@@ -205,11 +198,11 @@ class ContractStepsIndicator extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   label,
-                  style: VanepTypography.cardSubtitle.copyWith(
+                  style: context.typography.cardSubtitle.copyWith(
                     fontSize: 12,
                     color: index == currentIndex
-                        ? VanepColors.textPrimary
-                        : VanepColors.textSecondary,
+                        ? context.palette.textPrimary
+                        : context.palette.textSecondary,
                   ),
                 ),
               ],
@@ -220,44 +213,60 @@ class ContractStepsIndicator extends StatelessWidget {
   }
 }
 
+TextStyle featuredPriceStyle(VanepPalette palette) => TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w800,
+  color: palette.textPrimary,
+  fontFeatures: [FontFeature.tabularFigures()],
+);
+
+TextStyle featuredInstallmentsStyle(VanepPalette palette) => TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+  color: palette.textSecondary,
+);
+
 class FeaturedProposalCard extends StatelessWidget {
   const FeaturedProposalCard({
     required this.item,
     required this.now,
-    required this.onSeeProposalTapped,
+    required this.actions,
     super.key,
   });
 
   final NewProposalItem item;
   final DateTime now;
-  final VoidCallback onSeeProposalTapped;
+  final HomeNegotiationActions actions;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final expiresAt = item.expiresAt;
+    final request = item.request;
     return VanepCard(
-      highlighted: true,
+      borderColor: context.palette.actionBorder,
+      onTap: () => actions.onProposalTapped(request),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
               Expanded(
                 child: Text(
-                  l10n.clientHomeNewProposal,
-                  style: VanepTypography.linkAction.copyWith(
-                    fontWeight: FontWeight.w500,
+                  l10n.clientHomeNewProposal.toUpperCase(),
+                  style: context.typography.overline,
+                ),
+              ),
+              if (expiresAt != null)
+                VanepExpiryChip(
+                  label: l10n.clientHomeExpiresIn(
+                    calendarDaysBetween(now, expiresAt.toLocal()),
                   ),
+                  isUrgent: isExpiryUrgent(now, expiresAt),
                 ),
-              ),
-              HomeBadgeText(
-                text: l10n.clientHomeExpiresIn(
-                  calendarDaysBetween(now, item.expiresAt),
-                ),
-                color: VanepColors.textSecondary,
-              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 14),
           Row(
             children: [
               VanepPersonAvatar(name: item.driverName),
@@ -266,49 +275,47 @@ class FeaturedProposalCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.driverName, style: VanepTypography.cardTitle),
                     Text(
-                      l10n.clientHomeNamesAndTrip(
-                        joinNames(l10n, item.childNames),
-                        tripLabel(l10n, roundTrip: item.roundTrip),
-                      ),
-                      style: VanepTypography.cardSubtitle,
+                      item.driverName,
+                      style: context.typography.cardTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      joinFirstNames(l10n, item.childNames),
+                      style: context.typography.cardSubtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: formatMoney(l10n, item.monthlyFeeCents),
-                      style: VanepTypography.heading.copyWith(fontSize: 18),
-                    ),
-                    TextSpan(
-                      text: l10n.clientHomePerMonth,
-                      style: VanepTypography.cardSubtitle,
-                    ),
-                  ],
-                ),
+              const SizedBox(width: 12),
+              VanepInstallmentPrice(
+                amountCents: item.installmentAmountCents,
+                installments: item.installments,
+                amountStyle: featuredPriceStyle(context.palette),
+                countStyle: featuredInstallmentsStyle(context.palette),
               ),
             ],
           ),
           const SizedBox(height: 14),
           Row(
             children: [
-              Expanded(
-                child: VanepSecondaryButton(
-                  label: l10n.clientHomeChat,
-                  icon: Icons.chat_bubble_outline,
-                  onPressed: () =>
-                      openUnavailableFeature(context, l10n.clientHomeChat),
+              if (request.conversationToken != null) ...[
+                Expanded(
+                  child: VanepSecondaryButton(
+                    label: l10n.clientHomeChat,
+                    icon: Icons.chat_bubble_outline,
+                    onPressed: () => actions.onChatTapped(request),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
+                const SizedBox(width: 10),
+              ],
               Expanded(
                 child: VanepPrimaryButton(
                   label: l10n.clientHomeSeeProposal,
-                  onPressed: onSeeProposalTapped,
+                  onPressed: () => actions.onProposalTapped(request),
                 ),
               ),
             ],
@@ -323,13 +330,13 @@ class NeedsYouRow extends StatelessWidget {
   const NeedsYouRow({
     required this.item,
     required this.now,
-    required this.onProposalsTapped,
+    required this.actions,
     super.key,
   });
 
   final NeedsYouItem item;
   final DateTime now;
-  final VoidCallback onProposalsTapped;
+  final HomeNegotiationActions actions;
 
   @override
   Widget build(BuildContext context) {
@@ -352,19 +359,24 @@ class NeedsYouRow extends StatelessWidget {
       ),
       NewProposalItem() => HomeRowTile(
         leading: VanepPersonAvatar(name: item.driverName),
-        title: l10n.clientHomeNewProposalFor(joinNames(l10n, item.childNames)),
-        subtitle: l10n.clientHomeDriverAndMonthlyFee(
-          item.driverName,
-          formatMoney(l10n, item.monthlyFeeCents),
+        title: l10n.clientHomeNewProposalFor(
+          joinFirstNames(l10n, item.childNames),
         ),
-        onTap: onProposalsTapped,
+        subtitle: l10n.clientHomeDriverAndInstallments(
+          item.driverName,
+          formatInstallments(
+            l10n,
+            item.installments,
+            item.installmentAmountCents,
+          ),
+        ),
+        onTap: () => actions.onProposalTapped(item.request),
       ),
       ExpiredRequestItem() => HomeRowTile(
         leading: VanepPersonAvatar(name: item.driverName),
         title: l10n.clientHomeRequestExpired(firstNameOf(item.driverName)),
-        subtitle: l10n.clientHomeSeeSimilarDrivers,
-        onTap: () =>
-            openUnavailableFeature(context, l10n.clientHomeSeeSimilarDrivers),
+        subtitle: l10n.clientHomeSearchVans,
+        onTap: actions.onFindVanTapped,
       ),
       PaymentItem() => PaymentRow(item: item, now: now),
       RenewalItem() => HomeRowTile(
@@ -375,10 +387,10 @@ class NeedsYouRow extends StatelessWidget {
             openUnavailableFeature(context, l10n.clientHomeShortcutContracts),
       ),
       VehicleInspectionExpiredItem() => HomeRowTile(
-        leading: const HomeIconBubble(
+        leading: HomeIconBubble(
           icon: Icons.assignment_late_outlined,
-          background: VanepColors.warningSurface,
-          foreground: VanepColors.warning,
+          background: context.palette.warningSurface,
+          foreground: context.palette.warning,
         ),
         title: l10n.clientHomeInspectionExpired,
         subtitle: l10n.clientHomeInspectionDeadline(
@@ -413,10 +425,10 @@ class PaymentRow extends StatelessWidget {
     final daysLeft = calendarDaysBetween(now, item.dueAt);
 
     return HomeRowTile(
-      leading: const HomeIconBubble(
+      leading: HomeIconBubble(
         icon: Icons.payments_outlined,
-        background: VanepColors.warningSurface,
-        foreground: VanepColors.warning,
+        background: context.palette.warningSurface,
+        foreground: context.palette.warning,
       ),
       title: childName != null
           ? l10n.clientHomeMonthlyFeeOf(childName)
@@ -430,7 +442,9 @@ class PaymentRow extends StatelessWidget {
               text: daysLeft < 0
                   ? l10n.clientHomeOverdue
                   : l10n.clientHomeDueIn(daysLeft),
-              color: daysLeft < 0 ? VanepColors.danger : VanepColors.warning,
+              color: daysLeft < 0
+                  ? context.palette.danger
+                  : context.palette.warning,
             ),
       onTap: () =>
           openUnavailableFeature(context, l10n.clientHomeShortcutPayments),
@@ -458,9 +472,9 @@ class RateStars extends StatelessWidget {
                 context,
                 l10n.clientHomeRateVan(firstNameOf(driverName)),
               ),
-              icon: const Icon(
+              icon: Icon(
                 Icons.star_border_rounded,
-                color: VanepColors.textMuted,
+                color: context.palette.textMuted,
                 size: 30,
               ),
             ),

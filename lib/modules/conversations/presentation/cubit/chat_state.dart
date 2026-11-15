@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_failure.dart';
 
@@ -25,7 +24,6 @@ int compareBySentAt(ConversationMessage first, ConversationMessage second) {
 class ChatState extends Equatable {
   const ChatState({
     this.status = ChatStatus.initial,
-    this.conversation,
     this.messages = const [],
     this.hasMore = false,
     this.nextPage = 1,
@@ -35,8 +33,6 @@ class ChatState extends Equatable {
   });
 
   final ChatStatus status;
-
-  final Conversation? conversation;
 
   final List<ConversationMessage> messages;
 
@@ -61,7 +57,6 @@ class ChatState extends Equatable {
 
   ChatState copyWith({
     ChatStatus? status,
-    Conversation? conversation,
     List<ConversationMessage>? messages,
     bool? hasMore,
     int? nextPage,
@@ -72,7 +67,6 @@ class ChatState extends Equatable {
   }) {
     return ChatState(
       status: status ?? this.status,
-      conversation: conversation ?? this.conversation,
       messages: messages ?? this.messages,
       hasMore: hasMore ?? this.hasMore,
       nextPage: nextPage ?? this.nextPage,
@@ -85,7 +79,6 @@ class ChatState extends Equatable {
   @override
   List<Object?> get props => [
     status,
-    conversation,
     messages,
     hasMore,
     nextPage,

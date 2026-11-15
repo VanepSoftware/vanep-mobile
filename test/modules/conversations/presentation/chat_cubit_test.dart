@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
-import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_failure.dart';
 import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_realtime_event.dart';
@@ -33,40 +32,28 @@ Ok<ConversationFailure, ConversationMessagePage> pageOf(
 }) => Ok(ConversationMessagePage(messages: messages, hasMore: hasMore));
 
 void main() {
-  late MockOpenConversation openConversation;
   late MockListConversationMessages listMessages;
   late MockSendConversationMessage sendMessage;
   late MockWatchConversation watchConversation;
   late StreamController<ConversationRealtimeEvent> realtime;
   late bool realtimeCancelled;
 
-  ChatCubit clientChat() => ChatCubit(
-    openConversation: openConversation,
+  ChatCubit chatOf() => ChatCubit(
     listConversationMessages: listMessages,
     sendConversationMessage: sendMessage,
     watchConversation: watchConversation,
-    driverToken: 'driver-1',
-  );
-
-  ChatCubit driverChat() => ChatCubit(
-    openConversation: openConversation,
-    listConversationMessages: listMessages,
-    sendConversationMessage: sendMessage,
-    watchConversation: watchConversation,
-    conversation: testConversation,
+    conversationToken: testConversation.token,
   );
 
   void stubPage(
     int page,
     Result<ConversationFailure, ConversationMessagePage> result,
   ) {
-    when(
-      () => listMessages(conversationToken: 'conversation-1', page: page),
-    ).thenAnswer((_) async => result);
+    when(() => listMessages(conversationToken: 'conversation-1', page: page))
+        .thenAnswer((_) async => result);
   }
 
   setUp(() {
-    openConversation = MockOpenConversation();
     listMessages = MockListConversationMessages();
     sendMessage = MockSendConversationMessage();
     watchConversation = MockWatchConversation();
@@ -74,60 +61,34 @@ void main() {
     realtime = StreamController<ConversationRealtimeEvent>(
       onCancel: () => realtimeCancelled = true,
     );
-    when(
-      () => watchConversation('conversation-1'),
-    ).thenAnswer((_) => realtime.stream);
-    when(() => openConversation('driver-1')).thenAnswer(
-      (_) async =>
-          const Ok<ConversationFailure, Conversation>(testConversation),
-    );
+    when(() => watchConversation('conversation-1'))
+        .thenAnswer((_) => realtime.stream);
     stubPage(0, pageOf([testDriverMessage, testClientMessage], hasMore: true));
   });
 
   tearDown(() => realtime.close());
 
-  test(
-    'the client route opens the conversation, then loads it oldest first',
-    () async {
-      final cubit = clientChat();
-
-      await cubit.start();
-
-      expect(cubit.state.status, ChatStatus.ready);
-      expect(cubit.state.conversation, testConversation);
-      expect(cubit.state.messages, [testClientMessage, testDriverMessage]);
-      expect(cubit.state.hasMore, isTrue);
-      await cubit.close();
-    },
-  );
-
-  test('the driver route loads without opening', () async {
-    final cubit = driverChat();
+  test('loads the conversation it was given, oldest first', () async {
+    final cubit = chatOf();
 
     await cubit.start();
 
     expect(cubit.state.status, ChatStatus.ready);
-    verifyNever(() => openConversation(any()));
+    expect(cubit.state.messages, [testClientMessage, testDriverMessage]);
+    expect(cubit.state.hasMore, isTrue);
     await cubit.close();
   });
 
-  test('a failure to open can be retried', () async {
-    when(() => openConversation('driver-1')).thenAnswer(
-      (_) async => const Err<ConversationFailure, Conversation>(
-        ConversationDriverUnavailableFailure(),
-      ),
-    );
-    final cubit = clientChat();
+  test('a failure to load can be retried', () async {
+    stubPage(0, const Err(ConversationNotFoundFailure()));
+    final cubit = chatOf();
 
     await cubit.start();
 
     expect(cubit.state.status, ChatStatus.loadFailed);
-    expect(cubit.state.failure, const ConversationDriverUnavailableFailure());
+    expect(cubit.state.failure, const ConversationNotFoundFailure());
 
-    when(() => openConversation('driver-1')).thenAnswer(
-      (_) async =>
-          const Ok<ConversationFailure, Conversation>(testConversation),
-    );
+    stubPage(0, pageOf([testDriverMessage]));
     await cubit.start();
 
     expect(cubit.state.status, ChatStatus.ready);
@@ -137,7 +98,7 @@ void main() {
 
   test('older messages are loaded above the current ones', () async {
     stubPage(1, pageOf([olderMessage]));
-    final cubit = driverChat();
+    final cubit = chatOf();
     await cubit.start();
 
     await cubit.loadOlderMessages();
@@ -148,9 +109,8 @@ void main() {
 
     await cubit.loadOlderMessages();
 
-    verify(
-      () => listMessages(conversationToken: 'conversation-1', page: 1),
-    ).called(1);
+    verify(() => listMessages(conversationToken: 'conversation-1', page: 1))
+        .called(1);
     await cubit.close();
   });
 
@@ -160,7 +120,7 @@ void main() {
     ).thenAnswer(
       (_) async => Ok<ConversationFailure, ConversationMessage>(liveMessage),
     );
-    final cubit = driverChat();
+    final cubit = chatOf();
     await cubit.start();
 
     final sent = await cubit.sendMessage('Combinado');
@@ -174,14 +134,13 @@ void main() {
   test(
     'a failed send keeps the conversation and reports the failure',
     () async {
-      when(
-        () => sendMessage(conversationToken: 'conversation-1', body: 'Oi'),
-      ).thenAnswer(
-        (_) async => const Err<ConversationFailure, ConversationMessage>(
-          ConversationNetworkFailure(),
-        ),
-      );
-      final cubit = driverChat();
+      when(() => sendMessage(conversationToken: 'conversation-1', body: 'Oi'))
+          .thenAnswer(
+            (_) async => const Err<ConversationFailure, ConversationMessage>(
+              ConversationNetworkFailure(),
+            ),
+          );
+      final cubit = chatOf();
       await cubit.start();
 
       final sent = await cubit.sendMessage('Oi');
@@ -194,7 +153,7 @@ void main() {
   );
 
   test('a live message is added once, even when it arrives twice', () async {
-    final cubit = driverChat();
+    final cubit = chatOf();
     await cubit.start();
 
     realtime
@@ -213,7 +172,7 @@ void main() {
   test(
     'reconnecting reloads the latest page to recover missed messages',
     () async {
-      final cubit = driverChat();
+      final cubit = chatOf();
       await cubit.start();
       stubPage(0, pageOf([liveMessage, testDriverMessage], hasMore: true));
 
@@ -230,7 +189,7 @@ void main() {
   );
 
   test('closing stops listening to the conversation', () async {
-    final cubit = driverChat();
+    final cubit = chatOf();
     await cubit.start();
 
     await cubit.close();

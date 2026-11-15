@@ -20,6 +20,15 @@ final class DependentValidationFailure extends DependentFailure {
   List<Object?> get props => [messagesByField];
 }
 
+final class DependentRejectedFailure extends DependentFailure {
+  const DependentRejectedFailure({required this.detail});
+
+  final String detail;
+
+  @override
+  List<Object?> get props => [detail];
+}
+
 final class DependentNotFoundFailure extends DependentFailure {
   const DependentNotFoundFailure();
 }

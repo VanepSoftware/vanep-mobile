@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,11 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversati
 import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
 import 'package:vanep_mobile/modules/driver/domain/repositories/driver_home_repository.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
-import 'package:vanep_mobile/modules/driver/presentation/pages/driver_vans_tab.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_state.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
@@ -23,7 +28,10 @@ import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
+import '../modules/driver_proposals/driver_proposals_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
+import '../modules/driver_van_central/driver_van_central_mocks.dart';
+import '../modules/driver_van_central/driver_van_central_fixtures.dart';
 
 class _StubHomeRepository implements DriverHomeRepository {
   _StubHomeRepository(this.data);
@@ -44,6 +52,9 @@ Widget harness(
   Future<void> Function(BuildContext)? openServiceAreas,
   ConversationsInboxCubit? conversationsCubit,
   Future<void> Function(BuildContext, Conversation)? openConversationChat,
+  DriverNegotiationsCubit? negotiationsCubit,
+  VanCentralCubit? vanCentralCubit,
+  Future<void> Function(BuildContext, DriverVan)? openVanStudents,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -58,19 +69,48 @@ Widget harness(
       providers: [
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<DriverHomeCubit>.value(value: cubit),
+        BlocProvider<VanCentralCubit>.value(
+          value: vanCentralCubit ?? readyVanCentralCubit(),
+        ),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
         BlocProvider<ConversationsInboxCubit>.value(
           value: conversationsCubit ?? readyConversationsCubit(),
+        ),
+        BlocProvider<DriverNegotiationsCubit>.value(
+          value: negotiationsCubit ?? readyNegotiationsCubit(),
         ),
       ],
       child: DriverShell(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
         openServiceAreas: openServiceAreas ?? (_) async {},
         openMyVans: (_) async {},
+        openVanRegistration: (_) async {},
+        openVanStudents: openVanStudents ?? (_, _) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
+        proposalsActions: DriverProposalsTabActions(
+          onOpenRequest: (_) async {},
+          onOpenProposal: (_) async {},
+        ),
       ),
     ),
   );
+}
+
+VanCentralCubit readyVanCentralCubit() {
+  final cubit = MockVanCentralCubit();
+  whenListen(
+    cubit,
+    const Stream<VanCentralState>.empty(),
+    initialState: const VanCentralState(
+      status: VanCentralStatus.loaded,
+      vans: [firstVan],
+      occupancy: testOccupancy,
+      attendance: testAttendance,
+      serviceAreas: testServiceAreas,
+    ),
+  );
+  when(() => cubit.refresh()).thenAnswer((_) async {});
+  return cubit;
 }
 
 List<String> bottomNavLabels(WidgetTester tester) {
@@ -123,8 +163,8 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Vans'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(DriverVansTab), findsOneWidget);
-    expect(find.text('Minhas vans'), findsOneWidget);
+    expect(find.byType(VanCentralTab), findsOneWidget);
+    expect(find.text('Vans'), findsWidgets);
   });
 
   testWidgets('where you operate opens service areas and rereads profile', (
@@ -142,38 +182,65 @@ void main() {
 
     await tester.tap(find.bySemanticsLabel('Vans'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Onde você atende'));
+    await tester.ensureVisible(find.text('Áreas de atendimento'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Áreas de atendimento'));
     await tester.pumpAndSettle();
 
     expect(opened, isTrue);
     verify(() => authCubit.refreshSessionProfile()).called(1);
   });
 
-  testWidgets('the Propostas tab shows proposals and contracts coming soon', (
+  testWidgets('the Propostas tab loads and shows the negotiations', (
     tester,
   ) async {
-    await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
+    final negotiationsCubit = readyNegotiationsCubit();
+    await tester.pumpWidget(
+      harness(
+        cubit,
+        authCubit,
+        profileSummaryCubit,
+        negotiationsCubit: negotiationsCubit,
+      ),
+    );
 
     await tester.tap(find.bySemanticsLabel('Propostas'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Propostas e contratos'), findsOneWidget);
-    expect(find.text('Em breve'), findsOneWidget);
+    expect(find.byType(DriverProposalsTab), findsOneWidget);
+    expect(find.text('Negociações'), findsOneWidget);
+    expect(find.text('Maria · Theo e Alice'), findsOneWidget);
+    expect(find.text('Em breve'), findsNothing);
+    verify(() => negotiationsCubit.load()).called(1);
   });
 
-  testWidgets('students live in the Vans hub and are coming soon', (
-    tester,
-  ) async {
-    await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
+  testWidgets(
+    'students opens the selected van and refreshes the hub on return',
+    (tester) async {
+      final centralCubit = readyVanCentralCubit();
+      final opened = <DriverVan>[];
+      await tester.pumpWidget(
+        harness(
+          cubit,
+          authCubit,
+          profileSummaryCubit,
+          vanCentralCubit: centralCubit,
+          openVanStudents: (_, van) async => opened.add(van),
+        ),
+      );
 
-    await tester.tap(find.bySemanticsLabel('Vans'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Alunos'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.bySemanticsLabel('Vans'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Alunos'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Alunos'));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(VanepComingSoonPage), findsOneWidget);
-    expect(find.text('Alunos'), findsWidgets);
-  });
+      expect(opened, [firstVan]);
+      expect(find.byType(VanepComingSoonPage), findsNothing);
+      verify(() => centralCubit.refresh()).called(1);
+    },
+  );
 
   testWidgets('the menu button opens the account drawer and refreshes it', (
     tester,

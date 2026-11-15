@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/password_policy.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class PasswordRequirementsChecklist extends StatelessWidget {
   const PasswordRequirementsChecklist({
@@ -67,10 +66,10 @@ class PasswordRequirementRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = met
-        ? VanepColors.success
+        ? context.palette.success
         : highlightUnmet
-        ? VanepColors.danger
-        : VanepColors.textSecondary;
+        ? context.palette.danger
+        : context.palette.textSecondary;
     return Padding(
       padding: const EdgeInsets.only(top: 6),
       child: Row(
@@ -84,7 +83,7 @@ class PasswordRequirementRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: VanepTypography.cardSubtitle.copyWith(color: color),
+              style: context.typography.cardSubtitle.copyWith(color: color),
             ),
           ),
         ],

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+
 enum NeedsYouTier { signature, proposal, payment, followUp }
 
 sealed class NeedsYouItem extends Equatable {
@@ -42,23 +44,22 @@ final class ContractToSignItem extends NeedsYouItem {
 }
 
 final class NewProposalItem extends NeedsYouItem {
-  const NewProposalItem({
-    required this.driverName,
-    required this.childNames,
-    required this.roundTrip,
-    required this.monthlyFeeCents,
-    required this.expiresAt,
-  });
+  const NewProposalItem({required this.request});
 
-  final String driverName;
+  final ClientServiceRequest request;
 
-  final List<String> childNames;
+  String get driverName => request.driverName;
 
-  final bool roundTrip;
+  List<String> get childNames => [
+    for (final item in request.items) item.dependentName,
+  ];
 
-  final int monthlyFeeCents;
+  int get installments => request.currentProposal?.installments ?? 0;
 
-  final DateTime expiresAt;
+  int get installmentAmountCents =>
+      request.currentProposal?.installmentAmountCents ?? 0;
+
+  DateTime? get expiresAt => request.currentProposal?.validUntil;
 
   @override
   NeedsYouTier get tier => NeedsYouTier.proposal;
@@ -70,13 +71,7 @@ final class NewProposalItem extends NeedsYouItem {
   bool get isFeaturable => true;
 
   @override
-  List<Object?> get props => [
-    driverName,
-    childNames,
-    roundTrip,
-    monthlyFeeCents,
-    expiresAt,
-  ];
+  List<Object?> get props => [request];
 }
 
 final class ExpiredRequestItem extends NeedsYouItem {

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vanep_mobile/modules/contract_readiness/domain/entities/contract_readiness.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 
@@ -9,12 +10,15 @@ class DependentsState extends Equatable {
   const DependentsState({
     this.status = DependentsStatus.initial,
     this.dependents = const [],
+    this.readinessByToken,
     this.failure,
   });
 
   final DependentsStatus status;
 
   final List<Dependent> dependents;
+
+  final Map<String, Set<ContractReadinessField>>? readinessByToken;
 
   final DependentFailure? failure;
 
@@ -39,19 +43,35 @@ class DependentsState extends Equatable {
     return null;
   }
 
+  Dependent? dependentOf(String token) {
+    for (final dependent in dependents) {
+      if (dependent.token == token) return dependent;
+    }
+    return null;
+  }
+
+  Set<ContractReadinessField>? gapsOf(String token) => readinessByToken?[token];
+
+  bool isIncomplete(String token) => gapsOf(token)?.isNotEmpty ?? false;
+
   DependentsState copyWith({
     DependentsStatus? status,
     List<Dependent>? dependents,
+    Map<String, Set<ContractReadinessField>>? readinessByToken,
+    bool clearReadiness = false,
     DependentFailure? failure,
     bool clearFailure = false,
   }) {
     return DependentsState(
       status: status ?? this.status,
       dependents: dependents ?? this.dependents,
+      readinessByToken: clearReadiness
+          ? null
+          : readinessByToken ?? this.readinessByToken,
       failure: clearFailure ? null : failure ?? this.failure,
     );
   }
 
   @override
-  List<Object?> get props => [status, dependents, failure];
+  List<Object?> get props => [status, dependents, readinessByToken, failure];
 }
