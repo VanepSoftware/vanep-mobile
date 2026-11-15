@@ -31,6 +31,11 @@ String assistantInitialsOf(String fullName) {
   return '$first$second'.toUpperCase();
 }
 
+String assistantInitialOf(String fullName) {
+  final initials = assistantInitialsOf(fullName);
+  return initials.isEmpty ? '?' : initials.substring(0, 1);
+}
+
 String firstNameOf(String fullName) {
   return fullName.trim().split(RegExp(r'\s+')).first;
 }

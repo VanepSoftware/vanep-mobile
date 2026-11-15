@@ -6,8 +6,9 @@ abstract class AssistantStudentsDataSource {
 }
 
 // TODO(VAN-73): mocked rosters from the prototype. The students of each van
-// need a new endpoint (name, stop, place and absence of the day). Delete this
-// class and its registration in assistant_container.dart when it is wired.
+// need a new endpoint (name, stop, place, absence of the day and whether the
+// family is in the app). Delete this class and its registration in
+// assistant_container.dart when it is wired.
 class MockedAssistantStudentsDataSource implements AssistantStudentsDataSource {
   const MockedAssistantStudentsDataSource();
 
@@ -49,6 +50,7 @@ class MockedAssistantStudentsDataSource implements AssistantStudentsDataSource {
               name: 'Enzo Barros',
               stopNumber: 4,
               placeName: 'Res. Aurora',
+              hasFamilyInApp: false,
             ),
             AssistantStudentSummary(
               token: 'mock-student-gabriel',
@@ -73,6 +75,7 @@ class MockedAssistantStudentsDataSource implements AssistantStudentsDataSource {
               name: 'Laís Teixeira',
               stopNumber: 7,
               placeName: 'Escola Classe 10',
+              hasFamilyInApp: false,
             ),
             AssistantStudentSummary(
               token: 'mock-student-laura',

@@ -614,6 +614,7 @@
   "assistantStudentsSearchHint": "Search student",
   "assistantStudentsStop": "Stop {number} · {place}",
   "assistantStudentsAbsentToday": "Not going today",
+  "assistantStudentsWithoutFamily": "No family in the app",
   "assistantStudentsNoResults": "No students found.",
   "assistantStudentsEmpty": "This van has no students yet.",
   "@assistantStudentsSubtitle": {

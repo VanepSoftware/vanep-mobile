@@ -19,4 +19,13 @@ void main() {
         .map((student) => student.name);
     expect(absent, ['Ana Oliveira', 'Lucas Prado']);
   });
+
+  test('includes students whose family is not in the app', () async {
+    final overview = await dataSource.findStudentsOverview();
+
+    final withoutFamily = overview.rosters.first.students
+        .where((student) => !student.hasFamilyInApp)
+        .map((student) => student.name);
+    expect(withoutFamily, ['Enzo Barros', 'Laís Teixeira']);
+  });
 }

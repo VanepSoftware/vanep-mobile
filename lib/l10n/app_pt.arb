@@ -443,6 +443,7 @@
   "assistantStudentsSearchHint": "Buscar aluno",
   "assistantStudentsStop": "Parada {number} · {place}",
   "assistantStudentsAbsentToday": "Não vai hoje",
+  "assistantStudentsWithoutFamily": "Sem família no app",
   "assistantStudentsNoResults": "Nenhum aluno encontrado.",
   "assistantStudentsEmpty": "Esta van ainda não tem alunos.",
   "assistantSignupTitle": "Cadastro de assistente",

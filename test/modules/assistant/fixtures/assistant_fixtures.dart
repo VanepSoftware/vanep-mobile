@@ -93,6 +93,7 @@ const testAssistantStudentLais = AssistantStudentSummary(
   name: 'Laís Teixeira',
   stopNumber: 7,
   placeName: 'Escola Classe 10',
+  hasFamilyInApp: false,
 );
 
 const testAssistantStudentBeatriz = AssistantStudentSummary(

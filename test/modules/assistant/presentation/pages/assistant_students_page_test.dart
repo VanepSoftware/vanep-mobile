@@ -146,11 +146,25 @@ void main() {
     expect(find.text('Você ainda não tem vans vinculadas.'), findsOneWidget);
   });
 
-  testWidgets('does nothing yet when a student is tapped', (tester) async {
+  testWidgets('marks only the student whose family is not in the app', (
+    tester,
+  ) async {
     await pumpPage(tester, readyState);
 
-    await tester.tap(find.text('Ana Oliveira'));
+    expect(find.text('Sem família no app'), findsOneWidget);
+  });
 
-    expect(find.text('Alunos'), findsOneWidget);
+  testWidgets('rows are not tappable until the student details exist', (
+    tester,
+  ) async {
+    await pumpPage(tester, readyState);
+
+    expect(
+      find.ancestor(
+        of: find.text('Ana Oliveira'),
+        matching: find.byType(InkWell),
+      ),
+      findsNothing,
+    );
   });
 }

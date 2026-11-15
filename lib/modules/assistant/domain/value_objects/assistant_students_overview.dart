@@ -9,6 +9,7 @@ class AssistantStudentSummary extends Equatable {
     required this.stopNumber,
     required this.placeName,
     this.isAbsentToday = false,
+    this.hasFamilyInApp = true,
   });
 
   final String token;
@@ -21,6 +22,10 @@ class AssistantStudentSummary extends Equatable {
 
   final bool isAbsentToday;
 
+  // False for a passenger the driver registered without the family in the app
+  // (unlinked passenger, VAN-57); the list shows both kinds.
+  final bool hasFamilyInApp;
+
   @override
   List<Object?> get props => [
     token,
@@ -28,6 +33,7 @@ class AssistantStudentSummary extends Equatable {
     stopNumber,
     placeName,
     isAbsentToday,
+    hasFamilyInApp,
   ];
 }
 

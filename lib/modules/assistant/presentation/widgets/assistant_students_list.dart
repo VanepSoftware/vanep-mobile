@@ -10,10 +10,6 @@ import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant
 
 const studentRowMinHeight = 64.0;
 
-// TODO(VAN-73): rows do nothing until the student details screen (VAN-74)
-// exists. Replace the call site and delete this function.
-void openStudentDetailsLater() {}
-
 class AssistantStudentRow extends StatelessWidget {
   const AssistantStudentRow({required this.student, super.key});
 
@@ -27,63 +23,67 @@ class AssistantStudentRow extends StatelessWidget {
       student.stopNumber,
       student.placeName,
     );
+    final tags = [
+      if (!student.hasFamilyInApp) l10n.assistantStudentsWithoutFamily,
+      if (student.isAbsentToday) l10n.assistantStudentsAbsentToday,
+    ];
 
+    // TODO(VAN-74): the row becomes tappable (InkWell, button semantics and a
+    // chevron) when the student details screen exists.
     return Semantics(
-      button: true,
       excludeSemantics: true,
-      label: student.isAbsentToday
-          ? '${student.name}, $stop, ${l10n.assistantStudentsAbsentToday}'
-          : '${student.name}, $stop',
-      child: InkWell(
-        onTap: openStudentDetailsLater,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: studentRowMinHeight),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Row(
-              children: [
-                VanepAvatar(
-                  size: 40,
-                  initials: assistantInitialsOf(student.name).padRight(1).substring(0, 1),
-                  backgroundColor: surface,
-                  foregroundColor: accent,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        student.name,
-                        style: VanepTypography.cardTitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        stop,
-                        style: VanepTypography.cardSubtitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                if (student.isAbsentToday) ...[
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.assistantStudentsAbsentToday,
-                    style: VanepTypography.ratingLabel.copyWith(
-                      color: VanepColors.warning,
+      label: [student.name, stop, ...tags].join(', '),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: studentRowMinHeight),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              VanepAvatar(
+                size: 40,
+                initials: assistantInitialOf(student.name),
+                backgroundColor: surface,
+                foregroundColor: accent,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      student.name,
+                      style: VanepTypography.cardTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    Text(
+                      stop,
+                      style: VanepTypography.cardSubtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              if (!student.hasFamilyInApp) ...[
+                const SizedBox(width: 8),
+                Text(
+                  l10n.assistantStudentsWithoutFamily,
+                  style: VanepTypography.ratingLabel.copyWith(
+                    color: VanepColors.textMuted,
                   ),
-                ],
-                const SizedBox(width: 4),
-                const Icon(
-                  Icons.chevron_right_rounded,
-                  color: VanepColors.textMuted,
                 ),
               ],
-            ),
+              if (student.isAbsentToday) ...[
+                const SizedBox(width: 8),
+                Text(
+                  l10n.assistantStudentsAbsentToday,
+                  style: VanepTypography.ratingLabel.copyWith(
+                    color: VanepColors.warning,
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ),
