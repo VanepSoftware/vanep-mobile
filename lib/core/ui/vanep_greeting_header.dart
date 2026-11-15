@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
-
-String firstNameOf(String value) {
-  final trimmed = value.trim();
-  if (trimmed.isEmpty) return trimmed;
-  return trimmed.split(RegExp(r'\s+')).first;
-}
+import 'package:vanep_mobile/core/formatters/names_formatter.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepGreetingHeader extends StatelessWidget {
   const VanepGreetingHeader({
     required this.displayName,
+    this.title,
     this.subtitle,
     this.trailingEmoji,
     super.key,
   });
 
   final String displayName;
+  final String? title;
   final String? subtitle;
   final String? trailingEmoji;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final greeting = l10n.homeGreeting(firstNameOf(displayName));
+    final greeting = title ?? l10n.homeGreeting(firstNameOf(displayName));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,11 +29,11 @@ class VanepGreetingHeader extends StatelessWidget {
         Row(
           children: [
             Flexible(
-              child: Text(greeting, style: VanepTypography.pageTitle),
+              child: Text(greeting, style: context.typography.pageTitle),
             ),
             if (trailingEmoji != null) ...[
               const SizedBox(width: 8),
-              Text(trailingEmoji!, style: VanepTypography.pageTitle),
+              Text(trailingEmoji!, style: context.typography.pageTitle),
             ],
           ],
         ),
@@ -45,8 +41,8 @@ class VanepGreetingHeader extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             subtitle!,
-            style: VanepTypography.cardSubtitle.copyWith(
-              color: VanepColors.textSecondary,
+            style: context.typography.cardSubtitle.copyWith(
+              color: context.palette.textSecondary,
             ),
           ),
         ],

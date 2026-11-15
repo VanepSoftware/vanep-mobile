@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 
 class AssistantBulkActionBar extends StatelessWidget {
@@ -26,11 +26,9 @@ class AssistantBulkActionBar extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
-        color: VanepColors.card,
-        border: Border(
-          top: BorderSide(color: VanepColors.divider),
-        ),
+      decoration: BoxDecoration(
+        color: context.palette.card,
+        border: Border(top: BorderSide(color: context.palette.divider)),
       ),
       child: SafeArea(
         top: false,
@@ -41,20 +39,17 @@ class AssistantBulkActionBar extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: isUpdating ? null : onConfirmBulkDropOff,
               style: ElevatedButton.styleFrom(
-                backgroundColor: VanepColors.success,
-                foregroundColor: VanepColors.onBrand,
+                backgroundColor: context.palette.success,
+                foregroundColor: context.palette.onAction,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              icon: const Icon(Icons.done_all_rounded, size: 20),
+              icon: Icon(Icons.done_all_rounded, size: 20),
               label: Text(
                 l10n.assistantBulkDropOff(selectedCount),
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
             ),
           ),

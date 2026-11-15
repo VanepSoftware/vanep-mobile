@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -9,6 +8,7 @@ import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriversHomeBody extends StatelessWidget {
   const DriversHomeBody({this.onDriverSelected, super.key});
@@ -74,7 +74,7 @@ class DriversSuggestionsList extends StatelessWidget {
         child: Text(
           emptyMessage,
           textAlign: TextAlign.center,
-          style: VanepTypography.cardSubtitle,
+          style: context.typography.cardSubtitle,
         ),
       );
     }

@@ -23,10 +23,21 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
 
   final RecordNoShow recordNoShow;
 
+  int routeRevision = 0;
+
+  void clearRoute() {
+    routeRevision++;
+    emit(const AssistantChecklistState());
+  }
+
   Future<void> loadRoute(String vanToken) async {
+    final revision = ++routeRevision;
+    final switchingVan = state.vanToken != vanToken;
     emit(
       state.copyWith(
         isLoading: true,
+        isUpdating: false,
+        stops: switchingVan ? const [] : state.stops,
         vanToken: () => vanToken,
         selectedStudentTokens: const {},
         isLinkRevoked: false,
@@ -35,17 +46,14 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
     );
 
     final result = await getActiveTripRoute(vanToken);
+    if (isClosed || revision != routeRevision) return;
     switch (result) {
       case Ok(:final value):
         emit(
-          state.copyWith(
-            isLoading: false,
-            stops: value,
-            isLinkRevoked: false,
-          ),
+          state.copyWith(isLoading: false, stops: value, isLinkRevoked: false),
         );
       case Err(:final error):
-        final revoked = _isRevocationError(error);
+        final revoked = isRevocationError(error);
         emit(
           state.copyWith(
             isLoading: false,
@@ -58,6 +66,15 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
   }
 
   Future<void> confirmBoarding(String studentToken) async {
+    if (!state.allStudents.any(
+      (student) =>
+          student.studentToken == studentToken &&
+          student.status == BoardingStatus.pending,
+    )) {
+      return;
+    }
+    if (state.isUpdating || state.isLoading || state.isLinkRevoked) return;
+    final revision = routeRevision;
     final currentVanToken = state.vanToken;
     if (currentVanToken == null) return;
 
@@ -70,22 +87,18 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
       confirmedBy: ConfirmationSource.assistant,
     );
 
+    if (isClosed || revision != routeRevision) return;
     switch (result) {
       case Ok():
-        final updatedStops = _updateStudentsInStops(
+        final updatedStops = updateStudentsInStops(
           tokens: {studentToken},
           status: BoardingStatus.boarded,
           confirmedBy: ConfirmationSource.assistant,
           noShowReason: null,
         );
-        emit(
-          state.copyWith(
-            isUpdating: false,
-            stops: updatedStops,
-          ),
-        );
+        emit(state.copyWith(isUpdating: false, stops: updatedStops));
       case Err(:final error):
-        final revoked = _isRevocationError(error);
+        final revoked = isRevocationError(error);
         emit(
           state.copyWith(
             isUpdating: false,
@@ -97,6 +110,14 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
   }
 
   void toggleStudentSelection(String studentToken) {
+    if (state.isUpdating) return;
+    if (!state.allStudents.any(
+      (student) =>
+          student.studentToken == studentToken &&
+          student.status == BoardingStatus.boarded,
+    )) {
+      return;
+    }
     final next = Set<String>.from(state.selectedStudentTokens);
     if (!next.remove(studentToken)) {
       next.add(studentToken);
@@ -105,15 +126,12 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
   }
 
   void selectAllAtStop(String stopId) {
+    if (state.isUpdating) return;
     final stop = state.stops.where((s) => s.id == stopId).firstOrNull;
     if (stop == null) return;
 
     final eligibleTokens = stop.items
-        .where(
-          (s) =>
-              s.status == BoardingStatus.boarded ||
-              s.status == BoardingStatus.pending,
-        )
+        .where((s) => s.status == BoardingStatus.boarded)
         .map((s) => s.studentToken)
         .toSet();
 
@@ -130,12 +148,22 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
   }
 
   void clearSelection() {
+    if (state.isUpdating) return;
     emit(state.copyWith(selectedStudentTokens: const {}));
   }
 
   Future<void> confirmBulkDropOff() async {
+    if (state.isUpdating || state.isLoading || state.isLinkRevoked) return;
+    final revision = routeRevision;
     final currentVanToken = state.vanToken;
-    final tokens = state.selectedStudentTokens.toList();
+    final tokens = state.allStudents
+        .where(
+          (student) =>
+              student.status == BoardingStatus.boarded &&
+              state.selectedStudentTokens.contains(student.studentToken),
+        )
+        .map((student) => student.studentToken)
+        .toList();
     if (currentVanToken == null || tokens.isEmpty) return;
 
     emit(state.copyWith(isUpdating: true, failure: () => null));
@@ -147,10 +175,11 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
       confirmedBy: ConfirmationSource.assistant,
     );
 
+    if (isClosed || revision != routeRevision) return;
     switch (result) {
       case Ok():
-        final updatedStops = _updateStudentsInStops(
-          tokens: state.selectedStudentTokens,
+        final updatedStops = updateStudentsInStops(
+          tokens: tokens.toSet(),
           status: BoardingStatus.droppedOff,
           confirmedBy: ConfirmationSource.assistant,
           noShowReason: null,
@@ -163,7 +192,7 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
           ),
         );
       case Err(:final error):
-        final revoked = _isRevocationError(error);
+        final revoked = isRevocationError(error);
         emit(
           state.copyWith(
             isUpdating: false,
@@ -175,6 +204,15 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
   }
 
   Future<void> markNoShow(String studentToken, NoShowReason reason) async {
+    if (!state.allStudents.any(
+      (student) =>
+          student.studentToken == studentToken &&
+          student.status == BoardingStatus.pending,
+    )) {
+      return;
+    }
+    if (state.isUpdating || state.isLoading || state.isLinkRevoked) return;
+    final revision = routeRevision;
     final currentVanToken = state.vanToken;
     if (currentVanToken == null) return;
 
@@ -186,9 +224,10 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
       reason: reason,
     );
 
+    if (isClosed || revision != routeRevision) return;
     switch (result) {
       case Ok():
-        final updatedStops = _updateStudentsInStops(
+        final updatedStops = updateStudentsInStops(
           tokens: {studentToken},
           status: BoardingStatus.noShow,
           confirmedBy: ConfirmationSource.assistant,
@@ -204,7 +243,7 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
           ),
         );
       case Err(:final error):
-        final revoked = _isRevocationError(error);
+        final revoked = isRevocationError(error);
         emit(
           state.copyWith(
             isUpdating: false,
@@ -223,12 +262,11 @@ class AssistantChecklistCubit extends Cubit<AssistantChecklistState> {
     emit(state.copyWith(statusFilter: () => status));
   }
 
-  bool _isRevocationError(AssistantFailure failure) {
-    return failure == AssistantFailure.revokedInvite ||
-        failure == AssistantFailure.unauthorized;
+  bool isRevocationError(AssistantFailure failure) {
+    return failure == AssistantFailure.revokedInvite;
   }
 
-  List<AssistantTripStop> _updateStudentsInStops({
+  List<AssistantTripStop> updateStudentsInStops({
     required Set<String> tokens,
     required BoardingStatus status,
     required ConfirmationSource confirmedBy,

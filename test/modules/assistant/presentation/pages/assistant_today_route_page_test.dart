@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,6 +74,27 @@ void main() {
 
   setUp(() {
     cubit = MockAssistantChecklistCubit();
+  });
+
+  testWidgets('a route failure shows a retry instead of an empty list', (
+    tester,
+  ) async {
+    whenListen(
+      cubit,
+      const Stream<AssistantChecklistState>.empty(),
+      initialState: const AssistantChecklistState(
+        vanToken: 'van-1',
+        failure: AssistantFailure.network,
+      ),
+    );
+    when(() => cubit.loadRoute('van-1')).thenAnswer((_) async {});
+    await tester.pumpWidget(buildHarness(cubit));
+    expect(
+      find.text('Sem conexão com o servidor. Tente novamente.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Tentar novamente'));
+    verify(() => cubit.loadRoute('van-1')).called(1);
   });
 
   testWidgets('shows empty route message when stops is empty', (tester) async {
@@ -174,8 +196,7 @@ void main() {
     await tester.tap(find.text('Confirmar ausência'));
     await tester.pumpAndSettle();
 
-    verify(
-      () => cubit.markNoShow('stu-1', NoShowReason.notAtLocation),
-    ).called(1);
+    verify(() => cubit.markNoShow('stu-1', NoShowReason.notAtLocation))
+        .called(1);
   });
 }

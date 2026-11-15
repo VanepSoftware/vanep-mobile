@@ -1,7 +1,7 @@
+import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_checklist_error_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/boarding_status.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
@@ -29,29 +29,33 @@ class AssistantStudentsListPage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.link_off_rounded,
                     size: 52,
-                    color: VanepColors.danger,
+                    color: context.palette.danger,
                   ),
                   const SizedBox(height: 12),
                   Text(
                     l10n.assistantLinkRevokedTitle,
                     textAlign: TextAlign.center,
-                    style: VanepTypography.heading,
+                    style: context.typography.heading,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     l10n.assistantLinkRevokedMessage,
                     textAlign: TextAlign.center,
-                    style: VanepTypography.body.copyWith(
-                      color: VanepColors.textSecondary,
+                    style: context.typography.body.copyWith(
+                      color: context.palette.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
           );
+        }
+
+        if (state.failure != null) {
+          return AssistantChecklistErrorView(state: state);
         }
 
         final cubit = context.read<AssistantChecklistCubit>();
@@ -68,7 +72,7 @@ class AssistantStudentsListPage extends StatelessWidget {
         return Column(
           children: [
             Container(
-              color: VanepColors.card,
+              color: context.palette.card,
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
               child: Column(
                 children: [
@@ -76,12 +80,12 @@ class AssistantStudentsListPage extends StatelessWidget {
                     onChanged: cubit.updateSearchQuery,
                     decoration: InputDecoration(
                       hintText: l10n.assistantStudentsSearchHint,
-                      prefixIcon: const Icon(
+                      prefixIcon: Icon(
                         Icons.search_rounded,
-                        color: VanepColors.textSecondary,
+                        color: context.palette.textSecondary,
                       ),
                       filled: true,
-                      fillColor: VanepColors.surface,
+                      fillColor: context.palette.surface,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 14,
                         vertical: 12,
@@ -113,7 +117,7 @@ class AssistantStudentsListPage extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(height: 1, color: VanepColors.divider),
+            Divider(height: 1, color: context.palette.divider),
             Expanded(
               child: students.isEmpty
                   ? Center(
@@ -122,8 +126,8 @@ class AssistantStudentsListPage extends StatelessWidget {
                         child: Text(
                           l10n.assistantStudentsEmpty,
                           textAlign: TextAlign.center,
-                          style: VanepTypography.body.copyWith(
-                            color: VanepColors.textSecondary,
+                          style: context.typography.body.copyWith(
+                            color: context.palette.textSecondary,
                           ),
                         ),
                       ),

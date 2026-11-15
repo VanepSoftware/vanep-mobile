@@ -12,11 +12,13 @@ class Environment {
     required this.authBaseUrl,
     required this.oauthClientId,
     this.googleServerClientId = '',
+    this.googleIosClientId = '',
     this.placesApiKeyAndroid = '',
     this.placesApiKeyIos = '',
     this.placesAndroidPackage = '',
     this.placesAndroidCertSha1 = '',
     this.placesIosBundleId = '',
+    this.clientHomeScenario = '',
   });
 
   factory Environment.fromDotEnv(DotEnv env) {
@@ -24,12 +26,14 @@ class Environment {
       authBaseUrl: _require(env, 'AUTH_URL'),
       oauthClientId: _require(env, 'OAUTH_CLIENT_ID'),
       googleServerClientId: env.maybeGet('GOOGLE_SERVER_CLIENT_ID') ?? '',
+      googleIosClientId: env.maybeGet('GOOGLE_IOS_CLIENT_ID') ?? '',
       placesApiKeyAndroid: env.maybeGet('GOOGLE_PLACES_API_KEY_ANDROID') ?? '',
       placesApiKeyIos: env.maybeGet('GOOGLE_PLACES_API_KEY_IOS') ?? '',
       placesAndroidPackage: env.maybeGet('GOOGLE_PLACES_ANDROID_PACKAGE') ?? '',
       placesAndroidCertSha1:
           env.maybeGet('GOOGLE_PLACES_ANDROID_CERT_SHA1') ?? '',
       placesIosBundleId: env.maybeGet('GOOGLE_PLACES_IOS_BUNDLE_ID') ?? '',
+      clientHomeScenario: env.maybeGet('CLIENT_HOME_SCENARIO') ?? '',
     );
   }
 
@@ -38,6 +42,8 @@ class Environment {
   final String oauthClientId;
 
   final String googleServerClientId;
+
+  final String googleIosClientId;
 
   final String placesApiKeyAndroid;
 
@@ -48,6 +54,8 @@ class Environment {
   final String placesAndroidCertSha1;
 
   final String placesIosBundleId;
+
+  final String clientHomeScenario;
 
   String get tokenEndpoint => '$authBaseUrl/oauth2/token';
 
@@ -96,9 +104,47 @@ class Environment {
 
   String get clientsMeEndpoint => '$clientsEndpoint/me';
 
+  String get contractReadinessEndpoint =>
+      '$clientsMeEndpoint/contract-readiness';
+
+  String get clientServiceRequestsEndpoint =>
+      '$clientsMeEndpoint/service-requests';
+
+  String get clientProposalsEndpoint => '$clientsMeEndpoint/proposals';
+
   String get dependentsEndpoint => '$authBaseUrl/api/dependent';
 
+  String dependentSchoolDaysEndpoint(String dependentToken) =>
+      '$dependentsEndpoint/${Uri.encodeComponent(dependentToken)}/school-days';
+
+  String get schoolResolveEndpoint => '$authBaseUrl/api/schools/resolve';
+
   String get driversMeEndpoint => '$authBaseUrl/api/drivers/me';
+
+  String get driverOccupancyEndpoint => '$driversMeEndpoint/occupancy';
+
+  String get driverAvailabilityEndpoint => '$driversMeEndpoint/availability';
+
+  String get driverServiceRequestsEndpoint =>
+      '$driversMeEndpoint/service-requests';
+
+  String get driverProposalsEndpoint => '$driversMeEndpoint/proposals';
+
+  String get driverStudentsEndpoint => '$driversMeEndpoint/students';
+
+  String get driverInviteLinkEndpoint => '$driversMeEndpoint/invite-link';
+
+  String get driverUnlinkedPassengersEndpoint =>
+      '$driversMeEndpoint/unlinked-passengers';
+
+  String unlinkedPassengerInviteEndpoint(String studentToken) =>
+      '$driverUnlinkedPassengersEndpoint/${Uri.encodeComponent(studentToken)}/invite';
+
+  String unlinkedPassengerMergeEndpoint(String studentToken) =>
+      '$driverUnlinkedPassengersEndpoint/${Uri.encodeComponent(studentToken)}/merge';
+
+  String unlinkedPassengerDismissMatchEndpoint(String studentToken) =>
+      '$driverUnlinkedPassengersEndpoint/${Uri.encodeComponent(studentToken)}/family-match/dismiss';
 
   String get vehiclesEndpoint => '$authBaseUrl/api/vehicles';
 

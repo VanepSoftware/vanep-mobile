@@ -17,14 +17,21 @@ void main() {
     account = MockGoogleSignInAccount();
     when(
       () =>
-          googleSignIn.initialize(serverClientId: any(named: 'serverClientId')),
+          googleSignIn.initialize(
+            clientId: any(named: 'clientId'),
+            serverClientId: any(named: 'serverClientId'),
+          ),
     ).thenAnswer((_) async {});
   });
 
-  GoogleSignInIdTokenSource buildSource({String serverClientId = 'web-id'}) {
+  GoogleSignInIdTokenSource buildSource({
+    String serverClientId = 'web-id',
+    String clientId = '',
+  }) {
     return GoogleSignInIdTokenSource(
       googleSignIn: googleSignIn,
       serverClientId: serverClientId,
+      clientId: clientId,
     );
   }
 
@@ -40,7 +47,9 @@ void main() {
       expect(await source.requestIdToken(), 'id-token');
       expect(await source.requestIdToken(), 'id-token');
 
-      verify(() => googleSignIn.initialize(serverClientId: 'web-id')).called(1);
+      verify(
+        () => googleSignIn.initialize(clientId: null, serverClientId: 'web-id'),
+      ).called(1);
     },
   );
 
@@ -68,7 +77,10 @@ void main() {
   void failInitializationWith(Object error) {
     when(
       () =>
-          googleSignIn.initialize(serverClientId: any(named: 'serverClientId')),
+          googleSignIn.initialize(
+            clientId: any(named: 'clientId'),
+            serverClientId: any(named: 'serverClientId'),
+          ),
     ).thenAnswer((_) => Future<void>.error(error));
   }
 
@@ -109,7 +121,9 @@ void main() {
       throwsA(isA<GoogleIdTokenException>()),
     );
 
-    verify(() => googleSignIn.initialize(serverClientId: 'web-id')).called(1);
+    verify(
+      () => googleSignIn.initialize(clientId: null, serverClientId: 'web-id'),
+    ).called(1);
   });
 
   test('an account without ID token is an error', () async {
@@ -122,6 +136,22 @@ void main() {
       buildSource().requestIdToken(),
       throwsA(const GoogleIdTokenException('missing_id_token')),
     );
+  });
+
+  test('the iOS client id is passed through to the SDK', () async {
+    when(() => googleSignIn.authenticate()).thenAnswer((_) async => account);
+    when(
+      () => account.authentication,
+    ).thenReturn(const GoogleSignInAuthentication(idToken: 'id-token'));
+
+    await buildSource(clientId: 'ios-client').requestIdToken();
+
+    verify(
+      () => googleSignIn.initialize(
+        clientId: 'ios-client',
+        serverClientId: 'web-id',
+      ),
+    ).called(1);
   });
 
   test('without a server client id nothing is requested', () async {

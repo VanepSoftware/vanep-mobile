@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -14,6 +13,7 @@ import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_page.
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_data_slots.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/profile_header.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/profile_menu_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class AccountDrawer extends StatelessWidget {
   const AccountDrawer({
@@ -25,6 +25,7 @@ class AccountDrawer extends StatelessWidget {
     this.statusColor,
     this.isSummaryLoading = false,
     this.buildPersonalDataSlots,
+    this.openSettings,
     super.key,
   });
 
@@ -36,6 +37,7 @@ class AccountDrawer extends StatelessWidget {
   final Color? statusColor;
   final bool isSummaryLoading;
   final PersonalDataSlotsBuilder? buildPersonalDataSlots;
+  final Future<void> Function(BuildContext context)? openSettings;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class AccountDrawer extends StatelessWidget {
     final hasPendingEmailConfirmation = profile.pendingEmail != null;
 
     return Drawer(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       child: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
@@ -69,6 +71,7 @@ class AccountDrawer extends StatelessWidget {
                   profile,
                   id,
                   buildPersonalDataSlots: buildPersonalDataSlots,
+                  openSettings: openSettings,
                 ),
                 pendingEmailConfirmation: hasPendingEmailConfirmation,
               ),
@@ -85,6 +88,7 @@ Future<void> handleProfileMenuSelection(
   UserProfile profile,
   ProfileMenuId id, {
   PersonalDataSlotsBuilder? buildPersonalDataSlots,
+  Future<void> Function(BuildContext context)? openSettings,
 }) async {
   switch (id) {
     case ProfileMenuId.personalData:
@@ -100,12 +104,13 @@ Future<void> handleProfileMenuSelection(
           ),
         ),
       );
+    case ProfileMenuId.settings:
+      await openSettings?.call(context);
     case ProfileMenuId.signOut:
       await confirmAndSignOut(context);
     case ProfileMenuId.paymentMethods:
     case ProfileMenuId.professionalData:
     case ProfileMenuId.assistantInvite:
-    case ProfileMenuId.settings:
     case ProfileMenuId.privacySecurity:
       break;
   }

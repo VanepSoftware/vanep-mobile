@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,6 +68,27 @@ void main() {
     cubit = MockAssistantChecklistCubit();
   });
 
+  testWidgets('a route failure shows a retry instead of an empty list', (
+    tester,
+  ) async {
+    whenListen(
+      cubit,
+      const Stream<AssistantChecklistState>.empty(),
+      initialState: const AssistantChecklistState(
+        vanToken: 'van-1',
+        failure: AssistantFailure.network,
+      ),
+    );
+    when(() => cubit.loadRoute('van-1')).thenAnswer((_) async {});
+    await tester.pumpWidget(buildHarness(cubit));
+    expect(
+      find.text('Sem conexão com o servidor. Tente novamente.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Tentar novamente'));
+    verify(() => cubit.loadRoute('van-1')).called(1);
+  });
+
   testWidgets('renders students list and delegates search and filter actions', (
     tester,
   ) async {
@@ -87,9 +109,7 @@ void main() {
     verify(() => cubit.updateSearchQuery('Lucas')).called(1);
 
     await tester.tap(find.widgetWithText(ChoiceChip, 'Entregue'));
-    verify(
-      () => cubit.updateStatusFilter(BoardingStatus.droppedOff),
-    ).called(1);
+    verify(() => cubit.updateStatusFilter(BoardingStatus.droppedOff)).called(1);
   });
 
   testWidgets('shows empty state when filtered list is empty', (tester) async {

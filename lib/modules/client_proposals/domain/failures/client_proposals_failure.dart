@@ -1,0 +1,1 @@
+enum ClientProposalsFailure { network, unexpected }

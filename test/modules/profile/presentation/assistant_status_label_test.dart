@@ -5,6 +5,7 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/profile/domain/value_objects/assistant_status.dart';
 import 'package:vanep_mobile/modules/profile/presentation/formatters/assistant_status_label.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 void main() {
   Future<AppLocalizations> loadPt(WidgetTester tester) async {
@@ -44,16 +45,29 @@ void main() {
   });
 
   test('maps assistant statuses to quiet chip colors', () {
-    expect(assistantStatusColor(AssistantStatus.active), VanepColors.success);
     expect(
-      assistantStatusColor(AssistantStatus.pending),
+      assistantStatusColor(VanepPalette.light, AssistantStatus.active),
+      VanepPalette.light.success,
+    );
+    expect(
+      assistantStatusColor(VanepPalette.light, AssistantStatus.pending),
       VanepColors.ratingStar,
     );
     expect(
-      assistantStatusColor(AssistantStatus.unlinked),
-      VanepColors.textMuted,
+      assistantStatusColor(VanepPalette.light, AssistantStatus.unlinked),
+      VanepPalette.light.textMuted,
     );
-    expect(assistantStatusColor(AssistantStatus.inactive), VanepColors.danger);
-    expect(assistantStatusColor(null), isNull);
+    expect(
+      assistantStatusColor(VanepPalette.light, AssistantStatus.inactive),
+      VanepPalette.light.danger,
+    );
+    expect(assistantStatusColor(VanepPalette.light, null), isNull);
+  });
+
+  test('assistant status colors follow the dark palette', () {
+    expect(
+      assistantStatusColor(VanepPalette.dark, AssistantStatus.active),
+      VanepPalette.dark.success,
+    );
   });
 }

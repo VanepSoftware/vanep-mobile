@@ -13,7 +13,7 @@ void main() {
   });
 
   test(
-    'number, complement, neighborhood, district and zipCode may be null',
+    'number, complement, neighborhood and zipCode may be null',
     () {
       final dto = PersonalAddressDto.fromJson(
         fakePersonalAddressJson(
@@ -21,8 +21,6 @@ void main() {
           complement: null,
           zipCode: null,
           neighborhood: null,
-          districtName: null,
-          districtToken: null,
         ),
       );
 
@@ -33,8 +31,6 @@ void main() {
           complement: null,
           zipCode: null,
           neighborhood: null,
-          districtName: null,
-          districtToken: null,
         ),
       );
     },
@@ -49,8 +45,6 @@ void main() {
     expect(address.complement, isNull);
     expect(address.zipCode, isNull);
     expect(address.neighborhood, isNull);
-    expect(address.districtName, isNull);
-    expect(address.districtToken, isNull);
   });
 
   test('response json without googlePlaceId still maps', () {

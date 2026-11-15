@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_checklist_item.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/boarding_status.dart';
@@ -35,19 +34,19 @@ class AssistantStudentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final canSelect = showSelection &&
-        (item.status == BoardingStatus.boarded ||
-            item.status == BoardingStatus.pending);
+    final canSelect = showSelection && item.status == BoardingStatus.boarded;
     final isPending = item.status == BoardingStatus.pending;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: VanepColors.card,
+        color: context.palette.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isSelected ? VanepColors.action : VanepColors.cardBorder,
+          color: isSelected
+              ? context.palette.action
+              : context.palette.cardBorder,
           width: isSelected ? 1.5 : 1,
         ),
       ),
@@ -62,7 +61,7 @@ class AssistantStudentCard extends StatelessWidget {
                   height: 44,
                   child: Checkbox(
                     value: isSelected,
-                    activeColor: VanepColors.action,
+                    activeColor: context.palette.action,
                     onChanged: (_) => onToggleSelect?.call(),
                   ),
                 ),
@@ -74,14 +73,11 @@ class AssistantStudentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.studentName,
-                      style: VanepTypography.cardTitle,
-                    ),
+                    Text(item.studentName, style: context.typography.cardTitle),
                     const SizedBox(height: 2),
                     Text(
                       item.schoolName,
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                   ],
                 ),
@@ -104,8 +100,8 @@ class AssistantStudentCard extends StatelessWidget {
                     child: OutlinedButton(
                       onPressed: onMarkNoShow,
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: VanepColors.danger,
-                        side: const BorderSide(color: VanepColors.danger),
+                        foregroundColor: context.palette.danger,
+                        side: BorderSide(color: context.palette.danger),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -113,7 +109,7 @@ class AssistantStudentCard extends StatelessWidget {
                       child: Text(
                         l10n.assistantMarkNoShow,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                         ),
@@ -128,8 +124,8 @@ class AssistantStudentCard extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: onConfirmBoarding,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: VanepColors.action,
-                        foregroundColor: VanepColors.onBrand,
+                        backgroundColor: context.palette.action,
+                        foregroundColor: context.palette.onAction,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -138,7 +134,7 @@ class AssistantStudentCard extends StatelessWidget {
                       child: Text(
                         l10n.assistantConfirmBoarding,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                         ),
@@ -169,14 +165,14 @@ class _StudentAvatar extends StatelessWidget {
       width: 44,
       height: 44,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        color: VanepColors.avatarPlaceholder,
+      decoration: BoxDecoration(
+        color: context.palette.avatarPlaceholder,
         shape: BoxShape.circle,
       ),
       child: Text(
         initial,
-        style: VanepTypography.cardTitle.copyWith(
-          color: VanepColors.textPrimary,
+        style: context.typography.cardTitle.copyWith(
+          color: context.palette.textPrimary,
         ),
       ),
     );
@@ -184,10 +180,7 @@ class _StudentAvatar extends StatelessWidget {
 }
 
 class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({
-    required this.status,
-    required this.l10n,
-  });
+  const _StatusBadge({required this.status, required this.l10n});
 
   final BoardingStatus status;
 
@@ -198,23 +191,23 @@ class _StatusBadge extends StatelessWidget {
     final (label, bg, fg) = switch (status) {
       BoardingStatus.pending => (
         l10n.assistantStatusPending,
-        VanepColors.warningSurface,
-        VanepColors.warning,
+        context.palette.warningSurface,
+        context.palette.warning,
       ),
       BoardingStatus.boarded => (
         l10n.assistantStatusBoarded,
-        VanepColors.actionSurface,
-        VanepColors.action,
+        context.palette.actionSurface,
+        context.palette.action,
       ),
       BoardingStatus.droppedOff => (
         l10n.assistantStatusDroppedOff,
-        const Color(0x1F1E8E5A),
-        VanepColors.success,
+        context.palette.successSurface,
+        context.palette.success,
       ),
       BoardingStatus.noShow => (
         l10n.assistantStatusNoShow,
-        const Color(0x1FC4564A),
-        VanepColors.danger,
+        context.palette.dangerSurface,
+        context.palette.danger,
       ),
     };
 
@@ -226,11 +219,7 @@ class _StatusBadge extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: fg,
-        ),
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: fg),
       ),
     );
   }

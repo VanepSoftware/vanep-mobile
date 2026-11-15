@@ -7,6 +7,7 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_
 import 'package:vanep_mobile/modules/conversations/domain/failures/conversation_failure.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_state.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/widgets/conversation_message_bubble.dart';
 
@@ -18,14 +19,19 @@ Widget harness(ChatCubit cubit, ConversationParticipant viewerSide) {
   return localizedHarness(
     BlocProvider<ChatCubit>.value(
       value: cubit,
-      child: ChatPage(viewerSide: viewerSide),
+      child: ChatPage(
+        counterpartName: conversationCounterpartName(
+          testConversation,
+          viewerSide,
+        ),
+        viewerSide: viewerSide,
+      ),
     ),
   );
 }
 
 final readyState = ChatState(
   status: ChatStatus.ready,
-  conversation: testConversation,
   messages: [testClientMessage, testDriverMessage],
 );
 
@@ -112,9 +118,7 @@ void main() {
   testWidgets('an empty conversation invites the first message', (
     tester,
   ) async {
-    seed(
-      const ChatState(status: ChatStatus.ready, conversation: testConversation),
-    );
+    seed(const ChatState(status: ChatStatus.ready));
 
     await tester.pumpWidget(harness(cubit, ConversationParticipant.client));
 
@@ -127,7 +131,7 @@ void main() {
     seed(
       const ChatState(
         status: ChatStatus.loadFailed,
-        failure: ConversationDriverUnavailableFailure(),
+        failure: ConversationNotFoundFailure(),
       ),
     );
     when(() => cubit.start()).thenAnswer((_) async {});
@@ -136,7 +140,7 @@ void main() {
     await tester.tap(find.text('Tentar novamente'));
 
     expect(
-      find.text('Este motorista não está mais disponível.'),
+      find.text('Esta conversa não está mais disponível.'),
       findsOneWidget,
     );
     verify(() => cubit.start()).called(1);

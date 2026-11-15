@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepSecondaryButton extends StatelessWidget {
   const VanepSecondaryButton({
@@ -9,47 +9,82 @@ class VanepSecondaryButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.icon,
+    this.leading,
+    this.onBrand = false,
+    this.isDestructive = false,
+    this.compact = false,
     super.key,
-  });
+  }) : assert(icon == null || leading == null);
 
   final String label;
   final VoidCallback? onPressed;
   final bool isLoading;
   final IconData? icon;
 
+  // For marks that are not an icon font glyph, such as a brand logo.
+  final Widget? leading;
+
+  final bool onBrand;
+
+  final bool isDestructive;
+
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 52,
-      width: double.infinity,
+      height: compact ? 40 : 52,
+      width: compact ? null : double.infinity,
       child: OutlinedButton(
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: VanepColors.textPrimary,
-          disabledForegroundColor: VanepColors.textMuted,
-          side: const BorderSide(color: VanepColors.inputBorder),
-          backgroundColor: VanepColors.card,
+          foregroundColor: onBrand
+              ? VanepColors.onBrand
+              : (isDestructive
+                    ? context.palette.dangerText
+                    : context.palette.textPrimary),
+          disabledForegroundColor: context.palette.textMuted,
+          side: onBrand
+              ? BorderSide.none
+              : BorderSide(
+                  color: isDestructive
+                      ? context.palette.dangerBorder
+                      : context.palette.inputBorder,
+                ),
+          backgroundColor: onBrand
+              ? VanepColors.onBrand.withValues(alpha: 0.14)
+              : (isDestructive
+                    ? context.palette.dangerSurface
+                    : context.palette.card),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          padding: compact ? const EdgeInsets.symmetric(horizontal: 12) : null,
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 22,
                 width: 22,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.2,
-                  color: VanepColors.action,
+                  color: context.palette.action,
                 ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: compact ? MainAxisSize.min : MainAxisSize.max,
                 children: [
-                  if (icon != null) ...[
-                    Icon(icon, size: 20),
-                    const SizedBox(width: 10),
+                  if (icon != null || leading != null) ...[
+                    leading ?? Icon(icon, size: compact ? 18 : 20),
+                    SizedBox(width: compact ? 6 : 10),
                   ],
-                  Text(label, style: VanepTypography.button),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: context.typography.button,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ],
               ),
       ),

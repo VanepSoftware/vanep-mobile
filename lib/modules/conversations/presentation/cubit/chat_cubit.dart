@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/result/result.dart';
-import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/list_conversation_messages.dart';
-import 'package:vanep_mobile/modules/conversations/domain/usecases/open_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/watch_conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_realtime_event.dart';
@@ -13,48 +10,29 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_state
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit({
-    required this.openConversation,
     required this.listConversationMessages,
     required this.sendConversationMessage,
     required this.watchConversation,
-    this.driverToken,
-    Conversation? conversation,
-  }) : assert(driverToken != null || conversation != null),
-       super(ChatState(conversation: conversation));
+    required this.conversationToken,
+  }) : super(const ChatState());
 
-  final OpenConversation openConversation;
+  final String conversationToken;
   final ListConversationMessages listConversationMessages;
   final SendConversationMessage sendConversationMessage;
   final WatchConversation watchConversation;
-  final String? driverToken;
 
   StreamSubscription<ConversationRealtimeEvent>? realtimeSubscription;
 
   Future<void> start() async {
     emit(state.copyWith(status: ChatStatus.loading, clearFailure: true));
-    final conversation =
-        state.conversation ?? await openConversationWithDriver();
-    if (conversation == null) return;
     await loadLatestMessages();
-    if (state.isReady) watchConversationEvents(conversation);
-  }
-
-  Future<Conversation?> openConversationWithDriver() async {
-    final result = await openConversation(driverToken!);
-    switch (result) {
-      case Ok(:final value):
-        emit(state.copyWith(conversation: value));
-        return value;
-      case Err(:final error):
-        emit(state.copyWith(status: ChatStatus.loadFailed, failure: error));
-        return null;
-    }
+    if (state.isReady) watchConversationEvents();
   }
 
   Future<void> loadLatestMessages() async {
     final wasReady = state.isReady;
     final result = await listConversationMessages(
-      conversationToken: state.conversation!.token,
+      conversationToken: conversationToken,
       page: 0,
     );
     if (isClosed) return;
@@ -77,7 +55,7 @@ class ChatCubit extends Cubit<ChatState> {
     if (!state.isReady || !state.hasMore || state.isLoadingOlder) return;
     emit(state.copyWith(isLoadingOlder: true));
     final result = await listConversationMessages(
-      conversationToken: state.conversation!.token,
+      conversationToken: conversationToken,
       page: state.nextPage,
     );
     if (isClosed) return;
@@ -98,7 +76,7 @@ class ChatCubit extends Cubit<ChatState> {
     if (!state.isReady || state.isSending) return false;
     emit(state.copyWith(isSending: true, clearFailure: true));
     final result = await sendConversationMessage(
-      conversationToken: state.conversation!.token,
+      conversationToken: conversationToken,
       body: body,
     );
     if (isClosed) return result.isOk;
@@ -114,11 +92,10 @@ class ChatCubit extends Cubit<ChatState> {
     return result.isOk;
   }
 
-  void watchConversationEvents(Conversation conversation) {
+  void watchConversationEvents() {
     if (realtimeSubscription != null) return;
-    realtimeSubscription = watchConversation(
-      conversation.token,
-    ).listen(applyRealtimeEvent);
+    realtimeSubscription = watchConversation(conversationToken)
+        .listen(applyRealtimeEvent);
   }
 
   void applyRealtimeEvent(ConversationRealtimeEvent event) {

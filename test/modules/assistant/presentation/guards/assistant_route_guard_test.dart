@@ -8,6 +8,11 @@ void main() {
   group('AssistantRouteGuard', () {
     test('isRestricted identifies driver and client restricted routes', () {
       expect(AssistantRouteGuard.isRestricted('/driver'), isTrue);
+      expect(
+        AssistantRouteGuard.isRestricted('/driver/vans?active=true'),
+        isTrue,
+      );
+      expect(AssistantRouteGuard.isRestricted('/drivers-public'), isFalse);
       expect(AssistantRouteGuard.isRestricted('/proposals'), isTrue);
       expect(AssistantRouteGuard.isRestricted('/documents'), isTrue);
       expect(AssistantRouteGuard.isRestricted('/search'), isTrue);
@@ -46,9 +51,8 @@ void main() {
             ),
           ),
           routes: {
-            '/proposals': (context) => const Scaffold(
-                  body: Text('Proposals Screen'),
-                ),
+            '/proposals': (context) =>
+                const Scaffold(body: Text('Proposals Screen')),
           },
         ),
       );
@@ -61,9 +65,7 @@ void main() {
       expect(find.text('Go to proposals'), findsOneWidget);
     });
 
-    testWidgets('allows navigation when user is not assistant', (
-      tester,
-    ) async {
+    testWidgets('allows navigation when user is not assistant', (tester) async {
       var unauthorizedCalled = false;
       final guard = AssistantRouteGuard(
         isAssistant: () => false,
@@ -90,9 +92,8 @@ void main() {
             ),
           ),
           routes: {
-            '/proposals': (context) => const Scaffold(
-                  body: Text('Proposals Screen'),
-                ),
+            '/proposals': (context) =>
+                const Scaffold(body: Text('Proposals Screen')),
           },
         ),
       );

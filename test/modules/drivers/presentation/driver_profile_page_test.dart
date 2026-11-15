@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_cover_background.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_slot.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -14,6 +13,7 @@ import 'package:vanep_mobile/modules/drivers/domain/failures/driver_failure.dart
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 
 import '../drivers_fixtures.dart';
 import 'drivers_presentation_mocks.dart';
@@ -23,7 +23,7 @@ class MockApiImageLoader extends Mock implements ApiImageLoader {}
 Widget harness(
   DriverProfileCubit cubit,
   ApiImageLoader loader, {
-  ValueChanged<String>? onChatTapped,
+  ValueChanged<String>? onQuoteRequested,
 }) {
   return RepositoryProvider<ApiImageLoader>.value(
     value: loader,
@@ -38,7 +38,7 @@ Widget harness(
       locale: const Locale('pt'),
       home: BlocProvider<DriverProfileCubit>.value(
         value: cubit,
-        child: DriverProfilePage(onChatTapped: onChatTapped),
+        child: DriverProfilePage(onQuoteRequested: onQuoteRequested),
       ),
     ),
   );
@@ -62,7 +62,7 @@ void main() {
     );
   }
 
-  testWidgets('shows a spinner while loading, without the chat button', (
+  testWidgets('shows a spinner while loading, without the quote button', (
     tester,
   ) async {
     seed(const DriverProfileState());
@@ -70,7 +70,7 @@ void main() {
     await tester.pumpWidget(harness(cubit, loader));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    expect(find.text('Conversar com o motorista'), findsNothing);
+    expect(find.text('Pedir orçamento'), findsNothing);
   });
 
   testWidgets('shows who the driver is and where they work', (tester) async {
@@ -173,7 +173,7 @@ void main() {
     expect(find.byType(VanepPhotoSlot), findsNWidgets(2));
     expect(
       tester.widget<AppBar>(find.byType(AppBar)).foregroundColor,
-      VanepColors.card,
+      VanepColors.onBrand,
     );
   });
 
@@ -213,7 +213,28 @@ void main() {
     expect(find.text('Fotos da van'), findsNothing);
   });
 
-  testWidgets('the chat button opens the chat with this driver', (
+  testWidgets('the quote button opens the quote request to this driver', (
+    tester,
+  ) async {
+    seed(
+      DriverProfileState(
+        status: DriverProfileStatus.loaded,
+        profile: testDriverProfile.copyWith(available: true),
+      ),
+    );
+    final requested = <String>[];
+
+    await tester.pumpWidget(
+      harness(cubit, loader, onQuoteRequested: requested.add),
+    );
+    await tester.tap(find.text('Pedir orçamento'));
+    await tester.pump();
+
+    expect(requested, [testDriverProfile.token]);
+    expect(find.text('Conversar com o motorista'), findsNothing);
+  });
+
+  testWidgets('a driver not taking students cannot get a quote request', (
     tester,
   ) async {
     seed(
@@ -222,15 +243,19 @@ void main() {
         profile: testDriverProfile,
       ),
     );
-    final tappedDrivers = <String>[];
+    final requested = <String>[];
 
     await tester.pumpWidget(
-      harness(cubit, loader, onChatTapped: tappedDrivers.add),
+      harness(cubit, loader, onQuoteRequested: requested.add),
     );
-    await tester.tap(find.text('Conversar com o motorista'));
+    await tester.tap(find.text('Pedir orçamento'));
     await tester.pump();
 
-    expect(tappedDrivers, [testDriverProfile.token]);
+    expect(
+      find.text('Este motorista não está aceitando novos alunos.'),
+      findsOneWidget,
+    );
+    expect(requested, isEmpty);
   });
 
   testWidgets('a missing driver is explained and can be retried', (

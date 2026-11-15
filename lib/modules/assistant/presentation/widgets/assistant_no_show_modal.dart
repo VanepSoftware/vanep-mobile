@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/no_show_reason.dart';
 
@@ -10,7 +9,7 @@ Future<NoShowReason?> showAssistantNoShowModal(
 }) {
   return showModalBottomSheet<NoShowReason>(
     context: context,
-    backgroundColor: VanepColors.card,
+    backgroundColor: context.palette.card,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -64,19 +63,19 @@ class _AssistantNoShowModalState extends State<AssistantNoShowModal> {
               height: 4,
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
-                color: VanepColors.divider,
+                color: context.palette.divider,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
           Text(
             l10n.assistantNoShowModalTitle,
-            style: VanepTypography.heading,
+            style: context.typography.heading,
           ),
           const SizedBox(height: 4),
           Text(
             '${widget.studentName} — ${l10n.assistantNoShowModalSubtitle}',
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           const SizedBox(height: 16),
           for (final (reason, label) in reasons)
@@ -97,15 +96,12 @@ class _AssistantNoShowModalState extends State<AssistantNoShowModal> {
                             ? Icons.radio_button_checked_rounded
                             : Icons.radio_button_off_rounded,
                         color: _selectedReason == reason
-                            ? VanepColors.action
-                            : VanepColors.textSecondary,
+                            ? context.palette.action
+                            : context.palette.textSecondary,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Text(
-                          label,
-                          style: VanepTypography.body,
-                        ),
+                        child: Text(label, style: context.typography.body),
                       ),
                     ],
                   ),
@@ -120,8 +116,8 @@ class _AssistantNoShowModalState extends State<AssistantNoShowModal> {
               child: ElevatedButton(
                 onPressed: () => widget.onConfirm(_selectedReason),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: VanepColors.danger,
-                  foregroundColor: VanepColors.onBrand,
+                  backgroundColor: context.palette.danger,
+                  foregroundColor: context.palette.onAction,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -129,7 +125,7 @@ class _AssistantNoShowModalState extends State<AssistantNoShowModal> {
                 ),
                 child: Text(
                   l10n.assistantNoShowConfirm,
-                  style: VanepTypography.button,
+                  style: context.typography.button,
                 ),
               ),
             ),

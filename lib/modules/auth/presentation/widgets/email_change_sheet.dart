@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -10,13 +8,14 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_field_lim
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/mappers/profile_edit_failure_l10n.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> showEmailChangeSheet(BuildContext context) {
   final cubit = context.read<PersonalDataCubit>();
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: VanepColors.card,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -97,7 +96,7 @@ Widget buildEmailChangeForm(
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(l10n.profileChangeEmailTitle, style: VanepTypography.cardTitle),
+      Text(l10n.profileChangeEmailTitle, style: context.typography.cardTitle),
       const SizedBox(height: 16),
       VanepTextField(
         label: l10n.profileFieldEmail,
@@ -141,21 +140,21 @@ class EmailChangeConfirmation extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Icon(
+        Icon(
           Icons.mark_email_read_outlined,
           size: 44,
-          color: VanepColors.action,
+          color: context.palette.action,
         ),
         const SizedBox(height: 16),
         Text(
           l10n.profileEmailChangeConfirmationTitle,
-          style: VanepTypography.cardTitle,
+          style: context.typography.cardTitle,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(
           l10n.profileEmailChangeConfirmationMessage(email),
-          style: VanepTypography.cardSubtitle.copyWith(height: 1.4),
+          style: context.typography.cardSubtitle.copyWith(height: 1.4),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),

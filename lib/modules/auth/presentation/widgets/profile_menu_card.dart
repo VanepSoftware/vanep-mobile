@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_section.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/builders/profile_menu_builder.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/profile_menu_id.dart';
@@ -24,26 +23,13 @@ class ProfileMenuSectionView extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final title = section.title;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title != null) ...[
-          Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 8),
-            child: Text(
-              profileSectionTitleLabel(title, l10n),
-              style: VanepTypography.sectionTitle.copyWith(
-                color: VanepColors.textPrimary,
-              ),
-            ),
-          ),
-        ],
-        ProfileMenuCard(
-          section: section,
-          onItemSelected: onItemSelected,
-          pendingEmailConfirmation: pendingEmailConfirmation,
-        ),
-      ],
+    return VanepSection(
+      title: title == null ? null : profileSectionTitleLabel(title, l10n),
+      child: ProfileMenuCard(
+        section: section,
+        onItemSelected: onItemSelected,
+        pendingEmailConfirmation: pendingEmailConfirmation,
+      ),
     );
   }
 }
