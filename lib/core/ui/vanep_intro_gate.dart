@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/ui/vanep_van_intro.dart';
-import 'package:vanep_mobile/core/ui/vanep_van_intro_timeline.dart';
+import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
+import 'package:vanep_mobile/core/ui/vanep_intro_frame.dart';
 
 class VanepIntroGate extends StatefulWidget {
   const VanepIntroGate({required this.child, super.key});
@@ -16,7 +16,7 @@ class VanepIntroGateState extends State<VanepIntroGate>
     with SingleTickerProviderStateMixin {
   late final AnimationController _intro = AnimationController(
     vsync: this,
-    duration: vanepVanIntroDuration,
+    duration: vanepIntroDuration,
   );
   bool _introFinished = false;
 
@@ -46,8 +46,27 @@ class VanepIntroGateState extends State<VanepIntroGate>
       fit: StackFit.expand,
       children: [
         ExcludeSemantics(excluding: showsIntro, child: widget.child),
-        if (showsIntro) VanepVanIntroOverlay(progress: _intro),
+        if (showsIntro) VanepIntroOverlay(progress: _intro),
       ],
+    );
+  }
+}
+
+class VanepIntroOverlay extends StatelessWidget {
+  const VanepIntroOverlay({required this.progress, super.key});
+
+  final Animation<double> progress;
+
+  @override
+  Widget build(BuildContext context) {
+    return AbsorbPointer(
+      child: AnimatedBuilder(
+        animation: progress,
+        builder: (context, _) => Opacity(
+          opacity: fadeOutVanepIntroOverlay(progress.value),
+          child: VanepBrandSplash(frame: VanepIntroFrame.at(progress.value)),
+        ),
+      ),
     );
   }
 }
