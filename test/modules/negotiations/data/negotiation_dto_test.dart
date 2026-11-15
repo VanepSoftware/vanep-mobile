@@ -3,13 +3,13 @@ import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/negotiations/data/dtos/proposal_dto.dart';
 import 'package:vanep_mobile/modules/negotiations/data/dtos/service_request_dto.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_field.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_status.dart';
 
 import '../negotiation_json_fixtures.dart';

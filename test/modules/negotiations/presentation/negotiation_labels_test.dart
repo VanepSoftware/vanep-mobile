@@ -4,7 +4,7 @@ import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_history.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/request_schools.dart';
@@ -13,7 +13,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiati
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_field.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 
 import '../negotiations_fixtures.dart';

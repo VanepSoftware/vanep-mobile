@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
-import 'package:vanep_mobile/modules/driver_van_central/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 
 import '../driver_van_central_fixtures.dart';
 

@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const VanepAppBar({this.title, this.caption, this.actions, super.key});
+  const VanepAppBar({
+    this.title,
+    this.caption,
+    this.actions,
+    this.titleWidget,
+    super.key,
+  });
 
   final String? title;
+  final Widget? titleWidget;
   final String? caption;
   final List<Widget>? actions;
 
@@ -20,9 +27,11 @@ class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       scrolledUnderElevation: 0,
-      title: title == null
-          ? null
-          : VanepAppBarTitle(title: title, caption: caption),
+      title:
+          titleWidget ??
+          (title == null
+              ? null
+              : VanepAppBarTitle(title: title, caption: caption)),
       actions: actions,
     );
   }

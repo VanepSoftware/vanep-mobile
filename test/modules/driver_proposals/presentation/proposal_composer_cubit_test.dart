@@ -8,9 +8,9 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposa
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_state.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_draft.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 
 import '../../driver_vans/driver_vans_mocks.dart';
 import '../../negotiations/negotiations_fixtures.dart';
