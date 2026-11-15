@@ -18,6 +18,17 @@ class AccountRemoteDataSource {
     );
   }
 
+  Future<void> checkSignupDuplicates({
+    String? email,
+    String? document,
+    String? phone,
+  }) async {
+    await dio.post<void>(
+      environment.signupCheckEndpoint,
+      data: {'email': ?email, 'document': ?document, 'phone': ?phone},
+    );
+  }
+
   Future<void> completeGoogleSignup({
     required String ticket,
     required SignupForm form,

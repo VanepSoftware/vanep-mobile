@@ -23,16 +23,23 @@ import 'auth_presentation_mocks.dart';
 
 void main() {
   late MockSignUp signUp;
+  late MockCheckSignupDuplicates checkSignupDuplicates;
   late MockCompleteGoogleSignup completeGoogleSignup;
   late MockSignInWithGoogle signInWithGoogle;
   late List<AuthSession> startedSessions;
 
   final filled = SignupState(form: validClientSignupForm);
 
-  setUpAll(registerAuthFallbacks);
+  setUpAll(() {
+    registerAuthFallbacks();
+    registerFallbackValue(<AccountField>{});
+  });
 
   setUp(() {
     signUp = MockSignUp();
+    checkSignupDuplicates = MockCheckSignupDuplicates();
+    when(() => checkSignupDuplicates(any(), any()))
+        .thenAnswer((_) async => const Ok(null));
     completeGoogleSignup = MockCompleteGoogleSignup();
     signInWithGoogle = MockSignInWithGoogle();
     startedSessions = [];
@@ -40,6 +47,7 @@ void main() {
 
   SignupCubit buildCubit({GoogleSignupTicket? googleTicket}) => SignupCubit(
     signUp: signUp,
+    checkSignupDuplicates: checkSignupDuplicates,
     completeGoogleSignup: completeGoogleSignup,
     signInWithGoogle: signInWithGoogle,
     startSession: startedSessions.add,
@@ -203,9 +211,8 @@ void main() {
       'completes with the ticket and repeats the Google grant',
       setUp: () {
         stubCompletion(const Ok(null));
-        when(
-          signInWithGoogle.call,
-        ).thenAnswer((_) async => Ok<AuthFailure, AuthSession>(session));
+        when(signInWithGoogle.call)
+            .thenAnswer((_) async => Ok<AuthFailure, AuthSession>(session));
       },
       build: () => buildCubit(googleTicket: googleTicket),
       seed: () => googleFilled,
@@ -301,7 +308,68 @@ void main() {
       build: buildCubit,
       seed: () => SignupState(form: validClientSignupForm),
       act: (cubit) => cubit.nextStep(),
-      expect: () => [SignupState(form: validClientSignupForm, stepIndex: 1)],
+      expect: () => [
+        SignupState(form: validClientSignupForm, status: SignupStatus.checking),
+        SignupState(form: validClientSignupForm, stepIndex: 1),
+      ],
+      verify: (_) => verify(
+        () => checkSignupDuplicates(
+          validClientSignupForm,
+          SignupStep.access.fields,
+        ),
+      ).called(1),
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'nextStep stays and shows every duplicate of the step at once',
+      setUp: () => when(() => checkSignupDuplicates(any(), any())).thenAnswer(
+        (_) async => const Err(
+          AccountValidationFailure({
+            AccountField.document: AccountFieldIssue.duplicate,
+            AccountField.phone: AccountFieldIssue.duplicate,
+            AccountField.email: AccountFieldIssue.duplicate,
+          }),
+        ),
+      ),
+      build: buildCubit,
+      seed: () => SignupState(form: validClientSignupForm, stepIndex: 1),
+      act: (cubit) => cubit.nextStep(),
+      expect: () => [
+        SignupState(
+          form: validClientSignupForm,
+          stepIndex: 1,
+          status: SignupStatus.checking,
+        ),
+        SignupState(
+          form: validClientSignupForm,
+          stepIndex: 1,
+          issues: const {
+            AccountField.document: AccountFieldIssue.duplicate,
+            AccountField.phone: AccountFieldIssue.duplicate,
+          },
+        ),
+      ],
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'nextStep goes on when the check itself fails',
+      setUp: () =>
+          when(() => checkSignupDuplicates(any(), any()))
+              .thenAnswer((_) async => const Err(NetworkAccountFailure())),
+      build: buildCubit,
+      seed: () => SignupState(form: validClientSignupForm),
+      act: (cubit) => cubit.nextStep(),
+      expect: () => [
+        SignupState(form: validClientSignupForm, status: SignupStatus.checking),
+        SignupState(form: validClientSignupForm, stepIndex: 1),
+      ],
+    );
+
+    blocTest<SignupCubit, SignupState>(
+      'nextStep skips the check when the step has local issues',
+      build: buildCubit,
+      act: (cubit) => cubit.nextStep(),
+      verify: (_) => verifyNever(() => checkSignupDuplicates(any(), any())),
     );
 
     blocTest<SignupCubit, SignupState>(
@@ -313,6 +381,11 @@ void main() {
       ),
       act: (cubit) => cubit.nextStep(),
       expect: () => [
+        SignupState(
+          form: validClientSignupForm,
+          status: SignupStatus.checking,
+          issues: const {AccountField.document: AccountFieldIssue.duplicate},
+        ),
         SignupState(
           form: validClientSignupForm,
           stepIndex: 1,

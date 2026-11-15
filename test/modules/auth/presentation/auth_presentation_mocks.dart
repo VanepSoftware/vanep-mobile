@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/check_signup_duplicates.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/complete_google_signup.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/delete_my_personal_address.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
@@ -57,6 +58,8 @@ class MockSignInWithPassword extends Mock implements SignInWithPassword {}
 class MockLoginCubit extends MockCubit<LoginState> implements LoginCubit {}
 
 class MockSignUp extends Mock implements SignUp {}
+
+class MockCheckSignupDuplicates extends Mock implements CheckSignupDuplicates {}
 
 class MockSignupCubit extends MockCubit<SignupState> implements SignupCubit {}
 

@@ -70,6 +70,8 @@ class Environment {
 
   String get signupCompleteEndpoint => '$authBaseUrl/api/auth/signup/complete';
 
+  String get signupCheckEndpoint => '$authBaseUrl/api/auth/signup/check';
+
   String get emailVerifyEndpoint => '$authBaseUrl/api/auth/email/verify';
 
   String get emailVerifyResendEndpoint =>

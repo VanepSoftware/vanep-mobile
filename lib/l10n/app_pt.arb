@@ -99,6 +99,7 @@
   "accountIssueBasePriceNotPositive": "O valor base deve ser maior que zero.",
   "accountIssueEmailDuplicate": "Já existe uma conta com este e-mail.",
   "accountIssueDocumentDuplicate": "Já existe uma conta com este CPF.",
+  "accountIssuePhoneDuplicate": "Já existe uma conta com este telefone.",
   "accountIssueRejected": "Confira este campo.",
   "accountErrorCheckFields": "Confira os campos destacados.",
   "accountErrorInvalidCode": "Código inválido ou expirado.",

@@ -50,6 +50,46 @@ void main() {
     );
   });
 
+  test('checkSignupDuplicates maps every duplicated field', () async {
+    final options = RequestOptions(path: '/api/auth/signup/check');
+    when(
+      () => remote.checkSignupDuplicates(
+        email: any(named: 'email'),
+        document: any(named: 'document'),
+        phone: any(named: 'phone'),
+      ),
+    ).thenThrow(
+      DioException(
+        requestOptions: options,
+        response: Response<Object?>(
+          requestOptions: options,
+          statusCode: 409,
+          data: {
+            'code': 'document_duplicate',
+            'message': 'x',
+            'errors': [
+              {'field': 'document', 'message': 'x'},
+              {'field': 'phone', 'message': 'x'},
+            ],
+          },
+        ),
+      ),
+    );
+
+    final result = await repository.checkSignupDuplicates(
+      document: '52998224725',
+      phone: '11999990000',
+    );
+
+    expect(
+      result.errorOrNull,
+      const AccountValidationFailure({
+        AccountField.document: AccountFieldIssue.duplicate,
+        AccountField.phone: AccountFieldIssue.duplicate,
+      }),
+    );
+  });
+
   test('verifyEmail maps invalid_code', () async {
     final options = RequestOptions(path: '/api/auth/email/verify');
     when(

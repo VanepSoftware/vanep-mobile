@@ -58,6 +58,8 @@ String accountFieldIssueMessage(
     (_, AccountFieldIssue.notPositive) => l10n.accountIssueBasePriceNotPositive,
     (AccountField.document, AccountFieldIssue.duplicate) =>
       l10n.accountIssueDocumentDuplicate,
+    (AccountField.phone, AccountFieldIssue.duplicate) =>
+      l10n.accountIssuePhoneDuplicate,
     (_, AccountFieldIssue.duplicate) => l10n.accountIssueEmailDuplicate,
     (_, AccountFieldIssue.rejected) => l10n.accountIssueRejected,
   };
