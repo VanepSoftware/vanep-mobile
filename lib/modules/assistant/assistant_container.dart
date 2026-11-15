@@ -5,7 +5,13 @@ import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/assistant_home_scenario.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_absences_datasource.dart';
+import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_van_detail_datasource.dart';
+import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_van_detail_repository_impl.dart';
+import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_van_detail_repository.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/find_assistant_van_detail.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/leave_assistant_van.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/respond_to_assistant_invite.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_detail_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_absences_repository_impl.dart';
 import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_absences_repository.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/find_assistant_absences.dart';
@@ -37,6 +43,8 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invi
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_students_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_vans_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/find_assistant_former_links.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_former_links_cubit.dart';
 
 AssistantRouteDataSource assistantRouteDataSourceFor(String scenarioName) {
   return MockedAssistantRouteDataSource(
@@ -80,6 +88,13 @@ void registerAssistantDependencies(GetIt getIt) {
     )
     ..registerFactory<FindAssistantVans>(
       () => FindAssistantVans(getIt<AssistantVansRepository>()),
+    )
+    ..registerFactory<AssistantFormerLinksCubit>(
+      () => AssistantFormerLinksCubit(
+        findFormerLinks: FindAssistantFormerLinks(
+          getIt<AssistantVansRepository>(),
+        ),
+      ),
     )
     ..registerFactory<AssistantVansCubit>(
       () => AssistantVansCubit(
@@ -140,6 +155,24 @@ void registerAssistantDependencies(GetIt getIt) {
     ..registerFactory<AssistantAbsencesCubit>(
       () => AssistantAbsencesCubit(
         findAssistantAbsences: getIt<FindAssistantAbsences>(),
+      ),
+    )
+    ..registerSingleton<AssistantVanDetailDataSource>(
+      const MockedAssistantVanDetailDataSource(),
+    )
+    ..registerSingleton<AssistantVanDetailRepository>(
+      AssistantVanDetailRepositoryImpl(
+        dataSource: getIt<AssistantVanDetailDataSource>(),
+      ),
+    )
+    ..registerFactory<AssistantVanDetailCubit>(
+      () => AssistantVanDetailCubit(
+        findVanDetail: FindAssistantVanDetail(
+          getIt<AssistantVanDetailRepository>(),
+        ),
+        leaveAssistantVan: LeaveAssistantVan(
+          getIt<AssistantVanDetailRepository>(),
+        ),
       ),
     )
     ..registerFactory<AssistantHomeCubit>(

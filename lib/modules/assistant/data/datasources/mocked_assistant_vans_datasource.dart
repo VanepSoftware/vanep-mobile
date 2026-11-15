@@ -1,9 +1,12 @@
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_invite.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_former_link.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 
 abstract class AssistantVansDataSource {
   Future<AssistantVansOverview> findVansOverview();
+
+  Future<List<AssistantFormerLink>> findFormerLinks();
 }
 
 // TODO(VAN-68): mocked vans, pending invite and former links from the
@@ -56,5 +59,24 @@ class MockedAssistantVansDataSource implements AssistantVansDataSource {
       ],
       formerVanCount: 1,
     );
+  }
+
+  @override
+  Future<List<AssistantFormerLink>> findFormerLinks() async {
+    final now = clock();
+    return [
+      AssistantFormerLink(
+        van: const AssistantVan(
+          token: 'mock-van-renata',
+          driverToken: 'mock-driver-renata',
+          driverName: 'Renata Alves',
+          plate: 'JKL3M45',
+          model: 'Master',
+          shift: 'MORNING',
+        ),
+        joinedAt: DateTime(now.year, 2, 3),
+        endedAt: DateTime(now.year, 7, 31),
+      ),
+    ];
   }
 }
