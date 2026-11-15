@@ -8,7 +8,6 @@ import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/media/media_container.dart';
 import 'package:vanep_mobile/core/places/places_container.dart';
-import 'package:vanep_mobile/core/phone/phone_container.dart';
 import 'package:vanep_mobile/core/share/share_container.dart';
 import 'package:vanep_mobile/modules/auth/auth_container.dart';
 import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource.dart';
@@ -53,7 +52,6 @@ Future<void> main() async {
   registerProfileDependencies(getIt);
   registerPlacesDependencies(getIt);
   registerShareDependencies(getIt);
-  registerPhoneDependencies(getIt);
   registerDriverServiceAreasDependencies(getIt);
   registerDriverSearchDependencies(getIt);
   registerIbgeLocationsDependencies(getIt);
