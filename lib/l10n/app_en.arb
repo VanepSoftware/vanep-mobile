@@ -2884,6 +2884,22 @@
       }
     }
   },
+  "assistantStopsSubtitle": "{driver} · {shift} · {stops}",
+  "@assistantStopsSubtitle": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "shift": {
+        "type": "String"
+      },
+      "stops": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantStopsOutbound": "Outbound",
+  "assistantStopsReturn": "Return",
   "assistantStopsNoShow": "{name} {reason}",
   "@assistantStopsNoShow": {
     "placeholders": {
@@ -2911,6 +2927,7 @@
       }
     }
   },
+  "assistantStopsOrderByDriver": "Stop order set by the driver.",
   "assistantSkipReasonTitleBoarding": "Why didn't they board?",
   "assistantSkipReasonTitleDropOff": "Why didn't they get off?",
   "assistantSkipReasonOtherLabel": "Describe the reason",
