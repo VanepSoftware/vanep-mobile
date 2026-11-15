@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/proposal_child.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 
 const filterButtonVisibleAvatars = 2;
 
@@ -15,8 +15,8 @@ class ChildFilterButton extends StatelessWidget {
     super.key,
   });
 
-  final List<ProposalChild> children;
-  final ProposalChild? selectedChild;
+  final List<Dependent> children;
+  final Dependent? selectedChild;
   final VoidCallback onTap;
 
   @override

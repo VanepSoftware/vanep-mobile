@@ -7,6 +7,7 @@ import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposals.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 
 Future<void> showChildFilterSheet(
   BuildContext context, {
@@ -191,42 +192,12 @@ class ChildFilterOption extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                ChildFilterRadio(isSelected: isSelected),
+                ProposalChoiceRadio(isSelected: isSelected),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class ChildFilterRadio extends StatelessWidget {
-  const ChildFilterRadio({required this.isSelected, super.key});
-
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 22,
-      height: 22,
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: isSelected ? VanepColors.action : VanepColors.textMuted,
-          width: 2,
-        ),
-      ),
-      child: isSelected
-          ? const DecoratedBox(
-              decoration: BoxDecoration(
-                color: VanepColors.action,
-                shape: BoxShape.circle,
-              ),
-            )
-          : null,
     );
   }
 }

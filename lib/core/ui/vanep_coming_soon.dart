@@ -4,7 +4,11 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
 class VanepComingSoon extends StatelessWidget {
-  const VanepComingSoon({required this.title, required this.message, super.key});
+  const VanepComingSoon({
+    required this.title,
+    required this.message,
+    super.key,
+  });
 
   final String title;
   final String message;

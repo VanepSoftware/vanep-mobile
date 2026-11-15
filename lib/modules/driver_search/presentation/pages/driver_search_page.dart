@@ -18,12 +18,15 @@ class DriverSearchPage extends StatefulWidget {
   const DriverSearchPage({
     required this.autocomplete,
     this.onDriverSelected,
+    this.onQuoteRequested,
     super.key,
   });
 
   final PlaceAutocompleteController autocomplete;
 
   final ValueChanged<String>? onDriverSelected;
+
+  final ValueChanged<String>? onQuoteRequested;
 
   @override
   State<DriverSearchPage> createState() => DriverSearchPageState();
@@ -108,6 +111,16 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                       widget.onDriverSelected,
                       driver.token,
                     ),
+                    basePriceCents: switch (driver.basePrice) {
+                      final price? => (price * 100).round(),
+                      null => null,
+                    },
+                    onQuoteRequested: driver.available
+                        ? selectDriverCallback(
+                            widget.onQuoteRequested,
+                            driver.token,
+                          )
+                        : null,
                   ),
                 ),
               if (state.status == DriverSearchStatus.loadingMore)

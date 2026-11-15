@@ -10,11 +10,13 @@ class ConversationInputBar extends StatefulWidget {
   const ConversationInputBar({
     required this.isSending,
     required this.onSend,
+    this.leading,
     super.key,
   });
 
   final bool isSending;
   final Future<bool> Function(String body) onSend;
+  final Widget? leading;
 
   @override
   State<ConversationInputBar> createState() => ConversationInputBarState();
@@ -37,6 +39,7 @@ class ConversationInputBarState extends State<ConversationInputBar> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final leading = widget.leading;
 
     return SafeArea(
       top: false,
@@ -45,6 +48,7 @@ class ConversationInputBarState extends State<ConversationInputBar> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            ?leading,
             Expanded(
               child: TextField(
                 controller: controller,

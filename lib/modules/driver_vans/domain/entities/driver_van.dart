@@ -16,4 +16,6 @@ abstract class DriverVan {
   String? get photoFrontUrl;
 
   String? get photoSideUrl;
+
+  bool get active;
 }

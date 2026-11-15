@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/ui/vanep_intro_frame.dart';
 import 'package:vanep_mobile/core/ui/vanep_logo.dart';
 import 'package:vanep_mobile/core/ui/vanep_logo_glyphs.dart';
 
@@ -34,15 +35,55 @@ void main() {
     expect(size.height, closeTo(200 * vanepLogoHeight / vanepLogoWidth, 0.01));
   });
 
-  test('repaints only when the colour changes', () {
-    final painter = VanepLogoPainter(color: VanepColors.onBrand);
+  testWidgets('paints letters that are still hidden without failing', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      localizedHarness(
+        Center(
+          child: VanepLogo(
+            width: 200,
+            letterReveals: VanepIntroFrame.at(0.2).letterReveals,
+          ),
+        ),
+      ),
+    );
+
+    expect(logoCanvas(), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  test('repaints only when the colour or the reveal changes', () {
+    final painter = VanepLogoPainter(
+      color: VanepColors.onBrand,
+      letterReveals: vanepLogoFullyRevealed,
+    );
 
     expect(
-      painter.shouldRepaint(VanepLogoPainter(color: VanepColors.onBrand)),
+      painter.shouldRepaint(
+        VanepLogoPainter(
+          color: VanepColors.onBrand,
+          letterReveals: vanepLogoFullyRevealed,
+        ),
+      ),
       isFalse,
     );
     expect(
-      painter.shouldRepaint(VanepLogoPainter(color: VanepColors.textPrimary)),
+      painter.shouldRepaint(
+        VanepLogoPainter(
+          color: VanepColors.textPrimary,
+          letterReveals: vanepLogoFullyRevealed,
+        ),
+      ),
+      isTrue,
+    );
+    expect(
+      painter.shouldRepaint(
+        VanepLogoPainter(
+          color: VanepColors.onBrand,
+          letterReveals: VanepIntroFrame.at(0.2).letterReveals,
+        ),
+      ),
       isTrue,
     );
   });

@@ -90,11 +90,21 @@ void main() {
       expect(overview.today, isNull);
     });
 
-    test('negotiating has the section and a new proposal', () async {
+    test('negotiating leaves the negotiations to the API', () async {
       final overview = await overviewFor(ClientHomeScenario.negotiating);
 
-      expect(overview.today, isA<NegotiatingSection>());
-      expect(overview.needsYou.whereType<NewProposalItem>(), isNotEmpty);
+      expect(overview.today, isNull);
+      expect(overview.needsYou, isEmpty);
+    });
+
+    test('no scenario mocks a negotiation anymore', () async {
+      for (final scenario in ClientHomeScenario.values) {
+        final overview = await overviewFor(scenario);
+
+        expect(overview.today, isNot(isA<NegotiatingSection>()));
+        expect(overview.needsYou.whereType<NewProposalItem>(), isEmpty);
+        expect(overview.needsYou.whereType<ExpiredRequestItem>(), isEmpty);
+      }
     });
 
     test('everything at once has a live van and a contract to sign', () async {

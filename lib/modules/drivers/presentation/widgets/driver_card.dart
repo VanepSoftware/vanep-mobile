@@ -3,8 +3,10 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
 
@@ -13,6 +15,8 @@ class DriverCard extends StatelessWidget {
     required this.driver,
     this.onTap,
     this.coverage = const [],
+    this.basePriceCents,
+    this.onQuoteRequested,
     super.key,
   });
 
@@ -21,45 +25,86 @@ class DriverCard extends StatelessWidget {
 
   final List<String> coverage;
 
+  final int? basePriceCents;
+
+  final VoidCallback? onQuoteRequested;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    final basePriceCents = this.basePriceCents;
+    final onQuoteRequested = this.onQuoteRequested;
+    final summary = Row(
+      children: [
+        VanepAvatar(photoUrl: driver.photoUrl),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(driver.name, style: VanepTypography.cardTitle),
+              if (coverage.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  formatDriverCoverage(coverage),
+                  style: VanepTypography.cardSubtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              if (driver.experienceYears != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  l10n.driverExperienceYears(driver.experienceYears!),
+                  style: VanepTypography.cardSubtitle,
+                ),
+              ],
+              const SizedBox(height: 6),
+              DriverRatingRow(rating: driver.rating, city: driver.city),
+            ],
+          ),
+        ),
+        const Icon(Icons.chevron_right, color: VanepColors.textMuted),
+      ],
+    );
+
     return VanepCard(
       onTap: onTap,
-      child: Row(
-        children: [
-          VanepAvatar(photoUrl: driver.photoUrl),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: basePriceCents == null && onQuoteRequested == null
+          ? summary
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(driver.name, style: VanepTypography.cardTitle),
-                if (coverage.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    formatDriverCoverage(coverage),
-                    style: VanepTypography.cardSubtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-                if (driver.experienceYears != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    l10n.driverExperienceYears(driver.experienceYears!),
-                    style: VanepTypography.cardSubtitle,
-                  ),
-                ],
-                const SizedBox(height: 6),
-                DriverRatingRow(rating: driver.rating, city: driver.city),
+                summary,
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: basePriceCents == null
+                          ? const SizedBox.shrink()
+                          : Text(
+                              l10n.driverBasePriceFrom(
+                                formatMoney(l10n, basePriceCents),
+                              ),
+                              style: VanepTypography.cardSubtitle.copyWith(
+                                color: VanepColors.textPrimary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                    ),
+                    if (onQuoteRequested != null)
+                      SizedBox(
+                        width: 168,
+                        child: VanepSecondaryButton(
+                          label: l10n.driverRequestQuoteButton,
+                          onPressed: onQuoteRequested,
+                        ),
+                      ),
+                  ],
+                ),
               ],
             ),
-          ),
-          const Icon(Icons.chevron_right, color: VanepColors.textMuted),
-        ],
-      ),
     );
   }
 }
