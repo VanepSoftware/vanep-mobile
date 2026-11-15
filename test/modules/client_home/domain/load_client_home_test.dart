@@ -10,6 +10,7 @@ import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_enabled
 import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_home_headline.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_section_without_van.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
+import 'package:vanep_mobile/modules/client_home/domain/value_objects/negotiation_highlights.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
@@ -52,7 +53,9 @@ void main() {
       addressReturns(null);
       dependentsReturn(const []);
 
-      final result = await buildUseCase()();
+      final result = await buildUseCase()(
+        highlights: NegotiationHighlights.none,
+      );
 
       expect(
         result.valueOrNull,
@@ -64,7 +67,9 @@ void main() {
       addressReturns(fakePersonalAddress());
       dependentsReturn(const []);
 
-      final result = await buildUseCase()();
+      final result = await buildUseCase()(
+        highlights: NegotiationHighlights.none,
+      );
 
       expect(
         result.valueOrNull,
@@ -76,9 +81,42 @@ void main() {
       addressReturns(fakePersonalAddress());
       dependentsReturn([testHelenaDependent]);
 
-      final result = await buildUseCase()();
+      final result = await buildUseCase()(
+        highlights: NegotiationHighlights.none,
+      );
 
       expect(result.valueOrNull, const NoLinkedVanSection());
+    });
+
+    test('open negotiations show how many there are and for whom', () async {
+      addressReturns(fakePersonalAddress());
+      dependentsReturn([testHelenaDependent]);
+
+      final result = await buildUseCase()(
+        highlights: const NegotiationHighlights(
+          openCount: 3,
+          childNames: ['Ana Souza', 'Pedro Souza'],
+        ),
+      );
+
+      expect(
+        result.valueOrNull,
+        const NegotiatingSection(
+          childNames: ['Ana Souza', 'Pedro Souza'],
+          openNegotiations: 3,
+        ),
+      );
+    });
+
+    test('the first steps come before the negotiations', () async {
+      addressReturns(null);
+      dependentsReturn([testHelenaDependent]);
+
+      final result = await buildUseCase()(
+        highlights: const NegotiationHighlights(openCount: 1),
+      );
+
+      expect(result.valueOrNull, isA<FirstStepsSection>());
     });
 
     test('a network failure on the address is a network failure', () async {
@@ -89,7 +127,9 @@ void main() {
       );
       dependentsReturn(const []);
 
-      final result = await buildUseCase()();
+      final result = await buildUseCase()(
+        highlights: NegotiationHighlights.none,
+      );
 
       expect(result.errorOrNull, ClientHomeFailure.network);
     });
@@ -102,7 +142,9 @@ void main() {
         ),
       );
 
-      final result = await buildUseCase()();
+      final result = await buildUseCase()(
+        highlights: NegotiationHighlights.none,
+      );
 
       expect(result.errorOrNull, ClientHomeFailure.unexpected);
     });
@@ -111,15 +153,22 @@ void main() {
   group('LoadClientHome', () {
     late MockClientHomeRepository repository;
     late MockResolveSectionWithoutVan resolveSectionWithoutVan;
+    late MockFindNegotiationHighlights findNegotiationHighlights;
+
+    setUpAll(() => registerFallbackValue(NegotiationHighlights.none));
 
     setUp(() {
       repository = MockClientHomeRepository();
       resolveSectionWithoutVan = MockResolveSectionWithoutVan();
+      findNegotiationHighlights = MockFindNegotiationHighlights();
+      when(findNegotiationHighlights.call)
+          .thenAnswer((_) async => NegotiationHighlights.none);
     });
 
     LoadClientHome buildUseCase() => LoadClientHome(
       repository: repository,
       resolveSectionWithoutVan: resolveSectionWithoutVan,
+      findNegotiationHighlights: findNegotiationHighlights,
       prioritizeNeedsYouItems: const PrioritizeNeedsYouItems(),
       resolveEnabledShortcuts: const ResolveEnabledShortcuts(),
       resolveHomeHeadline: const ResolveHomeHeadline(),
@@ -147,16 +196,19 @@ void main() {
       expect(home.enabledShortcuts, HomeShortcut.values.toSet());
       expect(home.needsYou.visible, [testOctoberFeeAwaitingConfirmation]);
       expect(home.date, testWednesdayMorning);
-      verifyNever(resolveSectionWithoutVan.call);
+      verifyNever(
+        () => resolveSectionWithoutVan(highlights: any(named: 'highlights')),
+      );
     });
 
     test('without a section it resolves first steps from real data', () async {
       overviewReturns(const DailyOverview());
-      when(resolveSectionWithoutVan.call).thenAnswer(
-        (_) async => const Ok<ClientHomeFailure, TodaySection>(
-          FirstStepsSection(hasAddress: false, hasDependents: false),
-        ),
-      );
+      when(() => resolveSectionWithoutVan(highlights: any(named: 'highlights')))
+          .thenAnswer(
+            (_) async => const Ok<ClientHomeFailure, TodaySection>(
+              FirstStepsSection(hasAddress: false, hasDependents: false),
+            ),
+          );
 
       final home = (await buildUseCase()()).valueOrNull!;
 
@@ -184,6 +236,45 @@ void main() {
       expect(home.needsYou.hiddenCount, 1);
     });
 
+    test('the real negotiation items join the ones of the scenario', () async {
+      overviewReturns(
+        DailyOverview(
+          today: testNoRouteTodaySection,
+          needsYou: [testRateCarlos, testAnaMonthlyFee, testContractToSign],
+        ),
+      );
+      when(findNegotiationHighlights.call).thenAnswer(
+        (_) async => NegotiationHighlights(
+          newProposals: [testCarlosProposal],
+          expiredRequests: const [testExpiredRequest],
+        ),
+      );
+
+      final home = (await buildUseCase()()).valueOrNull!;
+
+      expect(home.needsYou.visible, [
+        testContractToSign,
+        testCarlosProposal,
+        testExpiredRequest,
+      ]);
+      expect(home.needsYou.hiddenCount, 2);
+    });
+
+    test('the section without a van counts the real negotiations', () async {
+      const highlights = NegotiationHighlights(openCount: 2);
+      overviewReturns(const DailyOverview());
+      when(findNegotiationHighlights.call).thenAnswer((_) async => highlights);
+      when(() => resolveSectionWithoutVan(highlights: highlights)).thenAnswer(
+        (_) async => const Ok<ClientHomeFailure, TodaySection>(
+          NegotiatingSection(childNames: ['Ana'], openNegotiations: 2),
+        ),
+      );
+
+      final home = (await buildUseCase()()).valueOrNull!;
+
+      expect(home.today, isA<NegotiatingSection>());
+    });
+
     test('an overview failure is returned as is', () async {
       when(repository.findDailyOverview).thenAnswer(
         (_) async => const Err<ClientHomeFailure, DailyOverview>(
@@ -198,11 +289,12 @@ void main() {
 
     test('a failure resolving the section is returned as is', () async {
       overviewReturns(const DailyOverview());
-      when(resolveSectionWithoutVan.call).thenAnswer(
-        (_) async => const Err<ClientHomeFailure, TodaySection>(
-          ClientHomeFailure.unexpected,
-        ),
-      );
+      when(() => resolveSectionWithoutVan(highlights: any(named: 'highlights')))
+          .thenAnswer(
+            (_) async => const Err<ClientHomeFailure, TodaySection>(
+              ClientHomeFailure.unexpected,
+            ),
+          );
 
       final result = await buildUseCase()();
 

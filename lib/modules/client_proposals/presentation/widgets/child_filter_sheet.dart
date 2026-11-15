@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposals.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
+import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> showChildFilterSheet(
   BuildContext context, {
@@ -17,7 +18,7 @@ Future<void> showChildFilterSheet(
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: VanepColors.card,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -90,7 +91,7 @@ class ChildFilterSheet extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: VanepColors.inputBorder,
+                    color: context.palette.inputBorder,
                     borderRadius: BorderRadius.circular(999),
                   ),
                 ),
@@ -101,10 +102,10 @@ class ChildFilterSheet extends StatelessWidget {
                   Expanded(
                     child: Text(
                       l10n.clientProposalsFilterSheetTitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: VanepColors.textPrimary,
+                        color: context.palette.textPrimary,
                       ),
                     ),
                   ),
@@ -172,61 +173,31 @@ class ChildFilterOption extends StatelessWidget {
                       Text.rich(
                         TextSpan(
                           text: title,
-                          style: VanepTypography.cardTitle.copyWith(
+                          style: context.typography.cardTitle.copyWith(
                             fontSize: 15,
                           ),
                           children: [
                             if (titleDetail != null)
                               TextSpan(
                                 text: ' · $titleDetail',
-                                style: VanepTypography.cardSubtitle.copyWith(
+                                style: context.typography.cardSubtitle.copyWith(
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                           ],
                         ),
                       ),
-                      Text(subtitle, style: VanepTypography.cardSubtitle),
+                      Text(subtitle, style: context.typography.cardSubtitle),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
-                ChildFilterRadio(isSelected: isSelected),
+                ProposalChoiceRadio(isSelected: isSelected),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class ChildFilterRadio extends StatelessWidget {
-  const ChildFilterRadio({required this.isSelected, super.key});
-
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 22,
-      height: 22,
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: isSelected ? VanepColors.action : VanepColors.textMuted,
-          width: 2,
-        ),
-      ),
-      child: isSelected
-          ? const DecoratedBox(
-              decoration: BoxDecoration(
-                color: VanepColors.action,
-                shape: BoxShape.circle,
-              ),
-            )
-          : null,
     );
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepSearchField extends StatefulWidget {
   const VanepSearchField({
@@ -29,31 +28,28 @@ class VanepSearchFieldState extends State<VanepSearchField> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
+    final typography = context.typography;
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-      borderSide: const BorderSide(color: VanepColors.cardBorder),
+      borderSide: BorderSide(color: palette.cardBorder),
     );
 
     return TextField(
       controller: controller,
       onChanged: widget.onChanged,
       textInputAction: TextInputAction.search,
-      style: VanepTypography.fieldValue,
+      style: typography.fieldValue,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: VanepTypography.fieldValue.copyWith(
-          color: VanepColors.textMuted,
-        ),
-        prefixIcon: const Icon(
-          Icons.search_rounded,
-          color: VanepColors.textSecondary,
-        ),
+        hintStyle: typography.fieldValue.copyWith(color: palette.textMuted),
+        prefixIcon: Icon(Icons.search_rounded, color: palette.textSecondary),
         filled: true,
-        fillColor: VanepColors.card,
+        fillColor: palette.card,
         contentPadding: const EdgeInsets.symmetric(vertical: 14),
         enabledBorder: border,
         focusedBorder: border.copyWith(
-          borderSide: const BorderSide(color: VanepColors.action),
+          borderSide: BorderSide(color: palette.action),
         ),
       ),
     );

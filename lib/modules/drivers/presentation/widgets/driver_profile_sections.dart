@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_cover_background.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_slot.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/formatters/driver_profile_formatters.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverProfileHeader extends StatelessWidget {
   const DriverProfileHeader({required this.profile, super.key});
@@ -31,7 +31,7 @@ class DriverProfileHeader extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: onCover
-                      ? Border.all(color: VanepColors.card, width: 3)
+                      ? Border.all(color: VanepColors.onBrand, width: 3)
                       : null,
                 ),
                 child: VanepAvatar(photoUrl: profile.photoUrl, size: 96),
@@ -40,8 +40,10 @@ class DriverProfileHeader extends StatelessWidget {
               Text(
                 profile.name,
                 style: onCover
-                    ? VanepTypography.heading.copyWith(color: VanepColors.card)
-                    : VanepTypography.heading,
+                    ? context.typography.heading.copyWith(
+                        color: VanepColors.onBrand,
+                      )
+                    : context.typography.heading,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -68,7 +70,7 @@ class DriverProfileHighlights extends StatelessWidget {
         if (experienceYears != null)
           Text(
             l10n.driverProfileExperience(experienceYears),
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
         if (rating != null) ...[
           const SizedBox(height: 4),
@@ -79,7 +81,7 @@ class DriverProfileHighlights extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 l10n.driverProfileRating(rating.toStringAsFixed(1)),
-                style: VanepTypography.ratingLabel.copyWith(
+                style: context.typography.ratingLabel.copyWith(
                   color: VanepColors.ratingStar,
                 ),
               ),
@@ -108,9 +110,9 @@ class DriverProfileInfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: VanepColors.textSecondary),
+          Icon(icon, size: 18, color: context.palette.textSecondary),
           const SizedBox(width: 10),
-          Expanded(child: Text(text, style: VanepTypography.body)),
+          Expanded(child: Text(text, style: context.typography.body)),
         ],
       ),
     );
@@ -131,16 +133,19 @@ class DriverProfileVehicleSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(formatVanTitle(l10n, vehicle), style: VanepTypography.cardTitle),
+          Text(
+            formatVanTitle(l10n, vehicle),
+            style: context.typography.cardTitle,
+          ),
           const SizedBox(height: 4),
           Text(
             formatVanDetails(l10n, vehicle),
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           const SizedBox(height: 12),
           Text(
             l10n.driverProfileVanPhotos,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           const SizedBox(height: 8),
           Row(

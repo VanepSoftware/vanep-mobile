@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepChoice<T> {
   const VanepChoice({required this.value, required this.label});
@@ -57,16 +56,18 @@ class VanepChoiceChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
+
     return Semantics(
       button: true,
       selected: isSelected,
       label: label,
       excludeSemantics: true,
       child: Material(
-        color: isSelected ? VanepColors.textPrimary : VanepColors.card,
+        color: isSelected ? palette.textPrimary : palette.card,
         shape: StadiumBorder(
           side: BorderSide(
-            color: isSelected ? VanepColors.textPrimary : VanepColors.cardBorder,
+            color: isSelected ? palette.textPrimary : palette.cardBorder,
           ),
         ),
         clipBehavior: Clip.antiAlias,
@@ -80,10 +81,8 @@ class VanepChoiceChip extends StatelessWidget {
                 widthFactor: 1,
                 child: Text(
                   label,
-                  style: VanepTypography.ratingLabel.copyWith(
-                    color: isSelected
-                        ? VanepColors.onBrand
-                        : VanepColors.textPrimary,
+                  style: context.typography.ratingLabel.copyWith(
+                    color: isSelected ? palette.card : palette.textPrimary,
                   ),
                 ),
               ),

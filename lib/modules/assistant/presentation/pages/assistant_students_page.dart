@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_choice_chips.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
@@ -33,7 +32,7 @@ class AssistantStudentsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       body: SafeArea(
         child: BlocBuilder<AssistantStudentsCubit, AssistantStudentsState>(
           builder: (context, state) => AssistantStudentsBody(state: state),
@@ -58,7 +57,7 @@ class AssistantStudentsBody extends StatelessWidget {
     return ListView(
       padding: assistantStudentsPagePadding,
       children: [
-        Text(l10n.assistantStudentsTitle, style: VanepTypography.pageTitle),
+        Text(l10n.assistantStudentsTitle, style: context.typography.pageTitle),
         const SizedBox(height: 4),
         if (roster != null)
           Text(
@@ -67,7 +66,7 @@ class AssistantStudentsBody extends StatelessWidget {
               assistantVansShiftLabel(l10n, roster.van.shift),
               roster.students.length,
             ),
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
         const SizedBox(height: 20),
         switch (state.status) {
@@ -80,7 +79,7 @@ class AssistantStudentsBody extends StatelessWidget {
           AssistantStudentsStatus.ready when roster == null => Text(
             l10n.assistantVansEmpty,
             textAlign: TextAlign.center,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           AssistantStudentsStatus.ready => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,23 +112,23 @@ class AssistantStudentsBody extends StatelessWidget {
                         ? l10n.assistantStudentsEmpty
                         : l10n.assistantStudentsNoResults,
                     textAlign: TextAlign.center,
-                    style: VanepTypography.cardSubtitle,
+                    style: context.typography.cardSubtitle,
                   ),
                 )
               else
                 Container(
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
-                    color: VanepColors.card,
+                    color: context.palette.card,
                     borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-                    border: Border.all(color: VanepColors.cardBorder),
+                    border: Border.all(color: context.palette.cardBorder),
                   ),
                   child: Column(
                     children: [
                       for (final (index, student)
                           in state.visibleStudents.indexed) ...[
                         if (index > 0)
-                          const Divider(height: 1, color: VanepColors.divider),
+                          Divider(height: 1, color: context.palette.divider),
                         AssistantStudentRow(student: student),
                       ],
                     ],

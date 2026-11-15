@@ -224,4 +224,93 @@ void main() {
       );
     });
   });
+
+  group('document and school', () {
+    const pedro = TestDependent(
+      token: 'dep-pedro',
+      name: 'Pedro Oliveira',
+      document: '52998224725',
+      school: TestDependentSchool(),
+    );
+
+    test('fromDependent copies the document and the school token', () {
+      final draft = DependentDraft.fromDependent(pedro);
+
+      expect(draft.document, '52998224725');
+      expect(draft.schoolToken, 'school-delta');
+    });
+
+    test('a dependent without them starts with neither', () {
+      final draft = DependentDraft.fromDependent(testHelenaDependent);
+
+      expect(draft.document, isNull);
+      expect(draft.schoolToken, isNull);
+    });
+
+    test('an invalid CPF is rejected', () {
+      final errors = validateDependentDraft(
+        const DependentDraft(name: 'Pedro', document: '111.111.111-11'),
+        today: today,
+      );
+
+      expect(errors, {DependentField.document: DependentDraftError.documentInvalid});
+    });
+
+    test('an empty CPF is not an error', () {
+      final errors = validateDependentDraft(
+        const DependentDraft(name: 'Pedro', document: '  '),
+        today: today,
+      );
+
+      expect(errors, isEmpty);
+    });
+
+    test('a valid masked CPF is accepted', () {
+      final errors = validateDependentDraft(
+        const DependentDraft(name: 'Pedro', document: '529.982.247-25'),
+        today: today,
+      );
+
+      expect(errors, isEmpty);
+    });
+
+    test('an invalid CPF already saved is still rejected', () {
+      const lucas = TestDependent(
+        token: 'dep-lucas',
+        name: 'Lucas Souza',
+        document: '90000000001',
+      );
+
+      final errors = validateDependentDraft(
+        DependentDraft.fromDependent(lucas).withName('Lucas S. Souza'),
+        today: today,
+      );
+
+      expect(errors, {DependentField.document: DependentDraftError.documentInvalid});
+    });
+
+    test('withDocument and withSchoolToken replace only their field', () {
+      final draft = DependentDraft.fromDependent(pedro);
+
+      final withDocument = draft.withDocument('390.533.447-05');
+      final withSchool = draft.withSchoolToken('school-horizonte');
+
+      expect(withDocument.document, '390.533.447-05');
+      expect(withDocument.schoolToken, 'school-delta');
+      expect(withDocument.name, 'Pedro Oliveira');
+      expect(withSchool.schoolToken, 'school-horizonte');
+      expect(withSchool.document, '52998224725');
+    });
+
+    test('the other with methods keep the document and the school', () {
+      final draft = DependentDraft.fromDependent(pedro)
+          .withName('Pedro O.')
+          .withBirthDate('2015-01-01')
+          .withGender(Gender.male)
+          .withAddress(fakeCompleteDraft());
+
+      expect(draft.document, '52998224725');
+      expect(draft.schoolToken, 'school-delta');
+    });
+  });
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
-
-/// Matches [VanepColors.actionSurface] (`0x14` alpha) so the selected pill
+/// Matches [context.palette.actionSurface] (`0x14` alpha) so the selected pill
 /// keeps the same tint the cards and badges use.
 const double _selectedPillOpacity = 0.08;
 
@@ -57,15 +55,16 @@ class VanepBottomNav extends StatelessWidget {
         return SalomonBottomBar(
           currentIndex: currentIndex,
           onTap: onDestinationSelected,
-          backgroundColor: VanepColors.card,
-          selectedItemColor: VanepColors.action,
-          unselectedItemColor: VanepColors.textSecondary,
+          backgroundColor: context.palette.card,
+          selectedItemColor: context.palette.action,
+          unselectedItemColor: context.palette.textSecondary,
           selectedColorOpacity: _selectedPillOpacity,
           margin: _rowMargin,
           itemPadding: _itemPadding,
           items: [
             for (var index = 0; index < items.length; index++)
               navBarItem(
+                context,
                 items[index],
                 selected: index == currentIndex,
                 labelMaxWidth: labelMaxWidth,
@@ -96,6 +95,7 @@ double measureSelectedLabelMaxWidth({
 }
 
 SalomonBottomBarItem navBarItem(
+  BuildContext context,
   VanepNavItem item, {
   required bool selected,
   required double labelMaxWidth,
@@ -110,7 +110,7 @@ SalomonBottomBarItem navBarItem(
         constraints: BoxConstraints(maxWidth: labelMaxWidth),
         child: Text(
           item.label,
-          style: VanepTypography.button,
+          style: context.typography.button,
           maxLines: 1,
           softWrap: false,
           overflow: TextOverflow.ellipsis,

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
@@ -11,6 +9,7 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversati
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_state.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/formatters/conversation_labels.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/widgets/conversation_inbox_tile.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ConversationsInboxTab extends StatelessWidget {
   const ConversationsInboxTab({
@@ -35,7 +34,7 @@ class ConversationsInboxTab extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
             child: Text(
               l10n.conversationsInboxTitle,
-              style: VanepTypography.pageTitle,
+              style: context.typography.pageTitle,
             ),
           ),
           Expanded(
@@ -72,8 +71,8 @@ class ConversationsInboxBody extends StatelessWidget {
     final cubit = context.read<ConversationsInboxCubit>();
 
     if (state.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: VanepColors.action),
+      return Center(
+        child: CircularProgressIndicator(color: context.palette.action),
       );
     }
     if (state.hasLoadFailed) {
@@ -93,13 +92,13 @@ class ConversationsInboxBody extends StatelessWidget {
           child: Text(
             conversationsInboxEmptyLabel(l10n, viewerSide),
             textAlign: TextAlign.center,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
         ),
       );
     }
     return RefreshIndicator(
-      color: VanepColors.action,
+      color: context.palette.action,
       onRefresh: cubit.loadConversations,
       child: ListView.separated(
         physics: const AlwaysScrollableScrollPhysics(),

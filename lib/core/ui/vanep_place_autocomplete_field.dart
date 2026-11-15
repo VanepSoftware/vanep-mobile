@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class PlaceSelection {
   const PlaceSelection({required this.suggestion, required this.sessionToken});
@@ -109,11 +108,12 @@ class VanepPlaceAutocompleteFieldState
           enabled: widget.enabled,
           onChanged: onQueryChanged,
           textInputAction: TextInputAction.search,
-          style: VanepTypography.fieldValue.copyWith(
-            color: VanepColors.textPrimary,
+          style: context.typography.fieldValue.copyWith(
+            color: context.palette.textPrimary,
             fontSize: 15,
           ),
           decoration: vanepInputDecoration(
+            context,
             hintText: widget.hint,
             prefixIcon: Icons.search,
           ),
@@ -126,8 +126,8 @@ class VanepPlaceAutocompleteFieldState
                 Expanded(
                   child: Text(
                     message,
-                    style: VanepTypography.cardSubtitle.copyWith(
-                      color: VanepColors.textSecondary,
+                    style: context.typography.cardSubtitle.copyWith(
+                      color: context.palette.textSecondary,
                     ),
                   ),
                 ),
@@ -141,20 +141,23 @@ class VanepPlaceAutocompleteFieldState
         if (message == null && searched && suggestions.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: Text(widget.emptyLabel, style: VanepTypography.cardSubtitle),
+            child: Text(
+              widget.emptyLabel,
+              style: context.typography.cardSubtitle,
+            ),
           ),
         for (final suggestion in suggestions)
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(
               suggestion.primaryText,
-              style: VanepTypography.cardTitle,
+              style: context.typography.cardTitle,
             ),
             subtitle: suggestion.secondaryText.isEmpty
                 ? null
                 : Text(
                     suggestion.secondaryText,
-                    style: VanepTypography.cardSubtitle,
+                    style: context.typography.cardSubtitle,
                   ),
             onTap: () => selectSuggestion(suggestion),
           ),

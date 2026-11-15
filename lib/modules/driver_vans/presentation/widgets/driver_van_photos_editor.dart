@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_slot.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_source_sheet.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -10,6 +9,7 @@ import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_
 import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_target.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/formatters/driver_van_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverVanPhotosEditor extends StatelessWidget {
   const DriverVanPhotosEditor({required this.van, super.key});
@@ -23,11 +23,11 @@ class DriverVanPhotosEditor extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(driverVanTitle(l10n, van), style: VanepTypography.cardTitle),
+        Text(driverVanTitle(l10n, van), style: context.typography.cardTitle),
         const SizedBox(height: 4),
         Text(
           '${van.plate} · ${l10n.driverProfileVanCapacity(van.capacity)} · ${van.color}',
-          style: VanepTypography.cardSubtitle,
+          style: context.typography.cardSubtitle,
         ),
         const SizedBox(height: 12),
         Row(

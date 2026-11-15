@@ -1,0 +1,1 @@
+enum ContractReadinessFailure { network, unexpected }

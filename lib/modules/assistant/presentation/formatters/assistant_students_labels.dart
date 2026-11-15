@@ -1,20 +1,21 @@
 import 'package:flutter/painting.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_vans_labels.dart';
 
-const studentAvatarTones = [
-  (VanepColors.actionSurface, VanepColors.action),
-  (VanepColors.warningSurface, VanepColors.warning),
-  (VanepColors.successSurface, VanepColors.success),
-  (VanepColors.avatarPlaceholder, VanepColors.textSecondary),
+List<(Color, Color)> studentAvatarTonesOf(VanepPalette palette) => [
+  (palette.actionSurface, palette.action),
+  (palette.warningSurface, palette.warning),
+  (palette.successSurface, palette.success),
+  (palette.avatarPlaceholder, palette.textSecondary),
 ];
 
-(Color, Color) studentAvatarToneOf(String token) {
+(Color, Color) studentAvatarToneOf(VanepPalette palette, String token) {
+  final tones = studentAvatarTonesOf(palette);
   final hash = token.codeUnits.fold(0, (sum, unit) => sum + unit);
-  return studentAvatarTones[hash % studentAvatarTones.length];
+  return tones[hash % tones.length];
 }
 
 String assistantRosterTabLabel(AppLocalizations l10n, AssistantVan van) {

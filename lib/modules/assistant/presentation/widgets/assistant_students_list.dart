@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_students_overview.dart';
@@ -18,7 +17,10 @@ class AssistantStudentRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final (surface, accent) = studentAvatarToneOf(student.token);
+    final (surface, accent) = studentAvatarToneOf(
+      context.palette,
+      student.token,
+    );
     final stop = l10n.assistantStudentsStop(
       student.stopNumber,
       student.placeName,
@@ -52,13 +54,13 @@ class AssistantStudentRow extends StatelessWidget {
                   children: [
                     Text(
                       student.name,
-                      style: VanepTypography.cardTitle,
+                      style: context.typography.cardTitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       stop,
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -69,8 +71,8 @@ class AssistantStudentRow extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   l10n.assistantStudentsWithoutFamily,
-                  style: VanepTypography.ratingLabel.copyWith(
-                    color: VanepColors.textMuted,
+                  style: context.typography.ratingLabel.copyWith(
+                    color: context.palette.textMuted,
                   ),
                 ),
               ],
@@ -78,8 +80,8 @@ class AssistantStudentRow extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   l10n.assistantStudentsAbsentToday,
-                  style: VanepTypography.ratingLabel.copyWith(
-                    color: VanepColors.warning,
+                  style: context.typography.ratingLabel.copyWith(
+                    color: context.palette.warning,
                   ),
                 ),
               ],
