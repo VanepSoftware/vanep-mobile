@@ -1,3 +1,7 @@
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_state.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_students_list_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_today_route_page.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +27,9 @@ import '../modules/profile/profile_mocks.dart';
 class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
     implements AssistantVanSelectorCubit {}
 
+class MockAssistantChecklistCubit extends MockCubit<AssistantChecklistState>
+    implements AssistantChecklistCubit {}
+
 const tVan1 = AssistantVan(
   token: 'van-1',
   driverToken: 'driver-1',
@@ -43,6 +50,7 @@ const tVan2 = AssistantVan(
 
 Widget buildTestHarness({
   required AssistantVanSelectorCubit vanSelectorCubit,
+  required AssistantChecklistCubit checklistCubit,
   required AuthCubit authCubit,
   required ProfileSummaryCubit profileSummaryCubit,
 }) {
@@ -59,6 +67,7 @@ Widget buildTestHarness({
       providers: [
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<AssistantVanSelectorCubit>.value(value: vanSelectorCubit),
+        BlocProvider<AssistantChecklistCubit>.value(value: checklistCubit),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
       ],
       child: const AssistantShell(
@@ -74,11 +83,19 @@ Widget buildTestHarness({
 void main() {
   late MockAssistantVanSelectorCubit vanSelectorCubit;
   late MockAuthCubit authCubit;
+  late MockAssistantChecklistCubit checklistCubit;
   late MockProfileSummaryCubit profileSummaryCubit;
 
   setUp(() {
     vanSelectorCubit = MockAssistantVanSelectorCubit();
     authCubit = MockAuthCubit();
+    checklistCubit = MockAssistantChecklistCubit();
+    whenListen(
+      checklistCubit,
+      const Stream<AssistantChecklistState>.empty(),
+      initialState: const AssistantChecklistState(),
+    );
+    when(() => checklistCubit.loadRoute(any())).thenAnswer((_) async {});
     profileSummaryCubit = MockProfileSummaryCubit();
 
     whenListen(
@@ -105,12 +122,13 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
+        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
     );
 
-    expect(find.text('Rota'), findsNWidgets(2));
+    expect(find.byType(AssistantTodayRoutePage), findsOneWidget);
 
     final nav = tester.widget<VanepBottomNav>(find.byType(VanepBottomNav));
     expect([
@@ -131,6 +149,7 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
+        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
@@ -139,7 +158,7 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Alunos'));
     await tester.pump();
 
-    expect(find.text('Alunos'), findsNWidgets(2));
+    expect(find.byType(AssistantStudentsListPage), findsOneWidget);
 
     await tester.tap(find.bySemanticsLabel('Meu perfil'));
     await tester.pump();
@@ -159,6 +178,7 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
+        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
@@ -179,6 +199,7 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
+        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
@@ -202,6 +223,7 @@ void main() {
       await tester.pumpWidget(
         buildTestHarness(
           vanSelectorCubit: vanSelectorCubit,
+          checklistCubit: checklistCubit,
           authCubit: authCubit,
           profileSummaryCubit: profileSummaryCubit,
         ),
@@ -228,6 +250,7 @@ void main() {
       await tester.pumpWidget(
         buildTestHarness(
           vanSelectorCubit: vanSelectorCubit,
+          checklistCubit: checklistCubit,
           authCubit: authCubit,
           profileSummaryCubit: profileSummaryCubit,
         ),
@@ -258,6 +281,7 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
+        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
@@ -281,6 +305,7 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
+        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),

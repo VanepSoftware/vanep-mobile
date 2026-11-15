@@ -56,6 +56,7 @@ import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_van_registration_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/assistant_shell.dart';
@@ -205,6 +206,9 @@ class AuthGate extends StatelessWidget {
               providers: [
                 BlocProvider<AssistantVanSelectorCubit>(
                   create: (_) => getIt<AssistantVanSelectorCubit>()..loadVans(),
+                ),
+                BlocProvider<AssistantChecklistCubit>(
+                  create: (_) => getIt<AssistantChecklistCubit>(),
                 ),
                 BlocProvider<ProfileSummaryCubit>(
                   create: (_) => getIt<ProfileSummaryCubit>(),

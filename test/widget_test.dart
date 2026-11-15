@@ -34,6 +34,8 @@ import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_state.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
@@ -84,6 +86,9 @@ class MockPlaceAutocompleteDataSource extends Mock
 
 class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
     implements AssistantVanSelectorCubit {}
+
+class MockAssistantChecklistCubit extends MockCubit<AssistantChecklistState>
+    implements AssistantChecklistCubit {}
 
 void registerVanCentralCubit() {
   final vanCentralCubit = MockVanCentralCubit();
@@ -252,6 +257,12 @@ void main() {
       initialState: const AssistantVanSelectorState(),
     );
     when(() => assistantCubit.loadVans()).thenAnswer((_) async {});
+    final checklistCubit = MockAssistantChecklistCubit();
+    whenListen(
+      checklistCubit,
+      const Stream<AssistantChecklistState>.empty(),
+      initialState: const AssistantChecklistState(),
+    );
     final profileSummaryCubit = MockProfileSummaryCubit();
     whenListen(
       profileSummaryCubit,
@@ -260,6 +271,7 @@ void main() {
     );
     getIt
       ..registerFactory<AssistantVanSelectorCubit>(() => assistantCubit)
+      ..registerFactory<AssistantChecklistCubit>(() => checklistCubit)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
     addTearDown(getIt.reset);
 
