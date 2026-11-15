@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
@@ -14,6 +12,7 @@ import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/servic
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_state.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/formatters/service_area_failure_label.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverServiceAreasPage extends StatelessWidget {
   const DriverServiceAreasPage({required this.autocomplete, super.key});
@@ -25,7 +24,7 @@ class DriverServiceAreasPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       appBar: AppBar(title: Text(l10n.serviceAreasTitle)),
       body: BlocBuilder<DriverServiceAreasCubit, DriverServiceAreasState>(
         builder: (context, state) {
@@ -39,7 +38,7 @@ class DriverServiceAreasPage extends StatelessWidget {
               children: [
                 Text(
                   l10n.serviceAreasSubtitle,
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 ),
                 const SizedBox(height: 16),
                 VanepPlaceAutocompleteField(
@@ -63,7 +62,7 @@ class DriverServiceAreasPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       l10n.serviceAreasMaxReached,
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                   ),
                 const SizedBox(height: 20),
@@ -76,7 +75,7 @@ class DriverServiceAreasPage extends StatelessWidget {
                 if (!state.isLoadingAreas && state.isEmpty)
                   Text(
                     l10n.serviceAreasEmpty,
-                    style: VanepTypography.cardSubtitle,
+                    style: context.typography.cardSubtitle,
                   ),
                 for (final draft in state.drafts)
                   Padding(
@@ -90,21 +89,21 @@ class DriverServiceAreasPage extends StatelessWidget {
                               children: [
                                 Text(
                                   draft.label,
-                                  style: VanepTypography.cardTitle,
+                                  style: context.typography.cardTitle,
                                 ),
                                 if (draft.looksCityWide)
                                   Text(
                                     l10n.serviceAreasCityWideHint,
-                                    style: VanepTypography.cardSubtitle,
+                                    style: context.typography.cardSubtitle,
                                   ),
                               ],
                             ),
                           ),
                           IconButton(
                             tooltip: l10n.serviceAreasRemove,
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.close,
-                              color: VanepColors.textSecondary,
+                              color: context.palette.textSecondary,
                             ),
                             onPressed: () => cubit.removeDraft(draft.identity),
                           ),
@@ -117,8 +116,8 @@ class DriverServiceAreasPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
                     child: Text(
                       serviceAreaFailureLabel(l10n, failure),
-                      style: VanepTypography.cardSubtitle.copyWith(
-                        color: VanepColors.textPrimary,
+                      style: context.typography.cardSubtitle.copyWith(
+                        color: context.palette.textPrimary,
                       ),
                     ),
                   ),

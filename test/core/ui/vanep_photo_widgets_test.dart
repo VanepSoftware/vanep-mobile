@@ -109,9 +109,8 @@ void main() {
 
     await tester.tap(find.byType(VanepPhotoSlot));
 
-    verify(
-      () => loader.loadBytes('/api/vehicles/van-1/photo-front?v=1'),
-    ).called(1);
+    verify(() => loader.loadBytes('/api/vehicles/van-1/photo-front?v=1'))
+        .called(1);
     expect(find.byType(VanepPhotoEditBadge), findsOneWidget);
     expect(taps, 1);
   });
@@ -170,8 +169,7 @@ void main() {
 
     expect(find.text('Carlos'), findsOneWidget);
     expect(find.byType(VanepCoverScrim), findsOneWidget);
-    verify(
-      () => loader.loadBytes('/api/vehicles/van-9/photo-front?v=1'),
-    ).called(1);
+    verify(() => loader.loadBytes('/api/vehicles/van-9/photo-front?v=1'))
+        .called(1);
   });
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepMenuItem {
   const VanepMenuItem({
@@ -10,7 +9,12 @@ class VanepMenuItem {
     required this.icon,
     this.enabled = true,
     this.isDestructive = false,
+    this.subtitle,
     this.warningSubtitle,
+    this.trailing,
+    this.trailingIcon = Icons.chevron_right,
+    this.content,
+    this.semanticsLabel,
     this.onTap,
   });
 
@@ -18,7 +22,12 @@ class VanepMenuItem {
   final IconData icon;
   final bool enabled;
   final bool isDestructive;
+  final String? subtitle;
   final String? warningSubtitle;
+  final Widget? trailing;
+  final IconData trailingIcon;
+  final Widget? content;
+  final String? semanticsLabel;
   final VoidCallback? onTap;
 }
 
@@ -30,23 +39,23 @@ class VanepMenuCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: VanepColors.card,
+      color: context.palette.card,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-        side: const BorderSide(color: VanepColors.cardBorder),
+        side: BorderSide(color: context.palette.cardBorder),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           for (var index = 0; index < items.length; index++) ...[
             if (index > 0)
-              const Divider(
+              Divider(
                 height: 1,
                 thickness: 1,
                 indent: 14,
                 endIndent: 14,
-                color: VanepColors.divider,
+                color: context.palette.divider,
               ),
             VanepMenuTile(item: items[index]),
           ],
@@ -65,21 +74,24 @@ class VanepMenuTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final enabled = item.enabled;
     final foreground = !enabled
-        ? VanepColors.textMuted
+        ? context.palette.textMuted
         : item.isDestructive
-        ? VanepColors.danger
-        : VanepColors.textPrimary;
+        ? context.palette.danger
+        : context.palette.textPrimary;
     final iconColor = !enabled
-        ? VanepColors.textMuted
+        ? context.palette.textMuted
         : item.isDestructive
-        ? VanepColors.danger
-        : VanepColors.textSecondary;
+        ? context.palette.danger
+        : context.palette.textSecondary;
     final iconBackground = item.isDestructive && enabled
-        ? VanepColors.danger.withValues(alpha: 0.10)
-        : VanepColors.surface;
+        ? context.palette.danger.withValues(alpha: 0.10)
+        : context.palette.surface;
+    final subtitle = item.subtitle;
     final warningSubtitle = item.warningSubtitle;
+    final trailing = item.trailing;
+    final content = item.content;
 
-    return InkWell(
+    final tile = InkWell(
       onTap: enabled ? item.onTap : null,
       borderRadius: BorderRadius.circular(16),
       child: Opacity(
@@ -105,26 +117,48 @@ class VanepMenuTile extends StatelessWidget {
                   children: [
                     Text(
                       item.label,
-                      style: VanepTypography.cardTitle.copyWith(
+                      style: context.typography.cardTitle.copyWith(
                         color: foreground,
                       ),
                     ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(subtitle, style: context.typography.cardSubtitle),
+                    ],
                     if (warningSubtitle != null) ...[
                       const SizedBox(height: 3),
                       VanepMenuWarningSubtitle(text: warningSubtitle),
                     ],
+                    if (content != null) ...[
+                      const SizedBox(height: 6),
+                      content,
+                    ],
                   ],
                 ),
               ),
-              if (!item.isDestructive)
+              if (trailing != null)
+                trailing
+              else if (!item.isDestructive)
                 Icon(
-                  Icons.chevron_right,
-                  color: enabled ? VanepColors.textMuted : VanepColors.divider,
+                  item.trailingIcon,
+                  color: enabled
+                      ? context.palette.textMuted
+                      : context.palette.divider,
                 ),
             ],
           ),
         ),
       ),
+    );
+    final semanticsLabel = item.semanticsLabel;
+    if (semanticsLabel == null) return tile;
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: semanticsLabel,
+      onTap: enabled ? item.onTap : null,
+      excludeSemantics: true,
+      child: tile,
     );
   }
 }
@@ -139,15 +173,15 @@ class VanepMenuWarningSubtitle extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.error_outline, size: 13, color: VanepColors.warning),
+        Icon(Icons.error_outline, size: 13, color: context.palette.warning),
         const SizedBox(width: 4),
         Flexible(
           child: Text(
             text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: VanepTypography.cardSubtitle.copyWith(
-              color: VanepColors.warning,
+            style: context.typography.cardSubtitle.copyWith(
+              color: context.palette.warning,
               fontSize: 12,
             ),
           ),

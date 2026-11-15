@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -13,9 +13,9 @@ import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant
 
 const minimumTouchTarget = 44.0;
 
-const vanIconTones = [
-  (VanepColors.actionSurface, VanepColors.action),
-  (VanepColors.successSurface, VanepColors.success),
+List<(Color, Color)> vanIconTonesOf(VanepPalette palette) => [
+  (palette.actionSurface, palette.action),
+  (palette.successSurface, palette.success),
 ];
 
 // TODO(VAN-68): the buttons of these cards do nothing until the screens they
@@ -54,8 +54,8 @@ class AssistantPendingInviteCard extends StatelessWidget {
                 VanepAvatar(
                   size: 40,
                   initials: assistantInitialsOf(invite.driverName),
-                  backgroundColor: VanepColors.warningSurface,
-                  foregroundColor: VanepColors.warning,
+                  backgroundColor: context.palette.warningSurface,
+                  foregroundColor: context.palette.warning,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -64,20 +64,20 @@ class AssistantPendingInviteCard extends StatelessWidget {
                     children: [
                       Text(
                         invite.driverName,
-                        style: VanepTypography.cardTitle,
+                        style: context.typography.cardTitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       if (invite.vehicleDescription != null)
                         Text(
                           invite.vehicleDescription!,
-                          style: VanepTypography.cardSubtitle,
+                          style: context.typography.cardSubtitle,
                         ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(expiry, style: VanepTypography.ratingLabel),
+                Text(expiry, style: context.typography.ratingLabel),
               ],
             ),
             const SizedBox(height: 12),
@@ -120,7 +120,8 @@ class AssistantVanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final van = summary.van;
-    final (surface, accent) = vanIconTones[toneIndex % vanIconTones.length];
+    final tones = vanIconTonesOf(context.palette);
+    final (surface, accent) = tones[toneIndex % tones.length];
     final title = l10n.assistantVansVanTitle(firstNameOf(van.driverName));
     final subtitle = assistantVanSubtitle(l10n, van);
     final departure = l10n.assistantVansDeparture(
@@ -157,32 +158,32 @@ class AssistantVanCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: VanepTypography.cardTitle),
+                      Text(title, style: context.typography.cardTitle),
                       const SizedBox(height: 2),
-                      Text(subtitle, style: VanepTypography.cardSubtitle),
+                      Text(subtitle, style: context.typography.cardSubtitle),
                     ],
                   ),
                 ),
               ],
             ),
-            const Divider(height: 24, color: VanepColors.divider),
+            Divider(height: 24, color: context.palette.divider),
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.schedule_rounded,
                   size: 18,
-                  color: VanepColors.textSecondary,
+                  color: context.palette.textSecondary,
                 ),
                 const SizedBox(width: 6),
-                Text(departure, style: VanepTypography.cardSubtitle),
+                Text(departure, style: context.typography.cardSubtitle),
                 const SizedBox(width: 16),
-                const Icon(
+                Icon(
                   Icons.groups_rounded,
                   size: 18,
-                  color: VanepColors.textSecondary,
+                  color: context.palette.textSecondary,
                 ),
                 const SizedBox(width: 6),
-                Text(students, style: VanepTypography.cardSubtitle),
+                Text(students, style: context.typography.cardSubtitle),
               ],
             ),
             const SizedBox(height: 12),
@@ -232,16 +233,16 @@ class AssistantFormerVansTile extends StatelessWidget {
           height: minimumTouchTarget + 12,
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.history_rounded,
                 size: 22,
-                color: VanepColors.textSecondary,
+                color: context.palette.textSecondary,
               ),
               const SizedBox(width: 12),
-              Expanded(child: Text(label, style: VanepTypography.ratingLabel)),
-              const Icon(
+              Expanded(child: Text(label, style: context.typography.ratingLabel)),
+              Icon(
                 Icons.chevron_right_rounded,
-                color: VanepColors.textSecondary,
+                color: context.palette.textSecondary,
               ),
             ],
           ),

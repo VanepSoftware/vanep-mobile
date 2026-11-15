@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverLocationSharingTile extends StatelessWidget {
   const DriverLocationSharingTile({
@@ -23,8 +22,8 @@ class DriverLocationSharingTile extends StatelessWidget {
         Expanded(
           child: Text(
             l10n.driverShareLiveLocation,
-            style: VanepTypography.cardSubtitle.copyWith(
-              color: VanepColors.textSecondary,
+            style: context.typography.cardSubtitle.copyWith(
+              color: context.palette.textSecondary,
             ),
           ),
         ),

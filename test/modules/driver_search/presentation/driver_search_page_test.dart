@@ -36,6 +36,7 @@ Widget harness(
   DriverSearchCubit cubit,
   PlaceAutocompleteController auto, {
   ValueChanged<String>? onDriverSelected,
+  ValueChanged<String>? onQuoteRequested,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -51,6 +52,7 @@ Widget harness(
       child: DriverSearchPage(
         autocomplete: auto,
         onDriverSelected: onDriverSelected,
+        onQuoteRequested: onQuoteRequested,
       ),
     ),
   );
@@ -63,9 +65,8 @@ void main() {
   setUp(() {
     cubit = MockDriverSearchCubit();
     final datasource = MockPlaceAutocompleteDataSource();
-    when(
-      () => datasource.findSuggestions(any(), any()),
-    ).thenAnswer((_) async => const Ok([]));
+    when(() => datasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
     autocomplete = PlaceAutocompleteController(datasource: datasource);
   });
 
@@ -102,6 +103,34 @@ void main() {
     await tester.tap(find.text('Setor L Norte'));
 
     expect(selected, ['d2']);
+  });
+
+  testWidgets('a result shows the base price and asks for a quote', (
+    tester,
+  ) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: [
+          DriverSearchResult(
+            token: 'd1',
+            name: 'Carlos Souza',
+            basePrice: 320,
+            available: true,
+          ),
+        ],
+      ),
+    );
+    final requested = <String>[];
+
+    await tester.pumpWidget(
+      harness(cubit, autocomplete, onQuoteRequested: requested.add),
+    );
+
+    expect(find.text('a partir de R\$\u00a0320'), findsOneWidget);
+    await tester.tap(find.text('Pedir orçamento'));
+
+    expect(requested, ['d1']);
   });
 
   testWidgets('renders results in the order the API returned', (tester) async {

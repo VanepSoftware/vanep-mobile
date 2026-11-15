@@ -18,6 +18,17 @@ void main() {
     expect(failure.messagesByField[DependentField.name], 'Nome muito longo.');
   });
 
+  test('rejections are equal only with the same detail', () {
+    expect(
+      const DependentRejectedFailure(detail: 'a'),
+      equals(const DependentRejectedFailure(detail: 'a')),
+    );
+    expect(
+      const DependentRejectedFailure(detail: 'a'),
+      isNot(equals(const DependentRejectedFailure(detail: 'b'))),
+    );
+  });
+
   test('failures of the same kind are equal', () {
     expect(
       const DependentNetworkFailure(),

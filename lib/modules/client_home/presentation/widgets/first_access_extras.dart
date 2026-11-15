@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverInviteRow extends StatelessWidget {
   const DriverInviteRow({super.key});
@@ -83,11 +82,11 @@ class HowVanepWorksCard extends StatelessWidget {
                     icon: step.icon,
                     size: 32,
                     background: step.highlighted
-                        ? VanepColors.warningSurface
-                        : VanepColors.actionSurface,
+                        ? context.palette.warningSurface
+                        : context.palette.actionSurface,
                     foreground: step.highlighted
-                        ? VanepColors.warning
-                        : VanepColors.action,
+                        ? context.palette.warning
+                        : context.palette.action,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -96,11 +95,11 @@ class HowVanepWorksCard extends StatelessWidget {
                       children: [
                         Text(
                           step.title,
-                          style: VanepTypography.cardTitle.copyWith(
+                          style: context.typography.cardTitle.copyWith(
                             fontSize: 15,
                           ),
                         ),
-                        Text(step.hint, style: VanepTypography.cardSubtitle),
+                        Text(step.hint, style: context.typography.cardSubtitle),
                       ],
                     ),
                   ),

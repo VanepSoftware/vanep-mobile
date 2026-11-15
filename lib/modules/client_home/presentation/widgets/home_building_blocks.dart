@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const homeBlockSpacing = 24.0;
 
@@ -47,7 +47,7 @@ class HomeSectionHeader extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          Expanded(child: Text(title, style: VanepTypography.sectionTitle)),
+          Expanded(child: Text(title, style: context.typography.sectionTitle)),
           if (label != null)
             TextButton(
               onPressed: onAction,
@@ -55,7 +55,7 @@ class HomeSectionHeader extends StatelessWidget {
                 minimumSize: const Size(44, 44),
                 padding: const EdgeInsets.symmetric(horizontal: 4),
               ),
-              child: Text(label, style: VanepTypography.linkAction),
+              child: Text(label, style: context.typography.linkAction),
             ),
         ],
       ),
@@ -66,15 +66,15 @@ class HomeSectionHeader extends StatelessWidget {
 class HomeIconBubble extends StatelessWidget {
   const HomeIconBubble({
     required this.icon,
-    this.background = VanepColors.actionSurface,
-    this.foreground = VanepColors.action,
+    this.background,
+    this.foreground,
     this.size = 40,
     super.key,
   });
 
   final IconData icon;
-  final Color background;
-  final Color foreground;
+  final Color? background;
+  final Color? foreground;
   final double size;
 
   @override
@@ -82,8 +82,15 @@ class HomeIconBubble extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(color: background, shape: BoxShape.circle),
-      child: Icon(icon, size: size * 0.5, color: foreground),
+      decoration: BoxDecoration(
+        color: background ?? context.palette.actionSurface,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        icon,
+        size: size * 0.5,
+        color: foreground ?? context.palette.action,
+      ),
     );
   }
 }
@@ -126,12 +133,12 @@ class HomeRowTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(title, style: VanepTypography.cardTitle),
+                        Text(title, style: context.typography.cardTitle),
                         if (subtitleText != null) ...[
                           const SizedBox(height: 2),
                           Text(
                             subtitleText,
-                            style: VanepTypography.cardSubtitle,
+                            style: context.typography.cardSubtitle,
                           ),
                         ],
                       ],
@@ -141,9 +148,9 @@ class HomeRowTile extends StatelessWidget {
                   trailing ??
                       (onTap == null
                           ? const SizedBox.shrink()
-                          : const Icon(
+                          : Icon(
                               Icons.chevron_right,
-                              color: VanepColors.textMuted,
+                              color: context.palette.textMuted,
                             )),
                 ],
               ),
@@ -164,21 +171,17 @@ class HomeRowsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: VanepColors.card,
+      color: context.palette.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-        side: const BorderSide(color: VanepColors.cardBorder),
+        side: BorderSide(color: context.palette.cardBorder),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           for (final (index, row) in rows.indexed) ...[
             if (index > 0)
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: VanepColors.divider,
-              ),
+              Divider(height: 1, thickness: 1, color: context.palette.divider),
             row,
           ],
         ],
@@ -188,21 +191,17 @@ class HomeRowsCard extends StatelessWidget {
 }
 
 class HomeBadgeText extends StatelessWidget {
-  const HomeBadgeText({
-    required this.text,
-    this.color = VanepColors.warning,
-    super.key,
-  });
+  const HomeBadgeText({required this.text, this.color, super.key});
 
   final String text;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: VanepTypography.cardSubtitle.copyWith(
-        color: color,
+      style: context.typography.cardSubtitle.copyWith(
+        color: color ?? context.palette.warning,
         fontWeight: FontWeight.w700,
       ),
     );

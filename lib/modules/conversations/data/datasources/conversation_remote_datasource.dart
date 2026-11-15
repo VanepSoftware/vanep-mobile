@@ -14,14 +14,6 @@ class ConversationRemoteDataSource {
   final Dio dio;
   final Environment environment;
 
-  Future<Conversation> openConversation(String driverToken) async {
-    final response = await dio.post<Map<String, dynamic>>(
-      environment.conversationsEndpoint,
-      data: {'driverToken': driverToken},
-    );
-    return readConversation(response.data);
-  }
-
   Future<List<Conversation>> listMyConversations() async {
     final response = await dio.get<List<dynamic>>(
       environment.conversationsMeEndpoint,

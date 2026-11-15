@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
@@ -33,7 +32,7 @@ class AssistantVansPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       body: SafeArea(
         child: BlocBuilder<AssistantVansCubit, AssistantVansState>(
           builder: (context, state) => AssistantVansBody(state: state),
@@ -55,9 +54,9 @@ class AssistantVansBody extends StatelessWidget {
     return ListView(
       padding: assistantVansPagePadding,
       children: [
-        Text(l10n.assistantVansTitle, style: VanepTypography.pageTitle),
+        Text(l10n.assistantVansTitle, style: context.typography.pageTitle),
         const SizedBox(height: 4),
-        Text(l10n.assistantVansSubtitle, style: VanepTypography.cardSubtitle),
+        Text(l10n.assistantVansSubtitle, style: context.typography.cardSubtitle),
         const SizedBox(height: 20),
         switch (state.status) {
           AssistantVansStatus.loading => const AssistantVansSkeleton(),
@@ -89,7 +88,7 @@ class AssistantVansContent extends StatelessWidget {
       return Text(
         l10n.assistantVansEmpty,
         textAlign: TextAlign.center,
-        style: VanepTypography.cardSubtitle,
+        style: context.typography.cardSubtitle,
       );
     }
 
@@ -99,7 +98,7 @@ class AssistantVansContent extends StatelessWidget {
         if (invite != null) ...[
           Text(
             l10n.assistantVansPendingInviteSection,
-            style: VanepTypography.sectionTitle,
+            style: context.typography.sectionTitle,
           ),
           const SizedBox(height: assistantVansCardSpacing),
           AssistantPendingInviteCard(
@@ -111,7 +110,7 @@ class AssistantVansContent extends StatelessWidget {
         if (overview.activeVans.isNotEmpty) ...[
           Text(
             l10n.assistantVansActiveSection,
-            style: VanepTypography.sectionTitle,
+            style: context.typography.sectionTitle,
           ),
           const SizedBox(height: assistantVansCardSpacing),
           for (final (vanIndex, summary) in overview.activeVans.indexed) ...[
