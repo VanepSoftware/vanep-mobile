@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -49,12 +50,11 @@ Widget buildTestableWidget({
 
 void main() {
   group('AssistantVanSelectorSheet', () {
-    testWidgets('renders empty state when no vans are provided', (tester) async {
+    testWidgets('renders empty state when no vans are provided', (
+      tester,
+    ) async {
       await tester.pumpWidget(
-        buildTestableWidget(
-          vans: const [],
-          onSelectVan: (_) {},
-        ),
+        buildTestableWidget(vans: const [], onSelectVan: (_) {}),
       );
 
       expect(find.text('Selecione a van'), findsOneWidget);
@@ -62,10 +62,7 @@ void main() {
         find.text('Escolha qual van você vai acompanhar hoje'),
         findsOneWidget,
       );
-      expect(
-        find.text('Nenhuma van vinculada no momento.'),
-        findsOneWidget,
-      );
+      expect(find.text('Nenhuma van vinculada no momento.'), findsOneWidget);
     });
 
     testWidgets('renders list of vans with driver and shift details', (
@@ -80,9 +77,9 @@ void main() {
       );
 
       expect(find.text('Renault Master (ABC-1234)'), findsOneWidget);
-      expect(find.text('Carlos Silva • Manhã'), findsOneWidget);
+      expect(find.text('Carlos Silva • manhã'), findsOneWidget);
       expect(find.text('Mercedes Sprinter (XYZ-5678)'), findsOneWidget);
-      expect(find.text('Maria Santos • Tarde'), findsOneWidget);
+      expect(find.text('Maria Santos • tarde'), findsOneWidget);
       expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
     });
 
@@ -102,52 +99,53 @@ void main() {
       expect(selected, equals(tVan2));
     });
 
-    testWidgets('showAssistantVanSelectorSheet displays bottom sheet and selects van', (
-      tester,
-    ) async {
-      AssistantVan? selected;
+    testWidgets(
+      'showAssistantVanSelectorSheet displays bottom sheet and selects van',
+      (tester) async {
+        AssistantVan? selected;
 
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('pt'),
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => showAssistantVanSelectorSheet(
-                  context,
-                  vans: const [tVan1, tVan2],
-                  selectedVan: tVan1,
-                  onSelectVan: (van) => selected = van,
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('pt'),
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () => showAssistantVanSelectorSheet(
+                    context,
+                    vans: const [tVan1, tVan2],
+                    selectedVan: tVan1,
+                    onSelectVan: (van) => selected = van,
+                  ),
+                  child: const Text('Open'),
                 ),
-                child: const Text('Open'),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(AssistantVanSelectorSheet), findsOneWidget);
-      expect(find.text('Renault Master (ABC-1234)'), findsOneWidget);
+        expect(find.byType(AssistantVanSelectorSheet), findsOneWidget);
+        expect(find.text('Renault Master (ABC-1234)'), findsOneWidget);
 
-      await tester.tap(find.text('Mercedes Sprinter (XYZ-5678)'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Mercedes Sprinter (XYZ-5678)'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(AssistantVanSelectorSheet), findsNothing);
-      expect(selected, equals(tVan2));
-    });
+        expect(find.byType(AssistantVanSelectorSheet), findsNothing);
+        expect(selected, equals(tVan2));
+      },
+    );
   });
 
-  group('assistantShiftLabel', () {
+  group('formatApiSchoolShift', () {
     testWidgets('translates morning, afternoon, night and fallback correctly', (
       tester,
     ) async {
@@ -171,11 +169,12 @@ void main() {
         ),
       );
 
-      expect(assistantShiftLabel(l10n, 'MORNING'), equals('Manhã'));
-      expect(assistantShiftLabel(l10n, 'AFTERNOON'), equals('Tarde'));
-      expect(assistantShiftLabel(l10n, 'NIGHT'), equals('Noite'));
-      expect(assistantShiftLabel(l10n, 'CUSTOM'), equals('CUSTOM'));
-      expect(assistantShiftLabel(l10n, null), equals(''));
+      expect(formatApiSchoolShift(l10n, 'MORNING'), equals('manhã'));
+      expect(formatApiSchoolShift(l10n, 'AFTERNOON'), equals('tarde'));
+      expect(formatApiSchoolShift(l10n, 'NIGHT'), equals('noite'));
+      expect(formatApiSchoolShift(l10n, 'CUSTOM'), equals('CUSTOM'));
+      expect(formatApiSchoolShift(l10n, null), equals(''));
+      expect(formatApiSchoolShift(l10n, 'FULLTIME'), equals('integral'));
     });
   });
 }

@@ -1,7 +1,8 @@
+import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
+import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
@@ -14,10 +15,7 @@ import 'package:vanep_mobile/shell/assistant_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 
 class AssistantShell extends StatefulWidget {
-  const AssistantShell({
-    required this.profile,
-    super.key,
-  });
+  const AssistantShell({required this.profile, super.key});
 
   final UserProfile profile;
 
@@ -35,7 +33,7 @@ class AssistantShellState extends State<AssistantShell> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       drawer: ShellAccountDrawer(profile: widget.profile),
       onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
         context,
@@ -55,10 +53,13 @@ class AssistantShellState extends State<AssistantShell> {
                     onNotificationsTapped: () => openNotifications(context),
                   ),
                   const SizedBox(height: 12),
-                  BlocBuilder<AssistantVanSelectorCubit, AssistantVanSelectorState>(
+                  BlocBuilder<
+                    AssistantVanSelectorCubit,
+                    AssistantVanSelectorState
+                  >(
                     builder: (context, state) {
                       if (state.isLoading) {
-                        return const VanepCard(
+                        return VanepCard(
                           child: SizedBox(
                             height: 48,
                             child: Center(
@@ -67,11 +68,21 @@ class AssistantShellState extends State<AssistantShell> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: VanepColors.action,
+                                  color: context.palette.action,
                                 ),
                               ),
                             ),
                           ),
+                        );
+                      }
+
+                      if (state.failure != null) {
+                        return VanepErrorView(
+                          message: l10n.assistantVansLoadError,
+                          retryLabel: l10n.assistantVansRetry,
+                          onRetry: context
+                              .read<AssistantVanSelectorCubit>()
+                              .loadVans,
                         );
                       }
 
@@ -83,16 +94,16 @@ class AssistantShellState extends State<AssistantShell> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.info_outline_rounded,
-                                color: VanepColors.textSecondary,
+                                color: context.palette.textSecondary,
                                 size: 20,
                               ),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   l10n.assistantNoVansLinked,
-                                  style: VanepTypography.cardSubtitle,
+                                  style: context.typography.cardSubtitle,
                                 ),
                               ),
                             ],
@@ -105,21 +116,17 @@ class AssistantShellState extends State<AssistantShell> {
                         final vanTitle = van.model.isNotEmpty
                             ? '${van.model} • ${van.plate}'
                             : van.plate;
-                        final shiftLabel = assistantShiftLabel(l10n, van.shift);
+                        final shiftLabel = formatApiSchoolShift(
+                          l10n,
+                          van.shift,
+                        );
                         final subtitle = shiftLabel.isNotEmpty
                             ? '${l10n.assistantActiveVan} • $shiftLabel'
                             : l10n.assistantActiveVan;
 
                         return VanepCard(
                           onTap: state.hasMultipleVans
-                              ? () => showAssistantVanSelectorSheet(
-                                    context,
-                                    vans: state.vans,
-                                    selectedVan: state.selectedVan,
-                                    onSelectVan: (selected) => context
-                                        .read<AssistantVanSelectorCubit>()
-                                        .selectVan(selected),
-                                  )
+                              ? () => openVanSelector(context, state)
                               : null,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -131,12 +138,12 @@ class AssistantShellState extends State<AssistantShell> {
                                 width: 40,
                                 height: 40,
                                 decoration: BoxDecoration(
-                                  color: VanepColors.actionSurface,
+                                  color: context.palette.actionSurface,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.airport_shuttle_rounded,
-                                  color: VanepColors.action,
+                                  color: context.palette.action,
                                   size: 24,
                                 ),
                               ),
@@ -148,31 +155,25 @@ class AssistantShellState extends State<AssistantShell> {
                                   children: [
                                     Text(
                                       vanTitle,
-                                      style: VanepTypography.cardTitle,
+                                      style: context.typography.cardTitle,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
                                       subtitle,
-                                      style: VanepTypography.cardSubtitle,
+                                      style: context.typography.cardSubtitle,
                                     ),
                                   ],
                                 ),
                               ),
                               if (state.hasMultipleVans)
                                 TextButton(
-                                  onPressed: () => showAssistantVanSelectorSheet(
-                                    context,
-                                    vans: state.vans,
-                                    selectedVan: state.selectedVan,
-                                    onSelectVan: (selected) => context
-                                        .read<AssistantVanSelectorCubit>()
-                                        .selectVan(selected),
-                                  ),
+                                  onPressed: () =>
+                                      openVanSelector(context, state),
                                   child: Text(
                                     l10n.assistantSwitchVan,
-                                    style: VanepTypography.linkAction,
+                                    style: context.typography.linkAction,
                                   ),
                                 ),
                             ],
@@ -191,7 +192,7 @@ class AssistantShellState extends State<AssistantShell> {
                 index: selectedIndex,
                 children: [
                   VanepComingSoon(
-                    title: l10n.navTodayRoute,
+                    title: l10n.navRoute,
                     message: l10n.comingSoon,
                   ),
                   VanepComingSoon(
@@ -218,4 +219,17 @@ class AssistantShellState extends State<AssistantShell> {
   void selectShellTab(int index) {
     setState(() => selectedIndex = index);
   }
+}
+
+Future<void> openVanSelector(
+  BuildContext context,
+  AssistantVanSelectorState state,
+) {
+  final cubit = context.read<AssistantVanSelectorCubit>();
+  return showAssistantVanSelectorSheet(
+    context,
+    vans: state.vans,
+    selectedVan: state.selectedVan,
+    onSelectVan: cubit.selectVan,
+  );
 }

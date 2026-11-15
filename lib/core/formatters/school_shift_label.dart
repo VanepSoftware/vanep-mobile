@@ -5,5 +5,12 @@ String formatShift(AppLocalizations l10n, SchoolShift shift) {
   return switch (shift) {
     SchoolShift.morning => l10n.clientHomeShiftMorning,
     SchoolShift.afternoon => l10n.clientHomeShiftAfternoon,
+    SchoolShift.night => l10n.clientHomeShiftNight,
+    SchoolShift.fullTime => l10n.clientHomeShiftFullTime,
   };
+}
+
+String formatApiSchoolShift(AppLocalizations l10n, String? raw) {
+  final shift = SchoolShift.fromApi(raw);
+  return shift == null ? raw ?? '' : formatShift(l10n, shift);
 }

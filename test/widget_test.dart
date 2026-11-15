@@ -1,3 +1,5 @@
+import 'package:vanep_mobile/modules/assistant/presentation/guards/assistant_route_guard.dart';
+
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
@@ -22,6 +24,9 @@ import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_state.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
@@ -42,12 +47,23 @@ import 'modules/client_home/client_home_fixtures.dart';
 import 'modules/client_home/client_home_mocks.dart';
 import 'modules/dependents/dependents_mocks.dart';
 import 'modules/conversations/conversations_mocks.dart';
+import 'modules/driver_proposals/driver_proposals_mocks.dart';
 import 'modules/drivers/drivers_fixtures.dart';
 import 'modules/drivers/presentation/drivers_presentation_mocks.dart';
 import 'modules/profile/profile_mocks.dart';
+import 'modules/driver_van_central/driver_van_central_mocks.dart';
 
 Widget _harness(AuthCubit cubit) {
   return MaterialApp(
+    navigatorObservers: [
+      AssistantRouteGuard(
+        isAssistant: () {
+          final state = cubit.state;
+          return state is AuthAuthenticated &&
+              state.session.profile.type == UserType.assistant;
+        },
+      ),
+    ],
     localizationsDelegates: const [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -68,6 +84,17 @@ class MockPlaceAutocompleteDataSource extends Mock
 
 class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
     implements AssistantVanSelectorCubit {}
+
+void registerVanCentralCubit() {
+  final vanCentralCubit = MockVanCentralCubit();
+  whenListen(
+    vanCentralCubit,
+    const Stream<VanCentralState>.empty(),
+    initialState: const VanCentralState(status: VanCentralStatus.loaded),
+  );
+  when(() => vanCentralCubit.load()).thenAnswer((_) async {});
+  getIt.registerFactory<VanCentralCubit>(() => vanCentralCubit);
+}
 
 void main() {
   late MockAuthCubit cubit;
@@ -150,9 +177,8 @@ void main() {
     );
     when(clientHomeCubit.loadHome).thenAnswer((_) async {});
     final autocompleteDatasource = MockPlaceAutocompleteDataSource();
-    when(
-      () => autocompleteDatasource.findSuggestions(any(), any()),
-    ).thenAnswer((_) async => const Ok([]));
+    when(() => autocompleteDatasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<ClientHomeCubit>(() => clientHomeCubit)
       ..registerFactory<DriversCubit>(() => driversCubit)
@@ -165,6 +191,7 @@ void main() {
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
+    registerVanCentralCubit();
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(
@@ -188,18 +215,19 @@ void main() {
       initialState: const ProfileSummaryState(),
     );
     final autocompleteDatasource = MockPlaceAutocompleteDataSource();
-    when(
-      () => autocompleteDatasource.findSuggestions(any(), any()),
-    ).thenAnswer((_) async => const Ok([]));
+    when(() => autocompleteDatasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
       ..registerFactory<ConversationsInboxCubit>(
         () => readyConversationsCubit(),
       )
+      ..registerFactory<DriverNegotiationsCubit>(readyNegotiationsCubit)
       ..registerFactory<PlaceAutocompleteController>(
         () => PlaceAutocompleteController(datasource: autocompleteDatasource),
       );
+    registerVanCentralCubit();
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(
@@ -236,9 +264,7 @@ void main() {
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(
-      FakeAuthSession(
-        profile: const FakeUserProfile(type: UserType.assistant),
-      ),
+      FakeAuthSession(profile: const FakeUserProfile(type: UserType.assistant)),
     );
     when(() => cubit.state).thenReturn(state);
     whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);
@@ -249,6 +275,13 @@ void main() {
     expect(find.byType(DriverShell), findsNothing);
     expect(find.byType(ClientShell), findsNothing);
     verify(() => assistantCubit.loadVans()).called(1);
+    final context = tester.element(find.byType(AssistantShell));
+    final navigation = openDriverVans(context);
+    await tester.pumpAndSettle();
+    await navigation;
+    expect(tester.takeException(), isNull);
+    expect(find.byType(AssistantShell), findsOneWidget);
+    expect(find.text('Acesso não autorizado.'), findsOneWidget);
   });
 
   testWidgets('starting a session closes the pages pushed over the login', (
@@ -274,7 +307,9 @@ void main() {
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
       ..registerFactory<ConversationsInboxCubit>(
         () => readyConversationsCubit(),
-      );
+      )
+      ..registerFactory<DriverNegotiationsCubit>(readyNegotiationsCubit);
+    registerVanCentralCubit();
     addTearDown(getIt.reset);
     final authenticated = AuthAuthenticated(
       FakeAuthSession(profile: const FakeUserProfile(type: UserType.driver)),

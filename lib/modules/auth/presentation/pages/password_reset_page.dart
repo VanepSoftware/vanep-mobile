@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -17,6 +16,7 @@ import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/password_requirements_checklist.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/verification_code_field.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> openPasswordReset(
   BuildContext context, {
@@ -44,7 +44,7 @@ class PasswordResetPage extends StatelessWidget {
       listener: presentPasswordResetOutcome,
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: VanepColors.card,
+          backgroundColor: context.palette.card,
           appBar: const VanepAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),

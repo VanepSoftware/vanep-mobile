@@ -3,10 +3,7 @@ import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 
 class AssistantRouteGuard extends NavigatorObserver {
-  AssistantRouteGuard({
-    required this.isAssistant,
-    this.onUnauthorized,
-  });
+  AssistantRouteGuard({required this.isAssistant, this.onUnauthorized});
 
   final bool Function() isAssistant;
   final void Function(BuildContext context)? onUnauthorized;
@@ -21,33 +18,36 @@ class AssistantRouteGuard extends NavigatorObserver {
 
   static bool isRestricted(String? routeName) {
     if (routeName == null) return false;
-    return restrictedRoutes.contains(routeName);
+    final path = Uri.tryParse(routeName)?.path;
+    return restrictedRoutes.any(
+      (root) => path == root || (path?.startsWith('$root/') ?? false),
+    );
   }
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
-    _guardRoute(route);
+    guardRoute(route);
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if (newRoute != null) {
-      _guardRoute(newRoute);
+      guardRoute(newRoute);
     }
   }
 
-  void _guardRoute(Route<dynamic> route) {
+  void guardRoute(Route<dynamic> route) {
     if (!isAssistant()) return;
     final name = route.settings.name;
     if (isRestricted(name)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (route.navigator?.canPop() ?? false) {
-          route.navigator?.pop();
-        }
-        final context = route.navigator?.context;
-        if (context != null && context.mounted) {
+        final navigator = route.navigator;
+        if (navigator == null) return;
+        final context = navigator.context;
+        if (!route.isFirst) navigator.removeRoute(route);
+        if (context.mounted) {
           if (onUnauthorized != null) {
             onUnauthorized!(context);
           } else {

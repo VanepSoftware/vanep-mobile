@@ -88,3 +88,18 @@
 - [ ] 5.10 Slice tests and layout verification (ensuring touch targets >= 44px)
 - [ ] 5.11 Run `make lint` and `make test`
 - [ ] 5.12 **Aguardar validação final do desenvolvedor no aparelho (R27a)**; só então commitar e abrir PR
+
+
+### Phase 4 — PR #103 review follow-up
+
+- [x] Reconcile app composition, localization, and AuthGate tests with main (`1fdd977`).
+- [x] Register the assistant navigation observer and name role-specific application routes; prevent restricted page construction and match nested paths.
+- [x] Show van loading failures with a retry action instead of the unlinked state.
+- [x] Reuse the shared school shift formatter, consolidate van selector opening, and use the same route tab/title label.
+- [x] Adapt assistant UI to the current theme palette and typography API.
+- [x] Add regression coverage for failed van loading, retry, restricted nested routes, and real application navigation.
+- [x] Record latest developer test results via FVM: full suite **2,416 passed / zero failed** in 16m18s; negotiation route regression tests also passed independently.
+- [x] Inspect updated full-suite coverage: **17,932 / 19,377 relevant lines (92.54%)**, above the 85% threshold.
+- [x] Complete FVM code generation, lint (no issues), and full tests/coverage, per developer reports.
+- [x] Include the FVM-resolved dependency lockfile used by the successful lint and full test run.
+- [ ] Validate the review fixes on device/emulator and capture updated video/screenshots. Developer explicitly authorized early commit/push; manual validation remains pending.

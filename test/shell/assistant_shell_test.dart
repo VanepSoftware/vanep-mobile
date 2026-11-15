@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/ui/vanep_bottom_nav.dart';
+import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
@@ -109,10 +110,12 @@ void main() {
       ),
     );
 
-    expect(find.text('Rota do dia'), findsOneWidget);
+    expect(find.text('Rota'), findsNWidgets(2));
 
     final nav = tester.widget<VanepBottomNav>(find.byType(VanepBottomNav));
-    expect([for (final i in nav.items) i.label], equals(['Rota', 'Alunos', 'Meu perfil']));
+    expect([
+      for (final i in nav.items) i.label,
+    ], equals(['Rota', 'Alunos', 'Meu perfil']));
   });
 
   testWidgets('switching tabs updates active coming soon view', (tester) async {
@@ -184,18 +187,74 @@ void main() {
     expect(find.text('Nenhuma van vinculada no momento.'), findsOneWidget);
   });
 
-  testWidgets('shows active van details without switch button when only 1 van exists', (
+  testWidgets(
+    'shows active van details without switch button when only 1 van exists',
+    (tester) async {
+      whenListen(
+        vanSelectorCubit,
+        const Stream<AssistantVanSelectorState>.empty(),
+        initialState: const AssistantVanSelectorState(
+          vans: [tVan1],
+          selectedVan: tVan1,
+        ),
+      );
+
+      await tester.pumpWidget(
+        buildTestHarness(
+          vanSelectorCubit: vanSelectorCubit,
+          authCubit: authCubit,
+          profileSummaryCubit: profileSummaryCubit,
+        ),
+      );
+
+      expect(find.text('Renault Master • ABC-1234'), findsOneWidget);
+      expect(find.text('Van ativa • manhã'), findsOneWidget);
+      expect(find.text('Trocar van'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'shows switch van button when linked to multiple vans and opens selector',
+    (tester) async {
+      whenListen(
+        vanSelectorCubit,
+        const Stream<AssistantVanSelectorState>.empty(),
+        initialState: const AssistantVanSelectorState(
+          vans: [tVan1, tVan2],
+          selectedVan: tVan1,
+        ),
+      );
+
+      await tester.pumpWidget(
+        buildTestHarness(
+          vanSelectorCubit: vanSelectorCubit,
+          authCubit: authCubit,
+          profileSummaryCubit: profileSummaryCubit,
+        ),
+      );
+
+      expect(find.text('Renault Master • ABC-1234'), findsOneWidget);
+      expect(find.text('Trocar van'), findsOneWidget);
+
+      await tester.tap(find.text('Trocar van'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AssistantVanSelectorSheet), findsOneWidget);
+      expect(find.text('Mercedes Sprinter (XYZ-5678)'), findsOneWidget);
+    },
+  );
+
+  testWidgets('shows load failure with retry instead of unlinked state', (
     tester,
   ) async {
     whenListen(
       vanSelectorCubit,
       const Stream<AssistantVanSelectorState>.empty(),
       initialState: const AssistantVanSelectorState(
-        vans: [tVan1],
-        selectedVan: tVan1,
+        failure: AssistantFailure.network,
       ),
     );
-
+    when(() => vanSelectorCubit.loadVans()).thenAnswer((_) async {});
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
@@ -203,40 +262,10 @@ void main() {
         profileSummaryCubit: profileSummaryCubit,
       ),
     );
-
-    expect(find.text('Renault Master • ABC-1234'), findsOneWidget);
-    expect(find.text('Van ativa • Manhã'), findsOneWidget);
-    expect(find.text('Trocar van'), findsNothing);
-  });
-
-  testWidgets('shows switch van button when linked to multiple vans and opens selector', (
-    tester,
-  ) async {
-    whenListen(
-      vanSelectorCubit,
-      const Stream<AssistantVanSelectorState>.empty(),
-      initialState: const AssistantVanSelectorState(
-        vans: [tVan1, tVan2],
-        selectedVan: tVan1,
-      ),
-    );
-
-    await tester.pumpWidget(
-      buildTestHarness(
-        vanSelectorCubit: vanSelectorCubit,
-        authCubit: authCubit,
-        profileSummaryCubit: profileSummaryCubit,
-      ),
-    );
-
-    expect(find.text('Renault Master • ABC-1234'), findsOneWidget);
-    expect(find.text('Trocar van'), findsOneWidget);
-
-    await tester.tap(find.text('Trocar van'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(AssistantVanSelectorSheet), findsOneWidget);
-    expect(find.text('Mercedes Sprinter (XYZ-5678)'), findsOneWidget);
+    expect(find.text('Não foi possível carregar as vans.'), findsOneWidget);
+    expect(find.text('Nenhuma van vinculada no momento.'), findsNothing);
+    await tester.tap(find.text('Tentar novamente'));
+    verify(() => vanSelectorCubit.loadVans()).called(1);
   });
 
   testWidgets('menu icon opens drawer', (tester) async {

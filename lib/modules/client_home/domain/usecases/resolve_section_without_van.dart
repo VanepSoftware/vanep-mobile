@@ -2,6 +2,7 @@ import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/personal_address_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
 import 'package:vanep_mobile/modules/client_home/domain/failures/client_home_failure.dart';
+import 'package:vanep_mobile/modules/client_home/domain/value_objects/negotiation_highlights.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
@@ -21,12 +22,18 @@ ClientHomeFailure clientHomeFailureFromDependents(DependentFailure failure) {
 TodaySection sectionForOnboarding({
   required bool hasAddress,
   required bool hasDependents,
+  required NegotiationHighlights highlights,
 }) {
   final steps = FirstStepsSection(
     hasAddress: hasAddress,
     hasDependents: hasDependents,
   );
-  return steps.isComplete ? const NoLinkedVanSection() : steps;
+  if (!steps.isComplete) return steps;
+  if (highlights.openCount == 0) return const NoLinkedVanSection();
+  return NegotiatingSection(
+    childNames: highlights.childNames,
+    openNegotiations: highlights.openCount,
+  );
 }
 
 class ResolveSectionWithoutVan {
@@ -39,7 +46,9 @@ class ResolveSectionWithoutVan {
 
   final FindMyDependents findMyDependents;
 
-  Future<Result<ClientHomeFailure, TodaySection>> call() async {
+  Future<Result<ClientHomeFailure, TodaySection>> call({
+    required NegotiationHighlights highlights,
+  }) async {
     final (addressResult, dependentsResult) = await (
       findMyPersonalAddress(),
       findMyDependents(),
@@ -58,6 +67,7 @@ class ResolveSectionWithoutVan {
       sectionForOnboarding(
         hasAddress: addressResult.valueOrNull != null,
         hasDependents: dependentsResult.valueOrNull?.isNotEmpty ?? false,
+        highlights: highlights,
       ),
     );
   }

@@ -27,6 +27,7 @@ Stack: Flutter (pinned via FVM / `.fvmrc`, currently `3.47.2`), Dart SDK `^3.13.
 - R11 — **Spec before code.** Every feature starts with a spec (ADR or task breakdown). Write specs in English even when the user speaks another language.
 - R12 — **Branch naming.** Use `feat/`, `fix/`, or `chore/` prefixes.
 - R13 — **PR requirements.** CI must pass (lint + tests); at least one review. Run `make lint` and `make test`.
+- R13a — **Screenshots and video in every PR (non-negotiable).** Every PR description includes screenshots **and** a screen recording (video or GIF) that prove what was done, captured from a real run of the app — an Android emulator (e.g. the `Pixel_9a` AVD), an iOS simulator, or a device — never mockups or design exports. Cover the happy path, each state the change delivers (empty, loading, error, locked, …) and the misuse the change validates. Host the media on the repo's `pr-assets` branch under `van-<N>/` and link it from the description. A PR without this evidence is not ready for review.
 - R14 — **Commits.** Use conventional commit messages.
 - R15 — **Codegen.** Run `dart run build_runner build --delete-conflicting-outputs` after any DTO or entity change.
 

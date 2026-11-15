@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/media/photo_source.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<PhotoSource?> showVanepPhotoSourceSheet(
   BuildContext context, {
@@ -11,7 +10,7 @@ Future<PhotoSource?> showVanepPhotoSourceSheet(
 }) {
   return showModalBottomSheet<PhotoSource>(
     context: context,
-    backgroundColor: VanepColors.card,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -53,8 +52,8 @@ class VanepPhotoSourceOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: VanepColors.textPrimary),
-      title: Text(label, style: VanepTypography.body),
+      leading: Icon(icon, color: context.palette.textPrimary),
+      title: Text(label, style: context.typography.body),
       onTap: onTap,
     );
   }

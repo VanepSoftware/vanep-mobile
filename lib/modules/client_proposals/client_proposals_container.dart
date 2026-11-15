@@ -1,55 +1,91 @@
 import 'package:get_it/get_it.dart';
 
-import 'package:vanep_mobile/core/environment/environment.dart';
-import 'package:vanep_mobile/modules/client_proposals/data/datasources/client_proposals_scenario.dart';
-import 'package:vanep_mobile/modules/client_proposals/data/datasources/dependent_proposal_children_datasource.dart';
-import 'package:vanep_mobile/modules/client_proposals/data/datasources/empty_proposals_datasource.dart';
-import 'package:vanep_mobile/modules/client_proposals/data/datasources/scenario_client_proposals_datasource.dart';
-import 'package:vanep_mobile/modules/client_proposals/data/repositories/client_proposals_repository_impl.dart';
-import 'package:vanep_mobile/modules/client_proposals/domain/repositories/client_proposals_repository.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/usecases/load_client_proposals.dart';
+import 'package:vanep_mobile/modules/client_proposals/domain/usecases/load_proposal_detail.dart';
+import 'package:vanep_mobile/modules/client_proposals/domain/usecases/load_quote_request.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_request_cubit.dart';
+import 'package:vanep_mobile/modules/contract_readiness/domain/usecases/find_contract_readiness.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
-
-// TODO(VAN-42): switches between real children with no proposals and fully
-// mocked data via CLIENT_PROPOSALS_SCENARIO; register the remote proposals data
-// source here once api-java #30 lands and drop the scenario branch.
-ClientProposalsRepository clientProposalsRepositoryFor(
-  String scenarioName, {
-  required FindMyDependents findMyDependents,
-}) {
-  final scenario = ClientProposalsScenario.fromName(scenarioName);
-  if (scenario == null) {
-    return ClientProposalsRepositoryImpl(
-      proposalsDataSource: const EmptyProposalsDataSource(),
-      childrenDataSource: DependentProposalChildrenDataSource(
-        findMyDependents: findMyDependents,
-      ),
-    );
-  }
-  final scenarioDataSource = ScenarioClientProposalsDataSource(
-    scenario: scenario,
-  );
-  return ClientProposalsRepositoryImpl(
-    proposalsDataSource: scenarioDataSource,
-    childrenDataSource: scenarioDataSource,
-  );
-}
+import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_days.dart';
+import 'package:vanep_mobile/modules/drivers/domain/usecases/find_driver_profile.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/accept_proposal.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/decline_proposal.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/find_client_proposal.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/find_client_service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_proposal_versions.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_client_service_requests.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/request_proposal_adjustment.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/send_service_request.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/usecases/withdraw_service_request.dart';
 
 void registerClientProposalsDependencies(GetIt getIt) {
   getIt
-    ..registerLazySingleton<ClientProposalsRepository>(
-      () => clientProposalsRepositoryFor(
-        getIt<Environment>().clientProposalsScenario,
+    ..registerFactory<LoadClientProposals>(
+      () => LoadClientProposals(
+        listServiceRequests: getIt<ListClientServiceRequests>(),
         findMyDependents: getIt<FindMyDependents>(),
       ),
     )
-    ..registerFactory<LoadClientProposals>(
-      () => LoadClientProposals(repository: getIt<ClientProposalsRepository>()),
+    ..registerFactory<LoadProposalDetail>(
+      () => LoadProposalDetail(
+        findProposal: getIt<FindClientProposal>(),
+        findServiceRequest: getIt<FindClientServiceRequest>(),
+        listVersions: getIt<ListClientProposalVersions>(),
+      ),
+    )
+    ..registerFactory<LoadQuoteStudents>(
+      () => LoadQuoteStudents(
+        findMyDependents: getIt<FindMyDependents>(),
+        findReadiness: getIt<FindContractReadiness>(),
+        findSchoolDays: getIt<FindSchoolDays>(),
+      ),
+    )
+    ..registerFactory<LoadQuoteRequest>(
+      () => LoadQuoteRequest(
+        findDriverProfile: getIt<FindDriverProfile>(),
+        loadQuoteStudents: getIt<LoadQuoteStudents>(),
+        listServiceRequests: getIt<ListClientServiceRequests>(),
+      ),
     )
     ..registerFactory<ClientProposalsCubit>(
       () => ClientProposalsCubit(
         loadClientProposals: getIt<LoadClientProposals>(),
+        listServiceRequests: getIt<ListClientServiceRequests>(),
+        withdrawServiceRequest: getIt<WithdrawServiceRequest>(),
+      ),
+    )
+    ..registerFactoryParam<ProposalDetailCubit, String, String?>(
+      (requestToken, proposalToken) => ProposalDetailCubit(
+        requestToken: requestToken,
+        proposalToken: proposalToken,
+        loadProposalDetail: getIt<LoadProposalDetail>(),
+        acceptProposal: getIt<AcceptProposal>(),
+        withdrawServiceRequest: getIt<WithdrawServiceRequest>(),
+      ),
+    )
+    ..registerFactoryParam<ProposalAdjustmentCubit, String, void>(
+      (proposalToken, _) => ProposalAdjustmentCubit(
+        proposalToken: proposalToken,
+        requestAdjustment: getIt<RequestProposalAdjustment>(),
+      ),
+    )
+    ..registerFactoryParam<ProposalDeclineCubit, String, void>(
+      (proposalToken, _) => ProposalDeclineCubit(
+        proposalToken: proposalToken,
+        declineProposal: getIt<DeclineProposal>(),
+      ),
+    )
+    ..registerFactoryParam<QuoteRequestCubit, String, void>(
+      (driverToken, _) => QuoteRequestCubit(
+        driverToken: driverToken,
+        loadQuoteRequest: getIt<LoadQuoteRequest>(),
+        loadQuoteStudents: getIt<LoadQuoteStudents>(),
+        listServiceRequests: getIt<ListClientServiceRequests>(),
+        sendServiceRequest: getIt<SendServiceRequest>(),
       ),
     );
 }

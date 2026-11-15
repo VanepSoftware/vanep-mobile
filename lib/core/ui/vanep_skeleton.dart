@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 /// Shimmering placeholder zone shown while an API response is pending.
 ///
@@ -17,9 +16,9 @@ class VanepSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Skeletonizer.zone(
       enabled: enabled,
-      effect: const ShimmerEffect(
-        baseColor: VanepColors.skeletonBase,
-        highlightColor: VanepColors.skeletonHighlight,
+      effect: ShimmerEffect(
+        baseColor: context.palette.skeletonBase,
+        highlightColor: context.palette.skeletonHighlight,
       ),
       child: child,
     );

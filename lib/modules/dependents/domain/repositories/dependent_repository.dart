@@ -16,4 +16,6 @@ abstract class DependentRepository {
   });
 
   Future<Result<DependentFailure, Dependent>> markAsDefault(String token);
+
+  Future<Result<DependentFailure, void>> removeDependent(String token);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_bottom_nav.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 const testNavItems = [
   VanepNavItem(
@@ -106,7 +106,7 @@ void main() {
 
     // Rounded end to end — a smaller radius is what read as a box before.
     expect(selected.shape, isA<StadiumBorder>());
-    expect(selected.color, VanepColors.actionSurface);
+    expect(selected.color, VanepPalette.light.actionSurface);
     expect(unselected.color!.a, 0);
   });
 

@@ -1,17 +1,8 @@
+import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:flutter/material.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
-
-String assistantShiftLabel(AppLocalizations l10n, String? shift) {
-  return switch (shift?.toUpperCase()) {
-    'MORNING' => l10n.assistantShiftMorning,
-    'AFTERNOON' => l10n.assistantShiftAfternoon,
-    'NIGHT' => l10n.assistantShiftNight,
-    _ => shift ?? '',
-  };
-}
 
 Future<void> showAssistantVanSelectorSheet(
   BuildContext context, {
@@ -21,7 +12,7 @@ Future<void> showAssistantVanSelectorSheet(
 }) {
   return showModalBottomSheet<void>(
     context: context,
-    backgroundColor: VanepColors.card,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -68,19 +59,16 @@ class AssistantVanSelectorSheet extends StatelessWidget {
               height: 4,
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
-                color: VanepColors.divider,
+                color: context.palette.divider,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
-          Text(
-            l10n.assistantSelectVanTitle,
-            style: VanepTypography.heading,
-          ),
+          Text(l10n.assistantSelectVanTitle, style: context.typography.heading),
           const SizedBox(height: 4),
           Text(
             l10n.assistantSelectVanSubtitle,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           const SizedBox(height: 16),
           if (vans.isEmpty)
@@ -89,8 +77,8 @@ class AssistantVanSelectorSheet extends StatelessWidget {
               child: Center(
                 child: Text(
                   l10n.assistantNoVansLinked,
-                  style: VanepTypography.body.copyWith(
-                    color: VanepColors.textSecondary,
+                  style: context.typography.body.copyWith(
+                    color: context.palette.textSecondary,
                   ),
                 ),
               ),
@@ -100,15 +88,13 @@ class AssistantVanSelectorSheet extends StatelessWidget {
               child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: vans.length,
-                separatorBuilder: (context, index) => const Divider(
-                  height: 1,
-                  color: VanepColors.divider,
-                ),
+                separatorBuilder: (context, index) =>
+                    Divider(height: 1, color: context.palette.divider),
                 itemBuilder: (context, index) {
                   final van = vans[index];
                   final isSelected = van.token == selectedVan?.token;
 
-                  final shiftText = assistantShiftLabel(l10n, van.shift);
+                  final shiftText = formatApiSchoolShift(l10n, van.shift);
                   final subtitle = shiftText.isEmpty
                       ? van.driverName
                       : '${van.driverName} • $shiftText';
@@ -123,35 +109,36 @@ class AssistantVanSelectorSheet extends StatelessWidget {
                       height: 44,
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? VanepColors.actionSurface
-                            : VanepColors.surface,
+                            ? context.palette.actionSurface
+                            : context.palette.surface,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(
                         Icons.airport_shuttle_rounded,
                         color: isSelected
-                            ? VanepColors.action
-                            : VanepColors.textSecondary,
+                            ? context.palette.action
+                            : context.palette.textSecondary,
                       ),
                     ),
                     title: Text(
                       '${van.model} (${van.plate})',
-                      style: VanepTypography.body.copyWith(
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w400,
-                        color: VanepColors.textPrimary,
+                      style: context.typography.body.copyWith(
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                        color: context.palette.textPrimary,
                       ),
                     ),
                     subtitle: Text(
                       subtitle,
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                     trailing: isSelected
-                      ? const Icon(
-                          Icons.check_circle_rounded,
-                          color: VanepColors.action,
-                        )
-                      : null,
+                        ? Icon(
+                            Icons.check_circle_rounded,
+                            color: context.palette.action,
+                          )
+                        : null,
                     onTap: () => onSelectVan(van),
                   );
                 },
