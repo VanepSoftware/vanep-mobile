@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 import 'package:vanep_mobile/core/formatters/schedule_labels.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
@@ -46,12 +45,12 @@ class VanStudentsProgressCard extends StatelessWidget {
                     progress.withFamily,
                     progress.total,
                   ),
-                  style: VanepTypography.cardTitle,
+                  style: context.typography.cardTitle,
                 ),
               ),
               Text(
                 l10n.vanStudentsProgressPercent(progress.percent),
-                style: VanepTypography.cardSubtitle,
+                style: context.typography.cardSubtitle,
               ),
             ],
           ),
@@ -61,14 +60,14 @@ class VanStudentsProgressCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress.ratio,
               minHeight: 8,
-              color: VanepColors.action,
-              backgroundColor: VanepColors.divider,
+              color: context.palette.action,
+              backgroundColor: context.palette.divider,
             ),
           ),
           const SizedBox(height: 10),
           Text(
             l10n.vanStudentsProgressHint,
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           const SizedBox(height: 12),
           VanepSecondaryButton(
@@ -121,12 +120,12 @@ class FamilyMatchCard extends StatelessWidget {
                   children: [
                     Text(
                       familyMatchTitle(l10n, student),
-                      style: VanepTypography.cardTitle,
+                      style: context.typography.cardTitle,
                     ),
                     const SizedBox(height: 3),
                     Text(
                       familyMatchBody(l10n, match),
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                   ],
                 ),
@@ -257,7 +256,7 @@ class VanStudentsListCard extends StatelessWidget {
       child: Column(
         children: [
           for (final (index, student) in students.indexed) ...[
-            if (index > 0) const Divider(height: 1, color: VanepColors.divider),
+            if (index > 0) Divider(height: 1, color: context.palette.divider),
             VanStudentRow(
               student: student,
               now: now,
@@ -290,11 +289,11 @@ class VanStudentRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final isJoined = student.familyStatus == FamilyStatus.familyJoined;
     final subtitleStyle = isJoined
-        ? VanepTypography.cardSubtitle.copyWith(
-            color: VanepColors.action,
+        ? context.typography.cardSubtitle.copyWith(
+            color: context.palette.action,
             fontWeight: FontWeight.w600,
           )
-        : VanepTypography.cardSubtitle;
+        : context.typography.cardSubtitle;
 
     return InkWell(
       onTap: isJoined && !isBusy
@@ -312,7 +311,7 @@ class VanStudentRow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(student.name, style: VanepTypography.cardTitle),
+                    Text(student.name, style: context.typography.cardTitle),
                     const SizedBox(height: 2),
                     Text(
                       studentRowSubtitle(l10n, student, now),
@@ -341,7 +340,7 @@ class VanStudentRow extends StatelessWidget {
                   ),
                 ],
                 FamilyStatus.familyJoined => [
-                  const Icon(Icons.chevron_right, color: VanepColors.textMuted),
+                  Icon(Icons.chevron_right, color: context.palette.textMuted),
                 ],
                 FamilyStatus.withFamily => const <Widget>[],
               },

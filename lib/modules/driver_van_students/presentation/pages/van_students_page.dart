@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/share/text_sharer.dart';
 import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
@@ -88,7 +88,7 @@ class VanStudentsPage extends StatelessWidget {
             current.isSearching != previous.isSearching,
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: VanepColors.surface,
+            backgroundColor: context.palette.surface,
             appBar: VanepAppBar(
               title: state.isSearching ? null : l10n.vanStudentsTitle,
               titleWidget: state.isSearching
@@ -169,8 +169,8 @@ class VanStudentsBody extends StatelessWidget {
     return BlocBuilder<VanStudentsCubit, VanStudentsState>(
       builder: (context, state) {
         return switch (state.status) {
-          VanStudentsStatus.loading => const Center(
-            child: CircularProgressIndicator(color: VanepColors.action),
+          VanStudentsStatus.loading => Center(
+            child: CircularProgressIndicator(color: context.palette.action),
           ),
           VanStudentsStatus.loadFailed => VanepErrorView(
             message: l10n.vanStudentsLoadError,
@@ -178,7 +178,7 @@ class VanStudentsBody extends StatelessWidget {
             onRetry: cubit.load,
           ),
           VanStudentsStatus.loaded => RefreshIndicator(
-            color: VanepColors.action,
+            color: context.palette.action,
             onRefresh: cubit.refresh,
             child: VanStudentsContent(
               state: state,
@@ -269,7 +269,7 @@ class VanStudentsContent extends StatelessWidget {
         Text(
           l10n.vanStudentsListFooter,
           textAlign: TextAlign.center,
-          style: VanepTypography.cardSubtitle.copyWith(fontSize: 12),
+          style: context.typography.cardSubtitle.copyWith(fontSize: 12),
         ),
       ],
     );
@@ -302,9 +302,10 @@ class VanStudentsSearchFieldState extends State<VanStudentsSearchField> {
       autofocus: true,
       onChanged: widget.onChanged,
       textInputAction: TextInputAction.search,
-      cursorColor: VanepColors.action,
-      style: VanepTypography.fieldValue,
+      cursorColor: context.palette.action,
+      style: context.typography.fieldValue,
       decoration: vanepInputDecoration(
+        context,
         hintText: l10n.vanStudentsSearchHint,
         prefixIcon: Icons.search,
       ),
@@ -324,7 +325,7 @@ class VanStudentsEmptyMessage extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: VanepTypography.body,
+        style: context.typography.body,
       ),
     );
   }

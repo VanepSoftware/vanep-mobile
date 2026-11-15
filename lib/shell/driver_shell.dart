@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
@@ -19,6 +18,7 @@ import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/s
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/shell/driver_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const driverShellProposalsTabIndex = 2;
 
@@ -76,7 +76,7 @@ class DriverShellState extends State<DriverShell> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       drawer: ShellAccountDrawer(profile: widget.profile),
       onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
         context,

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/phone_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -13,6 +11,8 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_c
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/formatters/driver_profile_formatters.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_profile_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverProfilePage extends StatelessWidget {
   const DriverProfilePage({this.onQuoteRequested, super.key});
@@ -31,18 +31,18 @@ class DriverProfilePage extends StatelessWidget {
             profile != null && driverProfileCoverPhotoUrl(profile) != null;
 
         return Scaffold(
-          backgroundColor: VanepColors.card,
+          backgroundColor: context.palette.card,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             elevation: 0,
-            foregroundColor: onCover ? VanepColors.card : null,
+            foregroundColor: onCover ? VanepColors.onBrand : null,
             systemOverlayStyle: onCover ? SystemUiOverlayStyle.light : null,
           ),
           body: switch (state.status) {
-            DriverProfileStatus.loading => const Center(
-              child: CircularProgressIndicator(color: VanepColors.action),
+            DriverProfileStatus.loading => Center(
+              child: CircularProgressIndicator(color: context.palette.action),
             ),
             DriverProfileStatus.error => SafeArea(
               child: VanepErrorView(
@@ -69,7 +69,7 @@ class DriverProfilePage extends StatelessWidget {
                         Text(
                           l10n.quoteRequestDriverUnavailable,
                           textAlign: TextAlign.center,
-                          style: VanepTypography.cardSubtitle,
+                          style: context.typography.cardSubtitle,
                         ),
                         const SizedBox(height: 8),
                       ],
@@ -109,7 +109,7 @@ class DriverProfileBody extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: DriverProfileHighlights(profile: profile),
         ),
-        const Divider(height: 1, color: VanepColors.divider),
+        Divider(height: 1, color: context.palette.divider),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
           child: Column(
@@ -129,16 +129,16 @@ class DriverProfileBody extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(
                   l10n.driverProfileAbout,
-                  style: VanepTypography.sectionTitle,
+                  style: context.typography.sectionTitle,
                 ),
                 const SizedBox(height: 6),
-                Text(bio, style: VanepTypography.body),
+                Text(bio, style: context.typography.body),
               ],
               const SizedBox(height: 20),
               if (profile.vehicles.isEmpty)
                 Text(
                   l10n.driverProfileNoVan,
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 )
               else
                 for (final vehicle in profile.vehicles)

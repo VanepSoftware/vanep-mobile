@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/cpf_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
@@ -13,6 +11,7 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invi
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_invite_state.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/mappers/assistant_failure_l10n.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/password_requirements_checklist.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class AssistantLeanSignupPage extends StatefulWidget {
   const AssistantLeanSignupPage({super.key});
@@ -128,7 +127,7 @@ class _AssistantLeanSignupPageState extends State<AssistantLeanSignupPage> {
         final invite = state.invite;
 
         return Scaffold(
-          backgroundColor: VanepColors.card,
+          backgroundColor: context.palette.card,
           appBar: const VanepAppBar(),
           body: SafeArea(
             child: ListView(
@@ -154,7 +153,7 @@ class _AssistantLeanSignupPageState extends State<AssistantLeanSignupPage> {
                                 l10n.assistantSignupInvitedBy(
                                   invite.driverName,
                                 ),
-                                style: VanepTypography.cardTitle,
+                                style: context.typography.cardTitle,
                               ),
                               if (invite.vehicleDescription != null &&
                                   invite.vehicleDescription!.isNotEmpty) ...[
@@ -163,7 +162,7 @@ class _AssistantLeanSignupPageState extends State<AssistantLeanSignupPage> {
                                   l10n.assistantSignupVehicle(
                                     invite.vehicleDescription!,
                                   ),
-                                  style: VanepTypography.cardSubtitle,
+                                  style: context.typography.cardSubtitle,
                                 ),
                               ],
                             ],
@@ -282,7 +281,7 @@ class _AssistantLeanSignupPageState extends State<AssistantLeanSignupPage> {
                           ? null
                           : (checked) =>
                               cubit.updateAcceptTerms(checked ?? false),
-                      activeColor: VanepColors.action,
+                      activeColor: context.palette.action,
                     ),
                     Expanded(
                       child: GestureDetector(
@@ -291,12 +290,12 @@ class _AssistantLeanSignupPageState extends State<AssistantLeanSignupPage> {
                             : () => cubit.updateAcceptTerms(!state.acceptTerms),
                         child: Text(
                           l10n.assistantSignupAcceptTerms,
-                          style: VanepTypography.cardSubtitle.copyWith(
+                          style: context.typography.cardSubtitle.copyWith(
                             color: state.fieldErrors.containsKey(
                               AssistantSignupField.acceptTerms,
                             )
-                                ? VanepColors.danger
-                                : VanepColors.textPrimary,
+                                ? context.palette.danger
+                                : context.palette.textPrimary,
                           ),
                         ),
                       ),
@@ -311,8 +310,8 @@ class _AssistantLeanSignupPageState extends State<AssistantLeanSignupPage> {
                     padding: const EdgeInsets.only(left: 12),
                     child: Text(
                       l10n.assistantSignupErrorTermsRequired,
-                      style: VanepTypography.cardSubtitle.copyWith(
-                        color: VanepColors.danger,
+                      style: context.typography.cardSubtitle.copyWith(
+                        color: context.palette.danger,
                         fontSize: 12,
                       ),
                     ),

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepLinkButton extends StatelessWidget {
   const VanepLinkButton({
     required this.label,
     required this.onPressed,
-    this.color = VanepColors.action,
+    this.color,
     this.showsChevron = false,
     this.leadingIcon,
     super.key,
@@ -15,12 +14,13 @@ class VanepLinkButton extends StatelessWidget {
 
   final String label;
   final VoidCallback? onPressed;
-  final Color color;
+  final Color? color;
   final bool showsChevron;
   final IconData? leadingIcon;
 
   @override
   Widget build(BuildContext context) {
+    final color = this.color ?? context.palette.action;
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
@@ -38,7 +38,7 @@ class VanepLinkButton extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              style: VanepTypography.linkAction.copyWith(
+              style: context.typography.linkAction.copyWith(
                 fontSize: 14,
                 color: color,
               ),

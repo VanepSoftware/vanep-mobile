@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/formatters/money_input_formatter.dart';
@@ -25,6 +23,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ProposalAdjustmentPage extends StatefulWidget {
   const ProposalAdjustmentPage({
@@ -94,7 +93,7 @@ class ProposalAdjustmentPageState extends State<ProposalAdjustmentPage> {
       builder: (context, state) {
         final field = state.draft.field;
         return Scaffold(
-          backgroundColor: VanepColors.surface,
+          backgroundColor: context.palette.surface,
           appBar: VanepAppBar(title: l10n.proposalDetailAskAdjustment),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
@@ -119,7 +118,7 @@ class ProposalAdjustmentPageState extends State<ProposalAdjustmentPage> {
                           proposal.installmentAmountCents,
                         ),
                       ),
-                      style: VanepTypography.cardTitle,
+                      style: context.typography.cardTitle,
                     ),
                   ],
                 ),

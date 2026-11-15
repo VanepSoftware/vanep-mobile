@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/formatters/postal_address_display.dart';
@@ -29,6 +28,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_r
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const quoteStartDateWindow = Duration(days: 366);
 
@@ -129,7 +129,7 @@ class QuoteRequestPage extends StatelessWidget {
         final driver = state.driver;
         final draft = state.draft;
         return Scaffold(
-          backgroundColor: VanepColors.surface,
+          backgroundColor: context.palette.surface,
           appBar: VanepAppBar(title: l10n.quoteRequestTitle),
           body: switch (state.status) {
             QuoteRequestStatus.ready when driver != null && draft != null =>
@@ -144,8 +144,8 @@ class QuoteRequestPage extends StatelessWidget {
               retryLabel: l10n.clientProposalsRetry,
               onRetry: cubit.load,
             ),
-            _ => const Center(
-              child: CircularProgressIndicator(color: VanepColors.action),
+            _ => Center(
+              child: CircularProgressIndicator(color: context.palette.action),
             ),
           },
           bottomNavigationBar: state.status == QuoteRequestStatus.ready
@@ -189,7 +189,7 @@ class QuoteRequestBody extends StatelessWidget {
           child: state.students.isEmpty
               ? Text(
                   l10n.quoteRequestNoStudents,
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 )
               : Column(
                   children: [
@@ -325,17 +325,17 @@ class QuoteStudentOption extends StatelessWidget {
                         children: [
                           Text(
                             dependent.name,
-                            style: VanepTypography.cardTitle.copyWith(
+                            style: context.typography.cardTitle.copyWith(
                               color: isReady
-                                  ? VanepColors.textPrimary
-                                  : VanepColors.textMuted,
+                                  ? context.palette.textPrimary
+                                  : context.palette.textMuted,
                             ),
                           ),
                           if (!isReady)
                             Text(
                               l10n.quoteRequestIncomplete,
-                              style: VanepTypography.cardSubtitle.copyWith(
-                                color: VanepColors.warning,
+                              style: context.typography.cardSubtitle.copyWith(
+                                color: context.palette.warning,
                               ),
                             ),
                         ],
@@ -402,7 +402,7 @@ class QuoteRouteSection extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Text(
                   joinFirstNames(l10n, [student.dependent.name]),
-                  style: VanepTypography.fieldLabel,
+                  style: context.typography.fieldLabel,
                 ),
               ),
             ...buildStops(l10n, student.dependent),
@@ -477,18 +477,18 @@ class QuoteRouteStop extends StatelessWidget {
               Container(
                 width: 32,
                 height: 32,
-                decoration: const BoxDecoration(
-                  color: VanepColors.actionSurface,
+                decoration: BoxDecoration(
+                  color: context.palette.actionSurface,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 18, color: VanepColors.action),
+                child: Icon(icon, size: 18, color: context.palette.action),
               ),
               if (!isLast)
                 Expanded(
                   child: Container(
                     width: 2,
                     margin: const EdgeInsets.symmetric(vertical: 4),
-                    color: VanepColors.divider,
+                    color: context.palette.divider,
                   ),
                 ),
             ],
@@ -502,15 +502,15 @@ class QuoteRouteStop extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: VanepTypography.cardSubtitle.copyWith(
-                      color: VanepColors.textMuted,
+                    style: context.typography.cardSubtitle.copyWith(
+                      color: context.palette.textMuted,
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text(title, style: VanepTypography.fieldLabel),
+                  Text(title, style: context.typography.fieldLabel),
                   if (details.isNotEmpty) ...[
                     const SizedBox(height: 2),
-                    Text(details, style: VanepTypography.cardSubtitle),
+                    Text(details, style: context.typography.cardSubtitle),
                   ],
                 ],
               ),
@@ -647,9 +647,9 @@ class QuoteRequestFooter extends StatelessWidget {
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-        decoration: const BoxDecoration(
-          color: VanepColors.card,
-          border: Border(top: BorderSide(color: VanepColors.divider)),
+        decoration: BoxDecoration(
+          color: context.palette.card,
+          border: Border(top: BorderSide(color: context.palette.divider)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -688,7 +688,7 @@ class QuoteRequestFooter extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             child: Text(
                               clientGapLabel(l10n, field),
-                              style: VanepTypography.cardSubtitle.copyWith(
+                              style: context.typography.cardSubtitle.copyWith(
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -702,10 +702,10 @@ class QuoteRequestFooter extends StatelessWidget {
                   ? l10n.quoteRequestLimitReached(openRequestsLimit)
                   : l10n.quoteRequestFooter,
               textAlign: TextAlign.center,
-              style: VanepTypography.cardSubtitle.copyWith(
+              style: context.typography.cardSubtitle.copyWith(
                 color: state.hasReachedLimit
-                    ? VanepColors.warning
-                    : VanepColors.textSecondary,
+                    ? context.palette.warning
+                    : context.palette.textSecondary,
               ),
             ),
             const SizedBox(height: 8),

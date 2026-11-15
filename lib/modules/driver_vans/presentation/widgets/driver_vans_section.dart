@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/photo_failure_label.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
@@ -12,6 +10,7 @@ import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_
 import 'package:vanep_mobile/modules/driver_vans/presentation/formatters/driver_van_labels.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/widgets/driver_van_photos_editor.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/widgets/van_registration_form.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverVansSection extends StatelessWidget {
   const DriverVansSection({super.key});
@@ -45,16 +44,19 @@ class DriverVansSectionContent extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return switch (state.status) {
-      DriverVansStatus.loading => const Padding(
+      DriverVansStatus.loading => Padding(
         padding: EdgeInsets.symmetric(vertical: 16),
         child: Center(
-          child: CircularProgressIndicator(color: VanepColors.action),
+          child: CircularProgressIndicator(color: context.palette.action),
         ),
       ),
       DriverVansStatus.loadFailed => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.driverVansLoadError, style: VanepTypography.cardSubtitle),
+          Text(
+            l10n.driverVansLoadError,
+            style: context.typography.cardSubtitle,
+          ),
           TextButton(
             onPressed: context.read<DriverVansCubit>().loadVans,
             child: Text(l10n.driversRetryButton),

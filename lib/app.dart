@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
@@ -70,37 +69,62 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/proposa
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/request_decline_sheet.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/modules/settings/domain/value_objects/theme_preference.dart';
+import 'package:vanep_mobile/modules/settings/presentation/cubit/theme_preference_cubit.dart';
+import 'package:vanep_mobile/modules/settings/presentation/mappers/theme_mode_mapper.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
-import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
-import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/van_students_page.dart';
-import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/unlinked_passenger_form_page.dart';
-import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/van_students_cubit.dart';
-import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/unlinked_passenger_form_cubit.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/share/text_sharer.dart';
+import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/unlinked_passenger_form_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/van_students_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/unlinked_passenger_form_page.dart';
+import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/van_students_page.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 
 class VanepApp extends StatelessWidget {
-  const VanepApp({super.key});
+  const VanepApp({required this.initialThemePreference, super.key});
+
+  final ThemePreference initialThemePreference;
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<ApiImageLoader>.value(
       value: getIt<ApiImageLoader>(),
-      child: BlocProvider<AuthCubit>(
-        create: (_) => getIt<AuthCubit>()..checkSession(),
-        child: MaterialApp(
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-          debugShowCheckedModeBanner: false,
-          theme: VanepTheme.light(),
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const VanepIntroGate(child: AuthGate()),
-        ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthCubit>(
+            create: (_) => getIt<AuthCubit>()..checkSession(),
+          ),
+          BlocProvider<ThemePreferenceCubit>(
+            create: (_) =>
+                getIt<ThemePreferenceCubit>(param1: initialThemePreference),
+          ),
+        ],
+        child:
+            BlocSelector<
+              ThemePreferenceCubit,
+              ThemePreferenceState,
+              ThemePreference
+            >(
+              selector: (state) => state.preference,
+              builder: (context, themePreference) => MaterialApp(
+                onGenerateTitle: (context) =>
+                    AppLocalizations.of(context)!.appTitle,
+                debugShowCheckedModeBanner: false,
+                theme: VanepTheme.light(),
+                darkTheme: VanepTheme.dark(),
+                themeMode: themeModeFor(themePreference),
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: AppLocalizations.supportedLocales,
+                home: const VanepIntroGate(child: AuthGate()),
+              ),
+            ),
       ),
     );
   }
@@ -382,7 +406,7 @@ Future<ProposalDeclineOutcome?> showProposalDecline(
   return showModalBottomSheet<ProposalDeclineOutcome>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: VanepColors.card,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -568,7 +592,7 @@ Future<RequestDeclineOutcome?> showRequestDecline(
   return showModalBottomSheet<RequestDeclineOutcome>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: VanepColors.card,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),

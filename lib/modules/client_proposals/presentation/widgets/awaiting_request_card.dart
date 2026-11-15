@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
@@ -9,6 +8,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/service_reques
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_turn.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class AwaitingRequestCard extends StatelessWidget {
   const AwaitingRequestCard({
@@ -62,7 +62,7 @@ class AwaitingRequestCard extends StatelessWidget {
                 Flexible(
                   child: ProposalLinkButton(
                     label: l10n.clientProposalsCancelRequest,
-                    color: VanepColors.danger,
+                    color: context.palette.danger,
                     onPressed: isCancelling ? null : onCancel,
                   ),
                 ),

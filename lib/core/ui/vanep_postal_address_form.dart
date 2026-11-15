@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 import 'package:vanep_mobile/core/formatters/postal_code_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_cep_address_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const vanepUfFieldWidth = 108.0;
 
@@ -286,8 +285,8 @@ class VanepUfSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final values = ufMenuValues(value: value, options: options);
-    final textStyle = VanepTypography.fieldValue.copyWith(
-      color: enabled ? VanepColors.textPrimary : VanepColors.textMuted,
+    final textStyle = context.typography.fieldValue.copyWith(
+      color: enabled ? context.palette.textPrimary : context.palette.textMuted,
     );
 
     return SizedBox(
@@ -298,13 +297,14 @@ class VanepUfSelect extends StatelessWidget {
           VanepFieldLabel(label: label, isRequired: true),
           const SizedBox(height: 8),
           InputDecorator(
-            decoration: vanepInputDecoration(errorText: errorText).copyWith(
-              enabled: enabled,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 4,
-              ),
-            ),
+            decoration: vanepInputDecoration(context, errorText: errorText)
+                .copyWith(
+                  enabled: enabled,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                ),
             child: enabled
                 ? DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
@@ -312,19 +312,19 @@ class VanepUfSelect extends StatelessWidget {
                       isExpanded: true,
                       menuMaxHeight: 280,
                       borderRadius: BorderRadius.circular(10),
-                      dropdownColor: VanepColors.card,
+                      dropdownColor: context.palette.card,
                       hint: Text(
                         hint,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: VanepTypography.fieldValue.copyWith(
-                          color: VanepColors.placeholder,
+                        style: context.typography.fieldValue.copyWith(
+                          color: context.palette.placeholder,
                         ),
                       ),
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.expand_more,
                         size: 20,
-                        color: VanepColors.textSecondary,
+                        color: context.palette.textSecondary,
                       ),
                       style: textStyle,
                       items: [
@@ -347,8 +347,8 @@ class VanepUfSelect extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: value.isEmpty
-                            ? VanepTypography.fieldValue.copyWith(
-                                color: VanepColors.placeholder,
+                            ? context.typography.fieldValue.copyWith(
+                                color: context.palette.placeholder,
                               )
                             : textStyle,
                       ),

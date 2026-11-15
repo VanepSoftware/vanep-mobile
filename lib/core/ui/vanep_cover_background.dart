@@ -1,29 +1,33 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/network/api_image_provider.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepCoverBackground extends StatelessWidget {
   const VanepCoverBackground({
     required this.child,
     this.photoUrl,
-    this.fallbackColor = VanepColors.actionSurface,
+    this.fallbackColor,
     super.key,
   });
 
   final Widget child;
   final String? photoUrl;
-  final Color fallbackColor;
+  final Color? fallbackColor;
 
   @override
   Widget build(BuildContext context) {
     final image = apiImageFor(context, photoUrl);
     if (image == null) {
-      return ColoredBox(color: fallbackColor, child: child);
+      return ColoredBox(
+        color: fallbackColor ?? context.palette.actionSurface,
+        child: child,
+      );
     }
 
     return ColoredBox(
-      color: VanepColors.textPrimary,
+      color: VanepColors.photoScrim,
       child: Stack(
         children: [
           Positioned.fill(
@@ -53,8 +57,8 @@ class VanepCoverScrim extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            VanepColors.textPrimary.withValues(alpha: 0.35),
-            VanepColors.textPrimary.withValues(alpha: 0.75),
+            VanepColors.photoScrim.withValues(alpha: 0.35),
+            VanepColors.photoScrim.withValues(alpha: 0.75),
           ],
         ),
       ),

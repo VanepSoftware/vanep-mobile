@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepFilterChip extends StatelessWidget {
   const VanepFilterChip({
@@ -20,12 +20,14 @@ class VanepFilterChip extends StatelessWidget {
       button: true,
       toggled: isSelected,
       child: Material(
-        color: isSelected ? VanepColors.actionSurface : VanepColors.card,
+        color: isSelected
+            ? context.palette.actionSurface
+            : context.palette.card,
         shape: StadiumBorder(
           side: BorderSide(
             color: isSelected
-                ? VanepColors.actionBorder
-                : VanepColors.inputBorder,
+                ? context.palette.actionBorder
+                : context.palette.inputBorder,
           ),
         ),
         child: InkWell(
@@ -44,8 +46,8 @@ class VanepFilterChip extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: isSelected
-                        ? VanepColors.action
-                        : VanepColors.textPrimary,
+                        ? context.palette.action
+                        : context.palette.textPrimary,
                   ),
                 ),
               ),

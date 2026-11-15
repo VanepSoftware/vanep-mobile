@@ -1,99 +1,100 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
+@immutable
 class VanepTypography {
-  const VanepTypography._();
+  const VanepTypography(this.palette);
 
-  static const TextStyle wordmark = TextStyle(
+  final VanepPalette palette;
+
+  TextStyle get wordmark => const TextStyle(
     fontSize: 56,
     fontWeight: FontWeight.w800,
     letterSpacing: -1.7,
     height: 1,
   );
 
-  static const TextStyle tagline = TextStyle(
+  TextStyle get tagline => TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: VanepColors.textSecondary,
+    color: palette.textSecondary,
   );
 
-  static const TextStyle heading = TextStyle(
+  TextStyle get heading => TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w700,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle body = TextStyle(
+  TextStyle get body => TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w400,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle button = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-  );
+  TextStyle get button =>
+      const TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
 
-  static const TextStyle pageTitle = TextStyle(
+  TextStyle get pageTitle => TextStyle(
     fontSize: 26,
     fontWeight: FontWeight.w800,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle sectionTitle = TextStyle(
+  TextStyle get sectionTitle => TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w700,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle cardTitle = TextStyle(
+  TextStyle get cardTitle => TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w700,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle cardSubtitle = TextStyle(
+  TextStyle get cardSubtitle => TextStyle(
     fontSize: 13,
     fontWeight: FontWeight.w400,
-    color: VanepColors.textSecondary,
+    color: palette.textSecondary,
   );
 
-  static const TextStyle ratingLabel = TextStyle(
+  TextStyle get ratingLabel => TextStyle(
     fontSize: 13,
     fontWeight: FontWeight.w700,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle fieldLabel = TextStyle(
+  TextStyle get fieldLabel => TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w600,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle fieldValue = TextStyle(
+  TextStyle get fieldValue => TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle loginTitle = TextStyle(
+  TextStyle get loginTitle => TextStyle(
     fontSize: 26,
     fontWeight: FontWeight.w600,
     letterSpacing: -0.3,
-    color: VanepColors.textPrimary,
+    color: palette.textPrimary,
   );
 
-  static const TextStyle overline = TextStyle(
+  TextStyle get overline => TextStyle(
     fontSize: 11,
     fontWeight: FontWeight.w800,
     letterSpacing: 0.9,
-    color: VanepColors.action,
+    color: palette.action,
   );
 
-  static const TextStyle linkAction = TextStyle(
+  TextStyle get linkAction => TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w600,
-    color: VanepColors.action,
+    color: palette.action,
   );
 }

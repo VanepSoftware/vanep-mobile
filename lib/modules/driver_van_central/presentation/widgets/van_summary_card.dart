@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/formatters/van_central_labels.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const vanSummaryRadius = 16.0;
 
@@ -105,7 +105,7 @@ class VanSummaryHeader extends StatelessWidget {
             children: [
               Text(
                 vanTitleLabel(l10n, van),
-                style: VanepTypography.cardTitle.copyWith(
+                style: context.typography.cardTitle.copyWith(
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
                   color: VanepColors.onBrand,
@@ -114,7 +114,7 @@ class VanSummaryHeader extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 vanDetailsLabel(l10n, van, withAssistant: withAssistant),
-                style: VanepTypography.cardSubtitle.copyWith(
+                style: context.typography.cardSubtitle.copyWith(
                   color: VanepColors.onBrand.withValues(alpha: 0.75),
                 ),
               ),
@@ -154,7 +154,7 @@ class VanOperationStatus extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           active ? l10n.vanCentralInOperation : l10n.vanCentralOutOfOperation,
-          style: VanepTypography.ratingLabel.copyWith(color: textColor),
+          style: context.typography.ratingLabel.copyWith(color: textColor),
         ),
       ],
     );
@@ -204,7 +204,7 @@ class VanShiftMeter extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final shiftName = operationShiftLabel(l10n, occupancy.shift);
     final isFull = occupancy.isFullIn(capacity);
-    final textStyle = VanepTypography.ratingLabel.copyWith(
+    final textStyle = context.typography.ratingLabel.copyWith(
       color: VanepColors.onBrand,
     );
 
@@ -247,7 +247,7 @@ class VanShiftMeter extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           l10n.vanCentralShiftSeats(occupancy.passengers, capacity),
-          style: VanepTypography.cardSubtitle.copyWith(
+          style: context.typography.cardSubtitle.copyWith(
             fontSize: 12,
             color: VanepColors.onBrand.withValues(alpha: 0.72),
           ),
@@ -268,7 +268,7 @@ class VanOccupancyUnavailable extends StatelessWidget {
 
     return Text(
       message ?? l10n.vanCentralOccupancyUnavailable,
-      style: VanepTypography.cardSubtitle.copyWith(
+      style: context.typography.cardSubtitle.copyWith(
         color: VanepColors.onBrand.withValues(alpha: 0.72),
       ),
     );

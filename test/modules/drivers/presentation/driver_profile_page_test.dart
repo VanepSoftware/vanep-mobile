@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_cover_background.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_slot.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -14,6 +13,7 @@ import 'package:vanep_mobile/modules/drivers/domain/failures/driver_failure.dart
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 
 import '../drivers_fixtures.dart';
 import 'drivers_presentation_mocks.dart';
@@ -173,7 +173,7 @@ void main() {
     expect(find.byType(VanepPhotoSlot), findsNWidgets(2));
     expect(
       tester.widget<AppBar>(find.byType(AppBar)).foregroundColor,
-      VanepColors.card,
+      VanepColors.onBrand,
     );
   });
 

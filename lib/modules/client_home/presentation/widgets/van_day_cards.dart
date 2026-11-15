@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
@@ -12,6 +10,7 @@ import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_sect
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 String vanTitle(AppLocalizations l10n, VanDay van) {
   return l10n.clientHomeVanTitle(van.driverName, formatShift(l10n, van.shift));
@@ -45,27 +44,30 @@ class VanDayCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(vanTitle(l10n, van), style: VanepTypography.cardTitle),
+                    Text(
+                      vanTitle(l10n, van),
+                      style: context.typography.cardTitle,
+                    ),
                     Text(
                       l10n.clientHomeVanSubtitle(
                         van.vehicleModel,
                         van.plate,
                         formatTimeOfDay(l10n, van.departureAt),
                       ),
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const Divider(height: 28, color: VanepColors.divider),
+          Divider(height: 28, color: context.palette.divider),
           VanScheduleRow(schedule: van.schedule),
-          const Divider(height: 28, color: VanepColors.divider),
+          Divider(height: 28, color: context.palette.divider),
           for (final rider in van.absentRiders)
             VanNoticeRow(
               icon: Icons.event_busy_outlined,
-              iconColor: VanepColors.warning,
+              iconColor: context.palette.warning,
               text: l10n.clientHomeNotGoingToday(rider.name),
               actionLabel: l10n.clientHomeUndo,
               onAction: () => openUnavailableFeature(
@@ -76,7 +78,7 @@ class VanDayCard extends StatelessWidget {
           if (stopChange != null)
             VanNoticeRow(
               icon: Icons.edit_location_alt_outlined,
-              iconColor: VanepColors.action,
+              iconColor: context.palette.action,
               text: formatStopChange(l10n, stopChange),
             ),
           const SizedBox(height: 10),
@@ -162,9 +164,9 @@ class ScheduleCell extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: VanepTypography.cardSubtitle),
+        Text(label, style: context.typography.cardSubtitle),
         const SizedBox(height: 2),
-        Text(value, style: VanepTypography.cardTitle),
+        Text(value, style: context.typography.cardTitle),
       ],
     );
   }
@@ -195,11 +197,11 @@ class VanNoticeRow extends StatelessWidget {
         children: [
           Icon(icon, size: 20, color: iconColor),
           const SizedBox(width: 10),
-          Expanded(child: Text(text, style: VanepTypography.body)),
+          Expanded(child: Text(text, style: context.typography.body)),
           if (label != null)
             TextButton(
               onPressed: onAction,
-              child: Text(label, style: VanepTypography.linkAction),
+              child: Text(label, style: context.typography.linkAction),
             ),
         ],
       ),

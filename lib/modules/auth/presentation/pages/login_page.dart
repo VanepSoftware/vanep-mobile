@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/google_logo.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -20,6 +18,7 @@ import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.d
 import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/password_reset_page.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/signup_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,9 +49,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
+      value: context.surfaceOverlayStyle,
       child: Scaffold(
-        backgroundColor: VanepColors.card,
+        backgroundColor: context.palette.card,
         body: SafeArea(
           child: BlocConsumer<LoginCubit, LoginState>(
             listenWhen: (previous, current) =>
@@ -123,9 +122,9 @@ class LoginForm extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Center(
+                Center(
                   child: VanepWordmark(
-                    color: VanepColors.textPrimary,
+                    color: context.palette.textPrimary,
                     fontSize: 44,
                   ),
                 ),
@@ -133,13 +132,13 @@ class LoginForm extends StatelessWidget {
                 Text(
                   l10n.loginHeading,
                   textAlign: TextAlign.center,
-                  style: VanepTypography.loginTitle,
+                  style: context.typography.loginTitle,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   l10n.loginSubtitle,
                   textAlign: TextAlign.center,
-                  style: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
+                  style: context.typography.cardSubtitle.copyWith(fontSize: 15),
                 ),
                 const SizedBox(height: 36),
                 VanepTextField(
@@ -179,7 +178,7 @@ class LoginForm extends StatelessWidget {
                           )
                         : null,
                     style: TextButton.styleFrom(
-                      foregroundColor: VanepColors.action,
+                      foregroundColor: context.palette.action,
                     ),
                     child: Text(
                       l10n.loginForgotPassword,
@@ -203,7 +202,7 @@ class LoginForm extends StatelessWidget {
                   children: [
                     Text(
                       l10n.loginNoAccount,
-                      style: VanepTypography.cardSubtitle.copyWith(
+                      style: context.typography.cardSubtitle.copyWith(
                         fontSize: 15,
                       ),
                     ),
@@ -212,7 +211,7 @@ class LoginForm extends StatelessWidget {
                           ? () => openAccountTypeChoice(context)
                           : null,
                       style: TextButton.styleFrom(
-                        foregroundColor: VanepColors.action,
+                        foregroundColor: context.palette.action,
                         padding: const EdgeInsets.symmetric(horizontal: 6),
                       ),
                       child: Text(
@@ -239,7 +238,7 @@ class LoginForm extends StatelessWidget {
                     ),
                   ),
                   style: TextButton.styleFrom(
-                    foregroundColor: VanepColors.textSecondary,
+                    foregroundColor: context.palette.textSecondary,
                   ),
                 ),
               ],
@@ -260,12 +259,12 @@ class LoginDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: VanepColors.inputBorder)),
+        Expanded(child: Divider(color: context.palette.inputBorder)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(label, style: VanepTypography.cardSubtitle),
+          child: Text(label, style: context.typography.cardSubtitle),
         ),
-        const Expanded(child: Divider(color: VanepColors.inputBorder)),
+        Expanded(child: Divider(color: context.palette.inputBorder)),
       ],
     );
   }

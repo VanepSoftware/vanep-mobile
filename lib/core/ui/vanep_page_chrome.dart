@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
   const VanepAppBar({
@@ -24,8 +22,8 @@ class VanepAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final title = this.title;
     return AppBar(
-      backgroundColor: VanepColors.card,
-      foregroundColor: VanepColors.textPrimary,
+      backgroundColor: context.palette.card,
+      foregroundColor: context.palette.textPrimary,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -48,7 +46,7 @@ class VanepAppBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final caption = this.caption;
-    final titleText = Text(title, style: VanepTypography.cardTitle);
+    final titleText = Text(title, style: context.typography.cardTitle);
     if (caption == null) return titleText;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +58,7 @@ class VanepAppBarTitle extends StatelessWidget {
           caption,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: VanepTypography.cardSubtitle.copyWith(fontSize: 12),
+          style: context.typography.cardSubtitle.copyWith(fontSize: 12),
         ),
       ],
     );
@@ -91,11 +89,11 @@ class VanepPageHeader extends StatelessWidget {
             VanepIconBadge(icon: icon, size: 56),
             const SizedBox(height: 20),
           ],
-          Text(title, style: VanepTypography.loginTitle),
+          Text(title, style: context.typography.loginTitle),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: VanepTypography.cardSubtitle.copyWith(
+            style: context.typography.cardSubtitle.copyWith(
               fontSize: 15,
               height: 1.4,
             ),
@@ -118,10 +116,10 @@ class VanepIconBadge extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: VanepColors.action.withValues(alpha: 0.08),
+        color: context.palette.action.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(size / 4),
       ),
-      child: Icon(icon, color: VanepColors.action, size: size * 0.48),
+      child: Icon(icon, color: context.palette.action, size: size * 0.48),
     );
   }
 }
@@ -174,9 +172,9 @@ class VanepBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: VanepColors.card,
-        border: Border(top: BorderSide(color: VanepColors.cardBorder)),
+      decoration: BoxDecoration(
+        color: context.palette.card,
+        border: Border(top: BorderSide(color: context.palette.cardBorder)),
       ),
       child: SafeArea(
         top: false,
@@ -205,12 +203,14 @@ class VanepOutlinedPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: highlighted
-          ? VanepColors.action.withValues(alpha: 0.04)
-          : VanepColors.card,
+          ? context.palette.action.withValues(alpha: 0.04)
+          : context.palette.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: highlighted ? VanepColors.action : VanepColors.cardBorder,
+          color: highlighted
+              ? context.palette.action
+              : context.palette.cardBorder,
         ),
       ),
       clipBehavior: Clip.antiAlias,

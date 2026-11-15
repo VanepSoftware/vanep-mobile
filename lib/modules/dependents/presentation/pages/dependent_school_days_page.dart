@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
@@ -20,6 +18,7 @@ import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_editor_frame.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependents_list_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<SchoolWeek?> openDependentSchoolDays(
   BuildContext context, {
@@ -140,7 +139,7 @@ class DependentSchoolDayRow extends StatelessWidget {
             label: l10n.dependentSchoolDayHasClass(dayName),
             child: Switch(
               value: isOn,
-              activeTrackColor: VanepColors.action,
+              activeTrackColor: context.palette.action,
               onChanged: enabled ? onToggle : null,
             ),
           ),
@@ -148,19 +147,19 @@ class DependentSchoolDayRow extends StatelessWidget {
           Expanded(
             child: Text(
               dayName,
-              style: VanepTypography.cardTitle.copyWith(
+              style: context.typography.cardTitle.copyWith(
                 fontSize: 15,
                 fontWeight: isOn ? FontWeight.w700 : FontWeight.w600,
                 color: isOn
-                    ? VanepColors.textPrimary
-                    : VanepColors.textSecondary,
+                    ? context.palette.textPrimary
+                    : context.palette.textSecondary,
               ),
             ),
           ),
           if (shift == null)
             Text(
               l10n.dependentSchoolDayOff,
-              style: VanepTypography.cardSubtitle.copyWith(
+              style: context.typography.cardSubtitle.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             )
@@ -212,22 +211,22 @@ class DependentSchoolShiftPicker extends StatelessWidget {
         height: 40,
         padding: const EdgeInsets.only(left: 14, right: 10),
         decoration: BoxDecoration(
-          color: VanepColors.card,
+          color: context.palette.card,
           borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: VanepColors.inputBorder),
+          border: Border.all(color: context.palette.inputBorder),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               shiftName,
-              style: VanepTypography.ratingLabel.copyWith(fontSize: 14),
+              style: context.typography.ratingLabel.copyWith(fontSize: 14),
             ),
             const SizedBox(width: 4),
-            const Icon(
+            Icon(
               Icons.expand_more,
               size: 20,
-              color: VanepColors.textSecondary,
+              color: context.palette.textSecondary,
             ),
           ],
         ),

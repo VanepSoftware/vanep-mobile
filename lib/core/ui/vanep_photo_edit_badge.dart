@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepPhotoEditBadge extends StatelessWidget {
   const VanepPhotoEditBadge({this.size = 28, super.key});
@@ -14,14 +14,14 @@ class VanepPhotoEditBadge extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: VanepColors.action,
+          color: context.palette.action,
           shape: BoxShape.circle,
-          border: Border.all(color: VanepColors.card, width: 2),
+          border: Border.all(color: context.palette.card, width: 2),
         ),
         child: Icon(
           Icons.photo_camera_outlined,
           size: size * 0.5,
-          color: VanepColors.card,
+          color: context.palette.onAction,
         ),
       ),
     );
@@ -37,16 +37,16 @@ class VanepUploadingOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: VanepColors.textPrimary.withValues(alpha: 0.45),
+        color: VanepColors.photoScrim.withValues(alpha: 0.45),
         shape: shape,
       ),
-      child: const Center(
+      child: Center(
         child: SizedBox(
           width: 24,
           height: 24,
           child: CircularProgressIndicator(
             strokeWidth: 2.4,
-            color: VanepColors.card,
+            color: VanepColors.onBrand,
           ),
         ),
       ),

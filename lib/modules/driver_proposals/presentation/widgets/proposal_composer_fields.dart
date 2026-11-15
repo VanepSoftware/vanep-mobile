@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/money_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 int? parseNumberInput(String text) => int.tryParse(text.trim());
 
@@ -214,7 +213,9 @@ class ComposerFieldError extends StatelessWidget {
       padding: const EdgeInsets.only(top: 6),
       child: Text(
         text,
-        style: VanepTypography.cardSubtitle.copyWith(color: VanepColors.danger),
+        style: context.typography.cardSubtitle.copyWith(
+          color: context.palette.danger,
+        ),
       ),
     );
   }

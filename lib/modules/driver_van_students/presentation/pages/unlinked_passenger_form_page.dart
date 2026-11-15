@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:vanep_mobile/core/ui/vanep_city_picker_sheet.dart';
@@ -74,7 +73,7 @@ class UnlinkedPassengerFormPage extends StatelessWidget {
               return PopScope(
                 canPop: !state.isSaving,
                 child: Scaffold(
-                  backgroundColor: VanepColors.surface,
+                  backgroundColor: context.palette.surface,
                   appBar: VanepAppBar(
                     title: l10n.unlinkedPassengerFormTitle,
                     caption: vanCaption,
@@ -115,7 +114,7 @@ class UnlinkedPassengerFormBody extends StatelessWidget {
           children: [
             Text(
               l10n.unlinkedPassengerFormIntro,
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
             const SizedBox(height: unlinkedPassengerSectionSpacing),
             UnlinkedPassengerStudentSection(state: state),
@@ -145,7 +144,9 @@ class UnlinkedPassengerFieldError extends StatelessWidget {
       padding: const EdgeInsets.only(top: 6),
       child: Text(
         text,
-        style: VanepTypography.cardSubtitle.copyWith(color: VanepColors.danger),
+        style: context.typography.cardSubtitle.copyWith(
+          color: context.palette.danger,
+        ),
       ),
     );
   }
@@ -235,23 +236,26 @@ class UnlinkedPassengerSchoolSection extends StatelessWidget {
             ),
           ),
           if (state.isResolvingSchool)
-            const Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: LinearProgressIndicator(color: VanepColors.action),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: LinearProgressIndicator(color: context.palette.action),
             )
           else if (school != null)
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.check_circle,
                     size: 18,
-                    color: VanepColors.action,
+                    color: context.palette.action,
                   ),
                   const SizedBox(width: 6),
                   Expanded(
-                    child: Text(school.name, style: VanepTypography.cardTitle),
+                    child: Text(
+                      school.name,
+                      style: context.typography.cardTitle,
+                    ),
                   ),
                 ],
               ),
@@ -261,7 +265,7 @@ class UnlinkedPassengerSchoolSection extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             l10n.unlinkedPassengerSchoolShiftLabel,
-            style: VanepTypography.fieldLabel,
+            style: context.typography.fieldLabel,
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -400,7 +404,7 @@ class UnlinkedPassengerScheduleSection extends StatelessWidget {
               children: [
                 Text(
                   l10n.unlinkedPassengerDaysHint,
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 ),
                 const SizedBox(height: 8),
                 days,

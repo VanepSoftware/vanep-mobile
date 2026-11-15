@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
@@ -19,6 +18,7 @@ import 'package:vanep_mobile/modules/drivers/presentation/pages/find_vans_tab.da
 import 'package:vanep_mobile/shell/client_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const clientShellHomeTabIndex = 0;
 
@@ -79,7 +79,7 @@ class ClientShellState extends State<ClientShell> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       drawer: ShellAccountDrawer(profile: widget.profile),
       onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
         context,

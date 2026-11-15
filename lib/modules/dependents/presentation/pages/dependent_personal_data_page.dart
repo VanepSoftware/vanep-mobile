@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/domain/cpf.dart';
 import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
@@ -19,6 +18,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_per
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_personal_data_state.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/formatters/dependent_labels.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_editor_frame.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const int maxDependentNameLength = 255;
 
@@ -157,7 +157,7 @@ class DependentPersonalDataBodyState extends State<DependentPersonalDataBody> {
                 errorText: errorOf(DependentField.birthDate),
                 suffix: IconButton(
                   tooltip: l10n.dependentFieldBirthDatePick,
-                  color: VanepColors.textSecondary,
+                  color: context.palette.textSecondary,
                   icon: const Icon(Icons.calendar_today_outlined, size: 20),
                   onPressed: state.isSaving ? null : pickBirthDate,
                 ),

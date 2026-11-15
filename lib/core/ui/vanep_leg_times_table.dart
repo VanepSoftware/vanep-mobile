@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
@@ -61,7 +60,7 @@ class VanepLegTimesTable extends StatelessWidget {
                 Text(
                   routeLegLabel(l10n, leg),
                   textAlign: TextAlign.center,
-                  style: VanepTypography.cardTitle,
+                  style: context.typography.cardTitle,
                 ),
             ],
           ),
@@ -71,7 +70,7 @@ class VanepLegTimesTable extends StatelessWidget {
               child: VanepLegTimesRow(
                 leading: Text(
                   weekdayShortLabel(l10n, weekday),
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 ),
                 cells: [
                   for (final leg in legs)
@@ -88,8 +87,8 @@ class VanepLegTimesTable extends StatelessWidget {
                       Text(
                         '—',
                         textAlign: TextAlign.center,
-                        style: VanepTypography.cardSubtitle.copyWith(
-                          color: VanepColors.textMuted,
+                        style: context.typography.cardSubtitle.copyWith(
+                          color: context.palette.textMuted,
                         ),
                       ),
                 ],
@@ -185,15 +184,17 @@ class VanepTimeButton extends StatelessWidget {
           minimumSize: const Size(72, 40),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           foregroundColor: time == null
-              ? VanepColors.action
-              : VanepColors.textPrimary,
-          side: const BorderSide(color: VanepColors.inputBorder),
+              ? context.palette.action
+              : context.palette.textPrimary,
+          side: BorderSide(color: context.palette.inputBorder),
         ),
         child: Text(
           time == null ? l10n.proposalComposerSetTime : formatClockTime(time),
-          style: VanepTypography.cardSubtitle.copyWith(
+          style: context.typography.cardSubtitle.copyWith(
             fontWeight: FontWeight.w700,
-            color: time == null ? VanepColors.action : VanepColors.textPrimary,
+            color: time == null
+                ? context.palette.action
+                : context.palette.textPrimary,
           ),
         ),
       ),
@@ -219,12 +220,12 @@ class VanepDefaultLegTimes extends StatelessWidget {
       children: [
         Text(
           l10n.scheduleEditorDefaultTimes,
-          style: VanepTypography.fieldLabel,
+          style: context.typography.fieldLabel,
         ),
         const SizedBox(height: 4),
         Text(
           l10n.scheduleEditorDefaultTimesHint,
-          style: VanepTypography.cardSubtitle,
+          style: context.typography.cardSubtitle,
         ),
         const SizedBox(height: 8),
         Row(
@@ -239,7 +240,7 @@ class VanepDefaultLegTimes extends StatelessWidget {
                     Text(
                       routeLegLabel(l10n, leg),
                       textAlign: TextAlign.center,
-                      style: VanepTypography.cardTitle,
+                      style: context.typography.cardTitle,
                     ),
                     const SizedBox(height: 8),
                     VanepTimeButton(

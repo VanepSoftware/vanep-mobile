@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class NegotiatingCard extends StatelessWidget {
   const NegotiatingCard({
@@ -39,11 +39,11 @@ class NegotiatingCard extends StatelessWidget {
                       l10n.clientHomeNoVanYet(
                         joinFirstNames(l10n, section.childNames),
                       ),
-                      style: VanepTypography.cardTitle,
+                      style: context.typography.cardTitle,
                     ),
                     Text(
                       l10n.clientHomeOpenNegotiations(section.openNegotiations),
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                   ],
                 ),

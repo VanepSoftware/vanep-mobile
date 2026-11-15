@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_current_dot.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 void main() {
   Future<void> pumpDot(WidgetTester tester, VanepCurrentDot dot) {
@@ -31,7 +31,7 @@ void main() {
     );
 
     final decoration = decorationOf(tester);
-    expect(decoration.color, VanepColors.action);
+    expect(decoration.color, VanepPalette.light.action);
     expect(decoration.border, isNotNull);
     expect(find.bySemanticsLabel('Versão atual'), findsOneWidget);
   });
@@ -43,7 +43,7 @@ void main() {
     );
 
     final decoration = decorationOf(tester);
-    expect(decoration.color, VanepColors.textMuted);
+    expect(decoration.color, VanepPalette.light.textMuted);
     expect(decoration.border, isNull);
     expect(find.bySemanticsLabel('Versão atual'), findsNothing);
   });

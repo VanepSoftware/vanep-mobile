@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -11,6 +10,7 @@ import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_sect
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_building_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ChildDayCard extends StatelessWidget {
   const ChildDayCard({required this.plan, super.key});
@@ -30,7 +30,7 @@ class ChildDayCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.clientHomeChildDayTitle(plan.childName),
-                  style: VanepTypography.cardTitle,
+                  style: context.typography.cardTitle,
                 ),
               ),
               TextButton(
@@ -38,7 +38,7 @@ class ChildDayCard extends StatelessWidget {
                     openUnavailableFeature(context, l10n.clientHomeHistory),
                 child: Text(
                   l10n.clientHomeHistory,
-                  style: VanepTypography.linkAction,
+                  style: context.typography.linkAction,
                 ),
               ),
             ],
@@ -74,7 +74,7 @@ class DayMilestoneRow extends StatelessWidget {
                 ? Icons.radio_button_checked
                 : Icons.radio_button_unchecked,
             size: 22,
-            color: emphasis ? VanepColors.action : VanepColors.divider,
+            color: emphasis ? context.palette.action : context.palette.divider,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -83,15 +83,15 @@ class DayMilestoneRow extends StatelessWidget {
               children: [
                 Text(
                   formatMilestone(l10n, milestone.kind),
-                  style: VanepTypography.body.copyWith(
+                  style: context.typography.body.copyWith(
                     fontWeight: emphasis ? FontWeight.w700 : FontWeight.w500,
                   ),
                 ),
                 if (place != null)
                   Text(
                     l10n.clientHomeTodayPlace(place),
-                    style: VanepTypography.cardSubtitle.copyWith(
-                      color: VanepColors.action,
+                    style: context.typography.cardSubtitle.copyWith(
+                      color: context.palette.action,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -100,8 +100,10 @@ class DayMilestoneRow extends StatelessWidget {
           ),
           Text(
             milestone.estimated ? l10n.clientHomeApproximateTime(time) : time,
-            style: VanepTypography.cardSubtitle.copyWith(
-              color: emphasis ? VanepColors.action : VanepColors.textSecondary,
+            style: context.typography.cardSubtitle.copyWith(
+              color: emphasis
+                  ? context.palette.action
+                  : context.palette.textSecondary,
               fontWeight: emphasis ? FontWeight.w700 : FontWeight.w400,
             ),
           ),
@@ -127,7 +129,9 @@ class ArrivalCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: arrivalSurface,
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-        border: Border.all(color: VanepColors.success.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: context.palette.success.withValues(alpha: 0.3),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -135,9 +139,9 @@ class ArrivalCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const HomeIconBubble(
+                HomeIconBubble(
                   icon: Icons.school_outlined,
-                  background: VanepColors.success,
+                  background: context.palette.success,
                   foreground: VanepColors.onBrand,
                   size: 48,
                 ),
@@ -152,8 +156,8 @@ class ArrivalCard extends StatelessWidget {
                               formatTimeOfDay(l10n, section.confirmedAt),
                             )
                             .toUpperCase(),
-                        style: VanepTypography.cardSubtitle.copyWith(
-                          color: VanepColors.success,
+                        style: context.typography.cardSubtitle.copyWith(
+                          color: context.palette.success,
                           fontWeight: FontWeight.w700,
                           fontSize: 12,
                           letterSpacing: 0.8,
@@ -161,11 +165,13 @@ class ArrivalCard extends StatelessWidget {
                       ),
                       Text(
                         l10n.clientHomeArrivedAtSchool(section.childName),
-                        style: VanepTypography.heading.copyWith(fontSize: 20),
+                        style: context.typography.heading.copyWith(
+                          fontSize: 20,
+                        ),
                       ),
                       Text(
                         section.schoolName,
-                        style: VanepTypography.cardSubtitle,
+                        style: context.typography.cardSubtitle,
                       ),
                     ],
                   ),
@@ -177,16 +183,12 @@ class ArrivalCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.schedule,
-                    color: VanepColors.action,
-                    size: 20,
-                  ),
+                  Icon(Icons.schedule, color: context.palette.action, size: 20),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text.rich(
                       TextSpan(
-                        style: VanepTypography.body,
+                        style: context.typography.body,
                         children: [
                           TextSpan(
                             text: l10n.clientHomeSchoolDepartureAt(
@@ -252,21 +254,21 @@ class DayTimelineCard extends StatelessWidget {
                     width: 52,
                     child: Text(
                       formatClockTime(event.at),
-                      style: VanepTypography.ratingLabel,
+                      style: context.typography.ratingLabel,
                     ),
                   ),
                   HomeIconBubble(
                     icon: dayEventIcon(event.kind),
                     size: 24,
                     background: event.kind == DayEventKind.absence
-                        ? VanepColors.warningSurface
+                        ? context.palette.warningSurface
                         : event.kind == DayEventKind.routeStarted
-                        ? VanepColors.actionSurface
-                        : VanepColors.success,
+                        ? context.palette.actionSurface
+                        : context.palette.success,
                     foreground: event.kind == DayEventKind.absence
-                        ? VanepColors.warning
+                        ? context.palette.warning
                         : event.kind == DayEventKind.routeStarted
-                        ? VanepColors.action
+                        ? context.palette.action
                         : VanepColors.onBrand,
                   ),
                   const SizedBox(width: 10),
@@ -276,14 +278,14 @@ class DayTimelineCard extends StatelessWidget {
                       children: [
                         Text(
                           dayEventTitle(l10n, event),
-                          style: VanepTypography.cardTitle.copyWith(
+                          style: context.typography.cardTitle.copyWith(
                             fontSize: 15,
                           ),
                         ),
                         if (event.actorName != null)
                           Text(
                             l10n.clientHomeEventBy(event.actorName!),
-                            style: VanepTypography.cardSubtitle,
+                            style: context.typography.cardSubtitle,
                           ),
                       ],
                     ),
@@ -306,9 +308,9 @@ class AlertsPreferencesRow extends StatelessWidget {
     return HomeRowsCard(
       rows: [
         HomeRowTile(
-          leading: const Icon(
+          leading: Icon(
             Icons.notifications_active_outlined,
-            color: VanepColors.textSecondary,
+            color: context.palette.textSecondary,
           ),
           title: l10n.clientHomeAlertsTitle,
           subtitle: l10n.clientHomeAlertsMessage,
@@ -344,14 +346,14 @@ class NoRouteTodayCard extends StatelessWidget {
                   children: [
                     Text(
                       l10n.clientHomeNoRouteToday,
-                      style: VanepTypography.heading.copyWith(fontSize: 20),
+                      style: context.typography.heading.copyWith(fontSize: 20),
                     ),
                     Text(
                       l10n.clientHomeNextRoute(
                         formatWeekday(l10n, section.nextRouteAt),
                         formatTimeOfDay(l10n, section.nextRouteAt),
                       ),
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                     ),
                   ],
                 ),
@@ -373,7 +375,7 @@ class NoRouteTodayCard extends StatelessWidget {
               l10n.clientHomeReturnWithYou(
                 formatWeekday(l10n, dayWithoutReturn.date),
               ),
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
           ],
         ],
@@ -393,17 +395,17 @@ class WeekDayTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
       decoration: BoxDecoration(
-        color: VanepColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(VanepTheme.controlRadius),
       ),
       child: Column(
         children: [
           Text(
             formatShortWeekday(l10n, day.date),
-            style: VanepTypography.cardSubtitle.copyWith(fontSize: 12),
+            style: context.typography.cardSubtitle.copyWith(fontSize: 12),
           ),
           const SizedBox(height: 4),
-          Text('${day.date.day}', style: VanepTypography.cardTitle),
+          Text('${day.date.day}', style: context.typography.cardTitle),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -428,9 +430,9 @@ class LegMark extends StatelessWidget {
     return Container(
       height: 5,
       decoration: BoxDecoration(
-        color: active ? VanepColors.action : VanepColors.card,
+        color: active ? context.palette.action : context.palette.card,
         borderRadius: BorderRadius.circular(3),
-        border: active ? null : Border.all(color: VanepColors.inputBorder),
+        border: active ? null : Border.all(color: context.palette.inputBorder),
       ),
     );
   }
