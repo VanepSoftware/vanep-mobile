@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/weekday_leg.dart';
 
 enum ProposalComparisonField {

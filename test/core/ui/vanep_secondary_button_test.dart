@@ -85,4 +85,27 @@ void main() {
     expect(style.foregroundColor!.resolve({}), VanepPalette.light.dangerText);
     expect(style.side!.resolve({})!.color, VanepPalette.light.dangerBorder);
   });
+
+  testWidgets('a compact button is shorter and only as wide as its label', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: VanepSecondaryButton(
+              label: 'Convidar',
+              compact: true,
+              icon: Icons.share_outlined,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final size = tester.getSize(find.byType(VanepSecondaryButton));
+    expect(size.height, 40);
+    expect(size.width, lessThan(200));
+  });
 }

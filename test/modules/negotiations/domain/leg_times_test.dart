@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/leg_times.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 
 import '../negotiations_fixtures.dart';
 
