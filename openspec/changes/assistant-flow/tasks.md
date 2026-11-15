@@ -62,15 +62,15 @@
 
 ## 4. Phase 4 — Assistant Shell & Multi-Van Selection (branch: `feat-(N-37)/assistant-shell-van-selector`)
 
-- [ ] 4.1 State management `AssistantVanSelectorCubit` for active van selection (N:N support)
-- [ ] 4.2 Widget `AssistantVanSelectorSheet` to switch active van when linked to 2+ vans
-- [ ] 4.3 Widget `AssistantBottomNav` with icons only and `Semantics` labels: Rota, Alunos, Perfil
-- [ ] 4.4 Top-level `AssistantShell` hosting Rota, Alunos, and Perfil views
-- [ ] 4.5 Route guard preventing navigation to driver/client restricted paths
-- [ ] 4.6 Update `AuthGate` in `lib/app.dart` to branch `UserType.assistant` to `AssistantShell`
-- [ ] 4.7 Widget and flow tests for `AssistantShell` and `AuthGate`
-- [ ] 4.8 Run `make lint` and `make test`
-- [ ] 4.9 **Aguardar validação do desenvolvedor no emulador/aparelho (R27a)**; só então commitar e abrir PR
+- [x] 4.1 State management `AssistantVanSelectorCubit` for active van selection (N:N support)
+- [x] 4.2 Widget `AssistantVanSelectorSheet` to switch active van when linked to 2+ vans
+- [x] 4.3 Widget `AssistantBottomNav` with icons only and `Semantics` labels: Rota, Alunos, Perfil
+- [x] 4.4 Top-level `AssistantShell` hosting Rota, Alunos, and Perfil views
+- [x] 4.5 Route guard preventing navigation to driver/client restricted paths
+- [x] 4.6 Update `AuthGate` in `lib/app.dart` to branch `UserType.assistant` to `AssistantShell`
+- [x] 4.7 Widget and flow tests for `AssistantShell` and `AuthGate`
+- [x] 4.8 Run `make lint` and `make test`
+- [x] 4.9 **Aguardar validação do desenvolvedor no emulador/aparelho (R27a)**; só então commitar e abrir PR
 
 ---
 
@@ -88,3 +88,18 @@
 - [ ] 5.10 Slice tests and layout verification (ensuring touch targets >= 44px)
 - [ ] 5.11 Run `make lint` and `make test`
 - [ ] 5.12 **Aguardar validação final do desenvolvedor no aparelho (R27a)**; só então commitar e abrir PR
+
+
+### Phase 4 — PR #103 review follow-up
+
+- [x] Reconcile app composition, localization, and AuthGate tests with main (`1fdd977`).
+- [x] Register the assistant navigation observer and name role-specific application routes; prevent restricted page construction and match nested paths.
+- [x] Show van loading failures with a retry action instead of the unlinked state.
+- [x] Reuse the shared school shift formatter, consolidate van selector opening, and use the same route tab/title label.
+- [x] Adapt assistant UI to the current theme palette and typography API.
+- [x] Add regression coverage for failed van loading, retry, restricted nested routes, and real application navigation.
+- [x] Record latest developer test results via FVM: full suite **2,416 passed / zero failed** in 16m18s; negotiation route regression tests also passed independently.
+- [x] Inspect updated full-suite coverage: **17,932 / 19,377 relevant lines (92.54%)**, above the 85% threshold.
+- [x] Complete FVM code generation, lint (no issues), and full tests/coverage, per developer reports.
+- [x] Include the FVM-resolved dependency lockfile used by the successful lint and full test run.
+- [ ] Validate the review fixes on device/emulator and capture updated video/screenshots. Developer explicitly authorized early commit/push; manual validation remains pending.

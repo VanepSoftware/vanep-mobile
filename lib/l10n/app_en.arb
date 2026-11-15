@@ -2385,5 +2385,87 @@
   "unlinkedPassengerErrorSchoolRequired": "Choose the school.",
   "unlinkedPassengerErrorSchoolShiftRequired": "Choose the school shift.",
   "unlinkedPassengerErrorLegRequired": "Mark at least one leg.",
-  "unlinkedPassengerErrorNotesTooLong": "Use up to 500 characters."
+  "unlinkedPassengerErrorNotesTooLong": "Use up to 500 characters.",
+  "navProposalsAndContracts": "Proposals & contracts",
+  "profileDependents": "Manage dependents",
+  "dependentFormNewTitle": "New dependent",
+  "dependentFormEditTitle": "Edit dependent",
+  "dependentFormSave": "Save",
+  "dependentFormSaved": "Dependent saved.",
+  "dependentFieldBirthDateEmpty": "Pick a date",
+  "dependentFieldBirthDateClear": "Clear date",
+  "dependentFormSubtitle": "Enter the details of who rides the van. Only the name is required.",
+  "dependentFieldAddress": "Address",
+  "dependentFieldAddressEmpty": "No address set.",
+  "dependentFieldAddressRemove": "Clear address",
+  "dependentAddressRegisterAction": "Add address",
+  "dependentAddressEditAction": "Edit address",
+  "dependentAddressMenuTooltip": "More options",
+  "dependentAddressFormTitleNew": "Add address",
+  "dependentAddressFormTitleEdit": "Edit address",
+  "dependentAddressFormSubtitle": "Enter the ZIP code and complete the dependent's address details.",
+  "dependentAddressConfirmAction": "Confirm address",
+  "dependentAddressIncomplete": "Complete the address to save.",
+  "driverProfileChatButton": "Chat with the driver",
+  "conversationTitle": "Chat",
+  "conversationFailureDriverUnavailable": "This driver is no longer available.",
+  "navRoute": "Route",
+  "navAssistantProfile": "My profile",
+  "assistantActiveVan": "Active van",
+  "assistantSwitchVan": "Switch van",
+  "assistantSelectVanTitle": "Select active van",
+  "assistantSelectVanSubtitle": "Choose which van you will accompany today",
+  "assistantNoVansLinked": "No vans linked at the moment.",
+  "unauthorizedAccess": "Unauthorized access.",
+  "clientHomeNamesListLastSeparator": " and ",
+  "clientHomeRoundTrip": "round trip",
+  "clientHomeOneWay": "one way",
+  "clientHomeNamesAndTrip": "{names} · {trip}",
+  "@clientHomeNamesAndTrip": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "trip": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomePerMonth": "/month",
+  "clientHomeSeeSimilarDrivers": "See similar drivers",
+  "clientProposalsNewOnVanep": "{gender, select, female{New on Vanep} other{New on Vanep}}",
+  "@clientProposalsNewOnVanep": {
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsMondayToFriday": "Mon to Fri",
+  "clientProposalsPerMonth": "/mo",
+  "clientProposalsPreviousFee": "before {amount}",
+  "@clientProposalsPreviousFee": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsClosedSummary": "For {name} · {amount}/mo",
+  "@clientProposalsClosedSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsOutcomeAccepted": "Accepted",
+  "clientProposalsOutcomeDeclined": "Declined",
+  "clientProposalsOutcomeExpired": "Expired",
+  "clientProposalsOutcomeCancelled": "Cancelled",
+  "assistantVansLoadError": "Could not load your vans.",
+  "assistantVansRetry": "Try again"
 }

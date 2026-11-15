@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/modules/assistant/presentation/guards/assistant_route_guard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -55,6 +56,9 @@ import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_van_registration_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
+import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/shell/assistant_shell.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
@@ -68,7 +72,6 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/proposal_composer_page.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/request_decline_sheet.dart';
-import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/modules/settings/domain/value_objects/theme_preference.dart';
 import 'package:vanep_mobile/modules/settings/presentation/cubit/theme_preference_cubit.dart';
 import 'package:vanep_mobile/modules/settings/presentation/mappers/theme_mode_mapper.dart';
@@ -109,6 +112,22 @@ class VanepApp extends StatelessWidget {
             >(
               selector: (state) => state.preference,
               builder: (context, themePreference) => MaterialApp(
+                navigatorObservers: [
+                  AssistantRouteGuard(
+                    isAssistant: () {
+                      final state = context.read<AuthCubit>().state;
+                      return state is AuthAuthenticated &&
+                          state.session.profile.type == UserType.assistant;
+                    },
+                  ),
+                ],
+                onGenerateRoute: (settings) =>
+                    AssistantRouteGuard.isRestricted(settings.name)
+                    ? MaterialPageRoute<void>(
+                        settings: settings,
+                        builder: (_) => const SizedBox.shrink(),
+                      )
+                    : null,
                 onGenerateTitle: (context) =>
                     AppLocalizations.of(context)!.appTitle,
                 debugShowCheckedModeBanner: false,
@@ -182,6 +201,17 @@ class AuthGate extends StatelessWidget {
                 ),
               ),
             ),
+            UserType.assistant => MultiBlocProvider(
+              providers: [
+                BlocProvider<AssistantVanSelectorCubit>(
+                  create: (_) => getIt<AssistantVanSelectorCubit>()..loadVans(),
+                ),
+                BlocProvider<ProfileSummaryCubit>(
+                  create: (_) => getIt<ProfileSummaryCubit>(),
+                ),
+              ],
+              child: AssistantShell(profile: session.profile),
+            ),
             _ => MultiBlocProvider(
               providers: [
                 BlocProvider<DriversCubit>(
@@ -234,7 +264,9 @@ class AuthGate extends StatelessWidget {
 Future<void> openDriverSearch(BuildContext context) async {
   final autocomplete = getIt<PlaceAutocompleteController>();
   await Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/search'),
       builder: (_) => BlocProvider<DriverSearchCubit>(
         create: (_) => getIt<DriverSearchCubit>(),
         child: DriverSearchPage(
@@ -251,7 +283,9 @@ Future<void> openDriverSearch(BuildContext context) async {
 }
 
 Route<void> clientProposalsRoute(BuildContext context) {
-  return MaterialPageRoute<void>(
+  return rolePageRoute<void>(
+    context: context,
+    settings: const RouteSettings(name: '/proposals'),
     builder: (_) => BlocProvider<ClientProposalsCubit>(
       create: (_) => getIt<ClientProposalsCubit>()..loadProposals(),
       child: ClientProposalsPage(
@@ -272,7 +306,9 @@ Future<void> openClientProposals(BuildContext context) {
 
 Future<void> openQuoteRequest(BuildContext context, String driverToken) {
   return Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/client/quote'),
       builder: (_) => BlocProvider<QuoteRequestCubit>(
         create: (_) => getIt<QuoteRequestCubit>(param1: driverToken)..load(),
         child: QuoteRequestPage(
@@ -312,7 +348,9 @@ Future<void> openClientReadinessField(
       return;
   }
   await Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/client/readiness'),
       builder: (_) => BlocProvider<PersonalDataCubit>(
         create: (_) => getIt<PersonalDataCubit>(param1: syncProfile)..load(),
         child: page,
@@ -327,7 +365,9 @@ Route<void> proposalDetailRoute(
   String? proposalToken,
   bool acceptsOnOpen = false,
 }) {
-  return MaterialPageRoute<void>(
+  return rolePageRoute<void>(
+    context: context,
+    settings: const RouteSettings(name: '/proposals/detail'),
     builder: (_) => BlocProvider<ProposalDetailCubit>(
       create: (_) {
         final cubit = getIt<ProposalDetailCubit>(
@@ -388,7 +428,9 @@ Future<bool> openProposalAdjustment(
   Proposal proposal,
 ) async {
   final asked = await Navigator.of(context).push<bool>(
-    MaterialPageRoute<bool>(
+    rolePageRoute<bool>(
+      context: context,
+      settings: const RouteSettings(name: '/proposals/adjustment'),
       builder: (_) => BlocProvider<ProposalAdjustmentCubit>(
         create: (_) => getIt<ProposalAdjustmentCubit>(param1: proposal.token),
         child: ProposalAdjustmentPage(request: request, proposal: proposal),
@@ -423,7 +465,9 @@ Future<void> openProposalAccepted(
   Proposal proposal,
 ) {
   return Navigator.of(context).pushReplacement(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/proposals/accepted'),
       builder: (_) =>
           ProposalAcceptedPage(request: request, proposal: proposal),
     ),
@@ -432,7 +476,9 @@ Future<void> openProposalAccepted(
 
 Future<void> openDriverProfile(BuildContext context, String driverToken) {
   return Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/client/driver-profile'),
       builder: (_) => BlocProvider<DriverProfileCubit>(
         create: (_) =>
             getIt<DriverProfileCubit>(param1: driverToken)..loadProfile(),
@@ -465,7 +511,9 @@ Future<void> openConversationChat(
   required ConversationParticipant viewerSide,
 }) {
   return Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: RouteSettings(name: '/${viewerSide.name}/chat'),
       builder: (_) => switch (viewerSide) {
         ConversationParticipant.client => MultiBlocProvider(
           providers: [
@@ -554,7 +602,9 @@ Future<void> openDriverServiceRequest(
   DriverServiceRequest request,
 ) {
   return Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/requests'),
       builder: (_) => BlocProvider<DriverServiceRequestCubit>(
         create: (_) =>
             getIt<DriverServiceRequestCubit>(param1: request.token)..load(),
@@ -573,7 +623,9 @@ Future<void> openDriverProposal(
   final proposalToken = request.currentProposal?.token;
   if (proposalToken == null) return openDriverServiceRequest(context, request);
   return Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/proposals'),
       builder: (_) => BlocProvider<DriverProposalCubit>(
         create: (_) => getIt<DriverProposalCubit>(
           param1: request.token,
@@ -609,7 +661,9 @@ Future<ProposalComposerOutcome?> openProposalComposer(
   Proposal? previousVersion,
 }) {
   return Navigator.of(context).push<ProposalComposerOutcome>(
-    MaterialPageRoute<ProposalComposerOutcome>(
+    rolePageRoute<ProposalComposerOutcome>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/proposals/compose'),
       builder: (_) => BlocProvider<ProposalComposerCubit>(
         create: (_) => getIt<ProposalComposerCubit>(
           param1: request.token,
@@ -652,7 +706,9 @@ Future<void> openDriverNegotiationChat(
 
 Future<void> openDriverVans(BuildContext context) {
   return Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/vans'),
       builder: (_) => BlocProvider<DriverVansCubit>(
         create: (_) => getIt<DriverVansCubit>()..loadVans(),
         child: const DriverVansPage(),
@@ -663,7 +719,9 @@ Future<void> openDriverVans(BuildContext context) {
 
 Future<void> openDriverVanRegistration(BuildContext context) {
   return Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/vans/register'),
       builder: (_) => BlocProvider<DriverVansCubit>(
         create: (_) => getIt<DriverVansCubit>()..loadVans(),
         child: const DriverVanRegistrationPage(),
@@ -680,7 +738,9 @@ Future<void> openDriverVanStudents(BuildContext context, DriverVan van) {
   final l10n = AppLocalizations.of(context)!;
   final vanCaption = vanCaptionOf(l10n, van);
   return Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/vans/students'),
       builder: (pageContext) => BlocProvider<VanStudentsCubit>(
         create: (_) => getIt<VanStudentsCubit>(param1: van.token)..load(),
         child: VanStudentsPage(
@@ -700,7 +760,9 @@ Future<String?> openUnlinkedPassengerForm(
   String vanCaption,
 ) {
   return Navigator.of(context).push<String>(
-    MaterialPageRoute<String>(
+    rolePageRoute<String>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/vans/students/add'),
       builder: (_) => BlocProvider<UnlinkedPassengerFormCubit>(
         create: (_) => getIt<UnlinkedPassengerFormCubit>(param1: vehicleToken),
         child: UnlinkedPassengerFormPage(vanCaption: vanCaption),
@@ -712,7 +774,9 @@ Future<String?> openUnlinkedPassengerForm(
 Future<void> openDriverServiceAreas(BuildContext context) async {
   final autocomplete = getIt<PlaceAutocompleteController>();
   await Navigator.of(context).push(
-    MaterialPageRoute<void>(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/service-areas'),
       builder: (_) => BlocProvider<DriverServiceAreasCubit>(
         create: (_) => getIt<DriverServiceAreasCubit>()..loadMyAreas(),
         child: DriverServiceAreasPage(autocomplete: autocomplete),
@@ -729,4 +793,23 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const VanepBrandSplash();
   }
+}
+
+MaterialPageRoute<T> rolePageRoute<T>({
+  required BuildContext context,
+  required RouteSettings settings,
+  required WidgetBuilder builder,
+}) {
+  return MaterialPageRoute<T>(
+    settings: settings,
+    builder: (pageContext) {
+      final state = context.read<AuthCubit>().state;
+      if (state is AuthAuthenticated &&
+          state.session.profile.type == UserType.assistant &&
+          AssistantRouteGuard.isRestricted(settings.name)) {
+        return const SizedBox.shrink();
+      }
+      return builder(pageContext);
+    },
+  );
 }

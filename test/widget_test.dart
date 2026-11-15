@@ -1,3 +1,5 @@
+import 'package:vanep_mobile/modules/assistant/presentation/guards/assistant_route_guard.dart';
+
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
@@ -32,7 +34,10 @@ import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/shell/assistant_shell.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
@@ -50,6 +55,15 @@ import 'modules/driver_van_central/driver_van_central_mocks.dart';
 
 Widget _harness(AuthCubit cubit) {
   return MaterialApp(
+    navigatorObservers: [
+      AssistantRouteGuard(
+        isAssistant: () {
+          final state = cubit.state;
+          return state is AuthAuthenticated &&
+              state.session.profile.type == UserType.assistant;
+        },
+      ),
+    ],
     localizationsDelegates: const [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -68,10 +82,16 @@ class MockDriverSearchCubit extends MockCubit<DriverSearchState>
 class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
 
+class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
+    implements AssistantVanSelectorCubit {}
+
 void registerVanCentralCubit() {
   final vanCentralCubit = MockVanCentralCubit();
-  whenListen(vanCentralCubit, const Stream<VanCentralState>.empty(),
-      initialState: const VanCentralState(status: VanCentralStatus.loaded));
+  whenListen(
+    vanCentralCubit,
+    const Stream<VanCentralState>.empty(),
+    initialState: const VanCentralState(status: VanCentralStatus.loaded),
+  );
   when(() => vanCentralCubit.load()).thenAnswer((_) async {});
   getIt.registerFactory<VanCentralCubit>(() => vanCentralCubit);
 }
@@ -157,9 +177,8 @@ void main() {
     );
     when(clientHomeCubit.loadHome).thenAnswer((_) async {});
     final autocompleteDatasource = MockPlaceAutocompleteDataSource();
-    when(
-      () => autocompleteDatasource.findSuggestions(any(), any()),
-    ).thenAnswer((_) async => const Ok([]));
+    when(() => autocompleteDatasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<ClientHomeCubit>(() => clientHomeCubit)
       ..registerFactory<DriversCubit>(() => driversCubit)
@@ -196,9 +215,8 @@ void main() {
       initialState: const ProfileSummaryState(),
     );
     final autocompleteDatasource = MockPlaceAutocompleteDataSource();
-    when(
-      () => autocompleteDatasource.findSuggestions(any(), any()),
-    ).thenAnswer((_) async => const Ok([]));
+    when(() => autocompleteDatasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<DriverHomeCubit>(DriverHomeCubit.new)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
@@ -222,6 +240,48 @@ void main() {
 
     expect(find.byType(DriverShell), findsOneWidget);
     expect(find.byType(ClientShell), findsNothing);
+  });
+
+  testWidgets('routes an assistant session to the assistant shell', (
+    tester,
+  ) async {
+    final assistantCubit = MockAssistantVanSelectorCubit();
+    whenListen(
+      assistantCubit,
+      const Stream<AssistantVanSelectorState>.empty(),
+      initialState: const AssistantVanSelectorState(),
+    );
+    when(() => assistantCubit.loadVans()).thenAnswer((_) async {});
+    final profileSummaryCubit = MockProfileSummaryCubit();
+    whenListen(
+      profileSummaryCubit,
+      const Stream<ProfileSummaryState>.empty(),
+      initialState: const ProfileSummaryState(),
+    );
+    getIt
+      ..registerFactory<AssistantVanSelectorCubit>(() => assistantCubit)
+      ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
+    addTearDown(getIt.reset);
+
+    final state = AuthAuthenticated(
+      FakeAuthSession(profile: const FakeUserProfile(type: UserType.assistant)),
+    );
+    when(() => cubit.state).thenReturn(state);
+    whenListen(cubit, const Stream<AuthState>.empty(), initialState: state);
+
+    await tester.pumpWidget(_harness(cubit));
+
+    expect(find.byType(AssistantShell), findsOneWidget);
+    expect(find.byType(DriverShell), findsNothing);
+    expect(find.byType(ClientShell), findsNothing);
+    verify(() => assistantCubit.loadVans()).called(1);
+    final context = tester.element(find.byType(AssistantShell));
+    final navigation = openDriverVans(context);
+    await tester.pumpAndSettle();
+    await navigation;
+    expect(tester.takeException(), isNull);
+    expect(find.byType(AssistantShell), findsOneWidget);
+    expect(find.text('Acesso não autorizado.'), findsOneWidget);
   });
 
   testWidgets('starting a session closes the pages pushed over the login', (
