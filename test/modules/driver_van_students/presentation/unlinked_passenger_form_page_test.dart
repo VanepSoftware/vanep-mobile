@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/places/place_search_session.dart';
 import 'package:vanep_mobile/modules/driver_van_students/domain/value_objects/unlinked_passenger_draft.dart';
+import 'package:vanep_mobile/modules/schools/domain/failures/school_failure.dart';
 import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/unlinked_passenger_form_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/unlinked_passenger_form_state.dart';
 import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/unlinked_passenger_form_page.dart';
@@ -179,4 +182,74 @@ void main() {
           .called(1);
     },
   );
+
+  testWidgets('an old school error does not show again when saving starts', (
+    tester,
+  ) async {
+    const schoolError = SchoolNetworkFailure();
+    final editing = UnlinkedPassengerFormState(draft: completeDraft());
+    final failed = editing.copyWith(schoolFailure: schoolError);
+    final saving = failed.copyWith(status: UnlinkedPassengerFormStatus.saving);
+    final changes = StreamController<UnlinkedPassengerFormState>();
+    addTearDown(changes.close);
+    whenListen(cubit, changes.stream, initialState: editing);
+
+    await pumpForm(tester, editing);
+    changes.add(failed);
+    await tester.pump();
+
+    expect(find.text('Sem conexão. Tente de novo.'), findsOneWidget);
+    ScaffoldMessenger.of(tester.element(find.byType(UnlinkedPassengerFormPage)))
+        .hideCurrentSnackBar();
+    await tester.pumpAndSettle();
+    expect(find.text('Sem conexão. Tente de novo.'), findsNothing);
+
+    changes.add(saving);
+    await tester.pump();
+
+    expect(find.text('Sem conexão. Tente de novo.'), findsNothing);
+  });
+
+  testWidgets('stays open while the passenger is being saved', (tester) async {
+    when(() => cubit.state).thenReturn(
+      UnlinkedPassengerFormState(
+        draft: completeDraft(),
+        status: UnlinkedPassengerFormStatus.saving,
+      ),
+    );
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      localizedHarness(
+        Builder(
+          builder: (context) => TextButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) =>
+                      BlocProvider<UnlinkedPassengerFormCubit>.value(
+                        value: cubit,
+                        child: const UnlinkedPassengerFormPage(
+                          vanCaption: 'Van',
+                        ),
+                      ),
+                ),
+              );
+            },
+            child: const Text('abrir'),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('abrir'));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.state<NavigatorState>(find.byType(Navigator)).maybePop();
+    await tester.pump();
+
+    expect(find.text('Adicionar aluno'), findsOneWidget);
+    expect(find.text('abrir'), findsNothing);
+  });
 }

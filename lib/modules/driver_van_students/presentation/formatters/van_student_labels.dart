@@ -135,8 +135,6 @@ String unlinkedPassengerErrorLabel(
       l10n.postalAddressFieldRequiredError,
     UnlinkedPassengerDraftError.legRequired =>
       l10n.unlinkedPassengerErrorLegRequired,
-    UnlinkedPassengerDraftError.timeRequired =>
-      l10n.unlinkedPassengerErrorTimeRequired,
     UnlinkedPassengerDraftError.notesTooLong =>
       l10n.unlinkedPassengerErrorNotesTooLong,
   };

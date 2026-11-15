@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
+enum VanepConfirmChoice { confirmed, declined, dismissed }
+
 Future<bool> showVanepConfirmDialog({
   required BuildContext context,
   required String title,
@@ -11,8 +13,27 @@ Future<bool> showVanepConfirmDialog({
   required String cancelLabel,
   bool isDestructive = false,
 }) async {
+  final choice = await showVanepConfirmChoice(
+    context: context,
+    title: title,
+    message: message,
+    confirmLabel: confirmLabel,
+    cancelLabel: cancelLabel,
+    isDestructive: isDestructive,
+  );
+  return choice == VanepConfirmChoice.confirmed;
+}
+
+Future<VanepConfirmChoice> showVanepConfirmChoice({
+  required BuildContext context,
+  required String title,
+  required String message,
+  required String confirmLabel,
+  required String cancelLabel,
+  bool isDestructive = false,
+}) async {
   final confirmColor = isDestructive ? VanepColors.danger : VanepColors.action;
-  final confirmed = await showDialog<bool>(
+  final choice = await showDialog<VanepConfirmChoice>(
     context: context,
     builder: (dialogContext) {
       return AlertDialog(
@@ -29,7 +50,8 @@ Future<bool> showVanepConfirmDialog({
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(VanepConfirmChoice.declined),
             child: Text(
               cancelLabel,
               style: VanepTypography.cardTitle.copyWith(
@@ -39,7 +61,8 @@ Future<bool> showVanepConfirmDialog({
             ),
           ),
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
+            onPressed: () =>
+                Navigator.of(dialogContext).pop(VanepConfirmChoice.confirmed),
             child: Text(
               confirmLabel,
               style: VanepTypography.cardTitle.copyWith(color: confirmColor),
@@ -49,5 +72,5 @@ Future<bool> showVanepConfirmDialog({
       );
     },
   );
-  return confirmed ?? false;
+  return choice ?? VanepConfirmChoice.dismissed;
 }

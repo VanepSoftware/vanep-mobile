@@ -1,4 +1,3 @@
-import 'package:vanep_mobile/modules/driver_van_central/domain/usecases/find_driver_occupancy.dart';
 import 'package:dio/dio.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
@@ -55,5 +54,3 @@ class MockTextSharer extends Mock implements TextSharer {}
 
 class FakeUnlinkedPassengerDraft extends Fake
     implements UnlinkedPassengerDraft {}
-
-class MockFindDriverOccupancy extends Mock implements FindDriverOccupancy {}

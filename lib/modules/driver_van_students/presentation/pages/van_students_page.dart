@@ -132,14 +132,22 @@ class VanStudentsPage extends StatelessWidget {
     if (match == null) return;
     final l10n = AppLocalizations.of(context)!;
     final cubit = context.read<VanStudentsCubit>();
-    final confirmed = await showVanepConfirmDialog(
+    final choice = await showVanepConfirmChoice(
       context: context,
       title: l10n.vanStudentsMergeDialogTitle(match.dependentName),
       message: l10n.vanStudentsMergeDialogMessage,
       confirmLabel: l10n.vanStudentsMergeDialogConfirm,
       cancelLabel: l10n.vanStudentsMatchDismiss,
     );
-    if (confirmed) await cubit.mergeFamily(student);
+    if (!context.mounted) return;
+    switch (choice) {
+      case VanepConfirmChoice.confirmed:
+        await cubit.mergeFamily(student);
+      case VanepConfirmChoice.declined:
+        await cubit.dismissFamilyMatch(student);
+      case VanepConfirmChoice.dismissed:
+        return;
+    }
   }
 }
 

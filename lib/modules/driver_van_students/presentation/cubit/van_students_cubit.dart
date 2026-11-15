@@ -1,4 +1,3 @@
-import 'package:vanep_mobile/modules/driver_van_central/domain/usecases/find_driver_occupancy.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
@@ -18,20 +17,19 @@ class VanStudentsCubit extends Cubit<VanStudentsState> {
   VanStudentsCubit({
     required this.vehicleToken,
     required this.listDriverStudents,
-    required this.findDriverOccupancy,
     required this.inviteStudentFamily,
     required this.findParentsGroupInvite,
     required this.mergeStudentFamily,
     required this.dismissStudentFamilyMatch,
-  }) : super(const VanStudentsState());
+  }) : super(VanStudentsState());
 
   final String? vehicleToken;
   final ListDriverStudents listDriverStudents;
-  final FindDriverOccupancy findDriverOccupancy;
   final InviteStudentFamily inviteStudentFamily;
   final FindParentsGroupInvite findParentsGroupInvite;
   final MergeStudentFamily mergeStudentFamily;
   final DismissStudentFamilyMatch dismissStudentFamilyMatch;
+  int refreshGeneration = 0;
 
   Future<void> load() async {
     emit(state.copyWith(status: VanStudentsStatus.loading));
@@ -39,19 +37,17 @@ class VanStudentsCubit extends Cubit<VanStudentsState> {
   }
 
   Future<void> refresh() async {
-    final studentsFuture = listDriverStudents(vehicleToken: vehicleToken);
-    final occupancyFuture = findDriverOccupancy();
-    final students = await studentsFuture;
-    final occupancy = await occupancyFuture;
-    if (isClosed) return;
+    final generation = ++refreshGeneration;
+    final students = await listDriverStudents(vehicleToken: vehicleToken);
+    if (isClosed || generation != refreshGeneration) return;
     emit(switch (students) {
       Ok(value: final students) => state.copyWith(
         status: VanStudentsStatus.loaded,
         students: students,
-        occupancy: switch (occupancy) {
-          Ok(value: final occupancy) => occupancy,
-          Err() => state.occupancy,
-        },
+        disabledShifts: reconcileDisabledShifts(
+          shiftsInUse(students),
+          state.disabledShifts,
+        ),
       ),
       Err()
           when state.students.isNotEmpty ||

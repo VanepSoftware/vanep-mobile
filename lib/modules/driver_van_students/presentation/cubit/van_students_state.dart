@@ -1,4 +1,3 @@
-import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
 import 'package:equatable/equatable.dart';
 import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 import 'package:vanep_mobile/modules/driver_van_students/domain/entities/driver_student.dart';
@@ -49,10 +48,9 @@ class VanStudentsShareRequest extends Equatable {
 }
 
 class VanStudentsState extends Equatable {
-  const VanStudentsState({
+  VanStudentsState({
     this.status = VanStudentsStatus.loading,
     this.students = const [],
-    this.occupancy,
     this.familyFilter = StudentFamilyFilter.all,
     this.disabledShifts = const {},
     this.query = '',
@@ -61,11 +59,15 @@ class VanStudentsState extends Equatable {
     this.isSharingGroupLink = false,
     this.notice,
     this.shareRequest,
-  });
+  }) : summary = summarizeVanStudents(
+         students,
+         familyFilter: familyFilter,
+         disabledShifts: disabledShifts,
+         query: query,
+       );
 
   final VanStudentsStatus status;
   final List<DriverStudent> students;
-  final DriverOccupancy? occupancy;
   final StudentFamilyFilter familyFilter;
   final Set<OperationShift> disabledShifts;
   final String query;
@@ -74,41 +76,25 @@ class VanStudentsState extends Equatable {
   final bool isSharingGroupLink;
   final VanStudentsNotice? notice;
   final VanStudentsShareRequest? shareRequest;
+  final VanStudentSummary summary;
 
-  List<OperationShift> get shifts => shiftsInUse(students);
+  List<OperationShift> get shifts => summary.shifts;
 
-  Set<OperationShift> get enabledShifts =>
-      enabledShiftsOf(shifts, disabledShifts);
+  Set<OperationShift> get enabledShifts => summary.enabledShifts;
 
-  List<DriverStudent> get visibleStudents => filterVanStudents(
-    students,
-    familyFilter: familyFilter,
-    enabledShifts: enabledShifts,
-    query: query,
-  );
+  List<DriverStudent> get visibleStudents => summary.visibleStudents;
 
-  Map<StudentFamilyFilter, int> get counts =>
-      countByFamilyFilter(students, enabledShifts: enabledShifts, query: query);
+  Map<StudentFamilyFilter, int> get counts => summary.counts;
 
-  DriverStudent? get pendingMatch => firstPendingMatch(students);
+  DriverStudent? get pendingMatch => summary.pendingMatch;
 
-  FamilyProgress get progress {
-    final occupancy = this.occupancy;
-    if (occupancy != null) {
-      return FamilyProgress(
-        withFamily: occupancy.studentsWithFamily,
-        total: occupancy.students,
-      );
-    }
-    return familyProgressOf(students);
-  }
+  FamilyProgress get progress => summary.progress;
 
   bool isBusy(String studentToken) => busyStudentToken == studentToken;
 
   VanStudentsState copyWith({
     VanStudentsStatus? status,
     List<DriverStudent>? students,
-    DriverOccupancy? occupancy,
     StudentFamilyFilter? familyFilter,
     Set<OperationShift>? disabledShifts,
     String? query,
@@ -124,7 +110,6 @@ class VanStudentsState extends Equatable {
     return VanStudentsState(
       status: status ?? this.status,
       students: students ?? this.students,
-      occupancy: occupancy ?? this.occupancy,
       familyFilter: familyFilter ?? this.familyFilter,
       disabledShifts: disabledShifts ?? this.disabledShifts,
       query: query ?? this.query,
@@ -144,7 +129,6 @@ class VanStudentsState extends Equatable {
   List<Object?> get props => [
     status,
     students,
-    occupancy,
     familyFilter,
     disabledShifts,
     query,

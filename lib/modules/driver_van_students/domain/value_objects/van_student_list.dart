@@ -57,20 +57,80 @@ List<DriverStudent> filterVanStudents(
   ];
 }
 
+class VanStudentSummary extends Equatable {
+  const VanStudentSummary({
+    required this.shifts,
+    required this.enabledShifts,
+    required this.visibleStudents,
+    required this.counts,
+    required this.progress,
+    required this.pendingMatch,
+  });
+
+  final List<OperationShift> shifts;
+  final Set<OperationShift> enabledShifts;
+  final List<DriverStudent> visibleStudents;
+  final Map<StudentFamilyFilter, int> counts;
+  final FamilyProgress progress;
+  final DriverStudent? pendingMatch;
+
+  @override
+  List<Object?> get props => [
+    shifts,
+    enabledShifts,
+    visibleStudents,
+    counts,
+    progress,
+    pendingMatch,
+  ];
+}
+
+VanStudentSummary summarizeVanStudents(
+  List<DriverStudent> students, {
+  required StudentFamilyFilter familyFilter,
+  required Set<OperationShift> disabledShifts,
+  required String query,
+}) {
+  final shifts = shiftsInUse(students);
+  final enabledShifts = enabledShiftsOf(shifts, disabledShifts);
+  final counts = {for (final filter in StudentFamilyFilter.values) filter: 0};
+  final visibleStudents = <DriverStudent>[];
+  for (final student in students) {
+    if (!isInEnabledShifts(student, enabledShifts)) continue;
+    if (!matchesStudentSearch(student, query)) continue;
+    for (final filter in StudentFamilyFilter.values) {
+      if (filter.includes(student.familyStatus)) {
+        counts[filter] = counts[filter]! + 1;
+      }
+    }
+    if (familyFilter.includes(student.familyStatus)) {
+      visibleStudents.add(student);
+    }
+  }
+  return VanStudentSummary(
+    shifts: shifts,
+    enabledShifts: enabledShifts,
+    visibleStudents: visibleStudents,
+    counts: counts,
+    progress: familyProgressOf(students),
+    pendingMatch: firstPendingMatch(students),
+  );
+}
+
 Map<StudentFamilyFilter, int> countByFamilyFilter(
   List<DriverStudent> students, {
   required Set<OperationShift> enabledShifts,
   required String query,
 }) {
-  return {
-    for (final familyFilter in StudentFamilyFilter.values)
-      familyFilter: filterVanStudents(
-        students,
-        familyFilter: familyFilter,
-        enabledShifts: enabledShifts,
-        query: query,
-      ).length,
-  };
+  return summarizeVanStudents(
+    students,
+    familyFilter: StudentFamilyFilter.all,
+    disabledShifts: {
+      for (final shift in shiftsInUse(students))
+        if (!enabledShifts.contains(shift)) shift,
+    },
+    query: query,
+  ).counts;
 }
 
 FamilyProgress familyProgressOf(List<DriverStudent> students) {
@@ -111,4 +171,13 @@ Set<OperationShift> toggleDisabledShift({
   if (disabled.contains(shift)) return {...disabled}..remove(shift);
   if (enabledShiftsOf(inUse, disabled).length <= 1) return disabled;
   return {...disabled, shift};
+}
+
+Set<OperationShift> reconcileDisabledShifts(
+  List<OperationShift> inUse,
+  Set<OperationShift> disabled,
+) {
+  final stillDisabled = disabled.intersection(inUse.toSet());
+  if (inUse.isNotEmpty && stillDisabled.length == inUse.length) return {};
+  return stillDisabled;
 }

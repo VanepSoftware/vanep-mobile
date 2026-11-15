@@ -110,6 +110,38 @@ void main() {
       );
     });
 
+    test(
+      'drops shifts that are gone and reopens the list when all are off',
+      () {
+        expect(
+          reconcileDisabledShifts(
+            [OperationShift.afternoon],
+            {OperationShift.morning, OperationShift.afternoon},
+          ),
+          isEmpty,
+        );
+        expect(
+          reconcileDisabledShifts(
+            [OperationShift.morning, OperationShift.afternoon],
+            {OperationShift.afternoon},
+          ),
+          {OperationShift.afternoon},
+        );
+
+        final afterMorningLeft = reconcileDisabledShifts(
+          [OperationShift.afternoon],
+          {OperationShift.afternoon},
+        );
+        expect(
+          reconcileDisabledShifts([
+            OperationShift.morning,
+            OperationShift.afternoon,
+          ], afterMorningLeft),
+          isEmpty,
+        );
+      },
+    );
+
     test('never disables the last enabled shift', () {
       expect(
         toggleDisabledShift(

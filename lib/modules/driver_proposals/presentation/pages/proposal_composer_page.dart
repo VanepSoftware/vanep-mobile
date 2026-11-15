@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
+import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
@@ -220,50 +223,21 @@ class ProposalComposerBody extends StatelessWidget {
         ),
         const SizedBox(height: detailSectionSpacing),
         for (final item in draft.items) ...[
-          if (showsNames)
-            Text(
-              names[item.dependentToken] ?? '',
-              style: VanepTypography.fieldLabel,
-            ),
-          VanepScheduleEditor(
-            isAllowed: item.isRequested,
-            isSelected: item.isEnabled,
-            timeOf: item.timeOf,
+          ComposerItemSchedule(
+            item: item,
+            studentName: names[item.dependentToken] ?? '',
+            showsStudentName: showsNames,
+            missingLegError: item.hasAnyLeg
+                ? null
+                : errorTextOf(l10n, errors, const [
+                    ProposalDraftError.studentWithoutLeg,
+                  ]),
             onToggled: (leg, day) =>
                 cubit.toggleLeg(item.dependentToken, leg, day),
             onTimePicked: (day, leg, time) =>
                 cubit.changeTime(item.dependentToken, day, leg, time),
             onApplyToEveryDay: (leg, time) =>
                 cubit.applyTimeToEveryDay(item.dependentToken, leg, time),
-            layoutBuilder: (days, times) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                DetailSection(
-                  title: l10n.proposalDetailDaysTitle,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        l10n.proposalComposerAsRequested,
-                        style: VanepTypography.cardSubtitle,
-                      ),
-                      const SizedBox(height: 8),
-                      days,
-                      if (errorTextOf(l10n, errors, const [
-                            ProposalDraftError.studentWithoutLeg,
-                          ])
-                          case final error?)
-                        ComposerFieldError(text: error),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: detailSectionSpacing),
-                DetailSection(
-                  title: l10n.proposalDetailScheduleTitle,
-                  child: times ?? const SizedBox.shrink(),
-                ),
-              ],
-            ),
           ),
           const SizedBox(height: detailSectionSpacing),
         ],
@@ -281,6 +255,79 @@ class ProposalComposerBody extends StatelessWidget {
         const SizedBox(height: detailSectionSpacing),
         ComposerMessageField(message: draft.message),
       ],
+    );
+  }
+}
+
+class ComposerItemSchedule extends StatelessWidget {
+  const ComposerItemSchedule({
+    required this.item,
+    required this.studentName,
+    required this.showsStudentName,
+    required this.missingLegError,
+    required this.onToggled,
+    required this.onTimePicked,
+    required this.onApplyToEveryDay,
+    super.key,
+  });
+
+  final ProposalDraftItem item;
+  final String studentName;
+  final bool showsStudentName;
+  final String? missingLegError;
+  final void Function(RouteLeg leg, Weekday day) onToggled;
+  final void Function(Weekday day, RouteLeg leg, ClockTime time) onTimePicked;
+  final void Function(RouteLeg leg, ClockTime time) onApplyToEveryDay;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return VanepScheduleEditor(
+      isAllowed: item.isRequested,
+      isSelected: item.isEnabled,
+      timeOf: item.timeOf,
+      onToggled: onToggled,
+      onTimePicked: onTimePicked,
+      onApplyToEveryDay: onApplyToEveryDay,
+      layoutBuilder: (days, times) {
+        final daysBlock = Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l10n.proposalComposerAsRequested,
+              style: VanepTypography.cardSubtitle,
+            ),
+            const SizedBox(height: 8),
+            days,
+            if (missingLegError != null)
+              ComposerFieldError(text: missingLegError!),
+          ],
+        );
+        final timesBlock = times ?? const SizedBox.shrink();
+        if (!showsStudentName) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DetailSection(
+                title: l10n.proposalDetailDaysTitle,
+                child: daysBlock,
+              ),
+              const SizedBox(height: detailSectionSpacing),
+              DetailSection(
+                title: l10n.proposalDetailScheduleTitle,
+                child: timesBlock,
+              ),
+            ],
+          );
+        }
+        return DetailSection(
+          title: studentName,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [daysBlock, const SizedBox(height: 12), timesBlock],
+          ),
+        );
+      },
     );
   }
 }

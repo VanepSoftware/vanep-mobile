@@ -1,4 +1,5 @@
-import 'package:vanep_mobile/modules/driver_van_central/domain/failures/van_central_failure.dart';
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -8,6 +9,7 @@ import 'package:vanep_mobile/modules/driver_van_students/domain/entities/driver_
 import 'package:vanep_mobile/modules/driver_van_students/domain/entities/family_invite.dart';
 import 'package:vanep_mobile/modules/driver_van_students/domain/failures/driver_student_failure.dart';
 import 'package:vanep_mobile/modules/driver_van_students/domain/value_objects/student_family_filter.dart';
+import 'package:vanep_mobile/modules/driver_van_students/domain/value_objects/van_student_list.dart';
 import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/van_students_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_students/presentation/cubit/van_students_state.dart';
 
@@ -17,7 +19,6 @@ import '../driver_van_students_mocks.dart';
 const networkFailure = DriverStudentNetworkFailure();
 
 void main() {
-  late MockFindDriverOccupancy findDriverOccupancy;
   late MockListDriverStudents listDriverStudents;
   late MockInviteStudentFamily inviteStudentFamily;
   late MockFindParentsGroupInvite findParentsGroupInvite;
@@ -26,7 +27,6 @@ void main() {
 
   VanStudentsCubit buildCubit() => VanStudentsCubit(
     vehicleToken: 'van-1',
-    findDriverOccupancy: findDriverOccupancy,
     listDriverStudents: listDriverStudents,
     inviteStudentFamily: inviteStudentFamily,
     findParentsGroupInvite: findParentsGroupInvite,
@@ -42,13 +42,9 @@ void main() {
   final loaded = VanStudentsState(
     status: VanStudentsStatus.loaded,
     students: vanStudents,
-    occupancy: studentsOccupancy,
   );
 
   setUp(() {
-    findDriverOccupancy = MockFindDriverOccupancy();
-    when(() => findDriverOccupancy())
-        .thenAnswer((_) async => const Ok(studentsOccupancy));
     listDriverStudents = MockListDriverStudents();
     inviteStudentFamily = MockInviteStudentFamily();
     findParentsGroupInvite = MockFindParentsGroupInvite();
@@ -61,7 +57,7 @@ void main() {
     'loads the students of the van',
     build: buildCubit,
     act: (cubit) => cubit.load(),
-    expect: () => [const VanStudentsState(), loaded],
+    expect: () => [VanStudentsState(), loaded],
   );
 
   blocTest<VanStudentsCubit, VanStudentsState>(
@@ -70,11 +66,8 @@ void main() {
     build: buildCubit,
     act: (cubit) => cubit.load(),
     expect: () => [
-      const VanStudentsState(),
-      const VanStudentsState(
-        status: VanStudentsStatus.loaded,
-        occupancy: studentsOccupancy,
-      ),
+      VanStudentsState(),
+      VanStudentsState(status: VanStudentsStatus.loaded),
     ],
   );
 
@@ -86,8 +79,8 @@ void main() {
     build: buildCubit,
     act: (cubit) => cubit.load(),
     expect: () => [
-      const VanStudentsState(),
-      const VanStudentsState(status: VanStudentsStatus.loadFailed),
+      VanStudentsState(),
+      VanStudentsState(status: VanStudentsStatus.loadFailed),
     ],
   );
 
@@ -245,10 +238,10 @@ void main() {
       expect(cubit.state.shareRequest, isNull);
     },
   );
-  test('progress comes from occupancy rather than the filtered list', () {
-    expect(loaded.progress.total, 28);
-    expect(loaded.progress.withFamily, 24);
-    expect(loaded.progress.percent, 86);
+  test('progress comes from the students of this van', () {
+    expect(loaded.progress, familyProgressOf(vanStudents));
+    expect(loaded.progress.withFamily, 1);
+    expect(loaded.progress.total, 5);
     expect(loaded.copyWith(query: 'nobody').progress, loaded.progress);
   });
 
@@ -284,30 +277,41 @@ void main() {
   }
 
   blocTest<VanStudentsCubit, VanStudentsState>(
-    'an occupancy failure still shows the students',
-    setUp: () =>
-        when(() => findDriverOccupancy())
-            .thenAnswer((_) async => const Err(VanCentralFailure.network)),
+    'a refresh turns every shift back on when the ones left are all off',
+    setUp: () => answerStudents([afternoonMiguel]),
     build: buildCubit,
-    act: (cubit) => cubit.load(),
-    expect: () => [
-      const VanStudentsState(),
-      VanStudentsState(status: VanStudentsStatus.loaded, students: vanStudents),
-    ],
+    seed: () => loaded.copyWith(
+      disabledShifts: {OperationShift.morning, OperationShift.afternoon},
+    ),
+    act: (cubit) => cubit.refresh(),
     verify: (cubit) {
-      expect(cubit.state.progress.withFamily, 1);
-      expect(cubit.state.progress.total, 5);
+      expect(cubit.state.students, [afternoonMiguel]);
+      expect(cubit.state.disabledShifts, isEmpty);
+      expect(cubit.state.visibleStudents, [afternoonMiguel]);
     },
   );
 
-  blocTest<VanStudentsCubit, VanStudentsState>(
-    'an occupancy refresh failure preserves the last successful snapshot',
-    setUp: () =>
-        when(() => findDriverOccupancy())
-            .thenAnswer((_) async => const Err(VanCentralFailure.network)),
-    build: buildCubit,
-    seed: () => loaded,
-    act: (cubit) => cubit.refresh(),
-    expect: () => <VanStudentsState>[],
-  );
+  test('a slower refresh does not replace a newer list', () async {
+    final first =
+        Completer<Result<DriverStudentFailure, List<DriverStudent>>>();
+    final second =
+        Completer<Result<DriverStudentFailure, List<DriverStudent>>>();
+    var calls = 0;
+    when(() => listDriverStudents(vehicleToken: 'van-1')).thenAnswer((_) {
+      calls += 1;
+      return calls == 1 ? first.future : second.future;
+    });
+    final cubit = buildCubit();
+    final older = cubit.refresh();
+    final newer = cubit.refresh();
+
+    second.complete(Ok([afternoonMiguel]));
+    await newer;
+    expect(cubit.state.students, [afternoonMiguel]);
+
+    first.complete(Ok(vanStudents));
+    await older;
+    expect(cubit.state.students, [afternoonMiguel]);
+    await cubit.close();
+  });
 }

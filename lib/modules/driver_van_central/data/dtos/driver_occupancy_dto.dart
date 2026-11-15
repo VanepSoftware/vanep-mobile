@@ -1,7 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
+import 'package:vanep_mobile/core/data/json_readers.dart';
 import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
+import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
 
 part 'driver_occupancy_dto.freezed.dart';
 part 'driver_occupancy_dto.g.dart';
@@ -11,7 +12,7 @@ abstract class ShiftOccupancyDto
     with _$ShiftOccupancyDto
     implements ShiftOccupancy {
   const factory ShiftOccupancyDto({
-    @JsonKey(fromJson: operationShiftFromApi, toJson: operationShiftToApi)
+    @JsonKey(fromJson: readOperationShift, toJson: OperationShift.toApi)
     required OperationShift shift,
     required int passengers,
   }) = _ShiftOccupancyDto;
@@ -35,17 +36,8 @@ abstract class DriverOccupancyDto
       _$DriverOccupancyDtoFromJson(json);
 }
 
-OperationShift operationShiftFromApi(String value) =>
-    OperationShift.values.byName(value.toLowerCase());
-
-String operationShiftToApi(OperationShift shift) => shift.name.toUpperCase();
-
-bool isKnownOperationShift(Object? value) =>
-    value is String &&
-    OperationShift.values.any((shift) => shift.name == value.toLowerCase());
-
 List<ShiftOccupancyDto> knownShiftOccupanciesFromApi(List<dynamic> json) => [
   for (final entry in json.whereType<Map<String, dynamic>>())
-    if (isKnownOperationShift(entry['shift']))
+    if (OperationShift.fromApi(entry['shift']) != null)
       ShiftOccupancyDto.fromJson(Map<String, Object?>.from(entry)),
 ];

@@ -1033,6 +1033,5 @@
   "unlinkedPassengerErrorSchoolRequired": "Escolha a escola.",
   "unlinkedPassengerErrorSchoolShiftRequired": "Escolha o turno escolar.",
   "unlinkedPassengerErrorLegRequired": "Marque pelo menos um trecho.",
-  "unlinkedPassengerErrorTimeRequired": "Escolha o horário de cada trecho.",
   "unlinkedPassengerErrorNotesTooLong": "Use até 500 caracteres."
 }

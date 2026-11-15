@@ -2,7 +2,6 @@ import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_ci
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_state.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/ibge_locations_page.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
-import 'package:vanep_mobile/modules/driver_van_central/data/dtos/driver_occupancy_dto.dart';
 import 'package:vanep_mobile/core/data/schedule_slot_dto.dart';
 import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 import 'package:vanep_mobile/core/domain/school_shift.dart';
@@ -189,12 +188,6 @@ final familyInvite = FamilyInviteDto(
   code: 'ABCD2345EFGH',
   inviteUrl: 'https://vanep.com.br/convite/ABCD2345EFGH',
   sentAt: DateTime.utc(2026, 11, 8, 18),
-);
-
-const studentsOccupancy = DriverOccupancyDto(
-  shifts: [],
-  students: 28,
-  studentsWithFamily: 24,
 );
 
 const schoolSearchSuggestion = PlaceSuggestion(

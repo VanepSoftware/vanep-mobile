@@ -33,52 +33,70 @@ class UnlinkedPassengerFormPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final cubit = context.read<UnlinkedPassengerFormCubit>();
 
-    return BlocListener<UnlinkedPassengerFormCubit, UnlinkedPassengerFormState>(
-      listenWhen: (previous, current) =>
-          current.status != previous.status ||
-          current.saveFailure != previous.saveFailure ||
-          current.schoolFailure != previous.schoolFailure,
-      listener: (context, state) {
-        if (state.status == UnlinkedPassengerFormStatus.saved) {
-          Navigator.of(context).pop(state.draft.name.trim());
-          return;
-        }
-        final saveFailure = state.saveFailure;
-        if (saveFailure != null) {
-          VanepFeedback.showError(
-            context,
-            driverStudentFailureMessage(l10n, saveFailure),
-          );
-        }
-        final schoolFailure = state.schoolFailure;
-        if (schoolFailure != null) {
-          VanepFeedback.showError(
-            context,
-            schoolFailureLabel(l10n, schoolFailure),
-          );
-        }
-      },
-      child: Scaffold(
-        backgroundColor: VanepColors.surface,
-        appBar: VanepAppBar(
-          title: l10n.unlinkedPassengerFormTitle,
-          caption: vanCaption,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UnlinkedPassengerFormCubit, UnlinkedPassengerFormState>(
+          listenWhen: (previous, current) =>
+              previous.status != UnlinkedPassengerFormStatus.saved &&
+              current.status == UnlinkedPassengerFormStatus.saved,
+          listener: (context, state) {
+            Navigator.of(context).pop(state.draft.name.trim());
+          },
         ),
-        bottomNavigationBar: VanepBottomBar(
-          child:
-              BlocBuilder<
-                UnlinkedPassengerFormCubit,
-                UnlinkedPassengerFormState
-              >(
-                builder: (context, state) => VanepPrimaryButton(
-                  label: l10n.unlinkedPassengerSubmit,
-                  isLoading: state.isSaving,
-                  onPressed: state.blocksSave ? null : cubit.submit,
+        BlocListener<UnlinkedPassengerFormCubit, UnlinkedPassengerFormState>(
+          listenWhen: (previous, current) =>
+              current.saveFailure != previous.saveFailure &&
+              current.saveFailure != null,
+          listener: (context, state) {
+            VanepFeedback.showError(
+              context,
+              driverStudentFailureMessage(l10n, state.saveFailure!),
+            );
+          },
+        ),
+        BlocListener<UnlinkedPassengerFormCubit, UnlinkedPassengerFormState>(
+          listenWhen: (previous, current) =>
+              current.schoolFailure != previous.schoolFailure &&
+              current.schoolFailure != null,
+          listener: (context, state) {
+            VanepFeedback.showError(
+              context,
+              schoolFailureLabel(l10n, state.schoolFailure!),
+            );
+          },
+        ),
+      ],
+      child:
+          BlocBuilder<UnlinkedPassengerFormCubit, UnlinkedPassengerFormState>(
+            buildWhen: (previous, current) =>
+                previous.isSaving != current.isSaving,
+            builder: (context, state) {
+              return PopScope(
+                canPop: !state.isSaving,
+                child: Scaffold(
+                  backgroundColor: VanepColors.surface,
+                  appBar: VanepAppBar(
+                    title: l10n.unlinkedPassengerFormTitle,
+                    caption: vanCaption,
+                  ),
+                  bottomNavigationBar: VanepBottomBar(
+                    child:
+                        BlocBuilder<
+                          UnlinkedPassengerFormCubit,
+                          UnlinkedPassengerFormState
+                        >(
+                          builder: (context, state) => VanepPrimaryButton(
+                            label: l10n.unlinkedPassengerSubmit,
+                            isLoading: state.isSaving,
+                            onPressed: state.blocksSave ? null : cubit.submit,
+                          ),
+                        ),
+                  ),
+                  body: const UnlinkedPassengerFormBody(),
                 ),
-              ),
-        ),
-        body: const UnlinkedPassengerFormBody(),
-      ),
+              );
+            },
+          ),
     );
   }
 }
@@ -362,11 +380,6 @@ class UnlinkedPassengerScheduleSection extends StatelessWidget {
       state.visibleErrors,
       const [UnlinkedPassengerDraftError.legRequired],
     );
-    final timeError = unlinkedPassengerErrorText(
-      l10n,
-      state.visibleErrors,
-      const [UnlinkedPassengerDraftError.timeRequired],
-    );
 
     return VanepScheduleEditor(
       isAllowed: (_, _) => true,
@@ -402,11 +415,7 @@ class UnlinkedPassengerScheduleSection extends StatelessWidget {
               title: l10n.unlinkedPassengerSectionTimes,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  times,
-                  if (timeError != null)
-                    UnlinkedPassengerFieldError(text: timeError),
-                ],
+                children: [times],
               ),
             ),
           ],

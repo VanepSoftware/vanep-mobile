@@ -18,7 +18,6 @@ class MockVanStudentsCubit extends MockCubit<VanStudentsState>
 final loadedState = VanStudentsState(
   status: VanStudentsStatus.loaded,
   students: vanStudents,
-  occupancy: studentsOccupancy,
 );
 
 void main() {
@@ -64,8 +63,8 @@ void main() {
 
     expect(find.text('Alunos'), findsWidgets);
     expect(find.text('Sprinter · SDF4E21'), findsOneWidget);
-    expect(find.text('24 de 28 com família no app'), findsOneWidget);
-    expect(find.text('86%'), findsOneWidget);
+    expect(find.text('1 de 5 com família no app'), findsOneWidget);
+    expect(find.text('20%'), findsOneWidget);
     expect(find.text('É o mesmo Rafael?'), findsOneWidget);
     expect(
       find.textContaining('A família Costa cadastrou Rafael Costa, 9 anos.'),
@@ -105,6 +104,35 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(() => cubit.mergeFamily(joinedRafael)).called(1);
+  });
+
+  testWidgets('Não é in the merge dialog dismisses, and closing it does not', (
+    tester,
+  ) async {
+    await pumpPage(tester, loadedState);
+
+    await tester.tap(find.text('Sim, juntar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Juntar com Rafael Costa?'), findsOneWidget);
+
+    await tester.tapAt(const Offset(8, 8));
+    await tester.pumpAndSettle();
+    verifyNever(() => cubit.dismissFamilyMatch(any()));
+    verifyNever(() => cubit.mergeFamily(any()));
+    expect(find.text('Juntar com Rafael Costa?'), findsNothing);
+
+    await tester.tap(find.text('Sim, juntar'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.text('Não é'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    verify(() => cubit.dismissFamilyMatch(joinedRafael)).called(1);
+    verifyNever(() => cubit.mergeFamily(any()));
   });
 
   testWidgets('a share request opens the share sheet with the invite text', (
@@ -153,10 +181,7 @@ void main() {
   testWidgets('an empty van shows the empty message without progress', (
     tester,
   ) async {
-    await pumpPage(
-      tester,
-      const VanStudentsState(status: VanStudentsStatus.loaded),
-    );
+    await pumpPage(tester, VanStudentsState(status: VanStudentsStatus.loaded));
 
     expect(find.text('Nenhum aluno por aqui ainda.'), findsOneWidget);
     expect(find.text('0 de 0 com família no app'), findsNothing);
@@ -167,7 +192,7 @@ void main() {
     when(() => cubit.load()).thenAnswer((_) async {});
     await pumpPage(
       tester,
-      const VanStudentsState(status: VanStudentsStatus.loadFailed),
+      VanStudentsState(status: VanStudentsStatus.loadFailed),
     );
 
     expect(find.text('Não foi possível carregar os alunos.'), findsOneWidget);

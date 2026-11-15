@@ -25,20 +25,11 @@ void main() {
     });
   });
 
-  test('a leg without time and long texts are refused', () {
-    final complete = completeDraft();
-    final draft = complete.copyWith(
-      name: 'a' * 256,
-      notes: 'b' * 501,
-      legTimes: {
-        ...complete.legTimes,
-        (Weekday.tuesday, RouteLeg.homebound): null,
-      },
-    );
+  test('long texts are refused', () {
+    final draft = completeDraft().copyWith(name: 'a' * 256, notes: 'b' * 501);
 
     expect(draft.errors, {
       UnlinkedPassengerDraftError.nameTooLong,
-      UnlinkedPassengerDraftError.timeRequired,
       UnlinkedPassengerDraftError.notesTooLong,
     });
   });
@@ -59,7 +50,7 @@ void main() {
     );
     expect(
       draft.errors,
-      isNot(contains(UnlinkedPassengerDraftError.timeRequired)),
+      isNot(contains(UnlinkedPassengerDraftError.legRequired)),
     );
   });
 

@@ -1,4 +1,3 @@
-import 'package:vanep_mobile/modules/driver_van_central/domain/usecases/find_driver_occupancy.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
@@ -58,7 +57,6 @@ void registerDriverVanStudentsDependencies(GetIt getIt) {
       (vehicleToken, _) => VanStudentsCubit(
         vehicleToken: vehicleToken,
         listDriverStudents: getIt<ListDriverStudents>(),
-        findDriverOccupancy: getIt<FindDriverOccupancy>(),
         inviteStudentFamily: getIt<InviteStudentFamily>(),
         findParentsGroupInvite: getIt<FindParentsGroupInvite>(),
         mergeStudentFamily: getIt<MergeStudentFamily>(),

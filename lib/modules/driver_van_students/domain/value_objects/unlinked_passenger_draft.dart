@@ -20,7 +20,6 @@ enum UnlinkedPassengerDraftError {
   streetRequired,
   zipCodeInvalid,
   legRequired,
-  timeRequired,
   notesTooLong,
 }
 
@@ -75,7 +74,7 @@ class UnlinkedPassengerDraft extends Equatable {
 
   final PostalAddressDraft address;
 
-  final Map<WeekdayLeg, ClockTime?> legTimes;
+  final Map<WeekdayLeg, ClockTime> legTimes;
 
   final Map<RouteLeg, ClockTime> defaultTimes;
 
@@ -90,12 +89,7 @@ class UnlinkedPassengerDraft extends Equatable {
   ClockTime? timeOf(Weekday weekday, RouteLeg leg) => legTimes[(weekday, leg)];
 
   ClockTime defaultTimeOf(RouteLeg leg) {
-    final saved = defaultTimes[leg];
-    if (saved != null) return saved;
-    return switch (leg) {
-      RouteLeg.outbound => defaultOutboundPickupTime,
-      RouteLeg.homebound => defaultHomeboundPickupTime,
-    };
+    return defaultTimes[leg] ?? initialLegPickupTimes[leg]!;
   }
 
   UnlinkedPassengerDraft toggleLeg(Weekday weekday, RouteLeg leg) {
@@ -149,8 +143,6 @@ class UnlinkedPassengerDraft extends Equatable {
       if (addressIssues.contains(PostalAddressIssue.zipCodeInvalid))
         UnlinkedPassengerDraftError.zipCodeInvalid,
       if (legTimes.isEmpty) UnlinkedPassengerDraftError.legRequired,
-      if (legTimes.values.any((time) => time == null))
-        UnlinkedPassengerDraftError.timeRequired,
       if (notes.trim().length > unlinkedPassengerNotesMaxLength)
         UnlinkedPassengerDraftError.notesTooLong,
     };
@@ -177,7 +169,7 @@ class UnlinkedPassengerDraft extends Equatable {
     School? school,
     SchoolShift? schoolShift,
     PostalAddressDraft? address,
-    Map<WeekdayLeg, ClockTime?>? legTimes,
+    Map<WeekdayLeg, ClockTime>? legTimes,
     Map<RouteLeg, ClockTime>? defaultTimes,
     String? notes,
   }) {

@@ -2379,6 +2379,5 @@
   "unlinkedPassengerErrorSchoolRequired": "Choose the school.",
   "unlinkedPassengerErrorSchoolShiftRequired": "Choose the school shift.",
   "unlinkedPassengerErrorLegRequired": "Mark at least one leg.",
-  "unlinkedPassengerErrorTimeRequired": "Choose the time of each leg.",
   "unlinkedPassengerErrorNotesTooLong": "Use up to 500 characters."
 }
