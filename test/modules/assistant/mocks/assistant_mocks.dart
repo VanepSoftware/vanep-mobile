@@ -11,6 +11,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_absences_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_route_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_absences_repository.dart';
+import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_student_detail_repository.dart';
 import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_van_detail_repository.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/find_assistant_absences.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_students_datasource.dart';
@@ -91,6 +92,9 @@ class MockFindAssistantAbsences extends Mock implements FindAssistantAbsences {}
 
 class MockAssistantVanDetailRepository extends Mock
     implements AssistantVanDetailRepository {}
+
+class MockAssistantStudentDetailRepository extends Mock
+    implements AssistantStudentDetailRepository {}
 
 class MockRespondToAssistantInvite extends Mock
     implements RespondToAssistantInvite {}

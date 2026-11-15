@@ -16,6 +16,7 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_home
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_home_labels.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_vans_labels.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_home_tab.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_student_detail_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_home_cards.dart';
 
 class AssistantOnboardStudentsPage extends StatelessWidget {
@@ -142,6 +143,8 @@ class AssistantOnboardStudentsBody extends StatelessWidget {
                     for (final passenger in groups.onBoard)
                       AssistantPassengerRow(
                         passenger: passenger,
+                        onTap: () =>
+                            openStudentDetail(context, route, passenger, leg),
                         subtitle: stopLine(
                           passenger,
                           detail: timeOf(passenger.confirmedAt),
@@ -160,6 +163,8 @@ class AssistantOnboardStudentsBody extends StatelessWidget {
                 for (final passenger in groups.awaiting)
                   AssistantPassengerRow(
                     passenger: passenger,
+                    onTap: () =>
+                        openStudentDetail(context, route, passenger, leg),
                     subtitle: stopLine(passenger),
                     trailing: Text(
                       route.boardingStopOf(passenger.token, leg) == currentStop
@@ -181,6 +186,8 @@ class AssistantOnboardStudentsBody extends StatelessWidget {
                 for (final passenger in groups.didNotBoard)
                   AssistantPassengerRow(
                     passenger: passenger,
+                    onTap: () =>
+                        openStudentDetail(context, route, passenger, leg),
                     subtitle: stopLine(
                       passenger,
                       detail: [
@@ -206,6 +213,8 @@ class AssistantOnboardStudentsBody extends StatelessWidget {
                 for (final passenger in groups.notGoingToday)
                   AssistantPassengerRow(
                     passenger: passenger,
+                    onTap: () =>
+                        openStudentDetail(context, route, passenger, leg),
                     subtitle: [
                       for (final absence in route.todayAbsences)
                         if (absence.passengerToken == passenger.token)
@@ -253,7 +262,6 @@ class AssistantPassengerRow extends StatelessWidget {
   final AssistantRoutePassenger passenger;
   final String? subtitle;
   final Widget? trailing;
-  // TODO(VAN-74): rows open the student details once that screen exists.
   final VoidCallback? onTap;
 
   @override
@@ -319,4 +327,22 @@ class AssistantCorrectionSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+void openStudentDetail(
+  BuildContext context,
+  AssistantRouteSnapshot route,
+  AssistantRoutePassenger passenger,
+  TripLeg leg,
+) {
+  final stop = route.boardingStopOf(passenger.token, leg);
+  Navigator.of(context).push(
+    AssistantStudentDetailPage.route(
+      passenger.token,
+      today: AssistantStudentToday(
+        status: route.boardingStatusOf(passenger.token, leg),
+        stopNumber: stop == null ? null : route.stopNumberOf(stop),
+      ),
+    ),
+  );
 }
