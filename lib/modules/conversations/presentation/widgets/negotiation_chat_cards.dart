@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_current_dot.dart';
@@ -16,6 +14,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/service_reques
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_history.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const negotiationCardSpacing = 12.0;
 
@@ -63,12 +62,14 @@ class NegotiationChatCard extends StatelessWidget {
         ),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: sentByViewer ? VanepColors.actionTint : VanepColors.card,
+            color: sentByViewer
+                ? context.palette.actionTint
+                : context.palette.card,
             borderRadius: BorderRadius.circular(negotiationCardRadius),
             border: Border.all(
               color: isTinted
-                  ? VanepColors.actionBorder
-                  : VanepColors.cardBorder,
+                  ? context.palette.actionBorder
+                  : context.palette.cardBorder,
             ),
           ),
           child: Column(
@@ -80,19 +81,21 @@ class NegotiationChatCard extends StatelessWidget {
                   border: Border(
                     bottom: BorderSide(
                       color: isTinted
-                          ? VanepColors.actionBorder
-                          : VanepColors.divider,
+                          ? context.palette.actionBorder
+                          : context.palette.divider,
                     ),
                   ),
                 ),
                 child: Row(
                   children: [
-                    Icon(icon, size: 18, color: VanepColors.action),
+                    Icon(icon, size: 18, color: context.palette.action),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         title,
-                        style: VanepTypography.cardTitle.copyWith(fontSize: 14),
+                        style: context.typography.cardTitle.copyWith(
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                     if (trailing != null) ...[
@@ -112,7 +115,7 @@ class NegotiationChatCard extends StatelessWidget {
                     Text(
                       formatConversationTime(at),
                       textAlign: TextAlign.end,
-                      style: VanepTypography.cardSubtitle.copyWith(
+                      style: context.typography.cardSubtitle.copyWith(
                         fontSize: 11,
                       ),
                     ),
@@ -148,14 +151,14 @@ class NegotiationCardLine extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 17, color: VanepColors.textSecondary),
+            Icon(icon, size: 17, color: context.palette.textSecondary),
             const SizedBox(width: 8),
           ],
           Expanded(
             child: Text(
               text,
-              style: VanepTypography.cardSubtitle.copyWith(
-                color: VanepColors.textPrimary,
+              style: context.typography.cardSubtitle.copyWith(
+                color: context.palette.textPrimary,
                 fontWeight: isStrong ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
@@ -255,7 +258,7 @@ class NegotiationVersionCard extends StatelessWidget {
             )
           : Text(
               proposalStatusLabel(l10n, proposal.status),
-              style: VanepTypography.cardSubtitle.copyWith(
+              style: context.typography.cardSubtitle.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -263,10 +266,10 @@ class NegotiationVersionCard extends StatelessWidget {
         VanepInstallmentPrice(
           amountCents: proposal.installmentAmountCents,
           installments: proposal.installments,
-          amountStyle: VanepTypography.heading.copyWith(
+          amountStyle: context.typography.heading.copyWith(
             fontSize: isCurrent ? 22 : 18,
           ),
-          countStyle: VanepTypography.cardSubtitle.copyWith(
+          countStyle: context.typography.cardSubtitle.copyWith(
             fontSize: isCurrent ? 14 : 13,
             fontWeight: FontWeight.w600,
           ),
@@ -274,7 +277,7 @@ class NegotiationVersionCard extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           formatMoney(l10n, proposal.totalAmountCents),
-          style: VanepTypography.cardSubtitle,
+          style: context.typography.cardSubtitle,
         ),
         const SizedBox(height: 4),
         NegotiationCardLine(text: l10n.negotiationChatDueDay(proposal.dueDay)),
@@ -354,8 +357,8 @@ class NegotiationAdjustmentCard extends StatelessWidget {
             padding: const EdgeInsets.only(top: 4),
             child: Text(
               note,
-              style: VanepTypography.cardSubtitle.copyWith(
-                color: VanepColors.textPrimary,
+              style: context.typography.cardSubtitle.copyWith(
+                color: context.palette.textPrimary,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -382,22 +385,22 @@ class NegotiationNotice extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: VanepColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
+          Icon(
             Icons.info_outline,
             size: 16,
-            color: VanepColors.textSecondary,
+            color: context.palette.textSecondary,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
-              style: VanepTypography.cardSubtitle.copyWith(fontSize: 12),
+              style: context.typography.cardSubtitle.copyWith(fontSize: 12),
             ),
           ),
         ],
@@ -419,12 +422,12 @@ class ChatDayDivider extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: VanepColors.surface,
+            color: context.palette.surface,
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(
             label,
-            style: VanepTypography.cardSubtitle.copyWith(
+            style: context.typography.cardSubtitle.copyWith(
               fontSize: 12,
               fontWeight: FontWeight.w700,
             ),
@@ -449,26 +452,26 @@ class OpenProposalBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Material(
-      color: VanepColors.actionTint,
-      shape: const Border(
-        top: BorderSide(color: VanepColors.divider),
-        bottom: BorderSide(color: VanepColors.actionBorder),
+      color: context.palette.actionTint,
+      shape: Border(
+        top: BorderSide(color: context.palette.divider),
+        bottom: BorderSide(color: context.palette.actionBorder),
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
         child: Row(
           children: [
-            const Icon(
+            Icon(
               Icons.request_quote_outlined,
               size: 20,
-              color: VanepColors.action,
+              color: context.palette.action,
             ),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 formatOpenProposalBanner(l10n, proposal),
-                style: VanepTypography.cardSubtitle.copyWith(
-                  color: VanepColors.textPrimary,
+                style: context.typography.cardSubtitle.copyWith(
+                  color: context.palette.textPrimary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -490,26 +493,22 @@ class NegotiationLoadFailedBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Material(
-      color: VanepColors.warningSurfaceSoft,
-      shape: const Border(
-        top: BorderSide(color: VanepColors.divider),
-        bottom: BorderSide(color: VanepColors.warningBorder),
+      color: context.palette.warningSurfaceSoft,
+      shape: Border(
+        top: BorderSide(color: context.palette.divider),
+        bottom: BorderSide(color: context.palette.warningBorder),
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
         child: Row(
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 20,
-              color: VanepColors.warning,
-            ),
+            Icon(Icons.error_outline, size: 20, color: context.palette.warning),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 l10n.negotiationChatLoadError,
-                style: VanepTypography.cardSubtitle.copyWith(
-                  color: VanepColors.warningText,
+                style: context.typography.cardSubtitle.copyWith(
+                  color: context.palette.warningText,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -531,22 +530,22 @@ class AdjustmentRequestedBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Material(
-      color: VanepColors.warningSurfaceSoft,
-      shape: const Border(
-        top: BorderSide(color: VanepColors.divider),
-        bottom: BorderSide(color: VanepColors.warningBorder),
+      color: context.palette.warningSurfaceSoft,
+      shape: Border(
+        top: BorderSide(color: context.palette.divider),
+        bottom: BorderSide(color: context.palette.warningBorder),
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
         child: Row(
           children: [
-            const Icon(Icons.tune, size: 20, color: VanepColors.warning),
+            Icon(Icons.tune, size: 20, color: context.palette.warning),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 l10n.driverProposalsAdjustmentRequested,
-                style: VanepTypography.cardSubtitle.copyWith(
-                  color: VanepColors.warningText,
+                style: context.typography.cardSubtitle.copyWith(
+                  color: context.palette.warningText,
                   fontWeight: FontWeight.w600,
                 ),
               ),

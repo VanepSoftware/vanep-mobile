@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
@@ -30,6 +28,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 void openFullProposal(BuildContext context, DriverNegotiationActions actions) {
   final cubit = context.read<DriverProposalCubit>();
@@ -83,7 +82,7 @@ class DriverProposalPage extends StatelessWidget {
         final adjustment = isReadOnly ? null : detail?.pendingAdjustment;
         final onChat = detail == null ? null : actions.chatWith(detail.request);
         return Scaffold(
-          backgroundColor: VanepColors.surface,
+          backgroundColor: context.palette.surface,
           appBar: VanepAppBar(
             title: adjustment != null
                 ? l10n.driverProposalsAdjustmentRequested
@@ -117,8 +116,8 @@ class DriverProposalPage extends StatelessWidget {
               retryLabel: l10n.clientProposalsRetry,
               onRetry: cubit.load,
             ),
-            _ => const Center(
-              child: CircularProgressIndicator(color: VanepColors.action),
+            _ => Center(
+              child: CircularProgressIndicator(color: context.palette.action),
             ),
           },
           bottomNavigationBar: detail != null && adjustment != null
@@ -238,7 +237,7 @@ class AdjustmentRequestCard extends StatelessWidget {
     final suggestion = adjustment.suggestedValue?.trim() ?? '';
     final note = adjustment.note?.trim() ?? '';
     return VanepCard(
-      borderColor: VanepColors.actionBorder,
+      borderColor: context.palette.actionBorder,
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -253,13 +252,13 @@ class AdjustmentRequestCard extends StatelessWidget {
                         adjustmentFieldLabel(l10n, adjustment.field),
                       )
                       .toUpperCase(),
-                  style: VanepTypography.overline.copyWith(fontSize: 12),
+                  style: context.typography.overline.copyWith(fontSize: 12),
                 ),
               ),
               const SizedBox(width: 12),
               Text(
                 formatAdjustmentMoment(l10n, adjustment.createdAt, today),
-                style: VanepTypography.cardSubtitle,
+                style: context.typography.cardSubtitle,
               ),
             ],
           ),
@@ -315,12 +314,12 @@ class AdjustmentComparison extends StatelessWidget {
               value: current,
             ),
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.fromLTRB(8, 0, 8, 4),
             child: Icon(
               Icons.arrow_forward,
               size: 20,
-              color: VanepColors.textMuted,
+              color: context.palette.textMuted,
             ),
           ),
           Expanded(child: suggested),
@@ -347,15 +346,15 @@ class AdjustmentValue extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: VanepTypography.cardSubtitle),
+        Text(label, style: context.typography.cardSubtitle),
         const SizedBox(height: 4),
         Text(
           value,
-          style: VanepTypography.heading.copyWith(
+          style: context.typography.heading.copyWith(
             fontSize: 20,
             color: isSuggestion
-                ? VanepColors.action
-                : VanepColors.textSecondary,
+                ? context.palette.action
+                : context.palette.textSecondary,
           ),
         ),
       ],
@@ -373,12 +372,14 @@ class AdjustmentNote extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: VanepColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         note,
-        style: VanepTypography.body.copyWith(color: VanepColors.textPrimary),
+        style: context.typography.body.copyWith(
+          color: context.palette.textPrimary,
+        ),
       ),
     );
   }
@@ -422,7 +423,7 @@ class CurrentVersionCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.proposalDetailVersion(proposal.version),
-                  style: VanepTypography.cardTitle,
+                  style: context.typography.cardTitle,
                 ),
               ),
               VanepExpiryChip(
@@ -437,8 +438,8 @@ class CurrentVersionCard extends StatelessWidget {
           VanepInstallmentPrice(
             amountCents: proposal.installmentAmountCents,
             installments: proposal.installments,
-            amountStyle: VanepTypography.heading.copyWith(fontSize: 22),
-            countStyle: VanepTypography.cardSubtitle.copyWith(
+            amountStyle: context.typography.heading.copyWith(fontSize: 22),
+            countStyle: context.typography.cardSubtitle.copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -446,7 +447,7 @@ class CurrentVersionCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             formatMoney(l10n, proposal.totalAmountCents),
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           const SizedBox(height: 4),
           DetailInfoRow(

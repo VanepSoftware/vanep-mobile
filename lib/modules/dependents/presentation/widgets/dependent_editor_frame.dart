@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DependentEditorFrame extends StatelessWidget {
   const DependentEditorFrame({
@@ -24,7 +24,7 @@ class DependentEditorFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       appBar: VanepAppBar(title: title, caption: caption),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/formatters/weekday_label.dart';
@@ -21,6 +19,8 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const detailSectionSpacing = 16.0;
 
@@ -28,28 +28,28 @@ const scheduleLegIconSize = 40.0;
 
 const historyRailWidth = 14.0;
 
-const proposalPriceStyle = TextStyle(
+TextStyle proposalPriceStyle(VanepPalette palette) => TextStyle(
   fontSize: 32,
   fontWeight: FontWeight.w800,
   letterSpacing: -0.8,
   height: 1.1,
-  color: VanepColors.textPrimary,
+  color: palette.textPrimary,
   fontFeatures: [FontFeature.tabularFigures()],
 );
 
-const proposalInstallmentsSuffixStyle = TextStyle(
+TextStyle proposalInstallmentsSuffixStyle(VanepPalette palette) => TextStyle(
   fontSize: 15,
   fontWeight: FontWeight.w600,
   letterSpacing: 0,
-  color: VanepColors.textSecondary,
+  color: palette.textSecondary,
 );
 
 const historyConnectorWidth = 2.0;
 
-const scheduleTimeStyle = TextStyle(
+TextStyle scheduleTimeStyle(VanepPalette palette) => TextStyle(
   fontSize: 15,
   fontWeight: FontWeight.w700,
-  color: VanepColors.textPrimary,
+  color: palette.textPrimary,
   fontFeatures: [FontFeature.tabularFigures()],
 );
 
@@ -123,7 +123,7 @@ class DetailInfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: VanepTypography.cardSubtitle),
+          Text(label, style: context.typography.cardSubtitle),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -133,8 +133,8 @@ class DetailInfoRow extends StatelessWidget {
                   Text(
                     value,
                     textAlign: TextAlign.end,
-                    style: VanepTypography.cardSubtitle.copyWith(
-                      color: VanepColors.textPrimary,
+                    style: context.typography.cardSubtitle.copyWith(
+                      color: context.palette.textPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -162,9 +162,9 @@ class DetailNotice extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 18, color: VanepColors.textSecondary),
+        Icon(icon, size: 18, color: context.palette.textSecondary),
         const SizedBox(width: 8),
-        Expanded(child: Text(text, style: VanepTypography.cardSubtitle)),
+        Expanded(child: Text(text, style: context.typography.cardSubtitle)),
       ],
     );
   }
@@ -201,7 +201,7 @@ class ProposalValueCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.proposalDetailVersion(proposal.version).toUpperCase(),
-                  style: VanepTypography.overline,
+                  style: context.typography.overline,
                 ),
               ),
               VanepExpiryChip(
@@ -216,19 +216,19 @@ class ProposalValueCard extends StatelessWidget {
           VanepInstallmentPrice(
             amountCents: proposal.installmentAmountCents,
             installments: proposal.installments,
-            amountStyle: proposalPriceStyle,
-            countStyle: proposalInstallmentsSuffixStyle,
+            amountStyle: proposalPriceStyle(context.palette),
+            countStyle: proposalInstallmentsSuffixStyle(context.palette),
           ),
           const SizedBox(height: 2),
           Text(
             l10n.proposalDetailTotal(
               formatMoney(l10n, proposal.totalAmountCents),
             ),
-            style: VanepTypography.cardSubtitle,
+            style: context.typography.cardSubtitle,
           ),
           if (previous != null) ...[
             const SizedBox(height: 12),
-            const Divider(height: 1, color: VanepColors.divider),
+            Divider(height: 1, color: context.palette.divider),
             Row(
               children: [
                 Expanded(
@@ -267,9 +267,9 @@ class PriceChangeSummary extends StatelessWidget {
     if (change.isEmpty) return const SizedBox.shrink();
     final amount = formatMoney(l10n, change.totalDifferenceCents.abs());
     final totalColor = change.isCheaper
-        ? VanepColors.success
-        : VanepColors.textSecondary;
-    final installmentsStyle = VanepTypography.cardSubtitle.copyWith(
+        ? context.palette.success
+        : context.palette.textSecondary;
+    final installmentsStyle = context.typography.cardSubtitle.copyWith(
       fontWeight: FontWeight.w600,
     );
     return Semantics(
@@ -297,25 +297,25 @@ class PriceChangeSummary extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               amount,
-              style: VanepTypography.cardSubtitle.copyWith(
+              style: context.typography.cardSubtitle.copyWith(
                 fontWeight: FontWeight.w700,
                 color: totalColor,
               ),
             ),
           ],
           if (change.hasTotalChanged && change.hasInstallmentsChanged)
-            Text(' · ', style: VanepTypography.cardSubtitle),
+            Text(' · ', style: context.typography.cardSubtitle),
           if (change.hasInstallmentsChanged) ...[
             Text(
               l10n.installmentsCount(change.previousInstallments),
               style: installmentsStyle,
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 4),
               child: Icon(
                 Icons.arrow_forward,
                 size: 14,
-                color: VanepColors.textMuted,
+                color: context.palette.textMuted,
               ),
             ),
             Text(
@@ -345,7 +345,7 @@ class DetailWeekLegsSection extends StatelessWidget {
         children: [
           for (final (index, (names, rows)) in gridsByChildren.indexed) ...[
             if (index > 0) const SizedBox(height: 12),
-            if (showsNames) Text(names, style: VanepTypography.fieldLabel),
+            if (showsNames) Text(names, style: context.typography.fieldLabel),
             VanepWeekLegsGrid<RouteLeg>(rows: rows),
           ],
         ],
@@ -371,7 +371,7 @@ class DetailScheduleSection extends StatelessWidget {
             joinNames(l10n, [
               for (final item in group) item.dependentFirstName,
             ]),
-            style: VanepTypography.fieldLabel,
+            style: context.typography.fieldLabel,
           ),
         for (final leg in RouteLeg.values)
           if (timesOfLeg(group.first.slots, leg) case final times
@@ -387,7 +387,7 @@ class DetailScheduleSection extends StatelessWidget {
           for (final (index, tile) in tiles.indexed) ...[
             if (index > 0)
               tile is ScheduleLegTile
-                  ? const Divider(height: 24, color: VanepColors.divider)
+                  ? Divider(height: 24, color: context.palette.divider)
                   : const SizedBox(height: 16),
             tile,
           ],
@@ -413,8 +413,8 @@ class ScheduleLegTile extends StatelessWidget {
         Container(
           width: scheduleLegIconSize,
           height: scheduleLegIconSize,
-          decoration: const BoxDecoration(
-            color: VanepColors.surface,
+          decoration: BoxDecoration(
+            color: context.palette.surface,
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -422,7 +422,7 @@ class ScheduleLegTile extends StatelessWidget {
                 ? Icons.home_outlined
                 : Icons.school_outlined,
             size: 20,
-            color: VanepColors.textSecondary,
+            color: context.palette.textSecondary,
           ),
         ),
         const SizedBox(width: 12),
@@ -438,19 +438,22 @@ class ScheduleLegTile extends StatelessWidget {
                       children: [
                         Text(
                           routeLegLabel(l10n, leg),
-                          style: VanepTypography.cardTitle,
+                          style: context.typography.cardTitle,
                         ),
                         Text(
                           leg == RouteLeg.outbound
                               ? l10n.proposalDetailPickupAtHome
                               : l10n.proposalDetailLeaveSchool,
-                          style: VanepTypography.cardSubtitle,
+                          style: context.typography.cardSubtitle,
                         ),
                       ],
                     ),
                   ),
                   if (shared != null)
-                    Text(formatClockTime(shared), style: scheduleTimeStyle),
+                    Text(
+                      formatClockTime(shared),
+                      style: scheduleTimeStyle(context.palette),
+                    ),
                 ],
               ),
               if (shared == null)
@@ -464,10 +467,13 @@ class ScheduleLegTile extends StatelessWidget {
                           Expanded(
                             child: Text(
                               weekdayShortLabel(l10n, weekday),
-                              style: VanepTypography.cardSubtitle,
+                              style: context.typography.cardSubtitle,
                             ),
                           ),
-                          Text(formatClockTime(time), style: scheduleTimeStyle),
+                          Text(
+                            formatClockTime(time),
+                            style: scheduleTimeStyle(context.palette),
+                          ),
                         ],
                       ),
                     ),
@@ -534,7 +540,9 @@ class DetailTextSection extends StatelessWidget {
       title: title,
       child: Text(
         text,
-        style: VanepTypography.body.copyWith(color: VanepColors.textPrimary),
+        style: context.typography.body.copyWith(
+          color: context.palette.textPrimary,
+        ),
       ),
     );
   }
@@ -601,7 +609,7 @@ class NegotiationHistoryEntry extends StatelessWidget {
                     child: Container(
                       width: historyConnectorWidth,
                       margin: const EdgeInsets.only(top: 4),
-                      color: VanepColors.divider,
+                      color: context.palette.divider,
                     ),
                   ),
               ],
@@ -617,8 +625,8 @@ class NegotiationHistoryEntry extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: VanepTypography.cardSubtitle.copyWith(
-                        color: VanepColors.textPrimary,
+                      style: context.typography.cardSubtitle.copyWith(
+                        color: context.palette.textPrimary,
                         fontWeight: isCurrent
                             ? FontWeight.w700
                             : FontWeight.w500,
@@ -626,7 +634,7 @@ class NegotiationHistoryEntry extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(date, style: VanepTypography.cardSubtitle),
+                  Text(date, style: context.typography.cardSubtitle),
                 ],
               ),
             ),

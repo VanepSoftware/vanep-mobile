@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/proposal_detail_labels.dart';
@@ -9,6 +8,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart'
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DetailDriverCard extends StatelessWidget {
   const DetailDriverCard({required this.request, this.proposal, super.key});
@@ -57,10 +57,10 @@ class DetailStudentsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (final item in request.items) ...[
-            Text(item.dependentName, style: VanepTypography.cardTitle),
+            Text(item.dependentName, style: context.typography.cardTitle),
             Text(
               formatClientStudentDetail(l10n, item, today),
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
             if (item != request.items.last) const SizedBox(height: 10),
           ],

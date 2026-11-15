@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
@@ -52,7 +52,7 @@ class ProfileHeader extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: VanepTypography.pageTitle.copyWith(fontSize: 22),
+                style: context.typography.pageTitle.copyWith(fontSize: 22),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -60,7 +60,7 @@ class ProfileHeader extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   email!,
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -81,19 +81,19 @@ class ProfileHeader extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         rating!.toStringAsFixed(1),
-                        style: VanepTypography.ratingLabel,
+                        style: context.typography.ratingLabel,
                       ),
                     ],
                     if (rating != null && city != null)
-                      const Text(
+                      Text(
                         ' · ',
-                        style: TextStyle(color: VanepColors.textMuted),
+                        style: TextStyle(color: context.palette.textMuted),
                       ),
                     if (city != null)
                       Flexible(
                         child: Text(
                           city!,
-                          style: VanepTypography.cardSubtitle,
+                          style: context.typography.cardSubtitle,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -103,7 +103,7 @@ class ProfileHeader extends StatelessWidget {
                 const SizedBox(height: 6),
                 ProfileAssistantStatusChip(
                   label: statusLabel!,
-                  color: statusColor ?? VanepColors.textSecondary,
+                  color: statusColor ?? context.palette.textSecondary,
                 ),
               ],
             ],
@@ -136,7 +136,7 @@ class ProfileAssistantStatusChip extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: VanepTypography.cardSubtitle.copyWith(
+          style: context.typography.cardSubtitle.copyWith(
             color: color,
             fontSize: 12,
           ),

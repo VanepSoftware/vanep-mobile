@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/domain/iso_calendar_date.dart';
 import 'package:vanep_mobile/core/formatters/birth_date_formatter.dart';
@@ -31,6 +29,7 @@ import 'package:vanep_mobile/modules/auth/presentation/pages/account_type_page.d
 import 'package:vanep_mobile/modules/auth/presentation/pages/email_code_verification_page.dart';
 
 import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_invite_code_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> openPasswordSignup(BuildContext context, UserType type) {
   if (type == UserType.assistant) {
@@ -77,7 +76,7 @@ class SignupPage extends StatelessWidget {
             if (!didPop) cubit.previousStep();
           },
           child: Scaffold(
-            backgroundColor: VanepColors.card,
+            backgroundColor: context.palette.card,
             appBar: const VanepAppBar(),
             body: Column(
               children: [
@@ -179,14 +178,14 @@ class SignupStepHeader extends StatelessWidget {
             Expanded(
               child: Text(
                 signupTitle(l10n, state.form.type),
-                style: VanepTypography.fieldLabel.copyWith(
-                  color: VanepColors.action,
+                style: context.typography.fieldLabel.copyWith(
+                  color: context.palette.action,
                 ),
               ),
             ),
             Text(
               l10n.signupStepProgress(state.stepIndex + 1, totalSteps),
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
           ],
         ),
@@ -227,8 +226,8 @@ class SignupStepProgressBar extends StatelessWidget {
               height: 4,
               decoration: BoxDecoration(
                 color: stepIndex < completedSteps
-                    ? VanepColors.action
-                    : VanepColors.cardBorder,
+                    ? context.palette.action
+                    : context.palette.cardBorder,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -492,14 +491,14 @@ class SignupAccountSummary extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: VanepTypography.cardTitle),
+                Text(name, style: context.typography.cardTitle),
                 const SizedBox(height: 2),
-                Text(email, style: VanepTypography.cardSubtitle),
+                Text(email, style: context.typography.cardSubtitle),
                 const SizedBox(height: 6),
                 Text(
                   accountTypeLabel(l10n, type),
-                  style: VanepTypography.cardSubtitle.copyWith(
-                    color: VanepColors.action,
+                  style: context.typography.cardSubtitle.copyWith(
+                    color: context.palette.action,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -610,12 +609,12 @@ class SignupTermsField extends StatelessWidget {
                 child: Checkbox(
                   value: accepted,
                   onChanged: (value) => onChanged(value ?? false),
-                  activeColor: VanepColors.action,
-                  checkColor: VanepColors.card,
+                  activeColor: context.palette.action,
+                  checkColor: context.palette.onAction,
                   side: BorderSide(
                     color: errorText == null
-                        ? VanepColors.textSecondary
-                        : VanepColors.danger,
+                        ? context.palette.textSecondary
+                        : context.palette.danger,
                   ),
                 ),
               ),
@@ -623,7 +622,7 @@ class SignupTermsField extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.signupAcceptTerms,
-                  style: VanepTypography.fieldValue,
+                  style: context.typography.fieldValue,
                 ),
               ),
             ],
@@ -634,8 +633,8 @@ class SignupTermsField extends StatelessWidget {
             padding: const EdgeInsets.only(left: 4, top: 6),
             child: Text(
               errorText,
-              style: VanepTypography.cardSubtitle.copyWith(
-                color: VanepColors.danger,
+              style: context.typography.cardSubtitle.copyWith(
+                color: context.palette.danger,
                 fontSize: 12,
               ),
             ),

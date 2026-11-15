@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepGreetingHeader extends StatelessWidget {
   const VanepGreetingHeader({
@@ -29,10 +28,12 @@ class VanepGreetingHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            Flexible(child: Text(greeting, style: VanepTypography.pageTitle)),
+            Flexible(
+              child: Text(greeting, style: context.typography.pageTitle),
+            ),
             if (trailingEmoji != null) ...[
               const SizedBox(width: 8),
-              Text(trailingEmoji!, style: VanepTypography.pageTitle),
+              Text(trailingEmoji!, style: context.typography.pageTitle),
             ],
           ],
         ),
@@ -40,8 +41,8 @@ class VanepGreetingHeader extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             subtitle!,
-            style: VanepTypography.cardSubtitle.copyWith(
-              color: VanepColors.textSecondary,
+            style: context.typography.cardSubtitle.copyWith(
+              color: context.palette.textSecondary,
             ),
           ),
         ],

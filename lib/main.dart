@@ -27,6 +27,9 @@ import 'package:vanep_mobile/modules/ibge_locations/ibge_locations_container.dar
 import 'package:vanep_mobile/modules/negotiations/negotiations_container.dart';
 import 'package:vanep_mobile/modules/profile/profile_container.dart';
 import 'package:vanep_mobile/modules/schools/schools_container.dart';
+import 'package:vanep_mobile/modules/settings/data/datasources/settings_local_datasource.dart';
+import 'package:vanep_mobile/modules/settings/domain/usecases/get_theme_preference.dart';
+import 'package:vanep_mobile/modules/settings/settings_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +39,10 @@ Future<void> main() async {
 
   await Hive.initFlutter();
   await Hive.deleteBoxFromDisk(AuthLocalDataSource.legacyHiveBoxName);
+  registerSettingsDependencies(
+    getIt,
+    settingsBox: await Hive.openBox<String>(SettingsLocalDataSource.boxName),
+  );
   registerAuthDependencies(getIt, secureStorage: const FlutterSecureStorage());
   registerMediaDependencies(getIt);
   registerDriverDependencies(getIt);
@@ -57,5 +64,6 @@ Future<void> main() async {
   registerClientProposalsDependencies(getIt);
   registerDriverProposalsDependencies(getIt);
 
-  runApp(const VanepApp());
+  final themePreference = await getIt<GetThemePreference>()();
+  runApp(VanepApp(initialThemePreference: themePreference));
 }

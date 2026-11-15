@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+List<({Color surface, Color text})> vanepInitialAvatarTones(
+  VanepPalette palette,
+) {
+  return [
+    (surface: palette.avatarAmberSurface, text: palette.avatarAmberText),
+    (surface: palette.avatarBlueSurface, text: palette.avatarBlueText),
+    (surface: palette.avatarGreenSurface, text: palette.avatarGreenText),
+    (surface: palette.avatarGraySurface, text: palette.avatarGrayText),
+  ];
+}
 
-const vanepInitialAvatarPalette = <({Color surface, Color text})>[
-  (surface: VanepColors.avatarAmberSurface, text: VanepColors.avatarAmberText),
-  (surface: VanepColors.avatarBlueSurface, text: VanepColors.avatarBlueText),
-  (surface: VanepColors.avatarGreenSurface, text: VanepColors.avatarGreenText),
-  (surface: VanepColors.avatarGraySurface, text: VanepColors.avatarGrayText),
-];
-
-({Color surface, Color text}) vanepInitialAvatarColors(String seed) {
+({Color surface, Color text}) vanepInitialAvatarColors(
+  VanepPalette palette,
+  String seed,
+) {
+  final tones = vanepInitialAvatarTones(palette);
   final sum = seed.codeUnits.fold<int>(0, (total, unit) => total + unit);
-  return vanepInitialAvatarPalette[sum % vanepInitialAvatarPalette.length];
+  return tones[sum % tones.length];
 }
 
 String vanepInitialOf(String name) {
@@ -34,7 +42,7 @@ class VanepInitialAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = vanepInitialAvatarColors(seed);
+    final colors = vanepInitialAvatarColors(context.palette, seed);
     return ExcludeSemantics(
       child: Container(
         width: size,

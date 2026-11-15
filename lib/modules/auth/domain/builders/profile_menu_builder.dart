@@ -37,7 +37,7 @@ const _enabledSignOut = ProfileMenuEntry(
 );
 
 const _settingsSection = ProfileMenuSection([
-  ProfileMenuEntry(id: ProfileMenuId.settings, enabled: false),
+  ProfileMenuEntry(id: ProfileMenuId.settings, enabled: true),
   ProfileMenuEntry(id: ProfileMenuId.privacySecurity, enabled: false),
 ], title: ProfileMenuSectionTitle.preferences);
 

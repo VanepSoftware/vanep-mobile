@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
@@ -24,6 +22,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_wiz
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_header_card.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_readiness_card.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_school_week_bar.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> openDependentDetail(BuildContext context, String token) {
   final dependents = context.read<DependentsCubit>();
@@ -70,8 +69,8 @@ class DependentDetailView extends StatelessWidget {
       builder: (context, dependentsState) {
         final dependent = dependentsState.dependentOf(token);
         if (dependent == null) {
-          return const Scaffold(
-            backgroundColor: VanepColors.surface,
+          return Scaffold(
+            backgroundColor: context.palette.surface,
             appBar: VanepAppBar(),
           );
         }
@@ -80,7 +79,7 @@ class DependentDetailView extends StatelessWidget {
             dependentsState.canChooseDefault && !dependent.isDefault;
 
         return Scaffold(
-          backgroundColor: VanepColors.surface,
+          backgroundColor: context.palette.surface,
           appBar: VanepAppBar(
             title: dependentFirstName(dependent.name),
             caption: l10n.dependentDetailCaption,
@@ -144,7 +143,7 @@ class DependentDetailView extends StatelessWidget {
                 child: TextButton(
                   onPressed: () => confirmRemoval(context, dependent),
                   style: TextButton.styleFrom(
-                    foregroundColor: VanepColors.danger,
+                    foregroundColor: context.palette.danger,
                     minimumSize: const Size(44, 44),
                   ),
                   child: Text(l10n.dependentRemove),
@@ -183,7 +182,7 @@ class DependentSchoolRoutineCard extends StatelessWidget {
                   ? null
                   : Text(
                       school.name,
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -203,7 +202,7 @@ class DependentSchoolRoutineCard extends StatelessWidget {
                   ? null
                   : Text(
                       pickup,
-                      style: VanepTypography.cardSubtitle,
+                      style: context.typography.cardSubtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

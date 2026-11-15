@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 Widget menuHarness(List<VanepMenuItem> items) {
   return MaterialApp(
@@ -75,7 +75,7 @@ void main() {
     );
 
     final label = tester.widget<Text>(find.text('Sair'));
-    expect(label.style?.color, VanepColors.danger);
+    expect(label.style?.color, VanepPalette.light.danger);
     expect(find.byIcon(Icons.chevron_right), findsNothing);
   });
 

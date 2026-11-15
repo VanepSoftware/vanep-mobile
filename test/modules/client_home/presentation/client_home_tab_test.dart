@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
@@ -19,6 +18,7 @@ import 'package:vanep_mobile/modules/client_home/presentation/pages/client_home_
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/client_home_skeleton.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_shortcuts_grid.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/live_van_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 import '../../../core/ui/localized_harness.dart';
 import '../client_home_fixtures.dart';
@@ -213,7 +213,7 @@ void main() {
       ),
     );
     expect(card.highlighted, isFalse);
-    expect(card.borderColor, VanepColors.actionBorder);
+    expect(card.borderColor, VanepPalette.light.actionBorder);
     expect(find.text('Pedido para Rita expirou'), findsOneWidget);
 
     await tester.tap(find.text('Ver propostas'));

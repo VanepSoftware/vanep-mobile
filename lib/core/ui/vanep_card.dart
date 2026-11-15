@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepCard extends StatelessWidget {
   const VanepCard({
@@ -22,13 +22,15 @@ class VanepCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: highlighted ? VanepColors.actionSurface : VanepColors.card,
+      color: highlighted ? context.palette.actionSurface : context.palette.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
         side: BorderSide(
           color:
               borderColor ??
-              (highlighted ? VanepColors.action : VanepColors.cardBorder),
+              (highlighted
+                  ? context.palette.action
+                  : context.palette.cardBorder),
         ),
       ),
       clipBehavior: Clip.antiAlias,

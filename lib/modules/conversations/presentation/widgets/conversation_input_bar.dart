@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/usecases/send_conversation_message.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ConversationInputBar extends StatefulWidget {
   const ConversationInputBar({
@@ -57,6 +57,7 @@ class ConversationInputBarState extends State<ConversationInputBar> {
                 maxLength: conversationMessageMaxLength,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: vanepInputDecoration(
+                  context,
                   hintText: l10n.conversationInputHint,
                 ),
               ),
@@ -69,7 +70,7 @@ class ConversationInputBarState extends State<ConversationInputBar> {
                     !isBlankConversationMessage(value.text);
                 return IconButton(
                   tooltip: l10n.conversationSend,
-                  color: VanepColors.action,
+                  color: context.palette.action,
                   onPressed: canSend ? sendTypedMessage : null,
                   icon: const Icon(Icons.send_rounded),
                 );

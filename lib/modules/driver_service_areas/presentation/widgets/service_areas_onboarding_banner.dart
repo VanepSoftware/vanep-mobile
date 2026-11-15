@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ServiceAreasOnboardingBanner extends StatelessWidget {
   const ServiceAreasOnboardingBanner({
@@ -26,12 +26,12 @@ class ServiceAreasOnboardingBanner extends StatelessWidget {
           children: [
             Text(
               l10n.serviceAreasOnboardingTitle,
-              style: VanepTypography.cardTitle,
+              style: context.typography.cardTitle,
             ),
             const SizedBox(height: 6),
             Text(
               l10n.serviceAreasOnboardingBody,
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
             const SizedBox(height: 10),
             Row(

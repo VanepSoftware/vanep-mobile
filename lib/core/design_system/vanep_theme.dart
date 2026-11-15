@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 
 class VanepTheme {
@@ -9,61 +9,81 @@ class VanepTheme {
   static const double controlRadius = 10;
   static const double cardRadius = 12;
 
-  static ThemeData light() {
+  static ThemeData light() =>
+      buildTheme(VanepPalette.light, brightness: Brightness.light);
+
+  static ThemeData dark() =>
+      buildTheme(VanepPalette.dark, brightness: Brightness.dark);
+
+  static ThemeData buildTheme(
+    VanepPalette palette, {
+    required Brightness brightness,
+  }) {
+    final typography = VanepTypography(palette);
     return ThemeData(
       useMaterial3: true,
-      colorScheme: lightColorScheme(),
-      scaffoldBackgroundColor: VanepColors.surface,
-      canvasColor: VanepColors.surface,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: VanepColors.card,
-        foregroundColor: VanepColors.textPrimary,
+      brightness: brightness,
+      colorScheme: buildColorScheme(palette, brightness: brightness),
+      extensions: [palette],
+      scaffoldBackgroundColor: palette.surface,
+      canvasColor: palette.surface,
+      appBarTheme: AppBarTheme(
+        backgroundColor: palette.card,
+        foregroundColor: palette.textPrimary,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
       ),
-      dividerTheme: const DividerThemeData(
-        color: VanepColors.divider,
+      dividerTheme: DividerThemeData(
+        color: palette.divider,
         thickness: 1,
         space: 1,
       ),
       cardTheme: CardThemeData(
-        color: VanepColors.card,
+        color: palette.card,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cardRadius),
-          side: const BorderSide(color: VanepColors.cardBorder),
+          side: BorderSide(color: palette.cardBorder),
         ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: VanepColors.card,
+        backgroundColor: palette.card,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: VanepColors.card,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: palette.card,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
       ),
-      filledButtonTheme: FilledButtonThemeData(style: filledButtonStyle()),
-      textButtonTheme: TextButtonThemeData(style: textButtonStyle()),
+      drawerTheme: DrawerThemeData(
+        backgroundColor: palette.surface,
+        surfaceTintColor: Colors.transparent,
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: palette.card,
+        surfaceTintColor: Colors.transparent,
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: buildFilledButtonStyle(palette, typography),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: buildTextButtonStyle(palette, typography),
+      ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-        style: outlinedButtonStyle(),
+        style: buildOutlinedButtonStyle(palette, typography),
       ),
-      switchTheme: switchStyle(),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: VanepColors.action,
-      ),
+      switchTheme: buildSwitchTheme(palette),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: palette.action),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: VanepColors.textPrimary,
-        contentTextStyle: VanepTypography.body.copyWith(
-          color: VanepColors.card,
-        ),
+        backgroundColor: palette.textPrimary,
+        contentTextStyle: typography.body.copyWith(color: palette.card),
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(controlRadius),
@@ -72,70 +92,83 @@ class VanepTheme {
     );
   }
 
-  static ColorScheme lightColorScheme() {
+  static ColorScheme buildColorScheme(
+    VanepPalette palette, {
+    required Brightness brightness,
+  }) {
     return ColorScheme.fromSeed(
-      seedColor: VanepColors.action,
-      brightness: Brightness.light,
+      seedColor: palette.action,
+      brightness: brightness,
     ).copyWith(
-      primary: VanepColors.action,
-      onPrimary: VanepColors.card,
-      surface: VanepColors.surface,
-      onSurface: VanepColors.textPrimary,
-      surfaceContainerHighest: VanepColors.card,
-      outline: VanepColors.inputBorder,
-      outlineVariant: VanepColors.cardBorder,
-      error: VanepColors.danger,
-      onError: VanepColors.card,
+      primary: palette.action,
+      onPrimary: palette.onAction,
+      surface: palette.surface,
+      onSurface: palette.textPrimary,
+      onSurfaceVariant: palette.textSecondary,
+      surfaceContainerHighest: palette.card,
+      outline: palette.inputBorder,
+      outlineVariant: palette.cardBorder,
+      error: palette.danger,
+      onError: palette.onAction,
     );
   }
 
-  static ButtonStyle filledButtonStyle() {
+  static ButtonStyle buildFilledButtonStyle(
+    VanepPalette palette,
+    VanepTypography typography,
+  ) {
     return FilledButton.styleFrom(
-      backgroundColor: VanepColors.action,
-      foregroundColor: VanepColors.card,
-      disabledBackgroundColor: VanepColors.inputBorder,
-      disabledForegroundColor: VanepColors.textMuted,
+      backgroundColor: palette.action,
+      foregroundColor: palette.onAction,
+      disabledBackgroundColor: palette.inputBorder,
+      disabledForegroundColor: palette.textMuted,
       elevation: 0,
-      textStyle: VanepTypography.button,
+      textStyle: typography.button,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(controlRadius),
       ),
     );
   }
 
-  static ButtonStyle textButtonStyle() {
+  static ButtonStyle buildTextButtonStyle(
+    VanepPalette palette,
+    VanepTypography typography,
+  ) {
     return TextButton.styleFrom(
-      foregroundColor: VanepColors.action,
-      disabledForegroundColor: VanepColors.textMuted,
-      textStyle: VanepTypography.button,
+      foregroundColor: palette.action,
+      disabledForegroundColor: palette.textMuted,
+      textStyle: typography.button,
     );
   }
 
-  static ButtonStyle outlinedButtonStyle() {
+  static ButtonStyle buildOutlinedButtonStyle(
+    VanepPalette palette,
+    VanepTypography typography,
+  ) {
     return OutlinedButton.styleFrom(
-      foregroundColor: VanepColors.textPrimary,
-      disabledForegroundColor: VanepColors.textMuted,
-      backgroundColor: VanepColors.card,
-      side: const BorderSide(color: VanepColors.inputBorder),
-      textStyle: VanepTypography.button,
+      foregroundColor: palette.textPrimary,
+      disabledForegroundColor: palette.textMuted,
+      backgroundColor: palette.card,
+      side: BorderSide(color: palette.inputBorder),
+      textStyle: typography.button,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(controlRadius),
       ),
     );
   }
 
-  static SwitchThemeData switchStyle() {
+  static SwitchThemeData buildSwitchTheme(VanepPalette palette) {
     return SwitchThemeData(
-      thumbColor: const WidgetStatePropertyAll(VanepColors.card),
+      thumbColor: WidgetStatePropertyAll(palette.onAction),
       trackColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.selected)
-            ? VanepColors.action
-            : VanepColors.inputBorder,
+            ? palette.action
+            : palette.inputBorder,
       ),
       trackOutlineColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.selected)
-            ? VanepColors.action
-            : VanepColors.inputBorder,
+            ? palette.action
+            : palette.inputBorder,
       ),
     );
   }

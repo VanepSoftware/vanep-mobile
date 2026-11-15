@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/formatters/gender_label.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepGenderSelect extends StatelessWidget {
   const VanepGenderSelect({
@@ -32,7 +31,7 @@ class VanepGenderSelect extends StatelessWidget {
         VanepFieldLabel(label: label),
         const SizedBox(height: 8),
         InputDecorator(
-          decoration: vanepInputDecoration().copyWith(
+          decoration: vanepInputDecoration(context).copyWith(
             enabled: enabled,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -41,20 +40,20 @@ class VanepGenderSelect extends StatelessWidget {
           ),
           child: Theme(
             data: Theme.of(context)
-                .copyWith(disabledColor: VanepColors.textMuted),
+                .copyWith(disabledColor: context.palette.textMuted),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<Gender?>(
                 value: value,
                 isExpanded: true,
                 borderRadius: BorderRadius.circular(10),
-                dropdownColor: VanepColors.card,
+                dropdownColor: context.palette.card,
                 icon: Icon(
                   Icons.expand_more,
                   color: enabled
-                      ? VanepColors.textSecondary
-                      : VanepColors.textMuted,
+                      ? context.palette.textSecondary
+                      : context.palette.textMuted,
                 ),
-                style: VanepTypography.fieldValue,
+                style: context.typography.fieldValue,
                 items: [
                   for (final choice in choices)
                     DropdownMenuItem<Gender?>(

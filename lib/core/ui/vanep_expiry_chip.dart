@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/ui/vanep_chip.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const expiryUrgentDays = 2;
 
@@ -26,11 +26,11 @@ class VanepExpiryChip extends StatelessWidget {
       label: label,
       icon: Icons.schedule,
       background: isUrgent
-          ? VanepColors.warningSurface
-          : VanepColors.avatarGraySurface,
+          ? context.palette.warningSurface
+          : context.palette.avatarGraySurface,
       foreground: isUrgent
-          ? VanepColors.warningText
-          : VanepColors.avatarGrayText,
+          ? context.palette.warningText
+          : context.palette.avatarGrayText,
     );
   }
 }
