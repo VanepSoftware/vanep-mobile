@@ -1,14 +1,18 @@
 enum NoShowReason {
-  notifiedByGuardian,
-  notAtLocation,
+  notAtStop,
+  returnedHome,
+  pickedUpByGuardian,
+  sick,
   other;
 
   static NoShowReason? fromApi(Object? raw) {
     if (raw is! String) return null;
     final normalized = raw.trim().toUpperCase();
     return switch (normalized) {
-      'NOTIFIED_BY_GUARDIAN' => NoShowReason.notifiedByGuardian,
-      'NOT_AT_LOCATION' => NoShowReason.notAtLocation,
+      'NOT_AT_STOP' => NoShowReason.notAtStop,
+      'RETURNED_HOME' => NoShowReason.returnedHome,
+      'PICKED_UP_BY_GUARDIAN' => NoShowReason.pickedUpByGuardian,
+      'SICK' => NoShowReason.sick,
       'OTHER' => NoShowReason.other,
       _ => null,
     };
@@ -16,8 +20,10 @@ enum NoShowReason {
 
   static String toApi(NoShowReason reason) {
     return switch (reason) {
-      NoShowReason.notifiedByGuardian => 'NOTIFIED_BY_GUARDIAN',
-      NoShowReason.notAtLocation => 'NOT_AT_LOCATION',
+      NoShowReason.notAtStop => 'NOT_AT_STOP',
+      NoShowReason.returnedHome => 'RETURNED_HOME',
+      NoShowReason.pickedUpByGuardian => 'PICKED_UP_BY_GUARDIAN',
+      NoShowReason.sick => 'SICK',
       NoShowReason.other => 'OTHER',
     };
   }

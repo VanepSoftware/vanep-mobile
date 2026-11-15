@@ -31,4 +31,24 @@ void main() {
 
     expect(find.text('hello'), findsOneWidget);
   });
+
+  testWidgets('showInfoWithAction runs the action when tapped', (tester) async {
+    var undone = 0;
+    await tester.pumpWidget(
+      _host(
+        (c) => VanepFeedback.showInfoWithAction(
+          c,
+          'saved',
+          actionLabel: 'Undo',
+          onAction: () => undone++,
+        ),
+      ),
+    );
+    await tester.tap(find.text('tap'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Undo'));
+
+    expect(find.text('saved'), findsOneWidget);
+    expect(undone, 1);
+  });
 }

@@ -6,6 +6,8 @@ import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/respond_to_assistant_invite.dart';
 import 'package:vanep_mobile/core/ui/vanep_skeleton.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
@@ -34,7 +36,18 @@ class AssistantVansPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: context.palette.surface,
       body: SafeArea(
-        child: BlocBuilder<AssistantVansCubit, AssistantVansState>(
+        child: BlocConsumer<AssistantVansCubit, AssistantVansState>(
+          listenWhen: (previous, current) =>
+              current.status == AssistantVansStatus.ready &&
+              current.failure != null &&
+              previous.failure != current.failure,
+          listener: (context, state) => VanepFeedback.showError(
+            context,
+            assistantFailureMessage(
+              AppLocalizations.of(context)!,
+              state.failure!,
+            ),
+          ),
           builder: (context, state) => AssistantVansBody(state: state),
         ),
       ),
@@ -104,6 +117,12 @@ class AssistantVansContent extends StatelessWidget {
           AssistantPendingInviteCard(
             invite: invite,
             daysLeft: daysUntilInviteExpires(invite.expiresAt, DateTime.now()),
+            onAccept: () => context.read<AssistantVansCubit>().answerInvite(
+              InviteResponse.accept,
+            ),
+            onReject: () => context.read<AssistantVansCubit>().answerInvite(
+              InviteResponse.reject,
+            ),
           ),
           const SizedBox(height: 24),
         ],
