@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
-import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_shortcuts.dart';
 import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_main_card.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_shortcuts.dart';
 import 'package:vanep_mobile/modules/driver/presentation/widgets/slide_stop_confirmation.dart';
-import 'package:vanep_mobile/core/ui/vanep_card.dart';
 
 import '../driver_home_fixture.dart';
 import 'driver_home_tab_test.dart' show harness;
 
 const titles = {
-  HomePhase.blocked: 'Regularização necessária',
-  HomePhase.incomplete: 'Complete seu cadastro',
-  HomePhase.underReview: 'Cadastro em análise',
+  HomePhase.blocked: 'Novas propostas estão pausadas',
+  HomePhase.incomplete: 'Complete seu cadastro para aparecer na busca',
+  HomePhase.underReview: 'A Vanep está conferindo seus documentos',
   HomePhase.rejected: 'Cadastro rejeitado',
-  HomePhase.inProgress: 'Em rota',
-  HomePhase.beforeDeparture: 'Antes de sair',
-  HomePhase.shiftCompleted: 'Turno concluído',
-  HomePhase.buildingRoute: 'Vamos montar sua rota',
-  HomePhase.noRouteToday: 'Sem rota hoje',
+  HomePhase.inProgress: 'de 14 a bordo',
+  HomePhase.beforeDeparture: 'Saída 6h20',
+  HomePhase.shiftCompleted: '13 alunos entregues',
+  HomePhase.buildingRoute: 'Traga os alunos que você já tem',
+  HomePhase.noRouteToday: 'Próxima rota: segunda, 6h20',
 };
+
 const shortcuts = [
   'Alunos',
   'Rota e paradas',
@@ -44,12 +45,18 @@ void main() {
       final card = find.byType(DriverHomeMainCard);
       expect(
         find.descendant(of: card, matching: find.text(titles[phase]!)),
-        findsOneWidget,
+        findsWidgets,
       );
       expect(
         find.descendant(of: card, matching: find.byType(VanepCard)),
         findsOneWidget,
       );
+      await tester.scrollUntilVisible(
+        find.byType(DriverHomeShortcuts),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
       final buttons = tester
           .widgetList<OutlinedButton>(
             find.descendant(
@@ -107,10 +114,12 @@ void main() {
     await tester.pumpWidget(harness(cubit));
     await tester.pumpAndSettle();
     expect(find.text('Você está fora do expediente.'), findsOneWidget);
-    await tester.ensureVisible(find.text('Iniciar rota'));
-    await tester.tap(find.text('Iniciar rota'));
+    await tester.ensureVisible(find.text('Deslize para iniciar a rota'));
+    await tester.tap(find.text('Deslize para iniciar a rota'));
     await tester.pumpAndSettle();
     expect(repository.starts, 1);
+    await tester.drag(find.byType(ListView), const Offset(0, 400));
+    await tester.pumpAndSettle();
     expect(find.text('Em rota'), findsOneWidget);
   });
 

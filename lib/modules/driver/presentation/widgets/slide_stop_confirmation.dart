@@ -1,7 +1,7 @@
-import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-
+import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_primitives.dart';
 
 class SlideStopConfirmation extends StatefulWidget {
   const SlideStopConfirmation({
@@ -10,110 +10,124 @@ class SlideStopConfirmation extends StatefulWidget {
     required this.enabled,
     required this.onConfirmed,
   });
+
   final StopConfirmation confirmation;
   final bool enabled;
   final Future<void> Function() onConfirmed;
+
   @override
-  State<SlideStopConfirmation> createState() => _SlideStopConfirmationState();
+  State<SlideStopConfirmation> createState() => SlideStopConfirmationState();
 }
 
-class _SlideStopConfirmationState extends State<SlideStopConfirmation> {
-  double _progress = 0;
-  bool _submitting = false;
-  bool _dragging = false;
+class SlideStopConfirmationState extends State<SlideStopConfirmation> {
+  double progress = 0;
+  bool submitting = false;
+  bool dragging = false;
 
-  Future<void> _finish() async {
+  Future<void> finishDrag() async {
     final complete =
-        _dragging && _progress >= 1 && widget.enabled && !_submitting;
+        dragging && progress >= 1 && widget.enabled && !submitting;
     setState(() {
-      _progress = 0;
-      _dragging = false;
+      progress = 0;
+      dragging = false;
     });
     if (!complete) return;
-    setState(() => _submitting = true);
+    setState(() => submitting = true);
     try {
       await widget.onConfirmed();
     } finally {
-      if (mounted) setState(() => _submitting = false);
+      if (mounted) setState(() => submitting = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final action = widget.confirmation.action == StopAction.boarding
-        ? AppLocalizations.of(context)!.driverHomeBoarding
-        : AppLocalizations.of(context)!.driverHomeDisembarking;
-    final enabled = widget.enabled && !_submitting;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          AppLocalizations.of(context)!
-              .driverHomeSlideStudent(widget.confirmation.studentName, action),
-        ),
-        const SizedBox(height: 8),
-        LayoutBuilder(
-          builder: (context, box) {
-            const thumb = 52.0;
-            final distance = box.maxWidth - thumb;
-            return Semantics(
-              label: AppLocalizations.of(context)!.driverHomeSlideHint(action),
-              child: Container(
-                height: thumb,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(26),
-                ),
-                child: Stack(
-                  children: [
-                    const Center(
-                      child: Icon(Icons.keyboard_double_arrow_right),
+        ? l10n.driverHomeBoarding
+        : l10n.driverHomeDisembarking;
+    final enabled = widget.enabled && !submitting;
+    return LayoutBuilder(
+      builder: (context, box) {
+        const trackHeight = 62.0;
+        const thumbSize = 50.0;
+        const padding = 6.0;
+        final distance = box.maxWidth - thumbSize - padding * 2;
+        return Semantics(
+          label: l10n.driverHomeSlideHint(action),
+          child: Container(
+            height: trackHeight,
+            padding: const EdgeInsets.all(padding),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE3F3EA),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: const Color(0xFFC6E6D3)),
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 48, right: 12),
+                  child: Text(
+                    l10n.driverHomeSlideConfirmCount(2),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: DriverHomeTokens.success,
                     ),
-                    Positioned(
-                      left: _progress * (distance > 0 ? distance : 0),
-                      child: GestureDetector(
-                        // Somente arrastar a alça até o fim confirma; toque não confirma.
-                        onHorizontalDragStart: enabled && distance > 0
-                            ? (_) => setState(() => _dragging = true)
-                            : null,
-                        onHorizontalDragUpdate: enabled && distance > 0
-                            ? (event) {
-                                setState(
-                                  () => _progress =
-                                      (_progress + event.delta.dx / distance)
-                                          .clamp(0.0, 1.0)
-                                          .toDouble(),
-                                );
-                              }
-                            : null,
-                        onHorizontalDragEnd: enabled ? (_) => _finish() : null,
-                        onHorizontalDragCancel: () => setState(() {
-                          _progress = 0;
-                          _dragging = false;
-                        }),
-                        child: Container(
-                          width: thumb,
-                          height: thumb,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: enabled
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).disabledColor,
+                  ),
+                ),
+                Positioned(
+                  left: progress * (distance > 0 ? distance : 0),
+                  child: GestureDetector(
+                    onHorizontalDragStart: enabled && distance > 0
+                        ? (_) => setState(() => dragging = true)
+                        : null,
+                    onHorizontalDragUpdate: enabled && distance > 0
+                        ? (event) {
+                            setState(
+                              () => progress =
+                                  (progress + event.delta.dx / distance)
+                                      .clamp(0.0, 1.0)
+                                      .toDouble(),
+                            );
+                          }
+                        : null,
+                    onHorizontalDragEnd: enabled ? (_) => finishDrag() : null,
+                    onHorizontalDragCancel: () => setState(() {
+                      progress = 0;
+                      dragging = false;
+                    }),
+                    child: Container(
+                      width: thumbSize,
+                      height: thumbSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: enabled
+                            ? DriverHomeTokens.success
+                            : Theme.of(context).disabledColor,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x38187A4C),
+                            blurRadius: 10,
+                            offset: Offset(0, 2),
                           ),
-                          child: Icon(
-                            Icons.arrow_forward,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.keyboard_double_arrow_right,
+                        color: Colors.white,
+                        size: 22,
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-      ],
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

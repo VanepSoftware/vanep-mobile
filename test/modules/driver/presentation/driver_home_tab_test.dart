@@ -1,7 +1,7 @@
-import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
 import 'package:vanep_mobile/modules/driver/domain/usecases/driver_home_rules.dart';
@@ -49,12 +49,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Olá, Carlos!'), findsOneWidget);
     expect(find.text('Seu expediente começa às 6h00'), findsOneWidget);
-    await tester.ensureVisible(find.text('Iniciar rota'));
-    await tester.tap(find.text('Iniciar rota'));
+    expect(find.text('Saída 6h20'), findsOneWidget);
+    await tester.ensureVisible(find.text('Deslize para iniciar a rota'));
+    await tester.tap(find.text('Deslize para iniciar a rota'));
     await tester.pumpAndSettle();
     expect(repository.starts, 1);
-    expect(find.text('Em rota'), findsOneWidget);
+    expect(find.text('Próxima parada · 5 de 10'.toUpperCase()), findsOneWidget);
   });
+
   testWidgets(
     'incomplete state keeps six shortcuts with only Documents enabled',
     (tester) async {
@@ -86,6 +88,7 @@ void main() {
       expect(find.text('Documentos'), findsOneWidget);
     },
   );
+
   testWidgets('rejected registration shows reason and resubmission action', (
     tester,
   ) async {
@@ -98,7 +101,7 @@ void main() {
     addTearDown(cubit.close);
     await tester.pumpWidget(harness(cubit));
     await tester.pumpAndSettle();
-    expect(find.text('Cadastro rejeitado'), findsOneWidget);
+    expect(find.text('Cadastro rejeitado'), findsWidgets);
     expect(find.text('CNH ilegível'), findsOneWidget);
     expect(find.text('Corrigir e reenviar'), findsOneWidget);
     final card = tester.widget<VanepCard>(find.byType(VanepCard));
@@ -114,6 +117,7 @@ void main() {
     );
     expect(material.color, Theme.of(context).colorScheme.errorContainer);
   });
+
   testWidgets(
     'blocked active trip keeps operational card and a warning banner',
     (tester) async {
@@ -134,9 +138,10 @@ void main() {
       expect(find.text('Em rota'), findsOneWidget);
       expect(find.text('Atualize os documentos vencidos.'), findsOneWidget);
       expect(find.text('Checklist'), findsOneWidget);
-      expect(find.text('Regularização necessária'), findsNothing);
+      expect(find.text('Novas propostas estão pausadas'), findsNothing);
     },
   );
+
   for (final action in StopAction.values) {
     testWidgets(
       '$action requires full drag; tap and partial drag do not confirm',

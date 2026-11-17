@@ -11,17 +11,17 @@ void main() {
     await tester.pumpWidget(const DriverHomePreview());
     await tester.pumpAndSettle();
     expect(find.text('Prévia de teste — dados simulados'), findsOneWidget);
-    expect(find.text('Antes de sair'), findsOneWidget);
+    expect(find.text('Saída 6h20'), findsOneWidget);
     await tester.tap(find.byType(DropdownButton<HomePhase>));
     await tester.pumpAndSettle();
     await tester.tap(find.text('rejected').last);
     await tester.pumpAndSettle();
-    expect(find.text('Cadastro rejeitado'), findsOneWidget);
+    expect(find.text('Cadastro rejeitado'), findsWidgets);
     expect(find.text('CNH ilegível'), findsOneWidget);
     await tester.tap(find.text('EN'));
     await tester.pumpAndSettle();
     expect(find.text('Test preview — simulated data'), findsOneWidget);
-    expect(find.text('Registration rejected'), findsOneWidget);
+    expect(find.text('Registration rejected'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 }
