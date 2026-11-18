@@ -14,6 +14,7 @@ import 'package:vanep_mobile/modules/auth/data/datasources/auth_local_datasource
 import 'package:vanep_mobile/modules/assistant/assistant_container.dart';
 import 'package:vanep_mobile/modules/client_home/client_home_container.dart';
 import 'package:vanep_mobile/modules/client_proposals/client_proposals_container.dart';
+import 'package:vanep_mobile/modules/client_vans/client_vans_container.dart';
 import 'package:vanep_mobile/modules/contract_readiness/contract_readiness_container.dart';
 import 'package:vanep_mobile/modules/conversations/conversations_container.dart';
 import 'package:vanep_mobile/modules/dependents/dependents_container.dart';
@@ -66,6 +67,7 @@ Future<void> main() async {
   registerConversationsDependencies(getIt);
   registerClientHomeDependencies(getIt);
   registerClientProposalsDependencies(getIt);
+  registerClientVansDependencies(getIt);
   registerDriverProposalsDependencies(getIt);
 
   final themePreference = await getIt<GetThemePreference>()();

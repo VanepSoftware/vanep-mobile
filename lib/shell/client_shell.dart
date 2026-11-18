@@ -8,13 +8,18 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit
 import 'package:vanep_mobile/modules/auth/presentation/pages/personal_address_form_page.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/pages/client_home_tab.dart';
+import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_van_detail_page.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_vans_page.dart';
+import 'package:vanep_mobile/modules/conversations/data/dtos/conversation_dto.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_state.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/conversations_inbox_tab.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_page.dart';
-import 'package:vanep_mobile/modules/drivers/presentation/pages/find_vans_tab.dart';
 import 'package:vanep_mobile/shell/client_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
@@ -103,10 +108,14 @@ class ClientShellState extends State<ClientShell> {
             onNegotiationChatTapped: (request) =>
                 widget.openNegotiationChat(context, request),
           ),
-          FindVansTab(
+          ClientVansPage(
             onSearchTapped: () => widget.openDriverSearch(context),
-            onDriverSelected: (driverToken) =>
-                widget.openDriverProfile(context, driverToken),
+            onVanTapped: (van) => openClientVanDetail(
+              context,
+              van: van,
+              onChatWithDriver: () => _openChatWithDriver(van),
+            ),
+            onChatTapped: _openChatWithDriver,
           ),
           ConversationsInboxTab(
             viewerSide: ConversationParticipant.client,
@@ -127,6 +136,9 @@ class ClientShellState extends State<ClientShell> {
     setState(() => selectedIndex = index);
     if (index == clientShellHomeTabIndex) {
       context.read<ClientHomeCubit>().loadHome();
+    }
+    if (index == clientShellVansTabIndex) {
+      context.read<ClientVansCubit>().loadVans();
     }
     if (index == clientShellConversationsTabIndex) {
       context.read<ConversationsInboxCubit>().loadConversations();
@@ -157,5 +169,59 @@ class ClientShellState extends State<ClientShell> {
       ),
     );
     await homeCubit.loadHome();
+  }
+
+  Future<void> _openChatWithDriver(ClientVan van) async {
+    final inboxCubit = context.read<ConversationsInboxCubit>();
+    if (inboxCubit.state.status != ConversationsInboxStatus.ready) {
+      await inboxCubit.loadConversations();
+    }
+    if (!mounted) return;
+
+    final conversations = inboxCubit.state.conversations;
+    Conversation? target;
+
+    if (van.driver.token.isNotEmpty) {
+      for (final conv in conversations) {
+        if (conv.driverToken == van.driver.token) {
+          target = conv;
+          break;
+        }
+      }
+    }
+
+    if (target == null && van.driver.name.isNotEmpty) {
+      for (final conv in conversations) {
+        if (conv.driverName.trim().toLowerCase() ==
+            van.driver.name.trim().toLowerCase()) {
+          target = conv;
+          break;
+        }
+      }
+    }
+
+    if (target == null) {
+      await inboxCubit.loadConversations();
+      if (!mounted) return;
+      final refreshed = inboxCubit.state.conversations;
+      for (final conv in refreshed) {
+        if ((van.driver.token.isNotEmpty &&
+                conv.driverToken == van.driver.token) ||
+            (van.driver.name.isNotEmpty &&
+                conv.driverName.trim().toLowerCase() ==
+                    van.driver.name.trim().toLowerCase())) {
+          target = conv;
+          break;
+        }
+      }
+    }
+
+    target ??= ConversationDto(
+      token: van.token,
+      driverToken: van.driver.token,
+      driverName: van.driver.name,
+    );
+
+    await widget.openConversationChat(context, target);
   }
 }
