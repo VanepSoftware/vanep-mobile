@@ -142,6 +142,35 @@ void main() {
     },
   );
 
+  testWidgets(
+    'shiftCompleted Renovação para 2027 row is tappable and opens coming soon page',
+    (tester) async {
+      final repository = HomeRepository()
+        ..data = const DriverHomeData(
+          registration: RegistrationStatus.approved,
+          todayTrip: Trip(
+            id: 'trip',
+            status: TripStatus.completed,
+            label: 'Manhã',
+          ),
+          laterShiftLabel: 'Tarde',
+        );
+      final cubit = DriverHomeCubit(repository: repository);
+      addTearDown(cubit.close);
+      await tester.pumpWidget(harness(cubit));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Renovação para 2027'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Renovação para 2027'));
+      await tester.pumpAndSettle();
+      expect(find.text('Em breve'), findsOneWidget);
+    },
+  );
+
   for (final action in StopAction.values) {
     testWidgets(
       '$action requires full drag; tap and partial drag do not confirm',

@@ -141,13 +141,13 @@ class DriverListCard extends StatelessWidget {
   final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => Container(
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: DriverHomeTokens.surface,
+  Widget build(BuildContext context) => Material(
+    color: DriverHomeTokens.surface,
+    shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(DriverHomeTokens.radiusMd),
-      border: Border.all(color: DriverHomeTokens.border),
+      side: const BorderSide(color: DriverHomeTokens.border),
     ),
+    clipBehavior: Clip.antiAlias,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

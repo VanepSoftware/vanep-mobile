@@ -390,6 +390,7 @@ class DriverBeforeDepartureCompanion extends StatelessWidget {
                   color: DriverHomeTokens.warning,
                 ),
               ),
+              onTap: () => navigation.openShortcut(Shortcut.documents),
             ),
           ],
         ),
@@ -416,6 +417,7 @@ class DriverBeforeDepartureCompanion extends StatelessWidget {
             ),
             title: l10n.driverHomeLaterAfternoonRouteTitle,
             subtitle: l10n.driverHomeLaterAfternoonRouteSubtitle,
+            onTap: () => navigation.openShortcut(Shortcut.route),
           ),
         ),
       ],
@@ -761,6 +763,7 @@ class DriverShiftCompletedCompanion extends StatelessWidget {
                   color: DriverHomeTokens.textSecondary,
                 ),
               ),
+              onTap: () => navigation.openShortcut(Shortcut.students),
             ),
             DriverListRow(
               leading: const DriverIconBubble(
@@ -778,6 +781,7 @@ class DriverShiftCompletedCompanion extends StatelessWidget {
                   color: DriverHomeTokens.warning,
                 ),
               ),
+              onTap: () => navigation.openShortcut(Shortcut.documents),
             ),
             DriverListRow(
               leading: const DriverIconBubble(
@@ -792,6 +796,7 @@ class DriverShiftCompletedCompanion extends StatelessWidget {
                 size: 20,
                 color: DriverHomeTokens.textMuted,
               ),
+              onTap: () => navigation.openShortcut(Shortcut.financial),
             ),
           ],
         ),
