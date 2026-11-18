@@ -1,0 +1,4 @@
+enum StopAction {
+  boarding,
+  disembarking,
+}
