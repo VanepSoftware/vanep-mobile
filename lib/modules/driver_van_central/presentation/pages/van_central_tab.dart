@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -12,12 +10,15 @@ import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_register_prompt.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_selector.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_summary_card.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 
 class VanCentralTab extends StatelessWidget {
   const VanCentralTab({
     required this.onRegisterVan,
     required this.onOpenVanDetails,
     required this.onOpenServiceAreas,
+    required this.onOpenStudents,
     required this.onOpenComingSoon,
     super.key,
   });
@@ -25,6 +26,7 @@ class VanCentralTab extends StatelessWidget {
   final Future<void> Function() onRegisterVan;
   final Future<void> Function() onOpenVanDetails;
   final Future<void> Function() onOpenServiceAreas;
+  final Future<void> Function(DriverVan van) onOpenStudents;
   final Future<void> Function(String title) onOpenComingSoon;
 
   @override
@@ -41,6 +43,10 @@ class VanCentralTab extends StatelessWidget {
       onRegisterVan: () => openThenRefresh(onRegisterVan),
       onOpenVanDetails: () => openThenRefresh(onOpenVanDetails),
       onOpenServiceAreas: () => openThenRefresh(onOpenServiceAreas),
+      onOpenStudents: () {
+        final van = cubit.state.selectedVan;
+        if (van != null) openThenRefresh(() => onOpenStudents(van));
+      },
       onOpenComingSoon: onOpenComingSoon,
       onAcceptingStudentsChanged: cubit.setAcceptingStudents,
     );
@@ -56,7 +62,7 @@ class VanCentralTab extends StatelessWidget {
         return SafeArea(
           bottom: false,
           child: RefreshIndicator(
-            color: VanepColors.action,
+            color: context.palette.action,
             onRefresh: cubit.refresh,
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
@@ -92,16 +98,18 @@ class VanCentralHeader extends StatelessWidget {
 
     return Row(
       children: [
-        Expanded(child: Text(l10n.navVans, style: VanepTypography.pageTitle)),
+        Expanded(
+          child: Text(l10n.navVans, style: context.typography.pageTitle),
+        ),
         if (showAddVan)
           IconButton.outlined(
             tooltip: l10n.vanCentralAddVan,
             onPressed: onAddVan,
             style: IconButton.styleFrom(
-              backgroundColor: VanepColors.card,
-              side: const BorderSide(color: VanepColors.inputBorder),
+              backgroundColor: context.palette.card,
+              side: BorderSide(color: context.palette.inputBorder),
             ),
-            icon: const Icon(Icons.add, color: VanepColors.textPrimary),
+            icon: Icon(Icons.add, color: context.palette.textPrimary),
           ),
       ],
     );
@@ -120,10 +128,10 @@ class VanCentralBody extends StatelessWidget {
     final selectedVan = state.selectedVan;
 
     return switch (state.status) {
-      VanCentralStatus.loading => const Padding(
+      VanCentralStatus.loading => Padding(
         padding: EdgeInsets.only(top: 48),
         child: Center(
-          child: CircularProgressIndicator(color: VanepColors.action),
+          child: CircularProgressIndicator(color: context.palette.action),
         ),
       ),
       VanCentralStatus.loadFailed => VanepErrorView(
@@ -134,7 +142,7 @@ class VanCentralBody extends StatelessWidget {
       VanCentralStatus.loaded when selectedVan == null => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(l10n.vanCentralNoVanSubtitle, style: VanepTypography.body),
+          Text(l10n.vanCentralNoVanSubtitle, style: context.typography.body),
           const SizedBox(height: 22),
           VanRegisterPrompt(onRegisterVan: actions.onRegisterVan),
           const SizedBox(height: 22),

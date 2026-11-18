@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/google_logo.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 void main() {
   testWidgets('renders the label and reports taps', (tester) async {
@@ -78,8 +78,34 @@ void main() {
     final style = tester
         .widget<OutlinedButton>(find.byType(OutlinedButton))
         .style!;
-    expect(style.backgroundColor!.resolve({}), VanepColors.dangerSurface);
-    expect(style.foregroundColor!.resolve({}), VanepColors.dangerText);
-    expect(style.side!.resolve({})!.color, VanepColors.dangerBorder);
+    expect(
+      style.backgroundColor!.resolve({}),
+      VanepPalette.light.dangerSurface,
+    );
+    expect(style.foregroundColor!.resolve({}), VanepPalette.light.dangerText);
+    expect(style.side!.resolve({})!.color, VanepPalette.light.dangerBorder);
+  });
+
+  testWidgets('a compact button is shorter and only as wide as its label', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: VanepSecondaryButton(
+              label: 'Convidar',
+              compact: true,
+              icon: Icons.share_outlined,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final size = tester.getSize(find.byType(VanepSecondaryButton));
+    expect(size.height, 40);
+    expect(size.width, lessThan(200));
   });
 }

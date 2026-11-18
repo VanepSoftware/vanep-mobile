@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/modules/auth/presentation/pages/signup_page.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
-typedef AccountTypeSelected =
-    Future<void> Function(BuildContext context, UserType type);
+typedef AccountTypeSelected = Future<void> Function(
+  BuildContext context,
+  UserType type,
+);
 
 Future<void> openAccountTypeChoice(
   BuildContext context, {
@@ -30,7 +31,7 @@ class AccountTypePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: VanepColors.card,
+      backgroundColor: context.palette.card,
       appBar: const VanepAppBar(),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -55,13 +56,13 @@ class AccountTypePage extends StatelessWidget {
             children: [
               Text(
                 l10n.signupAlreadyHaveAccount,
-                style: VanepTypography.cardSubtitle.copyWith(fontSize: 15),
+                style: context.typography.cardSubtitle.copyWith(fontSize: 15),
               ),
               TextButton(
                 onPressed: () =>
                     Navigator.of(context).popUntil((route) => route.isFirst),
                 style: TextButton.styleFrom(
-                  foregroundColor: VanepColors.action,
+                  foregroundColor: context.palette.action,
                   padding: const EdgeInsets.symmetric(horizontal: 6),
                 ),
                 child: Text(
@@ -130,11 +131,11 @@ class AccountTypeOption extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: VanepTypography.cardTitle),
+                Text(label, style: context.typography.cardTitle),
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: VanepTypography.cardSubtitle.copyWith(
+                  style: context.typography.cardSubtitle.copyWith(
                     fontSize: 14,
                     height: 1.35,
                   ),
@@ -143,7 +144,7 @@ class AccountTypeOption extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          const Icon(Icons.chevron_right, color: VanepColors.textMuted),
+          Icon(Icons.chevron_right, color: context.palette.textMuted),
         ],
       ),
     );

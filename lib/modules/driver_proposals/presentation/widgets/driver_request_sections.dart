@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
@@ -12,6 +11,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/service_reques
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/item_groups.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class DriverClientCard extends StatelessWidget {
   const DriverClientCard({
@@ -66,10 +66,10 @@ class DriverStudentsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (final item in request.items) ...[
-            Text(item.dependentFirstName, style: VanepTypography.cardTitle),
+            Text(item.dependentFirstName, style: context.typography.cardTitle),
             Text(
               formatDriverStudentDetail(l10n, item),
-              style: VanepTypography.cardSubtitle,
+              style: context.typography.cardSubtitle,
             ),
             if (item != request.items.last) const SizedBox(height: 10),
           ],
@@ -95,7 +95,10 @@ class DriverRouteSection extends StatelessWidget {
         children: [
           for (final item in request.items) ...[
             if (showsNames)
-              Text(item.dependentFirstName, style: VanepTypography.fieldLabel),
+              Text(
+                item.dependentFirstName,
+                style: context.typography.fieldLabel,
+              ),
             if (item.pickupNeighborhood case final neighborhood?)
               DetailInfoRow(
                 label: l10n.quoteRequestPickup,

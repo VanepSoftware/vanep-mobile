@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
@@ -16,8 +15,10 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
+import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/shell/driver_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const driverShellProposalsTabIndex = 2;
 
@@ -29,6 +30,7 @@ class DriverShell extends StatefulWidget {
     required this.openServiceAreas,
     required this.openMyVans,
     required this.openVanRegistration,
+    required this.openVanStudents,
     required this.openConversationChat,
     required this.proposalsActions,
     super.key,
@@ -41,6 +43,9 @@ class DriverShell extends StatefulWidget {
   final Future<void> Function(BuildContext context) openMyVans;
 
   final Future<void> Function(BuildContext context) openVanRegistration;
+
+  final Future<void> Function(BuildContext context, DriverVan van)
+  openVanStudents;
 
   final Future<void> Function(BuildContext context, Conversation conversation)
   openConversationChat;
@@ -71,7 +76,7 @@ class DriverShellState extends State<DriverShell> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       drawer: ShellAccountDrawer(profile: widget.profile),
       onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
         context,
@@ -99,6 +104,7 @@ class DriverShellState extends State<DriverShell> {
                   onOpenVanDetails: () => widget.openMyVans(context),
                   onOpenServiceAreas: () =>
                       openServiceAreasAndRefreshProfile(context),
+                  onOpenStudents: (van) => widget.openVanStudents(context, van),
                   onOpenComingSoon: (title) => openComingSoonPage(
                     context,
                     title: title,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanepMenuItem {
   const VanepMenuItem({
@@ -40,23 +39,23 @@ class VanepMenuCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: VanepColors.card,
+      color: context.palette.card,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-        side: const BorderSide(color: VanepColors.cardBorder),
+        side: BorderSide(color: context.palette.cardBorder),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           for (var index = 0; index < items.length; index++) ...[
             if (index > 0)
-              const Divider(
+              Divider(
                 height: 1,
                 thickness: 1,
                 indent: 14,
                 endIndent: 14,
-                color: VanepColors.divider,
+                color: context.palette.divider,
               ),
             VanepMenuTile(item: items[index]),
           ],
@@ -75,18 +74,18 @@ class VanepMenuTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final enabled = item.enabled;
     final foreground = !enabled
-        ? VanepColors.textMuted
+        ? context.palette.textMuted
         : item.isDestructive
-        ? VanepColors.danger
-        : VanepColors.textPrimary;
+        ? context.palette.danger
+        : context.palette.textPrimary;
     final iconColor = !enabled
-        ? VanepColors.textMuted
+        ? context.palette.textMuted
         : item.isDestructive
-        ? VanepColors.danger
-        : VanepColors.textSecondary;
+        ? context.palette.danger
+        : context.palette.textSecondary;
     final iconBackground = item.isDestructive && enabled
-        ? VanepColors.danger.withValues(alpha: 0.10)
-        : VanepColors.surface;
+        ? context.palette.danger.withValues(alpha: 0.10)
+        : context.palette.surface;
     final subtitle = item.subtitle;
     final warningSubtitle = item.warningSubtitle;
     final trailing = item.trailing;
@@ -118,13 +117,13 @@ class VanepMenuTile extends StatelessWidget {
                   children: [
                     Text(
                       item.label,
-                      style: VanepTypography.cardTitle.copyWith(
+                      style: context.typography.cardTitle.copyWith(
                         color: foreground,
                       ),
                     ),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2),
-                      Text(subtitle, style: VanepTypography.cardSubtitle),
+                      Text(subtitle, style: context.typography.cardSubtitle),
                     ],
                     if (warningSubtitle != null) ...[
                       const SizedBox(height: 3),
@@ -142,7 +141,9 @@ class VanepMenuTile extends StatelessWidget {
               else if (!item.isDestructive)
                 Icon(
                   item.trailingIcon,
-                  color: enabled ? VanepColors.textMuted : VanepColors.divider,
+                  color: enabled
+                      ? context.palette.textMuted
+                      : context.palette.divider,
                 ),
             ],
           ),
@@ -172,15 +173,15 @@ class VanepMenuWarningSubtitle extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.error_outline, size: 13, color: VanepColors.warning),
+        Icon(Icons.error_outline, size: 13, color: context.palette.warning),
         const SizedBox(width: 4),
         Flexible(
           child: Text(
             text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: VanepTypography.cardSubtitle.copyWith(
-              color: VanepColors.warning,
+            style: context.typography.cardSubtitle.copyWith(
+              color: context.palette.warning,
               fontSize: 12,
             ),
           ),

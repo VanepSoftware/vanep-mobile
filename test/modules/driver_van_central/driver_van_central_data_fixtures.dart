@@ -1,6 +1,6 @@
 import 'package:vanep_mobile/modules/driver_van_central/data/dtos/driver_attendance_dto.dart';
 import 'package:vanep_mobile/modules/driver_van_central/data/dtos/driver_occupancy_dto.dart';
-import 'package:vanep_mobile/modules/driver_van_central/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 
 const occupancyJson = {
   'shifts': [

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -10,16 +8,18 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart'
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_comparison.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const comparisonArrowWidth = 32.0;
 
 const comparisonArrowSize = 16.0;
 
-const previousVersionLabelStyle = TextStyle(
+TextStyle previousVersionLabelStyle(VanepPalette palette) => TextStyle(
   fontSize: 11,
   fontWeight: FontWeight.w800,
   letterSpacing: 0.9,
-  color: VanepColors.textSecondary,
+  color: palette.textSecondary,
 );
 
 class ProposalComparisonPage extends StatelessWidget {
@@ -38,7 +38,7 @@ class ProposalComparisonPage extends StatelessWidget {
     final changes = compareProposalVersions(previous, current);
 
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       appBar: VanepAppBar(
         title: l10n.proposalComparisonTitle,
         caption: l10n.proposalComparisonVersions(
@@ -98,12 +98,12 @@ class ComparisonArrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(top: 1),
       child: Icon(
         Icons.arrow_forward,
         size: comparisonArrowSize,
-        color: VanepColors.textMuted,
+        color: context.palette.textMuted,
       ),
     );
   }
@@ -125,11 +125,11 @@ class ComparisonVersionHeader extends StatelessWidget {
     return ComparisonColumns(
       previous: Text(
         l10n.proposalDetailVersion(previous.version).toUpperCase(),
-        style: previousVersionLabelStyle,
+        style: previousVersionLabelStyle(context.palette),
       ),
       current: Text(
         l10n.proposalDetailVersion(current.version).toUpperCase(),
-        style: VanepTypography.overline,
+        style: context.typography.overline,
       ),
     );
   }
@@ -155,7 +155,7 @@ class ComparisonTable extends StatelessWidget {
       children: [
         ComparisonVersionHeader(previous: previous, current: current),
         for (final field in fields) ...[
-          const Divider(height: 24, color: VanepColors.divider),
+          Divider(height: 24, color: context.palette.divider),
           if (field == ProposalComparisonField.schedule)
             ScheduleComparisonRow(previous: previous, current: current)
           else
@@ -203,8 +203,8 @@ class ScheduleComparisonRow extends StatelessWidget {
                         students > 1 &&
                         change.dependentFirstNames.length < students,
                   ),
-                  style: VanepTypography.cardSubtitle.copyWith(
-                    color: VanepColors.textPrimary,
+                  style: context.typography.cardSubtitle.copyWith(
+                    color: context.palette.textPrimary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -231,7 +231,7 @@ class ComparisonFieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: VanepTypography.cardSubtitle.copyWith(
+      style: context.typography.cardSubtitle.copyWith(
         fontSize: 12,
         fontWeight: FontWeight.w600,
       ),
@@ -251,14 +251,14 @@ class ComparisonValues extends StatelessWidget {
       showsArrow: true,
       previous: ComparisonLines(
         lines: before,
-        style: VanepTypography.cardSubtitle.copyWith(
-          color: VanepColors.textSecondary,
+        style: context.typography.cardSubtitle.copyWith(
+          color: context.palette.textSecondary,
         ),
       ),
       current: ComparisonLines(
         lines: now,
-        style: VanepTypography.cardSubtitle.copyWith(
-          color: VanepColors.textPrimary,
+        style: context.typography.cardSubtitle.copyWith(
+          color: context.palette.textPrimary,
           fontWeight: FontWeight.w700,
         ),
       ),

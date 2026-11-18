@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -11,6 +9,7 @@ import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_home_b
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/formatters/driver_search_failure_label.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const loadMoreThresholdPixels = 240.0;
 
@@ -63,7 +62,7 @@ class DriverSearchPageState extends State<DriverSearchPage> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       appBar: AppBar(title: Text(l10n.driverSearchTitle)),
       body: BlocBuilder<DriverSearchCubit, DriverSearchState>(
         builder: (context, state) {
@@ -94,12 +93,12 @@ class DriverSearchPageState extends State<DriverSearchPage> {
               if (failure != null && state.status == DriverSearchStatus.failed)
                 Text(
                   driverSearchFailureLabel(l10n, failure),
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 ),
               if (state.hasNoResults)
                 Text(
                   l10n.driverSearchEmpty,
-                  style: VanepTypography.cardSubtitle,
+                  style: context.typography.cardSubtitle,
                 ),
               for (final driver in state.results)
                 Padding(
@@ -136,7 +135,7 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                     children: [
                       Text(
                         driverSearchFailureLabel(l10n, failure),
-                        style: VanepTypography.cardSubtitle,
+                        style: context.typography.cardSubtitle,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),

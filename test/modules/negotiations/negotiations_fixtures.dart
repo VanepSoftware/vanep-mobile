@@ -3,13 +3,13 @@ import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal_summary.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_field.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_status.dart';
 
 final requestCreatedAt = DateTime.utc(2026, 10, 1, 12);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_installment_price.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
@@ -12,6 +11,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/service_reques
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/request_schools.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class PendingProposalCard extends StatelessWidget {
   const PendingProposalCard({
@@ -58,15 +58,15 @@ class PendingProposalCard extends StatelessWidget {
                   child: VanepInstallmentPrice(
                     amountCents: proposal.installmentAmountCents,
                     installments: proposal.installments,
-                    amountStyle: const TextStyle(
+                    amountStyle: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
-                      color: VanepColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
-                    countStyle: const TextStyle(
+                    countStyle: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: VanepColors.textSecondary,
+                      color: context.palette.textSecondary,
                     ),
                   ),
                 ),

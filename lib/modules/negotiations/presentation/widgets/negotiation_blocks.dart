@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
+import 'package:vanep_mobile/core/ui/vanep_link_button.dart';
 
 const proposalsSectionSpacing = 16.0;
 
@@ -16,7 +16,7 @@ class ProposalsSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: proposalsCardSpacing),
-      child: Text(title, style: VanepTypography.sectionTitle),
+      child: Text(title, style: context.typography.sectionTitle),
     );
   }
 }
@@ -52,7 +52,7 @@ class ProposalPersonHeader extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: VanepTypography.cardTitle.copyWith(fontSize: 15),
+                style: context.typography.cardTitle.copyWith(fontSize: 15),
               ),
               if (subtitle != null) ...[
                 const SizedBox(height: 2),
@@ -65,7 +65,7 @@ class ProposalPersonHeader extends StatelessWidget {
                     Flexible(
                       child: Text(
                         subtitle,
-                        style: VanepTypography.cardSubtitle,
+                        style: context.typography.cardSubtitle,
                       ),
                     ),
                   ],
@@ -89,58 +89,14 @@ class ProposalStatusText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: VanepTypography.cardSubtitle.copyWith(fontWeight: FontWeight.w700),
-    );
-  }
-}
-
-class ProposalLinkButton extends StatelessWidget {
-  const ProposalLinkButton({
-    required this.label,
-    required this.onPressed,
-    this.color = VanepColors.action,
-    this.showsChevron = false,
-    this.leadingIcon,
-    super.key,
-  });
-
-  final String label;
-  final VoidCallback? onPressed;
-  final Color color;
-  final bool showsChevron;
-  final IconData? leadingIcon;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        foregroundColor: color,
-        padding: EdgeInsets.zero,
-        minimumSize: const Size(44, 44),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (leadingIcon case final icon?) ...[
-            Icon(icon, size: 18),
-            const SizedBox(width: 4),
-          ],
-          Flexible(
-            child: Text(
-              label,
-              style: VanepTypography.linkAction.copyWith(
-                fontSize: 14,
-                color: color,
-              ),
-            ),
-          ),
-          if (showsChevron) const Icon(Icons.chevron_right, size: 18),
-        ],
+      style: context.typography.cardSubtitle.copyWith(
+        fontWeight: FontWeight.w700,
       ),
     );
   }
 }
+
+typedef ProposalLinkButton = VanepLinkButton;
 
 class ProposalTermsBox extends StatelessWidget {
   const ProposalTermsBox({required this.lines, super.key});
@@ -152,7 +108,7 @@ class ProposalTermsBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: VanepColors.surface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -162,13 +118,13 @@ class ProposalTermsBox extends StatelessWidget {
             if (index > 0) const SizedBox(height: 6),
             Row(
               children: [
-                Icon(icon, size: 17, color: VanepColors.textSecondary),
+                Icon(icon, size: 17, color: context.palette.textSecondary),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     text,
-                    style: VanepTypography.cardSubtitle.copyWith(
-                      color: VanepColors.textPrimary,
+                    style: context.typography.cardSubtitle.copyWith(
+                      color: context.palette.textPrimary,
                     ),
                   ),
                 ),
@@ -207,10 +163,10 @@ class ProposalChoiceOption extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: VanepColors.textPrimary,
+                    color: context.palette.textPrimary,
                   ),
                 ),
               ),
@@ -237,14 +193,16 @@ class ProposalChoiceRadio extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected ? VanepColors.action : VanepColors.textMuted,
+          color: isSelected
+              ? context.palette.action
+              : context.palette.textMuted,
           width: 2,
         ),
       ),
       child: isSelected
-          ? const DecoratedBox(
+          ? DecoratedBox(
               decoration: BoxDecoration(
-                color: VanepColors.action,
+                color: context.palette.action,
                 shape: BoxShape.circle,
               ),
             )

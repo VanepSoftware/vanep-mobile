@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/core/formatters/weekday_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const weekLegsLabelWidth = 52.0;
 
@@ -76,7 +76,7 @@ class VanepWeekLegsGrid<T> extends StatelessWidget {
                   child: Text(
                     weekdayShortLabel(l10n, day),
                     textAlign: TextAlign.center,
-                    style: VanepTypography.cardSubtitle.copyWith(
+                    style: context.typography.cardSubtitle.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                     ),
@@ -93,9 +93,9 @@ class VanepWeekLegsGrid<T> extends StatelessWidget {
                 child: ExcludeSemantics(
                   child: Text(
                     row.label,
-                    style: VanepTypography.cardSubtitle.copyWith(
+                    style: context.typography.cardSubtitle.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: VanepColors.textPrimary,
+                      color: context.palette.textPrimary,
                     ),
                   ),
                 ),
@@ -168,14 +168,14 @@ class WeekLegCellMark extends StatelessWidget {
   Widget build(BuildContext context) {
     final (background, border) = switch (cell) {
       VanepWeekLegCell(isSelected: true) => (
-        VanepColors.action,
-        VanepColors.action,
+        context.palette.action,
+        context.palette.action,
       ),
       VanepWeekLegCell(isEnabled: false) => (
-        VanepColors.surface,
-        VanepColors.surface,
+        context.palette.surface,
+        context.palette.surface,
       ),
-      _ => (VanepColors.card, VanepColors.inputBorder),
+      _ => (context.palette.card, context.palette.inputBorder),
     };
     return Container(
       width: weekLegsCellSize,

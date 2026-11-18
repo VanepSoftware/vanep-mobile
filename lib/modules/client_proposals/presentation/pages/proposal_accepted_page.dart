@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
@@ -16,6 +14,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart'
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class ProposalAcceptedPage extends StatelessWidget {
   const ProposalAcceptedPage({
@@ -34,7 +33,7 @@ class ProposalAcceptedPage extends StatelessWidget {
     final acceptedAt = proposal.acceptedAt;
 
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       appBar: VanepAppBar(title: l10n.proposalAcceptedTitle),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
@@ -42,16 +41,16 @@ class ProposalAcceptedPage extends StatelessWidget {
           VanepCard(
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.check_circle,
                   size: 32,
-                  color: VanepColors.success,
+                  color: context.palette.success,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     l10n.proposalAcceptedContract(children, request.driverName),
-                    style: VanepTypography.cardTitle,
+                    style: context.typography.cardTitle,
                   ),
                 ),
               ],
@@ -158,19 +157,20 @@ class AcceptedStep extends StatelessWidget {
           Icon(
             isDone ? Icons.check_circle : Icons.radio_button_unchecked,
             size: 20,
-            color: isDone ? VanepColors.success : VanepColors.textMuted,
+            color: isDone ? context.palette.success : context.palette.textMuted,
           ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               label,
-              style: VanepTypography.cardSubtitle.copyWith(
-                color: VanepColors.textPrimary,
+              style: context.typography.cardSubtitle.copyWith(
+                color: context.palette.textPrimary,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
-          if (value != null) Text(value, style: VanepTypography.cardSubtitle),
+          if (value != null)
+            Text(value, style: context.typography.cardSubtitle),
         ],
       ),
     );

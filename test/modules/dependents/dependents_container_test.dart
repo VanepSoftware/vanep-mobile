@@ -14,6 +14,7 @@ import 'package:vanep_mobile/modules/dependents/domain/usecases/replace_school_d
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_detail_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_pickup_cubit.dart';
+import 'package:vanep_mobile/core/places/school_place_types.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_school_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_school_days_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';

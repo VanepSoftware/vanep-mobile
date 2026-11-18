@@ -9,8 +9,8 @@ import 'package:vanep_mobile/modules/negotiations/domain/usecases/send_proposal.
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_draft.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/route_leg.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 
 DateTime calendarDayOf(DateTime moment) {
   return DateTime(moment.year, moment.month, moment.day);

@@ -226,6 +226,12 @@
   "profileProfessionalData": "Professional data",
   "profileAssistantInvite": "Driver invite",
   "profileSettings": "Settings",
+  "settingsAppearanceTitle": "Appearance",
+  "settingsThemeSystem": "System",
+  "settingsThemeLight": "Light",
+  "settingsThemeDark": "Dark",
+  "settingsThemeSystemHint": "In System mode, the app follows your phone's light or dark theme.",
+  "settingsThemeSaveFailed": "We couldn't save your theme choice. It will reset when you reopen the app.",
   "profilePrivacySecurity": "Privacy and security",
   "profileSignOutTitle": "Sign out of your account?",
   "profileSignOutMessage": "You'll be signed out on this device. You can sign in again anytime.",
@@ -542,6 +548,81 @@
   "assistantFailureUnauthorized": "You do not have permission to access this resource.",
   "assistantFailureNetwork": "No connection to the server. Please try again.",
   "assistantFailureUnexpected": "Something went wrong. Please try again.",
+  "assistantVansTitle": "Vans",
+  "assistantVansSubtitle": "The vans you work on",
+  "assistantVansPendingInviteSection": "Pending invitation",
+  "assistantVansActiveSection": "Active",
+  "assistantVansDecline": "Decline",
+  "assistantVansAccept": "Accept",
+  "assistantVansExpiresInDays": "{count, plural, =1{Expires in 1 day} other{Expires in {count} days}}",
+  "@assistantVansExpiresInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantVansExpiresToday": "Expires today",
+  "assistantVansVanTitle": "{name}'s van",
+  "@assistantVansVanTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantVansDeparture": "Departs {time}",
+  "@assistantVansDeparture": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantVansStudentCount": "{count, plural, =1{1 student} other{{count} students}}",
+  "@assistantVansStudentCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantVansDetails": "Details",
+  "assistantVansRouteToday": "Today's route",
+  "assistantVansFormerLinks": "{count, plural, =1{Previous links · 1 van} other{Previous links · {count} vans}}",
+  "@assistantVansFormerLinks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantVansEmpty": "You have no linked vans yet.",
+  "assistantVansShiftMorning": "morning",
+  "assistantVansShiftAfternoon": "afternoon",
+  "assistantVansShiftNight": "night",
+  "assistantVansShiftFullTime": "full time",
+  "assistantStudentsTitle": "Students",
+  "assistantStudentsSubtitle": "{name}'s van · {shift} · {count, plural, =1{1 student} other{{count} students}}",
+  "assistantStudentsSearchHint": "Search student",
+  "assistantStudentsStop": "Stop {number} · {place}",
+  "assistantStudentsAbsentToday": "Not going today",
+  "assistantStudentsWithoutFamily": "No family in the app",
+  "assistantStudentsNoResults": "No students found.",
+  "assistantStudentsEmpty": "This van has no students yet.",
+  "@assistantStudentsSubtitle": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "shift": {"type": "String"},
+      "count": {"type": "int"}
+    }
+  },
+  "@assistantStudentsStop": {
+    "placeholders": {
+      "number": {"type": "int"},
+      "place": {"type": "String"}
+    }
+  },
   "assistantSignupTitle": "Assistant registration",
   "assistantSignupSubtitle": "Fill in your details to start monitoring routes.",
   "assistantSignupInvitedBy": "You were invited by {name}",
@@ -2159,6 +2240,16 @@
     }
   },
   "proposalComposerApplyToAll": "Apply to every day",
+  "scheduleEditorDefaultTimes": "Default time",
+  "scheduleEditorDefaultTimesHint": "Marking a day applies this time.",
+  "scheduleEditorDefaultTimeLabel": "Default {leg} time",
+  "@scheduleEditorDefaultTimeLabel": {
+    "placeholders": {
+      "leg": {
+        "type": "String"
+      }
+    }
+  },
   "proposalComposerVanTitle": "Van",
   "proposalComposerNoVan": "Register a van to send the proposal.",
   "proposalComposerRegisterVan": "Register van",
@@ -2207,5 +2298,289 @@
   },
   "proposalComposerErrorStudentWithoutLeg": "Keep at least one leg for each student.",
   "negotiationChatRespond": "Respond",
-  "negotiationChatDriverPrivacyNotice": "Full address and name available after acceptance."
+  "negotiationChatDriverPrivacyNotice": "Full address and name available after acceptance.",
+  "vanStudentsTitle": "Students",
+  "vanStudentsCaption": "{model} · {plate}",
+  "@vanStudentsCaption": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "plate": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsSearchAction": "Search student",
+  "vanStudentsSearchHint": "Student name",
+  "vanStudentsSearchClose": "Close search",
+  "vanStudentsProgressTitle": "{withFamily} of {total} with family on the app",
+  "@vanStudentsProgressTitle": {
+    "placeholders": {
+      "withFamily": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "vanStudentsProgressPercent": "{percent}%",
+  "@vanStudentsProgressPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "vanStudentsProgressHint": "Without the family on the app, parents get no notices.",
+  "vanStudentsShareGroupLink": "Send link to the parents' group",
+  "vanStudentsMatchTitle": "Is it the same {firstName}?",
+  "@vanStudentsMatchTitle": {
+    "placeholders": {
+      "firstName": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsMatchBody": "The {familyName} family registered {dependentName}, {age, plural, =1{1 year old} other{{age} years old}}. Merging keeps the student's place on the route.",
+  "@vanStudentsMatchBody": {
+    "placeholders": {
+      "familyName": {
+        "type": "String"
+      },
+      "dependentName": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "vanStudentsMatchBodyWithoutAge": "The {familyName} family registered {dependentName}. Merging keeps the student's place on the route.",
+  "@vanStudentsMatchBodyWithoutAge": {
+    "placeholders": {
+      "familyName": {
+        "type": "String"
+      },
+      "dependentName": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsMatchDismiss": "It's not",
+  "vanStudentsMatchConfirm": "Yes, merge",
+  "vanStudentsMergeDialogTitle": "Merge with {dependentName}?",
+  "@vanStudentsMergeDialogTitle": {
+    "placeholders": {
+      "dependentName": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsMergeDialogMessage": "The student moves to \"With family\" and the family starts getting notices. The place on the route stays the same.",
+  "vanStudentsMergeDialogConfirm": "Merge",
+  "vanStudentsFilterLabel": "Filter students",
+  "vanStudentsFilterAll": "All",
+  "vanStudentsFilterWithFamily": "With family",
+  "vanStudentsFilterWithoutFamily": "Without family",
+  "vanStudentsShiftFilterLabel": "Shift",
+  "vanStudentsInvite": "Invite",
+  "vanStudentsResend": "Resend",
+  "vanStudentsInvitedToday": "Invite sent today",
+  "vanStudentsInvitedDaysAgo": "{days, plural, =1{Invite sent 1 day ago} other{Invite sent {days} days ago}}",
+  "@vanStudentsInvitedDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "vanStudentsFamilyJoined": "Family joined · confirm",
+  "vanStudentsListFooter": "Students with family on the app show under \"With family\", with contract and notices.",
+  "vanStudentsEmpty": "No students here yet.",
+  "vanStudentsEmptyFiltered": "No students match these filters.",
+  "vanStudentsAdd": "Add student",
+  "vanStudentsLoadError": "Could not load the students.",
+  "vanStudentsInviteShareText": "Hi! I'm {studentName}'s van driver. Get Vanep to receive the ride notices: {url}",
+  "@vanStudentsInviteShareText": {
+    "placeholders": {
+      "studentName": {
+        "type": "String"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsGroupShareText": "Hi, families! Get Vanep to receive the van notices: {url}",
+  "@vanStudentsGroupShareText": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsMerged": "{studentName} now has the family on the app.",
+  "@vanStudentsMerged": {
+    "placeholders": {
+      "studentName": {
+        "type": "String"
+      }
+    }
+  },
+  "vanStudentsDismissed": "Suggestion dismissed.",
+  "vanStudentsActionError": "Could not finish. Please try again.",
+  "vanStudentsNetworkError": "No connection. Please try again.",
+  "unlinkedPassengerFormTitle": "Add student",
+  "unlinkedPassengerFormIntro": "Register a student you already drive. Then invite the family to the app.",
+  "unlinkedPassengerSectionStudent": "Student",
+  "unlinkedPassengerSectionSchool": "School",
+  "unlinkedPassengerSectionPickup": "Pickup",
+  "unlinkedPassengerSectionDays": "Days and legs",
+  "unlinkedPassengerSectionTimes": "Pickup time",
+  "unlinkedPassengerSectionNotes": "Notes",
+  "unlinkedPassengerNameLabel": "Student name",
+  "unlinkedPassengerSchoolHint": "Search school",
+  "unlinkedPassengerSchoolShiftLabel": "School shift",
+  "unlinkedPassengerDaysHint": "Mark the legs the student rides each day.",
+  "unlinkedPassengerNotesLabel": "Notes (optional)",
+  "unlinkedPassengerNotesHint": "E.g. blue gate, call before arriving",
+  "unlinkedPassengerSubmit": "Register student",
+  "unlinkedPassengerCreated": "{studentName} was registered.",
+  "@unlinkedPassengerCreated": {
+    "placeholders": {
+      "studentName": {
+        "type": "String"
+      }
+    }
+  },
+  "unlinkedPassengerErrorNameRequired": "Enter the student's name.",
+  "unlinkedPassengerErrorNameTooLong": "Use up to 255 characters.",
+  "unlinkedPassengerErrorSchoolRequired": "Choose the school.",
+  "unlinkedPassengerErrorSchoolShiftRequired": "Choose the school shift.",
+  "unlinkedPassengerErrorLegRequired": "Mark at least one leg.",
+  "unlinkedPassengerErrorNotesTooLong": "Use up to 500 characters.",
+  "navProposalsAndContracts": "Proposals & contracts",
+  "profileDependents": "Manage dependents",
+  "dependentFormNewTitle": "New dependent",
+  "dependentFormEditTitle": "Edit dependent",
+  "dependentFormSave": "Save",
+  "dependentFormSaved": "Dependent saved.",
+  "dependentFieldBirthDateEmpty": "Pick a date",
+  "dependentFieldBirthDateClear": "Clear date",
+  "dependentFormSubtitle": "Enter the details of who rides the van. Only the name is required.",
+  "dependentFieldAddress": "Address",
+  "dependentFieldAddressEmpty": "No address set.",
+  "dependentFieldAddressRemove": "Clear address",
+  "dependentAddressRegisterAction": "Add address",
+  "dependentAddressEditAction": "Edit address",
+  "dependentAddressMenuTooltip": "More options",
+  "dependentAddressFormTitleNew": "Add address",
+  "dependentAddressFormTitleEdit": "Edit address",
+  "dependentAddressFormSubtitle": "Enter the ZIP code and complete the dependent's address details.",
+  "dependentAddressConfirmAction": "Confirm address",
+  "dependentAddressIncomplete": "Complete the address to save.",
+  "driverProfileChatButton": "Chat with the driver",
+  "conversationTitle": "Chat",
+  "conversationFailureDriverUnavailable": "This driver is no longer available.",
+  "navRoute": "Route",
+  "navAssistantProfile": "My profile",
+  "assistantActiveVan": "Active van",
+  "assistantSwitchVan": "Switch van",
+  "assistantSelectVanTitle": "Select active van",
+  "assistantSelectVanSubtitle": "Choose which van you will accompany today",
+  "assistantNoVansLinked": "No vans linked at the moment.",
+  "unauthorizedAccess": "Unauthorized access.",
+  "clientHomeNamesListLastSeparator": " and ",
+  "clientHomeRoundTrip": "round trip",
+  "clientHomeOneWay": "one way",
+  "clientHomeNamesAndTrip": "{names} · {trip}",
+  "@clientHomeNamesAndTrip": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      },
+      "trip": {
+        "type": "String"
+      }
+    }
+  },
+  "clientHomePerMonth": "/month",
+  "clientHomeSeeSimilarDrivers": "See similar drivers",
+  "clientProposalsNewOnVanep": "{gender, select, female{New on Vanep} other{New on Vanep}}",
+  "@clientProposalsNewOnVanep": {
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsMondayToFriday": "Mon to Fri",
+  "clientProposalsPerMonth": "/mo",
+  "clientProposalsPreviousFee": "before {amount}",
+  "@clientProposalsPreviousFee": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsClosedSummary": "For {name} · {amount}/mo",
+  "@clientProposalsClosedSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientProposalsOutcomeAccepted": "Accepted",
+  "clientProposalsOutcomeDeclined": "Declined",
+  "clientProposalsOutcomeExpired": "Expired",
+  "clientProposalsOutcomeCancelled": "Cancelled",
+  "assistantVansLoadError": "Could not load your vans.",
+  "assistantVansRetry": "Try again",
+  "assistantRouteEmpty": "No stops scheduled for this route today.",
+  "assistantRouteProgress": "{completed} of {total} students handled",
+  "@assistantRouteProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantConfirmBoarding": "Confirm boarding",
+  "assistantMarkNoShow": "No-show",
+  "assistantBulkDropOff": "Bulk drop-off ({count})",
+  "@assistantBulkDropOff": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantSelectAllStop": "Select all at stop",
+  "assistantStatusPending": "Pending",
+  "assistantStatusBoarded": "Boarded",
+  "assistantStatusDroppedOff": "Dropped off",
+  "assistantStatusNoShow": "No-show",
+  "assistantConfirmedByAssistant": "Confirmed by assistant",
+  "assistantConfirmedByDriver": "Confirmed by driver",
+  "assistantNoShowModalTitle": "Record no-show",
+  "assistantNoShowModalSubtitle": "Select why the student did not board:",
+  "assistantNoShowReasonNotified": "Notified by guardian",
+  "assistantNoShowReasonNotAtLocation": "Not at pick-up location",
+  "assistantNoShowReasonOther": "Other reason",
+  "assistantNoShowConfirm": "Confirm no-show",
+  "assistantStudentsSearchHint": "Search student or school...",
+  "assistantFilterAll": "All",
+  "assistantStudentsEmpty": "No students found.",
+  "assistantLinkRevokedTitle": "Access revoked",
+  "assistantLinkRevokedMessage": "The driver removed your link to this van."
 }

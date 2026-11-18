@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_state.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/formatters/van_central_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class VanCentralActions {
   const VanCentralActions({
     required this.onRegisterVan,
     required this.onOpenVanDetails,
     required this.onOpenServiceAreas,
+    required this.onOpenStudents,
     required this.onOpenComingSoon,
     required this.onAcceptingStudentsChanged,
   });
@@ -19,6 +19,7 @@ class VanCentralActions {
   final VoidCallback onRegisterVan;
   final VoidCallback onOpenVanDetails;
   final VoidCallback onOpenServiceAreas;
+  final VoidCallback onOpenStudents;
   final ValueChanged<String> onOpenComingSoon;
   final ValueChanged<bool> onAcceptingStudentsChanged;
 }
@@ -38,7 +39,7 @@ class VanCentralSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(title, style: VanepTypography.sectionTitle),
+        Text(title, style: context.typography.sectionTitle),
         const SizedBox(height: 10),
         VanepMenuCard(items: items),
       ],
@@ -84,12 +85,13 @@ class VanCentralMenus extends StatelessWidget {
               Icons.route_outlined,
               l10n.vanCentralRouteHint,
             ),
-            comingSoonItem(
-              l10n.vanCentralStudents,
-              Icons.groups_outlined,
-              occupancy == null
+            VanepMenuItem(
+              label: l10n.vanCentralStudents,
+              icon: Icons.groups_outlined,
+              subtitle: occupancy == null
                   ? l10n.vanCentralStudentsHint
                   : studentsSummary(l10n, occupancy),
+              onTap: actions.onOpenStudents,
             ),
             comingSoonItem(
               l10n.vanCentralAbsences,
@@ -154,7 +156,7 @@ class VanCentralMenus extends StatelessWidget {
                       ),
                 trailing: Switch(
                   value: attendance.acceptingStudents,
-                  activeTrackColor: VanepColors.action,
+                  activeTrackColor: context.palette.action,
                   onChanged: state.isChangingAttendance
                       ? null
                       : actions.onAcceptingStudentsChanged,
@@ -202,7 +204,7 @@ class VanCentralLockedMenus extends StatelessWidget {
         icon: icon,
         subtitle: hint,
         enabled: false,
-        trailing: const Icon(Icons.lock_outline, color: VanepColors.textMuted),
+        trailing: Icon(Icons.lock_outline, color: context.palette.textMuted),
       );
     }
 

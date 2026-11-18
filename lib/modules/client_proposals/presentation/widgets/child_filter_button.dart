@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const filterButtonVisibleAvatars = 2;
 
@@ -35,9 +35,9 @@ class ChildFilterButton extends StatelessWidget {
         label: l10n.clientProposalsFilterByChild(label),
         excludeSemantics: true,
         child: Material(
-          color: VanepColors.card,
-          shape: const StadiumBorder(
-            side: BorderSide(color: VanepColors.inputBorder),
+          color: context.palette.card,
+          shape: StadiumBorder(
+            side: BorderSide(color: context.palette.inputBorder),
           ),
           child: InkWell(
             customBorder: const StadiumBorder(),
@@ -60,17 +60,17 @@ class ChildFilterButton extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: VanepColors.textPrimary,
+                        color: context.palette.textPrimary,
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(
+                    Icon(
                       Icons.expand_more,
                       size: 20,
-                      color: VanepColors.textSecondary,
+                      color: context.palette.textSecondary,
                     ),
                   ],
                 ),

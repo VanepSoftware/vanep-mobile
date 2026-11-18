@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_city_picker_sheet.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
@@ -11,6 +10,7 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_state.dart';
 import 'package:vanep_mobile/modules/auth/presentation/mappers/personal_address_failure_l10n.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class PersonalAddressFormPage extends StatefulWidget {
   const PersonalAddressFormPage({super.key});
@@ -71,7 +71,7 @@ class _PersonalAddressFormPageState extends State<PersonalAddressFormPage> {
         final cepFailure = state.cepFailure;
 
         return Scaffold(
-          backgroundColor: VanepColors.card,
+          backgroundColor: context.palette.card,
           appBar: const VanepAppBar(),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),

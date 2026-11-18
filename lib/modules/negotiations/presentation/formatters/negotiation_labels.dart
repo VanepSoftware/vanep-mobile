@@ -10,7 +10,7 @@ import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/clock_time.dart';
+import 'package:vanep_mobile/core/domain/schedule/clock_time.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/legs_summary.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_history.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_turn.dart';
@@ -19,7 +19,9 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/request_schools.dart';
-import 'package:vanep_mobile/modules/negotiations/domain/value_objects/route_leg.dart';
+import 'package:vanep_mobile/core/formatters/schedule_labels.dart';
+
+export 'package:vanep_mobile/core/formatters/schedule_labels.dart';
 
 String adjustmentPolicyLabel(
   AppLocalizations l10n,
@@ -71,22 +73,6 @@ String clientTurnLabel(AppLocalizations l10n, ClientTurn turn) {
   };
 }
 
-String routeLegLabel(AppLocalizations l10n, RouteLeg leg) {
-  return switch (leg) {
-    RouteLeg.outbound => l10n.negotiationLegOutbound,
-    RouteLeg.homebound => l10n.negotiationLegHomebound,
-  };
-}
-
-String legsSummaryLabel(AppLocalizations l10n, LegsSummary summary) {
-  return switch (summary) {
-    LegsSummary.roundTrip => l10n.negotiationLegsRoundTrip,
-    LegsSummary.outboundOnly => l10n.negotiationLegsOutboundOnly,
-    LegsSummary.homeboundOnly => l10n.negotiationLegsHomeboundOnly,
-    LegsSummary.mixed => l10n.negotiationLegsMixed,
-  };
-}
-
 String negotiationFailureMessage(
   AppLocalizations l10n,
   NegotiationFailure failure,
@@ -116,12 +102,6 @@ String proposalStatusLabel(AppLocalizations l10n, ProposalStatus status) {
 
 String formatProposalPeriod(AppLocalizations l10n, Proposal proposal) {
   return formatCalendarRange(l10n, proposal.startsOn, proposal.endsOn);
-}
-
-String formatClockTime(ClockTime time) {
-  final hour = time.hour.toString().padLeft(2, '0');
-  final minute = time.minute.toString().padLeft(2, '0');
-  return '$hour:$minute';
 }
 
 String formatProposalVehicle(AppLocalizations l10n, ProposalVehicle vehicle) {

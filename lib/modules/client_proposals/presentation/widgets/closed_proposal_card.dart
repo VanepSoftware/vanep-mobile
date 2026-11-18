@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_chip.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -9,15 +8,14 @@ import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/propo
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_turn.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
-(Color, Color) outcomeChipColors(ClientTurn outcome) {
+(Color, Color) outcomeChipColors(VanepPalette palette, ClientTurn outcome) {
   return switch (outcome) {
-    ClientTurn.accepted => (
-      VanepColors.avatarGreenSurface,
-      VanepColors.success,
-    ),
-    ClientTurn.expired => (VanepColors.warningSurface, VanepColors.warning),
-    _ => (VanepColors.surface, VanepColors.textSecondary),
+    ClientTurn.accepted => (palette.avatarGreenSurface, palette.success),
+    ClientTurn.expired => (palette.warningSurface, palette.warning),
+    _ => (palette.surface, palette.textSecondary),
   };
 }
 
@@ -48,7 +46,10 @@ class ProposalOutcomeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (background, foreground) = outcomeChipColors(outcome);
+    final (background, foreground) = outcomeChipColors(
+      context.palette,
+      outcome,
+    );
     return VanepChip(
       label: clientTurnLabel(AppLocalizations.of(context)!, outcome),
       background: background,

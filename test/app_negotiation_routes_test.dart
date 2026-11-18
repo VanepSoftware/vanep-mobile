@@ -1,5 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
+import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/app.dart';
@@ -13,8 +17,25 @@ import 'package:vanep_mobile/modules/conversations/presentation/pages/chat_page.
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 
 import 'core/ui/localized_harness.dart';
+import 'modules/auth/auth_fixtures.dart';
+import 'modules/auth/presentation/auth_presentation_mocks.dart';
 import 'modules/conversations/conversations_mocks.dart';
 import 'modules/negotiations/negotiations_fixtures.dart';
+
+Widget negotiationRouteHarness(UserType userType, Widget child) {
+  final auth = MockAuthCubit();
+  whenListen(
+    auth,
+    const Stream<AuthState>.empty(),
+    initialState: AuthAuthenticated(
+      FakeAuthSession(profile: FakeUserProfile(type: userType)),
+    ),
+  );
+  return BlocProvider<AuthCubit>(
+    create: (_) => auth,
+    child: localizedHarness(child),
+  );
+}
 
 void main() {
   testWidgets('opens the chat of the negotiation as the client', (
@@ -53,7 +74,8 @@ void main() {
     addTearDown(getIt.reset);
 
     await tester.pumpWidget(
-      localizedHarness(
+      negotiationRouteHarness(
+        UserType.client,
         Builder(
           builder: (context) => TextButton(
             onPressed: () =>
@@ -66,6 +88,7 @@ void main() {
     await tester.tap(find.text('Conversar'));
     await tester.pumpAndSettle();
 
+    expect(tester.takeException(), isNull);
     expect(find.byType(ChatPage<ClientServiceRequest>), findsOneWidget);
     expect(timelineTokens, ['conversation-1']);
     expect(openedTokens, ['conversation-1']);
@@ -104,7 +127,8 @@ void main() {
     addTearDown(getIt.reset);
 
     await tester.pumpWidget(
-      localizedHarness(
+      negotiationRouteHarness(
+        UserType.driver,
         Builder(
           builder: (context) => TextButton(
             onPressed: () =>
@@ -117,6 +141,7 @@ void main() {
     await tester.tap(find.text('Conversar'));
     await tester.pumpAndSettle();
 
+    expect(tester.takeException(), isNull);
     expect(find.byType(ChatPage<DriverServiceRequest>), findsOneWidget);
     expect(timelineTokens, ['conversation-1']);
     expect(find.text('Maria'), findsOneWidget);
@@ -124,7 +149,8 @@ void main() {
 
   testWidgets('a request without a conversation opens nothing', (tester) async {
     await tester.pumpWidget(
-      localizedHarness(
+      negotiationRouteHarness(
+        UserType.client,
         Builder(
           builder: (context) => TextButton(
             onPressed: () => openClientNegotiationChat(
@@ -146,7 +172,8 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      localizedHarness(
+      negotiationRouteHarness(
+        UserType.client,
         Builder(
           builder: (context) => TextButton(
             onPressed: () => openProposalAcceptance(

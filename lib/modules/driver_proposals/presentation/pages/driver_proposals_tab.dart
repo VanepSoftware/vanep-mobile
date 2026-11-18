@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
@@ -18,6 +17,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiati
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/negotiation_blocks.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposals_empty_state.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const negotiationsPrefetchExtent = 320.0;
 
@@ -58,7 +58,7 @@ class DriverProposalsTab extends StatelessWidget {
     final cubit = context.read<DriverNegotiationsCubit>();
 
     return Scaffold(
-      backgroundColor: VanepColors.surface,
+      backgroundColor: context.palette.surface,
       appBar: VanepAppBar(title: l10n.navProposals),
       body: BlocConsumer<DriverNegotiationsCubit, DriverNegotiationsState>(
         listenWhen: (previous, current) =>
@@ -120,9 +120,9 @@ class DriverProposalsTab extends StatelessWidget {
                       onRetry: cubit.load,
                     )
                   else
-                    const Center(
+                    Center(
                       child: CircularProgressIndicator(
-                        color: VanepColors.action,
+                        color: context.palette.action,
                       ),
                     ),
                 ],
@@ -183,10 +183,10 @@ class DriverNegotiationsList extends StatelessWidget {
             ),
           ],
         if (isLoadingMore)
-          const Center(
+          Center(
             child: Padding(
               padding: EdgeInsets.all(8),
-              child: CircularProgressIndicator(color: VanepColors.action),
+              child: CircularProgressIndicator(color: context.palette.action),
             ),
           ),
       ],

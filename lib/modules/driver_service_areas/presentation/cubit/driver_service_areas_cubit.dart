@@ -24,7 +24,12 @@ class DriverServiceAreasCubit extends Cubit<DriverServiceAreasState> {
   final ReplaceMyServiceAreas replaceMyServiceAreas;
 
   Future<void> loadMyAreas() async {
-    emit(state.copyWith(status: DriverServiceAreasStatus.loading, clearFailure: true));
+    emit(
+      state.copyWith(
+        status: DriverServiceAreasStatus.loading,
+        clearFailure: true,
+      ),
+    );
     final result = await findMyServiceAreas();
     emit(
       result.fold(
@@ -44,26 +49,30 @@ class DriverServiceAreasCubit extends Cubit<DriverServiceAreasState> {
 
   void addDraft(ServiceAreaDraft draft) {
     if (!state.canAddMore) return;
-    if (state.drafts.any((existing) => existing.identity == draft.identity)) return;
-    emit(
-      state.copyWith(
-        drafts: [...state.drafts, draft],
-        clearFailure: true,
-      ),
-    );
+    if (state.drafts.any((existing) => existing.identity == draft.identity)) {
+      return;
+    }
+    emit(state.copyWith(drafts: [...state.drafts, draft], clearFailure: true));
   }
 
   void removeDraft(String identity) {
     emit(
       state.copyWith(
-        drafts: state.drafts.where((draft) => draft.identity != identity).toList(),
+        drafts: state.drafts
+            .where((draft) => draft.identity != identity)
+            .toList(),
         clearFailure: true,
       ),
     );
   }
 
   Future<void> saveAreas() async {
-    emit(state.copyWith(status: DriverServiceAreasStatus.saving, clearFailure: true));
+    emit(
+      state.copyWith(
+        status: DriverServiceAreasStatus.saving,
+        clearFailure: true,
+      ),
+    );
     final result = await replaceMyServiceAreas(state.drafts);
     emit(
       result.fold(

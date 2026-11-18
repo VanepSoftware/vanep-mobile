@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/domain/gender.dart';
 import 'package:vanep_mobile/core/ui/vanep_gender_select.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 
 import 'localized_host.dart';
 
@@ -101,6 +101,6 @@ void main() {
 
     final context = tester.element(find.text('Feminino'));
     final style = DefaultTextStyle.of(context).style;
-    expect(style.color, VanepColors.textMuted);
+    expect(style.color, VanepPalette.light.textMuted);
   });
 }

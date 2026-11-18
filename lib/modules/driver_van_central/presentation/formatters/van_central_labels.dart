@@ -4,16 +4,10 @@ import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/servic
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_attendance.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/van_assistant.dart';
-import 'package:vanep_mobile/modules/driver_van_central/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 
-String operationShiftLabel(AppLocalizations l10n, OperationShift shift) {
-  return switch (shift) {
-    OperationShift.morning => l10n.vanCentralShiftMorning,
-    OperationShift.afternoon => l10n.vanCentralShiftAfternoon,
-    OperationShift.night => l10n.vanCentralShiftNight,
-  };
-}
+export 'package:vanep_mobile/core/formatters/schedule_labels.dart';
 
 String operationShiftWithArticle(AppLocalizations l10n, OperationShift shift) {
   return switch (shift) {

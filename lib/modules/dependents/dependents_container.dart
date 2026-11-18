@@ -5,6 +5,7 @@ import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
+import 'package:vanep_mobile/core/places/school_place_types.dart';
 import 'package:vanep_mobile/modules/contract_readiness/domain/usecases/find_contract_readiness.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';

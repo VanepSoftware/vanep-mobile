@@ -6,7 +6,7 @@ import 'package:vanep_mobile/modules/driver_van_central/data/datasources/van_cen
 import 'package:vanep_mobile/modules/driver_van_central/data/repositories/van_central_repository_impl.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/entities/van_assistant.dart';
 import 'package:vanep_mobile/modules/driver_van_central/domain/failures/van_central_failure.dart';
-import 'package:vanep_mobile/modules/driver_van_central/domain/value_objects/operation_shift.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 
 import '../driver_van_central_data_fixtures.dart';
 import '../driver_van_central_mocks.dart';

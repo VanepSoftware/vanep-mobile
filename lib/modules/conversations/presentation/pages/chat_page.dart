@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
@@ -23,6 +21,7 @@ import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart'
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_history.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_turn.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const olderMessagesTriggerExtent = 300.0;
 
@@ -79,7 +78,7 @@ class ChatPage<R extends ServiceRequest> extends StatelessWidget {
       builder: (context, state) {
         final actions = negotiationActions;
         return Scaffold(
-          backgroundColor: VanepColors.card,
+          backgroundColor: context.palette.card,
           appBar: VanepAppBar(title: counterpartName),
           body: actions == null
               ? ChatBody<R>(
@@ -139,8 +138,8 @@ class ChatBody<R extends ServiceRequest> extends StatelessWidget {
         isAdjustmentPending(negotiation.request);
 
     if (state.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: VanepColors.action),
+      return Center(
+        child: CircularProgressIndicator(color: context.palette.action),
       );
     }
     if (state.hasLoadFailed) {
@@ -182,7 +181,7 @@ class ChatBody<R extends ServiceRequest> extends StatelessWidget {
               ? Center(
                   child: Text(
                     l10n.conversationEmpty,
-                    style: VanepTypography.cardSubtitle,
+                    style: context.typography.cardSubtitle,
                   ),
                 )
               : ChatMessageList<R>(
@@ -202,7 +201,7 @@ class ChatBody<R extends ServiceRequest> extends StatelessWidget {
                   openProposal != null
               ? IconButton(
                   tooltip: l10n.proposalDetailAskAdjustment,
-                  color: VanepColors.action,
+                  color: context.palette.action,
                   icon: const Icon(Icons.tune),
                   onPressed: () => runNegotiationAction<R>(
                     context,
@@ -362,10 +361,10 @@ class ChatMessageList<R extends ServiceRequest> extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           if (index == newestFirst.length) {
-            return const Padding(
+            return Padding(
               padding: EdgeInsets.all(12),
               child: Center(
-                child: CircularProgressIndicator(color: VanepColors.action),
+                child: CircularProgressIndicator(color: context.palette.action),
               ),
             );
           }

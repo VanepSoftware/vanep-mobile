@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/core/design_system/vanep_palette.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 class AvatarTone {
   const AvatarTone(this.background, this.foreground);
@@ -11,15 +12,18 @@ class AvatarTone {
   final Color foreground;
 }
 
-const avatarTones = [
-  AvatarTone(VanepColors.actionSurface, VanepColors.action),
-  AvatarTone(VanepColors.warningSurface, VanepColors.warning),
-  AvatarTone(Color(0x1A1E8E5A), VanepColors.success),
-];
+List<AvatarTone> avatarTones(VanepPalette palette) {
+  return [
+    AvatarTone(palette.actionSurface, palette.action),
+    AvatarTone(palette.warningSurface, palette.warning),
+    AvatarTone(palette.successSurface, palette.success),
+  ];
+}
 
-AvatarTone avatarToneFor(String name) {
+AvatarTone avatarToneFor(VanepPalette palette, String name) {
+  final tones = avatarTones(palette);
   final seed = name.codeUnits.fold<int>(0, (sum, unit) => sum + unit);
-  return avatarTones[seed % avatarTones.length];
+  return tones[seed % tones.length];
 }
 
 String initialsOf(String name) {
@@ -47,7 +51,7 @@ class VanepPersonAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tone = avatarToneFor(name);
+    final tone = avatarToneFor(context.palette, name);
     return Opacity(
       opacity: dimmed ? 0.4 : 1,
       child: VanepAvatar(
@@ -90,8 +94,8 @@ class VanepAvatarStack extends StatelessWidget {
         VanepAvatar(
           size: size - 3,
           initials: '+$hiddenCount',
-          backgroundColor: VanepColors.avatarPlaceholder,
-          foregroundColor: VanepColors.textSecondary,
+          backgroundColor: context.palette.avatarPlaceholder,
+          foregroundColor: context.palette.textSecondary,
         ),
     ];
     return SizedBox(
@@ -103,8 +107,8 @@ class VanepAvatarStack extends StatelessWidget {
             Positioned(
               left: step * index,
               child: DecoratedBox(
-                decoration: const BoxDecoration(
-                  color: VanepColors.card,
+                decoration: BoxDecoration(
+                  color: context.palette.card,
                   shape: BoxShape.circle,
                 ),
                 child: Padding(
