@@ -8,6 +8,10 @@ import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_section.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_state.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_van_detail_page.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_detail_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_detail_state.dart';
@@ -26,16 +30,36 @@ import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> openDependentDetail(BuildContext context, String token) {
   final dependents = context.read<DependentsCubit>();
+  ClientVansCubit? vansCubit;
+  try {
+    vansCubit = context.read<ClientVansCubit>();
+  } catch (_) {
+    if (getIt.isRegistered<ClientVansCubit>()) {
+      vansCubit = getIt<ClientVansCubit>();
+    }
+  }
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => buildDependentDetail(dependents, token),
+      builder: (_) => buildDependentDetail(
+        dependents,
+        token,
+        clientVansCubit: vansCubit,
+      ),
     ),
   );
 }
 
-Widget buildDependentDetail(DependentsCubit dependents, String token) {
-  return BlocProvider.value(
-    value: dependents,
+Widget buildDependentDetail(
+  DependentsCubit dependents,
+  String token, {
+  ClientVansCubit? clientVansCubit,
+}) {
+  return MultiBlocProvider(
+    providers: [
+      BlocProvider<DependentsCubit>.value(value: dependents),
+      if (clientVansCubit != null)
+        BlocProvider<ClientVansCubit>.value(value: clientVansCubit),
+    ],
     child: DependentDetailPage(token: token),
   );
 }
@@ -110,10 +134,12 @@ class DependentDetailView extends StatelessWidget {
                     VanepMenuItem(
                       label: l10n.dependentRowVan,
                       icon: Icons.airport_shuttle_outlined,
+                      onTap: () => openLinkedVan(context, dependent),
                     ),
                     VanepMenuItem(
                       label: l10n.dependentRowContract,
                       icon: Icons.description_outlined,
+                      onTap: () => openLinkedVan(context, dependent),
                     ),
                   ],
                 ),
@@ -311,6 +337,40 @@ Future<void> completeProfile(BuildContext context, Dependent dependent) async {
   );
   await detail.loadSchoolWeek();
 }
+
+Future<void> openLinkedVan(BuildContext context, Dependent dependent) async {
+  ClientVansCubit? vansCubit;
+  try {
+    vansCubit = context.read<ClientVansCubit>();
+  } catch (_) {
+    if (getIt.isRegistered<ClientVansCubit>()) {
+      vansCubit = getIt<ClientVansCubit>();
+    }
+  }
+
+  if (vansCubit == null) return;
+
+  if (vansCubit.state.status != ClientVansStatus.loaded) {
+    await vansCubit.loadVans();
+  }
+  if (!context.mounted) return;
+
+  final vans = vansCubit.state.vans;
+  ClientVan? matchingVan;
+  for (final van in vans) {
+    if (van.dependents.any((d) =>
+        d.token == dependent.token ||
+        d.name.trim().toLowerCase() == dependent.name.trim().toLowerCase())) {
+      matchingVan = van;
+      break;
+    }
+  }
+
+  if (matchingVan != null) {
+    await openClientVanDetail(context, van: matchingVan);
+  }
+}
+
 
 Future<void> setAsDefault(BuildContext context, Dependent dependent) async {
   final l10n = AppLocalizations.of(context)!;

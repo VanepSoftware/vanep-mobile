@@ -21,6 +21,8 @@ import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_state.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_state.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
@@ -31,6 +33,7 @@ import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/client_home/client_home_fixtures.dart';
 import '../modules/client_home/client_home_mocks.dart';
+import '../modules/client_vans/fixtures/client_vans_fixtures.dart';
 import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
 import '../modules/dependents/dependents_mocks.dart';
@@ -52,6 +55,9 @@ PlaceAutocompleteController buildAutocomplete() {
   return PlaceAutocompleteController(datasource: datasource);
 }
 
+class MockClientVansCubit extends MockCubit<ClientVansState>
+    implements ClientVansCubit {}
+
 Widget _harness(
   DriversCubit driversCubit,
   AuthCubit authCubit,
@@ -59,6 +65,7 @@ Widget _harness(
   DependentsCubit dependentsCubit,
   ConversationsInboxCubit conversationsCubit,
   ClientHomeCubit clientHomeCubit,
+  ClientVansCubit clientVansCubit,
   Future<void> Function(BuildContext)? openDriverSearch,
   Future<void> Function(BuildContext, Conversation)? openConversationChat,
 ) {
@@ -79,6 +86,7 @@ Widget _harness(
         BlocProvider<DependentsCubit>.value(value: dependentsCubit),
         BlocProvider<ConversationsInboxCubit>.value(value: conversationsCubit),
         BlocProvider<ClientHomeCubit>.value(value: clientHomeCubit),
+        BlocProvider<ClientVansCubit>.value(value: clientVansCubit),
       ],
       child: ClientShell(
         openDriverProfile: (_, _) async {},
@@ -105,6 +113,7 @@ void main() {
   late MockDependentsCubit dependentsCubit;
   late MockConversationsInboxCubit conversationsCubit;
   late MockClientHomeCubit clientHomeCubit;
+  late MockClientVansCubit clientVansCubit;
 
   Widget harness({
     Future<void> Function(BuildContext)? openDriverSearch,
@@ -117,6 +126,7 @@ void main() {
       dependentsCubit,
       conversationsCubit,
       clientHomeCubit,
+      clientVansCubit,
       openDriverSearch,
       openConversationChat,
     );
@@ -133,6 +143,16 @@ void main() {
     dependentsCubit = MockDependentsCubit();
     conversationsCubit = readyConversationsCubit([testConversation]);
     clientHomeCubit = MockClientHomeCubit();
+    clientVansCubit = MockClientVansCubit();
+    whenListen(
+      clientVansCubit,
+      const Stream<ClientVansState>.empty(),
+      initialState: const ClientVansState(
+        status: ClientVansStatus.loaded,
+        vans: [],
+      ),
+    );
+    when(clientVansCubit.loadVans).thenAnswer((_) async {});
     whenListen(
       clientHomeCubit,
       const Stream<ClientHomeState>.empty(),
@@ -206,8 +226,7 @@ void main() {
     await tester.tap(find.text('Procurar van'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Sugestões perto de você'), findsOneWidget);
-    expect(find.byType(TextField), findsOneWidget);
+    expect(find.text('Minhas vans'), findsOneWidget);
   });
 
   testWidgets('the Mensagens tab lists the client conversations by driver', (
@@ -244,11 +263,51 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Vans'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(TextField));
+    await tester.tap(find.text('Buscar vans escolares'));
     await tester.pumpAndSettle();
 
     expect(opened, isTrue);
   });
+
+  testWidgets(
+    'tapping van card on Vans tab opens detail page and allows chatting with driver',
+    (tester) async {
+      whenListen(
+        clientVansCubit,
+        const Stream<ClientVansState>.empty(),
+        initialState: ClientVansState(
+          status: ClientVansStatus.loaded,
+          vans: [testClientVan],
+        ),
+      );
+
+      final opened = <Conversation>[];
+      await tester.pumpWidget(
+        harness(
+          openConversationChat: (_, conversation) async =>
+              opened.add(conversation),
+        ),
+      );
+
+      await tester.tap(find.bySemanticsLabel('Vans'));
+      await tester.pumpAndSettle();
+
+      // Tap minimal card to open detail page
+      await tester.tap(find.text('Mercedes-Benz Sprinter 415 CDI'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('ABC-4E21'), findsOneWidget);
+
+      // Tap chat with driver on the detail page
+      await tester.ensureVisible(find.text('Conversar com motorista'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Conversar com motorista'));
+      await tester.pumpAndSettle();
+
+      expect(opened, isNotEmpty);
+      expect(opened.first.driverName, 'Carlos Alberto Silva');
+    },
+  );
 
   testWidgets('the menu button opens the account drawer and refreshes it', (
     tester,

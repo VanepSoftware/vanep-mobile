@@ -1154,5 +1154,56 @@
   "assistantFilterAll": "Todos",
   "assistantStudentsEmpty": "Nenhum aluno encontrado.",
   "assistantLinkRevokedTitle": "Acesso revogado",
-  "assistantLinkRevokedMessage": "O motorista removeu seu vínculo com esta van."
+  "assistantLinkRevokedMessage": "O motorista removeu seu vínculo com esta van.",
+  "clientVansTitle": "Minhas vans",
+  "clientVansSubtitle": "Vans escolares vinculadas à sua conta",
+  "clientVansEmptyTitle": "Nenhuma van vinculada",
+  "clientVansEmptyMessage": "Você ainda não possui vans vinculadas aos seus dependentes. Encontre motoristas escolares para solicitar um transporte seguro.",
+  "clientVansFindVanButton": "Buscar vans escolares",
+  "clientVansAddNewVan": "Buscar outra van",
+  "clientVansDriverSection": "Motorista responsável",
+  "clientVansContractSection": "Contrato e Mensalidade",
+  "clientVansDependentsSection": "Dependentes nesta van",
+  "clientVansChatDriver": "Conversar com motorista",
+  "clientVansContractDetails": "Ver contrato",
+  "clientVansActiveBadge": "Ativa",
+  "clientVansPendingBadge": "Pendente",
+  "clientVansDueDay": "Vencimento todo dia {day}",
+  "@clientVansDueDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVansSeats": "{count} lugares",
+  "@clientVansSeats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVansLoadError": "Não foi possível carregar suas vans.",
+  "clientVansRetry": "Tentar novamente",
+  "clientVanDetailTitle": "Detalhes da van",
+  "clientVanDetailCaption": "Informações completas e contrato",
+  "clientVanDetailVehicleSection": "Veículo",
+  "clientVanDetailPlate": "Placa",
+  "clientVanDetailColor": "Cor",
+  "clientVanDetailYear": "Ano de fabricação",
+  "clientVanDetailCapacity": "Capacidade",
+  "clientVanDetailShift": "Turno",
+  "clientVanDetailSchedule": "Horários",
+  "clientVanDetailPickupAddress": "Ponto de embarque",
+  "clientVanDetailWeekdays": "Dias de atendimento",
+  "clientVansDriverLabel": "Motorista: {name}",
+  "@clientVansDriverLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansDependentNoVan": "Nenhuma van vinculada a este dependente."
 }
