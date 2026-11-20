@@ -14,6 +14,8 @@ class PersonalAddress extends Equatable {
     required this.cityToken,
     required this.stateUf,
     required this.countryIsoCode,
+    this.cityLatitude,
+    this.cityLongitude,
   });
 
   final String token;
@@ -35,6 +37,10 @@ class PersonalAddress extends Equatable {
   final String stateUf;
 
   final String countryIsoCode;
+
+  final double? cityLatitude;
+
+  final double? cityLongitude;
 
   PostalAddressDraft toDraft() {
     return PostalAddressDraft.fromParts(
@@ -61,5 +67,7 @@ class PersonalAddress extends Equatable {
     cityToken,
     stateUf,
     countryIsoCode,
+    cityLatitude,
+    cityLongitude,
   ];
 }

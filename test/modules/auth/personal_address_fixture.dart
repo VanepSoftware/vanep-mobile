@@ -12,6 +12,8 @@ PersonalAddress fakePersonalAddress({
   String cityToken = 'city-brasilia',
   String stateUf = 'DF',
   String countryIsoCode = 'BR',
+  double? cityLatitude,
+  double? cityLongitude,
 }) {
   return PersonalAddress(
     token: token,
@@ -24,6 +26,8 @@ PersonalAddress fakePersonalAddress({
     cityToken: cityToken,
     stateUf: stateUf,
     countryIsoCode: countryIsoCode,
+    cityLatitude: cityLatitude,
+    cityLongitude: cityLongitude,
   );
 }
 
@@ -38,6 +42,8 @@ Map<String, Object?> fakePersonalAddressJson({
   String cityToken = 'city-brasilia',
   String stateUf = 'DF',
   String countryIsoCode = 'BR',
+  double? cityLatitude,
+  double? cityLongitude,
 }) {
   return {
     'token': token,
@@ -50,6 +56,8 @@ Map<String, Object?> fakePersonalAddressJson({
     'cityToken': cityToken,
     'stateUf': stateUf,
     'countryIsoCode': countryIsoCode,
+    'cityLatitude': cityLatitude,
+    'cityLongitude': cityLongitude,
   };
 }
 

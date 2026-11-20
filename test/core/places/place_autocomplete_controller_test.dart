@@ -6,6 +6,8 @@ import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 
+import 'places_fixtures.dart';
+
 class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
 
@@ -195,5 +197,39 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 40));
 
     verify(() => datasource.findSuggestions('escola classe', any(), includedPrimaryTypes: const ['school'])).called(1);
+  });
+
+  test('searches without a center until one is set', () async {
+    when(() => datasource.findSuggestions(any(), any()))
+        .thenAnswer((_) async => const Ok([suggestion]));
+
+    controller.search('qnl 5', (_) {});
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+
+    verify(() => datasource.findSuggestions('qnl 5', any(), searchCenter: null))
+        .called(1);
+  });
+
+  test('forwards the search center once it is set', () async {
+    when(
+      () => datasource.findSuggestions(
+        any(),
+        any(),
+        searchCenter: any(named: 'searchCenter'),
+      ),
+    ).thenAnswer((_) async => const Ok([suggestion]));
+
+    controller
+      ..searchCenter = brasiliaSearchCenter
+      ..search('colégio', (_) {});
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+
+    verify(
+      () => datasource.findSuggestions(
+        'colégio',
+        any(),
+        searchCenter: brasiliaSearchCenter,
+      ),
+    ).called(1);
   });
 }

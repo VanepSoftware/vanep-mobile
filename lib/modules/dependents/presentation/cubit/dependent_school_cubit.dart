@@ -5,6 +5,7 @@ import 'package:vanep_mobile/core/places/place_suggestion.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_search_center.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_draft.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_editor.dart';
@@ -17,13 +18,23 @@ class DependentSchoolCubit extends Cubit<DependentSchoolState>
   DependentSchoolCubit({
     required Dependent dependent,
     required this.autocomplete,
+    required this.findSchoolSearchCenter,
     required this.resolveSchool,
     required this.updateDependent,
-  }) : super(DependentSchoolState(snapshot: dependent));
+  }) : super(DependentSchoolState(snapshot: dependent)) {
+    applySearchCenter(dependent);
+  }
 
   final PlaceAutocompleteController autocomplete;
+  final FindSchoolSearchCenter findSchoolSearchCenter;
   final ResolveSchool resolveSchool;
   final UpdateDependent updateDependent;
+
+  Future<void> applySearchCenter(Dependent dependent) async {
+    final center = await findSchoolSearchCenter(dependent);
+    if (isClosed || center == null) return;
+    autocomplete.searchCenter = center;
+  }
 
   void search(String input) {
     autocomplete.search(input, (result) {

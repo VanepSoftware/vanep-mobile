@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/formatters/place_distance_formatter.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_map_placeholder.dart';
@@ -154,7 +155,7 @@ class DependentSchoolResults extends StatelessWidget {
       if (selectedPlace != null && !state.suggestions.contains(selectedPlace))
         DependentSchoolOption(
           title: selectedPlace.primaryText,
-          subtitle: selectedPlace.secondaryText,
+          subtitle: placeSuggestionSubtitle(l10n, selectedPlace),
           isSelected: true,
         )
       else if (state.isCurrentSchoolSelected && currentSchool != null)
@@ -166,7 +167,7 @@ class DependentSchoolResults extends StatelessWidget {
       for (final suggestion in state.suggestions)
         DependentSchoolOption(
           title: suggestion.primaryText,
-          subtitle: suggestion.secondaryText,
+          subtitle: placeSuggestionSubtitle(l10n, suggestion),
           isSelected: suggestion == selectedPlace,
           onTap: state.isSaving ? null : () => onSelected(suggestion),
         ),

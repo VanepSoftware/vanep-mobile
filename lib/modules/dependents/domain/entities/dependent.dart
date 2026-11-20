@@ -44,4 +44,8 @@ abstract class DependentAddress {
   String get cityName;
 
   String get stateUf;
+
+  double? get cityLatitude;
+
+  double? get cityLongitude;
 }

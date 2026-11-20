@@ -1616,6 +1616,33 @@
   "dependentSchoolSearchPrompt": "Search for the school by its name.",
   "dependentSchoolSearchEmpty": "No school found with this name.",
   "dependentSchoolSearchUnavailable": "School search is unavailable. Try again in a moment.",
+  "placeDistanceMeters": "{meters} m",
+  "placeDistanceKilometers": "{kilometers} km",
+  "placeSuggestionDistanceAndRegion": "{distance} · {region}",
+  "@placeDistanceMeters": {
+    "placeholders": {
+      "meters": {
+        "type": "String"
+      }
+    }
+  },
+  "@placeDistanceKilometers": {
+    "placeholders": {
+      "kilometers": {
+        "type": "String"
+      }
+    }
+  },
+  "@placeSuggestionDistanceAndRegion": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "region": {
+        "type": "String"
+      }
+    }
+  },
   "dependentSchoolDaysWeek": "Week",
   "dependentSchoolDaysLoadError": "Could not load the school days.",
   "dependentSchoolDayHasClass": "{day}: has class",

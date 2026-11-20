@@ -3,9 +3,11 @@ import 'package:get_it/get_it.dart';
 
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/core/location/device_location_source.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/places/school_place_types.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
 import 'package:vanep_mobile/modules/contract_readiness/domain/usecases/find_contract_readiness.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';
@@ -20,6 +22,7 @@ import 'package:vanep_mobile/modules/dependents/domain/usecases/create_dependent
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_days.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/remove_dependent.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_search_center.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/replace_school_days.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/set_default_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/update_dependent.dart';
@@ -79,6 +82,12 @@ void registerDependentsDependencies(GetIt getIt) {
         findContractReadiness: getIt<FindContractReadiness>(),
       ),
     )
+    ..registerFactory<FindSchoolSearchCenter>(
+      () => FindSchoolSearchCenter(
+        findMyPersonalAddress: getIt<FindMyPersonalAddress>(),
+        deviceLocation: getIt<DeviceLocationSource>(),
+      ),
+    )
     ..registerFactoryParam<DependentDetailCubit, String, void>(
       (dependentToken, _) => DependentDetailCubit(
         dependentToken: dependentToken,
@@ -99,6 +108,7 @@ void registerDependentsDependencies(GetIt getIt) {
           datasource: getIt<PlaceAutocompleteDataSource>(),
           includedPrimaryTypes: schoolPlacePrimaryTypes,
         ),
+        findSchoolSearchCenter: getIt<FindSchoolSearchCenter>(),
         resolveSchool: getIt<ResolveSchool>(),
         updateDependent: getIt<UpdateDependent>(),
       ),

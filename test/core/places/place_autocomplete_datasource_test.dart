@@ -129,6 +129,76 @@ void main() {
     expect(captured['includedPrimaryTypes'], ['school', 'primary_school']);
   });
 
+  test(
+    'biases toward the search center and measures distance from it',
+    () async {
+      stubResponse(autocompleteResponseFixture);
+
+      await datasource.findSuggestions(
+        'colégio',
+        'session-abc',
+        searchCenter: brasiliaSearchCenter,
+      );
+
+      final captured =
+          verify(
+                () => dio.post<Map<String, dynamic>>(
+                  any(),
+                  data: captureAny(named: 'data'),
+                  options: any(named: 'options'),
+                ),
+              ).captured.single
+              as Map<String, Object?>;
+
+      const center = {'latitude': -15.7843, 'longitude': -47.9081};
+      expect(captured['locationBias'], {
+        'circle': {'center': center, 'radius': 50000.0},
+      });
+      expect(captured['origin'], center);
+      expect(captured.containsKey('locationRestriction'), isFalse);
+      expect(captured['includedRegionCodes'], ['br']);
+    },
+  );
+
+  test('sends neither bias nor origin without a search center', () async {
+    stubResponse(autocompleteResponseFixture);
+
+    await datasource.findSuggestions('qnl 5', 'session-abc');
+
+    final captured =
+        verify(
+              () => dio.post<Map<String, dynamic>>(
+                any(),
+                data: captureAny(named: 'data'),
+                options: any(named: 'options'),
+              ),
+            ).captured.single
+            as Map<String, Object?>;
+
+    expect(captured.containsKey('locationBias'), isFalse);
+    expect(captured.containsKey('origin'), isFalse);
+  });
+
+  test('reads the distance of each suggestion', () async {
+    stubResponse(schoolResponseWithDistanceFixture);
+
+    final result = await datasource.findSuggestions(
+      'colégio',
+      'session-1',
+      searchCenter: brasiliaSearchCenter,
+    );
+
+    expect(result.valueOrNull?.single.distanceMeters, 2400);
+  });
+
+  test('a suggestion without distance has a null distance', () async {
+    stubResponse(autocompleteResponseFixture);
+
+    final result = await datasource.findSuggestions('qnl 5', 'session-1');
+
+    expect(result.valueOrNull?.single.distanceMeters, isNull);
+  });
+
   test('sends the platform key in the header', () async {
     stubResponse(autocompleteResponseFixture);
 

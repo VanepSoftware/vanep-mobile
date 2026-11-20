@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
+import 'package:vanep_mobile/core/places/place_search_center.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
@@ -55,6 +56,7 @@ void main() {
   late MockPlaceAutocompleteController autocomplete;
   late MockPlaceSearchSession session;
   late MockResolveSchool resolveSchool;
+  late MockFindSchoolSearchCenter findSchoolSearchCenter;
   late MockUpdateDependent updateDependent;
 
   setUpAll(() {
@@ -66,6 +68,8 @@ void main() {
     autocomplete = MockPlaceAutocompleteController();
     session = MockPlaceSearchSession();
     resolveSchool = MockResolveSchool();
+    findSchoolSearchCenter = MockFindSchoolSearchCenter();
+    when(() => findSchoolSearchCenter(any())).thenAnswer((_) async => null);
     updateDependent = MockUpdateDependent();
     when(() => autocomplete.session).thenReturn(session);
     when(session.currentToken).thenReturn('sess-1');
@@ -75,6 +79,7 @@ void main() {
     return DependentSchoolCubit(
       dependent: dependent,
       autocomplete: autocomplete,
+      findSchoolSearchCenter: findSchoolSearchCenter,
       resolveSchool: resolveSchool,
       updateDependent: updateDependent,
     );
@@ -112,6 +117,24 @@ void main() {
     expect(cubit.state.isCurrentSchoolSelected, isTrue);
     expect(cubit.state.selectedName, 'Colégio Delta');
     expect(cubit.state.canSave, isFalse);
+  });
+
+  test('biases the school search toward the resolved center', () async {
+    const center = PlaceSearchCenter(latitude: -15.7843, longitude: -47.9081);
+    when(() => findSchoolSearchCenter(any())).thenAnswer((_) async => center);
+
+    buildCubit(dependent: testDependentInBrasilia);
+    await Future<void>.delayed(Duration.zero);
+
+    verify(() => findSchoolSearchCenter(testDependentInBrasilia)).called(1);
+    verify(() => autocomplete.searchCenter = center).called(1);
+  });
+
+  test('keeps the search unbiased when no center is found', () async {
+    buildCubit();
+    await Future<void>.delayed(Duration.zero);
+
+    verifyNever(() => autocomplete.searchCenter = any());
   });
 
   test('a dependent without school opens with nothing selected', () {
