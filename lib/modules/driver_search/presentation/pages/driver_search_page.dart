@@ -5,13 +5,23 @@ import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/ui/vanep_place_autocomplete_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_card.dart';
-import 'package:vanep_mobile/modules/drivers/presentation/widgets/drivers_home_body.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/formatters/driver_search_failure_label.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/widgets/find_van_empty_view.dart';
+import 'package:vanep_mobile/modules/driver_search/presentation/widgets/find_van_skeleton.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 const loadMoreThresholdPixels = 240.0;
+
+VoidCallback? selectDriverCallback(
+  ValueChanged<String>? onDriverSelected,
+  String driverToken,
+) {
+  if (onDriverSelected == null) return null;
+  return () => onDriverSelected(driverToken);
+}
+
 
 class DriverSearchPage extends StatefulWidget {
   const DriverSearchPage({
@@ -107,29 +117,18 @@ class DriverSearchPageState extends State<DriverSearchPage> {
               ),
               const SizedBox(height: 16),
               if (state.status == DriverSearchStatus.searching)
-                const DriversSkeletonList(),
+                const FindVanSkeletonList(),
               if (failure != null && state.status == DriverSearchStatus.failed)
                 Text(
                   driverSearchFailureLabel(l10n, failure),
                   style: context.typography.cardSubtitle,
                 ),
-              if (state.hasNoResults) ...[
-                Text(
-                  l10n.driverSearchEmpty,
-                  style: context.typography.cardSubtitle,
+              if (state.hasNoResults)
+                FindVanEmptyView(
+                  onClearSearch: () {
+                    cubit.clearSearch();
+                  },
                 ),
-                const SizedBox(height: 12),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                    onPressed: () {
-                      cubit.clearSearch();
-                    },
-                    icon: const Icon(Icons.arrow_back, size: 16),
-                    label: Text(l10n.findVanClearSearch),
-                  ),
-                ),
-              ],
               if (state.isShowingRecommended && state.results.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
@@ -171,7 +170,7 @@ class DriverSearchPageState extends State<DriverSearchPage> {
               if (state.status == DriverSearchStatus.loadingMore)
                 const Padding(
                   padding: EdgeInsets.only(bottom: 12),
-                  child: DriversSkeletonList(count: 2),
+                  child: FindVanSkeletonList(count: 2),
                 ),
               if (failure != null &&
                   state.status == DriverSearchStatus.loadMoreFailed)
