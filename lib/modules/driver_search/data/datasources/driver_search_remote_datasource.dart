@@ -43,6 +43,7 @@ class DriverSearchRemoteDataSource {
   final Environment environment;
 
   String get endpoint => '${environment.driversEndpoint}/search';
+  String get recommendedEndpoint => environment.driversRecommendedEndpoint;
 
   Future<DriverSearchPage> searchByPlace(
     String placeId,
@@ -56,6 +57,20 @@ class DriverSearchRemoteDataSource {
         'page': page,
         if (sessionToken != null && sessionToken.isNotEmpty)
           'sessionToken': sessionToken,
+      },
+    );
+    return readSearchPage(response.data);
+  }
+
+  Future<DriverSearchPage> fetchRecommended({
+    int page = 0,
+    int size = 20,
+  }) async {
+    final response = await dio.get<Map<String, dynamic>>(
+      recommendedEndpoint,
+      queryParameters: {
+        'page': page,
+        'size': size,
       },
     );
     return readSearchPage(response.data);

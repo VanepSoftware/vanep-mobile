@@ -176,6 +176,7 @@ void main() {
       const Stream<DriverSearchState>.empty(),
       initialState: const DriverSearchState(),
     );
+    when(searchCubit.loadRecommended).thenAnswer((_) async {});
     final clientHomeCubit = MockClientHomeCubit();
     whenListen(
       clientHomeCubit,

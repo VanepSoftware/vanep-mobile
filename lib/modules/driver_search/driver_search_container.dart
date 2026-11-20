@@ -6,6 +6,7 @@ import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/modules/driver_search/data/datasources/driver_search_remote_datasource.dart';
 import 'package:vanep_mobile/modules/driver_search/data/repositories/driver_search_repository_impl.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/repositories/driver_search_repository.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/usecases/get_recommended_drivers.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/usecases/search_drivers_by_place.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 
@@ -28,9 +29,13 @@ void registerDriverSearchDependencies(GetIt getIt) {
     ..registerFactory<SearchDriversByPlace>(
       () => SearchDriversByPlace(getIt<DriverSearchRepository>()),
     )
+    ..registerFactory<GetRecommendedDrivers>(
+      () => GetRecommendedDrivers(getIt<DriverSearchRepository>()),
+    )
     ..registerFactory<DriverSearchCubit>(
       () => DriverSearchCubit(
         searchDriversByPlace: getIt<SearchDriversByPlace>(),
+        getRecommendedDrivers: getIt<GetRecommendedDrivers>(),
       ),
     );
 }

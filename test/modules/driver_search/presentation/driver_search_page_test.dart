@@ -278,4 +278,65 @@ void main() {
       findsNothing,
     );
   });
+
+  testWidgets('shows recommended vans header when showing recommendations', (
+    tester,
+  ) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: rankedResults,
+        isShowingRecommended: true,
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(find.text('Vans em destaque'), findsOneWidget);
+  });
+
+  testWidgets('shows search results header when place is searched', (
+    tester,
+  ) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: rankedResults,
+        placeId: 'place-1',
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(find.text('Vans disponíveis para este local'), findsOneWidget);
+    expect(find.byIcon(Icons.close), findsOneWidget);
+
+    when(() => cubit.clearSearch()).thenReturn(null);
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pump();
+
+    verify(() => cubit.clearSearch()).called(1);
+  });
+
+  testWidgets('empty state provides clear search button', (tester) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: [],
+        placeId: 'place-empty',
+      ),
+    );
+
+    when(() => cubit.clearSearch()).thenReturn(null);
+
+    await tester.pumpWidget(harness(cubit, autocomplete));
+
+    expect(find.text('Nenhum motorista atende este local ainda.'), findsOneWidget);
+    expect(find.text('Limpar busca'), findsWidgets);
+
+    await tester.tap(find.text('Limpar busca').first);
+    await tester.pump();
+
+    verify(() => cubit.clearSearch()).called(1);
+  });
 }

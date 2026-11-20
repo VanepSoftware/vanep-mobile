@@ -63,7 +63,25 @@ class DriverSearchPageState extends State<DriverSearchPage> {
 
     return Scaffold(
       backgroundColor: context.palette.surface,
-      appBar: AppBar(title: Text(l10n.driverSearchTitle)),
+      appBar: AppBar(
+        title: Text(l10n.findVanTitle),
+        actions: [
+          BlocBuilder<DriverSearchCubit, DriverSearchState>(
+            buildWhen: (prev, curr) =>
+                (prev.placeId != null) != (curr.placeId != null),
+            builder: (context, state) {
+              if (state.placeId == null) return const SizedBox.shrink();
+              return IconButton(
+                tooltip: l10n.findVanClearSearch,
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  context.read<DriverSearchCubit>().clearSearch();
+                },
+              );
+            },
+          ),
+        ],
+      ),
       body: BlocBuilder<DriverSearchCubit, DriverSearchState>(
         builder: (context, state) {
           final cubit = context.read<DriverSearchCubit>();
@@ -95,10 +113,38 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                   driverSearchFailureLabel(l10n, failure),
                   style: context.typography.cardSubtitle,
                 ),
-              if (state.hasNoResults)
+              if (state.hasNoResults) ...[
                 Text(
                   l10n.driverSearchEmpty,
                   style: context.typography.cardSubtitle,
+                ),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      cubit.clearSearch();
+                    },
+                    icon: const Icon(Icons.arrow_back, size: 16),
+                    label: Text(l10n.findVanClearSearch),
+                  ),
+                ),
+              ],
+              if (state.isShowingRecommended && state.results.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    l10n.findVanRecommendationsHeader,
+                    style: context.typography.sectionTitle,
+                  ),
+                )
+              else if (state.placeId != null && state.results.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    l10n.findVanSearchResultsHeader,
+                    style: context.typography.sectionTitle,
+                  ),
                 ),
               for (final driver in state.results)
                 Padding(

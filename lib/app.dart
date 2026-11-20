@@ -276,7 +276,7 @@ Future<void> openDriverSearch(BuildContext context) async {
       context: context,
       settings: const RouteSettings(name: '/search'),
       builder: (_) => BlocProvider<DriverSearchCubit>(
-        create: (_) => getIt<DriverSearchCubit>(),
+        create: (_) => getIt<DriverSearchCubit>()..loadRecommended(),
         child: DriverSearchPage(
           autocomplete: autocomplete,
           onDriverSelected: (driverToken) =>

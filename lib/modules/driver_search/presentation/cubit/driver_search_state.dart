@@ -21,6 +21,8 @@ class DriverSearchState extends Equatable {
     this.placeId,
     this.nextPage = 0,
     this.hasMore = false,
+    this.isShowingRecommended = false,
+    this.recommendedResults = const [],
   });
 
   final DriverSearchStatus status;
@@ -37,6 +39,10 @@ class DriverSearchState extends Equatable {
 
   final bool hasMore;
 
+  final bool isShowingRecommended;
+
+  final List<DriverSearchResult> recommendedResults;
+
   bool get hasNoResults =>
       status == DriverSearchStatus.loaded && results.isEmpty;
 
@@ -51,6 +57,8 @@ class DriverSearchState extends Equatable {
     String? placeId,
     int? nextPage,
     bool? hasMore,
+    bool? isShowingRecommended,
+    List<DriverSearchResult>? recommendedResults,
   }) {
     return DriverSearchState(
       status: status ?? this.status,
@@ -60,6 +68,8 @@ class DriverSearchState extends Equatable {
       placeId: placeId ?? this.placeId,
       nextPage: nextPage ?? this.nextPage,
       hasMore: hasMore ?? this.hasMore,
+      isShowingRecommended: isShowingRecommended ?? this.isShowingRecommended,
+      recommendedResults: recommendedResults ?? this.recommendedResults,
     );
   }
 
@@ -72,5 +82,7 @@ class DriverSearchState extends Equatable {
     placeId,
     nextPage,
     hasMore,
+    isShowingRecommended,
+    recommendedResults,
   ];
 }

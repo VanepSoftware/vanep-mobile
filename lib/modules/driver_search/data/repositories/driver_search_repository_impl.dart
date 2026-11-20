@@ -37,4 +37,15 @@ class DriverSearchRepositoryImpl implements DriverSearchRepository {
       return Err(driverSearchFailureFrom(exception));
     }
   }
+
+  @override
+  Future<Result<DriverSearchFailure, DriverSearchPage>> fetchRecommended({
+    int page = 0,
+  }) async {
+    try {
+      return Ok(await remote.fetchRecommended(page: page));
+    } on DioException catch (exception) {
+      return Err(driverSearchFailureFrom(exception));
+    }
+  }
 }
