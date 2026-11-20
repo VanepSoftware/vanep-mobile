@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -52,14 +53,64 @@ const sampleDrivers = [
   ),
 ];
 
+Future<void> loadAppFonts() async {
+  // MaterialIcons
+  final materialIconsFile = File(
+    '/home/caio-lucas/fvm/versions/3.47.2/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
+  );
+  if (materialIconsFile.existsSync()) {
+    final materialLoader = FontLoader('MaterialIcons');
+    materialLoader.addFont(
+      Future.value(ByteData.view(materialIconsFile.readAsBytesSync().buffer)),
+    );
+    await materialLoader.load();
+  }
+
+  // Roboto
+  final robotoFile = File(
+    '/home/caio-lucas/fvm/versions/3.47.2/bin/cache/artifacts/material_fonts/Roboto-Regular.ttf',
+  );
+  final robotoBoldFile = File(
+    '/home/caio-lucas/fvm/versions/3.47.2/bin/cache/artifacts/material_fonts/Roboto-Bold.ttf',
+  );
+  final robotoMediumFile = File(
+    '/home/caio-lucas/fvm/versions/3.47.2/bin/cache/artifacts/material_fonts/Roboto-Medium.ttf',
+  );
+
+  for (final family in ['Roboto', '.SF Pro Text', '.SF Pro Display', 'sans-serif']) {
+    final loader = FontLoader(family);
+    if (robotoFile.existsSync()) {
+      loader.addFont(
+        Future.value(ByteData.view(robotoFile.readAsBytesSync().buffer)),
+      );
+    }
+    if (robotoBoldFile.existsSync()) {
+      loader.addFont(
+        Future.value(ByteData.view(robotoBoldFile.readAsBytesSync().buffer)),
+      );
+    }
+    if (robotoMediumFile.existsSync()) {
+      loader.addFont(
+        Future.value(ByteData.view(robotoMediumFile.readAsBytesSync().buffer)),
+      );
+    }
+    await loader.load();
+  }
+}
+
 Widget buildScreenshotApp({
   required GlobalKey key,
   required DriverSearchCubit cubit,
   required PlaceAutocompleteController autocomplete,
 }) {
+  final baseTheme = VanepTheme.light();
+  final themeWithFont = baseTheme.copyWith(
+    textTheme: baseTheme.textTheme.apply(fontFamily: 'Roboto'),
+  );
+
   return MaterialApp(
     debugShowCheckedModeBanner: false,
-    theme: VanepTheme.light(),
+    theme: themeWithFont,
     localizationsDelegates: const [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -70,12 +121,15 @@ Widget buildScreenshotApp({
     locale: const Locale('pt'),
     home: RepaintBoundary(
       key: key,
-      child: BlocProvider<DriverSearchCubit>.value(
-        value: cubit,
-        child: DriverSearchPage(
-          autocomplete: autocomplete,
-          onDriverSelected: (_) {},
-          onQuoteRequested: (_) {},
+      child: DefaultTextStyle(
+        style: const TextStyle(fontFamily: 'Roboto', color: Colors.black),
+        child: BlocProvider<DriverSearchCubit>.value(
+          value: cubit,
+          child: DriverSearchPage(
+            autocomplete: autocomplete,
+            onDriverSelected: (_) {},
+            onQuoteRequested: (_) {},
+          ),
         ),
       ),
     ),
@@ -94,6 +148,11 @@ Future<void> capturePng(WidgetTester tester, GlobalKey key, String path) async {
 }
 
 void main() {
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    await loadAppFonts();
+  });
+
   testWidgets('Generate Find Van Screenshots', (tester) async {
     tester.view.physicalSize = const Size(390 * 2.0, 844 * 2.0);
     tester.view.devicePixelRatio = 2.0;
