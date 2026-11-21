@@ -154,9 +154,7 @@ void main() {
     expect(find.text('Sem família no app'), findsOneWidget);
   });
 
-  testWidgets('rows are not tappable until the student details exist', (
-    tester,
-  ) async {
+  testWidgets('rows open the student details', (tester) async {
     await pumpPage(tester, readyState);
 
     expect(
@@ -164,7 +162,7 @@ void main() {
         of: find.text('Ana Oliveira'),
         matching: find.byType(InkWell),
       ),
-      findsNothing,
+      findsOneWidget,
     );
   });
 }

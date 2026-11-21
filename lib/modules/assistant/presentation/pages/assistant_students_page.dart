@@ -15,6 +15,8 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_stud
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_students_labels.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_vans_labels.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/mappers/assistant_failure_l10n.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/boarding_status.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_student_detail_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_students_list.dart';
 
 const assistantStudentsPagePadding = EdgeInsets.fromLTRB(20, 24, 20, 24);
@@ -129,7 +131,19 @@ class AssistantStudentsBody extends StatelessWidget {
                           in state.visibleStudents.indexed) ...[
                         if (index > 0)
                           Divider(height: 1, color: context.palette.divider),
-                        AssistantStudentRow(student: student),
+                        AssistantStudentRow(
+                          student: student,
+                          onTap: () => Navigator.of(context).push(
+                            AssistantStudentDetailPage.route(
+                              student.token,
+                              today: student.isAbsentToday
+                                  ? const AssistantStudentToday(
+                                      status: BoardingStatus.notGoingToday,
+                                    )
+                                  : null,
+                            ),
+                          ),
+                        ),
                       ],
                     ],
                   ),
