@@ -2582,5 +2582,330 @@
   "assistantFilterAll": "All",
   "assistantStudentsEmpty": "No students found.",
   "assistantLinkRevokedTitle": "Access revoked",
-  "assistantLinkRevokedMessage": "The driver removed your link to this van."
+  "assistantLinkRevokedMessage": "The driver removed your link to this van.",
+  "driverHomeUnavailable": "Home data is not available yet.",
+  "driverHomeRefreshFailed": "Could not refresh home.",
+  "driverHomeStopChanged": "The stop changed. Check the details and slide again.",
+  "driverHomeRefreshAfterAction": "Action completed. Refresh to see the current status.",
+  "driverHomeActionFailed": "Could not complete the action. Try again.",
+  "driverHomeApprovalRequired": "Your registration must be approved to start the route.",
+  "driverHomeNoPendingRoute": "There is no route waiting to start.",
+  "driverHomeSubscription": "Update your Vanep subscription.",
+  "driverHomeDocuments": "Update expired documents.",
+  "driverHomeBothBlocked": "Update your Vanep subscription and expired documents.",
+  "driverHomeBlockedTitle": "Update required",
+  "driverHomeIncompleteTitle": "Complete your registration",
+  "driverHomeIncompleteDescription": "Open Documents to complete pending information.",
+  "driverHomeReviewTitle": "Registration under review",
+  "driverHomeReviewDescription": "Please wait for your documents to be reviewed.",
+  "driverHomeRejectedTitle": "Registration rejected",
+  "driverHomeRejectedDescription": "Check Documents for the reason.",
+  "driverHomeInProgress": "On route",
+  "driverHomeBeforeDeparture": "Before departure",
+  "driverHomeCompleted": "Shift completed",
+  "driverHomeBuildingTitle": "Let’s build your route",
+  "driverHomeBuildingDescription": "Your registration is approved. Add students to organize your route.",
+  "driverHomeNoRouteTitle": "No route today",
+  "driverHomeNoRouteDescription": "Manage your business using the shortcuts below.",
+  "driverHomeRegularize": "Update",
+  "driverHomeCompleteRegistration": "Complete registration",
+  "driverHomeResubmit": "Correct and resubmit",
+  "driverHomeChecklist": "Checklist",
+  "driverHomeStartRoute": "Start route",
+  "driverHomeAddStudents": "Add students",
+  "driverHomeStudents": "Students",
+  "driverHomeRoute": "Route and stops",
+  "driverHomeAbsences": "Absences and adjustments",
+  "driverHomeFinancial": "Finances",
+  "driverHomeAssistants": "Assistants",
+  "driverHomeDocumentsShortcut": "Documents",
+  "driverHomeRetry": "Try again",
+  "driverHomeOutsideHours": "You are outside working hours.",
+  "driverHomeRegularization": "Updates",
+  "driverHomeContact": "Stop contact",
+  "driverHomeBoarding": "boarding",
+  "driverHomeDisembarking": "disembarking",
+  "driverHomeMorning": "Morning",
+  "driverHomeAfternoon": "Afternoon",
+  "driverHomeNight": "Night",
+  "driverHomeFulltime": "Full day",
+  "driverHomeNextShift": "Next shift: {shift}",
+  "@driverHomeNextShift": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeCall": "Call: {contact}",
+  "@driverHomeCall": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeFamilyCounter": "{count} of {total} with family in the app",
+  "@driverHomeFamilyCounter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeSlideStudent": "{student}: slide to confirm {action}",
+  "@driverHomeSlideStudent": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSlideHint": "Slide from left to right to confirm {action}",
+  "@driverHomeSlideHint": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomePreviewTitle": "Test preview — simulated data",
+  "driverHomeShortcutsTitle": "Shortcuts",
+  "driverHomeGreetingHello": "Hello, {name}!",
+  "@driverHomeGreetingHello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingHelloPlain": "Hello, {name}",
+  "@driverHomeGreetingHelloPlain": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingMorning": "Good morning, {name}!",
+  "@driverHomeGreetingMorning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingSaturday": "Happy Saturday, {name}!",
+  "@driverHomeGreetingSaturday": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingMorningCompleted": "Morning completed",
+  "driverHomeSubtitleIncomplete": "Almost ready to receive students through Vanep.",
+  "driverHomeSubtitleUnderReview": "Your registration has been submitted.",
+  "driverHomeSubtitleRejected": "Your registration needs attention.",
+  "driverHomeSubtitleBuildingRoute": "Registration approved. Welcome to Vanep.",
+  "driverHomeSubtitleBeforeDeparture": "Wednesday, October 14",
+  "driverHomeSubtitleInProgress": "Outbound · since 6:21 AM",
+  "driverHomeSubtitleShiftCompleted": "Wednesday, October 14 · good job, {name}",
+  "@driverHomeSubtitleShiftCompleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSubtitleNoRouteToday": "Saturday, October 17",
+  "driverHomeSubtitleBlocked": "Thursday, November 12 · 2 items to resolve",
+  "driverHomeIncompleteOverline": "Registration · 3 of 6",
+  "driverHomeIncompleteHeadline": "Complete your registration to appear in search",
+  "driverHomeIncompleteStep1": "Personal details",
+  "driverHomeIncompleteStep2": "Professional profile",
+  "driverHomeIncompleteStep3": "Van · Sprinter 2021",
+  "driverHomeIncompleteStep4Title": "Driver's license (CNH)",
+  "driverHomeIncompleteStep4Hint": "License photo and expiration date",
+  "driverHomeIncompleteStepNow": "Now",
+  "driverHomeIncompleteStep5Title": "Documents",
+  "driverHomeIncompleteStep5Hint": "CRLV, inspection and permit · 1 of 3",
+  "driverHomeIncompleteStep6Title": "Service areas",
+  "driverHomeIncompleteStep6Hint": "Neighborhoods and schools you serve",
+  "driverHomeIncompleteSendCnh": "Upload CNH",
+  "driverHomeIncompleteFooter": "After submission, review takes up to 2 business days.",
+  "driverHomeUnderReviewOverline": "Under review",
+  "driverHomeUnderReviewHeadline": "Vanep is reviewing your documents",
+  "driverHomeUnderReviewSubtitle": "Response within 2 business days, here and by email.",
+  "driverHomeTimelineSent": "Submitted",
+  "driverHomeTimelineSentTime": "10/12 · 6:40 PM",
+  "driverHomeTimelineInReview": "Under review",
+  "driverHomeTimelineApproved": "Approved",
+  "driverHomeTimelineApprovedHint": "Unlocks starting routes and receiving proposals",
+  "driverHomeSeeSentDocuments": "See submitted documents",
+  "driverHomeMeanwhileAdvanceRoute": "Meanwhile, set up your route",
+  "driverHomeAdvanceStudentsTitle": "Add your current students",
+  "driverHomeAdvanceStudentsHint": "They join your route on day one",
+  "driverHomeAdvanceAssistantTitle": "Invite your assistant",
+  "driverHomeAdvanceAssistantHint": "They handle check-offs with you",
+  "driverHomeAdvancePriceTitle": "\"Starting at\" price",
+  "driverHomeAdvancePriceHint": "R$ 320/month · shown in search",
+  "driverHomeDoneBadge": "Done",
+  "driverHomeBuildingOverline": "Build your route",
+  "driverHomeBuildingHeadline": "Bring the students you already drive",
+  "driverHomeBuildingStep1Title": "Register current students",
+  "driverHomeBuildingStep1Hint": "Name, school and address",
+  "driverHomeBuildingStep2Title": "Invite families",
+  "driverHomeBuildingStep2Hint": "Via WhatsApp, so they get alerts",
+  "driverHomeBuildingStep3Title": "Invite your assistant",
+  "driverHomeBuildingStep3Hint": "They handle check-offs while you drive.",
+  "driverHomeShareParentGroupLink": "Send link in parents group",
+  "driverHomeAcceptingNewStudents": "Accepting new students",
+  "driverHomeAcceptingNewStudentsHint": "In Taguatinga and Águas Claras search",
+  "driverHomeRequestsTitle": "Requests",
+  "driverHomeRequestsEmptyTitle": "No quote requests yet",
+  "driverHomeRequestsEmptySubtitle": "When a request arrives, you will get an alert.",
+  "driverHomeBeforeDepartureOverline": "Morning route · outbound",
+  "driverHomeBeforeDepartureHeading": "Departure 6:20 AM",
+  "driverHomeStatStudentsToday": "students today",
+  "driverHomeStatStops": "stops",
+  "driverHomeStatAbsences": "absences",
+  "driverHomeCrewInitials": "MR",
+  "driverHomeCrewName": "Marcos on the van",
+  "driverHomeCrewRole": "Assistant · handles check-offs",
+  "driverHomeCrewOnline": "Online",
+  "driverHomeLocationTitle": "Share location",
+  "driverHomeLocationSubtitle": "Parents see the van only during the route",
+  "driverHomeSlideToStartRoute": "Slide to start route",
+  "driverHomeBeforeDepartureSection": "Before departure",
+  "driverHomeStopRequestTitle": "Pedro requested another stop",
+  "driverHomeStopRequestSubtitle": "Return trip: grandma's house · +4 min",
+  "driverHomeDecline": "Decline",
+  "driverHomeApprove": "Approve",
+  "driverHomeAbsencesTodayTitle": "Ana and Lucas are not going today",
+  "driverHomeAbsencesTodaySubtitle": "Already removed from today's route",
+  "driverHomeContractToSignTitle": "Contract to sign",
+  "driverHomeContractToSignSubtitle": "Maria Oliveira already signed",
+  "driverHomeContractHoursLeft": "20h left",
+  "driverHomeInviteAction": "Invite",
+  "driverHomeMissingFamiliesHint": "{count, plural, =1{1 family still without boarding alerts} other{{count} families still without boarding alerts}}",
+  "@driverHomeMissingFamiliesHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeAllFamiliesInAppHint": "All families already receive alerts in the app",
+  "driverHomeLaterAfternoonRouteTitle": "Later: afternoon route",
+  "driverHomeLaterAfternoonRouteSubtitle": "Departure 11:50 AM · 12 students · 9 stops",
+  "driverHomeInProgressOverline": "Home boarding",
+  "driverHomeParentsSeeVan": "Parents see the van",
+  "driverHomeOnBoardCount": "of {total} on board",
+  "@driverHomeOnBoardCount": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeNextStopLabel": "Next stop · 5 of 10",
+  "driverHomeNextStopEta": "600 m · 2 min",
+  "driverHomeNextStopDefaultAddress": "QNL 5, Conjunto J, house 12",
+  "driverHomeNextStopDefaultStudents": "Beatriz and Gabriel",
+  "driverHomeSlideConfirmCount": "Slide to confirm ({count})",
+  "@driverHomeSlideConfirmCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeExceptionAction": "Exception",
+  "driverHomeWazeAction": "Waze",
+  "driverHomeDrivingNotice": "While the van is moving, leave check-offs to Marcos.",
+  "driverHomeRecentCheckoffsTitle": "Recent check-offs",
+  "driverHomeFullListAction": "Full list",
+  "driverHomeCheckoff1Title": "Pedro boarded",
+  "driverHomeCheckoff1Subtitle": "06:47 · by Marcos",
+  "driverHomeCheckoff2Title": "Helena and Davi boarded",
+  "driverHomeCheckoff2Subtitle": "06:41 · by Marcos",
+  "driverHomeCheckoffNotified": "Notified",
+  "driverHomeCheckoff3Title": "Laura was not at the stop",
+  "driverHomeCheckoff3Subtitle": "06:33 · waited 5 min",
+  "driverHomeCheckoffFix": "Fix",
+  "driverHomeEndRouteAction": "End route",
+  "driverHomeEndRouteHint": "If any student is unchecked, the app warns before ending.",
+  "driverHomeCompletedOverline": "Ended at 7:24 AM",
+  "driverHomeCompletedHeadline": "13 students dropped off",
+  "driverHomeCompletedKpiUnchecked": "unchecked",
+  "driverHomeCompletedKpiAbsent": "absent",
+  "driverHomeCompletedKpiDurationValue": "1h03",
+  "driverHomeCompletedKpiDurationLabel": "route time",
+  "driverHomeSeeTripReport": "See trip report",
+  "driverHomeNextShiftOverline": "Next",
+  "driverHomeNextShiftAfternoonTitle": "Afternoon route · 11:50 AM",
+  "driverHomeNextShiftAfternoonSubtitle": "12 students · 9 stops",
+  "driverHomeListAction": "List",
+  "driverHomeUseBreakSection": "Use your break",
+  "driverHomeQuoteRequestsTitle": "2 quote requests",
+  "driverHomeQuoteRequestsSubtitle": "Andrade and Costa families",
+  "driverHomeQuoteRequestsWait": "Expires in 2 days",
+  "driverHomeRenewalTitle": "2027 renewal",
+  "driverHomeRenewalSubtitle": "9 contracts end in December",
+  "driverHomeNoRouteNextTitle": "Next route: Monday, 6:20 AM",
+  "driverHomeNoRouteNextSubtitle": "Morning 16 students · afternoon 12 students",
+  "driverHomeYourBusinessSection": "Your business",
+  "driverHomeSprinterSeatsTitle": "Sprinter seats",
+  "driverHomeSprinterSeatsTotal": "16 seats",
+  "driverHomeMorningFull": "full",
+  "driverHomeAfternoonVacancies": "4 seats left",
+  "driverHomeOfTotal": "of {total}",
+  "@driverHomeOfTotal": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeActiveContractsLabel": "Active contracts",
+  "driverHomeActiveContractsRevenue": "R$ 8,400/mo contracted",
+  "driverHomeStudentsWithFamilyLabel": "Students with family in the app",
+  "driverHomeInviteCount": "Invite {count}",
+  "@driverHomeInviteCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeSubscriptionSection": "Vanep subscription · October",
+  "driverHomeSubscriptionDue": "Due 11/10",
+  "driverHomeMonthlyPlan": "Monthly plan",
+  "driverHomeMonthlyPlanPrice": "R$ 49.90",
+  "driverHomeMonthlyPlanHint": "Commissions are included in each contract's price.",
+  "driverHomePayWithPix": "Pay with PIX",
+  "driverHomeInspectionWarningTitle": "Semiannual inspection expires in 12 days",
+  "driverHomeInspectionWarningSubtitle": "Without it, new requests are paused",
+  "driverHomeBlockedOverline": "Subscription overdue",
+  "driverHomeBlockedHeadline": "New proposals are paused",
+  "driverHomeBlockedSubtitle": "Your October invoice expired on 11/10. Your routes continue as normal.",
+  "driverHomePayAmountWithPix": "Pay R$ 49.90 with PIX",
+  "driverHomeSeeInvoice": "See invoice",
+  "driverHomeExpiredCrlvTitle": "CRLV expired on 11/08",
+  "driverHomeExpiredCrlvSubtitle": "New requests are paused until you upload the document.",
+  "driverHomeSendNewCrlv": "Upload new CRLV",
+  "driverHomeMeanwhileSection": "Meanwhile",
+  "driverHomeMeanwhileRoutes": "Routes, checklist and parent alerts",
+  "driverHomeMeanwhileContracts": "Active contracts and signed renewals",
+  "driverHomeMeanwhileProposals": "Reply to requests and send proposals",
+  "driverHomeMeanwhileSearch": "Appear in search",
+  "driverHomeAfternoonRouteStudents": "12 students",
+  "driverHomeReleasedBadge": "Cleared"
 }
