@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:vanep_mobile/modules/assistant/presentation/guards/assistant_route_guard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,7 +52,12 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.da
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_source_sheet.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_submission_flow_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_action.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/entities/requirement_status.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_file_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_detail_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_image_page.dart';
@@ -801,7 +808,13 @@ Future<void> openDriverDocumentDetail(
           builder: (pageContext) => DocumentDetailPage(
             type: type,
             vehicleToken: vehicleToken,
-            onAction: (_) => openDocumentSubmission(pageContext, type),
+            onAction: (action, requirement) => openDocumentSubmission(
+              pageContext,
+              type: type,
+              action: action,
+              requirement: requirement,
+              vehicleToken: vehicleToken,
+            ),
             onOpenImage: (imageUrl) =>
                 openDocumentImage(pageContext, type, imageUrl),
           ),
@@ -811,14 +824,73 @@ Future<void> openDriverDocumentDetail(
   );
 }
 
-// TODO(VAN-86): the submission flow arrives in phase 9 of driver-documents;
-// until then the detail action opens the coming soon page. Replace it then.
-Future<void> openDocumentSubmission(BuildContext context, DocumentType type) {
+Future<void> openDocumentSubmission(
+  BuildContext context, {
+  required DocumentType type,
+  required DocumentAction action,
+  required RequirementStatus requirement,
+  String? vehicleToken,
+}) async {
+  final compliance = context.read<DriverComplianceCubit>();
   final l10n = AppLocalizations.of(context)!;
-  return openComingSoonPage(
-    context,
-    title: documentTypeLabel(l10n, type),
-    message: l10n.comingSoon,
+  final vehicle = vehicleToken == null || compliance.state.compliance == null
+      ? null
+      : findVehicle(compliance.state.compliance!, vehicleToken);
+  final cubit = getIt<DocumentSubmissionCubit>(
+    param1: type,
+    param2: vehicleToken,
+  );
+  final incomplete = action == DocumentAction.finish
+      ? incompleteSubmissionOf(requirement)
+      : null;
+  if (incomplete != null) unawaited(cubit.resume(incomplete.token));
+  final picked = await showDocumentSourceSheet(context, cubit);
+  if (!picked || !context.mounted) {
+    await cubit.close();
+    return;
+  }
+  await Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/submission'),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<DriverComplianceCubit>.value(value: compliance),
+          BlocProvider<DocumentSubmissionCubit>.value(value: cubit),
+        ],
+        child: Builder(
+          builder: (pageContext) => DocumentSubmissionFlowPage(
+            vehicleCaption: vehicle == null
+                ? null
+                : l10n.vanStudentsCaption(vehicle.model, vehicle.plate),
+            dataFormBuilder: documentDataFormPlaceholder,
+            onBackToDocuments: () => Navigator.of(pageContext).popUntil(
+              (route) =>
+                  !driverDocumentFlowRoutes.contains(route.settings.name),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  await cubit.close();
+}
+
+const driverDocumentFlowRoutes = {
+  '/driver/documents/detail',
+  '/driver/documents/submission',
+};
+
+// TODO(VAN-86): the data form (M5) arrives in phase 10 of driver-documents;
+// until then the flow shows the coming soon content here. Replace it then.
+Widget documentDataFormPlaceholder(BuildContext context) {
+  final l10n = AppLocalizations.of(context)!;
+  return Scaffold(
+    appBar: AppBar(),
+    body: VanepComingSoon(
+      title: l10n.documentScanContinue,
+      message: l10n.comingSoon,
+    ),
   );
 }
 

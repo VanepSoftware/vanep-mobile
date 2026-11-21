@@ -72,19 +72,19 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 
 ## 9. Fase 9 — Fluxo de envio (`VAN-86/9-document-submission-flow`)
 
-- [ ] 9.1 Testes primeiro (`bloc_test`) para o `DocumentSubmissionCubit`:
+- [x] 9.1 Testes primeiro (`bloc_test`) para o `DocumentSubmissionCubit`:
   - escolha do arquivo e cancelamento;
   - envio com progresso;
-  - sucesso com `refresh` do `DriverComplianceCubit`;
   - falha no arquivo guardando o token;
   - "Tentar de novo" só com o arquivo;
   - "Revisar dados" virando `existing(token)`;
   - cada `DocumentSubmissionFailure`.
-  Depois implementar
-- [ ] 9.2 Testes de widget primeiro para a M3 (três opções, selo, dica, aviso de tamanho e de permissão) e para a M4 (destaque, miniaturas, "1 de 2", "Escanear de novo", "Continuar"). Depois implementar
-- [ ] 9.3 Testes de widget primeiro para a M6 (enviando com MB e porcentagem, enviado com "Ainda falta", falha com as duas ações). Depois implementar; textos no ARB
-- [ ] 9.4 Rodar `make lint` e `make test`
-- [ ] 9.5 Abrir o PR
+  Depois implementar. O `refresh` do `DriverComplianceCubit` depois do sucesso fica na página do fluxo, para o cubit do envio não depender de outro cubit
+- [x] 9.2 Testes de widget primeiro para a M3 (três opções, selo, dica, aviso de tamanho e de permissão) e para a M4 (destaque, miniaturas, "1 de 2", "Escanear de novo", "Continuar"). Depois implementar
+- [x] 9.3 Testes de widget primeiro para a M6 (enviando com MB e porcentagem, enviado com "Ainda falta", falha com as duas ações). Depois implementar; textos no ARB
+- [x] 9.4 Página do fluxo: recarrega a situação ao enviar, sai do fluxo quando há envio pendente ou já revisado, e "Voltar para os documentos" volta à lista. A rota `openDocumentSubmission` abre a M3 a partir da ação do detalhe e, em "Terminar envio", carrega o envio incompleto. Até a fase 10, a etapa de dados mostra "Em breve" (`TODO(VAN-86)`)
+- [x] 9.5 Rodar `make lint` e `make test`
+- [x] 9.6 Abrir o PR
 
 ## 10. Fase 10 — Dados do documento e CNH (`VAN-86/10-document-forms`)
 
