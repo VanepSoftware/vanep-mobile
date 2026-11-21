@@ -33,7 +33,8 @@ class DocumentDetailPage extends StatelessWidget {
 
   final DocumentType type;
   final String? vehicleToken;
-  final ValueChanged<DocumentAction> onAction;
+  final void Function(DocumentAction action, RequirementStatus requirement)
+  onAction;
   final ValueChanged<String>? onOpenImage;
 
   @override
@@ -88,11 +89,11 @@ class DocumentDetailPage extends StatelessWidget {
                       },
                     ),
             ),
-            bottomNavigationBar: action == null
+            bottomNavigationBar: action == null || requirement == null
                 ? null
                 : DocumentActionBar(
                     action: action,
-                    onPressed: () => onAction(action),
+                    onPressed: () => onAction(action, requirement),
                   ),
           );
         },

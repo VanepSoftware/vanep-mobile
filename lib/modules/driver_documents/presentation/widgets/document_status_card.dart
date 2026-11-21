@@ -9,12 +9,14 @@ import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/do
 class DocumentStatusCard extends StatelessWidget {
   const DocumentStatusCard({
     required this.entry,
-    required this.onTap,
+    this.onTap,
+    this.caption,
     super.key,
   });
 
   final DocumentEntry entry;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final String? caption;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,13 @@ class DocumentStatusCard extends StatelessWidget {
                   documentTypeLabel(l10n, entry.requirement.type),
                   style: context.typography.cardTitle,
                 ),
+                if (caption != null)
+                  Text(
+                    caption!,
+                    style: context.typography.cardSubtitle.copyWith(
+                      color: palette.textSecondary,
+                    ),
+                  ),
                 const SizedBox(height: 3),
                 DocumentStatusLine(style: style),
                 if (detail != null) ...[
@@ -62,7 +71,8 @@ class DocumentStatusCard extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: palette.textMuted),
+          if (onTap != null)
+            Icon(Icons.chevron_right, color: palette.textMuted),
         ],
       ),
     );

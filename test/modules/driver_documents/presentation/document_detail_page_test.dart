@@ -48,7 +48,7 @@ void main() {
           child: DocumentDetailPage(
             type: type,
             vehicleToken: vehicleToken,
-            onAction: actions.add,
+            onAction: (action, _) => actions.add(action),
           ),
         ),
       ),
