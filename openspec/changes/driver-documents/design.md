@@ -79,7 +79,7 @@ As escritas continuam nas rotas de cada recurso.
   - Alternativas descartadas: `google_mlkit_document_scanner` (só Android, em beta), `flutter_doc_scanner` (0.0.x, sem importar da galeria) e uma câmera feita à mão.
 - **Galeria:** reaproveita o `ImagePickerPhotoPicker` (R06). Os 1600 px com qualidade 85 transformam HEIC em JPEG, e o back recusa HEIC.
 - **PDF:** `file_picker`, na versão mais recente compatível com o SDK, com `FileType.custom` e `['pdf']`.
-- **Tamanho:** uma única regra, `isWithinDocumentUploadLimit(sizeBytes)`, com o limite de 10 MB (1024 × 1024 bytes por MB), o mesmo da regra de negócio do back e do texto da tela. Hoje o back limita também a requisição inteira em 10 MB, e o cabeçalho do multipart faz um arquivo perto do limite voltar 413. O ajuste foi pedido ao back (D2). Até ele sair, esse 413 cai na mesma mensagem de tamanho (D9).
+- **Tamanho:** uma única regra, `isWithinDocumentUploadLimit(sizeBytes)`, com o limite de 10 MB (1024 × 1024 bytes por MB), o mesmo da regra de negócio do back e do texto da tela. O back separou o limite de transporte (`MEDIA_MAX_UPLOAD_SIZE_MB`, padrão 11) da regra de 10 MB: um PDF de 9,9 MB passa, e acima de 10 MB volta 413 com `code` `media.file.too_large`, que cai na mesma mensagem de tamanho (D9).
 - **Configuração nativa:**
   - iOS: textos de câmera e fotos citando documentos, e `CFBundleLocalizations` com pt-BR, para o VisionKit seguir o idioma do app.
   - Android: `minSdk` 24, que já é o padrão do Flutter. A permissão `CAMERA` só entra se o teste em aparelho mostrar que precisa: a documentação do plugin se contradiz.
@@ -255,4 +255,4 @@ Nenhuma. O back fechou o contrato em 2026-11-20 (branches `VAN-86/*` do `vanep-a
 - `file {mimeType, sizeBytes, originalName}` nos três recursos;
 - códigos de data `document.expires_at.past`, `document.expires_at.too_far` e `driver_cnh.issue_date.future`, com `field` (`expiresAt`, `validUntil`, `issueDate`); a validação do Bean Validation traz só o `field`;
 - `ratingCount` e `experienceYears` no `/api/drivers/me`.
-O limite de upload separado (`MEDIA_MAX_UPLOAD_SIZE_MB`) ainda não entrou no back; até lá, o 413 perto de 10 MB vira a mensagem de tamanho (D3).
+O limite de upload separado (`MEDIA_MAX_UPLOAD_SIZE_MB`, padrão 11) entrou na fase 11 da VAN-86 do back (D3).
