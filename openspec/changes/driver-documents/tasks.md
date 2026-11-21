@@ -44,13 +44,14 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 
 ## 6. Fase 6 — Dados (`VAN-86/6-documents-data`)
 
-- [ ] 6.1 Conferir o contrato final na sessão do back dona da VAN-86 (nomes de `expiringSoon` e dos `code` de data) e atualizar a Open Question do `design.md`
-- [ ] 6.2 Testes primeiro para os DTOs com o JSON real do `/api/drivers/me/compliance` (requisito com `current` e `pending`, `file` nulo, CNH com categoria) e para os corpos de criação e edição dos três recursos. Depois criar os DTOs e rodar o `build_runner`
-- [ ] 6.3 Adicionar ao `Environment` os endpoints de compliance, documentos do motorista, documentos da van, CNH e `/file`. Testes primeiro para os datasources (caminho, método, multipart, progresso)
-- [ ] 6.4 Testes primeiro para os repositórios: a rota certa para cada `DocumentDraft`; cada linha da tabela de erros da spec → `DocumentSubmissionFailure`; os `code` de data → erro de campo. Depois implementar
-- [ ] 6.5 Se o compliance ainda não estiver no back: criar `FakeDriverComplianceDataSource` com `TODO(VAN-86)` apontando para o pedido D2 e para o registro no container que sai junto
-- [ ] 6.6 Criar `driver_documents_container.dart` e registrá-lo no `main.dart`; verificar o `GET` do compliance e um envio completo contra o back local
-- [ ] 6.7 Rodar `make lint` e `make test`
+- [x] 6.1 Conferir o contrato final na sessão do back dona da VAN-86 (nomes de `expiringSoon` e dos `code` de data) e atualizar a Open Question do `design.md`
+- [x] 6.2 Testes primeiro para os DTOs com o JSON real do `/api/drivers/me/compliance` (requisito com `current` e `pending`, `file` nulo, CNH com categoria) e para os corpos de criação e edição dos três recursos. Depois criar os DTOs e rodar o `build_runner`
+- [x] 6.3 Adicionar ao `Environment` os endpoints de compliance, documentos do motorista, documentos da van, CNH e `/file`. Testes primeiro para os datasources (caminho, método, multipart, progresso)
+- [x] 6.4 Testes primeiro para os repositórios: a rota certa para cada `DocumentDraft`; cada linha da tabela de erros da spec → `DocumentSubmissionFailure`; os `code` de data → erro de campo. Depois implementar
+- [x] 6.5 Se o compliance ainda não estiver no back: criar `FakeDriverComplianceDataSource` com `TODO(VAN-86)` apontando para o pedido D2 e para o registro no container que sai junto. Não foi preciso: o back já tem o compliance (branch `VAN-86/11-driver-own-compliance`)
+- [x] 6.6 Criar `driver_documents_container.dart` e registrá-lo no `main.dart`
+- [ ] 6.6a Verificar o `GET` do compliance e um envio completo contra o back local, com o login de um motorista (o back local responde 401 sem token; falta o teste manual)
+- [x] 6.7 Rodar `make lint` e `make test`
 - [ ] 6.8 Abrir o PR
 
 ## 7. Fase 7 — Listas (`VAN-86/7-documents-lists`)
