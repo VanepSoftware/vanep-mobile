@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/media/document_capture.dart';
 import 'package:vanep_mobile/core/media/document_file_store.dart';
 import 'package:vanep_mobile/core/media/file_opener.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
@@ -16,7 +17,9 @@ import 'package:vanep_mobile/modules/driver_documents/domain/usecases/find_submi
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/load_my_compliance.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/submit_document.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/upload_document_file.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_file_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
 
 void registerDriverDocumentsDependencies(GetIt getIt) {
@@ -54,6 +57,16 @@ void registerDriverDocumentsDependencies(GetIt getIt) {
     )
     ..registerFactory<DriverComplianceCubit>(
       () => DriverComplianceCubit(loadMyCompliance: getIt<LoadMyCompliance>()),
+    )
+    ..registerFactoryParam<DocumentSubmissionCubit, DocumentType, String?>(
+      (type, vehicleToken) => DocumentSubmissionCubit(
+        type: type,
+        vehicleToken: vehicleToken,
+        documentCapture: getIt<DocumentCapture>(),
+        submitDocument: getIt<SubmitDocument>(),
+        uploadDocumentFile: getIt<UploadDocumentFile>(),
+        findSubmissionForResume: getIt<FindSubmissionForResume>(),
+      ),
     )
     ..registerFactory<DocumentFileCubit>(
       () => DocumentFileCubit(
