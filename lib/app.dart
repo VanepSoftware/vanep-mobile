@@ -51,6 +51,11 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.da
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_groups.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/document_labels.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/vehicle_documents_page.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
@@ -189,6 +194,8 @@ class AuthGate extends StatelessWidget {
                 openMyVans: openDriverVans,
                 openVanRegistration: openDriverVanRegistration,
                 openVanStudents: openDriverVanStudents,
+                openVanDocuments: (context, van) =>
+                    openDriverVanDocuments(context, van: van),
                 openConversationChat: (context, conversation) =>
                     openInboxConversation(
                       context,
@@ -722,6 +729,64 @@ Future<void> openDriverVans(BuildContext context) {
         child: const DriverVansPage(),
       ),
     ),
+  );
+}
+
+Widget provideDriverCompliance(
+  DriverComplianceCubit? compliance,
+  Widget child,
+) {
+  if (compliance != null) {
+    return BlocProvider<DriverComplianceCubit>.value(
+      value: compliance,
+      child: child,
+    );
+  }
+  return BlocProvider<DriverComplianceCubit>(
+    create: (_) => getIt<DriverComplianceCubit>()..load(),
+    child: child,
+  );
+}
+
+Future<void> openDriverVanDocuments(
+  BuildContext context, {
+  DriverVan? van,
+  DriverComplianceCubit? compliance,
+}) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/vans'),
+      builder: (_) => provideDriverCompliance(
+        compliance,
+        Builder(
+          builder: (pageContext) => VehicleDocumentsPage(
+            onlyVehicleToken: van?.token,
+            onOpenDocument: (entry, _) =>
+                openDriverDocumentDetail(pageContext, entry),
+            onRegisterVan: () async {
+              await openDriverVanRegistration(pageContext);
+              if (!pageContext.mounted) return;
+              await pageContext.read<DriverComplianceCubit>().refresh();
+            },
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+// TODO(VAN-86): the document detail arrives in phase 8 of driver-documents;
+// until then a card opens the coming soon page. Replace this function then.
+Future<void> openDriverDocumentDetail(
+  BuildContext context,
+  DocumentEntry entry,
+) {
+  final l10n = AppLocalizations.of(context)!;
+  return openComingSoonPage(
+    context,
+    title: documentTypeLabel(l10n, entry.requirement.type),
+    message: l10n.comingSoon,
   );
 }
 

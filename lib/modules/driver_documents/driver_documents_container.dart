@@ -13,6 +13,7 @@ import 'package:vanep_mobile/modules/driver_documents/domain/repositories/driver
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/download_document_file.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/load_my_compliance.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/submit_document.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
 
 void registerDriverDocumentsDependencies(GetIt getIt) {
   getIt
@@ -40,5 +41,8 @@ void registerDriverDocumentsDependencies(GetIt getIt) {
     )
     ..registerFactory<DownloadDocumentFile>(
       () => DownloadDocumentFile(getIt<DocumentSubmissionRepository>()),
+    )
+    ..registerFactory<DriverComplianceCubit>(
+      () => DriverComplianceCubit(loadMyCompliance: getIt<LoadMyCompliance>()),
     );
 }
