@@ -9,13 +9,13 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 
 ## 2. Fase 2 — Captura e envio de arquivo (`VAN-86/2-document-capture-impl`)
 
-- [ ] 2.1 Adicionar `cunning_document_scanner` ^3.1.0, `file_picker` (a mais recente compatível), `open_filex` ^5 e `path_provider`. Verificar que `flutter build ios --no-codesign` não recria um Podfile (SPM)
-- [ ] 2.2 Atualizar no `Info.plist` os textos de câmera e fotos citando documentos e adicionar `CFBundleLocalizations` com pt-BR. Verificar no simulador que o scanner abre em português
-- [ ] 2.3 Testes primeiro para o adaptador do scanner: cancelar → `Ok(null)`; resultado → `PickedDocument` com o PDF, `pageCount` e prévias copiadas para a pasta do app; `permission_denied` → `permissionDenied`. Depois implementar
-- [ ] 2.4 Testes primeiro para os adaptadores da galeria (reaproveitando o `ImagePickerPhotoPicker`) e do PDF (`FileType.custom`, `['pdf']`), incluindo o arquivo grande → `tooLarge`. Depois implementar e registrar `DocumentCapture` no `media_container.dart`
-- [ ] 2.5 Testes primeiro para o `FileUploader` (multipart `file`, repassa `onSendProgress`). Depois trocar o `PhotoUploader` por ele e ajustar os chamadores de foto; os testes de foto que já existem continuam verdes
+- [x] 2.1 Adicionar `cunning_document_scanner` ^3.1.0, `file_picker` (a mais recente compatível), `open_filex` ^5 e `path_provider`. Verificar que `flutter build ios --no-codesign` não recria um Podfile (SPM)
+- [x] 2.2 Atualizar no `Info.plist` os textos de câmera e fotos citando documentos e adicionar `CFBundleLocalizations` com pt-BR. Verificar no simulador que o scanner abre em português
+- [x] 2.3 Testes primeiro para o adaptador do scanner: cancelar → `Ok(null)`; resultado → `PickedDocument` com o PDF, `pageCount` e prévias copiadas para a pasta do app; `permission_denied` → `permissionDenied`. Depois implementar
+- [x] 2.4 Testes primeiro para os adaptadores da galeria (reaproveitando o `ImagePickerPhotoPicker`) e do PDF (`FileType.custom`, `['pdf']`), incluindo o arquivo grande → `tooLarge`. Depois implementar e registrar `DocumentCapture` no `media_container.dart`
+- [x] 2.5 Testes primeiro para o `FileUploader` (multipart `file`, repassa `onSendProgress`). Depois trocar o `PhotoUploader` por ele e ajustar os chamadores de foto; os testes de foto que já existem continuam verdes
 - [ ] 2.6 No aparelho: medir o PDF do scanner com 2, 4 e 10 páginas no iPhone e no Android, e fixar o `noOfPages`; confirmar se o Android precisa de `CAMERA` no manifest; testar num emulador sem Play Services. Registrar os números no PR
-- [ ] 2.7 Rodar `make lint` e `make test`
+- [x] 2.7 Rodar `make lint` e `make test`
 - [ ] 2.8 Abrir o PR
 
 ## 3. Fase 3 — Domínio dos documentos (`VAN-86/3-documents-domain`)

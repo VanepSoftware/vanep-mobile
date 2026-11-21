@@ -4,8 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/media/photo_failure.dart';
-import 'package:vanep_mobile/core/media/picked_photo.dart';
-import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/core/network/file_uploader.dart';
 
 class MockDio extends Mock implements Dio {}
 
@@ -17,17 +16,30 @@ DioException statusError(int? status) => DioException(
 );
 
 void main() {
-  test('posts the photo as the "file" part of a multipart form', () async {
-    final dio = MockDio();
-    final directory = await Directory.systemTemp.createTemp('vanep');
-    final file = File('${directory.path}/van.jpg')..writeAsBytesSync([1, 2]);
-    when(
-      () => dio.post<void>(any(), data: any(named: 'data')),
-    ).thenAnswer((_) async => Response(requestOptions: RequestOptions()));
+  late MockDio dio;
+  late Directory directory;
+  late File file;
 
-    await PhotoUploader(dio: dio).upload(
+  setUp(() async {
+    dio = MockDio();
+    directory = await Directory.systemTemp.createTemp('vanep');
+    file = File('${directory.path}/van.jpg')..writeAsBytesSync([1, 2]);
+    when(
+      () => dio.post<void>(
+        any(),
+        data: any(named: 'data'),
+        onSendProgress: any(named: 'onSendProgress'),
+      ),
+    ).thenAnswer((_) async => Response(requestOptions: RequestOptions()));
+  });
+
+  tearDown(() => directory.delete(recursive: true));
+
+  test('posts the file as the "file" part of a multipart form', () async {
+    await FileUploader(dio: dio).upload(
       '/api/vehicles/van-1/photo-front',
-      PickedPhoto(path: file.path, fileName: 'van.jpg'),
+      path: file.path,
+      fileName: 'van.jpg',
     );
 
     final form =
@@ -40,7 +52,25 @@ void main() {
             as FormData;
     expect(form.files.single.key, 'file');
     expect(form.files.single.value.filename, 'van.jpg');
-    await directory.delete(recursive: true);
+  });
+
+  test('reports the upload progress to the caller', () async {
+    void onProgress(int sent, int total) {}
+
+    await FileUploader(dio: dio).upload(
+      '/api/driver-documents/doc-1/file',
+      path: file.path,
+      fileName: 'scan.pdf',
+      onSendProgress: onProgress,
+    );
+
+    verify(
+      () => dio.post<void>(
+        '/api/driver-documents/doc-1/file',
+        data: any(named: 'data'),
+        onSendProgress: onProgress,
+      ),
+    ).called(1);
   });
 
   test('maps the server answer to a photo failure', () {

@@ -1,21 +1,22 @@
 import 'package:dio/dio.dart';
 
 import 'package:vanep_mobile/core/media/photo_failure.dart';
-import 'package:vanep_mobile/core/media/picked_photo.dart';
 
-class PhotoUploader {
-  const PhotoUploader({required this.dio});
+class FileUploader {
+  const FileUploader({required this.dio});
 
   final Dio dio;
 
-  Future<void> upload(String endpoint, PickedPhoto photo) async {
+  Future<void> upload(
+    String endpoint, {
+    required String path,
+    required String fileName,
+    ProgressCallback? onSendProgress,
+  }) async {
     final form = FormData.fromMap({
-      'file': await MultipartFile.fromFile(
-        photo.path,
-        filename: photo.fileName,
-      ),
+      'file': await MultipartFile.fromFile(path, filename: fileName),
     });
-    await dio.post<void>(endpoint, data: form);
+    await dio.post<void>(endpoint, data: form, onSendProgress: onSendProgress);
   }
 }
 
