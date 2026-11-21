@@ -9,6 +9,7 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/signup_steps.dart';
 
 enum SignupStatus {
   editing,
+  checking,
   submitting,
   completed,
   signedIn,
@@ -43,6 +44,8 @@ class SignupState extends Equatable {
   final AccountFailure? failure;
 
   bool get isSubmitting => status == SignupStatus.submitting;
+
+  bool get isBusy => isSubmitting || status == SignupStatus.checking;
 
   bool get isCompleted => status == SignupStatus.completed;
 

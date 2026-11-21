@@ -27,6 +27,14 @@ void main() {
     expect(
       accountFieldIssueMessage(
         l10n,
+        AccountField.phone,
+        AccountFieldIssue.duplicate,
+      ),
+      'Já existe uma conta com este telefone.',
+    );
+    expect(
+      accountFieldIssueMessage(
+        l10n,
         AccountField.experienceYears,
         AccountFieldIssue.invalid,
       ),

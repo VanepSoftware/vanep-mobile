@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/domain/gender.dart';
+import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/check_signup_duplicates.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/complete_google_signup.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_google.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_up.dart';
@@ -15,6 +17,7 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart'
 class SignupCubit extends Cubit<SignupState> {
   SignupCubit({
     required this._signUp,
+    required this._checkSignupDuplicates,
     required this._completeGoogleSignup,
     required this._signInWithGoogle,
     required this._startSession,
@@ -27,6 +30,7 @@ class SignupCubit extends Cubit<SignupState> {
        );
 
   final SignUp _signUp;
+  final CheckSignupDuplicates _checkSignupDuplicates;
   final CompleteGoogleSignup _completeGoogleSignup;
   final SignInWithGoogle _signInWithGoogle;
   final StartSession _startSession;
@@ -84,7 +88,8 @@ class SignupCubit extends Cubit<SignupState> {
     );
   }
 
-  void nextStep() {
+  Future<void> nextStep() async {
+    if (state.isBusy) return;
     final allIssues = state.form.validate(
       includeCredentials: !state.isGoogleSignup,
     );
@@ -94,21 +99,48 @@ class SignupCubit extends Cubit<SignupState> {
       return;
     }
     if (state.isLastStep) return;
+    final duplicateIssues = await findDuplicatesOfStep();
+    if (isClosed) return;
+    if (duplicateIssues.isNotEmpty) {
+      emit(
+        state.copyWith(
+          status: SignupStatus.editing,
+          issues: {...state.issues, ...duplicateIssues},
+        ),
+      );
+      return;
+    }
     emit(
       state.copyWith(
+        status: SignupStatus.editing,
         stepIndex: state.stepIndex + 1,
         issues: issuesOutsideStep(state.issues, state.currentStep),
       ),
     );
   }
 
+  /// Duplicates among the fields of the current step. Any other failure lets
+  /// the user go on: sign-up checks again and reports it there.
+  Future<Map<AccountField, AccountFieldIssue>> findDuplicatesOfStep() async {
+    final step = state.currentStep;
+    emit(state.copyWith(status: SignupStatus.checking));
+    final result = await _checkSignupDuplicates(state.form, step.fields);
+    return switch (result) {
+      Err(error: AccountValidationFailure(:final issues)) => issuesOfStep(
+        issues,
+        step,
+      ),
+      _ => const {},
+    };
+  }
+
   void previousStep() {
-    if (state.isFirstStep) return;
+    if (state.isFirstStep || state.isBusy) return;
     emit(state.copyWith(stepIndex: state.stepIndex - 1));
   }
 
   Future<void> submit() async {
-    if (state.isSubmitting) return;
+    if (state.isBusy) return;
     emit(state.copyWith(status: SignupStatus.submitting, clearFailure: true));
     final googleTicket = state.googleTicket;
     if (googleTicket == null) {

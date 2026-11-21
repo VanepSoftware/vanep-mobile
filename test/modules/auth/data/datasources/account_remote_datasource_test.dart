@@ -67,6 +67,18 @@ void main() {
     expect(body.containsKey('gender'), isFalse);
   });
 
+  test('checkSignupDuplicates posts only the fields it was given', () async {
+    await remote.checkSignupDuplicates(
+      document: '52998224725',
+      phone: '11999990000',
+    );
+
+    expect(capturedBody('http://10.0.2.2:8080/api/auth/signup/check'), {
+      'document': '52998224725',
+      'phone': '11999990000',
+    });
+  });
+
   test('verifyEmail posts the e-mail and the code', () async {
     await remote.verifyEmail(email: 'ana@vanep.com.br', code: '012345');
 

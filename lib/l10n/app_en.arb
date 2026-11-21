@@ -151,6 +151,7 @@
   "accountIssueBasePriceNotPositive": "The base price must be greater than zero.",
   "accountIssueEmailDuplicate": "An account with this email already exists.",
   "accountIssueDocumentDuplicate": "An account with this CPF already exists.",
+  "accountIssuePhoneDuplicate": "An account with this phone already exists.",
   "accountIssueRejected": "Check this field.",
   "accountErrorCheckFields": "Check the highlighted fields.",
   "accountErrorInvalidCode": "Invalid or expired code.",

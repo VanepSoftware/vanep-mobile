@@ -37,6 +37,7 @@ import 'package:vanep_mobile/modules/auth/domain/usecases/reset_password_with_co
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_google.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_in_with_password.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_out.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/check_signup_duplicates.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/sign_up.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/upsert_my_personal_address.dart';
 import 'package:vanep_mobile/modules/auth/domain/usecases/verify_email_code.dart';
@@ -72,6 +73,9 @@ void registerAuthDependencies(
       ),
     )
     ..registerFactory<SignUp>(() => SignUp(getIt<AccountRepository>()))
+    ..registerFactory<CheckSignupDuplicates>(
+      () => CheckSignupDuplicates(getIt<AccountRepository>()),
+    )
     ..registerFactory<VerifyEmailCode>(
       () => VerifyEmailCode(getIt<AccountRepository>()),
     )
@@ -114,6 +118,7 @@ void registerAuthDependencies(
     ..registerFactoryParam<SignupCubit, SignupEntry, StartSession>(
       (entry, startSession) => SignupCubit(
         signUp: getIt<SignUp>(),
+        checkSignupDuplicates: getIt<CheckSignupDuplicates>(),
         completeGoogleSignup: getIt<CompleteGoogleSignup>(),
         signInWithGoogle: getIt<SignInWithGoogle>(),
         startSession: startSession,

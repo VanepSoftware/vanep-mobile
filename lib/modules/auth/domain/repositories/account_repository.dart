@@ -5,6 +5,14 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/signup_form.dart'
 abstract class AccountRepository {
   Future<Result<AccountFailure, void>> signUp(SignupForm form);
 
+  /// Fails with an [AccountValidationFailure] listing every field already
+  /// taken by another account.
+  Future<Result<AccountFailure, void>> checkSignupDuplicates({
+    String? email,
+    String? document,
+    String? phone,
+  });
+
   Future<Result<AccountFailure, void>> completeGoogleSignup({
     required String ticket,
     required SignupForm form,
