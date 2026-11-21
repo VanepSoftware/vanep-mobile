@@ -1,9 +1,9 @@
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/entities/document_submission.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/entities/requirement_status.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_action.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/compliance_state.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_display_state.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/submission_status.dart';
 
 const int expiringSoonWindowDays = 30;
 
@@ -23,14 +23,8 @@ DocumentDisplayState resolveDocumentDisplayState(
   };
 }
 
-bool hasPendingWithoutFile(RequirementStatus requirement) {
-  return [requirement.pending, requirement.current].any(
-    (submission) =>
-        submission != null &&
-        submission.status == SubmissionStatus.pending &&
-        submission.fileUrl == null,
-  );
-}
+bool hasPendingWithoutFile(RequirementStatus requirement) =>
+    incompleteSubmissionOf(requirement) != null;
 
 DocumentDisplayState resolveApprovedState(
   RequirementStatus requirement,
