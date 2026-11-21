@@ -86,6 +86,8 @@
 - [x] 5.8 Modal `AssistantNoShowModal` with reason selection ("Não compareceu")
 - [x] 5.9 Link revocation detection: redirect to unlinked state if driver revokes access
 - [x] 5.10 Slice tests and layout verification (ensuring touch targets >= 44px)
+
+> **Superseded (2026-11-15):** after the shell moved to Início · Vans · Alunos, the phase 5 pages, widgets, cubit, use cases and DTO had no entry point and were removed. The checklist now lives in the Início tab (`AssistantHomeCubit` + `AssistantRouteRepository`, change `assistant-home`, decision I1).
 - [ ] 5.11 Run `make lint` and `make test`
 - [ ] 5.12 **Aguardar validação final do desenvolvedor no aparelho (R27a)**; só então commitar e abrir PR
 

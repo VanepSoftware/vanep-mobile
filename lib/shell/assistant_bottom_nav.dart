@@ -21,19 +21,19 @@ class AssistantBottomNav extends StatelessWidget {
       onDestinationSelected: onDestinationSelected,
       items: [
         VanepNavItem(
-          icon: Icons.alt_route_outlined,
-          selectedIcon: Icons.alt_route_rounded,
-          label: l10n.navRoute,
+          icon: Icons.home_outlined,
+          selectedIcon: Icons.home_rounded,
+          label: l10n.navHome,
+        ),
+        VanepNavItem(
+          icon: Icons.airport_shuttle_outlined,
+          selectedIcon: Icons.airport_shuttle_rounded,
+          label: l10n.navVans,
         ),
         VanepNavItem(
           icon: Icons.groups_outlined,
           selectedIcon: Icons.groups_rounded,
           label: l10n.navStudents,
-        ),
-        VanepNavItem(
-          icon: Icons.person_outline_rounded,
-          selectedIcon: Icons.person_rounded,
-          label: l10n.navAssistantProfile,
         ),
       ],
     );

@@ -2484,9 +2484,6 @@
   "driverProfileChatButton": "Chat with the driver",
   "conversationTitle": "Chat",
   "conversationFailureDriverUnavailable": "This driver is no longer available.",
-  "navRoute": "Route",
-  "navAssistantProfile": "My profile",
-  "assistantActiveVan": "Active van",
   "assistantSwitchVan": "Switch van",
   "assistantSelectVanTitle": "Select active van",
   "assistantSelectVanSubtitle": "Choose which van you will accompany today",
@@ -2543,11 +2540,136 @@
   "clientProposalsOutcomeCancelled": "Cancelled",
   "assistantVansLoadError": "Could not load your vans.",
   "assistantVansRetry": "Try again",
-  "assistantRouteEmpty": "No stops scheduled for this route today.",
-  "assistantRouteProgress": "{completed} of {total} students handled",
-  "@assistantRouteProgress": {
+  "assistantConfirmBoarding": "Confirm boarding",
+  "assistantNoShowReasonOther": "Other reason",
+  "assistantStudentsSearchHint": "Search student or school...",
+  "assistantStudentsEmpty": "No students found.",
+  "assistantSelectedVan": "Selected van",
+  "assistantNoShowReasonNotAtStop": "Not at the stop",
+  "assistantNoShowReasonReturnedHome": "Had to go back home",
+  "assistantNoShowReasonPickedUpByGuardian": "Picked up by the guardian",
+  "assistantNoShowReasonSick": "Felt sick",
+  "assistantHomeGreeting": "Hi, {name}!",
+  "@assistantHomeGreeting": {
     "placeholders": {
-      "completed": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeNoVanTitle": "No van yet",
+  "assistantHomeNoVanBody": "Ask the driver to invite you",
+  "assistantHomeNoVanHint": "The invite arrives at this e-mail and shows up here for you to accept.",
+  "assistantHomeCopyEmail": "Copy e-mail",
+  "assistantHomeEmailCopied": "E-mail copied",
+  "assistantHomeShareEmail": "Send my e-mail to the driver",
+  "assistantHomeShareEmailMessage": "My e-mail to invite me as the van assistant on Vanep: {email}",
+  "@assistantHomeShareEmailMessage": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeHowItWorksTitle": "How it works",
+  "assistantHomeHowItWorksInvite": "The driver invites you from their app, with your e-mail.",
+  "assistantHomeHowItWorksAccept": "You accept it here. The invite lasts 72 hours.",
+  "assistantHomeHowItWorksConfirm": "On the day, you confirm each student boarding and getting off.",
+  "assistantHomeCapabilitiesTitle": "What you see in the app",
+  "assistantHomeCapabilityRoute": "Today's route and student list",
+  "assistantHomeCapabilityConfirm": "Confirm boarding and drop-off",
+  "assistantHomeCapabilityNoShow": "Mark who didn't show up",
+  "assistantHomeCapabilityHidden": "Prices, contracts and documents: only the driver",
+  "assistantHomeInviteSubtitle": "You received an invite.",
+  "assistantHomeTodayOutbound": "Today · outbound",
+  "assistantHomeNotStarted": "Not started",
+  "assistantHomeNoTripToday": "No route today",
+  "assistantHomeVanLabel": "{driver} · {model} {plate}",
+  "@assistantHomeVanLabel": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      },
+      "plate": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeStudentsCount": "{count, plural, =1{1 student} other{{count} students}}",
+  "@assistantHomeStudentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeStopsCount": "{count, plural, =1{1 stop} other{{count} stops}}",
+  "@assistantHomeStopsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeAbsencesCount": "{count, plural, =1{1 absence} other{{count} absences}}",
+  "@assistantHomeAbsencesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomePresentInVan": "I'm in the van",
+  "assistantHomePresentConfirmed": "You're in the van",
+  "assistantHomeChecklistOpensHint": "The checklist opens when the route starts.",
+  "assistantHomeNotGoingToday": "Not going today",
+  "assistantHomeNotifiedByFamily": "Notified by the family · {time}",
+  "@assistantHomeNotifiedByFamily": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeNotifiedByDriver": "Notified by the driver · {time}",
+  "@assistantHomeNotifiedByDriver": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeNotifiedYesterday": "Notified yesterday",
+  "assistantHomeFirstStops": "First stops",
+  "assistantHomeNextStops": "Next stops",
+  "assistantHomeSeeAll": "See all",
+  "assistantHomeOnRouteSince": "{driver} · {leg} · since {time}",
+  "@assistantHomeOnRouteSince": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "leg": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeLegOutbound": "outbound",
+  "assistantHomeLegReturn": "return",
+  "assistantHomeHomeBoarding": "Boarding at home",
+  "assistantHomeSchoolBoarding": "Boarding at school",
+  "assistantHomeSchoolArrival": "Arrival at school",
+  "assistantHomeHomeDropOff": "Drop-off at home",
+  "assistantHomeOnBoardOfTotal": "{onBoard} of {total} on board",
+  "@assistantHomeOnBoardOfTotal": {
+    "placeholders": {
+      "onBoard": {
         "type": "int"
       },
       "total": {
@@ -2555,32 +2677,181 @@
       }
     }
   },
-  "assistantConfirmBoarding": "Confirm boarding",
-  "assistantMarkNoShow": "No-show",
-  "assistantBulkDropOff": "Bulk drop-off ({count})",
-  "@assistantBulkDropOff": {
+  "assistantHomeOnBoard": "{count} on board",
+  "@assistantHomeOnBoard": {
     "placeholders": {
       "count": {
         "type": "int"
       }
     }
   },
-  "assistantSelectAllStop": "Select all at stop",
-  "assistantStatusPending": "Pending",
-  "assistantStatusBoarded": "Boarded",
-  "assistantStatusDroppedOff": "Dropped off",
-  "assistantStatusNoShow": "No-show",
-  "assistantConfirmedByAssistant": "Confirmed by assistant",
-  "assistantConfirmedByDriver": "Confirmed by driver",
-  "assistantNoShowModalTitle": "Record no-show",
-  "assistantNoShowModalSubtitle": "Select why the student did not board:",
-  "assistantNoShowReasonNotified": "Notified by guardian",
-  "assistantNoShowReasonNotAtLocation": "Not at pick-up location",
-  "assistantNoShowReasonOther": "Other reason",
-  "assistantNoShowConfirm": "Confirm no-show",
-  "assistantStudentsSearchHint": "Search student or school...",
-  "assistantFilterAll": "All",
-  "assistantStudentsEmpty": "No students found.",
-  "assistantLinkRevokedTitle": "Access revoked",
-  "assistantLinkRevokedMessage": "The driver removed your link to this van."
+  "assistantHomeStopNumber": "Stop {number} of {total}",
+  "@assistantHomeStopNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeVanArriving": "Van arriving",
+  "assistantHomeAtSchool": "At school",
+  "assistantHomeDeselectNotBoarded": "Untick who didn't board",
+  "assistantHomeDeselectNotDroppedOff": "Untick who isn't getting off",
+  "assistantHomeSwipeToConfirm": "Swipe to confirm ({count})",
+  "@assistantHomeSwipeToConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeConfirmBoardingSemantics": "{count, plural, =1{Confirm boarding of 1 student} other{Confirm boarding of {count} students}}",
+  "@assistantHomeConfirmBoardingSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeConfirmDropOffSemantics": "{count, plural, =1{Confirm drop-off of 1 student} other{Confirm drop-off of {count} students}}",
+  "@assistantHomeConfirmDropOffSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeGettingOffHere": "{count, plural, =1{1 student gets off here} other{{count} students get off here}}",
+  "@assistantHomeGettingOffHere": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeContinuingTo": "{count, plural, =1{{names} goes on to {school}} other{{names} go on to {school}}}",
+  "@assistantHomeContinuingTo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "names": {
+        "type": "String"
+      },
+      "school": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeNamesAnd": "{first} and {last}",
+  "@assistantHomeNamesAnd": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeOnBoardRowTitle": "Students on board",
+  "assistantHomeOnBoardRowSubtitle": "{onBoard} of {total} · {awaiting} waiting",
+  "@assistantHomeOnBoardRowSubtitle": {
+    "placeholders": {
+      "onBoard": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "awaiting": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeDropOffLine": "Drop-off · {names}",
+  "@assistantHomeDropOffLine": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeStopConfirmed": "{count, plural, =1{1 student confirmed} other{{count} students confirmed}}",
+  "@assistantHomeStopConfirmed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantHomeUndo": "Undo",
+  "assistantHomePausedTitle": "Access paused on {date}",
+  "@assistantHomePausedTitle": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomePausedBy": "{driver} paused your access",
+  "@assistantHomePausedBy": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomePausedBody": "You won't see the route or the students until access is resumed.",
+  "assistantHomeCallDriverNamed": "Call {driver}",
+  "@assistantHomeCallDriverNamed": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHomeOtherVan": "Your other van",
+  "assistantHomeActive": "Active",
+  "assistantHomeSeeOtherVanRoute": "See this van's route",
+  "assistantHomePausedInfo": "If the link ends, the van moves to Vans › Former links.",
+  "assistantHomeShortcuts": "Shortcuts",
+  "assistantHomeShortcutRoute": "Route and stops",
+  "assistantHomeShortcutAbsences": "Absences and changes",
+  "assistantHomeShortcutCallDriver": "Call the driver",
+  "assistantHomeRetry": "Try again",
+  "assistantStopsNoShow": "{name} {reason}",
+  "@assistantStopsNoShow": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantStopsNotGoing": "{name} is not going today",
+  "@assistantStopsNotGoing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantStopsDropOffCount": "{count, plural, =1{Drop-off · 1 student} other{Drop-off · {count} students}}",
+  "@assistantStopsDropOffCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantSkipReasonTitleBoarding": "Why didn't they board?",
+  "assistantSkipReasonTitleDropOff": "Why didn't they get off?",
+  "assistantSkipReasonOtherLabel": "Describe the reason",
+  "assistantSkipReasonConfirm": "Confirm"
 }

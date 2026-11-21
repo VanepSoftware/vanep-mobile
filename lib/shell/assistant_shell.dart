@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
-import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_state.dart';
-import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_students_list_page.dart';
-import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_today_route_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_home_tab.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_students_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_vans_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_van_selector_sheet.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/shell/assistant_bottom_nav.dart';
@@ -29,21 +28,6 @@ class AssistantShell extends StatefulWidget {
 class AssistantShellState extends State<AssistantShell> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final selectedVan = context
-          .read<AssistantVanSelectorCubit>()
-          .state
-          .selectedVan;
-      if (selectedVan != null) {
-        context.read<AssistantChecklistCubit>().loadRoute(selectedVan.token);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,23 +55,10 @@ class AssistantShellState extends State<AssistantShell> {
                     onNotificationsTapped: () => openNotifications(context),
                   ),
                   const SizedBox(height: 12),
-                  BlocConsumer<
+                  BlocBuilder<
                     AssistantVanSelectorCubit,
                     AssistantVanSelectorState
                   >(
-                    listenWhen: (previous, current) =>
-                        previous.selectedVan?.token !=
-                        current.selectedVan?.token,
-                    listener: (context, state) {
-                      final van = state.selectedVan;
-                      if (van != null) {
-                        context.read<AssistantChecklistCubit>().loadRoute(
-                          van.token,
-                        );
-                      } else {
-                        context.read<AssistantChecklistCubit>().clearRoute();
-                      }
-                    },
                     builder: (context, state) {
                       if (state.isLoading) {
                         return VanepCard(
@@ -152,8 +123,8 @@ class AssistantShellState extends State<AssistantShell> {
                           van.shift,
                         );
                         final subtitle = shiftLabel.isNotEmpty
-                            ? '${l10n.assistantActiveVan} • $shiftLabel'
-                            : l10n.assistantActiveVan;
+                            ? '${l10n.assistantSelectedVan} • $shiftLabel'
+                            : l10n.assistantSelectedVan;
 
                         return VanepCard(
                           onTap: state.hasMultipleVans
@@ -222,12 +193,13 @@ class AssistantShellState extends State<AssistantShell> {
               child: IndexedStack(
                 index: selectedIndex,
                 children: [
-                  const AssistantTodayRoutePage(),
-                  const AssistantStudentsListPage(),
-                  VanepComingSoon(
-                    title: l10n.navAssistantProfile,
-                    message: l10n.comingSoon,
+                  AssistantHomeTab.withCubit(
+                    displayName: widget.profile.name ?? '',
+                    email: widget.profile.email,
+                    vanSelector: context.read<AssistantVanSelectorCubit>(),
                   ),
+                  AssistantVansPage.withCubit(),
+                  AssistantStudentsPage.withCubit(),
                 ],
               ),
             ),

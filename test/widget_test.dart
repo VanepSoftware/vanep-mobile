@@ -34,8 +34,6 @@ import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
-import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
-import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_state.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_state.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
@@ -54,6 +52,8 @@ import 'modules/drivers/drivers_fixtures.dart';
 import 'modules/drivers/presentation/drivers_presentation_mocks.dart';
 import 'modules/profile/profile_mocks.dart';
 import 'modules/driver_van_central/driver_van_central_mocks.dart';
+import 'modules/assistant/mocks/assistant_mocks.dart'
+    show registerFakeAssistantTabs;
 
 Widget _harness(AuthCubit cubit) {
   return MaterialApp(
@@ -86,9 +86,6 @@ class MockPlaceAutocompleteDataSource extends Mock
 
 class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
     implements AssistantVanSelectorCubit {}
-
-class MockAssistantChecklistCubit extends MockCubit<AssistantChecklistState>
-    implements AssistantChecklistCubit {}
 
 void registerVanCentralCubit() {
   final vanCentralCubit = MockVanCentralCubit();
@@ -257,12 +254,6 @@ void main() {
       initialState: const AssistantVanSelectorState(),
     );
     when(() => assistantCubit.loadVans()).thenAnswer((_) async {});
-    final checklistCubit = MockAssistantChecklistCubit();
-    whenListen(
-      checklistCubit,
-      const Stream<AssistantChecklistState>.empty(),
-      initialState: const AssistantChecklistState(),
-    );
     final profileSummaryCubit = MockProfileSummaryCubit();
     whenListen(
       profileSummaryCubit,
@@ -271,8 +262,8 @@ void main() {
     );
     getIt
       ..registerFactory<AssistantVanSelectorCubit>(() => assistantCubit)
-      ..registerFactory<AssistantChecklistCubit>(() => checklistCubit)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit);
+    registerFakeAssistantTabs(getIt);
     addTearDown(getIt.reset);
 
     final state = AuthAuthenticated(
