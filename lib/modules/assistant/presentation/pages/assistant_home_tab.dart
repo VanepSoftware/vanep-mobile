@@ -24,6 +24,7 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_vans_labels.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/mappers/assistant_failure_l10n.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_onboard_students_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_route_stops_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_home_cards.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_home_route_widgets.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_vans_cards.dart';
@@ -173,8 +174,7 @@ class AssistantHomeBody extends StatelessWidget {
         const SizedBox(height: assistantHomeSectionSpacing),
         AssistantHomeShortcuts(
           isEnabled: hasActiveVan,
-          // TODO(VAN-71): opens the route screen once it exists.
-          onOpenRoute: doNothingYet,
+          onOpenRoute: () => openRouteStops(context),
           // TODO(VAN-72): opens the absences screen once it exists.
           onOpenAbsences: doNothingYet,
         ),
@@ -248,8 +248,7 @@ class AssistantHomeStatusContent extends StatelessWidget {
           AssistantStopsPreview(
             title: l10n.assistantHomeFirstStops,
             stops: route.firstStops(),
-            // TODO(VAN-71): opens the route screen once it exists.
-            onSeeAll: doNothingYet,
+            onSeeAll: () => openRouteStops(context),
           ),
         ],
       ],
@@ -275,8 +274,7 @@ class AssistantHomeStatusContent extends StatelessWidget {
           AssistantStopsPreview(
             title: l10n.assistantHomeNextStops,
             stops: route.nextStops(),
-            // TODO(VAN-71): opens the route screen once it exists.
-            onSeeAll: doNothingYet,
+            onSeeAll: () => openRouteStops(context),
           ),
         ],
       ],
@@ -338,6 +336,11 @@ class AssistantHomeSkeleton extends StatelessWidget {
       ),
     );
   }
+}
+
+void openRouteStops(BuildContext context) {
+  final cubit = context.read<AssistantHomeCubit>();
+  Navigator.of(context).push(AssistantRouteStopsPage.route(cubit));
 }
 
 Future<void> confirmStopWithReasons(

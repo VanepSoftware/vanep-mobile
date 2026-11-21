@@ -18,9 +18,9 @@ List<(Color, Color)> vanIconTonesOf(VanepPalette palette) => [
   (palette.successSurface, palette.success),
 ];
 
-// TODO(VAN-68): Rota de hoje (VAN-71), Detalhes (VAN-69) and Vínculos
-// anteriores (VAN-69) do nothing until those screens exist. Wire each call
-// site and delete this function.
+// TODO(VAN-68): Detalhes (VAN-69) and Vínculos anteriores (VAN-69) do
+// nothing until those screens exist. Wire each call site and delete this
+// function.
 void doNothingYet() {}
 
 class AssistantPendingInviteCard extends StatelessWidget {
