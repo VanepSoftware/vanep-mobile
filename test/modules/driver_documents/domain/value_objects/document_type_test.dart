@@ -59,4 +59,29 @@ void main() {
       DocumentKind.vehicleDocument,
     );
   });
+
+  test('reads the document type of each resource', () {
+    expect(
+      DocumentType.fromDocumentApi('CRLV'),
+      DocumentType.vehicleRegistration,
+    );
+    expect(
+      DocumentType.fromDocumentApi('CRIMINAL_RECORD'),
+      DocumentType.criminalRecord,
+    );
+    expect(DocumentType.fromDocumentApi('DRIVER_LICENSE'), isNull);
+  });
+
+  test('reads the submission kind of the back', () {
+    expect(DocumentKind.fromApi('DRIVER_CNH'), DocumentKind.driverCnh);
+    expect(
+      DocumentKind.fromApi('DRIVER_DOCUMENT'),
+      DocumentKind.driverDocument,
+    );
+    expect(
+      DocumentKind.fromApi('VEHICLE_DOCUMENT'),
+      DocumentKind.vehicleDocument,
+    );
+    expect(DocumentKind.fromApi('OTHER'), isNull);
+  });
 }

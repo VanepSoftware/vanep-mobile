@@ -11,6 +11,7 @@ abstract interface class DocumentSubmissionRepository {
   });
 
   Future<Result<DocumentSubmissionFailure, String>> downloadFile(
-    String fileUrl,
-  );
+    String fileUrl, {
+    required String fileName,
+  });
 }

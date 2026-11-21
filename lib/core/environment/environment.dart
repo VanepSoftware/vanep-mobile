@@ -161,6 +161,24 @@ class Environment {
 
   String get vehiclesEndpoint => '$authBaseUrl/api/vehicles';
 
+  String get driverComplianceEndpoint => '$driversMeEndpoint/compliance';
+
+  String get driverDocumentsEndpoint => '$authBaseUrl/api/driver-documents';
+
+  String driverDocumentEndpoint(String documentToken) =>
+      '$driverDocumentsEndpoint/${Uri.encodeComponent(documentToken)}';
+
+  String vehicleDocumentsEndpoint(String vehicleToken) =>
+      '$vehiclesEndpoint/${Uri.encodeComponent(vehicleToken)}/documents';
+
+  String vehicleDocumentEndpoint(String documentToken) =>
+      '$authBaseUrl/api/vehicle-documents/${Uri.encodeComponent(documentToken)}';
+
+  String get driverCnhsEndpoint => '$authBaseUrl/api/driver-cnhs';
+
+  String driverCnhEndpoint(String cnhToken) =>
+      '$driverCnhsEndpoint/${Uri.encodeComponent(cnhToken)}';
+
   String get myVehiclesEndpoint => '$vehiclesEndpoint/me';
 
   String vehiclePhotoEndpoint(String vehicleToken, String slot) =>
