@@ -2955,8 +2955,62 @@
     }
   },
   "assistantAbsencesFooter": "Absences come from the family. Stop changes are approved by the driver.",
+  "assistantVanDetailActive": "You're active",
+  "assistantVanDetailPaused": "Access paused",
+  "assistantVanDetailDriver": "Driver",
+  "assistantVanDetailCapabilitiesTitle": "What you can do here",
+  "assistantVanDetailCapabilityStops": "See addresses and the stop order",
+  "assistantVanDetailOnlyDriverOrders": "Only {driver} changes the stop order",
+  "@assistantVanDetailOnlyDriverOrders": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantVanDetailStopsTitle": "Stops · {shift}",
+  "@assistantVanDetailStopsTitle": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantVanDetailAllStops": "{count, plural, =1{1 stop in total} other{{count} stops in total}}",
+  "@assistantVanDetailAllStops": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantVanDetailLeave": "Leave this van",
+  "assistantVanDetailLeaveTitle": "Leave this van?",
+  "assistantVanDetailLeaveMessage": "You'll stop seeing {driver}'s route and students.",
+  "@assistantVanDetailLeaveMessage": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantVanDetailKeep": "Stay",
   "assistantSkipReasonTitleBoarding": "Why didn't they board?",
   "assistantSkipReasonTitleDropOff": "Why didn't they get off?",
   "assistantSkipReasonOtherLabel": "Describe the reason",
-  "assistantSkipReasonConfirm": "Confirm"
+  "assistantSkipReasonConfirm": "Confirm",
+  "assistantFormerLinksTitle": "Former links",
+  "assistantFormerLinksInfo": "You no longer see the route or the students of these vans.",
+  "assistantFormerLinkPeriod": "{start} – {end}",
+  "@assistantFormerLinkPeriod": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantFormerLinksEmpty": "No former links."
 }
