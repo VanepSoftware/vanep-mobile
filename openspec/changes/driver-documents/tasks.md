@@ -64,10 +64,10 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 
 ## 8. Fase 8 — Detalhe e reprovado (`VAN-86/8-document-detail`)
 
-- [ ] 8.1 Testes de widget primeiro para o detalhe: os blocos na ordem, a frase por estado, "O que foi enviado" só com envio (com os dois envios na renovação), "Sobre o documento" de cada tipo, a ação de cada estado. Depois implementar
-- [ ] 8.2 Testes de widget primeiro para a M7: o título por código de motivo, a mensagem só quando existe, o aviso e "Reenviar". Depois implementar
-- [ ] 8.3 Testes primeiro para abrir o arquivo: imagem → tela com `ApiImageProvider`; PDF → download autenticado e `open_filex`; falha → aviso sem sair da tela. Depois implementar
-- [ ] 8.4 Rodar `make lint` e `make test`
+- [x] 8.1 Testes de widget primeiro para o detalhe: os blocos na ordem, a frase por estado, "O que foi enviado" só com envio (com os dois envios na renovação), "Sobre o documento" de cada tipo, a ação de cada estado. Depois implementar
+- [x] 8.2 Testes de widget primeiro para a M7: o título por código de motivo, a mensagem só quando existe, o aviso e "Reenviar". Depois implementar
+- [x] 8.3 Testes primeiro para abrir o arquivo: imagem → tela com `ApiImageProvider`; PDF → download autenticado e `open_filex`; falha → aviso sem sair da tela. Depois implementar
+- [x] 8.4 Rodar `make lint` e `make test`
 - [ ] 8.5 Abrir o PR
 
 ## 9. Fase 9 — Fluxo de envio (`VAN-86/9-document-submission-flow`)

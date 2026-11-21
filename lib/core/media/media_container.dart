@@ -5,6 +5,7 @@ import 'package:vanep_mobile/core/media/device_document_capture.dart';
 import 'package:vanep_mobile/core/media/device_document_readers.dart';
 import 'package:vanep_mobile/core/media/document_capture.dart';
 import 'package:vanep_mobile/core/media/document_file_store.dart';
+import 'package:vanep_mobile/core/media/file_opener.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/core/network/file_uploader.dart';
@@ -19,6 +20,7 @@ void registerMediaDependencies(GetIt getIt) {
     ..registerSingleton<FileUploader>(FileUploader(dio: authenticatedDio))
     ..registerLazySingleton<PhotoPicker>(ImagePickerPhotoPicker.new)
     ..registerLazySingleton<DocumentFileStore>(DocumentFileStore.new)
+    ..registerLazySingleton<FileOpener>(SystemFileOpener.new)
     ..registerLazySingleton<DocumentCapture>(
       () => DeviceDocumentCapture(
         scanner: ScannerDocumentReader(store: getIt<DocumentFileStore>()),
