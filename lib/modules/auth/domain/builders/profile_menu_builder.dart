@@ -63,7 +63,7 @@ const _clientMenu = [
 const _driverMenu = [
   ProfileMenuSection([
     _enabledPersonalData,
-    ProfileMenuEntry(id: ProfileMenuId.professionalData, enabled: false),
+    ProfileMenuEntry(id: ProfileMenuId.professionalData, enabled: true),
   ], title: ProfileMenuSectionTitle.account),
   _settingsSection,
   _signOutSection,

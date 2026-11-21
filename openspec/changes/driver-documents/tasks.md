@@ -125,15 +125,15 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 
 ## 11. Fase 11 — Dados profissionais (`VAN-86/11-professional-data`)
 
-- [ ] 11.1 Testes primeiro para o perfil do motorista com `ratingCount` e `experienceYears` opcionais (DTO e entidade do `profile`). Depois implementar e rodar o `build_runner`
-- [ ] 11.2 Testes primeiro (`bloc_test`) para o cubit da tela: perfil, switch "Aceitando novos alunos" com o `ChangeAcceptingStudents` e falha só da situação dos documentos (as linhas aparecem sem subtítulo)
-- [ ] 11.3 Testes de widget primeiro para a página:
+- [x] 11.1 Testes primeiro para o perfil do motorista com `ratingCount` e `experienceYears` opcionais (DTO e entidade do `profile`). Depois implementar e rodar o `build_runner`
+- [x] 11.2 Testes primeiro (`bloc_test`) para o cubit da tela: perfil, switch "Aceitando novos alunos" com o `ChangeAcceptingStudents` e falha só da situação dos documentos (as linhas aparecem sem subtítulo)
+- [x] 11.3 Testes de widget primeiro para a página:
   - topo com selo só com aprovado e linha sem nota ou sem experiência;
   - Atendimento: Áreas abre a rota; Expediente, Espera e Preço abrem "Em breve";
   - Documentos com o subtítulo âmbar de `summarizeDocuments`;
   - Empresa com "CNPJ · Opcional";
   - skeleton e erro.
   Depois implementar no módulo `driver_professional_data`
-- [ ] 11.4 Ligar `ProfileMenuId.professionalData` no menu do motorista (`profile_menu_builder.dart` e `account_drawer.dart`) com a rota `openDriverProfessionalData`; verificar que responsável e auxiliar não ganham o item
-- [ ] 11.5 Rodar `make lint` e `make test`
-- [ ] 11.6 Abrir o PR
+- [x] 11.4 Ligar `ProfileMenuId.professionalData` no menu do motorista (`profile_menu_builder.dart` e `account_drawer.dart`) com a rota `openDriverProfessionalData`; verificar que responsável e auxiliar não ganham o item
+- [x] 11.5 Rodar `make lint` e `make test`
+- [x] 11.6 Abrir o PR

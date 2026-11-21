@@ -55,6 +55,10 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.da
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
+import 'package:vanep_mobile/modules/driver_professional_data/presentation/cubit/professional_data_cubit.dart';
+import 'package:vanep_mobile/modules/driver_professional_data/presentation/pages/professional_data_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/personal_documents_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_source_sheet.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_submission_flow_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
@@ -207,6 +211,7 @@ class AuthGate extends StatelessWidget {
                 openVanStudents: openDriverVanStudents,
                 openVanDocuments: (context, van) =>
                     openDriverVanDocuments(context, van: van),
+                openProfessionalData: openDriverProfessionalData,
                 openConversationChat: (context, conversation) =>
                     openInboxConversation(
                       context,
@@ -756,6 +761,68 @@ Widget provideDriverCompliance(
   return BlocProvider<DriverComplianceCubit>(
     create: (_) => getIt<DriverComplianceCubit>()..load(),
     child: child,
+  );
+}
+
+Future<void> openDriverProfessionalData(BuildContext context) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/professional-data'),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<ProfessionalDataCubit>(
+            create: (_) => getIt<ProfessionalDataCubit>()..load(),
+          ),
+          BlocProvider<DriverComplianceCubit>(
+            create: (_) => getIt<DriverComplianceCubit>()..load(),
+          ),
+        ],
+        child: Builder(
+          builder: (pageContext) {
+            final l10n = AppLocalizations.of(pageContext)!;
+            final compliance = pageContext.read<DriverComplianceCubit>();
+            return ProfessionalDataPage(
+              actions: ProfessionalDataActions(
+                onOpenServiceAreas: () => openDriverServiceAreas(pageContext),
+                onOpenPersonalDocuments: () => openDriverPersonalDocuments(
+                  pageContext,
+                  compliance: compliance,
+                ),
+                onOpenVanDocuments: () =>
+                    openDriverVanDocuments(pageContext, compliance: compliance),
+                onOpenComingSoon: (title) => openComingSoonPage(
+                  pageContext,
+                  title: title,
+                  message: l10n.comingSoon,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverPersonalDocuments(
+  BuildContext context, {
+  DriverComplianceCubit? compliance,
+}) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/personal'),
+      builder: (_) => provideDriverCompliance(
+        compliance,
+        Builder(
+          builder: (pageContext) => PersonalDocumentsPage(
+            onOpenDocument: (entry) =>
+                openDriverDocumentDetail(pageContext, entry),
+          ),
+        ),
+      ),
+    ),
   );
 }
 

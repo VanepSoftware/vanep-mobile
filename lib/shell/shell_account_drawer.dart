@@ -13,9 +13,14 @@ import 'package:vanep_mobile/modules/settings/presentation/pages/settings_page.d
 import 'package:vanep_mobile/shell/shell_personal_data_slots.dart';
 
 class ShellAccountDrawer extends StatelessWidget {
-  const ShellAccountDrawer({required this.profile, super.key});
+  const ShellAccountDrawer({
+    required this.profile,
+    this.openProfessionalData,
+    super.key,
+  });
 
   final UserProfile profile;
+  final Future<void> Function(BuildContext context)? openProfessionalData;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,7 @@ class ShellAccountDrawer extends StatelessWidget {
           buildPersonalDataSlots: (context) =>
               buildShellPersonalDataSlots(context, profile),
           openSettings: openSettingsPage,
+          openProfessionalData: openProfessionalData,
         );
       },
     );
