@@ -214,11 +214,16 @@ void main() {
   );
 
   test('DownloadDocumentFile returns the local copy of the file', () async {
-    when(() => submissions.downloadFile('/api/driver-cnhs/cnh-1/file'))
-        .thenAnswer((_) async => const Ok('/tmp/cnh.pdf'));
+    when(
+      () => submissions.downloadFile(
+        '/api/driver-cnhs/cnh-1/file',
+        fileName: 'cnh.pdf',
+      ),
+    ).thenAnswer((_) async => const Ok('/tmp/cnh.pdf'));
 
     final result = await DownloadDocumentFile(submissions)(
       '/api/driver-cnhs/cnh-1/file',
+      fileName: 'cnh.pdf',
     );
 
     expect(result.valueOrNull, '/tmp/cnh.pdf');

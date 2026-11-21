@@ -7,6 +7,8 @@ class DownloadDocumentFile {
 
   final DocumentSubmissionRepository repository;
 
-  Future<Result<DocumentSubmissionFailure, String>> call(String fileUrl) =>
-      repository.downloadFile(fileUrl);
+  Future<Result<DocumentSubmissionFailure, String>> call(
+    String fileUrl, {
+    required String fileName,
+  }) => repository.downloadFile(fileUrl, fileName: fileName);
 }

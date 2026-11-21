@@ -250,4 +250,9 @@ Para voltar atrás, basta reverter o PR da fase.
 
 ## Open Questions
 
-- Os nomes finais dos campos pedidos ao back (`expiringSoon`, `ratingCount`, `experienceYears` e os `code` de data) chegam da sessão do back dona da pilha VAN-86. Só mudam os DTOs e a tabela de códigos. O `ratingCount` e o `experienceYears` entram na fase 11 da VAN-86 no back.
+Nenhuma. O back fechou o contrato em 2026-11-20 (branches `VAN-86/*` do `vanep-api-java`):
+- `GET /api/drivers/me/compliance` com `asOf`, `approvalStatus`, requisitos com `expiringSoon` sempre presente e envios com `kind`, `file` e, na CNH, `category`, `issueDate` e `registrationNumber`;
+- `file {mimeType, sizeBytes, originalName}` nos três recursos;
+- códigos de data `document.expires_at.past`, `document.expires_at.too_far` e `driver_cnh.issue_date.future`, com `field` (`expiresAt`, `validUntil`, `issueDate`); a validação do Bean Validation traz só o `field`;
+- `ratingCount` e `experienceYears` no `/api/drivers/me`.
+O limite de upload separado (`MEDIA_MAX_UPLOAD_SIZE_MB`) ainda não entrou no back; até lá, o 413 perto de 10 MB vira a mensagem de tamanho (D3).
