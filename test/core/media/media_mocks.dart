@@ -1,6 +1,7 @@
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/media/device_document_readers.dart';
+import 'package:vanep_mobile/core/media/document_capture.dart';
 import 'package:vanep_mobile/core/media/document_file_store.dart';
 import 'package:vanep_mobile/core/media/photo_picker.dart';
 import 'package:vanep_mobile/core/media/picked_photo.dart';
@@ -21,3 +22,5 @@ class MockCunningDocumentScannerPlatform extends Mock
 class MockDocumentReader extends Mock implements DocumentReader {}
 
 class MockDocumentFileStore extends Mock implements DocumentFileStore {}
+
+class MockDocumentCapture extends Mock implements DocumentCapture {}

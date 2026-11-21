@@ -12,9 +12,8 @@ import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_detail_page.dart';
 
 import '../driver_documents_fixture.dart';
+import '../driver_documents_mocks.dart';
 import 'documents_pages_harness.dart';
-
-class MockDocumentFileCubit extends Mock implements DocumentFileCubit {}
 
 void main() {
   late MockDocumentFileCubit fileCubit;
