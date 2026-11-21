@@ -1,0 +1,1 @@
+enum ComplianceFailure { network, unexpected }
