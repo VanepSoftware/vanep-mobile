@@ -23,6 +23,7 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_state.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_vans_labels.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/mappers/assistant_failure_l10n.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_onboard_students_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_home_cards.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_home_route_widgets.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_vans_cards.dart';
@@ -265,8 +266,9 @@ class AssistantHomeStatusContent extends StatelessWidget {
         const SizedBox(height: assistantHomeItemSpacing),
         AssistantOnBoardRow(
           route: route,
-          // TODO(VAN-70): opens the on-board students screen once it exists.
-          onTap: doNothingYet,
+          onTap: () =>
+              Navigator.of(context)
+                  .push(AssistantOnboardStudentsPage.route(cubit)),
         ),
         if (route.nextStops().isNotEmpty) ...[
           gap,

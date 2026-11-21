@@ -2823,6 +2823,67 @@
   "assistantHomeShortcutAbsences": "Absences and changes",
   "assistantHomeShortcutCallDriver": "Call the driver",
   "assistantHomeRetry": "Try again",
+  "assistantOnboardSubtitle": "{driver} · {leg} · {stopKind}",
+  "@assistantOnboardSubtitle": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "leg": {
+        "type": "String"
+      },
+      "stopKind": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantOnboardAwaitingCount": "{count} waiting",
+  "@assistantOnboardAwaitingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantOnboardNoShowCount": "{count, plural, =1{1 did not board} other{{count} did not board}}",
+  "@assistantOnboardNoShowCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantOnboardSectionOnBoard": "On board",
+  "assistantOnboardSectionAwaiting": "Waiting to board",
+  "assistantOnboardSectionNoShow": "Did not board",
+  "assistantOnboardNobodyOnBoard": "Nobody on board yet.",
+  "assistantOnboardStop": "Stop {number}",
+  "@assistantOnboardStop": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "assistantOnboardNow": "Now",
+  "assistantOnboardCorrect": "Correct",
+  "assistantOnboardCorrectTitle": "Correct boarding",
+  "assistantOnboardCorrectBody": "Did {name} board after all?",
+  "@assistantOnboardCorrectBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantOnboardCorrectSemantics": "Confirm boarding of {name}",
+  "@assistantOnboardCorrectSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "assistantStopsNoShow": "{name} {reason}",
   "@assistantStopsNoShow": {
     "placeholders": {
