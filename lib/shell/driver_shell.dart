@@ -31,6 +31,7 @@ class DriverShell extends StatefulWidget {
     required this.openMyVans,
     required this.openVanRegistration,
     required this.openVanStudents,
+    required this.openVanDocuments,
     required this.openConversationChat,
     required this.proposalsActions,
     super.key,
@@ -46,6 +47,9 @@ class DriverShell extends StatefulWidget {
 
   final Future<void> Function(BuildContext context, DriverVan van)
   openVanStudents;
+
+  final Future<void> Function(BuildContext context, DriverVan van)
+  openVanDocuments;
 
   final Future<void> Function(BuildContext context, Conversation conversation)
   openConversationChat;
@@ -105,6 +109,8 @@ class DriverShellState extends State<DriverShell> {
                   onOpenServiceAreas: () =>
                       openServiceAreasAndRefreshProfile(context),
                   onOpenStudents: (van) => widget.openVanStudents(context, van),
+                  onOpenVanDocuments: (van) =>
+                      widget.openVanDocuments(context, van),
                   onOpenComingSoon: (title) => openComingSoonPage(
                     context,
                     title: title,

@@ -42,6 +42,7 @@ Widget harness(
   DriverNegotiationsCubit? negotiationsCubit,
   VanCentralCubit? vanCentralCubit,
   Future<void> Function(BuildContext, DriverVan)? openVanStudents,
+  Future<void> Function(BuildContext, DriverVan)? openVanDocuments,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -73,6 +74,7 @@ Widget harness(
         openMyVans: (_) async {},
         openVanRegistration: (_) async {},
         openVanStudents: openVanStudents ?? (_, _) async {},
+        openVanDocuments: openVanDocuments ?? (_, _) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
         proposalsActions: DriverProposalsTabActions(
           onOpenRequest: (_) async {},
@@ -221,6 +223,34 @@ void main() {
       await tester.ensureVisible(find.text('Alunos'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Alunos'));
+      await tester.pumpAndSettle();
+
+      expect(opened, [firstVan]);
+      expect(find.byType(VanepComingSoonPage), findsNothing);
+      verify(() => centralCubit.refresh()).called(1);
+    },
+  );
+
+  testWidgets(
+    'van documents opens the selected van and refreshes the hub on return',
+    (tester) async {
+      final centralCubit = readyVanCentralCubit();
+      final opened = <DriverVan>[];
+      await tester.pumpWidget(
+        harness(
+          cubit,
+          authCubit,
+          profileSummaryCubit,
+          vanCentralCubit: centralCubit,
+          openVanDocuments: (_, van) async => opened.add(van),
+        ),
+      );
+
+      await tester.tap(find.bySemanticsLabel('Vans'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Documentos da van'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Documentos da van'));
       await tester.pumpAndSettle();
 
       expect(opened, [firstVan]);
