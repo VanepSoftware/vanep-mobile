@@ -2,9 +2,9 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 
 ## 1. Fase 1 — Contrato da captura (`VAN-86/1-document-capture-contract`)
 
-- [ ] 1.1 Testes primeiro para `isWithinDocumentUploadLimit`: 10 MB (10 × 1024 × 1024 bytes) passa e 10 MB + 1 byte não passa. Depois implementar; verificar com `make test`
-- [ ] 1.2 Criar `DocumentSource` (`scanner`, `gallery`, `pdfFile`), `PickedDocument` (equatable), `DocumentCaptureFailure` (`permissionDenied`, `tooLarge`, `unexpected`) e o contrato `DocumentCapture` em `lib/core/media/`, só o contrato; verificar com `flutter analyze --fatal-infos`
-- [ ] 1.3 Rodar `make lint` e `make test`
+- [x] 1.1 Testes primeiro para `isWithinDocumentUploadLimit`: 10 MB (10 × 1024 × 1024 bytes) passa e 10 MB + 1 byte não passa. Depois implementar; verificar com `make test`
+- [x] 1.2 Criar `DocumentSource` (`scanner`, `gallery`, `pdfFile`), `PickedDocument` (equatable), `DocumentCaptureFailure` (`permissionDenied`, `tooLarge`, `unexpected`) e o contrato `DocumentCapture` em `lib/core/media/`, só o contrato; verificar com `flutter analyze --fatal-infos`
+- [x] 1.3 Rodar `make lint` e `make test`
 - [ ] 1.4 Abrir o PR
 
 ## 2. Fase 2 — Captura e envio de arquivo (`VAN-86/2-document-capture-impl`)
