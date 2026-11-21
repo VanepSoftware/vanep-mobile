@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/media/picked_photo.dart';
-import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/core/network/file_uploader.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_photo_side.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/value_objects/van_registration.dart';
 import 'package:vanep_mobile/modules/driver_vans/data/dtos/driver_van_dto.dart';
@@ -11,12 +11,12 @@ class DriverVanRemoteDataSource {
   const DriverVanRemoteDataSource({
     required this.dio,
     required this.environment,
-    required this.photoUploader,
+    required this.fileUploader,
   });
 
   final Dio dio;
   final Environment environment;
-  final PhotoUploader photoUploader;
+  final FileUploader fileUploader;
 
   Future<List<DriverVanDto>> fetchMyVans() async {
     final response = await dio.get<List<dynamic>>(
@@ -43,9 +43,10 @@ class DriverVanRemoteDataSource {
     VanPhotoSide side,
     PickedPhoto photo,
   ) {
-    return photoUploader.upload(
+    return fileUploader.upload(
       environment.vehiclePhotoEndpoint(vanToken, vanPhotoSlotName(side)),
-      photo,
+      path: photo.path,
+      fileName: photo.fileName,
     );
   }
 }
