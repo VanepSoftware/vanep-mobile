@@ -57,7 +57,7 @@ Alternativa descartada: pôr a tela Dados profissionais dentro de `driver_docume
 
 | Pedido | Usado em | Se atrasar |
 |---|---|---|
-| `GET /api/drivers/me/compliance` (situação calculada pela `DriverCompliancePolicy`, com `asOf`, requisitos do motorista e de cada van, `current`/`pending` e `expiringSoon` se vier) | todas as telas de leitura | a fase 5 implementa um datasource fictício com `TODO(VAN-86)` (R40b, R21) |
+| `GET /api/drivers/me/compliance` (situação calculada pela `DriverCompliancePolicy`, com `asOf`, requisitos do motorista e de cada van, `current`/`pending` e `expiringSoon` se vier) | todas as telas de leitura | a fase 6 implementa um datasource fictício com `TODO(VAN-86)` (R40b, R21) |
 | `file` {mimeType, sizeBytes, originalName} nos DTOs e no compliance | o nome do arquivo no detalhe | o detalhe mostra "Arquivo enviado" no lugar do nome |
 | limites de data com `code` estável | o erro por campo vindo do back | o app já valida antes de enviar (D6); o `detail` cai no erro genérico |
 | limite de upload do Spring separado da regra de 10 MB (`MEDIA_MAX_UPLOAD_SIZE_MB`, 11) | arquivos perto de 10 MB | o 413 vira a mensagem de tamanho; a VPS não tem nginx (o Cloudflare Tunnel liga direto à API), então não há outro limite no caminho |
@@ -208,16 +208,21 @@ Issue no Genwork: **VAN-86**. Branches empilhadas a partir de `VAN-86/spec-drive
 
 | Phase | Contents | Depends on | Parallel with |
 |----|----------|------------|---------------|
-| 1 | Contrato da captura em `core/media` (`DocumentCapture`, `PickedDocument`, `DocumentSource`, falhas, regra de tamanho) | — | 3 |
-| 2 | Implementações da captura, `FileUploader`, dependências e configuração nativa | 1 | 3, 4 |
-| 3 | Domínio de `driver_documents`: entidades, value objects, `resolveDocumentDisplayState`, agrupamento e resumo, `DocumentFieldRules`, drafts, falhas, contratos | — | 1, 2 |
-| 4 | Use cases de `driver_documents` | 3 | 2 |
-| 5 | Dados de `driver_documents`: DTOs, datasources, repositórios, endpoints, mapeamento de erros, container | 4 e o contrato do back (D2) | — |
-| 6 | Listas: `DriverComplianceCubit`, M1, M2, vazio sem van, entrada da Central da van, rotas | 5 | — |
-| 7 | Detalhe e M7, abrir o arquivo | 6, 2 | 8 |
-| 8 | Fluxo de envio: cubit, M3, M4, M6 (enviando, enviado, falha) | 6, 2 | 7 |
-| 9 | M5: formulários por tipo e da CNH, "Terminar envio" | 8 | 10 |
-| 10 | Dados profissionais: perfil com nota, avaliações e experiência; tela; menu da conta | 6 | 9 |
+| 1 | Contrato da captura em `core/media` (`DocumentCapture`, `PickedDocument`, `DocumentSource`, falhas, regra de tamanho) | — | — |
+| 2 | Implementações da captura, `FileUploader`, dependências e configuração nativa | 1 | 3 |
+| 3 | Modelo de `driver_documents`: value objects (`DocumentType`, estados, motivo, `DocumentFile`, `DocumentDisplayState`) e entidades abstratas | — | 2 |
+| 4 | Regras de `driver_documents`: `resolveDocumentDisplayState`, agrupamento e resumo, `DocumentFieldRules` e drafts | 3 | — |
+| 5 | Falhas, `SubmissionTarget`, contratos dos repositórios e use cases | 4 | — |
+| 6 | Dados de `driver_documents`: DTOs, datasources, repositórios, endpoints, mapeamento de erros, container | 5 e o contrato do back (D2) | — |
+| 7 | Listas: `DriverComplianceCubit`, M1, M2, vazio sem van, entrada da Central da van, rotas | 6 | — |
+| 8 | Detalhe e M7, abrir o arquivo | 7, 2 | 9 |
+| 9 | Fluxo de envio: cubit, M3, M4, M6 (enviando, enviado, falha) | 7, 2 | 8 |
+| 10 | M5: formulários por tipo e da CNH, "Terminar envio" | 9 | 11 |
+| 11 | Dados profissionais: perfil com nota, avaliações e experiência; tela; menu da conta | 7 | 10 |
+
+As branches são empilhadas na ordem das fases, mesmo quando duas poderiam andar em paralelo, para que cada PR tenha uma base só.
+
+A fase 3 original (domínio inteiro) foi dividida em 3, 4 e 5 antes de começar, porque passava de 10 arquivos de produção e 600 linhas (R23).
 
 Cada fase fica abaixo de 600 linhas produtivas e 10 arquivos novos (R23). Se passar, ela é dividida antes de começar.
 
@@ -239,8 +244,8 @@ Cada fase fica abaixo de 600 linhas produtivas e 10 arquivos novos (R23). Se pas
 ## Migration Plan
 
 Não há dado local para migrar. Cada fase entra atrás da tela que ainda não existe:
-- os documentos só aparecem quando a fase 6 liga a Central;
-- Dados profissionais só aparece quando a fase 10 liga o menu.
+- os documentos só aparecem quando a fase 7 liga a Central;
+- Dados profissionais só aparece quando a fase 11 liga o menu.
 Para voltar atrás, basta reverter o PR da fase.
 
 ## Open Questions
