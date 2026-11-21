@@ -88,7 +88,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 
 ## 10. Fase 10 — Dados do documento e CNH (`VAN-86/10-document-forms`)
 
-- [ ] 10.1 Testes de widget primeiro para a M5:
+- [x] 10.1 Testes de widget primeiro para a M5:
   - cartão do arquivo com "Trocar";
   - campos de cada tipo, a partir das `DocumentFieldRules`;
   - "(opcional)";
@@ -97,11 +97,11 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
   - erro de data por campo;
   - CRLV com "Válido até" vazio e a dica do calendário do Detran.
   Depois implementar
-- [ ] 10.2 Testes de widget primeiro para o formulário da CNH: máscara do registro com 9 a 11 dígitos, categorias, aviso sem D ou E, UF opcional e erro de número duplicado. Depois implementar
-- [ ] 10.3 Testes primeiro para "Terminar envio": carrega o envio pelo `FindSubmissionForResume`, preenche a M5 e envia com `existing(token)`. Depois ligar no detalhe
+- [x] 10.2 Testes de widget primeiro para o formulário da CNH: máscara do registro com 9 a 11 dígitos, categorias, aviso sem D ou E, UF opcional e erro de número duplicado. Depois implementar
+- [x] 10.3 Testes primeiro para "Terminar envio": carrega o envio pelo `FindSubmissionForResume`, preenche a M5 e envia com `existing(token)`. Depois ligar no detalhe
 - [ ] 10.4 Verificar no aparelho, contra o back local: envio novo, reenvio de reprovado, renovação, envio incompleto retomado e queda de rede no arquivo
-- [ ] 10.5 Rodar `make lint` e `make test`
-- [ ] 10.6 Abrir o PR
+- [x] 10.5 Rodar `make lint` e `make test`
+- [x] 10.6 Abrir o PR
 
 ## 11. Fase 11 — Dados profissionais (`VAN-86/11-professional-data`)
 

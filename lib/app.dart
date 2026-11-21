@@ -52,13 +52,13 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.da
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_source_sheet.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_submission_flow_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_action.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/entities/requirement_status.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_file_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_data_form_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_detail_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_image_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
@@ -836,6 +836,9 @@ Future<void> openDocumentSubmission(
   final vehicle = vehicleToken == null || compliance.state.compliance == null
       ? null
       : findVehicle(compliance.state.compliance!, vehicleToken);
+  final vehicleCaption = vehicle == null
+      ? null
+      : l10n.vanStudentsCaption(vehicle.model, vehicle.plate);
   final cubit = getIt<DocumentSubmissionCubit>(
     param1: type,
     param2: vehicleToken,
@@ -860,10 +863,9 @@ Future<void> openDocumentSubmission(
         ],
         child: Builder(
           builder: (pageContext) => DocumentSubmissionFlowPage(
-            vehicleCaption: vehicle == null
-                ? null
-                : l10n.vanStudentsCaption(vehicle.model, vehicle.plate),
-            dataFormBuilder: documentDataFormPlaceholder,
+            vehicleCaption: vehicleCaption,
+            dataFormBuilder: (_) =>
+                DocumentDataFormPage(vehicleCaption: vehicleCaption),
             onBackToDocuments: () => Navigator.of(pageContext).popUntil(
               (route) =>
                   !driverDocumentFlowRoutes.contains(route.settings.name),
@@ -880,19 +882,6 @@ const driverDocumentFlowRoutes = {
   '/driver/documents/detail',
   '/driver/documents/submission',
 };
-
-// TODO(VAN-86): the data form (M5) arrives in phase 10 of driver-documents;
-// until then the flow shows the coming soon content here. Replace it then.
-Widget documentDataFormPlaceholder(BuildContext context) {
-  final l10n = AppLocalizations.of(context)!;
-  return Scaffold(
-    appBar: AppBar(),
-    body: VanepComingSoon(
-      title: l10n.documentScanContinue,
-      message: l10n.comingSoon,
-    ),
-  );
-}
 
 Future<void> openDocumentImage(
   BuildContext context,
