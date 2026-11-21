@@ -41,10 +41,10 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 
 ## 5. Fase 5 — Contratos e use cases (`VAN-86/5-documents-usecases`)
 
-- [ ] 5.1 Criar `DocumentSubmissionFailure` (sealed), `ComplianceFailure`, `SubmissionTarget` e os contratos `DriverComplianceRepository` e `DocumentSubmissionRepository`, só os contratos
-- [ ] 5.2 Testes primeiro (`mocktail`) para `LoadMyCompliance`, `UploadDocumentFile`, `FindSubmissionForResume` e `DownloadDocumentFile`. Depois implementar
-- [ ] 5.3 Testes primeiro para `SubmitDocument`: novo envio → `create` e depois o arquivo; `existing(token)` → `update` e depois o arquivo; falha no arquivo → falha com o token; falha nos dados → o arquivo não é enviado. Depois implementar
-- [ ] 5.4 Rodar `make lint` e `make test`
+- [x] 5.1 Criar `DocumentSubmissionFailure` (sealed), `ComplianceFailure`, `SubmissionTarget` e os contratos `DriverComplianceRepository` e `DocumentSubmissionRepository`, só os contratos
+- [x] 5.2 Testes primeiro (`mocktail`) para `LoadMyCompliance`, `UploadDocumentFile`, `FindSubmissionForResume` e `DownloadDocumentFile`. Depois implementar
+- [x] 5.3 Testes primeiro para `SubmitDocument`: novo envio → `create` e depois o arquivo; `existing(token)` → `update` e depois o arquivo; falha no arquivo → falha com o token; falha nos dados → o arquivo não é enviado. Depois implementar
+- [x] 5.4 Rodar `make lint` e `make test`
 - [ ] 5.5 Abrir o PR
 
 ## 6. Fase 6 — Dados (`VAN-86/6-documents-data`)
