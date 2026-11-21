@@ -2928,6 +2928,33 @@
     }
   },
   "assistantStopsOrderByDriver": "Stop order set by the driver.",
+  "assistantAbsencesToday": "Today",
+  "assistantAbsencesUpcoming": "Next days",
+  "assistantAbsencesNobodyToday": "Nobody is missing today.",
+  "assistantAbsenceKindNotGoing": "Not going",
+  "assistantAbsenceKindOutboundOnly": "Outbound only",
+  "assistantAbsenceKindReturnOnly": "Return only",
+  "assistantAbsenceKindStopChange": "Stop",
+  "assistantAbsenceStopChange": "On the way back: {place}",
+  "@assistantAbsenceStopChange": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantAbsenceDate": "{weekday}, {date}",
+  "@assistantAbsenceDate": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantAbsencesFooter": "Absences come from the family. Stop changes are approved by the driver.",
   "assistantSkipReasonTitleBoarding": "Why didn't they board?",
   "assistantSkipReasonTitleDropOff": "Why didn't they get off?",
   "assistantSkipReasonOtherLabel": "Describe the reason",

@@ -23,6 +23,7 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_state.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_vans_labels.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/mappers/assistant_failure_l10n.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_absences_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_onboard_students_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_route_stops_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_home_cards.dart';
@@ -175,8 +176,7 @@ class AssistantHomeBody extends StatelessWidget {
         AssistantHomeShortcuts(
           isEnabled: hasActiveVan,
           onOpenRoute: () => openRouteStops(context),
-          // TODO(VAN-72): opens the absences screen once it exists.
-          onOpenAbsences: doNothingYet,
+          onOpenAbsences: () => openAbsences(context),
         ),
       ],
     );
@@ -341,6 +341,13 @@ class AssistantHomeSkeleton extends StatelessWidget {
 void openRouteStops(BuildContext context) {
   final cubit = context.read<AssistantHomeCubit>();
   Navigator.of(context).push(AssistantRouteStopsPage.route(cubit));
+}
+
+void openAbsences(BuildContext context) {
+  final cubit = context.read<AssistantHomeCubit>();
+  final vanToken = cubit.state.selectedVanToken;
+  if (vanToken == null) return;
+  Navigator.of(context).push(AssistantAbsencesPage.route(vanToken));
 }
 
 Future<void> confirmStopWithReasons(
