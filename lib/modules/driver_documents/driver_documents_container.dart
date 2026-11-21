@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/media/document_file_store.dart';
+import 'package:vanep_mobile/core/media/file_opener.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/core/network/file_uploader.dart';
 import 'package:vanep_mobile/modules/driver_documents/data/datasources/driver_documents_remote_datasource.dart';
@@ -13,6 +14,7 @@ import 'package:vanep_mobile/modules/driver_documents/domain/repositories/driver
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/download_document_file.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/load_my_compliance.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/submit_document.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_file_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
 
 void registerDriverDocumentsDependencies(GetIt getIt) {
@@ -44,5 +46,11 @@ void registerDriverDocumentsDependencies(GetIt getIt) {
     )
     ..registerFactory<DriverComplianceCubit>(
       () => DriverComplianceCubit(loadMyCompliance: getIt<LoadMyCompliance>()),
+    )
+    ..registerFactory<DocumentFileCubit>(
+      () => DocumentFileCubit(
+        downloadDocumentFile: getIt<DownloadDocumentFile>(),
+        fileOpener: getIt<FileOpener>(),
+      ),
     );
 }
