@@ -119,12 +119,20 @@ void main() {
 
     expect(find.text('Vans'), findsOneWidget);
     expect(find.byType(ClientVanCard), findsNWidgets(2));
+    expect(find.text('Carlos Alberto Silva'), findsOneWidget);
     expect(find.text('Mercedes-Benz Sprinter 415 CDI'), findsOneWidget);
-    expect(find.text('Motorista: Carlos Alberto Silva'), findsOneWidget);
+    expect(find.text('Mariana Costa'), findsOneWidget);
     expect(find.text('Renault Master'), findsOneWidget);
-    expect(find.text('Motorista: Mariana Costa'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Carlos Alberto Silva')).dy,
+      lessThan(tester.getTopLeft(find.text('Mercedes-Benz Sprinter 415 CDI')).dy),
+    );
+    expect(
+      tester.getTopLeft(find.text('Mariana Costa')).dy,
+      lessThan(tester.getTopLeft(find.text('Renault Master')).dy),
+    );
 
-    await tester.tap(find.text('Renault Master'));
+    await tester.tap(find.text('Mariana Costa'));
     await tester.pump();
     expect(tappedVan, _secondClientVan);
 
