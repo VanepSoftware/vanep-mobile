@@ -3,6 +3,8 @@ import 'package:get_it/get_it.dart';
 
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
 import 'package:vanep_mobile/modules/driver_search/data/datasources/driver_search_remote_datasource.dart';
 import 'package:vanep_mobile/modules/driver_search/data/repositories/driver_search_repository_impl.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/repositories/driver_search_repository.dart';
@@ -36,6 +38,8 @@ void registerDriverSearchDependencies(GetIt getIt) {
       () => DriverSearchCubit(
         searchDriversByPlace: getIt<SearchDriversByPlace>(),
         getRecommendedDrivers: getIt<GetRecommendedDrivers>(),
+        findMyPersonalAddress: getIt<FindMyPersonalAddress>(),
+        findMyDependents: getIt<FindMyDependents>(),
       ),
     );
 }

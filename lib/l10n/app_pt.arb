@@ -1334,5 +1334,62 @@
       }
     }
   },
-  "clientVansNoConversationYet": "Ainda não há uma conversa iniciada com este motorista."
+  "clientVansNoConversationYet": "Ainda não há uma conversa iniciada com este motorista.",
+  "findVanPrototypeSubtitle": "Quem atende o trajeto do seu filho",
+  "findVanHaveInvite": "Tenho\nconvite",
+  "findVanHaveInviteTitle": "Entrar com convite",
+  "findVanHaveInviteSubtitle": "Digite o código ou cole o link enviado pelo motorista.",
+  "findVanHaveInviteHint": "Código do convite",
+  "findVanHaveInviteAction": "Validar convite",
+  "findVanOriginLabel": "Embarque",
+  "findVanOriginPlaceholder": "Informar endereço de embarque",
+  "findVanDestinationLabel": "Destino",
+  "findVanDestinationPlaceholder": "Buscar escola ou endereço",
+  "findVanSwapTooltip": "Inverter embarque e destino",
+  "findVanHomePrefix": "Casa · {address}",
+  "@findVanHomePrefix": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "findVanForLabel": "Para",
+  "findVanDriversCount": "{count, plural, =1{1 motorista atende esse trajeto} other{{count} motoristas atendem esse trajeto}}",
+  "@findVanDriversCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "findVanSortNearest": "Mais próximos",
+  "findVanSortRating": "Melhor avaliação",
+  "findVanSortPrice": "Menor preço",
+  "findVanSortExperience": "Mais experientes",
+  "findVanSortSheetTitle": "Ordenar motoristas",
+  "findVanNewOnVanep": "Novo na Vanep",
+  "findVanExperienceYearsShort": "{years, plural, =1{1 ano de experiência} other{{years} anos de experiência}}",
+  "@findVanExperienceYearsShort": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "findVanSpotsAvailable": "Com vaga disponível",
+  "findVanSpotsFull": "Sem vaga disponível",
+  "findVanPriceStartingFrom": "a partir de",
+  "findVanPerMonth": "/mês",
+  "findVanPriceOnRequest": "Sob consulta",
+  "findVanProfileButton": "Perfil",
+  "findVanPrivacyNotice": "Até você aceitar uma proposta, o motorista vê só o bairro e o primeiro nome do seu filho.",
+  "findVanSearchSheetTitleOrigin": "Local de embarque",
+  "findVanSearchSheetTitleDestination": "Escola ou destino",
+  "findVanUseMyAddress": "Usar meu endereço",
+  "findVanFiltersButton": "Filtros",
+  "findVanFiltersSheetTitle": "Filtros",
+  "findVanFiltersDependentSubtitle": "Escolha para quem você procura uma van",
+  "findVanFiltersNoDependents": "Nenhum dependente cadastrado no momento.",
+  "findVanFiltersApply": "Aplicar"
 }

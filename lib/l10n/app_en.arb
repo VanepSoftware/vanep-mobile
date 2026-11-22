@@ -2762,5 +2762,62 @@
       }
     }
   },
-  "clientVansNoConversationYet": "There is no conversation started with this driver yet."
+  "clientVansNoConversationYet": "There is no conversation started with this driver yet.",
+  "findVanPrototypeSubtitle": "Who serves your child's route",
+  "findVanHaveInvite": "I have\nan invite",
+  "findVanHaveInviteTitle": "Join with invite",
+  "findVanHaveInviteSubtitle": "Enter the code or paste the link sent by the driver.",
+  "findVanHaveInviteHint": "Invite code",
+  "findVanHaveInviteAction": "Check invite",
+  "findVanOriginLabel": "Pickup",
+  "findVanOriginPlaceholder": "Enter pickup address",
+  "findVanDestinationLabel": "Destination",
+  "findVanDestinationPlaceholder": "Search school or address",
+  "findVanSwapTooltip": "Swap pickup and destination",
+  "findVanHomePrefix": "Home · {address}",
+  "@findVanHomePrefix": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "findVanForLabel": "For",
+  "findVanDriversCount": "{count, plural, =1{1 driver serves this route} other{{count} drivers serve this route}}",
+  "@findVanDriversCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "findVanSortNearest": "Nearest",
+  "findVanSortRating": "Highest rated",
+  "findVanSortPrice": "Lowest price",
+  "findVanSortExperience": "Most experienced",
+  "findVanSortSheetTitle": "Sort drivers",
+  "findVanNewOnVanep": "New on Vanep",
+  "findVanExperienceYearsShort": "{years, plural, =1{1 year of experience} other{{years} years of experience}}",
+  "@findVanExperienceYearsShort": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "findVanSpotsAvailable": "Spots available",
+  "findVanSpotsFull": "No spots available",
+  "findVanPriceStartingFrom": "starting at",
+  "findVanPerMonth": "/mo",
+  "findVanPriceOnRequest": "On request",
+  "findVanProfileButton": "Profile",
+  "findVanPrivacyNotice": "Until you accept a proposal, the driver only sees your neighborhood and your child's first name.",
+  "findVanSearchSheetTitleOrigin": "Pickup location",
+  "findVanSearchSheetTitleDestination": "School or destination",
+  "findVanUseMyAddress": "Use my address",
+  "findVanFiltersButton": "Filters",
+  "findVanFiltersSheetTitle": "Filters",
+  "findVanFiltersDependentSubtitle": "Choose who you are looking for a van for",
+  "findVanFiltersNoDependents": "No dependents registered yet.",
+  "findVanFiltersApply": "Apply"
 }

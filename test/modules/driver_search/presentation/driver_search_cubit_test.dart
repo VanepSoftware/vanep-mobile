@@ -268,4 +268,71 @@ void main() {
       expect(cubit.state.results, firstPage.drivers);
     },
   );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'filter, sort, dependent toggle, and swap actions update state',
+    setUp: () {
+      when(() => getRecommendedDrivers(page: any(named: 'page'))).thenAnswer(
+        (_) async => const Ok(
+          DriverSearchPage(
+            drivers: [
+              DriverSearchResult(
+                token: 'd1',
+                name: 'Alpha',
+                rating: 4.5,
+                basePrice: 350,
+                experienceYears: 5,
+                available: true,
+              ),
+              DriverSearchResult(
+                token: 'd2',
+                name: 'Beta',
+                rating: 4.9,
+                basePrice: 300,
+                experienceYears: 10,
+                available: false,
+              ),
+            ],
+            isLast: true,
+          ),
+        ),
+      );
+    },
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.loadRecommended();
+      cubit.setSortOrder(DriverSearchSortOrder.lowestPrice);
+      cubit.swapRoute();
+    },
+    verify: (cubit) {
+      expect(cubit.state.sortOrder, DriverSearchSortOrder.lowestPrice);
+      expect(cubit.state.routeSwapped, isTrue);
+      expect(cubit.state.displayedResults.map((d) => d.token), ['d1', 'd2']);
+    },
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'useProfileOrigin clears custom originLabel and restores search',
+    setUp: () {
+      stubPage(0, firstPage);
+      when(
+        () => getRecommendedDrivers(page: any(named: 'page')),
+      ).thenAnswer((_) async => const Ok(lastPage));
+    },
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.loadRecommended();
+      await cubit.searchFromRoute(
+        isDestination: false,
+        placeId: 'place-1',
+        label: 'Av. Paulista',
+      );
+      cubit.useProfileOrigin();
+    },
+    verify: (cubit) {
+      expect(cubit.state.originLabel, isNull);
+      expect(cubit.state.isShowingRecommended, isTrue);
+      expect(cubit.state.results.map((d) => d.token), ['d2']);
+    },
+  );
 }

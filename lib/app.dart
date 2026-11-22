@@ -329,11 +329,19 @@ Future<void> openQuoteRequest(BuildContext context, String driverToken) {
                 ),
             onCompleteClientField: (field) =>
                 openClientReadinessField(context, field),
-            onSent: (_) =>
-                Navigator.of(context)
-                    .pushReplacement(clientProposalsRoute(context)),
-            onOpenNegotiation: (request) =>
-                openProposalDetail(context, request),
+            onSent: (request) {
+              final navigator = Navigator.of(context);
+              if (request.conversationToken != null) {
+                navigator.pushReplacement(
+                  clientNegotiationChatRoute(context, request),
+                );
+              } else {
+                navigator.pushReplacement(clientProposalsRoute(context));
+              }
+            },
+            onOpenNegotiation: (request) => request.conversationToken != null
+                ? openClientNegotiationChat(context, request)
+                : openProposalDetail(context, request),
           ),
         ),
       ),
@@ -512,6 +520,56 @@ Future<void> openInboxConversation(
   );
 }
 
+Route<void> conversationChatRoute(
+  BuildContext context, {
+  required String conversationToken,
+  required String counterpartName,
+  required ConversationParticipant viewerSide,
+}) {
+  return rolePageRoute<void>(
+    context: context,
+    settings: RouteSettings(name: '/${viewerSide.name}/chat'),
+    builder: (_) => switch (viewerSide) {
+      ConversationParticipant.client => MultiBlocProvider(
+        providers: [
+          BlocProvider<ChatCubit>(
+            create: (_) => getIt<ChatCubit>(param1: conversationToken)..start(),
+          ),
+          BlocProvider<NegotiationTimelineCubit<ClientServiceRequest>>(
+            create: (_) =>
+                getIt<NegotiationTimelineCubit<ClientServiceRequest>>(
+                  param1: conversationToken,
+                )..load(),
+          ),
+        ],
+        child: ChatPage<ClientServiceRequest>(
+          counterpartName: counterpartName,
+          viewerSide: ConversationParticipant.client,
+          negotiationActions: clientNegotiationChatActions(context),
+        ),
+      ),
+      ConversationParticipant.driver => MultiBlocProvider(
+        providers: [
+          BlocProvider<ChatCubit>(
+            create: (_) => getIt<ChatCubit>(param1: conversationToken)..start(),
+          ),
+          BlocProvider<NegotiationTimelineCubit<DriverServiceRequest>>(
+            create: (_) =>
+                getIt<NegotiationTimelineCubit<DriverServiceRequest>>(
+                  param1: conversationToken,
+                )..load(),
+          ),
+        ],
+        child: ChatPage<DriverServiceRequest>(
+          counterpartName: counterpartName,
+          viewerSide: ConversationParticipant.driver,
+          negotiationActions: driverNegotiationChatActions(context),
+        ),
+      ),
+    },
+  );
+}
+
 Future<void> openConversationChat(
   BuildContext context, {
   required String conversationToken,
@@ -519,49 +577,11 @@ Future<void> openConversationChat(
   required ConversationParticipant viewerSide,
 }) {
   return Navigator.of(context).push(
-    rolePageRoute<void>(
-      context: context,
-      settings: RouteSettings(name: '/${viewerSide.name}/chat'),
-      builder: (_) => switch (viewerSide) {
-        ConversationParticipant.client => MultiBlocProvider(
-          providers: [
-            BlocProvider<ChatCubit>(
-              create: (_) =>
-                  getIt<ChatCubit>(param1: conversationToken)..start(),
-            ),
-            BlocProvider<NegotiationTimelineCubit<ClientServiceRequest>>(
-              create: (_) =>
-                  getIt<NegotiationTimelineCubit<ClientServiceRequest>>(
-                    param1: conversationToken,
-                  )..load(),
-            ),
-          ],
-          child: ChatPage<ClientServiceRequest>(
-            counterpartName: counterpartName,
-            viewerSide: ConversationParticipant.client,
-            negotiationActions: clientNegotiationChatActions(context),
-          ),
-        ),
-        ConversationParticipant.driver => MultiBlocProvider(
-          providers: [
-            BlocProvider<ChatCubit>(
-              create: (_) =>
-                  getIt<ChatCubit>(param1: conversationToken)..start(),
-            ),
-            BlocProvider<NegotiationTimelineCubit<DriverServiceRequest>>(
-              create: (_) =>
-                  getIt<NegotiationTimelineCubit<DriverServiceRequest>>(
-                    param1: conversationToken,
-                  )..load(),
-            ),
-          ],
-          child: ChatPage<DriverServiceRequest>(
-            counterpartName: counterpartName,
-            viewerSide: ConversationParticipant.driver,
-            negotiationActions: driverNegotiationChatActions(context),
-          ),
-        ),
-      },
+    conversationChatRoute(
+      context,
+      conversationToken: conversationToken,
+      counterpartName: counterpartName,
+      viewerSide: viewerSide,
     ),
   );
 }
@@ -579,17 +599,25 @@ NegotiationChatActions<ClientServiceRequest> clientNegotiationChatActions(
   );
 }
 
+Route<void> clientNegotiationChatRoute(
+  BuildContext context,
+  ClientServiceRequest request,
+) {
+  return conversationChatRoute(
+    context,
+    conversationToken: request.conversationToken!,
+    counterpartName: request.driverName,
+    viewerSide: ConversationParticipant.client,
+  );
+}
+
 Future<void> openClientNegotiationChat(
   BuildContext context,
   ClientServiceRequest request,
 ) async {
-  final conversationToken = request.conversationToken;
-  if (conversationToken == null) return;
-  await openConversationChat(
-    context,
-    conversationToken: conversationToken,
-    counterpartName: request.driverName,
-    viewerSide: ConversationParticipant.client,
+  if (request.conversationToken == null) return;
+  await Navigator.of(context).push(
+    clientNegotiationChatRoute(context, request),
   );
 }
 
