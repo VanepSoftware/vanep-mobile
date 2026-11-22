@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
+import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/personal_data_cubit.dart';
@@ -10,15 +12,17 @@ import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_
 import 'package:vanep_mobile/modules/client_home/presentation/pages/client_home_tab.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/helpers/client_van_chat_launcher.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_van_detail_page.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_vans_page.dart';
-import 'package:vanep_mobile/modules/conversations/data/dtos/conversation_dto.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
-import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_state.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/conversations_inbox_tab.dart';
+import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_detail_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_page.dart';
 import 'package:vanep_mobile/shell/client_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
@@ -114,6 +118,7 @@ class ClientShellState extends State<ClientShell> {
               context,
               van: van,
               onChatWithDriver: () => _openChatWithDriver(van),
+              onDependentTapped: _openDependentProfileFromVan,
             ),
             onChatTapped: _openChatWithDriver,
           ),
@@ -172,56 +177,55 @@ class ClientShellState extends State<ClientShell> {
   }
 
   Future<void> _openChatWithDriver(ClientVan van) async {
-    final inboxCubit = context.read<ConversationsInboxCubit>();
-    if (inboxCubit.state.status != ConversationsInboxStatus.ready) {
-      await inboxCubit.loadConversations();
+    final target = await resolveConversationForClientVan(context, van);
+    if (!mounted) return;
+    if (target == null) {
+      final l10n = AppLocalizations.of(context)!;
+      VanepFeedback.showInfo(context, l10n.clientVansNoConversationYet);
+      return;
+    }
+    await widget.openConversationChat(context, target);
+  }
+
+  Future<void> _openDependentProfileFromVan(ClientVanDependent vanDep) async {
+    final dependentsCubit = context.read<DependentsCubit>();
+    if (dependentsCubit.state.status != DependentsStatus.ready ||
+        _findMatchingDependent(dependentsCubit.state.dependents, vanDep) ==
+            null) {
+      await dependentsCubit.loadDependents();
     }
     if (!mounted) return;
 
-    final conversations = inboxCubit.state.conversations;
-    Conversation? target;
-
-    if (van.driver.token.isNotEmpty) {
-      for (final conv in conversations) {
-        if (conv.driverToken == van.driver.token) {
-          target = conv;
-          break;
-        }
-      }
-    }
-
-    if (target == null && van.driver.name.isNotEmpty) {
-      for (final conv in conversations) {
-        if (conv.driverName.trim().toLowerCase() ==
-            van.driver.name.trim().toLowerCase()) {
-          target = conv;
-          break;
-        }
-      }
-    }
-
-    if (target == null) {
-      await inboxCubit.loadConversations();
-      if (!mounted) return;
-      final refreshed = inboxCubit.state.conversations;
-      for (final conv in refreshed) {
-        if ((van.driver.token.isNotEmpty &&
-                conv.driverToken == van.driver.token) ||
-            (van.driver.name.isNotEmpty &&
-                conv.driverName.trim().toLowerCase() ==
-                    van.driver.name.trim().toLowerCase())) {
-          target = conv;
-          break;
-        }
-      }
-    }
-
-    target ??= ConversationDto(
-      token: van.token,
-      driverToken: van.driver.token,
-      driverName: van.driver.name,
+    final match = _findMatchingDependent(
+      dependentsCubit.state.dependents,
+      vanDep,
     );
 
-    await widget.openConversationChat(context, target);
+    if (match == null) {
+      final l10n = AppLocalizations.of(context)!;
+      VanepFeedback.showInfo(
+        context,
+        l10n.clientVanDependentNotInList(vanDep.name),
+      );
+      return;
+    }
+
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    selectShellTab(clientShellDependentsTabIndex);
+    await openDependentDetail(context, match.token);
+  }
+
+  Dependent? _findMatchingDependent(
+    List<Dependent> dependents,
+    ClientVanDependent vanDep,
+  ) {
+    final targetName = vanDep.name.trim().toLowerCase();
+    for (final dep in dependents) {
+      if (dep.token == vanDep.token ||
+          dep.name.trim().toLowerCase() == targetName) {
+        return dep;
+      }
+    }
+    return null;
   }
 }
