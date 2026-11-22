@@ -13,12 +13,14 @@ class DocumentSubmissionFlowPage extends StatelessWidget {
   const DocumentSubmissionFlowPage({
     required this.dataFormBuilder,
     required this.onBackToDocuments,
+    required this.onOpenPending,
     this.vehicleCaption,
     super.key,
   });
 
   final WidgetBuilder dataFormBuilder;
   final VoidCallback onBackToDocuments;
+  final OpenPendingDocument onOpenPending;
   final String? vehicleCaption;
 
   @override
@@ -57,6 +59,7 @@ class DocumentSubmissionFlowPage extends StatelessWidget {
             state: state,
             vehicleCaption: vehicleCaption,
             onBackToDocuments: onBackToDocuments,
+            onOpenPending: onOpenPending,
           ),
           _ => dataFormBuilder(context),
         };

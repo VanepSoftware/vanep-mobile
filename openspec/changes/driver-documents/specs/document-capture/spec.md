@@ -7,7 +7,7 @@ Deixa o motorista produzir o arquivo de um documento (escaneado, foto da galeria
 ### Requirement: Escolher como enviar
 
 Tocar na ação de envio de um documento SHALL abrir a folha "Como você quer enviar?", com o nome do documento no título e três opções nesta ordem:
-- "Escanear com a câmera", com o selo "Recomendado";
+- "Escanear com a câmera", com o cartão em destaque (sem selo) e a descrição "Fotografe o documento agora com a câmera. Se ele tiver verso, fotografe os dois lados.";
 - "Escolher da galeria";
 - "Escolher arquivo PDF".
 

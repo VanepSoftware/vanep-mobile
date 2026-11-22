@@ -50,6 +50,7 @@ void main() {
       DocumentSubmissionState state, {
       TestCompliance? compliance,
       VoidCallback? onBack,
+      OpenPendingDocument? onOpenPending,
     }) {
       return tester.pumpWidget(
         host(
@@ -57,6 +58,7 @@ void main() {
             state: state,
             vehicleCaption: 'Sprinter · SDF4E21',
             onBackToDocuments: onBack ?? () {},
+            onOpenPending: onOpenPending ?? (_, _) {},
           ),
           compliance: compliance,
         ),
@@ -97,17 +99,51 @@ void main() {
       );
 
       expect(find.text('Documento enviado'), findsOneWidget);
-      expect(find.text('Ainda falta'), findsOneWidget);
+      expect(find.text('Pendências'), findsOneWidget);
       expect(find.text('Certidão criminal'), findsOneWidget);
       expect(find.text('Reprovado'), findsOneWidget);
       await tester.tap(find.text('Voltar para os documentos'));
       expect(wentBack, isTrue);
     });
 
+    testWidgets('tapping a pending document opens it, with its van', (
+      tester,
+    ) async {
+      final opened = <(DocumentType, String?)>[];
+      await pumpStatus(
+        tester,
+        cubit.state.copyWith(step: SubmissionStep.sent),
+        compliance: TestCompliance(
+          driverRequirements: [
+            rejected(DocumentType.criminalRecord),
+            missing(DocumentType.municipalAuthorization, optional: true),
+          ],
+          vehicles: [
+            TestVehicle(
+              token: 'sprinter',
+              plate: 'SDF4E21',
+              model: 'Sprinter',
+              requirements: [missing(DocumentType.vehicleInspection)],
+            ),
+          ],
+        ),
+        onOpenPending: (entry, vehicleToken) =>
+            opened.add((entry.requirement.type, vehicleToken)),
+      );
+
+      expect(find.text('Alvará municipal'), findsNothing);
+      await tester.tap(find.text('Certidão criminal'));
+      await tester.tap(find.text('Vistoria semestral'));
+      expect(opened, [
+        (DocumentType.criminalRecord, null),
+        (DocumentType.vehicleInspection, 'sprinter'),
+      ]);
+    });
+
     testWidgets('nothing missing hides the list', (tester) async {
       await pumpStatus(tester, cubit.state.copyWith(step: SubmissionStep.sent));
 
-      expect(find.text('Ainda falta'), findsNothing);
+      expect(find.text('Pendências'), findsNothing);
     });
 
     testWidgets('a failed upload offers to try again or review the data', (

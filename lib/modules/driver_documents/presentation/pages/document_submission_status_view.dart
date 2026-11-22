@@ -14,17 +14,24 @@ import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/do
 import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/document_submission_labels.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_status_card.dart';
 
+typedef OpenPendingDocument = void Function(
+  DocumentEntry entry,
+  String? vehicleToken,
+);
+
 class DocumentSubmissionStatusView extends StatelessWidget {
   const DocumentSubmissionStatusView({
     required this.state,
     required this.vehicleCaption,
     required this.onBackToDocuments,
+    required this.onOpenPending,
     super.key,
   });
 
   final DocumentSubmissionState state;
   final String? vehicleCaption;
   final VoidCallback onBackToDocuments;
+  final OpenPendingDocument onOpenPending;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +41,7 @@ class DocumentSubmissionStatusView extends StatelessWidget {
         child: switch (state.step) {
           SubmissionStep.sent => DocumentSentView(
             onBackToDocuments: onBackToDocuments,
+            onOpenPending: onOpenPending,
           ),
           SubmissionStep.failed => DocumentSendFailedView(
             failure: state.failure,
@@ -130,9 +138,14 @@ class DocumentSendingView extends StatelessWidget {
 }
 
 class DocumentSentView extends StatelessWidget {
-  const DocumentSentView({required this.onBackToDocuments, super.key});
+  const DocumentSentView({
+    required this.onBackToDocuments,
+    required this.onOpenPending,
+    super.key,
+  });
 
   final VoidCallback onBackToDocuments;
+  final OpenPendingDocument onOpenPending;
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +194,8 @@ class DocumentSentView extends StatelessWidget {
                   DocumentStatusCard(
                     entry: missing.entry,
                     caption: missing.vehicleCaption,
+                    onTap: () =>
+                        onOpenPending(missing.entry, missing.vehicleToken),
                   ),
                   const SizedBox(height: 10),
                 ],
@@ -201,9 +216,14 @@ class DocumentSentView extends StatelessWidget {
 }
 
 class StillMissingEntry {
-  const StillMissingEntry({required this.entry, this.vehicleCaption});
+  const StillMissingEntry({
+    required this.entry,
+    this.vehicleToken,
+    this.vehicleCaption,
+  });
 
   final DocumentEntry entry;
+  final String? vehicleToken;
   final String? vehicleCaption;
 }
 
@@ -224,6 +244,7 @@ List<StillMissingEntry> stillMissingEntries(
       for (final entry in van.groups.pending)
         StillMissingEntry(
           entry: entry,
+          vehicleToken: van.vehicle.token,
           vehicleCaption: l10n.vanStudentsCaption(
             van.vehicle.model,
             van.vehicle.plate,

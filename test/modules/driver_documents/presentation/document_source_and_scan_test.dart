@@ -68,7 +68,7 @@ void main() {
       return results;
     }
 
-    testWidgets('shows the three ways, the recommendation and the tip', (
+    testWidgets('shows the three ways and the tip, with no badge', (
       tester,
     ) async {
       await openSheet(tester);
@@ -76,7 +76,13 @@ void main() {
       expect(find.text('Autorização escolar'), findsOneWidget);
       expect(find.text('Como você quer enviar?'), findsOneWidget);
       expect(find.text('Escanear com a câmera'), findsOneWidget);
-      expect(find.text('Recomendado'), findsOneWidget);
+      expect(
+        find.text(
+          'Fotografe o documento agora com a câmera. Se ele tiver verso, fotografe os dois lados.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Recomendado'), findsNothing);
       expect(find.text('Escolher da galeria'), findsOneWidget);
       expect(find.text('Escolher arquivo PDF'), findsOneWidget);
       expect(

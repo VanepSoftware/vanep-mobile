@@ -94,6 +94,8 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 9.2 Testes de widget primeiro para a M3 (três opções, selo, dica, aviso de tamanho e de permissão) e para a M4 (destaque, miniaturas, "1 de 2", "Escanear de novo", "Continuar"). Depois implementar
 - [x] 9.3 Testes de widget primeiro para a M6 (enviando com MB e porcentagem, enviado com "Ainda falta", falha com as duas ações). Depois implementar; textos no ARB
 - [x] 9.4 Página do fluxo: recarrega a situação ao enviar, sai do fluxo quando há envio pendente ou já revisado, e "Voltar para os documentos" volta à lista. A rota `openDocumentSubmission` abre a M3 a partir da ação do detalhe e, em "Terminar envio", carrega o envio incompleto. Até a fase 10, a etapa de dados mostra "Em breve" (`TODO(VAN-86)`)
+- [x] 9.4a Ajuste do teste no emulador: a M3 fica sem o selo "Recomendado" (o scanner continua em destaque) e a descrição do scanner diz o que o motorista faz
+- [x] 9.4b Ajuste do teste no emulador: na M6, "Ainda falta" vira "Pendências", e tocar num pendente fecha o fluxo e abre o detalhe dele
 - [x] 9.5 Rodar `make lint` e `make test`
 - [x] 9.6 Abrir o PR
 

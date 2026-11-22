@@ -796,31 +796,46 @@ Future<void> openDriverDocumentDetail(
   DocumentEntry entry, {
   String? vehicleToken,
 }) {
-  final compliance = context.read<DriverComplianceCubit>();
-  final type = entry.requirement.type;
   return Navigator.of(context).push(
-    rolePageRoute<void>(
-      context: context,
-      settings: const RouteSettings(name: '/driver/documents/detail'),
-      builder: (_) => MultiBlocProvider(
-        providers: [
-          BlocProvider<DriverComplianceCubit>.value(value: compliance),
-          BlocProvider<DocumentFileCubit>(
-            create: (_) => getIt<DocumentFileCubit>(),
-          ),
-        ],
-        child: Builder(
-          builder: (pageContext) => DocumentDetailPage(
+    driverDocumentDetailRoute(
+      context,
+      context.read<DriverComplianceCubit>(),
+      entry,
+      vehicleToken: vehicleToken,
+    ),
+  );
+}
+
+Route<void> driverDocumentDetailRoute(
+  BuildContext context,
+  DriverComplianceCubit compliance,
+  DocumentEntry entry, {
+  String? vehicleToken,
+}) {
+  final type = entry.requirement.type;
+  return rolePageRoute<void>(
+    context: context,
+    settings: const RouteSettings(name: '/driver/documents/detail'),
+    builder: (_) => MultiBlocProvider(
+      providers: [
+        BlocProvider<DriverComplianceCubit>.value(value: compliance),
+        BlocProvider<DocumentFileCubit>(
+          create: (_) => getIt<DocumentFileCubit>(),
+        ),
+      ],
+      child: Builder(
+        builder: (pageContext) => DocumentDetailPage(
+          type: type,
+          vehicleToken: vehicleToken,
+          onAction: (action, requirement) => openDocumentSubmission(
+            pageContext,
             type: type,
+            action: action,
+            requirement: requirement,
             vehicleToken: vehicleToken,
-            onSend: () => openDocumentSubmission(
-              pageContext,
-              type: type,
-              vehicleToken: vehicleToken,
-            ),
-            onOpenImage: (imageUrl) =>
-                openDocumentImage(pageContext, type, imageUrl),
           ),
+          onOpenImage: (imageUrl) =>
+              openDocumentImage(pageContext, type, imageUrl),
         ),
       ),
     ),
@@ -836,9 +851,10 @@ Future<void> openDocumentSubmission(
 }) async {
   final compliance = context.read<DriverComplianceCubit>();
   final l10n = AppLocalizations.of(context)!;
-  final vehicle = vehicleToken == null || compliance.state.compliance == null
+  final loaded = compliance.state.compliance;
+  final vehicle = vehicleToken == null || loaded == null
       ? null
-      : findVehicle(compliance.state.compliance!, vehicleToken);
+      : findVehicle(loaded, vehicleToken);
   final cubit = getIt<DocumentSubmissionCubit>(
     param1: type,
     param2: vehicleToken,
@@ -867,9 +883,15 @@ Future<void> openDocumentSubmission(
                 ? null
                 : l10n.vanStudentsCaption(vehicle.model, vehicle.plate),
             dataFormBuilder: documentDataFormPlaceholder,
-            onBackToDocuments: () => Navigator.of(pageContext).popUntil(
-              (route) =>
-                  !driverDocumentFlowRoutes.contains(route.settings.name),
+            onBackToDocuments: () =>
+                Navigator.of(pageContext).popUntil(isOutsideDocumentFlow),
+            onOpenPending: (entry, pendingVehicleToken) => unawaited(
+              replaceDocumentFlowWithDetail(
+                pageContext,
+                compliance,
+                entry,
+                vehicleToken: pendingVehicleToken,
+              ),
             ),
           ),
         ),
@@ -894,6 +916,27 @@ Widget documentDataFormPlaceholder(BuildContext context) {
       title: l10n.documentScanContinue,
       message: l10n.comingSoon,
     ),
+  );
+}
+
+bool isOutsideDocumentFlow(Route<dynamic> route) =>
+    !driverDocumentFlowRoutes.contains(route.settings.name);
+
+Future<void> replaceDocumentFlowWithDetail(
+  BuildContext context,
+  DriverComplianceCubit compliance,
+  DocumentEntry entry, {
+  String? vehicleToken,
+}) {
+  final navigator = Navigator.of(context);
+  return navigator.pushAndRemoveUntil(
+    driverDocumentDetailRoute(
+      navigator.context,
+      compliance,
+      entry,
+      vehicleToken: vehicleToken,
+    ),
+    isOutsideDocumentFlow,
   );
 }
 

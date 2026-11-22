@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/media/document_source.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
-import 'package:vanep_mobile/core/ui/vanep_chip.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/document_labels.dart';
@@ -72,7 +71,7 @@ class DocumentSourceSheet extends StatelessWidget {
                   icon: Icons.document_scanner_outlined,
                   title: l10n.documentSourceScanner,
                   hint: l10n.documentSourceScannerHint,
-                  badge: l10n.documentSourceRecommended,
+                  highlighted: true,
                   onTap: () => pick(DocumentSource.scanner),
                 ),
                 const SizedBox(height: 10),
@@ -141,7 +140,7 @@ class DocumentSourceOption extends StatelessWidget {
     required this.title,
     required this.hint,
     required this.onTap,
-    this.badge,
+    this.highlighted = false,
     super.key,
   });
 
@@ -149,27 +148,26 @@ class DocumentSourceOption extends StatelessWidget {
   final String title;
   final String hint;
   final VoidCallback onTap;
-  final String? badge;
+  final bool highlighted;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    final recommended = badge != null;
     return VanepCard(
       onTap: onTap,
-      highlighted: recommended,
+      highlighted: highlighted,
       child: Row(
         children: [
           Container(
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: recommended ? palette.actionSurface : palette.surface,
+              color: highlighted ? palette.actionSurface : palette.surface,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
-              color: recommended ? palette.action : palette.textPrimary,
+              color: highlighted ? palette.action : palette.textPrimary,
             ),
           ),
           const SizedBox(width: 14),
@@ -177,19 +175,7 @@ class DocumentSourceOption extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Wrap(
-                  spacing: 8,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Text(title, style: context.typography.cardTitle),
-                    if (badge != null)
-                      VanepChip(
-                        label: badge!,
-                        background: palette.actionSurface,
-                        foreground: palette.action,
-                      ),
-                  ],
-                ),
+                Text(title, style: context.typography.cardTitle),
                 const SizedBox(height: 3),
                 Text(
                   hint,
