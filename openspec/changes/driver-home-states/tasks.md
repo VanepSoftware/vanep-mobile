@@ -40,9 +40,9 @@ Presentation boundaries are provisional until measured against each predecessor.
 
 ## Phase 4 — Cards and shortcuts (`feat/VAN-66-home-cards`)
 
-- [ ] 4.1 Decouple main-card actions from the concrete Cubit through callbacks.
-- [ ] 4.2 Deliver main-card states and six fixed shortcuts with widget tests.
-- [ ] 4.3 Run analysis/widget tests, measure diff and open PR.
+- [x] 4.1 Decouple main-card actions from the concrete Cubit through callbacks.
+- [x] 4.2 Deliver main-card states and six fixed shortcuts with widget tests.
+- [x] 4.3 Run analysis/widget tests, measure diff and open PR.
 
 ## Phase 5 — Home integration (`feat/VAN-66-home-integration`)
 
