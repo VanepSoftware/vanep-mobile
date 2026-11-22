@@ -4,7 +4,7 @@ import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/failures/client_vans_failure.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/usecases/find_my_client_vans.dart';
 
-import '../fixtures/client_vans_fixtures.dart';
+import '../fixtures/client_vans_fixture.dart';
 import '../mocks/client_vans_mocks.dart';
 
 void main() {

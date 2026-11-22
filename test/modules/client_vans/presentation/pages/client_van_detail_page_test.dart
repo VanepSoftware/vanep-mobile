@@ -7,7 +7,7 @@ import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart
 import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_van_detail_page.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/widgets/client_van_hero_card.dart';
 
-import '../../fixtures/client_vans_fixtures.dart';
+import '../../fixtures/client_vans_fixture.dart';
 
 void main() {
   Widget wrap(Widget child) {

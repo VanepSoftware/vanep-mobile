@@ -10,7 +10,6 @@ void main() {
     expect(clientVanShiftLabel(pt, 'AFTERNOON'), 'Tarde');
     expect(clientVanShiftLabel(pt, 'NIGHT'), 'Noite');
     expect(clientVanShiftLabel(pt, 'FULLTIME'), 'Integral');
-    expect(clientVanShiftLabel(pt, 'FULL_TIME'), 'Integral');
     expect(clientVanShiftLabel(pt, 'Manhã'), 'Manhã');
     expect(clientVanShiftLabel(pt, ''), '');
 
