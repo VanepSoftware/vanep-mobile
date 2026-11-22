@@ -53,13 +53,3 @@ enum DocumentType {
   static DocumentType? fromRequirementApi(Object? raw) =>
       findByApiName(values, (type) => type.requirementApiName, raw);
 }
-
-final List<DocumentType> personalDocumentTypes = [
-  for (final type in DocumentType.values)
-    if (!type.isVehicleDocument) type,
-];
-
-final List<DocumentType> vehicleDocumentTypes = [
-  for (final type in DocumentType.values)
-    if (type.isVehicleDocument) type,
-];

@@ -61,18 +61,4 @@ void main() {
     expect(DocumentType.vehicleInspection.isVehicleDocument, isTrue);
     expect(DocumentType.criminalRecord.isVehicleDocument, isFalse);
   });
-
-  test('personal and van documents keep the display order of the spec', () {
-    expect(personalDocumentTypes, [
-      DocumentType.driverLicense,
-      DocumentType.schoolDriverCourse,
-      DocumentType.criminalRecord,
-      DocumentType.municipalAuthorization,
-    ]);
-    expect(vehicleDocumentTypes, [
-      DocumentType.vehicleRegistration,
-      DocumentType.vehicleInspection,
-      DocumentType.schoolVehicleAuthorization,
-    ]);
-  });
 }
