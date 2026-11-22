@@ -15,6 +15,7 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_vans
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_vans_state.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_vans_labels.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/mappers/assistant_failure_l10n.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_route_stops_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_vans_cards.dart';
 
 const assistantVansPagePadding = EdgeInsets.fromLTRB(20, 24, 20, 24);
@@ -133,7 +134,12 @@ class AssistantVansContent extends StatelessWidget {
           ),
           const SizedBox(height: assistantVansCardSpacing),
           for (final (vanIndex, summary) in overview.activeVans.indexed) ...[
-            AssistantVanCard(summary: summary, toneIndex: vanIndex),
+            AssistantVanCard(
+              summary: summary,
+              toneIndex: vanIndex,
+              onOpenRoute: () => Navigator.of(context)
+                  .push(AssistantRouteStopsPage.routeOfVan(summary.van.token)),
+            ),
             const SizedBox(height: assistantVansCardSpacing),
           ],
         ],
