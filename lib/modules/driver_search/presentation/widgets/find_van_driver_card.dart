@@ -108,58 +108,71 @@ class FindVanDriverCard extends StatelessWidget {
                 color: context.palette.divider,
               ),
               const SizedBox(height: 12),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: _PriceFooter(basePrice: driver.basePrice),
-                  ),
-                  TextButton(
-                    onPressed: onProfileTapped ?? onTap,
-                    style: TextButton.styleFrom(
-                      foregroundColor: context.palette.action,
-                      minimumSize: const Size(44, 38),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+              SizedBox(
+                width: double.infinity,
+                child: Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _PriceFooter(basePrice: driver.basePrice),
+                    Wrap(
+                      spacing: 4,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.end,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: onProfileTapped ?? onTap,
+                          style: TextButton.styleFrom(
+                            foregroundColor: context.palette.action,
+                            minimumSize: const Size(44, 38),
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            l10n.findVanProfileButton,
+                            style: TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w600,
+                              color: context.palette.action,
+                            ),
+                          ),
+                        ),
+                        FilledButton(
+                          onPressed: driver.available ? onQuoteRequested : null,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: context.palette.action,
+                            foregroundColor: context.palette.onAction,
+                            disabledBackgroundColor:
+                                context.palette.inputBorder,
+                            disabledForegroundColor:
+                                context.palette.textMuted,
+                            minimumSize: const Size(0, 38),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 9,
+                            ),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            l10n.driverRequestQuoteButton,
+                            style: const TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      l10n.findVanProfileButton,
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w600,
-                        color: context.palette.action,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  FilledButton(
-                    onPressed: driver.available ? onQuoteRequested : null,
-                    style: FilledButton.styleFrom(
-                      backgroundColor: context.palette.action,
-                      foregroundColor: context.palette.onAction,
-                      disabledBackgroundColor: context.palette.inputBorder,
-                      disabledForegroundColor: context.palette.textMuted,
-                      minimumSize: const Size(0, 38),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 9,
-                      ),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      l10n.driverRequestQuoteButton,
-                      style: const TextStyle(
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -290,16 +303,20 @@ class _PriceFooter extends StatelessWidget {
         ),
         const SizedBox(height: 1),
         Row(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            Text(
-              formatMoney(l10n, cents),
-              style: TextStyle(
-                fontSize: 16.5,
-                fontWeight: FontWeight.w800,
-                color: context.palette.textPrimary,
-                height: 1.2,
+            Flexible(
+              child: Text(
+                formatMoney(l10n, cents),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w800,
+                  color: context.palette.textPrimary,
+                  height: 1.2,
+                ),
               ),
             ),
             Text(

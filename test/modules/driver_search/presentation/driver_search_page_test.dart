@@ -583,4 +583,46 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('driver card footer wraps without overflow on narrow large-text view', (
+    tester,
+  ) async {
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        results: [
+          DriverSearchResult(
+            token: 'd-tight',
+            name: 'Carlos Souza',
+            rating: 4.9,
+            basePrice: 1320,
+            experienceYears: 8,
+            available: true,
+            serviceAreas: ['Taguatinga'],
+          ),
+        ],
+      ),
+    );
+
+    tester.view.physicalSize = const Size(320, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(
+          size: Size(320, 1200),
+          textScaler: TextScaler.linear(1.5),
+        ),
+        child: harness(cubit, autocomplete),
+      ),
+    );
+
+    expect(find.text('Perfil'), findsOneWidget);
+    expect(find.text('Pedir orçamento'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

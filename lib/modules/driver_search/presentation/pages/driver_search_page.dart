@@ -172,11 +172,15 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                     onClearSearch: cubit.clearSearch,
                   ),
                 if (visibleDrivers.isNotEmpty) ...[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Text(
+                  SizedBox(
+                    width: double.infinity,
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        Text(
                           l10n.findVanDriversCount(visibleDrivers.length),
                           style: context.typography.sectionTitle.copyWith(
                             fontSize: 14,
@@ -184,42 +188,45 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                             height: 1.25,
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      InkWell(
-                        onTap: () => showFindVanSortSheet(
-                          context,
-                          current: state.sortOrder,
-                          onSelected: cubit.setSortOrder,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 4,
+                        InkWell(
+                          onTap: () => showFindVanSortSheet(
+                            context,
+                            current: state.sortOrder,
+                            onSelected: cubit.setSortOrder,
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                sortOrderLabel(l10n, state.sortOrder),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 4,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    sortOrderLabel(l10n, state.sortOrder),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: context.palette.action,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 2),
+                                Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  size: 18,
                                   color: context.palette.action,
                                 ),
-                              ),
-                              const SizedBox(width: 2),
-                              Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                size: 18,
-                                color: context.palette.action,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 12),
                 ],

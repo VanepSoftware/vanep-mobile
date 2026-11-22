@@ -141,9 +141,31 @@ final sampleDependents = [
   ),
 ];
 
+String? resolveMaterialFontsDir() {
+  final flutterRoot = Platform.environment['FLUTTER_ROOT'];
+  if (flutterRoot != null && flutterRoot.isNotEmpty) {
+    final candidate = Directory(
+      '$flutterRoot/bin/cache/artifacts/material_fonts',
+    );
+    if (candidate.existsSync()) return candidate.path;
+  }
+
+  var dir = File(Platform.resolvedExecutable).parent;
+  for (var i = 0; i < 8; i++) {
+    final candidate = Directory('${dir.path}/bin/cache/artifacts/material_fonts');
+    if (candidate.existsSync()) return candidate.path;
+    final directCandidate = Directory('${dir.path}/material_fonts');
+    if (directCandidate.existsSync()) return directCandidate.path;
+    final parent = dir.parent;
+    if (parent.path == dir.path) break;
+    dir = parent;
+  }
+  return null;
+}
+
 Future<void> loadAppFonts() async {
-  const fontDir =
-      '/home/caio-lucas/fvm/versions/3.47.2/bin/cache/artifacts/material_fonts';
+  final fontDir = resolveMaterialFontsDir();
+  if (fontDir == null) return;
 
   final materialIconsFile = File('$fontDir/MaterialIcons-Regular.otf');
   if (materialIconsFile.existsSync()) {
@@ -298,7 +320,10 @@ void main() {
   testWidgets('Generate Find Van Prototype & Flow Screenshots', (tester) async {
     tester.view.physicalSize = const Size(390 * 2.0, 920 * 2.0);
     tester.view.devicePixelRatio = 2.0;
-    addTearDown(() => tester.view.resetPhysicalSize());
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
 
     final datasource = MockPlaceAutocompleteDataSource();
     when(() => datasource.findSuggestions(any(), any()))
@@ -306,8 +331,11 @@ void main() {
     final autocomplete = PlaceAutocompleteController(datasource: datasource);
     addTearDown(() => autocomplete.dispose());
 
-    const outputDir =
-        '/home/caio-lucas/OpenBot/Agents/agent-ebf428e8-3963-4ee3-bd51-afa6caae68af/screenshots';
+    final outputDir = Platform.environment['VANEP_SCREENSHOTS_DIR'];
+    Future<void> saveScreenshot(GlobalKey key, String fileName) async {
+      if (outputDir == null || outputDir.isEmpty) return;
+      await capturePng(tester, key, '$outputDir/$fileName');
+    }
 
     // 1. Main Find Van Prototype Screen
     {
@@ -335,7 +363,7 @@ void main() {
         ),
       );
       await tester.pump(const Duration(milliseconds: 100));
-      await capturePng(tester, key, '$outputDir/1_find_van_recommended.png');
+      await saveScreenshot(key, '1_find_van_recommended.png');
     }
 
     // 2. Empty State Screenshot
@@ -366,7 +394,7 @@ void main() {
         ),
       );
       await tester.pump(const Duration(milliseconds: 100));
-      await capturePng(tester, key, '$outputDir/3_find_van_empty_state.png');
+      await saveScreenshot(key, '3_find_van_empty_state.png');
     }
 
     // 3. Driver Profile Screen (opened by "Perfil")
@@ -393,7 +421,7 @@ void main() {
         ),
       );
       await tester.pump(const Duration(milliseconds: 100));
-      await capturePng(tester, key, '$outputDir/4_driver_profile.png');
+      await saveScreenshot(key, '4_driver_profile.png');
     }
 
     // 4. Quote Request Screen (opened by "Pedir orçamento")
@@ -455,7 +483,7 @@ void main() {
         ),
       );
       await tester.pump(const Duration(milliseconds: 100));
-      await capturePng(tester, key, '$outputDir/5_quote_request.png');
+      await saveScreenshot(key, '5_quote_request.png');
     }
 
     // 5. Quote Chat Flow Screen (opened after sending quote request)
@@ -532,7 +560,7 @@ void main() {
         ),
       );
       await tester.pump(const Duration(milliseconds: 100));
-      await capturePng(tester, key, '$outputDir/6_quote_chat_flow.png');
+      await saveScreenshot(key, '6_quote_chat_flow.png');
     }
   });
 }
