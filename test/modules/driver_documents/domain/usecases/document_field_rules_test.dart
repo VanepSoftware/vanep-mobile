@@ -251,10 +251,14 @@ void main() {
       });
     });
 
-    test('the category must be one of the CNH categories', () {
-      expect(validateCnh(category: 'F'), {
-        DocumentField.cnhCategory: DocumentFieldError.invalidFormat,
-      });
+    test('the category must be one that allows school transport', () {
+      expect(cnhCategories, ['D', 'E', 'AD', 'AE']);
+      expect(validateCnh(category: 'ae'), isEmpty);
+      for (final category in ['F', 'B', 'AB']) {
+        expect(validateCnh(category: category), {
+          DocumentField.cnhCategory: DocumentFieldError.invalidFormat,
+        });
+      }
       expect(validateCnh(category: ''), {
         DocumentField.cnhCategory: DocumentFieldError.required,
       });
@@ -304,18 +308,15 @@ void main() {
       );
     });
 
-    test('the issuing state is two letters when filled', () {
+    test('the issuing state is one of the 27 states when filled', () {
+      expect(cnhIssuingStates, hasLength(27));
       expect(validateCnh(issuingState: 'SP'), isEmpty);
-      expect(validateCnh(issuingState: 'Sao'), {
-        DocumentField.cnhIssuingState: DocumentFieldError.invalidFormat,
-      });
-    });
-
-    test('only categories with D or E count for school transport', () {
-      expect(cnhCategoryAllowsSchoolTransport('D'), isTrue);
-      expect(cnhCategoryAllowsSchoolTransport('AE'), isTrue);
-      expect(cnhCategoryAllowsSchoolTransport('AB'), isFalse);
-      expect(cnhCategoryAllowsSchoolTransport('B'), isFalse);
+      expect(validateCnh(issuingState: 'DF'), isEmpty);
+      for (final state in ['Sao', 'XX']) {
+        expect(validateCnh(issuingState: state), {
+          DocumentField.cnhIssuingState: DocumentFieldError.invalidFormat,
+        });
+      }
     });
   });
 }

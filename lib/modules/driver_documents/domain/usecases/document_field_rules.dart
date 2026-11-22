@@ -7,21 +7,39 @@ import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/docum
 
 const int maxDocumentNumberLength = 64;
 
-const List<String> cnhCategories = [
-  'A',
-  'B',
-  'C',
-  'D',
-  'E',
-  'AB',
-  'AC',
-  'AD',
-  'AE',
-];
+const List<String> cnhCategories = ['D', 'E', 'AD', 'AE'];
 
 final RegExp cnhRegistrationPattern = RegExp(r'^\d{9,11}$');
 
-final RegExp issuingStatePattern = RegExp(r'^[A-Z]{2}$');
+const List<String> cnhIssuingStates = [
+  'AC',
+  'AL',
+  'AM',
+  'AP',
+  'BA',
+  'CE',
+  'DF',
+  'ES',
+  'GO',
+  'MA',
+  'MG',
+  'MS',
+  'MT',
+  'PA',
+  'PB',
+  'PE',
+  'PI',
+  'PR',
+  'RJ',
+  'RN',
+  'RO',
+  'RR',
+  'RS',
+  'SC',
+  'SE',
+  'SP',
+  'TO',
+];
 
 class FieldRule extends Equatable {
   const FieldRule(this.field, {required this.required});
@@ -76,11 +94,6 @@ DateTime? latestExpiryFor(DocumentType type, DateTime asOf) {
     DocumentType.municipalAuthorization => addCalendarMonths(asOf, 60),
     DocumentType.criminalRecord || DocumentType.driverLicense => null,
   };
-}
-
-bool cnhCategoryAllowsSchoolTransport(String category) {
-  final normalized = category.toUpperCase();
-  return normalized.contains('D') || normalized.contains('E');
 }
 
 Map<DocumentField, DocumentFieldError> validateDocumentDraft(
@@ -200,7 +213,7 @@ DocumentFieldError? validateCnhIssueDate(DateTime? issueDate, DateTime asOf) {
 DocumentFieldError? validateIssuingState(String? issuingState) {
   final state = issuingState?.trim() ?? '';
   if (state.isEmpty) return null;
-  return issuingStatePattern.hasMatch(state)
+  return cnhIssuingStates.contains(state.toUpperCase())
       ? null
       : DocumentFieldError.invalidFormat;
 }

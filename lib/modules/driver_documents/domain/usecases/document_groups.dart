@@ -16,13 +16,20 @@ class DocumentEntry extends Equatable {
 }
 
 class DocumentGroups extends Equatable {
-  const DocumentGroups({required this.pending, required this.sent});
+  const DocumentGroups({
+    required this.pending,
+    required this.sent,
+    required this.optional,
+  });
 
   final List<DocumentEntry> pending;
   final List<DocumentEntry> sent;
+  final List<DocumentEntry> optional;
+
+  List<DocumentEntry> get all => [...pending, ...sent, ...optional];
 
   @override
-  List<Object?> get props => [pending, sent];
+  List<Object?> get props => [pending, sent, optional];
 }
 
 class VehicleDocumentGroups {
@@ -51,14 +58,22 @@ DocumentGroups groupDocuments(
         (left, right) =>
             left.requirement.type.index - right.requirement.type.index,
       );
+  final required = [
+    for (final entry in entries)
+      if (!entry.requirement.optional) entry,
+  ];
   return DocumentGroups(
     pending: [
-      for (final entry in entries)
+      for (final entry in required)
         if (entry.state.needsAction) entry,
     ],
     sent: [
-      for (final entry in entries)
+      for (final entry in required)
         if (!entry.state.needsAction) entry,
+    ],
+    optional: [
+      for (final entry in entries)
+        if (entry.requirement.optional) entry,
     ],
   );
 }

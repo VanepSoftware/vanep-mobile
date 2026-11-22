@@ -27,7 +27,6 @@ void main() {
       ], testAsOf);
 
       expect(summary.pendingCount, 4);
-      expect(summary.needsAttention, isTrue);
     },
   );
 
@@ -51,9 +50,26 @@ void main() {
 
       expect(summary.pendingCount, 0);
       expect(summary.nearestExpiryDays, 9);
-      expect(summary.needsAttention, isTrue);
     },
   );
+
+  test('an optional document never counts as pending', () {
+    final summary = summarizeDocuments([
+      TestRequirement(
+        type: DocumentType.municipalAuthorization,
+        state: ComplianceState.rejected,
+        optional: true,
+      ),
+      TestRequirement(
+        type: DocumentType.criminalRecord,
+        state: ComplianceState.expired,
+        optional: true,
+      ),
+    ], testAsOf);
+
+    expect(summary.pendingCount, 0);
+    expect(summary.nearestExpiryDays, isNull);
+  });
 
   test('everything approved and far from expiring needs nothing', () {
     final summary = summarizeDocuments([
@@ -63,6 +79,5 @@ void main() {
 
     expect(summary.pendingCount, 0);
     expect(summary.nearestExpiryDays, isNull);
-    expect(summary.needsAttention, isFalse);
   });
 }

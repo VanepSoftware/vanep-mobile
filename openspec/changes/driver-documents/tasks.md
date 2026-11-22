@@ -33,6 +33,8 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 4.1 Testes primeiro para `resolveDocumentDisplayState`: cada linha da tabela da spec, inclusive envio incompleto, renovação em análise, "Vence hoje" e "Vence amanhã", o uso do `expiringSoon` quando vem do back e o `asOf` no lugar do relógio. Depois implementar
 - [x] 4.2 Testes primeiro para o agrupamento (Pendentes e Enviados, ordem por tipo, vans com pendência primeiro, "Em dia") e para `summarizeDocuments` (contagem de pendentes, vencimento mais próximo, opcional fora da contagem). Depois implementar
 - [x] 4.3 Testes primeiro para `DocumentFieldRules`: campos e obrigatórios de cada tipo; cada limite de data da spec (CRLV até 31/12 do ano que vem); o aviso de CNH sem D ou E. Depois implementar com os drafts sealed `PersonalDocumentDraft`, `VehicleDocumentDraft` e `CnhDraft`
+- [x] 4.3a Ajuste do teste no emulador: categorias da CNH só D, E, AD e AE (as mesmas que o back aceita) e UF emissora validada contra as 27 UFs
+- [x] 4.3b Ajuste do teste no emulador: documentos opcionais (alvará) ficam num grupo próprio e nunca contam como pendentes, nem na van nem no resumo
 - [x] 4.4 Rodar `make lint` e `make test`
 - [ ] 4.5 Abrir o PR
 
