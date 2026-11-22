@@ -134,8 +134,6 @@ class Environment {
 
   String get driverTripsStartEndpoint => '$driversMeEndpoint/trips/start';
 
-  String get clientDriversMeEndpoint => '$authBaseUrl/api/client-drivers/me';
-
   String get driverOccupancyEndpoint => '$driversMeEndpoint/occupancy';
 
   String get driverAvailabilityEndpoint => '$driversMeEndpoint/availability';
