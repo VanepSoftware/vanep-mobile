@@ -2549,6 +2549,7 @@
   "assistantNoShowReasonReturnedHome": "Had to go back home",
   "assistantNoShowReasonPickedUpByGuardian": "Picked up by the guardian",
   "assistantNoShowReasonSick": "Felt sick",
+  "assistantStatusNotGoingToday": "Not going today",
   "assistantHomeGreeting": "Hi, {name}!",
   "@assistantHomeGreeting": {
     "placeholders": {
@@ -2557,6 +2558,7 @@
       }
     }
   },
+  "assistantHomeNoVanSubtitle": "Your assistant account is ready.",
   "assistantHomeNoVanTitle": "No van yet",
   "assistantHomeNoVanBody": "Ask the driver to invite you",
   "assistantHomeNoVanHint": "The invite arrives at this e-mail and shows up here for you to accept.",
@@ -2582,6 +2584,7 @@
   "assistantHomeCapabilityHidden": "Prices, contracts and documents: only the driver",
   "assistantHomeInviteSubtitle": "You received an invite.",
   "assistantHomeTodayOutbound": "Today · outbound",
+  "assistantHomeTodayReturn": "Today · return",
   "assistantHomeNotStarted": "Not started",
   "assistantHomeNoTripToday": "No route today",
   "assistantHomeVanLabel": "{driver} · {model} {plate}",
@@ -2646,6 +2649,7 @@
   "assistantHomeFirstStops": "First stops",
   "assistantHomeNextStops": "Next stops",
   "assistantHomeSeeAll": "See all",
+  "assistantHomeOnRoute": "On route",
   "assistantHomeOnRouteSince": "{driver} · {leg} · since {time}",
   "@assistantHomeOnRouteSince": {
     "placeholders": {
@@ -2928,6 +2932,17 @@
     }
   },
   "assistantStopsOrderByDriver": "Stop order set by the driver.",
+  "assistantAbsencesSubtitle": "{driver} · {shift}",
+  "@assistantAbsencesSubtitle": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      },
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
   "assistantAbsencesToday": "Today",
   "assistantAbsencesUpcoming": "Next days",
   "assistantAbsencesNobodyToday": "Nobody is missing today.",
@@ -2995,10 +3010,82 @@
     }
   },
   "assistantVanDetailKeep": "Stay",
+  "assistantStudentToday": "Today · {status}",
+  "@assistantStudentToday": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantStudentTodayAwaiting": "waiting to board",
+  "assistantStudentTodayOnBoard": "on board",
+  "assistantStudentTodayDroppedOff": "dropped off",
+  "assistantStudentTodayNoShow": "did not board",
+  "assistantStudentBoardingTitle": "Boarding and drop-off",
+  "assistantStudentPickup": "Boarding",
+  "assistantStudentDropOff": "Drop-off",
+  "assistantStudentReturn": "Return",
+  "assistantStudentWindow": "Window {start}–{end}",
+  "@assistantStudentWindow": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantStudentReturnDeparture": "Leaves at {time}",
+  "@assistantStudentReturnDeparture": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantStudentSameStop": "same stop",
+  "assistantStudentDaysTitle": "Days and legs",
+  "assistantStudentSiblingsTitle": "In the same van",
+  "assistantStudentGuardianTitle": "Guardian",
+  "assistantStudentDriverNoteTitle": "Driver's note",
   "assistantSkipReasonTitleBoarding": "Why didn't they board?",
   "assistantSkipReasonTitleDropOff": "Why didn't they get off?",
   "assistantSkipReasonOtherLabel": "Describe the reason",
   "assistantSkipReasonConfirm": "Confirm",
+  "assistantHistoryTitle": "Boarding history",
+  "assistantHistoryLastDays": "Last 30 days",
+  "assistantHistoryBoardedAndDropped": "Boarded {boarded} · got off {dropped}",
+  "@assistantHistoryBoardedAndDropped": {
+    "placeholders": {
+      "boarded": {
+        "type": "String"
+      },
+      "dropped": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHistoryBoarded": "Boarded {time}",
+  "@assistantHistoryBoarded": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHistoryNoShow": "Did not board · {reason}",
+  "@assistantHistoryNoShow": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "assistantHistoryNotGoing": "Did not go",
+  "assistantHistoryNoRecord": "No record",
+  "assistantHistoryEmpty": "No records in the last 30 days.",
   "assistantFormerLinksTitle": "Former links",
   "assistantFormerLinksInfo": "You no longer see the route or the students of these vans.",
   "assistantFormerLinkPeriod": "{start} – {end}",

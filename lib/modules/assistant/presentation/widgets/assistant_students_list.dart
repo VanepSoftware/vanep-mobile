@@ -10,9 +10,11 @@ import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant
 const studentRowMinHeight = 64.0;
 
 class AssistantStudentRow extends StatelessWidget {
-  const AssistantStudentRow({required this.student, super.key});
+  const AssistantStudentRow({required this.student, this.onTap, super.key});
 
   final AssistantStudentSummary student;
+
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -30,62 +32,69 @@ class AssistantStudentRow extends StatelessWidget {
       if (student.isAbsentToday) l10n.assistantStudentsAbsentToday,
     ];
 
-    // TODO(VAN-74): the row becomes tappable (InkWell, button semantics and a
-    // chevron) when the student details screen exists.
     return Semantics(
       excludeSemantics: true,
+      button: onTap != null,
+      onTap: onTap,
       label: [student.name, stop, ...tags].join(', '),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: studentRowMinHeight),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Row(
-            children: [
-              VanepAvatar(
-                size: 40,
-                initials: assistantInitialOf(student.name),
-                backgroundColor: surface,
-                foregroundColor: accent,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      student.name,
-                      style: context.typography.cardTitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      stop,
-                      style: context.typography.cardSubtitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+      child: InkWell(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: studentRowMinHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Row(
+              children: [
+                VanepAvatar(
+                  size: 40,
+                  initials: assistantInitialOf(student.name),
+                  backgroundColor: surface,
+                  foregroundColor: accent,
                 ),
-              ),
-              if (!student.hasFamilyInApp) ...[
-                const SizedBox(width: 8),
-                Text(
-                  l10n.assistantStudentsWithoutFamily,
-                  style: context.typography.ratingLabel.copyWith(
-                    color: context.palette.textMuted,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        student.name,
+                        style: context.typography.cardTitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        stop,
+                        style: context.typography.cardSubtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-              if (student.isAbsentToday) ...[
-                const SizedBox(width: 8),
-                Text(
-                  l10n.assistantStudentsAbsentToday,
-                  style: context.typography.ratingLabel.copyWith(
-                    color: context.palette.warning,
+                if (!student.hasFamilyInApp) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    l10n.assistantStudentsWithoutFamily,
+                    style: context.typography.ratingLabel.copyWith(
+                      color: context.palette.textMuted,
+                    ),
                   ),
-                ),
+                ],
+                if (student.isAbsentToday) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    l10n.assistantStudentsAbsentToday,
+                    style: context.typography.ratingLabel.copyWith(
+                      color: context.palette.warning,
+                    ),
+                  ),
+                ],
+                if (onTap != null) ...[
+                  const SizedBox(width: 4),
+                  Icon(Icons.chevron_right, color: context.palette.textMuted),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
