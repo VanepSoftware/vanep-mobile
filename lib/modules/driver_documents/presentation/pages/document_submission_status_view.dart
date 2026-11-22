@@ -12,6 +12,7 @@ import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/documen
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/document_labels.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/document_submission_labels.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_source_sheet.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_status_card.dart';
 
 typedef OpenPendingDocument = void Function(
@@ -304,12 +305,12 @@ class DocumentSendFailedView extends StatelessWidget {
             children: [
               VanepPrimaryButton(
                 label: l10n.documentSendRetry,
-                onPressed: cubit.retry,
+                onPressed: cubit.submit,
               ),
               const SizedBox(height: 10),
               VanepSecondaryButton(
-                label: l10n.documentSendReviewData,
-                onPressed: cubit.reviewData,
+                label: l10n.documentSendChangeFile,
+                onPressed: () => showDocumentSourceSheet(context, cubit),
               ),
             ],
           ),

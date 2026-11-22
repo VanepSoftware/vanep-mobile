@@ -5,13 +5,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/media/document_capture_failure.dart';
 import 'package:vanep_mobile/core/media/document_source.dart';
 import 'package:vanep_mobile/core/result/result.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/usecases/find_submission_for_resume.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/submit_document.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/usecases/upload_document_file.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
-import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_scan_review_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_source_sheet.dart';
 
 import '../../../core/media/document_capture_fixture.dart';
@@ -33,8 +30,6 @@ void main() {
       type: DocumentType.schoolVehicleAuthorization,
       documentCapture: capture,
       submitDocument: SubmitDocument(submissions),
-      uploadDocumentFile: UploadDocumentFile(submissions),
-      findSubmissionForResume: FindSubmissionForResume(submissions),
     );
   });
 
@@ -123,48 +118,7 @@ void main() {
 
       expect(find.text('Como você quer enviar?'), findsNothing);
       expect(results, [true]);
-      expect(cubit.state.step, SubmissionStep.reviewingScan);
-    });
-  });
-
-  group('check the scan (M4)', () {
-    testWidgets('shows the pages, switches the page and continues', (
-      tester,
-    ) async {
-      cubit.emit(
-        cubit.state.copyWith(
-          step: SubmissionStep.reviewingScan,
-          file: testScannedDocument,
-        ),
-      );
-      await tester.pumpWidget(
-        host(const DocumentScanReviewView(file: testScannedDocument)),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('Confira o arquivo'), findsOneWidget);
-      expect(find.text('Autorização escolar · 2 páginas'), findsOneWidget);
-      expect(find.text('1 de 2'), findsOneWidget);
-
-      await tester.tap(find.bySemanticsLabel('Página 2'));
-      await tester.pumpAndSettle();
-      expect(find.text('2 de 2'), findsOneWidget);
-
-      await tester.tap(find.text('Continuar'));
-      expect(cubit.state.step, SubmissionStep.fillingData);
-    });
-
-    testWidgets('scan again opens the scanner again', (tester) async {
-      when(() => capture.capture(DocumentSource.scanner))
-          .thenAnswer((_) async => const Ok(null));
-      await tester.pumpWidget(
-        host(const DocumentScanReviewView(file: testScannedDocument)),
-      );
-
-      await tester.tap(find.text('Escanear de novo'));
-      await tester.pumpAndSettle();
-
-      verify(() => capture.capture(DocumentSource.scanner)).called(1);
+      expect(cubit.state.step, SubmissionStep.confirming);
     });
   });
 }

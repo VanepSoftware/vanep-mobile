@@ -25,12 +25,11 @@ String? submissionFailureMessage(
   return switch (failure) {
     PendingExistsFailure() => l10n.documentSubmissionPendingExists,
     AlreadyReviewedFailure() => l10n.documentSubmissionAlreadyReviewed,
-    CnhNumberTakenFailure() => l10n.documentSubmissionCnhTaken,
     UnsupportedFileFailure() => l10n.documentSubmissionUnsupportedFile,
     FileTooLargeFailure() => l10n.documentFileTooLarge,
     UnexpectedSubmissionFailure(:final detail) =>
       detail ?? l10n.documentSubmissionUnexpected,
-    FieldRejectedFailure() || NetworkSubmissionFailure() => null,
+    NetworkSubmissionFailure() => null,
   };
 }
 

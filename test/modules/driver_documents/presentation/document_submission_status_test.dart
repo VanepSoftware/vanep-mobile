@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/media/document_source.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/failures/document_submission_failure.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/usecases/find_submission_for_resume.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/submit_document.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/usecases/upload_document_file.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
@@ -30,8 +28,6 @@ void main() {
       type: DocumentType.schoolVehicleAuthorization,
       documentCapture: capture,
       submitDocument: SubmitDocument(submissions),
-      uploadDocumentFile: UploadDocumentFile(submissions),
-      findSubmissionForResume: FindSubmissionForResume(submissions),
     );
   });
 
@@ -146,7 +142,7 @@ void main() {
       expect(find.text('Pendências'), findsNothing);
     });
 
-    testWidgets('a failed upload offers to try again or review the data', (
+    testWidgets('a failed upload offers to try again or change the file', (
       tester,
     ) async {
       await pumpStatus(
@@ -160,13 +156,14 @@ void main() {
       expect(find.text('Não deu para enviar'), findsOneWidget);
       expect(
         find.text(
-          'A conexão caiu no meio do envio. O arquivo e os dados continuam aqui, é só tentar de novo.',
+          'A conexão caiu no meio do envio. O arquivo continua aqui, é só tentar de novo.',
         ),
         findsOneWidget,
       );
       expect(find.text('Tentar de novo'), findsOneWidget);
-      await tester.tap(find.text('Revisar dados'));
-      expect(cubit.state.step, SubmissionStep.fillingData);
+      await tester.tap(find.text('Trocar arquivo'));
+      await tester.pumpAndSettle();
+      expect(find.text('Como você quer enviar?'), findsOneWidget);
     });
 
     testWidgets('a refused file type says why', (tester) async {
