@@ -150,9 +150,8 @@ class SentSubmissionCard extends StatelessWidget {
           if (submission.fileUrl != null)
             DetailRow(
               label: l10n.documentDetailFile,
-              value:
-                  submission.file?.originalName ??
-                  l10n.documentDetailFileFallback,
+              value: l10n.documentDetailViewFile,
+              trailingIcon: Icons.visibility_outlined,
               onTap: () => onOpenFile(submission),
             ),
           if (number != null)
@@ -214,16 +213,20 @@ class DetailRow extends StatelessWidget {
     required this.label,
     required this.value,
     this.onTap,
+    this.trailingIcon,
     super.key,
   });
 
   final String label;
   final String value;
   final VoidCallback? onTap;
+  final IconData? trailingIcon;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    final icon = trailingIcon;
+    final valueColor = onTap == null ? palette.textPrimary : palette.action;
     final row = Container(
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: palette.divider)),
@@ -244,11 +247,15 @@ class DetailRow extends StatelessWidget {
               value,
               textAlign: TextAlign.right,
               style: context.typography.cardSubtitle.copyWith(
-                color: onTap == null ? palette.textPrimary : palette.action,
+                color: valueColor,
                 fontWeight: onTap == null ? null : FontWeight.w700,
               ),
             ),
           ),
+          if (icon != null) ...[
+            const SizedBox(width: 6),
+            Icon(icon, size: 18, color: valueColor),
+          ],
         ],
       ),
     );

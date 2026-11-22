@@ -49,6 +49,7 @@ void main() {
             type: type,
             vehicleToken: vehicleToken,
             onAction: actions.add,
+            onOpenImage: (_) {},
           ),
         ),
       ),
@@ -105,7 +106,7 @@ void main() {
     expect(find.text('Mensagem da equipe Vanep'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text(
-        'O resto do seu cadastro continua valendo. Só este documento precisa ser enviado de novo.',
+        'O resto do seu cadastro continua valendo. Este documento precisa ser enviado de novo.',
       ),
       200,
     );
@@ -199,7 +200,8 @@ void main() {
     expect(find.text('Sprinter · SDF4E21'), findsOneWidget);
     expect(find.text('SDF4E21'), findsOneWidget);
     expect(find.text('Vence em 9 dias'), findsOneWidget);
-    await tester.tap(find.text('Arquivo enviado'));
+    expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+    await tester.tap(find.text('Ver arquivo'));
     verify(
       () => fileCubit.open('/api/driver-documents/submission-1/file', any()),
     ).called(1);

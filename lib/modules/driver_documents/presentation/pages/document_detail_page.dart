@@ -26,15 +26,15 @@ class DocumentDetailPage extends StatelessWidget {
   const DocumentDetailPage({
     required this.type,
     required this.onAction,
+    required this.onOpenImage,
     this.vehicleToken,
-    this.onOpenImage,
     super.key,
   });
 
   final DocumentType type;
   final String? vehicleToken;
   final ValueChanged<DocumentAction> onAction;
-  final ValueChanged<String>? onOpenImage;
+  final ValueChanged<String> onOpenImage;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class DocumentDetailPage extends StatelessWidget {
           current.failed != previous.failed,
       listener: (context, state) {
         final imageUrl = state.imageUrl;
-        if (imageUrl != null) onOpenImage?.call(imageUrl);
+        if (imageUrl != null) onOpenImage(imageUrl);
         if (state.failed) {
           VanepFeedback.showError(context, l10n.documentFileOpenError);
         }
