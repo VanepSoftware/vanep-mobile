@@ -1,13 +1,12 @@
-import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
-import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_state.dart';
-import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_students_list_page.dart';
-import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_today_route_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_students_page.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_vans_page.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_bottom_nav.dart';
 import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -20,15 +19,15 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/assistant_shell.dart';
 
+import 'package:vanep_mobile/modules/assistant/presentation/pages/assistant_home_tab.dart';
+
+import '../modules/assistant/mocks/assistant_mocks.dart';
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 
 class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
     implements AssistantVanSelectorCubit {}
-
-class MockAssistantChecklistCubit extends MockCubit<AssistantChecklistState>
-    implements AssistantChecklistCubit {}
 
 const tVan1 = AssistantVan(
   token: 'van-1',
@@ -50,7 +49,6 @@ const tVan2 = AssistantVan(
 
 Widget buildTestHarness({
   required AssistantVanSelectorCubit vanSelectorCubit,
-  required AssistantChecklistCubit checklistCubit,
   required AuthCubit authCubit,
   required ProfileSummaryCubit profileSummaryCubit,
 }) {
@@ -67,7 +65,6 @@ Widget buildTestHarness({
       providers: [
         BlocProvider<AuthCubit>.value(value: authCubit),
         BlocProvider<AssistantVanSelectorCubit>.value(value: vanSelectorCubit),
-        BlocProvider<AssistantChecklistCubit>.value(value: checklistCubit),
         BlocProvider<ProfileSummaryCubit>.value(value: profileSummaryCubit),
       ],
       child: const AssistantShell(
@@ -83,19 +80,11 @@ Widget buildTestHarness({
 void main() {
   late MockAssistantVanSelectorCubit vanSelectorCubit;
   late MockAuthCubit authCubit;
-  late MockAssistantChecklistCubit checklistCubit;
   late MockProfileSummaryCubit profileSummaryCubit;
 
   setUp(() {
     vanSelectorCubit = MockAssistantVanSelectorCubit();
     authCubit = MockAuthCubit();
-    checklistCubit = MockAssistantChecklistCubit();
-    whenListen(
-      checklistCubit,
-      const Stream<AssistantChecklistState>.empty(),
-      initialState: const AssistantChecklistState(),
-    );
-    when(() => checklistCubit.loadRoute(any())).thenAnswer((_) async {});
     profileSummaryCubit = MockProfileSummaryCubit();
 
     whenListen(
@@ -105,9 +94,11 @@ void main() {
     );
     when(() => authCubit.refreshSessionProfile()).thenAnswer((_) async {});
     when(() => profileSummaryCubit.refresh(any())).thenAnswer((_) async {});
+    registerFakeAssistantTabs(getIt);
+    addTearDown(getIt.reset);
   });
 
-  testWidgets('starts on Rota tab and bottom bar has Rota, Alunos, Perfil', (
+  testWidgets('starts on Início and the bottom bar has Início, Vans, Alunos', (
     tester,
   ) async {
     whenListen(
@@ -122,21 +113,22 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
-        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
     );
 
-    expect(find.byType(AssistantTodayRoutePage), findsOneWidget);
+    expect(find.byType(AssistantHomeTab), findsOneWidget);
 
     final nav = tester.widget<VanepBottomNav>(find.byType(VanepBottomNav));
     expect([
       for (final i in nav.items) i.label,
-    ], equals(['Rota', 'Alunos', 'Meu perfil']));
+    ], equals(['Início', 'Vans', 'Alunos']));
   });
 
-  testWidgets('switching tabs updates active coming soon view', (tester) async {
+  testWidgets('switching tabs shows the vans and the students tabs', (
+    tester,
+  ) async {
     whenListen(
       vanSelectorCubit,
       const Stream<AssistantVanSelectorState>.empty(),
@@ -149,7 +141,6 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
-        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
@@ -158,12 +149,12 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Alunos'));
     await tester.pump();
 
-    expect(find.byType(AssistantStudentsListPage), findsOneWidget);
+    expect(find.byType(AssistantStudentsPage), findsOneWidget);
 
-    await tester.tap(find.bySemanticsLabel('Meu perfil'));
+    await tester.tap(find.bySemanticsLabel('Vans'));
     await tester.pump();
 
-    expect(find.text('Meu perfil'), findsNWidgets(2));
+    expect(find.byType(AssistantVansPage), findsOneWidget);
   });
 
   testWidgets('shows loading indicator when van selector is loading', (
@@ -178,7 +169,6 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
-        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
@@ -199,7 +189,6 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
-        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
@@ -209,7 +198,7 @@ void main() {
   });
 
   testWidgets(
-    'shows active van details without switch button when only 1 van exists',
+    'shows selected van details without switch button when only 1 van exists',
     (tester) async {
       whenListen(
         vanSelectorCubit,
@@ -223,14 +212,13 @@ void main() {
       await tester.pumpWidget(
         buildTestHarness(
           vanSelectorCubit: vanSelectorCubit,
-          checklistCubit: checklistCubit,
           authCubit: authCubit,
           profileSummaryCubit: profileSummaryCubit,
         ),
       );
 
       expect(find.text('Renault Master • ABC-1234'), findsOneWidget);
-      expect(find.text('Van ativa • manhã'), findsOneWidget);
+      expect(find.text('Van selecionada • manhã'), findsOneWidget);
       expect(find.text('Trocar van'), findsNothing);
     },
   );
@@ -250,7 +238,6 @@ void main() {
       await tester.pumpWidget(
         buildTestHarness(
           vanSelectorCubit: vanSelectorCubit,
-          checklistCubit: checklistCubit,
           authCubit: authCubit,
           profileSummaryCubit: profileSummaryCubit,
         ),
@@ -281,7 +268,6 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
-        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),
@@ -305,7 +291,6 @@ void main() {
     await tester.pumpWidget(
       buildTestHarness(
         vanSelectorCubit: vanSelectorCubit,
-        checklistCubit: checklistCubit,
         authCubit: authCubit,
         profileSummaryCubit: profileSummaryCubit,
       ),

@@ -18,22 +18,27 @@ List<(Color, Color)> vanIconTonesOf(VanepPalette palette) => [
   (palette.successSurface, palette.success),
 ];
 
-// TODO(VAN-68): the buttons of these cards do nothing until the screens they
-// open exist: Detalhes -> VAN-69, Rota de hoje -> VAN-71, Aceitar and Recusar
-// -> invite accept/reject (already in AssistantRemoteDataSource), Vínculos
-// anteriores -> no task yet. Replace each call site and delete this function.
+// TODO(VAN-68): Rota de hoje (VAN-71), Detalhes (VAN-69) and Vínculos
+// anteriores (VAN-69) do nothing until those screens exist. Wire each call
+// site and delete this function.
 void doNothingYet() {}
 
 class AssistantPendingInviteCard extends StatelessWidget {
   const AssistantPendingInviteCard({
     required this.invite,
     required this.daysLeft,
+    this.onAccept = doNothingYet,
+    this.onReject = doNothingYet,
     super.key,
   });
 
   final AssistantInvite invite;
 
   final int daysLeft;
+
+  final VoidCallback onAccept;
+
+  final VoidCallback onReject;
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +91,14 @@ class AssistantPendingInviteCard extends StatelessWidget {
                 Expanded(
                   child: VanepSecondaryButton(
                     label: l10n.assistantVansDecline,
-                    onPressed: doNothingYet,
+                    onPressed: onReject,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: VanepPrimaryButton(
                     label: l10n.assistantVansAccept,
-                    onPressed: doNothingYet,
+                    onPressed: onAccept,
                   ),
                 ),
               ],
@@ -109,12 +114,18 @@ class AssistantVanCard extends StatelessWidget {
   const AssistantVanCard({
     required this.summary,
     required this.toneIndex,
+    this.onOpenDetails = doNothingYet,
+    this.onOpenRoute = doNothingYet,
     super.key,
   });
 
   final AssistantVanSummary summary;
 
   final int toneIndex;
+
+  final VoidCallback onOpenDetails;
+
+  final VoidCallback onOpenRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -192,7 +203,7 @@ class AssistantVanCard extends StatelessWidget {
                 Expanded(
                   child: VanepSecondaryButton(
                     label: l10n.assistantVansDetails,
-                    onPressed: doNothingYet,
+                    onPressed: onOpenDetails,
                   ),
                 ),
                 if (summary.hasRouteToday) ...[
@@ -200,7 +211,7 @@ class AssistantVanCard extends StatelessWidget {
                   Expanded(
                     child: VanepPrimaryButton(
                       label: l10n.assistantVansRouteToday,
-                      onPressed: doNothingYet,
+                      onPressed: onOpenRoute,
                     ),
                   ),
                 ],
@@ -214,9 +225,15 @@ class AssistantVanCard extends StatelessWidget {
 }
 
 class AssistantFormerVansTile extends StatelessWidget {
-  const AssistantFormerVansTile({required this.count, super.key});
+  const AssistantFormerVansTile({
+    required this.count,
+    this.onTap = doNothingYet,
+    super.key,
+  });
 
   final int count;
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +244,7 @@ class AssistantFormerVansTile extends StatelessWidget {
       button: true,
       label: label,
       child: VanepCard(
-        onTap: doNothingYet,
+        onTap: onTap,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SizedBox(
           height: minimumTouchTarget + 12,

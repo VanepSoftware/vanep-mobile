@@ -58,7 +58,8 @@ void main() {
         status: 'PENDING',
       );
 
-      when(() => remote.validateInvite('CODE-123')).thenAnswer((_) async => dto);
+      when(() => remote.validateInvite('CODE-123'))
+          .thenAnswer((_) async => dto);
 
       final result = await repository.validateInvite('CODE-123');
 
@@ -67,8 +68,7 @@ void main() {
     });
 
     test('returns Err(network) when network fails', () async {
-      when(() => remote.validateInvite(any()))
-          .thenThrow(_dioException(null));
+      when(() => remote.validateInvite(any())).thenThrow(_dioException(null));
 
       final result = await repository.validateInvite('CODE');
 
@@ -76,28 +76,29 @@ void main() {
     });
 
     test('returns Err(invalidInviteCode) when status is 404', () async {
-      when(() => remote.validateInvite(any()))
-          .thenThrow(_dioException(404));
+      when(() => remote.validateInvite(any())).thenThrow(_dioException(404));
 
       final result = await repository.validateInvite('UNKNOWN');
 
       expect(result.errorOrNull, AssistantFailure.invalidInviteCode);
     });
 
-    test('returns Err(expiredInvite) when error payload indicates expiry', () async {
-      when(() => remote.validateInvite(any()))
-          .thenThrow(_dioException(400, data: {'code': 'invite_expired'}));
+    test(
+      'returns Err(expiredInvite) when error payload indicates expiry',
+      () async {
+        when(() => remote.validateInvite(any()))
+            .thenThrow(_dioException(400, data: {'code': 'invite_expired'}));
 
-      final result = await repository.validateInvite('EXPIRED');
+        final result = await repository.validateInvite('EXPIRED');
 
-      expect(result.errorOrNull, AssistantFailure.expiredInvite);
-    });
+        expect(result.errorOrNull, AssistantFailure.expiredInvite);
+      },
+    );
   });
 
   group('registerWithInvite', () {
     test('returns Ok(null) when registration succeeds', () async {
-      when(() => remote.registerWithInvite(any()))
-          .thenAnswer((_) async {});
+      when(() => remote.registerWithInvite(any())).thenAnswer((_) async {});
 
       final result = await repository.registerWithInvite(
         inviteToken: 'tok-invite',
@@ -152,6 +153,25 @@ void main() {
       when(() => remote.fetchLinkedVans()).thenThrow(_dioException(401));
 
       final result = await repository.getLinkedVans();
+
+      expect(result.errorOrNull, AssistantFailure.unauthorized);
+    });
+  });
+
+  group('invite response', () {
+    test('accept posts to the API and returns Ok', () async {
+      when(() => remote.acceptInvite('invite')).thenAnswer((_) async {});
+
+      final result = await repository.acceptInvite('invite');
+
+      expect(result.isOk, isTrue);
+      verify(() => remote.acceptInvite('invite')).called(1);
+    });
+
+    test('reject maps an HTTP failure', () async {
+      when(() => remote.rejectInvite('invite')).thenThrow(_dioException(401));
+
+      final result = await repository.rejectInvite('invite');
 
       expect(result.errorOrNull, AssistantFailure.unauthorized);
     });
