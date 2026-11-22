@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/media/picked_document.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/failures/document_submission_failure.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/find_submission_for_resume.dart';
@@ -105,7 +106,8 @@ void main() {
 
     expect(find.text('Documento escaneado'), findsOneWidget);
     expect(find.text('PDF · 2 páginas · 1,4 MB'), findsOneWidget);
-    expect(find.text('Trocar'), findsOneWidget);
+    expect(find.byIcon(Icons.sync), findsOneWidget);
+    expect(find.text('Trocar'), findsNothing);
     expect(find.text('Dados do documento'), findsOneWidget);
     expect(
       find.text('Copie do jeito que está escrito no documento.'),
@@ -178,7 +180,38 @@ void main() {
     expect(submitAction(tester), isNull);
   });
 
-  testWidgets('the CNH asks its own fields and warns about category B', (
+  testWidgets('a picked photo shows a friendly title, never its file name', (
+    tester,
+  ) async {
+    final cubit = cubitFor(DocumentType.criminalRecord);
+    cubit.emit(
+      cubit.state.copyWith(
+        file: const PickedDocument(
+          path: '/tmp/vanep_documents/image_picker_C8F1A2B3D4E5.jpg',
+          fileName: 'image_picker_C8F1A2B3D4E5.jpg',
+          mimeType: 'image/jpeg',
+          sizeBytes: 2100 * 1024,
+        ),
+      ),
+    );
+    await pumpForm(tester, cubit);
+
+    expect(find.text('Arquivo selecionado'), findsOneWidget);
+    expect(find.textContaining('image_picker'), findsNothing);
+  });
+
+  testWidgets('tapping anywhere on the file card offers the ways again', (
+    tester,
+  ) async {
+    await pumpForm(tester, cubitFor(DocumentType.criminalRecord));
+
+    await tester.tap(find.text('PDF · 2 páginas · 1,4 MB'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Como você quer enviar?'), findsOneWidget);
+  });
+
+  testWidgets('the CNH asks its own fields, with only the school categories', (
     tester,
   ) async {
     await pumpForm(tester, cubitFor(DocumentType.driverLicense));
@@ -191,14 +224,42 @@ void main() {
     await typeIn(tester, 'Número de registro', '12345678');
     expect(find.text('Use de 9 a 11 números.'), findsOneWidget);
 
-    await tester.tap(find.text('B'));
+    for (final category in ['D', 'E', 'AD', 'AE']) {
+      expect(find.text(category), findsOneWidget);
+    }
+    for (final category in ['A', 'B', 'C', 'AB', 'AC']) {
+      expect(find.text(category), findsNothing);
+    }
+  });
+
+  testWidgets('the issuing state is picked from the list of states', (
+    tester,
+  ) async {
+    await pumpForm(tester, cubitFor(DocumentType.driverLicense));
+
+    expect(find.text('Selecione a UF'), findsOneWidget);
+    await tester.tap(find.byType(DropdownButton<String>));
     await tester.pumpAndSettle();
-    expect(
-      find.text(
-        'Para transporte escolar, a CNH precisa ser categoria D ou E. Esta não vai valer como credencial.',
-      ),
-      findsOneWidget,
+    await tester.tap(find.text('BA').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Selecione a UF'), findsNothing);
+    expect(find.text('BA'), findsOneWidget);
+  });
+
+  testWidgets('the calendar of an empty issue date opens on today', (
+    tester,
+  ) async {
+    await pumpForm(tester, cubitFor(DocumentType.driverLicense));
+
+    await tester.tap(find.byTooltip('Data de emissão'));
+    await tester.pumpAndSettle();
+
+    final picker = tester.widget<DatePickerDialog>(
+      find.byType(DatePickerDialog),
     );
+    expect(picker.initialDate, picker.lastDate);
+    expect(picker.initialDate, testAsOf);
   });
 
   testWidgets('a date refused by the back shows on its field until edited', (
@@ -226,6 +287,29 @@ void main() {
     await typeIn(tester, 'Válida até', '01/02/2027');
     expect(find.text('Confira a data: ela está longe demais.'), findsNothing);
     expect(submitAction(tester), isNotNull);
+  });
+
+  testWidgets('a category refused by the back shows until another is chosen', (
+    tester,
+  ) async {
+    final cubit = cubitFor(DocumentType.driverLicense);
+    await pumpForm(tester, cubit);
+
+    cubit.emit(
+      cubit.state.copyWith(
+        failure: const FieldRejectedFailure(
+          field: DocumentField.cnhCategory,
+          error: DocumentFieldError.invalidFormat,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    const message = 'A categoria da CNH deve ser D, E, AD ou AE.';
+    expect(find.text(message), findsOneWidget);
+
+    await tester.tap(find.text('AD'));
+    await tester.pumpAndSettle();
+    expect(find.text(message), findsNothing);
   });
 
   testWidgets('a CNH number of another account shows on the number', (

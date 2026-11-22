@@ -271,6 +271,8 @@ class VanepUfSelect extends StatelessWidget {
     required this.onChanged,
     this.errorText,
     this.enabled = true,
+    this.isRequired = true,
+    this.expanded = false,
     super.key,
   });
 
@@ -281,6 +283,8 @@ class VanepUfSelect extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final String? errorText;
   final bool enabled;
+  final bool isRequired;
+  final bool expanded;
 
   @override
   Widget build(BuildContext context) {
@@ -290,11 +294,11 @@ class VanepUfSelect extends StatelessWidget {
     );
 
     return SizedBox(
-      width: vanepUfFieldWidth,
+      width: expanded ? double.infinity : vanepUfFieldWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          VanepFieldLabel(label: label, isRequired: true),
+          VanepFieldLabel(label: label, isRequired: isRequired),
           const SizedBox(height: 8),
           InputDecorator(
             decoration: vanepInputDecoration(context, errorText: errorText)

@@ -32,61 +32,70 @@ class DocumentFileSummaryCard extends StatelessWidget {
     final preview = file.pagePreviewPaths.isEmpty
         ? null
         : file.pagePreviewPaths.first;
-    return VanepCard(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        children: [
-          Container(
-            width: 52,
-            height: 68,
-            decoration: BoxDecoration(
-              color: palette.surface,
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: palette.divider),
+    return Semantics(
+      button: true,
+      hint: l10n.documentDataChangeFile,
+      child: VanepCard(
+        padding: const EdgeInsets.all(12),
+        onTap: onChange,
+        child: Row(
+          children: [
+            Container(
+              width: 52,
+              height: 68,
+              decoration: BoxDecoration(
+                color: palette.surface,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: palette.divider),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: preview == null
+                  ? Icon(
+                      Icons.picture_as_pdf_outlined,
+                      color: palette.textSecondary,
+                    )
+                  : Image.file(
+                      File(preview),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stack) => Icon(
+                        Icons.description_outlined,
+                        color: palette.textSecondary,
+                      ),
+                    ),
             ),
-            clipBehavior: Clip.antiAlias,
-            child: preview == null
-                ? Icon(
-                    Icons.picture_as_pdf_outlined,
-                    color: palette.textSecondary,
-                  )
-                : Image.file(
-                    File(preview),
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stack) => Icon(
-                      Icons.description_outlined,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    pages == null
+                        ? l10n.documentDataSelectedFile
+                        : l10n.documentDataScannedFile,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.typography.cardTitle,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    pages == null
+                        ? l10n.documentFileSummary(format, size)
+                        : l10n.documentFileSummaryWithPages(
+                            format,
+                            pages,
+                            size,
+                          ),
+                    style: context.typography.cardSubtitle.copyWith(
                       color: palette.textSecondary,
                     ),
                   ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  pages == null ? file.fileName : l10n.documentDataScannedFile,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.typography.cardTitle,
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  pages == null
-                      ? l10n.documentFileSummary(format, size)
-                      : l10n.documentFileSummaryWithPages(format, pages, size),
-                  style: context.typography.cardSubtitle.copyWith(
-                    color: palette.textSecondary,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: onChange,
-            child: Text(l10n.documentDataChangeFile),
-          ),
-        ],
+            const SizedBox(width: 8),
+            Icon(Icons.sync, color: palette.action),
+          ],
+        ),
       ),
     );
   }
@@ -113,14 +122,14 @@ class DocumentDateField extends StatelessWidget {
   final String? helperText;
 
   Future<void> pickDate(BuildContext context) async {
-    final current = parseDocumentDateInput(controller.text);
-    final initial = current == null
+    final wanted =
+        parseDocumentDateInput(controller.text) ??
+        DateUtils.dateOnly(DateTime.now());
+    final initial = wanted.isBefore(firstDate)
         ? firstDate
-        : current.isBefore(firstDate)
-        ? firstDate
-        : current.isAfter(lastDate)
+        : wanted.isAfter(lastDate)
         ? lastDate
-        : current;
+        : wanted;
     final picked = await showDatePicker(
       context: context,
       initialDate: initial,

@@ -115,6 +115,9 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 10.2 Testes de widget primeiro para o formulário da CNH: máscara do registro com 9 a 11 dígitos, categorias, aviso sem D ou E, UF opcional e erro de número duplicado. Depois implementar
 - [x] 10.3 Testes primeiro para "Terminar envio": carrega o envio pelo `FindSubmissionForResume`, preenche a M5 e envia com `existing(token)`. Depois ligar no detalhe
 - [ ] 10.4 Verificar no aparelho, contra o back local: envio novo, reenvio de reprovado, renovação, envio incompleto retomado e queda de rede no arquivo
+- [x] 10.3a Ajuste do teste no emulador: no cartão do arquivo, o ícone de setas em círculo no lugar de "Trocar", o cartão inteiro tocável e o título "Arquivo selecionado" no lugar do nome do arquivo
+- [x] 10.3b Ajuste do teste no emulador: a CNH mostra só as categorias D, E, AD e AE, sem o aviso de categoria, a recusa da categoria pelo back aparece embaixo dos chips, e a UF emissora é um select
+- [x] 10.3c Ajuste do teste no emulador: o calendário de uma data vazia abre em hoje, dentro dos limites do campo (a emissão da CNH abria em 1966)
 - [x] 10.5 Rodar `make lint` e `make test`
 - [x] 10.6 Abrir o PR
 

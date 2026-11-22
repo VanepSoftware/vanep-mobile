@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
-import 'package:vanep_mobile/core/formatters/upper_case_input_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_choice_chips.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
+import 'package:vanep_mobile/core/ui/vanep_postal_address_form.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_read_only_field.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
@@ -36,7 +36,7 @@ class DocumentDataFormPageState extends State<DocumentDataFormPage> {
   final expiresAt = TextEditingController();
   final registration = TextEditingController();
   final issueDate = TextEditingController();
-  final issuingState = TextEditingController();
+  String issuingState = '';
   String category = '';
   final editedSinceRefusal = <DocumentField>{};
 
@@ -52,13 +52,7 @@ class DocumentDataFormPageState extends State<DocumentDataFormPage> {
 
   @override
   void dispose() {
-    for (final controller in [
-      number,
-      expiresAt,
-      registration,
-      issueDate,
-      issuingState,
-    ]) {
+    for (final controller in [number, expiresAt, registration, issueDate]) {
       controller.dispose();
     }
     super.dispose();
@@ -77,7 +71,7 @@ class DocumentDataFormPageState extends State<DocumentDataFormPage> {
         category = draft.category.toUpperCase();
         issueDate.text = formatDocumentDateInput(draft.issueDate);
         expiresAt.text = formatDocumentDateInput(draft.validUntil);
-        issuingState.text = draft.issuingState ?? '';
+        issuingState = draft.issuingState?.toUpperCase() ?? '';
       case null:
         return;
     }
@@ -92,7 +86,7 @@ class DocumentDataFormPageState extends State<DocumentDataFormPage> {
         category: category,
         issueDate: parseDocumentDateInput(issueDate.text),
         validUntil: expiry,
-        issuingState: issuingState.text,
+        issuingState: issuingState,
       );
     }
     final vehicleToken = state.vehicleToken;
@@ -181,6 +175,7 @@ class DocumentDataFormPageState extends State<DocumentDataFormPage> {
         ? null
         : submissionFailureMessage(l10n, generalFailure);
     final file = state.file;
+    final vehicleCaption = widget.vehicleCaption;
 
     return BlocListener<DocumentSubmissionCubit, DocumentSubmissionState>(
       listenWhen: (previous, current) =>
@@ -220,10 +215,10 @@ class DocumentDataFormPageState extends State<DocumentDataFormPage> {
               buildField(l10n, rule, errors, asOf),
               const SizedBox(height: 16),
             ],
-            if (widget.vehicleCaption != null)
+            if (vehicleCaption != null)
               VanepReadOnlyField(
                 label: l10n.documentFieldVan,
-                value: widget.vehicleCaption!,
+                value: vehicleCaption,
                 enabled: false,
               ),
           ],
@@ -293,6 +288,7 @@ class DocumentDataFormPageState extends State<DocumentDataFormPage> {
       DocumentField.cnhCategory => CnhCategoryField(
         label: label,
         selected: category,
+        errorText: visibleError(l10n, rule.field, errors, null),
         onSelected: (value) {
           category = value;
           edited(rule.field);
@@ -306,13 +302,18 @@ class DocumentDataFormPageState extends State<DocumentDataFormPage> {
         errorText: visibleError(l10n, rule.field, errors, issueDate),
         onChanged: (_) => edited(rule.field),
       ),
-      DocumentField.cnhIssuingState => VanepTextField(
+      DocumentField.cnhIssuingState => VanepUfSelect(
         label: label,
-        controller: issuingState,
-        maxLength: 2,
-        inputFormatters: const [UpperCaseInputFormatter()],
-        errorText: visibleError(l10n, rule.field, errors, issuingState),
-        onChanged: (_) => edited(rule.field),
+        hint: l10n.documentCnhIssuingStateHint,
+        value: issuingState,
+        options: cnhIssuingStates,
+        isRequired: false,
+        expanded: true,
+        errorText: visibleError(l10n, rule.field, errors, null),
+        onChanged: (value) {
+          issuingState = value;
+          edited(rule.field);
+        },
       ),
     };
   }
@@ -323,19 +324,18 @@ class CnhCategoryField extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onSelected,
+    this.errorText,
     super.key,
   });
 
   final String label;
   final String selected;
   final ValueChanged<String> onSelected;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final warns =
-        cnhCategories.contains(selected) &&
-        !cnhCategoryAllowsSchoolTransport(selected);
+    final error = errorText;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -349,12 +349,12 @@ class CnhCategoryField extends StatelessWidget {
           selected: selected,
           onSelected: onSelected,
         ),
-        if (warns) ...[
+        if (error != null) ...[
           const SizedBox(height: 8),
           Text(
-            l10n.documentCnhCategoryWarning,
+            error,
             style: context.typography.cardSubtitle.copyWith(
-              color: context.palette.warningText,
+              color: context.palette.dangerText,
             ),
           ),
         ],
