@@ -23,14 +23,14 @@ Presentation boundaries are provisional until measured against each predecessor.
 - [x] 1.2 Extract registration/trip/shortcut/stop value objects and Home entities.
 - [x] 1.3 Extract the repository contract and Home rules without data/presentation dependencies.
 - [x] 1.4 Generate existing project DTO code, run static analysis and domain tests on current main (12 tests passed; analyze with fatal infos passed).
-- [ ] 1.5 Open the domain PR and wait for review/merge before preparing phase 2.
+- [x] 1.5 Open the domain PR and wait for review/merge before preparing phase 2.
 
 ## Phase 2 — Data (`feat/VAN-66-home-data`)
 
-- [ ] 2.1 Extract adapter tests, then DTOs, datasource and repository implementation.
-- [ ] 2.2 Preserve main endpoint definitions and reject unresolved trip shifts.
-- [ ] 2.3 Keep stop confirmation unsupported until its backend contract exists.
-- [ ] 2.4 Run code generation, analysis and adapter tests; measure diff and open PR.
+- [x] 2.1 Extract adapter tests, then DTOs, datasource and repository implementation.
+- [x] 2.2 Preserve main endpoint definitions and reject unresolved trip shifts.
+- [x] 2.3 Keep stop confirmation unsupported until its backend contract exists.
+- [x] 2.4 Run code generation, analysis and adapter tests; measure diff and open PR.
 
 ## Phase 3 — Presentation primitives (`feat/VAN-66-home-primitives`)
 
