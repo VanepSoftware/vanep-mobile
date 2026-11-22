@@ -73,6 +73,8 @@ class DependentEditorDoubles {
   final MockFindSchoolDays findSchoolDays = MockFindSchoolDays();
   final MockReplaceSchoolDays replaceSchoolDays = MockReplaceSchoolDays();
   final MockResolveSchool resolveSchool = MockResolveSchool();
+  final MockFindSchoolSearchCenter findSchoolSearchCenter =
+      MockFindSchoolSearchCenter();
   final MockPlaceAutocompleteController autocomplete =
       MockPlaceAutocompleteController();
   final MockPlaceSearchSession session = MockPlaceSearchSession();
@@ -84,6 +86,7 @@ class DependentEditorDoubles {
     when(() => autocomplete.session).thenReturn(session);
     when(session.currentToken).thenReturn('sess-1');
     when(autocomplete.dispose).thenReturn(null);
+    when(() => findSchoolSearchCenter(any())).thenAnswer((_) async => null);
     when(() => listStates()).thenAnswer(
       (_) async => Ok(fakeIbgeLocationsPage(items: const [fakeDfState])),
     );
@@ -111,6 +114,7 @@ class DependentEditorDoubles {
         (dependent, _) => DependentSchoolCubit(
           dependent: dependent,
           autocomplete: autocomplete,
+          findSchoolSearchCenter: findSchoolSearchCenter,
           resolveSchool: resolveSchool,
           updateDependent: updateDependent,
         ),

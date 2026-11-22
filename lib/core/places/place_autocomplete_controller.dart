@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_failure.dart';
+import 'package:vanep_mobile/core/places/place_search_center.dart';
 import 'package:vanep_mobile/core/places/place_search_session.dart';
 import 'package:vanep_mobile/core/places/place_suggestion.dart';
 
@@ -23,6 +24,8 @@ class PlaceAutocompleteController {
   final Duration debounce;
   final int minimumCharacters;
   final List<String> includedPrimaryTypes;
+
+  PlaceSearchCenter? searchCenter;
 
   Timer? _pending;
   int _requestSequence = 0;
@@ -53,6 +56,7 @@ class PlaceAutocompleteController {
       input,
       session.currentToken(),
       includedPrimaryTypes: includedPrimaryTypes,
+      searchCenter: searchCenter,
     );
     if (sequence != _requestSequence) return;
     onResult(result);

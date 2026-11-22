@@ -5,6 +5,7 @@ class PlaceSuggestion extends Equatable {
     required this.placeId,
     required this.primaryText,
     required this.secondaryText,
+    this.distanceMeters,
   });
 
   final String placeId;
@@ -13,6 +14,13 @@ class PlaceSuggestion extends Equatable {
 
   final String secondaryText;
 
+  final int? distanceMeters;
+
   @override
-  List<Object?> get props => [placeId, primaryText, secondaryText];
+  List<Object?> get props => [
+    placeId,
+    primaryText,
+    secondaryText,
+    distanceMeters,
+  ];
 }

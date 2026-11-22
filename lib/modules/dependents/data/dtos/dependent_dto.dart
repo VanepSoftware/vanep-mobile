@@ -20,6 +20,8 @@ abstract class DependentAddressDto
     @Default('') String cityToken,
     @Default('') String cityName,
     @Default('') String stateUf,
+    double? cityLatitude,
+    double? cityLongitude,
   }) = _DependentAddressDto;
 
   factory DependentAddressDto.fromJson(Map<String, Object?> json) =>

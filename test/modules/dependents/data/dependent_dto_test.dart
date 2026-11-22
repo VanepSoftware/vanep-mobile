@@ -139,4 +139,40 @@ void main() {
     expect(dependent.school, isNull);
     expect(dependent.document, isNull);
   });
+
+  test('reads the city coordinates of the address', () {
+    final dependent = DependentDto.fromJson(
+      dependentPayload(
+        address: {
+          'token': 'addr-1',
+          'street': 'QNL 5 Conjunto A',
+          'cityToken': 'city-brasilia',
+          'cityName': 'Brasília',
+          'stateUf': 'DF',
+          'cityLatitude': -15.7843,
+          'cityLongitude': -47.9081,
+        },
+      ),
+    );
+
+    expect(dependent.address?.cityLatitude, -15.7843);
+    expect(dependent.address?.cityLongitude, -47.9081);
+  });
+
+  test('an address without city coordinates reads them as null', () {
+    final dependent = DependentDto.fromJson(
+      dependentPayload(
+        address: {
+          'token': 'addr-1',
+          'street': 'QNL 5 Conjunto A',
+          'cityToken': 'city-brasilia',
+          'cityName': 'Brasília',
+          'stateUf': 'DF',
+        },
+      ),
+    );
+
+    expect(dependent.address?.cityLatitude, isNull);
+    expect(dependent.address?.cityLongitude, isNull);
+  });
 }

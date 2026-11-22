@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dio/dio.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/location/device_location_source.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_search_session.dart';
 import 'package:vanep_mobile/modules/contract_readiness/domain/usecases/find_contract_readiness.dart';
@@ -10,6 +11,7 @@ import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_re
 import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_school_days_repository.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/create_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
+import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_search_center.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_school_days.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/remove_dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/replace_school_days.dart';
@@ -51,6 +53,11 @@ class MockReplaceSchoolDays extends Mock implements ReplaceSchoolDays {}
 class MockFindContractReadiness extends Mock implements FindContractReadiness {}
 
 class MockResolveSchool extends Mock implements ResolveSchool {}
+
+class MockDeviceLocationSource extends Mock implements DeviceLocationSource {}
+
+class MockFindSchoolSearchCenter extends Mock
+    implements FindSchoolSearchCenter {}
 
 class MockPlaceAutocompleteController extends Mock
     implements PlaceAutocompleteController {}
