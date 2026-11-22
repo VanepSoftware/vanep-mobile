@@ -54,10 +54,10 @@ Presentation boundaries are provisional until measured against each predecessor.
 
 ## Phase 6 — Acceptance (`feat/VAN-66-home-acceptance`)
 
-- [ ] 6.1 Add complete nine-state acceptance coverage and localized simulated preview.
-- [ ] 6.2 Repeat device validation if integration changes affect behavior.
-- [ ] 6.3 Attach the developer video with its simulated-data context and retain separate real API evidence.
-- [ ] 6.4 Run analysis/tests, measure diff and open PR; close #146 only after all replacements are accounted for.
+- [x] 6.1 Add complete nine-state acceptance coverage and localized simulated preview.
+- [x] 6.2 Repeat device validation if integration changes affect behavior.
+- [x] 6.3 Attach the developer video with its simulated-data context and retain separate real API evidence.
+- [x] 6.4 Run analysis/tests, measure diff and open PR; close #146 only after all replacements are accounted for.
 
 ## API limitations
 
