@@ -8,6 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
+import 'package:vanep_mobile/core/media/file_opener.dart';
 import 'package:vanep_mobile/core/network/api_image_provider.dart';
 import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
 import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
@@ -59,7 +60,6 @@ import 'package:vanep_mobile/modules/driver_documents/presentation/pages/documen
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_action.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_file_cubit.dart';
-import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_data_form_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_detail_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_image_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
@@ -874,8 +874,7 @@ Future<void> openDocumentSubmission(
         child: Builder(
           builder: (pageContext) => DocumentSubmissionFlowPage(
             vehicleCaption: vehicleCaption,
-            dataFormBuilder: (_) =>
-                DocumentDataFormPage(vehicleCaption: vehicleCaption),
+            onOpenPdf: getIt<FileOpener>().open,
             onBackToDocuments: () =>
                 Navigator.of(pageContext).popUntil(isOutsideDocumentFlow),
             onOpenPending: (entry, pendingVehicleToken) => unawaited(

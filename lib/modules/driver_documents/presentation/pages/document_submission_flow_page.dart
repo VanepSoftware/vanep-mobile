@@ -6,20 +6,21 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/document_submission_labels.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_confirm_page.dart';
 import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_submission_status_view.dart';
 
 class DocumentSubmissionFlowPage extends StatelessWidget {
   const DocumentSubmissionFlowPage({
     required this.onBackToDocuments,
-    required this.dataFormBuilder,
     required this.onOpenPending,
+    required this.onOpenPdf,
     this.vehicleCaption,
     super.key,
   });
 
   final VoidCallback onBackToDocuments;
   final OpenPendingDocument onOpenPending;
-  final WidgetBuilder dataFormBuilder;
+  final OpenLocalFile onOpenPdf;
   final String? vehicleCaption;
 
   @override
@@ -57,7 +58,10 @@ class DocumentSubmissionFlowPage extends StatelessWidget {
             onBackToDocuments: onBackToDocuments,
             onOpenPending: onOpenPending,
           ),
-          _ => dataFormBuilder(context),
+          _ => DocumentConfirmPage(
+            vehicleCaption: vehicleCaption,
+            onOpenPdf: onOpenPdf,
+          ),
         };
       },
     );

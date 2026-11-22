@@ -101,7 +101,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 9.5 Rodar `make lint` e `make test`
 - [x] 9.6 Abrir o PR
 
-## 10. Fase 10 — Dados do documento e CNH (`VAN-86/10-document-forms`)
+## 10. Fase 10 — Conferência e envio do arquivo (`VAN-86/10-document-forms`)
 
 - [x] 10.1 Testes de widget primeiro para a M5:
   - cartão do arquivo com "Trocar";
@@ -114,10 +114,12 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
   Depois implementar
 - [x] 10.2 Testes de widget primeiro para o formulário da CNH: máscara do registro com 9 a 11 dígitos, categorias, aviso sem D ou E, UF opcional e erro de número duplicado. Depois implementar
 - [x] 10.3 Testes primeiro para "Terminar envio": carrega o envio pelo `FindSubmissionForResume`, preenche a M5 e envia com `existing(token)`. Depois ligar no detalhe
-- [ ] 10.4 Verificar no aparelho, contra o back local: envio novo, reenvio de reprovado, renovação, envio incompleto retomado e queda de rede no arquivo
+- [ ] 10.4 Verificar no aparelho, contra o back local: envio novo de um documento pessoal, de um da van e da CNH, reenvio de reprovado (inclusive `NOT_ELIGIBLE`), renovação e queda de rede no envio
 - [x] 10.3a Ajuste do teste no emulador: no cartão do arquivo, o ícone de setas em círculo no lugar de "Trocar", o cartão inteiro tocável e o título "Arquivo selecionado" no lugar do nome do arquivo
 - [x] 10.3b Ajuste do teste no emulador: a CNH mostra só as categorias D, E, AD e AE, sem o aviso de categoria, a recusa da categoria pelo back aparece embaixo dos chips, e a UF emissora é um select
 - [x] 10.3c Ajuste do teste no emulador: o calendário de uma data vazia abre em hoje, dentro dos limites do campo (a emissão da CNH abria em 1966)
+- [x] 10.3d Mudança de contrato do back (2026-11-22, o motorista manda só o arquivo, D6): a M5 vira a conferência do arquivo (`DocumentConfirmPage`): o arquivo, a van travada, a dica de conferência e "Enviar para análise", sem campos e sem avisos de categoria ou validade. Saem os formulários, a retomada e as mudanças em `VanepUfSelect` e `calendar_days`
+- [x] 10.3e Revisão da M5 (2026-11-22): a M5 vira a tela de conferência dos três jeitos de enviar: prévia em carrossel, página em tela cheia com zoom, "Abrir PDF" no visualizador do sistema para o PDF sem prévia, "Trocar arquivo" embaixo da prévia, a van no cabeçalho e a lista "Antes de enviar, confira"
 - [x] 10.5 Rodar `make lint` e `make test`
 - [x] 10.6 Abrir o PR
 
