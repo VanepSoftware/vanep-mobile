@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
+import 'package:vanep_mobile/core/network/api_image_provider.dart';
 import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
 import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -805,7 +806,7 @@ Future<void> openDriverDocumentDetail(
           builder: (pageContext) => DocumentDetailPage(
             type: type,
             vehicleToken: vehicleToken,
-            onAction: (_) => openDocumentSubmission(pageContext, type),
+            onSend: () => openDocumentSubmission(pageContext, type),
             onOpenImage: (imageUrl) =>
                 openDocumentImage(pageContext, type, imageUrl),
           ),
@@ -838,8 +839,9 @@ Future<void> openDocumentImage(
       settings: const RouteSettings(name: '/driver/documents/file'),
       builder: (_) => DocumentImagePage(
         title: documentTypeLabel(l10n, type),
-        imageUrl: imageUrl,
-        loader: getIt<ApiImageLoader>(),
+        images: [
+          ApiImageProvider(path: imageUrl, loader: getIt<ApiImageLoader>()),
+        ],
       ),
     ),
   );

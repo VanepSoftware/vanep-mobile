@@ -77,6 +77,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 8.3 Testes primeiro para abrir o arquivo: imagem → tela com `ApiImageProvider`; PDF → download autenticado e `open_filex`; falha → aviso sem sair da tela. Depois implementar
 - [x] 8.3a Ajuste do teste no emulador: o aviso de reprovado fica sem "Só" ("Este documento precisa ser enviado de novo."), porque podem faltar outros documentos
 - [x] 8.3b Ajuste do teste no emulador: a linha "Arquivo" mostra "Ver arquivo" com o ícone de olho, nunca o nome do arquivo
+- [x] 8.3c Mudança de contrato do back (2026-11-22, o motorista manda só o arquivo, D6): o detalhe perde "Terminar envio", a ação vira um `onSend` só, e a M7 mostra "Não serve para transporte escolar" para `NOT_ELIGIBLE`
 - [x] 8.4 Rodar `make lint` e `make test`
 - [ ] 8.5 Abrir o PR
 

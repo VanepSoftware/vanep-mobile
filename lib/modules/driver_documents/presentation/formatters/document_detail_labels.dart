@@ -54,6 +54,7 @@ String rejectionReasonLabel(AppLocalizations l10n, RejectionReason? reason) {
     RejectionReason.dataMismatch => l10n.documentRejectionDataMismatch,
     RejectionReason.wrongType => l10n.documentRejectionWrongType,
     RejectionReason.incomplete => l10n.documentRejectionIncomplete,
+    RejectionReason.notEligible => l10n.documentRejectionNotEligible,
     RejectionReason.other || null => l10n.documentRejectionOther,
   };
 }
@@ -61,7 +62,6 @@ String rejectionReasonLabel(AppLocalizations l10n, RejectionReason? reason) {
 String documentActionLabel(AppLocalizations l10n, DocumentAction action) {
   return switch (action) {
     DocumentAction.send => l10n.documentActionSend,
-    DocumentAction.finish => l10n.documentActionFinish,
     DocumentAction.resend => l10n.documentActionResend,
     DocumentAction.sendNew => l10n.documentActionSendNew,
     DocumentAction.sendUpdated => l10n.documentActionSendUpdated,
@@ -73,7 +73,6 @@ String? documentStateNote(AppLocalizations l10n, DocumentDisplayState state) {
     DocumentUnderReview() => l10n.documentDetailUnderReviewNote,
     DocumentExpiringSoon() => l10n.documentDetailExpiringNote,
     DocumentExpired() => l10n.documentDetailExpiredNote,
-    DocumentIncomplete() => l10n.documentDetailIncompleteNote,
     DocumentRenewalUnderReview() => l10n.documentDetailRenewalNote,
     _ => null,
   };
@@ -90,10 +89,6 @@ String? documentStateDate(
   return switch (state) {
     DocumentNotSent(:final isOptional) =>
       isOptional ? l10n.documentStateOptional : null,
-    DocumentIncomplete() => sentOnDate(
-      l10n,
-      incompleteSubmissionOf(requirement)?.createdAt,
-    ),
     DocumentUnderReview() => sentOnDate(l10n, current?.createdAt),
     DocumentRejected() =>
       reviewedAt == null ? null : formatDayMonthAndTime(l10n, reviewedAt),

@@ -25,7 +25,7 @@ import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/docum
 class DocumentDetailPage extends StatelessWidget {
   const DocumentDetailPage({
     required this.type,
-    required this.onAction,
+    required this.onSend,
     required this.onOpenImage,
     this.vehicleToken,
     super.key,
@@ -33,7 +33,7 @@ class DocumentDetailPage extends StatelessWidget {
 
   final DocumentType type;
   final String? vehicleToken;
-  final ValueChanged<DocumentAction> onAction;
+  final VoidCallback onSend;
   final ValueChanged<String> onOpenImage;
 
   @override
@@ -90,10 +90,7 @@ class DocumentDetailPage extends StatelessWidget {
             ),
             bottomNavigationBar: action == null
                 ? null
-                : DocumentActionBar(
-                    action: action,
-                    onPressed: () => onAction(action),
-                  ),
+                : DocumentActionBar(action: action, onPressed: onSend),
           );
         },
       ),

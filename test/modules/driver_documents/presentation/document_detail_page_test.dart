@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_action.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/compliance_state.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_file.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
@@ -33,13 +32,13 @@ void main() {
     when(fileCubit.close).thenAnswer((_) async {});
   });
 
-  Future<List<DocumentAction>> pump(
+  Future<List<String>> pump(
     WidgetTester tester,
     TestCompliance compliance,
     DocumentType type, {
     String? vehicleToken,
   }) async {
-    final actions = <DocumentAction>[];
+    final sends = <String>[];
     await tester.pumpWidget(
       documentsHarness(
         complianceCubitWith(DriverComplianceState.ready(compliance)),
@@ -48,13 +47,13 @@ void main() {
           child: DocumentDetailPage(
             type: type,
             vehicleToken: vehicleToken,
-            onAction: actions.add,
+            onSend: () => sends.add(type.name),
             onOpenImage: (_) {},
           ),
         ),
       ),
     );
-    return actions;
+    return sends;
   }
 
   testWidgets('under review shows the sent data and has no action', (
@@ -95,7 +94,7 @@ void main() {
         rejectionReason: 'O nome está abreviado',
       ),
     );
-    final actions = await pump(
+    final sends = await pump(
       tester,
       TestCompliance(driverRequirements: [rejectedCertificate]),
       DocumentType.criminalRecord,
@@ -111,7 +110,7 @@ void main() {
       200,
     );
     await tester.tap(find.text('Reenviar'));
-    expect(actions, [DocumentAction.resend]);
+    expect(sends, hasLength(1));
   });
 
   testWidgets('a rejection without a message has no Vanep mark', (
@@ -135,7 +134,6 @@ void main() {
     final renewal = TestRequirement(
       type: DocumentType.driverLicense,
       state: ComplianceState.approved,
-      satisfied: true,
       current: TestSubmission(
         token: 'cnh-1',
         expiresAt: DateTime(2026, 12, 10),
@@ -159,21 +157,24 @@ void main() {
     expect(find.byType(FilledButton), findsNothing);
   });
 
-  testWidgets('an incomplete upload offers to finish it', (tester) async {
-    final incomplete = TestRequirement(
-      type: DocumentType.criminalRecord,
-      state: ComplianceState.pending,
-      current: TestSubmission(status: SubmissionStatus.pending, hasFile: false),
+  testWidgets('a rejected CNH that does not qualify shows why', (tester) async {
+    final notEligible = TestRequirement(
+      type: DocumentType.driverLicense,
+      state: ComplianceState.rejected,
+      current: TestSubmission(
+        status: SubmissionStatus.rejected,
+        rejectionReasonCode: RejectionReason.notEligible,
+      ),
     );
-    final actions = await pump(
+    final sends = await pump(
       tester,
-      TestCompliance(driverRequirements: [incomplete]),
-      DocumentType.criminalRecord,
+      TestCompliance(driverRequirements: [notEligible]),
+      DocumentType.driverLicense,
     );
 
-    expect(find.text('Envio incompleto'), findsOneWidget);
-    await tester.tap(find.text('Terminar envio'));
-    expect(actions, [DocumentAction.finish]);
+    expect(find.text('Não serve para transporte escolar'), findsOneWidget);
+    await tester.tap(find.text('Reenviar'));
+    expect(sends, ['driverLicense']);
   });
 
   testWidgets('a van document shows its van and opens the file', (
@@ -190,7 +191,7 @@ void main() {
         ),
       ],
     );
-    final actions = await pump(
+    final sends = await pump(
       tester,
       TestCompliance(vehicles: [sprinter]),
       DocumentType.vehicleInspection,
@@ -206,13 +207,13 @@ void main() {
       () => fileCubit.open('/api/driver-documents/submission-1/file', any()),
     ).called(1);
     await tester.tap(find.text('Enviar nova versão'));
-    expect(actions, [DocumentAction.sendNew]);
+    expect(sends, hasLength(1));
   });
 
   testWidgets('not sent shows only what the document is and send', (
     tester,
   ) async {
-    final actions = await pump(
+    final sends = await pump(
       tester,
       TestCompliance(
         driverRequirements: [
@@ -228,7 +229,7 @@ void main() {
       findsOneWidget,
     );
     await tester.tap(find.text('Enviar'));
-    expect(actions, [DocumentAction.send]);
+    expect(sends, hasLength(1));
   });
 
   testWidgets('a document that left the list says so', (tester) async {
