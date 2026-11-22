@@ -129,3 +129,77 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every PR and push to `main`:
 2. `flutter analyze --fatal-infos`
 3. `flutter test --coverage`
 4. Enforce minimum coverage of 85%
+
+---
+
+## Deploy
+
+Android releases go to Google Play through [fastlane](https://fastlane.tools)
+(`android/fastlane/Fastfile`), run by GitHub Actions on `ubuntu-latest`:
+
+| Trigger | Workflow | Play track | `.env` from |
+| --- | --- | --- | --- |
+| Push to `main` | `.github/workflows/cd-internal.yml` | `internal` (internal testing) | `TESTING_ENV_FILE` |
+| GitHub release published | `.github/workflows/cd-production.yml` | `production` | `PRODUCTION_ENV_FILE` |
+
+- Pushes whose head commit has `[skip ci]`, or that only touch docs (`*.md`,
+  `docs/**`, `openspec/**`), are not deployed.
+- **versionCode** is computed: fastlane reads the version codes on the
+  `internal`, `alpha`, `beta` and `production` tracks, takes the highest and adds 1.
+  The `+N` in `pubspec.yaml` is not used by the deploy.
+- **versionName** for production comes from the release tag (`v1.2.3` → `1.2.3`);
+  the tag must be `vX.Y.Z`. Pre-releases are not deployed.
+- Production currently uploads as a **draft** (`PLAY_RELEASE_STATUS: draft` in
+  `cd-production.yml`), because Play rejects `completed` releases for an app that
+  was never published. Remove it after the first reviewed release.
+- Only one deploy runs at a time (concurrency group `play-android-deploy`).
+- On failure the job prints a `[failure_category:config|build|play_api]` line and
+  an error annotation with that category.
+
+The contents of `.env` are packaged into the app bundle as an asset, so they
+must never hold real secrets.
+
+### Repository secrets
+
+| Secret | Content |
+| --- | --- |
+| `ANDROID_KEYSTORE_BASE64` | Upload keystore (`.jks`), base64-encoded (`base64 -i upload.jks`) |
+| `ANDROID_KEYSTORE_PASSWORD` | Keystore password |
+| `ANDROID_KEY_ALIAS` | Key alias (`upload`) |
+| `ANDROID_KEY_PASSWORD` | Key password |
+| `PLAY_SERVICE_ACCOUNT_JSON` | JSON key of the Google Play service account with release permission for `com.vanep.vanep_mobile` |
+| `TESTING_ENV_FILE` | Full `.env` contents for the internal testing build |
+| `PRODUCTION_ENV_FILE` | Full `.env` contents for the production build |
+
+`scripts/ci-prepare-play-deploy.sh` turns these into `android/app/upload.jks`,
+`android/key.properties`, `.env` and a service account file outside the repo.
+It only runs in CI, because it overwrites `.env` and `android/key.properties`.
+
+### Run a deploy locally
+
+This publishes to Google Play for real.
+
+1. Install Ruby 3.3 and the gems: `bundle install`.
+2. Put the `.env` you want to ship at the repo root and create
+   `android/key.properties` pointing at the upload keystore:
+
+   ```properties
+   storePassword=...
+   keyPassword=...
+   keyAlias=upload
+   storeFile=/absolute/path/to/upload.jks
+   ```
+
+3. Make sure `flutter` on your `PATH` is the `.fvmrc` version
+   (e.g. `export PATH="$PWD/.fvm/flutter_sdk/bin:$PATH"`).
+4. Point fastlane at the service account JSON (keep it outside the repo) and run
+   the lane from `android/`:
+
+   ```bash
+   export PLAY_SERVICE_ACCOUNT_JSON_PATH=/path/outside/repo/play-service-account.json
+   cd android
+   bundle exec fastlane android deploy_internal
+   ```
+
+   For production, also set `PLAY_VERSION_NAME=1.2.3` (and `PLAY_RELEASE_STATUS=draft`
+   while the app is still a draft) and run `bundle exec fastlane android deploy_production`.
