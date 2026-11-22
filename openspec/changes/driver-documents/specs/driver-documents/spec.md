@@ -25,11 +25,10 @@ Cada documento SHALL mostrar exatamente um destes estados, com ícone e texto co
 | Estado | Quando | Cor |
 |---|---|---|
 | Não enviado | sem envio | cinza |
-| Envio incompleto | o envio pendente não tem arquivo | cinza |
 | Reprovado | o envio mais novo foi reprovado | vermelho |
 | Vencido | o envio aprovado venceu | vermelho |
-| Em análise | só há envio pendente, com arquivo | azul |
-| Aprovado · nova versão em análise | há um aprovado válido e um pendente com arquivo | verde, com a segunda linha em azul |
+| Em análise | só há envio pendente | azul |
+| Aprovado · nova versão em análise | há um aprovado válido e um pendente | verde, com a segunda linha em azul |
 | Vence em N dias | aprovado, vencendo em até 30 dias, sem envio novo | âmbar |
 | Aprovado | aprovado e válido | verde |
 
@@ -40,11 +39,6 @@ Cada documento SHALL mostrar exatamente um destes estados, com ícone e texto co
 - **WHEN** a CNH aprovada vale até daqui a 20 dias e o motorista já mandou a nova
 - **THEN** o card mostra "Aprovado" e "Nova versão em análise", sem botão de envio
 
-#### Scenario: Envio sem arquivo
-
-- **WHEN** a certidão criminal tem um envio pendente sem arquivo
-- **THEN** o card mostra "Envio incompleto", e não "Em análise"
-
 #### Scenario: Vistoria vencida
 
 - **WHEN** a vistoria aprovada venceu ontem e não há envio novo
@@ -52,16 +46,17 @@ Cada documento SHALL mostrar exatamente um destes estados, com ícone e texto co
 
 ### Requirement: Documentos pessoais (M1)
 
-A tela "Documentos pessoais" SHALL listar CNH, Curso especializado, Certidão criminal e Alvará municipal em duas seções, cada uma com a contagem:
-- "Pendentes": não enviado, envio incompleto, reprovado, vencido e vence em N dias;
-- "Enviados": em análise, aprovado e aprovado com nova versão em análise.
+A tela "Documentos pessoais" SHALL listar CNH, Curso especializado, Certidão criminal e Alvará municipal em três seções, cada uma com a contagem:
+- "Pendentes": os obrigatórios não enviados, reprovados, vencidos ou que vencem em N dias;
+- "Enviados": os obrigatórios em análise, aprovados ou aprovados com nova versão em análise;
+- "Opcionais": os documentos que o back marca como `optional` (hoje só o alvará municipal), em qualquer estado. O card continua mostrando o estado ("Não enviado · Opcional", "Reprovado"...), mas um opcional nunca conta como pendente, nem na M1, nem na M2, nem em Dados profissionais, nem nas pendências da M6.
 
 Dentro de cada seção, a ordem SHALL ser CNH, curso, certidão, alvará. Uma seção vazia SHALL ser escondida. Cada card mostra ícone, nome, estado e seta, e abre o detalhe. A tela SHALL mostrar no rodapé: "Seus documentos só são vistos pela equipe Vanep que faz a análise."
 
 #### Scenario: Certidão reprovada e alvará não enviado
 
 - **WHEN** a certidão foi reprovada, o alvará não foi enviado e o resto está aprovado
-- **THEN** "Pendentes (2)" lista certidão e alvará, e "Enviados" lista CNH e curso
+- **THEN** "Pendentes (1)" lista a certidão, "Enviados" lista CNH e curso, e "Opcionais (1)" lista o alvará
 
 ### Requirement: Documentos das vans (M2)
 
@@ -84,12 +79,11 @@ Se o motorista não tem van ativa, a tela SHALL mostrar o vazio "Cadastre sua va
 ### Requirement: Detalhe do documento
 
 O detalhe SHALL ter o nome do documento no cabeçalho e, abaixo, "Documento pessoal" ou "<modelo> · <placa>". Depois vêm, nesta ordem:
-1. O estado, com a data ao lado (aprovado em, enviado em, válida até) e uma frase quando o estado pede: em análise, vencendo, vencido, envio incompleto.
-2. "O que foi enviado", só quando existe envio: o nome do arquivo, que abre o arquivo; os dados informados (número, categoria da CNH, placa da van, validade); e a data de envio. Com nova versão em análise, mostra os dois envios.
+1. O estado, com a data ao lado (aprovado em, enviado em, válida até) e uma frase quando o estado pede: em análise, vencendo, vencido.
+2. "O que foi enviado", só quando existe envio: a linha "Arquivo" com "Ver arquivo" e o ícone de olho, que abre o arquivo (o nome do arquivo nunca aparece); os dados que a Vanep preencheu na aprovação (número, categoria da CNH, validade), que não existem enquanto o envio está em análise, e a placa da van; e a data de envio. Com nova versão em análise, mostra os dois envios.
 3. "Sobre o documento": o que é, quem emite e a validade típica, com textos fixos por tipo.
 4. O rodapé com a ação do estado:
    - não enviado: "Enviar";
-   - envio incompleto: "Terminar envio";
    - reprovado: "Reenviar";
    - vencido e vencendo: "Enviar nova versão";
    - aprovado: "Enviar versão atualizada" (botão secundário);
@@ -110,9 +104,10 @@ O detalhe de um documento reprovado SHALL mostrar:
   - `DATA_MISMATCH`: "Dados não conferem com o cadastro";
   - `WRONG_TYPE`: "Tipo de documento errado";
   - `INCOMPLETE`: "Faltam páginas, frente ou verso";
+  - `NOT_ELIGIBLE`: "Não serve para transporte escolar" (por exemplo, uma CNH sem categoria D ou E: o app não avisa a categoria antes, porque a CNH pendente ainda não tem categoria);
   - `OTHER`: "Outro motivo";
 - a mensagem do admin, quando houver, com a marca "Mensagem da equipe Vanep";
-- o aviso "O resto do seu cadastro continua valendo. Só este documento precisa ser enviado de novo.";
+- o aviso "O resto do seu cadastro continua valendo. Este documento precisa ser enviado de novo.";
 - "Reenviar".
 
 #### Scenario: Reprovado por dados que não conferem
@@ -120,9 +115,14 @@ O detalhe de um documento reprovado SHALL mostrar:
 - **WHEN** o admin reprovou a certidão com `DATA_MISMATCH` e a mensagem "O nome está abreviado"
 - **THEN** o título é "Dados não conferem com o cadastro" e a mensagem aparece abaixo, marcada como da equipe Vanep
 
+#### Scenario: CNH que não serve para transporte escolar
+
+- **WHEN** o admin reprovou a CNH de categoria B com `NOT_ELIGIBLE`
+- **THEN** o título é "Não serve para transporte escolar" e o rodapé oferece "Reenviar"
+
 ### Requirement: Abrir o arquivo enviado
 
-Tocar no nome do arquivo SHALL abrir o arquivo com o acesso do motorista: uma imagem abre dentro do app, um PDF abre no visualizador do sistema. Se não der para baixar, o app SHALL avisar sem sair da tela.
+Tocar em "Ver arquivo" SHALL abrir o arquivo com o acesso do motorista: uma imagem abre dentro do app, um PDF abre no visualizador do sistema. Se não der para baixar, o app SHALL avisar sem sair da tela.
 
 #### Scenario: Abrir o PDF da CNH
 

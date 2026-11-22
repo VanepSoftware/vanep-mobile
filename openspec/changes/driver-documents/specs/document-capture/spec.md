@@ -25,7 +25,7 @@ A folha SHALL mostrar a dica: "Documento inteiro na foto, sem reflexo e com tudo
 #### Scenario: Frente e verso
 
 - **WHEN** o motorista escaneia duas páginas e conclui
-- **THEN** o app segue para "Confira o arquivo" com um PDF de 2 páginas
+- **THEN** o app segue para a conferência do envio (M5) com um PDF de 2 páginas
 
 #### Scenario: Cancelar o scanner
 
@@ -34,7 +34,7 @@ A folha SHALL mostrar a dica: "Documento inteiro na foto, sem reflexo e com tudo
 
 ### Requirement: Escolher da galeria
 
-"Escolher da galeria" SHALL abrir a galeria para uma única imagem. O app SHALL enviar a imagem como JPEG, inclusive quando a original é HEIC, sem juntar fotos num PDF. Depois de escolher, o app SHALL ir direto para os dados do documento, sem passar pela conferência.
+"Escolher da galeria" SHALL abrir a galeria para uma única imagem. O app SHALL enviar a imagem como JPEG, inclusive quando a original é HEIC, sem juntar fotos num PDF. Depois de escolher, o app SHALL ir direto para a conferência do envio (M5), sem passar pela conferência.
 
 #### Scenario: Foto do iPhone
 
@@ -43,12 +43,12 @@ A folha SHALL mostrar a dica: "Documento inteiro na foto, sem reflexo e com tudo
 
 ### Requirement: Escolher arquivo PDF
 
-"Escolher arquivo PDF" SHALL abrir o seletor de arquivos do sistema mostrando só PDFs. Depois de escolher, o app SHALL ir direto para os dados do documento.
+"Escolher arquivo PDF" SHALL abrir o seletor de arquivos do sistema mostrando só PDFs. Depois de escolher, o app SHALL ir direto para a conferência do envio (M5).
 
 #### Scenario: CRLV digital
 
 - **WHEN** o motorista escolhe o PDF do CRLV-e baixado do aplicativo do governo
-- **THEN** o app abre os dados do documento com esse PDF
+- **THEN** o app abre a conferência do envio com esse PDF
 
 ### Requirement: Tamanho máximo
 
@@ -67,22 +67,3 @@ Se a câmera ou a galeria for negada, o app SHALL avisar que a permissão é nec
 
 - **WHEN** o motorista nega a permissão da câmera ao escanear
 - **THEN** o app mostra o aviso e a folha continua aberta com as três opções
-
-### Requirement: Conferir o escaneado
-
-Depois do scanner, o app SHALL mostrar "Confira o arquivo", com o nome do documento e o número de páginas no cabeçalho. A tela SHALL mostrar:
-- a página escolhida em destaque;
-- a miniatura de cada página;
-- a posição ("1 de 2").
-
-Tocar numa miniatura SHALL pôr aquela página em destaque. "Escanear de novo" SHALL abrir o scanner outra vez e substituir todas as páginas pelo novo resultado. "Continuar" SHALL abrir os dados do documento. A tela SHALL NOT oferecer edição por página.
-
-#### Scenario: Ver a segunda página
-
-- **WHEN** o motorista toca na miniatura da página 2
-- **THEN** a página 2 fica em destaque e a posição mostra "2 de 2"
-
-#### Scenario: Escanear de novo
-
-- **WHEN** o motorista toca em "Escanear de novo" e escaneia uma página só
-- **THEN** a tela mostra 1 página, e o arquivo anterior é descartado
