@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_field.dart';
-
 sealed class DocumentSubmissionFailure extends Equatable {
   const DocumentSubmissionFailure();
 
@@ -15,20 +13,6 @@ final class PendingExistsFailure extends DocumentSubmissionFailure {
 
 final class AlreadyReviewedFailure extends DocumentSubmissionFailure {
   const AlreadyReviewedFailure();
-}
-
-final class CnhNumberTakenFailure extends DocumentSubmissionFailure {
-  const CnhNumberTakenFailure();
-}
-
-final class FieldRejectedFailure extends DocumentSubmissionFailure {
-  const FieldRejectedFailure({required this.field, required this.error});
-
-  final DocumentField field;
-  final DocumentFieldError error;
-
-  @override
-  List<Object?> get props => [field, error];
 }
 
 final class UnsupportedFileFailure extends DocumentSubmissionFailure {

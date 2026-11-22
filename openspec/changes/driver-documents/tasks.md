@@ -44,6 +44,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 5.1 Criar `DocumentSubmissionFailure` (sealed), `ComplianceFailure`, `SubmissionTarget` e os contratos `DriverComplianceRepository` e `DocumentSubmissionRepository`, só os contratos
 - [x] 5.2 Testes primeiro (`mocktail`) para `LoadMyCompliance`, `UploadDocumentFile`, `FindSubmissionForResume` e `DownloadDocumentFile`. Depois implementar
 - [x] 5.3 Testes primeiro para `SubmitDocument`: novo envio → `create` e depois o arquivo; `existing(token)` → `update` e depois o arquivo; falha no arquivo → falha com o token; falha nos dados → o arquivo não é enviado. Depois implementar
+- [x] 5.3a Mudança de contrato do back (2026-11-22, o motorista manda só o arquivo, D6): saem `SubmissionTarget`, `UploadDocumentFile`, `FindSubmissionForResume` e as falhas de campo; o contrato vira `send(DocumentUpload)`, e o `SubmitDocument` só o repassa
 - [x] 5.4 Rodar `make lint` e `make test`
 - [ ] 5.5 Abrir o PR
 
