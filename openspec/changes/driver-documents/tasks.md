@@ -24,6 +24,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 3.1 Testes primeiro para os value objects: `DocumentType` (o tipo da API de cada um, o `DocumentKind`, se é de van e a ordem de exibição; "opcional" vem só do back, no requisito), `ComplianceState`, `SubmissionStatus` e `RejectionReason` lidos da API, valor desconhecido → `null`. Depois implementar
 - [x] 3.2 Criar `DocumentFile` e `DocumentDisplayState` (sealed, equatable: `notSent`, `incomplete`, `rejected`, `expired`, `underReview`, `renewalUnderReview`, `expiringSoon(days)`, `approved`), com testes de igualdade
 - [x] 3.3 Criar as entidades abstratas `DocumentSubmission`, `RequirementStatus`, `VehicleCompliance` e `DriverCompliance`; verificar com `flutter analyze --fatal-infos`
+- [x] 3.3a Mudança de contrato do back (2026-11-22, o motorista manda só o arquivo, D6): sai o estado `incomplete`, e `RejectionReason` ganha `NOT_ELIGIBLE`
 - [x] 3.4 Rodar `make lint` e `make test`
 - [ ] 3.5 Abrir o PR
 

@@ -5,7 +5,6 @@ import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/docum
 abstract class RequirementStatus {
   DocumentType get type;
   bool get optional;
-  bool get satisfied;
   ComplianceState get state;
   DocumentSubmission? get current;
   DocumentSubmission? get pending;

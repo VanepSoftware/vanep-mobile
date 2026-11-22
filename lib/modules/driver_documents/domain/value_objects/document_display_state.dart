@@ -21,13 +21,6 @@ final class DocumentNotSent extends DocumentDisplayState {
   List<Object?> get props => [isOptional];
 }
 
-final class DocumentIncomplete extends DocumentDisplayState {
-  const DocumentIncomplete();
-
-  @override
-  bool get needsAction => true;
-}
-
 final class DocumentRejected extends DocumentDisplayState {
   const DocumentRejected();
 

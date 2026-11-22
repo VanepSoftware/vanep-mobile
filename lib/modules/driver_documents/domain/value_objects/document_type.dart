@@ -48,8 +48,6 @@ enum DocumentType {
   final String requirementApiName;
   final String? documentApiName;
 
-  bool get isVehicleDocument => kind == DocumentKind.vehicleDocument;
-
   static DocumentType? fromRequirementApi(Object? raw) =>
       findByApiName(values, (type) => type.requirementApiName, raw);
 }

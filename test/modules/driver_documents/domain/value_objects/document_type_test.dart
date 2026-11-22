@@ -58,7 +58,5 @@ void main() {
       DocumentType.schoolVehicleAuthorization.kind,
       DocumentKind.vehicleDocument,
     );
-    expect(DocumentType.vehicleInspection.isVehicleDocument, isTrue);
-    expect(DocumentType.criminalRecord.isVehicleDocument, isFalse);
   });
 }

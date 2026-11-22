@@ -6,6 +6,7 @@ enum RejectionReason {
   dataMismatch('DATA_MISMATCH'),
   wrongType('WRONG_TYPE'),
   incomplete('INCOMPLETE'),
+  notEligible('NOT_ELIGIBLE'),
   other('OTHER');
 
   const RejectionReason(this.apiName);

@@ -21,7 +21,6 @@ void main() {
     const needAction = <DocumentDisplayState>[
       DocumentNotSent(isOptional: false),
       DocumentNotSent(isOptional: true),
-      DocumentIncomplete(),
       DocumentRejected(),
       DocumentExpired(),
       DocumentExpiringSoon(daysLeft: 3),
