@@ -100,6 +100,13 @@ class Environment {
   String driverProfileEndpoint(String driverToken) =>
       '$driversEndpoint/${Uri.encodeComponent(driverToken)}/profile';
 
+  String get clientDriversEndpoint => '$authBaseUrl/api/client-drivers';
+
+  String get clientDriversMeEndpoint => '$clientDriversEndpoint/me';
+
+  String clientDriverContractsEndpoint(String clientDriverToken) =>
+      '$clientDriversEndpoint/${Uri.encodeComponent(clientDriverToken)}/contracts';
+
   String get clientsEndpoint => '$authBaseUrl/api/clients';
 
   String get clientsMeEndpoint => '$clientsEndpoint/me';
@@ -126,8 +133,6 @@ class Environment {
   String get driverTripsTodayEndpoint => '$driversMeEndpoint/trips/today';
 
   String get driverTripsStartEndpoint => '$driversMeEndpoint/trips/start';
-
-  String get clientDriversMeEndpoint => '$authBaseUrl/api/client-drivers/me';
 
   String get driverOccupancyEndpoint => '$driversMeEndpoint/occupancy';
 

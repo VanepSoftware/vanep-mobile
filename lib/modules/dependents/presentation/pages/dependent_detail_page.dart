@@ -8,6 +8,12 @@ import 'package:vanep_mobile/core/ui/vanep_menu_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_section.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_state.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/helpers/client_van_chat_launcher.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_van_detail_page.dart';
+import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_detail_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_detail_state.dart';
@@ -26,16 +32,46 @@ import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 
 Future<void> openDependentDetail(BuildContext context, String token) {
   final dependents = context.read<DependentsCubit>();
+  ClientVansCubit? vansCubit;
+  try {
+    vansCubit = context.read<ClientVansCubit>();
+  } catch (_) {
+    if (getIt.isRegistered<ClientVansCubit>()) {
+      vansCubit = getIt<ClientVansCubit>();
+    }
+  }
+  ConversationsInboxCubit? inboxCubit;
+  try {
+    inboxCubit = context.read<ConversationsInboxCubit>();
+  } catch (_) {}
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => buildDependentDetail(dependents, token),
+      builder: (_) => buildDependentDetail(
+        dependents,
+        token,
+        clientVansCubit: vansCubit,
+        conversationsInboxCubit: inboxCubit,
+      ),
     ),
   );
 }
 
-Widget buildDependentDetail(DependentsCubit dependents, String token) {
-  return BlocProvider.value(
-    value: dependents,
+Widget buildDependentDetail(
+  DependentsCubit dependents,
+  String token, {
+  ClientVansCubit? clientVansCubit,
+  ConversationsInboxCubit? conversationsInboxCubit,
+}) {
+  return MultiBlocProvider(
+    providers: [
+      BlocProvider<DependentsCubit>.value(value: dependents),
+      if (clientVansCubit != null)
+        BlocProvider<ClientVansCubit>.value(value: clientVansCubit),
+      if (conversationsInboxCubit != null)
+        BlocProvider<ConversationsInboxCubit>.value(
+          value: conversationsInboxCubit,
+        ),
+    ],
     child: DependentDetailPage(token: token),
   );
 }
@@ -105,18 +141,7 @@ class DependentDetailView extends StatelessWidget {
               ),
               VanepSection(
                 title: l10n.dependentDetailGroupVan,
-                child: VanepMenuCard(
-                  items: [
-                    VanepMenuItem(
-                      label: l10n.dependentRowVan,
-                      icon: Icons.airport_shuttle_outlined,
-                    ),
-                    VanepMenuItem(
-                      label: l10n.dependentRowContract,
-                      icon: Icons.description_outlined,
-                    ),
-                  ],
-                ),
+                child: _DependentVanSectionCard(dependent: dependent),
               ),
               VanepSection(
                 title: l10n.dependentDetailGroupRegistration,
@@ -311,6 +336,135 @@ Future<void> completeProfile(BuildContext context, Dependent dependent) async {
   );
   await detail.loadSchoolWeek();
 }
+
+class _DependentVanSectionCard extends StatelessWidget {
+  const _DependentVanSectionCard({required this.dependent});
+
+  final Dependent dependent;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final vansCubit = _tryReadClientVansCubit(context);
+
+    Widget buildCard(ClientVan? linkedVan, {bool loaded = false}) {
+      final vanSubtitle = linkedVan != null
+          ? '${linkedVan.vehicle.displayName} · ${linkedVan.driver.name}'
+          : (loaded ? l10n.dependentNoLinkedVan : null);
+      return VanepMenuCard(
+        items: [
+          VanepMenuItem(
+            label: l10n.dependentRowVan,
+            icon: Icons.airport_shuttle_outlined,
+            content: vanSubtitle == null
+                ? null
+                : Text(
+                    vanSubtitle,
+                    style: context.typography.cardSubtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+            onTap: () => openLinkedVan(context, dependent),
+          ),
+          VanepMenuItem(
+            label: l10n.dependentRowContract,
+            icon: Icons.description_outlined,
+            onTap: () => openLinkedVan(context, dependent),
+          ),
+        ],
+      );
+    }
+
+    if (vansCubit == null) {
+      return buildCard(null);
+    }
+
+    return BlocBuilder<ClientVansCubit, ClientVansState>(
+      bloc: vansCubit,
+      builder: (context, state) {
+        return buildCard(
+          findVanForDependent(state.vans, dependent),
+          loaded: state.status == ClientVansStatus.loaded,
+        );
+      },
+    );
+  }
+}
+
+ClientVansCubit? _tryReadClientVansCubit(BuildContext context) {
+  try {
+    return context.read<ClientVansCubit>();
+  } catch (_) {
+    if (getIt.isRegistered<ClientVansCubit>()) {
+      return getIt<ClientVansCubit>();
+    }
+    return null;
+  }
+}
+
+ClientVan? findVanForDependent(List<ClientVan> vans, Dependent dependent) {
+  final targetName = dependent.name.trim().toLowerCase();
+  for (final van in vans) {
+    if (van.dependents.any((d) =>
+        d.token == dependent.token ||
+        d.name.trim().toLowerCase() == targetName)) {
+      return van;
+    }
+  }
+  return null;
+}
+
+Future<void> openLinkedVan(BuildContext context, Dependent dependent) async {
+  final vansCubit = _tryReadClientVansCubit(context);
+  if (vansCubit == null) return;
+
+  if (vansCubit.state.status != ClientVansStatus.loaded ||
+      findVanForDependent(vansCubit.state.vans, dependent) == null) {
+    await vansCubit.loadVans();
+  }
+  if (!context.mounted) return;
+
+  final matchingVan = findVanForDependent(vansCubit.state.vans, dependent);
+  if (matchingVan != null) {
+    await openClientVanDetail(
+      context,
+      van: matchingVan,
+      onChatWithDriver: () => openChatDirectlyForClientVan(context, matchingVan),
+      onDependentTapped: (vanDep) async {
+        final isSameDependent = vanDep.token == dependent.token ||
+            vanDep.name.trim().toLowerCase() ==
+                dependent.name.trim().toLowerCase();
+        if (isSameDependent) {
+          Navigator.of(context).pop();
+          return;
+        }
+        final dependentsCubit = context.read<DependentsCubit>();
+        if (dependentsCubit.state.status != DependentsStatus.ready) {
+          await dependentsCubit.loadDependents();
+        }
+        if (!context.mounted) return;
+        final targetName = vanDep.name.trim().toLowerCase();
+        for (final candidate in dependentsCubit.state.dependents) {
+          if (candidate.token == vanDep.token ||
+              candidate.name.trim().toLowerCase() == targetName) {
+            await openDependentDetail(context, candidate.token);
+            return;
+          }
+        }
+        final l10n = AppLocalizations.of(context)!;
+        VanepFeedback.showInfo(
+          context,
+          l10n.clientVanDependentNotInList(vanDep.name),
+        );
+      },
+    );
+    return;
+  }
+
+  final l10n = AppLocalizations.of(context)!;
+  VanepFeedback.showInfo(context, l10n.dependentNoLinkedVan);
+}
+
 
 Future<void> setAsDefault(BuildContext context, Dependent dependent) async {
   final l10n = AppLocalizations.of(context)!;
