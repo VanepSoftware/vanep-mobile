@@ -57,3 +57,18 @@ app.*.map.json
 lib/l10n/app_localizations*.dart
 
 workspace.code-workspace
+
+# --- Deploy Google Play (fastlane) ---
+# Escritos por scripts/ci-prepare-play-deploy.sh no CI; nunca versionar.
+android/key.properties
+*.jks
+*.keystore
+*service-account*.json
+# Ruby/bundler (ruby/setup-ruby instala em vendor/bundle)
+/.bundle/
+/vendor/bundle/
+# Saídas do fastlane
+android/fastlane/report.xml
+android/fastlane/Preview.html
+android/fastlane/README.md
+android/fastlane/test_output/
