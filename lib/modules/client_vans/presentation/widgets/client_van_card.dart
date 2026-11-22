@@ -60,7 +60,7 @@ class ClientVanCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      vehicle.displayName,
+                      driver.name,
                       style: context.typography.cardTitle.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -70,7 +70,7 @@ class ClientVanCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      l10n.clientVansDriverLabel(driver.name),
+                      vehicle.displayName,
                       style: context.typography.cardSubtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
