@@ -56,7 +56,11 @@ void main() {
     when(
       () => dio.get<Map<String, dynamic>>(
         _testEnv.clientServiceRequestsEndpoint,
-        queryParameters: any(named: 'queryParameters'),
+        queryParameters: {
+          'status': 'OPEN,ANSWERED',
+          'page': 0,
+          'size': 50,
+        },
       ),
     ).thenAnswer(
       (_) async => _ok(_testEnv.clientServiceRequestsEndpoint, {
@@ -66,6 +70,12 @@ void main() {
             'clientDriverToken': 'link-open',
             'driverToken': 'drv-open',
             'status': 'OPEN',
+          },
+          {
+            'token': 'req-cancelled',
+            'clientDriverToken': 'link-cancelled',
+            'driverToken': 'drv-cancelled',
+            'status': 'WITHDRAWN',
           },
         ],
       }),
@@ -121,7 +131,11 @@ void main() {
     when(
       () => dio.get<Map<String, dynamic>>(
         _testEnv.clientServiceRequestsEndpoint,
-        queryParameters: any(named: 'queryParameters'),
+        queryParameters: {
+          'status': 'OPEN,ANSWERED',
+          'page': 0,
+          'size': 50,
+        },
       ),
     ).thenAnswer(
       (_) async => _ok(_testEnv.clientServiceRequestsEndpoint, {

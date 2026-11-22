@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/client_vans/data/datasources/client_vans_datasource.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
-
-const _openRequestStatuses = ['OPEN', 'ANSWERED', 'ADJUSTMENT_REQUESTED'];
+import 'package:vanep_mobile/modules/negotiations/data/datasources/negotiation_payloads.dart';
+import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_status.dart';
 
 const _inProgressContractStatuses = {
   'AWAITING_SIGNATURES',
@@ -218,14 +218,19 @@ class ClientVansRemoteDataSource implements ClientVansDataSource {
       final response = await dio.get<Map<String, dynamic>>(
         environment.clientServiceRequestsEndpoint,
         queryParameters: {
-          'status': _openRequestStatuses,
+          ...listQuery(statuses: openServiceRequestStatuses, page: 0),
           'size': 50,
         },
       );
       final content = response.data?['content'];
       if (content is! List) return const {};
+      final openNames = {
+        for (final status in openServiceRequestStatuses) status.apiName,
+      };
       final keys = <String>{};
       for (final item in content.whereType<Map<String, dynamic>>()) {
+        final rawStatus = (item['status'] as String?)?.toUpperCase();
+        if (rawStatus != null && !openNames.contains(rawStatus)) continue;
         final linkToken = item['clientDriverToken'] as String?;
         final driverToken = item['driverToken'] as String?;
         if (linkToken != null && linkToken.isNotEmpty) keys.add(linkToken);
