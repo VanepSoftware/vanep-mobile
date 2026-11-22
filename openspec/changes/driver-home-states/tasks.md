@@ -47,10 +47,10 @@ Presentation boundaries are provisional until measured against each predecessor.
 
 ## Phase 5 — Home integration (`feat/VAN-66-home-integration`)
 
-- [ ] 5.1 Integrate Cubit/state, Home and DI without removing current main navigation.
-- [ ] 5.2 Update existing Home/shell tests in the same phase; keep all phases compilable.
-- [ ] 5.3 Verify RN-02, block banner during active trips and outside-hours advisory.
-- [ ] 5.4 Run analysis/integration tests, measure diff and open PR.
+- [x] 5.1 Integrate Cubit/state, Home and DI without removing current main navigation.
+- [x] 5.2 Update existing Home/shell tests in the same phase; keep all phases compilable.
+- [x] 5.3 Verify RN-02, block banner during active trips and outside-hours advisory.
+- [x] 5.4 Run analysis/integration tests, measure diff and open PR.
 
 ## Phase 6 — Acceptance (`feat/VAN-66-home-acceptance`)
 

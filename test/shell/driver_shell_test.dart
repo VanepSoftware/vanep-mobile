@@ -13,6 +13,8 @@ import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/s
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/domain/repositories/driver_home_repository.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
@@ -30,6 +32,17 @@ import '../modules/driver_proposals/driver_proposals_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 import '../modules/driver_van_central/driver_van_central_mocks.dart';
 import '../modules/driver_van_central/driver_van_central_fixtures.dart';
+
+class _StubHomeRepository implements DriverHomeRepository {
+  _StubHomeRepository(this.data);
+  final DriverHomeData data;
+  @override
+  Future<DriverHomeData> load() async => data;
+  @override
+  Future<void> startTrip(String tripId) async {}
+  @override
+  Future<void> confirmStop(StopConfirmation confirmation) async {}
+}
 
 Widget harness(
   DriverHomeCubit cubit,
@@ -353,5 +366,27 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(() => authCubit.refreshSessionProfile()).called(1);
+  });
+
+  testWidgets('tapping Adicionar alunos on home opens Alunos coming soon page', (
+    tester,
+  ) async {
+    final approvedCubit = DriverHomeCubit(
+      repository: _StubHomeRepository(
+        const DriverHomeData(registration: RegistrationStatus.approved),
+      ),
+    );
+    addTearDown(approvedCubit.close);
+
+    await tester.pumpWidget(
+      harness(approvedCubit, authCubit, profileSummaryCubit),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Adicionar alunos'));
+    await tester.tap(find.text('Adicionar alunos'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(VanepComingSoonPage), findsOneWidget);
   });
 }
