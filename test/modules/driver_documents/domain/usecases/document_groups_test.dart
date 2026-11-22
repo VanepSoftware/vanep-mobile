@@ -64,7 +64,6 @@ void main() {
       token: 'master',
       plate: 'RTA3B45',
       model: 'Master',
-      qualified: true,
       requirements: [
         approved(DocumentType.vehicleRegistration),
         approved(DocumentType.vehicleInspection),

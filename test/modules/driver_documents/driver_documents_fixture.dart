@@ -16,19 +16,15 @@ class TestSubmission implements DocumentSubmission {
     this.hasFile = true,
     this.expiresAt,
     this.token = 'submission-1',
-    this.kind = DocumentKind.driverDocument,
     this.documentNumber,
     this.rejectionReasonCode,
     this.rejectionReason,
     this.cnhCategory,
-    this.cnhIssueDate,
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime(2026, 10, 1);
 
   final bool hasFile;
 
-  @override
-  final DocumentKind kind;
   @override
   final String token;
   @override
@@ -46,8 +42,6 @@ class TestSubmission implements DocumentSubmission {
   @override
   final DateTime createdAt;
   @override
-  int get version => 0;
-  @override
   String? get fileUrl => hasFile ? '/api/driver-documents/$token/file' : null;
   @override
   DocumentFile? get file => hasFile
@@ -55,8 +49,6 @@ class TestSubmission implements DocumentSubmission {
       : null;
   @override
   final String? cnhCategory;
-  @override
-  final DateTime? cnhIssueDate;
 }
 
 class TestRequirement implements RequirementStatus {
@@ -66,7 +58,6 @@ class TestRequirement implements RequirementStatus {
     this.current,
     this.pending,
     this.optional = false,
-    this.satisfied = false,
     this.expiringSoon,
   });
 
@@ -81,8 +72,6 @@ class TestRequirement implements RequirementStatus {
   @override
   final bool optional;
   @override
-  final bool satisfied;
-  @override
   final bool? expiringSoon;
 }
 
@@ -92,8 +81,6 @@ class TestVehicle implements VehicleCompliance {
     required this.plate,
     required this.model,
     required this.requirements,
-    this.brand = 'Mercedes-Benz',
-    this.qualified = false,
   });
 
   @override
@@ -101,11 +88,7 @@ class TestVehicle implements VehicleCompliance {
   @override
   final String plate;
   @override
-  final String brand;
-  @override
   final String model;
-  @override
-  final bool qualified;
   @override
   final List<RequirementStatus> requirements;
 }
@@ -136,7 +119,6 @@ TestRequirement approved(DocumentType type, {DateTime? expiresAt}) =>
     TestRequirement(
       type: type,
       state: ComplianceState.approved,
-      satisfied: true,
       current: TestSubmission(expiresAt: expiresAt),
     );
 

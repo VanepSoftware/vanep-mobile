@@ -44,7 +44,7 @@ Essas linhas SHALL continuar também na Central da van. As linhas mostram só o 
 ### Requirement: Documentos
 
 A seção "Documentos" SHALL ter "Pessoais", que abre a M1, e "Vans", que abre a M2 com todas as vans. Cada linha SHALL mostrar um subtítulo âmbar só quando há algo a fazer:
-- "<n> pendentes", contando os documentos obrigatórios não enviados, os de envio incompleto, os reprovados e os vencidos (um documento opcional nunca conta);
+- "<n> pendentes", contando os documentos obrigatórios não enviados, os reprovados e os vencidos (um documento opcional nunca conta);
 - senão, "Vence em <n> dias", com o vencimento mais próximo dentro de 30 dias;
 - sem pendência nem vencimento próximo, a linha mostra só o nome.
 

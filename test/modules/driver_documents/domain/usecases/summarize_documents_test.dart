@@ -2,33 +2,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/summarize_documents.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/compliance_state.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/submission_status.dart';
 
 import '../../driver_documents_fixture.dart';
 
 void main() {
-  test(
-    'counts missing, incomplete, rejected and expired, but not the optional',
-    () {
-      final summary = summarizeDocuments([
-        missing(DocumentType.schoolDriverCourse),
-        missing(DocumentType.municipalAuthorization, optional: true),
-        rejected(DocumentType.criminalRecord),
-        expired(DocumentType.vehicleInspection),
-        TestRequirement(
-          type: DocumentType.driverLicense,
-          state: ComplianceState.pending,
-          current: TestSubmission(
-            status: SubmissionStatus.pending,
-            hasFile: false,
-          ),
-        ),
-        underReview(DocumentType.vehicleRegistration),
-      ], testAsOf);
+  test('counts missing, rejected and expired, but not the optional', () {
+    final summary = summarizeDocuments([
+      missing(DocumentType.schoolDriverCourse),
+      missing(DocumentType.municipalAuthorization, optional: true),
+      rejected(DocumentType.criminalRecord),
+      expired(DocumentType.vehicleInspection),
+      underReview(DocumentType.driverLicense),
+    ], testAsOf);
 
-      expect(summary.pendingCount, 4);
-    },
-  );
+    expect(summary.pendingCount, 3);
+  });
 
   test(
     'without pending documents, tells the nearest expiry within 30 days',

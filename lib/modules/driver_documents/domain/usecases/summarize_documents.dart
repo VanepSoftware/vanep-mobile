@@ -38,10 +38,7 @@ DocumentsSummary summarizeDocuments(
 
 bool countsAsPending(DocumentDisplayState state) {
   return switch (state) {
-    DocumentNotSent() ||
-    DocumentIncomplete() ||
-    DocumentRejected() ||
-    DocumentExpired() => true,
+    DocumentNotSent() || DocumentRejected() || DocumentExpired() => true,
     _ => false,
   };
 }

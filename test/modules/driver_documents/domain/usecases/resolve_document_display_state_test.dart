@@ -22,34 +22,6 @@ void main() {
     );
   });
 
-  test(
-    'a pending submission without a file is incomplete, not under review',
-    () {
-      final requirement = TestRequirement(
-        type: DocumentType.criminalRecord,
-        state: ComplianceState.pending,
-        current: TestSubmission(
-          status: SubmissionStatus.pending,
-          hasFile: false,
-        ),
-      );
-
-      expect(resolve(requirement), const DocumentIncomplete());
-    },
-  );
-
-  test('a renewal without a file is incomplete even with an approved one', () {
-    final requirement = TestRequirement(
-      type: DocumentType.driverLicense,
-      state: ComplianceState.approved,
-      satisfied: true,
-      current: TestSubmission(expiresAt: DateTime(2027, 1, 1)),
-      pending: TestSubmission(status: SubmissionStatus.pending, hasFile: false),
-    );
-
-    expect(resolve(requirement), const DocumentIncomplete());
-  });
-
   test('rejected and expired follow the state of the back', () {
     expect(
       resolve(rejected(DocumentType.criminalRecord)),
@@ -74,7 +46,6 @@ void main() {
       final requirement = TestRequirement(
         type: DocumentType.driverLicense,
         state: ComplianceState.approved,
-        satisfied: true,
         current: TestSubmission(expiresAt: DateTime(2026, 12, 10)),
         pending: TestSubmission(status: SubmissionStatus.pending),
       );
@@ -140,14 +111,12 @@ void main() {
     final notFlagged = TestRequirement(
       type: DocumentType.vehicleInspection,
       state: ComplianceState.approved,
-      satisfied: true,
       current: TestSubmission(expiresAt: DateTime(2026, 11, 29)),
       expiringSoon: false,
     );
     final flagged = TestRequirement(
       type: DocumentType.vehicleInspection,
       state: ComplianceState.approved,
-      satisfied: true,
       current: TestSubmission(expiresAt: DateTime(2027, 2, 1)),
       expiringSoon: true,
     );

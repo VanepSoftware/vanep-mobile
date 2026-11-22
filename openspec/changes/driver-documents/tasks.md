@@ -35,6 +35,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 4.3 Testes primeiro para `DocumentFieldRules`: campos e obrigatórios de cada tipo; cada limite de data da spec (CRLV até 31/12 do ano que vem); o aviso de CNH sem D ou E. Depois implementar com os drafts sealed `PersonalDocumentDraft`, `VehicleDocumentDraft` e `CnhDraft`
 - [x] 4.3a Ajuste do teste no emulador: categorias da CNH só D, E, AD e AE (as mesmas que o back aceita) e UF emissora validada contra as 27 UFs
 - [x] 4.3b Ajuste do teste no emulador: documentos opcionais (alvará) ficam num grupo próprio e nunca contam como pendentes, nem na van nem no resumo
+- [x] 4.3c Mudança de contrato do back (2026-11-22, o motorista manda só o arquivo, D6): saem as `DocumentFieldRules` e os drafts, e `resolveDocumentDisplayState` e `summarizeDocuments` deixam de ver envio sem arquivo
 - [x] 4.4 Rodar `make lint` e `make test`
 - [ ] 4.5 Abrir o PR
 
