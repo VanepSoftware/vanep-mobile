@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:vanep_mobile/modules/assistant/presentation/guards/assistant_route_guard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
+import 'package:vanep_mobile/core/media/file_opener.dart';
+import 'package:vanep_mobile/core/network/api_image_provider.dart';
 import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
 import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -51,6 +55,22 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.da
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
+import 'package:vanep_mobile/modules/driver_professional_data/presentation/cubit/professional_data_cubit.dart';
+import 'package:vanep_mobile/modules/driver_professional_data/presentation/pages/professional_data_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/personal_documents_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_source_sheet.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_submission_flow_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_action.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_file_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_detail_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_image_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_groups.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/document_labels.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/vehicle_documents_page.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
@@ -189,6 +209,9 @@ class AuthGate extends StatelessWidget {
                 openMyVans: openDriverVans,
                 openVanRegistration: openDriverVanRegistration,
                 openVanStudents: openDriverVanStudents,
+                openVanDocuments: (context, van) =>
+                    openDriverVanDocuments(context, van: van),
+                openProfessionalData: openDriverProfessionalData,
                 openConversationChat: (context, conversation) =>
                     openInboxConversation(
                       context,
@@ -720,6 +743,264 @@ Future<void> openDriverVans(BuildContext context) {
       builder: (_) => BlocProvider<DriverVansCubit>(
         create: (_) => getIt<DriverVansCubit>()..loadVans(),
         child: const DriverVansPage(),
+      ),
+    ),
+  );
+}
+
+Widget provideDriverCompliance(
+  DriverComplianceCubit? compliance,
+  Widget child,
+) {
+  if (compliance != null) {
+    return BlocProvider<DriverComplianceCubit>.value(
+      value: compliance,
+      child: child,
+    );
+  }
+  return BlocProvider<DriverComplianceCubit>(
+    create: (_) => getIt<DriverComplianceCubit>()..load(),
+    child: child,
+  );
+}
+
+Future<void> openDriverProfessionalData(BuildContext context) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/professional-data'),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<ProfessionalDataCubit>(
+            create: (_) => getIt<ProfessionalDataCubit>()..load(),
+          ),
+          BlocProvider<DriverComplianceCubit>(
+            create: (_) => getIt<DriverComplianceCubit>()..load(),
+          ),
+        ],
+        child: Builder(
+          builder: (pageContext) {
+            final l10n = AppLocalizations.of(pageContext)!;
+            final compliance = pageContext.read<DriverComplianceCubit>();
+            return ProfessionalDataPage(
+              actions: ProfessionalDataActions(
+                onOpenServiceAreas: () => openDriverServiceAreas(pageContext),
+                onOpenPersonalDocuments: () => openDriverPersonalDocuments(
+                  pageContext,
+                  compliance: compliance,
+                ),
+                onOpenVanDocuments: () =>
+                    openDriverVanDocuments(pageContext, compliance: compliance),
+                onOpenComingSoon: (title) => openComingSoonPage(
+                  pageContext,
+                  title: title,
+                  message: l10n.comingSoon,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverPersonalDocuments(
+  BuildContext context, {
+  DriverComplianceCubit? compliance,
+}) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/personal'),
+      builder: (_) => provideDriverCompliance(
+        compliance,
+        Builder(
+          builder: (pageContext) => PersonalDocumentsPage(
+            onOpenDocument: (entry) =>
+                openDriverDocumentDetail(pageContext, entry),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverVanDocuments(
+  BuildContext context, {
+  DriverVan? van,
+  DriverComplianceCubit? compliance,
+}) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/vans'),
+      builder: (_) => provideDriverCompliance(
+        compliance,
+        Builder(
+          builder: (pageContext) => VehicleDocumentsPage(
+            onlyVehicleToken: van?.token,
+            onOpenDocument: (entry, vehicle) => openDriverDocumentDetail(
+              pageContext,
+              entry,
+              vehicleToken: vehicle.token,
+            ),
+            onRegisterVan: () async {
+              await openDriverVanRegistration(pageContext);
+              if (!pageContext.mounted) return;
+              await pageContext.read<DriverComplianceCubit>().refresh();
+            },
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverDocumentDetail(
+  BuildContext context,
+  DocumentEntry entry, {
+  String? vehicleToken,
+}) {
+  return Navigator.of(context).push(
+    driverDocumentDetailRoute(
+      context,
+      context.read<DriverComplianceCubit>(),
+      entry,
+      vehicleToken: vehicleToken,
+    ),
+  );
+}
+
+Route<void> driverDocumentDetailRoute(
+  BuildContext context,
+  DriverComplianceCubit compliance,
+  DocumentEntry entry, {
+  String? vehicleToken,
+}) {
+  final type = entry.requirement.type;
+  return rolePageRoute<void>(
+    context: context,
+    settings: const RouteSettings(name: '/driver/documents/detail'),
+    builder: (_) => MultiBlocProvider(
+      providers: [
+        BlocProvider<DriverComplianceCubit>.value(value: compliance),
+        BlocProvider<DocumentFileCubit>(
+          create: (_) => getIt<DocumentFileCubit>(),
+        ),
+      ],
+      child: Builder(
+        builder: (pageContext) => DocumentDetailPage(
+          type: type,
+          vehicleToken: vehicleToken,
+          onSend: () => openDocumentSubmission(
+            pageContext,
+            type: type,
+            vehicleToken: vehicleToken,
+          ),
+          onOpenImage: (imageUrl) =>
+              openDocumentImage(pageContext, type, imageUrl),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDocumentSubmission(
+  BuildContext context, {
+  required DocumentType type,
+  String? vehicleToken,
+}) async {
+  final compliance = context.read<DriverComplianceCubit>();
+  final l10n = AppLocalizations.of(context)!;
+  final loaded = compliance.state.compliance;
+  final vehicle = vehicleToken == null || loaded == null
+      ? null
+      : findVehicle(loaded, vehicleToken);
+  final vehicleCaption = vehicle == null
+      ? null
+      : l10n.vanStudentsCaption(vehicle.model, vehicle.plate);
+  final cubit = getIt<DocumentSubmissionCubit>(
+    param1: type,
+    param2: vehicleToken,
+  );
+  final picked = await showDocumentSourceSheet(context, cubit);
+  if (!picked || !context.mounted) {
+    await cubit.close();
+    return;
+  }
+  await Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/submission'),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<DriverComplianceCubit>.value(value: compliance),
+          BlocProvider<DocumentSubmissionCubit>.value(value: cubit),
+        ],
+        child: Builder(
+          builder: (pageContext) => DocumentSubmissionFlowPage(
+            vehicleCaption: vehicleCaption,
+            onOpenPdf: getIt<FileOpener>().open,
+            onBackToDocuments: () =>
+                Navigator.of(pageContext).popUntil(isOutsideDocumentFlow),
+            onOpenPending: (entry, pendingVehicleToken) => unawaited(
+              replaceDocumentFlowWithDetail(
+                pageContext,
+                compliance,
+                entry,
+                vehicleToken: pendingVehicleToken,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  await cubit.close();
+}
+
+const driverDocumentFlowRoutes = {
+  '/driver/documents/detail',
+  '/driver/documents/submission',
+};
+
+bool isOutsideDocumentFlow(Route<dynamic> route) =>
+    !driverDocumentFlowRoutes.contains(route.settings.name);
+
+Future<void> replaceDocumentFlowWithDetail(
+  BuildContext context,
+  DriverComplianceCubit compliance,
+  DocumentEntry entry, {
+  String? vehicleToken,
+}) {
+  final navigator = Navigator.of(context);
+  return navigator.pushAndRemoveUntil(
+    driverDocumentDetailRoute(
+      navigator.context,
+      compliance,
+      entry,
+      vehicleToken: vehicleToken,
+    ),
+    isOutsideDocumentFlow,
+  );
+}
+
+Future<void> openDocumentImage(
+  BuildContext context,
+  DocumentType type,
+  String imageUrl,
+) {
+  final l10n = AppLocalizations.of(context)!;
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/file'),
+      builder: (_) => DocumentImagePage(
+        title: documentTypeLabel(l10n, type),
+        images: [
+          ApiImageProvider(path: imageUrl, loader: getIt<ApiImageLoader>()),
+        ],
       ),
     ),
   );

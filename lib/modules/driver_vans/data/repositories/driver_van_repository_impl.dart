@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import 'package:vanep_mobile/core/media/photo_failure.dart';
 import 'package:vanep_mobile/core/media/picked_photo.dart';
-import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/core/network/file_uploader.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/failures/driver_van_failure.dart';

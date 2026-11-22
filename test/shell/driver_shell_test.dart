@@ -42,6 +42,8 @@ Widget harness(
   DriverNegotiationsCubit? negotiationsCubit,
   VanCentralCubit? vanCentralCubit,
   Future<void> Function(BuildContext, DriverVan)? openVanStudents,
+  Future<void> Function(BuildContext, DriverVan)? openVanDocuments,
+  Future<void> Function(BuildContext)? openProfessionalData,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -73,6 +75,8 @@ Widget harness(
         openMyVans: (_) async {},
         openVanRegistration: (_) async {},
         openVanStudents: openVanStudents ?? (_, _) async {},
+        openVanDocuments: openVanDocuments ?? (_, _) async {},
+        openProfessionalData: openProfessionalData ?? (_) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
         proposalsActions: DriverProposalsTabActions(
           onOpenRequest: (_) async {},
@@ -229,6 +233,34 @@ void main() {
     },
   );
 
+  testWidgets(
+    'van documents opens the selected van and refreshes the hub on return',
+    (tester) async {
+      final centralCubit = readyVanCentralCubit();
+      final opened = <DriverVan>[];
+      await tester.pumpWidget(
+        harness(
+          cubit,
+          authCubit,
+          profileSummaryCubit,
+          vanCentralCubit: centralCubit,
+          openVanDocuments: (_, van) async => opened.add(van),
+        ),
+      );
+
+      await tester.tap(find.bySemanticsLabel('Vans'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Documentos da van'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Documentos da van'));
+      await tester.pumpAndSettle();
+
+      expect(opened, [firstVan]);
+      expect(find.byType(VanepComingSoonPage), findsNothing);
+      verify(() => centralCubit.refresh()).called(1);
+    },
+  );
+
   testWidgets('the menu button opens the account drawer and refreshes it', (
     tester,
   ) async {
@@ -242,6 +274,31 @@ void main() {
     verify(() => authCubit.refreshSessionProfile()).called(1);
     verify(() => profileSummaryCubit.refresh(any())).called(1);
   });
+
+  testWidgets(
+    'professional data opens from the menu and refreshes the van central',
+    (tester) async {
+      final centralCubit = readyVanCentralCubit();
+      var opened = 0;
+      await tester.pumpWidget(
+        harness(
+          cubit,
+          authCubit,
+          profileSummaryCubit,
+          vanCentralCubit: centralCubit,
+          openProfessionalData: (_) async => opened++,
+        ),
+      );
+
+      await tester.tap(find.byTooltip('Abrir menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Dados profissionais'));
+      await tester.pumpAndSettle();
+
+      expect(opened, 1);
+      verify(() => centralCubit.refresh()).called(1);
+    },
+  );
 
   testWidgets('the Mensagens tab loads the conversations and opens a chat', (
     tester,

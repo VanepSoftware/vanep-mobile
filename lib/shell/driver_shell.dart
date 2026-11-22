@@ -13,6 +13,7 @@ import 'package:vanep_mobile/modules/conversations/presentation/pages/conversati
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_home_tab.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
@@ -31,6 +32,8 @@ class DriverShell extends StatefulWidget {
     required this.openMyVans,
     required this.openVanRegistration,
     required this.openVanStudents,
+    required this.openVanDocuments,
+    required this.openProfessionalData,
     required this.openConversationChat,
     required this.proposalsActions,
     super.key,
@@ -46,6 +49,11 @@ class DriverShell extends StatefulWidget {
 
   final Future<void> Function(BuildContext context, DriverVan van)
   openVanStudents;
+
+  final Future<void> Function(BuildContext context, DriverVan van)
+  openVanDocuments;
+
+  final Future<void> Function(BuildContext context) openProfessionalData;
 
   final Future<void> Function(BuildContext context, Conversation conversation)
   openConversationChat;
@@ -69,6 +77,14 @@ class DriverShellState extends State<DriverShell> {
         OnboardingStep.serviceArea,
       );
 
+  Future<void> openProfessionalDataThenRefreshCentral(
+    BuildContext drawerContext,
+  ) async {
+    await widget.openProfessionalData(drawerContext);
+    if (!mounted) return;
+    await context.read<VanCentralCubit>().refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -77,7 +93,10 @@ class DriverShellState extends State<DriverShell> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: context.palette.surface,
-      drawer: ShellAccountDrawer(profile: widget.profile),
+      drawer: ShellAccountDrawer(
+        profile: widget.profile,
+        openProfessionalData: openProfessionalDataThenRefreshCentral,
+      ),
       onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
         context,
         widget.profile,
@@ -105,6 +124,8 @@ class DriverShellState extends State<DriverShell> {
                   onOpenServiceAreas: () =>
                       openServiceAreasAndRefreshProfile(context),
                   onOpenStudents: (van) => widget.openVanStudents(context, van),
+                  onOpenVanDocuments: (van) =>
+                      widget.openVanDocuments(context, van),
                   onOpenComingSoon: (title) => openComingSoonPage(
                     context,
                     title: title,
