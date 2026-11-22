@@ -20,19 +20,15 @@ void main() {
     ]);
   });
 
-  test('reads an approved CNH with its file, category and issue date', () {
+  test('reads an approved CNH with its file and category', () {
     final cnh = compliance.driverRequirements.first;
     final submission = cnh.current!;
 
     expect(cnh.state, ComplianceState.approved);
-    expect(cnh.satisfied, isTrue);
     expect(cnh.expiringSoon, isFalse);
-    expect(submission.kind, DocumentKind.driverCnh);
     expect(submission.status, SubmissionStatus.approved);
     expect(submission.expiresAt, DateTime(2031, 8, 12));
     expect(submission.cnhCategory, 'AD');
-    expect(submission.cnhIssueDate, DateTime(2021, 8, 12));
-    expect(submission.version, 3);
     expect(submission.fileUrl, '/api/driver-cnhs/cnh-1/file?v=abc');
     expect(
       submission.file,
@@ -68,8 +64,6 @@ void main() {
     expect(van.token, 'sprinter');
     expect(van.plate, 'SDF4E21');
     expect(van.model, 'Sprinter');
-    expect(van.qualified, isFalse);
-    expect(inspection.kind, DocumentKind.vehicleDocument);
     expect(inspection.rejectionReasonCode, RejectionReason.illegible);
     expect(inspection.rejectionReason, 'Foto tremida');
     expect(inspection.file?.originalName, isNull);

@@ -56,6 +56,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 6.4 Testes primeiro para os repositórios: a rota certa para cada `DocumentDraft`; cada linha da tabela de erros da spec → `DocumentSubmissionFailure`; os `code` de data → erro de campo. Depois implementar
 - [x] 6.5 Se o compliance ainda não estiver no back: criar `FakeDriverComplianceDataSource` com `TODO(VAN-86)` apontando para o pedido D2 e para o registro no container que sai junto. Não foi preciso: o back já tem o compliance (branch `VAN-86/11-driver-own-compliance`)
 - [x] 6.6 Criar `driver_documents_container.dart` e registrá-lo no `main.dart`
+- [x] 6.6b Mudança de contrato do back (2026-11-22, o motorista manda só o arquivo, D6): o datasource manda um `POST` multipart com `documentType` e `file` (a CNH só com `file`); saem os corpos de criação e edição e os endpoints por token; o mapeamento de erros lê os códigos do arquivo (`media.*`)
 - [ ] 6.6a Verificar o `GET` do compliance e um envio completo contra o back local, com o login de um motorista (o back local responde 401 sem token; falta o teste manual)
 - [x] 6.7 Rodar `make lint` e `make test`
 - [ ] 6.8 Abrir o PR

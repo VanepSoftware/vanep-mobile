@@ -11,10 +11,8 @@ import 'package:vanep_mobile/modules/driver_documents/data/repositories/driver_c
 import 'package:vanep_mobile/modules/driver_documents/domain/repositories/document_submission_repository.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/repositories/driver_compliance_repository.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/download_document_file.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/usecases/find_submission_for_resume.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/load_my_compliance.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/submit_document.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/usecases/upload_document_file.dart';
 
 void registerDriverDocumentsDependencies(GetIt getIt) {
   getIt
@@ -39,12 +37,6 @@ void registerDriverDocumentsDependencies(GetIt getIt) {
     )
     ..registerFactory<SubmitDocument>(
       () => SubmitDocument(getIt<DocumentSubmissionRepository>()),
-    )
-    ..registerFactory<UploadDocumentFile>(
-      () => UploadDocumentFile(getIt<DocumentSubmissionRepository>()),
-    )
-    ..registerFactory<FindSubmissionForResume>(
-      () => FindSubmissionForResume(getIt<DocumentSubmissionRepository>()),
     )
     ..registerFactory<DownloadDocumentFile>(
       () => DownloadDocumentFile(getIt<DocumentSubmissionRepository>()),

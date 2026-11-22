@@ -9,12 +9,6 @@ import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/submi
 DocumentType readRequirementType(Object? raw) =>
     requireRead(DocumentType.fromRequirementApi(raw), 'requirement', raw);
 
-DocumentType readDocumentType(Object? raw) =>
-    requireRead(DocumentType.fromDocumentApi(raw), 'document type', raw);
-
-DocumentKind readDocumentKind(Object? raw) =>
-    requireRead(DocumentKind.fromApi(raw), 'submission kind', raw);
-
 ComplianceState readComplianceState(Object? raw) =>
     requireRead(ComplianceState.fromApi(raw), 'compliance state', raw);
 

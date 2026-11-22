@@ -37,9 +37,7 @@ abstract class VehicleComplianceDto
   const factory VehicleComplianceDto({
     @JsonKey(fromJson: readToken) required String token,
     required String plate,
-    required String brand,
     required String model,
-    required bool qualified,
     @JsonKey(fromJson: readRequirementStatuses)
     required List<RequirementStatusDto> requirements,
   }) = _VehicleComplianceDto;
@@ -56,7 +54,6 @@ abstract class RequirementStatusDto
     @JsonKey(name: 'requirement', fromJson: readRequirementType)
     required DocumentType type,
     required bool optional,
-    required bool satisfied,
     @JsonKey(fromJson: readComplianceState) required ComplianceState state,
     bool? expiringSoon,
     DocumentSubmissionDto? current,
@@ -72,7 +69,6 @@ abstract class DocumentSubmissionDto
     with _$DocumentSubmissionDto
     implements DocumentSubmission {
   const factory DocumentSubmissionDto({
-    @JsonKey(fromJson: readDocumentKind) required DocumentKind kind,
     @JsonKey(fromJson: readToken) required String token,
     String? documentNumber,
     @JsonKey(fromJson: readOptionalCalendarDate) DateTime? expiresAt,
@@ -82,12 +78,9 @@ abstract class DocumentSubmissionDto
     String? rejectionReason,
     @JsonKey(fromJson: readOptionalInstant) DateTime? reviewedAt,
     @JsonKey(fromJson: readInstant) required DateTime createdAt,
-    @Default(0) int version,
     String? fileUrl,
     @JsonKey(fromJson: readOptionalDocumentFile) DocumentFile? file,
     @JsonKey(name: 'category') String? cnhCategory,
-    @JsonKey(name: 'issueDate', fromJson: readOptionalCalendarDate)
-    DateTime? cnhIssueDate,
   }) = _DocumentSubmissionDto;
 
   factory DocumentSubmissionDto.fromJson(Map<String, Object?> json) =>

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -9,9 +11,8 @@ import 'package:vanep_mobile/modules/driver_documents/data/repositories/driver_c
 import 'package:vanep_mobile/modules/driver_documents/domain/failures/compliance_failure.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/failures/document_submission_failure.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/usecases/submit_document.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_draft.dart';
 import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
-import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/submission_target.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_upload.dart';
 
 import '../../../core/media/document_capture_fixture.dart';
 import '../../../core/media/media_mocks.dart';
@@ -31,16 +32,17 @@ const environment = Environment(
   oauthClientId: 'vanep-mobile',
 );
 
+const upload = DocumentUpload(
+  type: DocumentType.criminalRecord,
+  file: testScannedDocument,
+);
+
 Response<T> ok<T>(T data) =>
     Response<T>(requestOptions: RequestOptions(), data: data, statusCode: 200);
 
 void main() {
   setUpAll(() {
-    registerFallbackValue(testScannedDocument);
-    registerFallbackValue(DocumentKind.driverDocument);
-    registerFallbackValue(
-      const PersonalDocumentDraft(type: DocumentType.criminalRecord),
-    );
+    registerFallbackValue(upload);
   });
 
   group('remote data source', () {
@@ -57,18 +59,14 @@ void main() {
         fileUploader: uploader,
       );
       when(
-        () => dio.post<Map<String, dynamic>>(any(), data: any(named: 'data')),
-      ).thenAnswer((_) async => ok({'token': 'new-1'}));
-      when(() => dio.put<Map<String, dynamic>>(any(), data: any(named: 'data')))
-          .thenAnswer((_) async => ok({'token': 'doc-1'}));
-      when(
-        () => uploader.upload(
+        () => uploader.createWithFile(
           any(),
           path: any(named: 'path'),
           fileName: any(named: 'fileName'),
+          fields: any(named: 'fields'),
           onSendProgress: any(named: 'onSendProgress'),
         ),
-      ).thenAnswer((_) async {});
+      ).thenAnswer((_) async => {'token': 'new-1'});
     });
 
     test('reads the situation from the driver compliance route', () async {
@@ -83,95 +81,78 @@ void main() {
       ).called(1);
     });
 
-    test('each draft is created in its own resource', () async {
-      await remote.create(
-        const PersonalDocumentDraft(type: DocumentType.criminalRecord),
-      );
-      await remote.create(
-        const VehicleDocumentDraft(
-          vehicleToken: 'sprinter',
-          type: DocumentType.vehicleInspection,
+    test('a document goes in one post with its type and its file', () async {
+      void onProgress(int sent, int total) {}
+
+      final token = await remote.send(
+        const DocumentUpload(
+          type: DocumentType.criminalRecord,
+          file: testScannedDocument,
         ),
-      );
-      final token = await remote.create(
-        CnhDraft(
-          registrationNumber: '01234567890',
-          category: 'D',
-          issueDate: DateTime(2021, 8, 12),
-          validUntil: DateTime(2031, 8, 12),
-        ),
+        onProgress: onProgress,
       );
 
       expect(token, 'new-1');
       verify(
-        () => dio.post<Map<String, dynamic>>(
+        () => uploader.createWithFile(
           '$base/api/driver-documents',
-          data: any(named: 'data'),
-        ),
-      ).called(1);
-      verify(
-        () => dio.post<Map<String, dynamic>>(
-          '$base/api/vehicles/sprinter/documents',
-          data: any(named: 'data'),
-        ),
-      ).called(1);
-      verify(
-        () => dio.post<Map<String, dynamic>>(
-          '$base/api/driver-cnhs',
-          data: any(named: 'data'),
+          path: testScannedDocument.path,
+          fileName: testScannedDocument.fileName,
+          fields: {'documentType': 'CRIMINAL_RECORD'},
+          onSendProgress: onProgress,
         ),
       ).called(1);
     });
 
-    test('an update goes to the resource of the token', () async {
-      await remote.update(
-        'vdoc-1',
-        const VehicleDocumentDraft(
+    test('a van document goes to the documents of its van', () async {
+      await remote.send(
+        const DocumentUpload(
+          type: DocumentType.vehicleRegistration,
           vehicleToken: 'sprinter',
-          type: DocumentType.vehicleInspection,
+          file: testScannedDocument,
         ),
       );
 
       verify(
-        () => dio.put<Map<String, dynamic>>(
-          '$base/api/vehicle-documents/vdoc-1',
-          data: any(named: 'data'),
+        () => uploader.createWithFile(
+          '$base/api/vehicles/sprinter/documents',
+          path: any(named: 'path'),
+          fileName: any(named: 'fileName'),
+          fields: {'documentType': 'CRLV'},
+          onSendProgress: any(named: 'onSendProgress'),
         ),
       ).called(1);
     });
 
-    test(
-      'the file goes to the /file route of its resource, with progress',
-      () async {
-        void onProgress(int sent, int total) {}
-
-        await remote.uploadFile(
-          'cnh-1',
-          DocumentKind.driverCnh,
-          testScannedDocument,
-          onProgress: onProgress,
-        );
-
-        verify(
-          () => uploader.upload(
-            '$base/api/driver-cnhs/cnh-1/file',
-            path: testScannedDocument.path,
-            fileName: testScannedDocument.fileName,
-            onSendProgress: onProgress,
-          ),
-        ).called(1);
-      },
-    );
-
-    test('reads the saved resource of a submission', () async {
-      when(() => dio.get<Map<String, dynamic>>(any()))
-          .thenAnswer((_) async => ok({'documentType': 'CRIMINAL_RECORD'}));
-
-      await remote.fetchResource('doc-1', DocumentKind.driverDocument);
+    test('the CNH goes with the file only', () async {
+      await remote.send(
+        const DocumentUpload(
+          type: DocumentType.driverLicense,
+          file: testScannedDocument,
+        ),
+      );
 
       verify(
-        () => dio.get<Map<String, dynamic>>('$base/api/driver-documents/doc-1'),
+        () => uploader.createWithFile(
+          '$base/api/driver-cnhs',
+          path: any(named: 'path'),
+          fileName: any(named: 'fileName'),
+          fields: <String, String>{},
+          onSendProgress: any(named: 'onSendProgress'),
+        ),
       ).called(1);
+    });
+
+    test('a van document without its van is a programming error', () {
+      expect(
+        () => remote.send(
+          const DocumentUpload(
+            type: DocumentType.vehicleInspection,
+            file: testScannedDocument,
+          ),
+        ),
+        throwsArgumentError,
+      );
     });
   });
 
@@ -223,73 +204,31 @@ void main() {
       repository = DocumentSubmissionRepositoryImpl(remote, store);
     });
 
-    test('a refused creation becomes the failure of its code', () async {
-      when(() => remote.create(any())).thenThrow(
-        DioException(
-          requestOptions: RequestOptions(),
-          response: Response<Object?>(
-            requestOptions: RequestOptions(),
-            statusCode: 409,
-            data: {'code': 'document.submission.pending_exists'},
-          ),
-        ),
-      );
+    test('a refused upload becomes the failure of its code', () async {
+      when(() => remote.send(any(), onProgress: any(named: 'onProgress')))
+          .thenThrow(
+            DioException(
+              requestOptions: RequestOptions(),
+              response: Response<Object?>(
+                requestOptions: RequestOptions(),
+                statusCode: 409,
+                data: {'code': 'document.submission.pending_exists'},
+              ),
+            ),
+          );
 
-      final result = await repository.create(
-        const PersonalDocumentDraft(type: DocumentType.criminalRecord),
-      );
+      final result = await repository.send(upload);
 
       expect(result.errorOrNull, const PendingExistsFailure());
     });
 
-    test('a refused file uses the file mapping', () async {
-      when(
-        () => remote.uploadFile(
-          any(),
-          any(),
-          any(),
-          onProgress: any(named: 'onProgress'),
-        ),
-      ).thenThrow(
-        DioException(
-          requestOptions: RequestOptions(),
-          response: Response<Object?>(
-            requestOptions: RequestOptions(),
-            statusCode: 413,
-          ),
-        ),
-      );
+    test('a kept file that is gone fails instead of hanging', () async {
+      when(() => remote.send(any(), onProgress: any(named: 'onProgress')))
+          .thenThrow(const PathNotFoundException('/tmp/gone.pdf', OSError()));
 
-      final result = await repository.uploadFile(
-        'doc-1',
-        DocumentKind.driverDocument,
-        testScannedDocument,
-      );
+      final result = await repository.send(upload);
 
-      expect(result.errorOrNull, const FileTooLargeFailure());
-    });
-
-    test('reads the saved data of a submission to finish it', () async {
-      when(() => remote.fetchResource('doc-1', DocumentKind.driverDocument))
-          .thenAnswer(
-            (_) async => {
-              'documentType': 'CRIMINAL_RECORD',
-              'documentNumber': 'C-1',
-            },
-          );
-
-      final result = await repository.findForResume(
-        'doc-1',
-        DocumentKind.driverDocument,
-      );
-
-      expect(
-        result.valueOrNull,
-        const PersonalDocumentDraft(
-          type: DocumentType.criminalRecord,
-          documentNumber: 'C-1',
-        ),
-      );
+      expect(result.errorOrNull, const UnexpectedSubmissionFailure());
     });
 
     test('downloads the file next to the kept documents', () async {
@@ -312,21 +251,10 @@ void main() {
     });
 
     test('the whole submission works through the repository', () async {
-      when(() => remote.create(any())).thenAnswer((_) async => 'doc-1');
-      when(
-        () => remote.uploadFile(
-          any(),
-          any(),
-          any(),
-          onProgress: any(named: 'onProgress'),
-        ),
-      ).thenAnswer((_) async {});
+      when(() => remote.send(any(), onProgress: any(named: 'onProgress')))
+          .thenAnswer((_) async => 'doc-1');
 
-      final result = await SubmitDocument(repository)(
-        target: const NewSubmission(),
-        draft: const PersonalDocumentDraft(type: DocumentType.criminalRecord),
-        file: testScannedDocument,
-      );
+      final result = await SubmitDocument(repository)(upload);
 
       expect(result.valueOrNull, 'doc-1');
     });

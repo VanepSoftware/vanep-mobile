@@ -1,17 +1,6 @@
 import 'package:vanep_mobile/core/domain/schedule/api_name.dart';
 
-enum DocumentKind {
-  driverDocument('DRIVER_DOCUMENT'),
-  vehicleDocument('VEHICLE_DOCUMENT'),
-  driverCnh('DRIVER_CNH');
-
-  const DocumentKind(this.apiName);
-
-  final String apiName;
-
-  static DocumentKind? fromApi(Object? raw) =>
-      findByApiName(values, (kind) => kind.apiName, raw);
-}
+enum DocumentKind { driverDocument, vehicleDocument, driverCnh }
 
 enum DocumentType {
   driverLicense(
@@ -61,13 +50,4 @@ enum DocumentType {
 
   static DocumentType? fromRequirementApi(Object? raw) =>
       findByApiName(values, (type) => type.requirementApiName, raw);
-
-  static DocumentType? fromDocumentApi(Object? raw) => findByApiName(
-    [
-      for (final type in values)
-        if (type.documentApiName != null) type,
-    ],
-    (type) => type.documentApiName!,
-    raw,
-  );
 }
