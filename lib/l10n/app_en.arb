@@ -2781,7 +2781,6 @@
   "documentTypeSchoolVehicleAuthorization": "School transport authorization",
   "documentStateNotSent": "Not sent",
   "documentStateOptional": "Optional",
-  "documentStateIncomplete": "Upload incomplete",
   "documentStateRejected": "Rejected",
   "documentStateExpired": "Expired",
   "documentStateUnderReview": "Under review",

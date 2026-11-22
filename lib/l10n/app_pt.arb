@@ -1353,7 +1353,6 @@
   "documentTypeSchoolVehicleAuthorization": "Autorização escolar",
   "documentStateNotSent": "Não enviado",
   "documentStateOptional": "Opcional",
-  "documentStateIncomplete": "Envio incompleto",
   "documentStateRejected": "Reprovado",
   "documentStateExpired": "Vencido",
   "documentStateUnderReview": "Em análise",

@@ -60,11 +60,6 @@ DocumentStatusStyle documentStatusStyleOf(
       icon: Icons.radio_button_unchecked,
       color: palette.textSecondary,
     ),
-    DocumentIncomplete() => DocumentStatusStyle(
-      label: l10n.documentStateIncomplete,
-      icon: Icons.pending_outlined,
-      color: palette.textSecondary,
-    ),
     DocumentRejected() => DocumentStatusStyle(
       label: l10n.documentStateRejected,
       icon: Icons.cancel,

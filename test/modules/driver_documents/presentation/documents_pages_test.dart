@@ -35,7 +35,6 @@ TestVehicle master() => TestVehicle(
   token: 'master',
   plate: 'RTA3B45',
   model: 'Master',
-  qualified: true,
   requirements: [
     approved(DocumentType.vehicleRegistration, expiresAt: DateTime(2027, 6, 1)),
     approved(DocumentType.vehicleInspection, expiresAt: DateTime(2027, 4, 1)),
