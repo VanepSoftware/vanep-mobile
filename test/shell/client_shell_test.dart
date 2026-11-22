@@ -36,7 +36,7 @@ import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/client_home/client_home_fixtures.dart';
 import '../modules/client_home/client_home_mocks.dart';
-import '../modules/client_vans/fixtures/client_vans_fixtures.dart';
+import '../modules/client_vans/fixtures/client_vans_fixture.dart';
 import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
 import '../modules/dependents/dependents_fixtures.dart';

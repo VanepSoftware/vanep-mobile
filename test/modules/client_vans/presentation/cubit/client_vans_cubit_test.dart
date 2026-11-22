@@ -6,7 +6,7 @@ import 'package:vanep_mobile/modules/client_vans/domain/failures/client_vans_fai
 import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_state.dart';
 
-import '../../fixtures/client_vans_fixtures.dart';
+import '../../fixtures/client_vans_fixture.dart';
 import '../../mocks/client_vans_mocks.dart';
 
 void main() {

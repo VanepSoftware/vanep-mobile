@@ -16,7 +16,7 @@ import 'package:vanep_mobile/modules/client_vans/presentation/widgets/client_van
 import 'package:vanep_mobile/modules/client_vans/presentation/widgets/client_vans_empty_view.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/widgets/client_vans_skeleton.dart';
 
-import '../../fixtures/client_vans_fixtures.dart';
+import '../../fixtures/client_vans_fixture.dart';
 
 class MockClientVansCubit extends MockCubit<ClientVansState>
     implements ClientVansCubit {}
