@@ -15,6 +15,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 2.4 Testes primeiro para os adaptadores da galeria (reaproveitando o `ImagePickerPhotoPicker`) e do PDF (`FileType.custom`, `['pdf']`), incluindo o arquivo grande → `tooLarge`. Depois implementar e registrar `DocumentCapture` no `media_container.dart`
 - [x] 2.5 Testes primeiro para o `FileUploader` (multipart `file`, repassa `onSendProgress`). Depois trocar o `PhotoUploader` por ele e ajustar os chamadores de foto; os testes de foto que já existem continuam verdes
 - [ ] 2.6 No aparelho: medir o PDF do scanner com 2, 4 e 10 páginas no iPhone e no Android, e fixar o `noOfPages`; confirmar se o Android precisa de `CAMERA` no manifest; testar num emulador sem Play Services. Registrar os números no PR
+- [x] 2.6a Mudança de contrato do back (2026-11-22, o motorista manda só o arquivo, D6): `FileUploader.createWithFile` manda campos extras com o arquivo e devolve o corpo da resposta
 - [x] 2.7 Rodar `make lint` e `make test`
 - [ ] 2.8 Abrir o PR
 

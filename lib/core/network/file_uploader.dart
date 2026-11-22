@@ -13,10 +13,37 @@ class FileUploader {
     required String fileName,
     ProgressCallback? onSendProgress,
   }) async {
-    final form = FormData.fromMap({
+    await dio.post<void>(
+      endpoint,
+      data: await multipartForm(path: path, fileName: fileName),
+      onSendProgress: onSendProgress,
+    );
+  }
+
+  Future<Map<String, Object?>> createWithFile(
+    String endpoint, {
+    required String path,
+    required String fileName,
+    Map<String, String> fields = const {},
+    ProgressCallback? onSendProgress,
+  }) async {
+    final response = await dio.post<Map<String, dynamic>>(
+      endpoint,
+      data: await multipartForm(path: path, fileName: fileName, fields: fields),
+      onSendProgress: onSendProgress,
+    );
+    return response.data ?? const {};
+  }
+
+  Future<FormData> multipartForm({
+    required String path,
+    required String fileName,
+    Map<String, String> fields = const {},
+  }) async {
+    return FormData.fromMap({
+      ...fields,
       'file': await MultipartFile.fromFile(path, filename: fileName),
     });
-    await dio.post<void>(endpoint, data: form, onSendProgress: onSendProgress);
   }
 }
 

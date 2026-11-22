@@ -73,6 +73,40 @@ void main() {
     ).called(1);
   });
 
+  test('creates a resource with its fields and the file in one form', () async {
+    when(
+      () => dio.post<Map<String, dynamic>>(
+        any(),
+        data: any(named: 'data'),
+        onSendProgress: any(named: 'onSendProgress'),
+      ),
+    ).thenAnswer(
+      (_) async =>
+          Response(requestOptions: RequestOptions(), data: {'token': 'doc-1'}),
+    );
+
+    final created = await FileUploader(dio: dio).createWithFile(
+      '/api/driver-documents',
+      path: file.path,
+      fileName: 'scan.pdf',
+      fields: {'documentType': 'CRIMINAL_RECORD'},
+    );
+
+    expect(created, {'token': 'doc-1'});
+    final form =
+        verify(
+              () => dio.post<Map<String, dynamic>>(
+                '/api/driver-documents',
+                data: captureAny(named: 'data'),
+                onSendProgress: any(named: 'onSendProgress'),
+              ),
+            ).captured.single
+            as FormData;
+    expect(form.fields.single.key, 'documentType');
+    expect(form.fields.single.value, 'CRIMINAL_RECORD');
+    expect(form.files.single.key, 'file');
+  });
+
   test('maps the server answer to a photo failure', () {
     expect(photoFailureFrom(statusError(null)), PhotoFailure.network);
     expect(photoFailureFrom(statusError(413)), PhotoFailure.tooLarge);
