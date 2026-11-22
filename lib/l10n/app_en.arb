@@ -2633,5 +2633,128 @@
       }
     }
   },
-  "clientVansDependentNoVan": "No van linked to this dependent."
+  "clientVansDependentNoVan": "No van linked to this dependent.",
+  "clientVansAnotherVanChip": "Another van",
+  "clientVansVanSelectorTitle": "{driver}'s van",
+  "@clientVansVanSelectorTitle": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansActiveContractBadge": "Active contract",
+  "clientVansPendingContractBadge": "Pending contract",
+  "clientVansPhotoPlaceholder": "Van photo (front and side)",
+  "clientVansDriverRole": "Driver",
+  "clientVansCallDriver": "Call {name}",
+  "@clientVansCallDriver": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansOnVanSection": "On the van",
+  "clientVansRoutineSection": "Routine",
+  "clientVansScheduleStopsTitle": "Schedule and stops",
+  "clientVansReportAbsenceTitle": "Report absence",
+  "clientVansReportAbsenceSubtitle": "Today or future days",
+  "clientVansAdjustStopTitle": "Adjust stop",
+  "clientVansAdjustStopSubtitle": "For today only; driver approves",
+  "clientVansTripHistoryTitle": "Trip history",
+  "clientVansTripHistorySubtitle": "Pickups and arrivals, day by day",
+  "clientVansContractPaymentsSection": "Contract and payments",
+  "clientVansContractRowTitle": "Contract",
+  "clientVansContractUntilSummary": "Until {date} · {amount}/mo",
+  "@clientVansContractUntilSummary": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansPaymentsRowTitle": "Payments",
+  "clientVansSecuritySection": "Safety",
+  "clientVansDocumentsTitle": "Driver and van documents",
+  "clientVansRateDriverTitle": "Rate {name}",
+  "@clientVansRateDriverTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansRateDriverSubtitle": "Anonymous, once per contract",
+  "clientVansCancelContractTitle": "Cancel contract",
+  "clientVansCancelContractSubtitle": "30-day notice and 10% remaining balance fee",
+  "clientVanNoDependents": "No dependents linked to this van yet.",
+  "clientVanNoContract": "Contract pending activation",
+  "clientVanDriverPhoneTitle": "Driver phone",
+  "clientVanDriverPhoneMissing": "Driver phone number not provided.",
+  "clientVanCopyPhone": "Copy number",
+  "clientVanPhoneCopied": "Number copied.",
+  "dependentNoLinkedVan": "This dependent is not linked to a van yet.",
+  "clientVanDependentNotInList": "Could not open {name}'s profile.",
+  "@clientVanDependentNotInList": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVanDetailBrandModel": "Make / Model",
+  "clientVanDetailMonthlyFee": "Monthly fee",
+  "clientVanDetailDueDate": "Due date",
+  "clientVanDetailContractPeriod": "Contract period",
+  "clientVanDetailInstallmentsLabel": "Contracted installments",
+  "clientVanDetailInstallmentsCount": "{count, plural, =1{1 installment} other{{count} installments}}",
+  "@clientVanDetailInstallmentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVanDetailTotalAmount": "Total amount",
+  "clientVanDetailSchool": "School",
+  "clientVanDetailOutboundTime": "Outbound: {time}",
+  "@clientVanDetailOutboundTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVanDetailReturnTime": "Return: {time}",
+  "@clientVanDetailReturnTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansScheduleBothTimes": "Pickup {pickup} · return {returnTime}",
+  "@clientVansScheduleBothTimes": {
+    "placeholders": {
+      "pickup": {
+        "type": "String"
+      },
+      "returnTime": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansSchedulePickupOnly": "Pickup {pickup}",
+  "@clientVansSchedulePickupOnly": {
+    "placeholders": {
+      "pickup": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansNoConversationYet": "There is no conversation started with this driver yet."
 }

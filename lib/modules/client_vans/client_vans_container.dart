@@ -5,7 +5,6 @@ import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/modules/client_vans/data/datasources/client_vans_datasource.dart';
 import 'package:vanep_mobile/modules/client_vans/data/datasources/client_vans_remote_datasource.dart';
-import 'package:vanep_mobile/modules/client_vans/data/datasources/mocked_client_vans_datasource.dart';
 import 'package:vanep_mobile/modules/client_vans/data/repositories/client_vans_repository_impl.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/repositories/client_vans_repository.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/usecases/find_my_client_vans.dart';
@@ -23,10 +22,7 @@ void registerClientVansDependencies(GetIt getIt) {
       ),
     )
     ..registerSingleton<ClientVansRepository>(
-      ClientVansRepositoryImpl(
-        dataSource: getIt<ClientVansDataSource>(),
-        fallbackDataSource: const MockedClientVansDataSource(),
-      ),
+      ClientVansRepositoryImpl(dataSource: getIt<ClientVansDataSource>()),
     )
     ..registerFactory<FindMyClientVans>(
       () => FindMyClientVans(getIt<ClientVansRepository>()),

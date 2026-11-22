@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
-import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
@@ -43,41 +42,47 @@ class ClientVansPage extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
                 children: [
-                  // Header
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.clientVansTitle,
-                              style: context.typography.pageTitle,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              l10n.clientVansSubtitle,
-                              style: context.typography.cardSubtitle,
-                            ),
-                          ],
+                        child: Text(
+                          l10n.navVans,
+                          style: context.typography.pageTitle.copyWith(
+                            fontSize: 26,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.5,
+                          ),
                         ),
                       ),
                       if (state.hasVans)
-                        IconButton.outlined(
-                          tooltip: l10n.clientVansAddNewVan,
-                          onPressed: onSearchTapped,
-                          style: IconButton.styleFrom(
-                            backgroundColor: context.palette.card,
-                            side: BorderSide(color: context.palette.inputBorder),
+                        Tooltip(
+                          message: l10n.clientVansAddNewVan,
+                          child: Material(
+                            color: context.palette.card,
+                            shape: CircleBorder(
+                              side: BorderSide(
+                                color: context.palette.inputBorder,
+                              ),
+                            ),
+                            child: InkWell(
+                              onTap: onSearchTapped,
+                              customBorder: const CircleBorder(),
+                              child: SizedBox(
+                                width: 38,
+                                height: 38,
+                                child: Icon(
+                                  Icons.search_rounded,
+                                  size: 20,
+                                  color: context.palette.textPrimary,
+                                ),
+                              ),
+                            ),
                           ),
-                          icon: Icon(Icons.add, color: context.palette.textPrimary),
                         ),
                     ],
                   ),
-
-                  const SizedBox(height: 20),
-
-                  // Content switch
+                  const SizedBox(height: 14),
                   switch (state.status) {
                     ClientVansStatus.loading => const ClientVansSkeleton(),
                     ClientVansStatus.loadFailed => VanepErrorView(
@@ -91,7 +96,7 @@ class ClientVansPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           for (final (index, van) in state.vans.indexed) ...[
-                            if (index > 0) const SizedBox(height: 20),
+                            if (index > 0) const SizedBox(height: 12),
                             ClientVanCard(
                               van: van,
                               onTap: onVanTapped != null
@@ -99,11 +104,13 @@ class ClientVansPage extends StatelessWidget {
                                   : null,
                             ),
                           ],
-                          const SizedBox(height: 20),
-                          VanepSecondaryButton(
-                            label: l10n.clientVansAddNewVan,
-                            icon: Icons.search_rounded,
-                            onPressed: onSearchTapped,
+                          const SizedBox(height: 16),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: _AddAnotherVanButton(
+                              label: l10n.clientVansAnotherVanChip,
+                              onTap: onSearchTapped,
+                            ),
                           ),
                         ],
                       ),
@@ -112,6 +119,49 @@ class ClientVansPage extends StatelessWidget {
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _AddAnotherVanButton extends StatelessWidget {
+  const _AddAnotherVanButton({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.palette.card,
+      shape: StadiumBorder(
+        side: BorderSide(color: context.palette.inputBorder),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const StadiumBorder(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.add_rounded,
+                size: 16,
+                color: context.palette.textPrimary,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  color: context.palette.textPrimary,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

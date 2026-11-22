@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_bottom_nav.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
+import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_detail_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
@@ -36,7 +39,9 @@ import '../modules/client_home/client_home_mocks.dart';
 import '../modules/client_vans/fixtures/client_vans_fixtures.dart';
 import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
+import '../modules/dependents/dependents_fixtures.dart';
 import '../modules/dependents/dependents_mocks.dart';
+import '../modules/dependents/presentation/dependents_page_harness.dart';
 import '../modules/drivers/drivers_fixtures.dart';
 import '../modules/drivers/presentation/drivers_presentation_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
@@ -226,7 +231,7 @@ void main() {
     await tester.tap(find.text('Procurar van'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Minhas vans'), findsOneWidget);
+    expect(find.text('Buscar vans escolares'), findsOneWidget);
   });
 
   testWidgets('the Mensagens tab lists the client conversations by driver', (
@@ -272,6 +277,13 @@ void main() {
   testWidgets(
     'tapping van card on Vans tab opens detail page and allows chatting with driver',
     (tester) async {
+      conversationsCubit = readyConversationsCubit([
+        const TestConversation(
+          token: 'conv-driver-test-01',
+          driverToken: 'driver-test-01',
+          driverName: 'Carlos Alberto Silva',
+        ),
+      ]);
       whenListen(
         clientVansCubit,
         const Stream<ClientVansState>.empty(),
@@ -299,13 +311,60 @@ void main() {
       expect(find.text('ABC-4E21'), findsOneWidget);
 
       // Tap chat with driver on the detail page
-      await tester.ensureVisible(find.text('Conversar com motorista'));
+      await tester.ensureVisible(find.byTooltip('Conversar com motorista'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Conversar com motorista'));
+      await tester.tap(find.byTooltip('Conversar com motorista'));
       await tester.pumpAndSettle();
 
       expect(opened, isNotEmpty);
-      expect(opened.first.driverName, 'Carlos Alberto Silva');
+      expect(opened.first.token, 'conv-driver-test-01');
+      expect(opened.first.driverToken, 'driver-test-01');
+    },
+  );
+
+  testWidgets(
+    'does not fall back to van token or driver name match when conversation is absent',
+    (tester) async {
+      conversationsCubit = readyConversationsCubit([
+        const TestConversation(
+          token: 'conv-other-driver',
+          driverToken: 'other-driver-token',
+          driverName: 'Carlos Alberto Silva',
+        ),
+      ]);
+      whenListen(
+        clientVansCubit,
+        const Stream<ClientVansState>.empty(),
+        initialState: ClientVansState(
+          status: ClientVansStatus.loaded,
+          vans: [testClientVan],
+        ),
+      );
+
+      final opened = <Conversation>[];
+      await tester.pumpWidget(
+        harness(
+          openConversationChat: (_, conversation) async =>
+              opened.add(conversation),
+        ),
+      );
+
+      await tester.tap(find.bySemanticsLabel('Vans'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Mercedes-Benz Sprinter 415 CDI'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.byTooltip('Conversar com motorista'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Conversar com motorista'));
+      await tester.pumpAndSettle();
+
+      expect(opened, isEmpty);
+      expect(
+        find.text('Ainda não há uma conversa iniciada com este motorista.'),
+        findsOneWidget,
+      );
     },
   );
 
@@ -406,4 +465,47 @@ void main() {
     expect(find.text('Gerencie quem viaja na van'), findsOneWidget);
     verify(dependentsCubit.loadDependents).called(1);
   });
+
+  testWidgets(
+    'tapping a dependent inside van detail switches to Dependentes tab and opens their profile',
+    (tester) async {
+      final doubles = DependentEditorDoubles()..register();
+      doubles.schoolDaysReturn(const SchoolWeek.empty());
+      addTearDown(getIt.reset);
+
+      const lucas = TestDependent(token: 'dep-test-01', name: 'Lucas Silva');
+      whenListen(
+        dependentsCubit,
+        const Stream<DependentsState>.empty(),
+        initialState: const DependentsState(
+          status: DependentsStatus.ready,
+          dependents: [lucas],
+        ),
+      );
+      whenListen(
+        clientVansCubit,
+        const Stream<ClientVansState>.empty(),
+        initialState: ClientVansState(
+          status: ClientVansStatus.loaded,
+          vans: [testClientVan],
+        ),
+      );
+
+      await tester.pumpWidget(harness());
+      await tester.tap(find.bySemanticsLabel('Vans'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Mercedes-Benz Sprinter 415 CDI'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.text('Lucas Silva'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Lucas Silva'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DependentDetailView), findsOneWidget);
+      expect(find.text('Lucas'), findsOneWidget);
+      expect(find.text('Lucas Silva'), findsOneWidget);
+    },
+  );
 }

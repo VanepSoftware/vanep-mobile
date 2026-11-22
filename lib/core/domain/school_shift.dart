@@ -12,7 +12,7 @@ enum SchoolShift {
       'MORNING' => SchoolShift.morning,
       'AFTERNOON' => SchoolShift.afternoon,
       'NIGHT' => SchoolShift.night,
-      'FULLTIME' => SchoolShift.fullTime,
+      'FULLTIME' || 'FULL_TIME' => SchoolShift.fullTime,
       _ => null,
     };
   }

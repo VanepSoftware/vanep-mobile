@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
-import 'package:vanep_mobile/core/network/api_image_provider.dart';
-import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
-import 'package:vanep_mobile/core/ui/vanep_card.dart';
-import 'package:vanep_mobile/core/ui/vanep_chip.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
-import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
-import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
-import 'package:vanep_mobile/core/ui/vanep_section.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/formatters/client_vans_labels.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/widgets/client_van_hero_card.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/widgets/client_van_sections.dart';
 
 Future<void> openClientVanDetail(
   BuildContext context, {
   required ClientVan van,
   VoidCallback? onChatWithDriver,
+  ValueChanged<ClientVanDependent>? onDependentTapped,
 }) {
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => ClientVanDetailPage(
         van: van,
         onChatWithDriver: onChatWithDriver,
+        onDependentTapped: onDependentTapped,
       ),
     ),
   );
@@ -33,26 +33,28 @@ class ClientVanDetailPage extends StatelessWidget {
   const ClientVanDetailPage({
     required this.van,
     this.onChatWithDriver,
+    this.onDependentTapped,
     super.key,
   });
 
   final ClientVan van;
   final VoidCallback? onChatWithDriver;
+  final ValueChanged<ClientVanDependent>? onDependentTapped;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final vehicle = van.vehicle;
-    final driver = van.driver;
     final contract = van.contract;
     final dependents = van.dependents;
 
-    final statusBg = van.isActive
-        ? context.palette.successSurface
-        : context.palette.warningSurface;
-    final statusFg = van.isActive
-        ? context.palette.success
-        : context.palette.warning;
+    void openSoon(String title) {
+      openComingSoonPage(
+        context,
+        title: title,
+        message: l10n.comingSoon,
+      );
+    }
 
     return Scaffold(
       backgroundColor: context.palette.surface,
@@ -63,405 +65,275 @@ class ClientVanDetailPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 48),
         children: [
-          // 1. Vehicle Hero Banner
-          _DetailVehicleBanner(
-            vehicle: vehicle,
-            statusBg: statusBg,
-            statusFg: statusFg,
-            isActive: van.isActive,
-            statusLabel: clientVanStatusLabel(l10n, van.status),
+          ClientVanHeroCard(
+            van: van,
+            onChatTapped: onChatWithDriver,
+            onCallTapped: () => _showDriverPhoneSheet(context, l10n),
           ),
           const SizedBox(height: 20),
-
-          // 2. Vehicle Details Section
-          VanepSection(
-            title: l10n.clientVanDetailVehicleSection,
-            child: VanepCard(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _DetailInfoRow(
-                    label: 'Marca / Modelo',
-                    value: vehicle.displayName,
-                  ),
-                  if (vehicle.plate != null && vehicle.plate!.isNotEmpty) ...[
-                    const Divider(height: 20),
-                    _DetailInfoRow(
-                      label: l10n.clientVanDetailPlate,
-                      value: vehicle.plate!,
-                    ),
-                  ],
-                  const Divider(height: 20),
-                  _DetailInfoRow(
-                    label: l10n.clientVanDetailYear,
-                    value: '${vehicle.manufactureYear}',
-                  ),
-                  const Divider(height: 20),
-                  _DetailInfoRow(
-                    label: l10n.clientVanDetailColor,
-                    value: vehicle.color,
-                  ),
-                  const Divider(height: 20),
-                  _DetailInfoRow(
-                    label: l10n.clientVanDetailCapacity,
-                    value: l10n.clientVansSeats(vehicle.capacity),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // 3. Driver Responsible Section
-          VanepSection(
-            title: l10n.clientVansDriverSection,
-            child: VanepCard(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      VanepAvatar(
-                        photoUrl: driver.photoUrl,
-                        initials: initialsOf(driver.name),
-                        size: 52,
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              driver.name,
-                              style: context.typography.cardTitle.copyWith(
-                                fontSize: 16,
-                              ),
-                            ),
-                            if (driver.phone != null &&
-                                driver.phone!.isNotEmpty) ...[
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.phone_outlined,
-                                    size: 14,
-                                    color: context.palette.textSecondary,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    driver.phone!,
-                                    style: context.typography.cardSubtitle,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      if (driver.rating != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.palette.warningSurface,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.star_rounded,
-                                size: 16,
-                                color: Colors.amber,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                driver.rating!.toStringAsFixed(1),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: context.palette.textPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                  if (onChatWithDriver != null) ...[
-                    const SizedBox(height: 16),
-                    VanepPrimaryButton(
-                      label: l10n.clientVansChatDriver,
-                      trailingIcon: Icons.chat_bubble_outline_rounded,
-                      onPressed: onChatWithDriver,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // 4. Contract Section
-          if (contract != null) ...[
-            VanepSection(
-              title: l10n.clientVansContractSection,
-              child: VanepCard(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
-                          formatMoney(
-                            l10n,
-                            (contract.installmentAmount * 100).round(),
-                          ),
-                          style: context.typography.pageTitle.copyWith(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                            color: context.palette.action,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text('/ mês', style: context.typography.cardSubtitle),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      l10n.clientVansDueDay(contract.dueDay),
-                      style: context.typography.body.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Divider(height: 1),
-                    const SizedBox(height: 12),
-                    _DetailInfoRow(
-                      label: 'Período de vigência',
-                      value: clientVanContractPeriod(l10n, contract),
-                    ),
-                    const Divider(height: 20),
-                    _DetailInfoRow(
-                      label: 'Parcelas contratadas',
-                      value: '${contract.installments} parcelas',
-                    ),
-                    const Divider(height: 20),
-                    _DetailInfoRow(
-                      label: 'Valor total',
-                      value: formatMoney(
-                        l10n,
-                        (contract.totalAmount * 100).round(),
-                      ),
-                    ),
-                  ],
+          if (dependents.isNotEmpty)
+            ClientVanDependentsSection(
+              dependents: dependents,
+              onDependentTapped: (dep) {
+                if (onDependentTapped != null) {
+                  onDependentTapped!(dep);
+                  return;
+                }
+                _showSchedulesSheet(context, l10n);
+              },
+            )
+          else
+            ClientVanGroupedSection(
+              title: l10n.clientVansOnVanSection,
+              rows: [
+                ClientVanMenuRow(
+                  leading: const ClientVanIconLeading(icon: Icons.face_outlined),
+                  title: l10n.clientVanNoDependents,
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 20),
-          ],
-
-          // 5. Dependents Section
-          if (dependents.isNotEmpty) ...[
-            VanepSection(
-              title: l10n.clientVansDependentsSection,
-              child: Column(
-                children: [
-                  for (final (index, dep) in dependents.indexed) ...[
-                    if (index > 0) const SizedBox(height: 12),
-                    VanepCard(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: context.palette.actionSurface,
-                                child: Icon(
-                                  Icons.school_outlined,
-                                  size: 20,
-                                  color: context.palette.action,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  dep.name,
-                                  style: context.typography.cardTitle.copyWith(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          _DetailInfoRow(
-                            label: 'Colégio',
-                            value: dep.schoolName,
-                          ),
-                          const Divider(height: 20),
-                          _DetailInfoRow(
-                            label: l10n.clientVanDetailShift,
-                            value: dep.shift,
-                          ),
-                          const Divider(height: 20),
-                          _DetailInfoRow(
-                            label: l10n.clientVanDetailPickupAddress,
-                            value: dep.pickupAddress,
-                          ),
-                          if (dep.pickupTime != null ||
-                              dep.returnTime != null) ...[
-                            const Divider(height: 20),
-                            _DetailInfoRow(
-                              label: l10n.clientVanDetailSchedule,
-                              value: [
-                                if (dep.pickupTime != null)
-                                  'Ida: ${dep.pickupTime}',
-                                if (dep.returnTime != null)
-                                  'Volta: ${dep.returnTime}',
-                              ].join(' · '),
-                            ),
-                          ],
-                          if (dep.weekdays.isNotEmpty) ...[
-                            const Divider(height: 20),
-                            Text(
-                              l10n.clientVanDetailWeekdays,
-                              style: context.typography.cardSubtitle,
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
-                              children: [
-                                for (final day in dep.weekdays)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: context.palette.actionSurface,
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Text(
-                                      day,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: context.palette.action,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-              ),
+          const SizedBox(height: 20),
+          ClientVanRoutineSection(
+            van: van,
+            onScheduleTapped: () => _showSchedulesSheet(context, l10n),
+            onFeatureTapped: openSoon,
+          ),
+          const SizedBox(height: 20),
+          if (contract != null)
+            ClientVanContractSection(
+              contract: contract,
+              onContractTapped: () => _showContractSheet(context, l10n, contract),
+              onPaymentsTapped: () => openSoon(l10n.clientVansPaymentsRowTitle),
+            )
+          else
+            ClientVanGroupedSection(
+              title: l10n.clientVansContractPaymentsSection,
+              rows: [
+                ClientVanMenuRow(
+                  leading: const ClientVanIconLeading(
+                    icon: Icons.description_outlined,
+                  ),
+                  title: l10n.clientVansContractRowTitle,
+                  subtitle: l10n.clientVanNoContract,
+                ),
+              ],
             ),
-          ],
+          const SizedBox(height: 20),
+          ClientVanSecuritySection(
+            van: van,
+            onDocumentsTapped: () => _showDocumentsSheet(context, l10n),
+            onFeatureTapped: openSoon,
+          ),
         ],
       ),
     );
   }
-}
 
-class _DetailVehicleBanner extends StatelessWidget {
-  const _DetailVehicleBanner({
-    required this.vehicle,
-    required this.statusBg,
-    required this.statusFg,
-    required this.isActive,
-    required this.statusLabel,
-  });
-
-  final ClientVanVehicle vehicle;
-  final Color statusBg;
-  final Color statusFg;
-  final bool isActive;
-  final String statusLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    final photo = vehicle.photoFrontUrl ?? vehicle.photoSideUrl;
-    final image = apiImageFor(context, photo);
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        height: 180,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              context.palette.action.withValues(alpha: 0.15),
-              context.palette.action.withValues(alpha: 0.05),
-            ],
-          ),
+  Future<void> _showDriverPhoneSheet(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    final phone = van.driver.phone?.trim() ?? '';
+    return _showDetailSheet(
+      context,
+      title: l10n.clientVanDriverPhoneTitle,
+      buildChildren: (sheetContext) => [
+        _DetailInfoRow(label: l10n.clientVansDriverRole, value: van.driver.name),
+        const Divider(height: 20),
+        Text(
+          phone.isNotEmpty ? phone : l10n.clientVanDriverPhoneMissing,
+          style: sheetContext.typography.cardTitle.copyWith(fontSize: 18),
         ),
-        child: Stack(
-          children: [
-            if (image != null)
-              Positioned.fill(
-                child: Image(
-                  image: image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => _placeholderBanner(context),
-                ),
-              )
-            else
-              _placeholderBanner(context),
-            Positioned(
-              top: 14,
-              right: 14,
-              child: VanepChip(
-                label: statusLabel,
-                background: statusBg,
-                foreground: statusFg,
-                icon: isActive ? Icons.check_circle_outline : Icons.schedule,
-              ),
+        if (phone.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: phone));
+                Navigator.of(sheetContext).pop();
+                VanepFeedback.showInfo(context, l10n.clientVanPhoneCopied);
+              },
+              icon: const Icon(Icons.copy_rounded, size: 18),
+              label: Text(l10n.clientVanCopyPhone),
             ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      ],
     );
   }
 
-  Widget _placeholderBanner(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.airport_shuttle_rounded,
-            size: 56,
-            color: context.palette.action.withValues(alpha: 0.7),
-          ),
-          const SizedBox(height: 8),
+  Future<void> _showSchedulesSheet(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    return _showDetailSheet(
+      context,
+      title: l10n.clientVansScheduleStopsTitle,
+      buildChildren: (sheetContext) => [
+        if (van.dependents.isEmpty)
           Text(
-            vehicle.displayName,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: context.palette.textPrimary,
+            l10n.clientVanNoDependents,
+            style: sheetContext.typography.cardSubtitle,
+          )
+        else
+          for (final (index, dep) in van.dependents.indexed) ...[
+            if (index > 0) const Divider(height: 24),
+            Text(
+              dep.name,
+              style: sheetContext.typography.cardTitle.copyWith(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            _DetailInfoRow(label: l10n.clientVanDetailSchool, value: dep.schoolName),
+            const Divider(height: 16),
+            _DetailInfoRow(
+              label: l10n.clientVanDetailShift,
+              value: clientVanShiftLabel(l10n, dep.shift),
+            ),
+            if (dep.pickupAddress.trim().isNotEmpty) ...[
+              const Divider(height: 16),
+              _DetailInfoRow(
+                label: l10n.clientVanDetailPickupAddress,
+                value: dep.pickupAddress,
+              ),
+            ],
+            if (dep.pickupTime != null || dep.returnTime != null) ...[
+              const Divider(height: 16),
+              _DetailInfoRow(
+                label: l10n.clientVanDetailSchedule,
+                value: [
+                  if (dep.pickupTime != null)
+                    l10n.clientVanDetailOutboundTime(dep.pickupTime!),
+                  if (dep.returnTime != null)
+                    l10n.clientVanDetailReturnTime(dep.returnTime!),
+                ].join(' · '),
+              ),
+            ],
+            if (dep.weekdays.isNotEmpty) ...[
+              const Divider(height: 16),
+              _DetailInfoRow(
+                label: l10n.clientVanDetailWeekdays,
+                value: dep.weekdays.join(', '),
+              ),
+            ],
+          ],
+      ],
+    );
+  }
+
+  Future<void> _showContractSheet(
+    BuildContext context,
+    AppLocalizations l10n,
+    ClientVanContract contract,
+  ) {
+    return _showDetailSheet(
+      context,
+      title: l10n.clientVansContractRowTitle,
+      buildChildren: (_) => [
+        _DetailInfoRow(
+          label: l10n.clientVansContractSection,
+          value: clientVanStatusLabel(l10n, contract.status),
+        ),
+        const Divider(height: 18),
+        _DetailInfoRow(
+          label: l10n.clientVanDetailMonthlyFee,
+          value: formatMoney(l10n, (contract.installmentAmount * 100).round()),
+        ),
+        const Divider(height: 18),
+        _DetailInfoRow(
+          label: l10n.clientVanDetailDueDate,
+          value: l10n.clientVansDueDay(contract.dueDay),
+        ),
+        const Divider(height: 18),
+        _DetailInfoRow(
+          label: l10n.clientVanDetailContractPeriod,
+          value: clientVanContractPeriod(l10n, contract),
+        ),
+        const Divider(height: 18),
+        _DetailInfoRow(
+          label: l10n.clientVanDetailInstallmentsLabel,
+          value: l10n.clientVanDetailInstallmentsCount(contract.installments),
+        ),
+        const Divider(height: 18),
+        _DetailInfoRow(
+          label: l10n.clientVanDetailTotalAmount,
+          value: formatMoney(l10n, (contract.totalAmount * 100).round()),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showDocumentsSheet(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    final vehicle = van.vehicle;
+    return _showDetailSheet(
+      context,
+      title: l10n.clientVansDocumentsTitle,
+      buildChildren: (_) => [
+        _DetailInfoRow(
+          label: l10n.clientVanDetailBrandModel,
+          value: vehicle.displayName,
+        ),
+        if (vehicle.plate != null && vehicle.plate!.isNotEmpty) ...[
+          const Divider(height: 18),
+          _DetailInfoRow(label: l10n.clientVanDetailPlate, value: vehicle.plate!),
+        ],
+        const Divider(height: 18),
+        _DetailInfoRow(
+          label: l10n.clientVanDetailYear,
+          value: '${vehicle.manufactureYear}',
+        ),
+        const Divider(height: 18),
+        _DetailInfoRow(label: l10n.clientVanDetailColor, value: vehicle.color),
+        const Divider(height: 18),
+        _DetailInfoRow(
+          label: l10n.clientVanDetailCapacity,
+          value: l10n.clientVansSeats(vehicle.capacity),
+        ),
+        const Divider(height: 18),
+        _DetailInfoRow(label: l10n.clientVansDriverRole, value: van.driver.name),
+      ],
+    );
+  }
+
+  Future<void> _showDetailSheet(
+    BuildContext context, {
+    required String title,
+    required List<Widget> Function(BuildContext sheetContext) buildChildren,
+  }) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.palette.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          child: SizedBox(
+            width: double.infinity,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    title,
+                    style: sheetContext.typography.sectionTitle.copyWith(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ...buildChildren(sheetContext),
+                ],
+              ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -478,10 +350,16 @@ class _DetailInfoRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Text(label, style: context.typography.cardSubtitle),
+          flex: 4,
+          child: Text(
+            label,
+            textAlign: TextAlign.start,
+            style: context.typography.cardSubtitle,
+          ),
         ),
         const SizedBox(width: 12),
-        Flexible(
+        Expanded(
+          flex: 5,
           child: Text(
             value,
             textAlign: TextAlign.end,
