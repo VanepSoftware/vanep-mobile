@@ -110,9 +110,7 @@ SalomonBottomBarItem navBarItem(
         constraints: BoxConstraints(maxWidth: labelMaxWidth),
         child: Text(
           item.label,
-          style: context.typography.button.copyWith(
-            fontFamily: Theme.of(context).textTheme.labelLarge?.fontFamily,
-          ),
+          style: context.typography.button,
           maxLines: 1,
           softWrap: false,
           overflow: TextOverflow.ellipsis,

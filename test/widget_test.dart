@@ -21,8 +21,6 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart'
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_state.dart';
-import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
-import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_state.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
@@ -85,9 +83,6 @@ class MockDriverSearchCubit extends MockCubit<DriverSearchState>
 
 class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
-
-class MockClientVansCubit extends MockCubit<ClientVansState>
-    implements ClientVansCubit {}
 
 class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
     implements AssistantVanSelectorCubit {}
@@ -186,19 +181,11 @@ void main() {
       ),
     );
     when(clientHomeCubit.loadHome).thenAnswer((_) async {});
-    final clientVansCubit = MockClientVansCubit();
-    whenListen(
-      clientVansCubit,
-      const Stream<ClientVansState>.empty(),
-      initialState: const ClientVansState(),
-    );
-    when(clientVansCubit.loadVans).thenAnswer((_) async {});
     final autocompleteDatasource = MockPlaceAutocompleteDataSource();
     when(() => autocompleteDatasource.findSuggestions(any(), any()))
         .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<ClientHomeCubit>(() => clientHomeCubit)
-      ..registerFactory<ClientVansCubit>(() => clientVansCubit)
       ..registerFactory<DriversCubit>(() => driversCubit)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
       ..registerFactory<DriverSearchCubit>(() => searchCubit)
