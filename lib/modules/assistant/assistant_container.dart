@@ -4,7 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/assistant_home_scenario.dart';
+import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_absences_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/respond_to_assistant_invite.dart';
+import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_absences_repository_impl.dart';
+import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_absences_repository.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/find_assistant_absences.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_absences_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/assistant_remote_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_route_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_route_repository_impl.dart';
@@ -120,6 +125,22 @@ void registerAssistantDependencies(GetIt getIt) {
     )
     ..registerFactory<MarkPresentInVan>(
       () => MarkPresentInVan(getIt<AssistantRouteRepository>()),
+    )
+    ..registerSingleton<AssistantAbsencesDataSource>(
+      const MockedAssistantAbsencesDataSource(),
+    )
+    ..registerSingleton<AssistantAbsencesRepository>(
+      AssistantAbsencesRepositoryImpl(
+        dataSource: getIt<AssistantAbsencesDataSource>(),
+      ),
+    )
+    ..registerFactory<FindAssistantAbsences>(
+      () => FindAssistantAbsences(getIt<AssistantAbsencesRepository>()),
+    )
+    ..registerFactory<AssistantAbsencesCubit>(
+      () => AssistantAbsencesCubit(
+        findAssistantAbsences: getIt<FindAssistantAbsences>(),
+      ),
     )
     ..registerFactory<AssistantHomeCubit>(
       () => AssistantHomeCubit(

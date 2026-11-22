@@ -8,7 +8,10 @@ import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_stud
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_vans_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_vans_state.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_absences_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_route_datasource.dart';
+import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_absences_repository.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/find_assistant_absences.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_students_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_vans_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_repository.dart';
@@ -76,6 +79,14 @@ class MockMarkPresentInVan extends Mock implements MarkPresentInVan {}
 
 class MockAssistantHomeCubit extends MockCubit<AssistantHomeState>
     implements AssistantHomeCubit {}
+
+class MockAssistantAbsencesRepository extends Mock
+    implements AssistantAbsencesRepository {}
+
+class MockAssistantAbsencesDataSource extends Mock
+    implements AssistantAbsencesDataSource {}
+
+class MockFindAssistantAbsences extends Mock implements FindAssistantAbsences {}
 
 class MockRespondToAssistantInvite extends Mock
     implements RespondToAssistantInvite {}
