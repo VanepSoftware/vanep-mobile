@@ -49,24 +49,20 @@ class PersonalDocumentsList extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
       children: [
-        if (groups.pending.isNotEmpty) ...[
-          DocumentEntriesSection(
-            title: l10n.driverDocumentsPendingSection,
-            trailing: '${groups.pending.length}',
-            entries: groups.pending,
-            onOpen: onOpenDocument,
-          ),
-          const SizedBox(height: 12),
-        ],
-        if (groups.sent.isNotEmpty) ...[
-          DocumentEntriesSection(
-            title: l10n.driverDocumentsSentSection,
-            trailing: '${groups.sent.length}',
-            entries: groups.sent,
-            onOpen: onOpenDocument,
-          ),
-          const SizedBox(height: 12),
-        ],
+        for (final (title, entries) in [
+          (l10n.driverDocumentsPendingSection, groups.pending),
+          (l10n.driverDocumentsSentSection, groups.sent),
+          (l10n.driverDocumentsOptionalSection, groups.optional),
+        ])
+          if (entries.isNotEmpty) ...[
+            DocumentEntriesSection(
+              title: title,
+              trailing: '${entries.length}',
+              entries: entries,
+              onOpen: onOpenDocument,
+            ),
+            const SizedBox(height: 12),
+          ],
         DocumentsPrivacyNote(text: l10n.driverDocumentsPersonalPrivacy),
       ],
     );

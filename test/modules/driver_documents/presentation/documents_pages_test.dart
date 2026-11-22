@@ -57,7 +57,7 @@ void main() {
       );
     }
 
-    testWidgets('pending first, each with its state, then the sent ones', (
+    testWidgets('pending first, then the sent ones, then the optional ones', (
       tester,
     ) async {
       await pump(tester, DriverComplianceState.ready(personalCompliance));
@@ -76,9 +76,16 @@ void main() {
         ),
         findsOneWidget,
       );
+      expect(find.text('Opcionais'), findsOneWidget);
       final pendingTop = tester.getTopLeft(find.text('Certidão criminal')).dy;
       final sentTop = tester.getTopLeft(find.text('CNH')).dy;
+      final optionalTop = tester.getTopLeft(find.text('Alvará municipal')).dy;
       expect(pendingTop, lessThan(sentTop));
+      expect(sentTop, lessThan(optionalTop));
+      expect(
+        tester.getTopLeft(find.text('Opcionais')).dy,
+        greaterThan(sentTop),
+      );
     });
 
     testWidgets('a group with nothing in it is hidden', (tester) async {

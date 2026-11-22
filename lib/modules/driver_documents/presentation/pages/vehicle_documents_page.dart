@@ -84,7 +84,7 @@ class VehicleDocumentsList extends StatelessWidget {
             trailing: van.isUpToDate
                 ? l10n.driverDocumentsVanUpToDate
                 : l10n.driverDocumentsVanPendingCount(van.pendingCount),
-            entries: [...van.groups.pending, ...van.groups.sent],
+            entries: van.groups.all,
             onOpen: (entry) => onOpenDocument(entry, van.vehicle),
           ),
           const SizedBox(height: 12),

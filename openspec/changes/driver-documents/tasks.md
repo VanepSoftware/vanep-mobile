@@ -66,6 +66,7 @@ Issue no Genwork: **VAN-86**. Branches no formato `VAN-86/<fase>-<nome>`, empilh
 - [x] 7.1 Testes primeiro (`bloc_test`) para o `DriverComplianceCubit`: carregar, falhar, `refresh` e o filtro por van
 - [x] 7.2 Testes de widget primeiro para a M1 (seções com contagem, seção vazia escondida, cards com estado e cor, rodapé) e para a M2 (seção por van, "<n> pendentes" ou "Em dia", vazio sem van com o cadastro, só a van filtrada), mais skeleton e erro. Depois implementar com os widgets de `core/ui`
 - [x] 7.3 Ligar "Documentos da van" da `VanCentralMenus` à M2 filtrada (a Central recarrega ao voltar) e criar a rota `openDriverVanDocuments` no `app.dart` (a de documentos pessoais entra na fase 11, com a primeira tela que a abre); até a fase 8, o card abre "Em breve" com `TODO(VAN-86)`; textos em `app_pt.arb` e `app_en.arb`
+- [x] 7.3a Ajuste do teste no emulador: seção "Opcionais" na M1, depois de Enviados; na M2 o opcional fica no fim da van
 - [x] 7.4 Rodar `make lint` e `make test`
 - [ ] 7.5 Abrir o PR
 

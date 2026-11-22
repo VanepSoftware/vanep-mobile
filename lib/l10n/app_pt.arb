@@ -1334,6 +1334,7 @@
   "driverDocumentsVanTitle": "Documentos da van",
   "driverDocumentsPendingSection": "Pendentes",
   "driverDocumentsSentSection": "Enviados",
+  "driverDocumentsOptionalSection": "Opcionais",
   "driverDocumentsPersonalPrivacy": "Seus documentos só são vistos pela equipe Vanep que faz a análise.",
   "driverDocumentsVansPrivacy": "Os documentos das vans só são vistos pela equipe Vanep que faz a análise.",
   "driverDocumentsVanPendingCount": "{count, plural, =1{1 pendente} other{{count} pendentes}}",

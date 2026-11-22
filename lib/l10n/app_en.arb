@@ -2762,6 +2762,7 @@
   "driverDocumentsVanTitle": "Van documents",
   "driverDocumentsPendingSection": "Pending",
   "driverDocumentsSentSection": "Sent",
+  "driverDocumentsOptionalSection": "Optional",
   "driverDocumentsPersonalPrivacy": "Only the Vanep review team sees your documents.",
   "driverDocumentsVansPrivacy": "Only the Vanep review team sees the van documents.",
   "driverDocumentsVanPendingCount": "{count, plural, =1{1 pending} other{{count} pending}}",
