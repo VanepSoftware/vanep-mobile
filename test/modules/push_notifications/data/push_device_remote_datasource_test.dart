@@ -34,7 +34,7 @@ void main() {
     verify(
       () => dio.post<void>(
         'https://api.vanep.test/api/devices',
-        data: {'token': 'abc:123', 'platform': 'android'},
+        data: {'fcmToken': 'abc:123', 'platform': 'ANDROID'},
       ),
     ).called(1);
   });
