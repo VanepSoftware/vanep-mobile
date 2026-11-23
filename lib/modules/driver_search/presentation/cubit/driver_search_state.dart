@@ -136,15 +136,11 @@ class DriverSearchState extends Equatable {
   }
 
   String? get effectiveOriginLabel {
-    final baseOrigin = originLabel ?? defaultOriginText;
-    final baseDestination = destinationLabel ?? defaultDestinationText;
-    return routeSwapped ? baseDestination : baseOrigin;
+    return routeSwapped ? destinationLabel : originLabel;
   }
 
   String? get effectiveDestinationLabel {
-    final baseOrigin = originLabel ?? defaultOriginText;
-    final baseDestination = destinationLabel ?? defaultDestinationText;
-    return routeSwapped ? baseOrigin : baseDestination;
+    return routeSwapped ? originLabel : destinationLabel;
   }
 
   DriverSearchState copyWith({

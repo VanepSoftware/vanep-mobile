@@ -312,27 +312,20 @@ void main() {
   );
 
   blocTest<DriverSearchCubit, DriverSearchState>(
-    'useProfileOrigin clears custom originLabel and restores search',
+    'loadRecommended leaves search address labels and dependent selection empty',
     setUp: () {
-      stubPage(0, firstPage);
-      when(
-        () => getRecommendedDrivers(page: any(named: 'page')),
-      ).thenAnswer((_) async => const Ok(lastPage));
+      when(() => getRecommendedDrivers(page: any(named: 'page'))).thenAnswer(
+        (_) async => const Ok(firstPage),
+      );
     },
     build: buildCubit,
-    act: (cubit) async {
-      await cubit.loadRecommended();
-      await cubit.searchFromRoute(
-        isDestination: false,
-        placeId: 'place-1',
-        label: 'Av. Paulista',
-      );
-      cubit.useProfileOrigin();
-    },
+    act: (cubit) => cubit.loadRecommended(),
     verify: (cubit) {
       expect(cubit.state.originLabel, isNull);
-      expect(cubit.state.isShowingRecommended, isTrue);
-      expect(cubit.state.results.map((d) => d.token), ['d2']);
+      expect(cubit.state.destinationLabel, isNull);
+      expect(cubit.state.effectiveOriginLabel, isNull);
+      expect(cubit.state.effectiveDestinationLabel, isNull);
+      expect(cubit.state.selectedDependentTokens, isEmpty);
     },
   );
 }

@@ -43,9 +43,6 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
     if (isClosed) return;
 
     final dependents = contextData.dependents ?? state.dependents;
-    final selectedTokens = state.selectedDependentTokens.isNotEmpty
-        ? state.selectedDependentTokens
-        : {for (final d in dependents) d.token};
 
     emit(
       result.fold(
@@ -55,7 +52,6 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
           isShowingRecommended: true,
           personalAddress: contextData.address,
           dependents: dependents,
-          selectedDependentTokens: selectedTokens,
         ),
         (page) {
           return state.copyWith(
@@ -70,7 +66,6 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
             hasMore: !page.isLast,
             personalAddress: contextData.address,
             dependents: dependents,
-            selectedDependentTokens: selectedTokens,
           );
         },
       ),
@@ -112,6 +107,7 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
           clearFailure: true,
           clearOriginLabel: true,
           clearDestinationLabel: true,
+          selectedDependentTokens: const {},
           routeSwapped: false,
           hasMore: false,
           nextPage: 0,
@@ -203,11 +199,9 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
   }
 
   void useProfileOrigin() {
-    if (state.destinationLabel == null && state.placeId != null) {
-      clearSearch();
-      return;
-    }
-    emit(state.copyWith(clearOriginLabel: true));
+    final defaultOrigin = state.defaultOriginText;
+    if (defaultOrigin == null) return;
+    emit(state.copyWith(originLabel: defaultOrigin));
   }
 
   Future<void> loadMore() async {

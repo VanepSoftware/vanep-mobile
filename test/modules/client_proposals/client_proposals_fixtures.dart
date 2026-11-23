@@ -186,6 +186,7 @@ const testQuoteDriver = DriverProfileDto(
   name: 'Carlos Souza',
   rating: 4.8,
   available: true,
+  verified: true,
   vehicles: [
     DriverProfileVehicleDto(
       token: 'van-master',

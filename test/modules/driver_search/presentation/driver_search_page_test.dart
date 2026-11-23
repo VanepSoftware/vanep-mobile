@@ -131,8 +131,10 @@ void main() {
     expect(find.text('Vans'), findsOneWidget);
     expect(find.text('Quem atende o trajeto do seu filho'), findsOneWidget);
     expect(find.text('Tenho\nconvite'), findsOneWidget);
-    expect(find.text('Casa · QNL 5 Conjunto F, QNL 5, Taguatinga'), findsOneWidget);
-    expect(find.text('Colégio Horizonte'), findsOneWidget);
+    expect(find.text('Informar endereço de embarque'), findsOneWidget);
+    expect(find.text('Buscar escola ou endereço'), findsOneWidget);
+    expect(find.text('Casa · QNL 5 Conjunto F, QNL 5, Taguatinga'), findsNothing);
+    expect(find.text('Colégio Horizonte'), findsNothing);
     expect(find.text('Filtros'), findsOneWidget);
     expect(find.text('Manhã'), findsNothing);
     expect(find.text('Tarde'), findsNothing);

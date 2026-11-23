@@ -82,7 +82,7 @@ abstract class DriverProfileDto
     int? experienceYears,
     double? basePrice,
     @Default(false) bool available,
-    @Default(true) bool verified,
+    @Default(false) bool verified,
     String? workStartTime,
     String? workEndTime,
     String? workDays,

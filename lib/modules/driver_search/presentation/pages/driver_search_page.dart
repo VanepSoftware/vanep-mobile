@@ -74,9 +74,7 @@ class DriverSearchPageState extends State<DriverSearchPage> {
   String? _formattedOrigin(AppLocalizations l10n, DriverSearchState state) {
     final label = state.effectiveOriginLabel;
     if (label == null) return null;
-    if (!state.routeSwapped &&
-        state.originLabel == null &&
-        state.defaultOriginText != null) {
+    if (state.defaultOriginText != null && label == state.defaultOriginText) {
       return l10n.findVanHomePrefix(label);
     }
     return label;
@@ -85,10 +83,7 @@ class DriverSearchPageState extends State<DriverSearchPage> {
   String? _formattedDestination(AppLocalizations l10n, DriverSearchState state) {
     final label = state.effectiveDestinationLabel;
     if (label == null) return null;
-    if (state.routeSwapped &&
-        state.originLabel == null &&
-        state.defaultOriginText != null &&
-        label == state.defaultOriginText) {
+    if (state.defaultOriginText != null && label == state.defaultOriginText) {
       return l10n.findVanHomePrefix(label);
     }
     return label;
@@ -129,7 +124,8 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                     autocomplete: widget.autocomplete,
                     hasActiveSearch: state.placeId != null,
                     onClearSearch: cubit.clearSearch,
-                    registeredOriginLabel: state.originLabel != null
+                    registeredOriginLabel:
+                        state.originLabel != state.defaultOriginText
                         ? state.defaultOriginText
                         : null,
                     onUseRegisteredOrigin: cubit.useProfileOrigin,
