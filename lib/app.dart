@@ -80,6 +80,8 @@ import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
+import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/shell/assistant_shell.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
@@ -124,6 +126,9 @@ class VanepApp extends StatelessWidget {
           BlocProvider<ThemePreferenceCubit>(
             create: (_) =>
                 getIt<ThemePreferenceCubit>(param1: initialThemePreference),
+          ),
+          BlocProvider<PushNavigationCubit>.value(
+            value: getIt<PushNavigationCubit>(),
           ),
         ],
         child:
@@ -224,6 +229,11 @@ class AuthGate extends StatelessWidget {
                   onOpenProposal: (request) =>
                       openDriverProposal(context, request),
                 ),
+                openPushChat: (context, target) => openPushChatTarget(
+                  context,
+                  target,
+                  viewerSide: ConversationParticipant.driver,
+                ),
               ),
             ),
             UserType.assistant => MultiBlocProvider(
@@ -277,6 +287,11 @@ class AuthGate extends StatelessWidget {
                 openClientProposals: openClientProposals,
                 openProposalDetail: openProposalDetail,
                 openNegotiationChat: openClientNegotiationChat,
+                openPushChat: (context, target) => openPushChatTarget(
+                  context,
+                  target,
+                  viewerSide: ConversationParticipant.client,
+                ),
               ),
             ),
           },
@@ -586,6 +601,19 @@ Future<void> openConversationChat(
         ),
       },
     ),
+  );
+}
+
+Future<void> openPushChatTarget(
+  BuildContext context,
+  ChatPushTarget target, {
+  required ConversationParticipant viewerSide,
+}) {
+  return openConversationChat(
+    context,
+    conversationToken: target.conversationToken,
+    counterpartName: target.counterpartName,
+    viewerSide: viewerSide,
   );
 }
 

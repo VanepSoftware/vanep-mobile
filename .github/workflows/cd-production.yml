@@ -46,10 +46,11 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           PRODUCTION_ENV_FILE: ${{ secrets.PRODUCTION_ENV_FILE }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
           missing_secrets=()
           for secret_name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS \
-            ANDROID_KEY_PASSWORD PLAY_SERVICE_ACCOUNT_JSON PRODUCTION_ENV_FILE; do
+            ANDROID_KEY_PASSWORD PLAY_SERVICE_ACCOUNT_JSON PRODUCTION_ENV_FILE GOOGLE_SERVICES_JSON; do
             if [ -z "${!secret_name}" ]; then
               missing_secrets+=("$secret_name")
             fi
@@ -96,7 +97,7 @@ jobs:
       - name: Generate code (build_runner)
         run: dart run build_runner build --delete-conflicting-outputs
 
-      - name: Prepara keystore, .env e service account
+      - name: Prepara keystore, .env, google-services.json e service account
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -104,6 +105,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           DART_DEFINE_ENV_FILE: ${{ secrets.PRODUCTION_ENV_FILE }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: bash scripts/ci-prepare-play-deploy.sh
 
       - name: Publica no Google Play (fastlane deploy_production)

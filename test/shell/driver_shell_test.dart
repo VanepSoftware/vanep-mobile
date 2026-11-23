@@ -20,6 +20,8 @@ import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_c
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
+import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';
@@ -28,6 +30,7 @@ import '../modules/conversations/conversations_fixtures.dart';
 import '../modules/conversations/conversations_mocks.dart';
 import '../modules/driver_proposals/driver_proposals_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
+import '../modules/push_notifications/push_notifications_fixtures.dart';
 import '../modules/driver_van_central/driver_van_central_mocks.dart';
 import '../modules/driver_van_central/driver_van_central_fixtures.dart';
 
@@ -44,6 +47,8 @@ Widget harness(
   Future<void> Function(BuildContext, DriverVan)? openVanStudents,
   Future<void> Function(BuildContext, DriverVan)? openVanDocuments,
   Future<void> Function(BuildContext)? openProfessionalData,
+  PushNavigationCubit? pushNavigationCubit,
+  Future<void> Function(BuildContext, ChatPushTarget)? openPushChat,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -68,6 +73,9 @@ Widget harness(
         BlocProvider<DriverNegotiationsCubit>.value(
           value: negotiationsCubit ?? readyNegotiationsCubit(),
         ),
+        BlocProvider<PushNavigationCubit>.value(
+          value: pushNavigationCubit ?? PushNavigationCubit(),
+        ),
       ],
       child: DriverShell(
         profile: FakeUserProfile(pendingOnboardingSteps: pendingSteps),
@@ -82,6 +90,7 @@ Widget harness(
           onOpenRequest: (_) async {},
           onOpenProposal: (_) async {},
         ),
+        openPushChat: openPushChat ?? (_, _) async {},
       ),
     ),
   );
@@ -410,5 +419,60 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(() => authCubit.refreshSessionProfile()).called(1);
+  });
+
+  group('push notification targets', () {
+    testWidgets('a chat push pending before mount opens the chat', (
+      tester,
+    ) async {
+      final pushNavigationCubit = PushNavigationCubit()
+        ..openTarget(chatPushTarget);
+      addTearDown(pushNavigationCubit.close);
+      final openedChats = <ChatPushTarget>[];
+      await tester.pumpWidget(
+        harness(
+          cubit,
+          authCubit,
+          profileSummaryCubit,
+          pushNavigationCubit: pushNavigationCubit,
+          openPushChat: (_, target) async => openedChats.add(target),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(openedChats, [chatPushTarget]);
+      expect(pushNavigationCubit.state, isNull);
+    });
+
+    for (final target in const [ProposalPushTarget(), ContractPushTarget()]) {
+      testWidgets('a ${target.runtimeType} opens the Propostas tab', (
+        tester,
+      ) async {
+        final pushNavigationCubit = PushNavigationCubit();
+        addTearDown(pushNavigationCubit.close);
+        final negotiationsCubit = readyNegotiationsCubit();
+        await tester.pumpWidget(
+          harness(
+            cubit,
+            authCubit,
+            profileSummaryCubit,
+            negotiationsCubit: negotiationsCubit,
+            pushNavigationCubit: pushNavigationCubit,
+          ),
+        );
+
+        pushNavigationCubit.openTarget(target);
+        await tester.pumpAndSettle();
+
+        expect(
+          tester
+              .widget<VanepBottomNav>(find.byType(VanepBottomNav))
+              .currentIndex,
+          driverShellProposalsTabIndex,
+        );
+        expect(find.byType(DriverProposalsTab), findsOneWidget);
+        verify(() => negotiationsCubit.load()).called(1);
+      });
+    }
   });
 }
