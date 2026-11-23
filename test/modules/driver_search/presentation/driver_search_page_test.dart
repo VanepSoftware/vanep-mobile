@@ -195,6 +195,53 @@ void main() {
     verify(() => cubit.useProfileOrigin()).called(1);
   });
 
+  testWidgets('Usar meu endereço searches by resolved placeId when found', (
+    tester,
+  ) async {
+    final ds = MockPlaceAutocompleteDataSource();
+    when(() => ds.findSuggestions(any(), any())).thenAnswer(
+      (_) async => const Ok([
+        PlaceSuggestion(
+          placeId: 'home-place-id',
+          primaryText: 'QNL 5 Conjunto F',
+          secondaryText: 'Taguatinga, DF',
+        ),
+      ]),
+    );
+    final resolvingAuto = PlaceAutocompleteController(datasource: ds);
+    addTearDown(resolvingAuto.dispose);
+
+    seed(
+      const DriverSearchState(
+        status: DriverSearchStatus.loaded,
+        personalAddress: sampleAddress,
+      ),
+    );
+    when(
+      () => cubit.searchFromRoute(
+        isDestination: false,
+        placeId: 'home-place-id',
+        label: 'QNL 5 Conjunto F, QNL 5, Taguatinga',
+        sessionToken: any(named: 'sessionToken'),
+      ),
+    ).thenAnswer((_) async {});
+
+    await tester.pumpWidget(harness(cubit, resolvingAuto));
+    await tester.tap(find.text('Embarque'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Usar meu endereço'));
+    await tester.pumpAndSettle();
+
+    verify(
+      () => cubit.searchFromRoute(
+        isDestination: false,
+        placeId: 'home-place-id',
+        label: 'QNL 5 Conjunto F, QNL 5, Taguatinga',
+        sessionToken: any(named: 'sessionToken'),
+      ),
+    ).called(1);
+  });
+
   testWidgets('tapping destination opens place autocomplete sheet', (
     tester,
   ) async {

@@ -2852,6 +2852,7 @@
   "driverProfileVerifiedBadge": "Verified by Vanep",
   "driverProfileBioSectionTitle": "Introduction",
   "driverProfileVacanciesSectionTitle": "Spots & price",
+  "driverProfileStartingFromLabel": "Starting from",
   "driverProfileStartingFromValue": "Starting from {price}",
   "@driverProfileStartingFromValue": {
     "placeholders": {
@@ -2900,7 +2901,7 @@
     }
   },
   "driverProfileVerifiedCardTitle": "Verified by Vanep",
-  "driverProfileVerifiedCardSubtitle": "Driver license, school course, inspection & background check",
+  "driverProfileVerifiedCardSubtitle": "License, background check, and van documents",
   "driverProfileReviewsSectionTitle": "Reviews",
   "driverProfileSeeAllReviews": "See all",
   "driverProfileNoReviewsYet": "No published reviews yet.",

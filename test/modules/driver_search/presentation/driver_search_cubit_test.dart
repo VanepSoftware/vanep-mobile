@@ -328,4 +328,63 @@ void main() {
       expect(cubit.state.selectedDependentTokens, isEmpty);
     },
   );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'searchFromRoute intersects drivers when both origin and destination are set',
+    setUp: () {
+      when(
+        () => searchDriversByPlace(
+          'origin-place',
+          sessionToken: any(named: 'sessionToken'),
+          page: 0,
+        ),
+      ).thenAnswer(
+        (_) async => const Ok(
+          DriverSearchPage(
+            drivers: [
+              DriverSearchResult(token: 'd1', name: 'Atende os dois'),
+              DriverSearchResult(token: 'd2', name: 'Só embarque'),
+            ],
+            isLast: true,
+          ),
+        ),
+      );
+      when(
+        () => searchDriversByPlace(
+          'dest-place',
+          sessionToken: any(named: 'sessionToken'),
+          page: 0,
+        ),
+      ).thenAnswer(
+        (_) async => const Ok(
+          DriverSearchPage(
+            drivers: [
+              DriverSearchResult(token: 'd1', name: 'Atende os dois'),
+              DriverSearchResult(token: 'd3', name: 'Só destino'),
+            ],
+            isLast: true,
+          ),
+        ),
+      );
+    },
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.searchFromRoute(
+        isDestination: false,
+        placeId: 'origin-place',
+        label: 'Taguatinga',
+      );
+      await cubit.searchFromRoute(
+        isDestination: true,
+        placeId: 'dest-place',
+        label: 'Colégio Horizonte',
+      );
+    },
+    verify: (cubit) {
+      expect(cubit.state.status, DriverSearchStatus.loaded);
+      expect(cubit.state.originPlaceId, 'origin-place');
+      expect(cubit.state.destinationPlaceId, 'dest-place');
+      expect(cubit.state.results.map((d) => d.token), ['d1']);
+    },
+  );
 }

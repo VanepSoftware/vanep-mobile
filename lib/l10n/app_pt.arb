@@ -1424,6 +1424,7 @@
   "driverProfileVerifiedBadge": "Verificado pela Vanep",
   "driverProfileBioSectionTitle": "Apresentação",
   "driverProfileVacanciesSectionTitle": "Vagas e preço",
+  "driverProfileStartingFromLabel": "A partir de",
   "driverProfileStartingFromValue": "A partir de {price}",
   "@driverProfileStartingFromValue": {
     "placeholders": {
@@ -1472,7 +1473,7 @@
     }
   },
   "driverProfileVerifiedCardTitle": "Verificado pela Vanep",
-  "driverProfileVerifiedCardSubtitle": "CNH, curso escolar, vistoria e antecedentes",
+  "driverProfileVerifiedCardSubtitle": "Habilitação, antecedentes e documentos das vans",
   "driverProfileReviewsSectionTitle": "Avaliações",
   "driverProfileSeeAllReviews": "Ver todas",
   "driverProfileNoReviewsYet": "Ainda sem avaliações publicadas.",
@@ -1495,7 +1496,7 @@
       }
     }
   },
-  "driverProfileShiftFull": "Lotado",
+  "driverProfileShiftFull": "Lotada",
   "chatCounterpartDriverCaption": "Motorista",
   "chatViewDriverProfileTooltip": "Ver perfil do motorista",
   "quoteRequestPrivacyNotice": "O motorista vê só o bairro e o primeiro nome até o aceite.",
