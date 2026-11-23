@@ -34,7 +34,7 @@ class SendDriverProposal {
     final blocked = proposalComposeBlockFailure(draft.block);
     if (blocked != null) return Future.value(Err(blocked));
     if (!draft.canSend) {
-      return Future.value(const Err(DriverProposalFailure.invalidAmount));
+      return Future.value(const Err(DriverProposalFailure.incompleteDraft));
     }
     return repository.send(draft);
   }

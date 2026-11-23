@@ -1,14 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-const schoolWeekdays = [
-  DateTime.monday,
-  DateTime.tuesday,
-  DateTime.wednesday,
-  DateTime.thursday,
-  DateTime.friday,
-];
+import 'package:vanep_mobile/core/domain/school_shift.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_schedule.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_terms.dart';
 
-enum RouteLeg { outbound, inbound }
+const proposalMessageMaxLength = 500;
 
 enum ProposalComposeBlock { none, overdueInvoice, notAcceptingStudents }
 
@@ -16,7 +12,6 @@ class ProposalStudentLine extends Equatable {
   const ProposalStudentLine({
     required this.token,
     required this.name,
-    required this.schoolName,
     required this.monthlyAmountCents,
   });
 
@@ -24,130 +19,171 @@ class ProposalStudentLine extends Equatable {
 
   final String name;
 
-  final String schoolName;
-
   final int monthlyAmountCents;
 
   ProposalStudentLine withAmount(int monthlyAmountCents) {
     return ProposalStudentLine(
       token: token,
       name: name,
-      schoolName: schoolName,
       monthlyAmountCents: monthlyAmountCents,
     );
   }
 
   @override
-  List<Object?> get props => [token, name, schoolName, monthlyAmountCents];
+  List<Object?> get props => [token, name, monthlyAmountCents];
 }
 
-class ProposalScheduleSlot extends Equatable {
-  const ProposalScheduleSlot({
-    required this.weekday,
-    required this.leg,
-    required this.minutesFromMidnight,
+class ProposalVanOption extends Equatable {
+  const ProposalVanOption({
+    required this.token,
+    required this.model,
+    required this.plate,
+    required this.capacity,
+    required this.freeSeats,
   });
 
-  final int weekday;
+  final String token;
 
-  final RouteLeg leg;
+  final String model;
 
-  final int minutesFromMidnight;
+  final String plate;
 
-  @override
-  List<Object?> get props => [weekday, leg, minutesFromMidnight];
-}
+  final int capacity;
 
-class ProposalScheduleDay extends Equatable {
-  const ProposalScheduleDay({required this.weekday, required this.slots});
-
-  final int weekday;
-
-  final List<ProposalScheduleSlot> slots;
+  final int freeSeats;
 
   @override
-  List<Object?> get props => [weekday, slots];
-}
-
-List<ProposalScheduleDay> groupProposalSchedule(
-  List<ProposalScheduleSlot> slots,
-) {
-  return [
-    for (final weekday in schoolWeekdays)
-      if (slots.any((slot) => slot.weekday == weekday))
-        ProposalScheduleDay(
-          weekday: weekday,
-          slots: [
-            for (final leg in RouteLeg.values)
-              ...slots.where(
-                (slot) => slot.weekday == weekday && slot.leg == leg,
-              ),
-          ],
-        ),
-  ];
-}
-
-class ProposalConditions extends Equatable {
-  const ProposalConditions({required this.dueDay, required this.notes});
-
-  final int dueDay;
-
-  final String notes;
-
-  @override
-  List<Object?> get props => [dueDay, notes];
+  List<Object?> get props => [token, model, plate, capacity, freeSeats];
 }
 
 class ProposalComposeDraft extends Equatable {
   const ProposalComposeDraft({
     required this.familyName,
     required this.students,
-    required this.schedule,
+    required this.vans,
+    required this.selectedVanToken,
+    required this.shift,
+    required this.requestedSlots,
+    required this.slots,
+    required this.times,
+    required this.payment,
     required this.conditions,
     required this.commissionCents,
+    required this.validityDays,
     required this.block,
+    this.message = '',
   });
 
   final String familyName;
 
   final List<ProposalStudentLine> students;
 
-  final List<ProposalScheduleSlot> schedule;
+  final List<ProposalVanOption> vans;
+
+  final String selectedVanToken;
+
+  final SchoolShift shift;
+
+  final Set<ProposalScheduleSlot> requestedSlots;
+
+  final Set<ProposalScheduleSlot> slots;
+
+  final ProposalRouteTimes times;
+
+  final ProposalPayment payment;
 
   final ProposalConditions conditions;
 
   final int commissionCents;
 
+  final int validityDays;
+
   final ProposalComposeBlock block;
 
-  int get familyAmountCents => students.fold(
+  final String message;
+
+  ProposalVanOption? get selectedVan =>
+      vans.where((van) => van.token == selectedVanToken).firstOrNull;
+
+  int get monthlyFamilyCents => students.fold(
     0,
     (sum, student) => sum + student.monthlyAmountCents,
   );
 
-  int get receivedCents => familyAmountCents - commissionCents;
+  int get monthlyReceivedCents => monthlyFamilyCents - commissionCents;
+
+  int get familyTotalCents => monthlyFamilyCents * payment.installments;
+
+  int get commissionTotalCents => commissionCents * payment.installments;
+
+  int get receivedTotalCents => familyTotalCents - commissionTotalCents;
+
+  bool get hasSeatsForStudents {
+    final van = selectedVan;
+    return van != null && van.freeSeats >= students.length;
+  }
+
+  bool get matchesRequest =>
+      slots.length == requestedSlots.length && slots.containsAll(requestedSlots);
+
+  ProposalLegs get legs => proposalLegsOf(slots);
+
+  bool get hasValidPrices =>
+      students.isNotEmpty &&
+      students.every((student) => student.monthlyAmountCents > 0) &&
+      receivedTotalCents > 0;
 
   bool get canSend =>
       block == ProposalComposeBlock.none &&
-      students.isNotEmpty &&
-      students.every((student) => student.monthlyAmountCents > 0) &&
-      receivedCents > 0;
+      hasValidPrices &&
+      hasSeatsForStudents &&
+      slots.isNotEmpty &&
+      times.isValid &&
+      payment.isValid;
 
   ProposalComposeDraft withStudentAmount(String token, int cents) {
     if (!students.any((student) => student.token == token)) return this;
-    return ProposalComposeDraft(
-      familyName: familyName,
+    return copyWith(
       students: [
         for (final student in students)
-          if (student.token == token)
-            student.withAmount(cents)
-          else
-            student,
+          if (student.token == token) student.withAmount(cents) else student,
       ],
-      schedule: schedule,
-      conditions: conditions,
+    );
+  }
+
+  ProposalComposeDraft withVan(String token) {
+    if (!vans.any((van) => van.token == token)) return this;
+    return copyWith(selectedVanToken: token);
+  }
+
+  ProposalComposeDraft withSlotToggled(ProposalScheduleSlot slot) {
+    return copyWith(slots: toggleProposalSlot(slots, slot));
+  }
+
+  ProposalComposeDraft copyWith({
+    List<ProposalStudentLine>? students,
+    String? selectedVanToken,
+    Set<ProposalScheduleSlot>? slots,
+    ProposalRouteTimes? times,
+    ProposalPayment? payment,
+    ProposalConditions? conditions,
+    String? message,
+  }) {
+    return ProposalComposeDraft(
+      familyName: familyName,
+      students: students ?? this.students,
+      vans: vans,
+      selectedVanToken: selectedVanToken ?? this.selectedVanToken,
+      shift: shift,
+      requestedSlots: requestedSlots,
+      slots: slots ?? this.slots,
+      times: times ?? this.times,
+      payment: payment ?? this.payment,
+      conditions: conditions ?? this.conditions,
       commissionCents: commissionCents,
+      validityDays: validityDays,
       block: block,
+      message: message ?? this.message,
     );
   }
 
@@ -155,9 +191,17 @@ class ProposalComposeDraft extends Equatable {
   List<Object?> get props => [
     familyName,
     students,
-    schedule,
+    vans,
+    selectedVanToken,
+    shift,
+    requestedSlots,
+    slots,
+    times,
+    payment,
     conditions,
     commissionCents,
+    validityDays,
     block,
+    message,
   ];
 }

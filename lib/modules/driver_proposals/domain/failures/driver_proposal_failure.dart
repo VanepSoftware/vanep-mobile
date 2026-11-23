@@ -3,5 +3,5 @@ enum DriverProposalFailure {
   unexpected,
   overdueInvoice,
   notAcceptingStudents,
-  invalidAmount,
+  incompleteDraft,
 }
