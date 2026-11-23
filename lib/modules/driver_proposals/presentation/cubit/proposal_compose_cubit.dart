@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/failures/driver_proposal_failure.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/proposal_compose_usecases.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_compose_draft.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_schedule.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_terms.dart';
 
 enum ProposalComposeStatus { idle, loading, ready, loadFailed, sending, sent }
 
@@ -81,15 +83,42 @@ class ProposalComposeCubit extends Cubit<ProposalComposeState> {
     }, (draft) => emit(state.withDraft(draft)));
   }
 
-  void changeStudentPrice(String token, int cents) {
+  void editDraft(ProposalComposeDraft Function(ProposalComposeDraft) edit) {
     final draft = state.draft;
     if (draft == null || state.status == ProposalComposeStatus.sending) return;
+    final edited = edit(draft);
+    if (edited == draft) return;
+    emit(state.withDraft(edited));
+  }
+
+  void changeStudentPrice(String token, int cents) {
     if (cents < 0) return;
-    final current = draft.students
-        .where((student) => student.token == token)
-        .firstOrNull;
-    if (current == null || current.monthlyAmountCents == cents) return;
-    emit(state.withDraft(draft.withStudentAmount(token, cents)));
+    editDraft((draft) => draft.withStudentAmount(token, cents));
+  }
+
+  void selectVan(String token) {
+    editDraft((draft) => draft.withVan(token));
+  }
+
+  void toggleSlot(ProposalScheduleSlot slot) {
+    editDraft((draft) => draft.withSlotToggled(slot));
+  }
+
+  void changeTimes(ProposalRouteTimes times) {
+    editDraft((draft) => draft.copyWith(times: times));
+  }
+
+  void changePayment(ProposalPayment payment) {
+    editDraft((draft) => draft.copyWith(payment: payment));
+  }
+
+  void changeConditions(ProposalConditions conditions) {
+    editDraft((draft) => draft.copyWith(conditions: conditions));
+  }
+
+  void changeMessage(String message) {
+    if (message.length > proposalMessageMaxLength) return;
+    editDraft((draft) => draft.copyWith(message: message));
   }
 
   Future<void> sendProposal() async {
