@@ -5,6 +5,7 @@
 #     ANDROID_KEY_ALIAS,
 #     ANDROID_KEY_PASSWORD         -> android/key.properties
 #   - DART_DEFINE_ENV_FILE         -> .env (asset do flutter_dotenv)
+#   - GOOGLE_SERVICES_JSON         -> android/app/google-services.json (Firebase)
 #   - PLAY_SERVICE_ACCOUNT_JSON    -> arquivo temporário fora do repo; o caminho
 #                                     vai para PLAY_SERVICE_ACCOUNT_JSON_PATH via $GITHUB_ENV
 #
@@ -18,6 +19,7 @@ readonly REQUIRED_VARIABLES=(
   ANDROID_KEY_PASSWORD
   PLAY_SERVICE_ACCOUNT_JSON
   DART_DEFINE_ENV_FILE
+  GOOGLE_SERVICES_JSON
 )
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -25,6 +27,7 @@ readonly REPO_ROOT
 readonly KEYSTORE_PATH="$REPO_ROOT/android/app/upload.jks"
 readonly KEY_PROPERTIES_PATH="$REPO_ROOT/android/key.properties"
 readonly ENV_FILE_PATH="$REPO_ROOT/.env"
+readonly GOOGLE_SERVICES_JSON_PATH="$REPO_ROOT/android/app/google-services.json"
 
 fail() {
   echo "::error title=Preparo do deploy no Google Play::$1" >&2
@@ -38,7 +41,7 @@ escape_property_value() {
 
 ensure_running_in_ci() {
   if [[ "${CI:-}" != "true" ]]; then
-    fail "este script só roda no CI: ele sobrescreve .env e android/key.properties"
+    fail "este script só roda no CI: ele sobrescreve .env, android/key.properties e android/app/google-services.json"
   fi
 }
 
@@ -73,6 +76,10 @@ write_env_file() {
   printf '%s\n' "$DART_DEFINE_ENV_FILE" > "$ENV_FILE_PATH"
 }
 
+write_google_services_json() {
+  printf '%s\n' "$GOOGLE_SERVICES_JSON" > "$GOOGLE_SERVICES_JSON_PATH"
+}
+
 write_service_account_json() {
   local secrets_directory
   secrets_directory="$(mktemp -d "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/play-deploy.XXXXXX")"
@@ -94,8 +101,9 @@ main() {
   write_keystore
   write_key_properties
   write_env_file
+  write_google_services_json
   write_service_account_json
-  echo "Keystore, key.properties, .env e service account do Play preparados."
+  echo "Keystore, key.properties, .env, google-services.json e service account do Play preparados."
 }
 
 main "$@"

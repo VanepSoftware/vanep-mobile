@@ -1,9 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import 'package:vanep_mobile/app.dart';
+import 'package:vanep_mobile/core/crash_reporting/crash_reporting.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/media/media_container.dart';
@@ -31,6 +35,7 @@ import 'package:vanep_mobile/modules/driver_search/driver_search_container.dart'
 import 'package:vanep_mobile/modules/ibge_locations/ibge_locations_container.dart';
 import 'package:vanep_mobile/modules/negotiations/negotiations_container.dart';
 import 'package:vanep_mobile/modules/profile/profile_container.dart';
+import 'package:vanep_mobile/modules/push_notifications/push_notifications_container.dart';
 import 'package:vanep_mobile/modules/schools/schools_container.dart';
 import 'package:vanep_mobile/modules/settings/data/datasources/settings_local_datasource.dart';
 import 'package:vanep_mobile/modules/settings/domain/usecases/get_theme_preference.dart';
@@ -38,6 +43,17 @@ import 'package:vanep_mobile/modules/settings/settings_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Firebase is configured for Android only (google-services.json); iOS has no
+  // GoogleService-Info.plist or APNs key yet, and initializeApp would throw.
+  final firebaseEnabled = defaultTargetPlatform == TargetPlatform.android;
+  if (firebaseEnabled) {
+    await Firebase.initializeApp();
+    await startCrashReporting(
+      FirebaseCrashlytics.instance,
+      collectionEnabled: !kDebugMode,
+    );
+  }
 
   await dotenv.load();
   configureCoreDependencies(Environment.fromDotEnv(dotenv));
@@ -49,6 +65,13 @@ Future<void> main() async {
     settingsBox: await Hive.openBox<String>(SettingsLocalDataSource.boxName),
   );
   registerAuthDependencies(getIt, secureStorage: const FlutterSecureStorage());
+  registerPushNavigationDependencies(getIt);
+  if (firebaseEnabled) {
+    await startPushNotifications(
+      getIt,
+      reportError: FirebaseCrashlytics.instance.recordError,
+    );
+  }
   registerMediaDependencies(getIt);
   registerDriverDependencies(getIt);
   registerDriverHomeDependencies(getIt);

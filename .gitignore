@@ -61,6 +61,7 @@ workspace.code-workspace
 # --- Deploy Google Play (fastlane) ---
 # Escritos por scripts/ci-prepare-play-deploy.sh no CI; nunca versionar.
 android/key.properties
+android/app/google-services.json
 *.jks
 *.keystore
 *service-account*.json

@@ -66,6 +66,19 @@ the mobile `.env` in sync:
 | `VANEP_OAUTH_MOBILE_CLIENT_ID` | `OAUTH_CLIENT_ID` |
 | `GOOGLE_CLIENT_ID` (Web client) | `GOOGLE_SERVER_CLIENT_ID` |
 
+### Configure Firebase (`google-services.json`)
+
+Android builds apply the `com.google.gms.google-services` and
+`com.google.firebase.crashlytics` Gradle plugins, so they need
+`android/app/google-services.json`. The file is **git-ignored**: download it
+from the Firebase console (Project settings → Your apps → Android app
+`com.vanep.vanep_mobile`) and save it at `android/app/google-services.json`.
+Without it, `flutter run` / `flutter build` on Android fails. CI writes it from
+the `GOOGLE_SERVICES_JSON` secret (see [Repository secrets](#repository-secrets)).
+
+Firebase is only initialized on Android; iOS has no `GoogleService-Info.plist`
+or APNs key yet.
+
 ### Run the app
 
 ```bash
@@ -99,6 +112,31 @@ the JWTs.
 > Local dev uses cleartext HTTP to reach `10.0.2.2:8080`; this is allowed only in
 > debug builds (`android/app/src/debug/AndroidManifest.xml`). Release builds are
 > HTTPS-only. On iOS, add an ATS exception if you point `AUTH_URL` at HTTP.
+
+---
+
+## Push notifications and Crashlytics (Android)
+
+- **Crashlytics** records `FlutterError.onError` and
+  `PlatformDispatcher.instance.onError`. Collection is off in debug builds.
+- **Permission**: after sign-in (or when a saved session is restored) the app asks
+  for the notification permission (runtime prompt on Android 13+,
+  `POST_NOTIFICATIONS`).
+- **Device registration**: if allowed, the FCM token is sent to
+  `POST /api/devices` with `{"token": "...", "platform": "android"}`, and sent
+  again on every token refresh. **Sair** calls `DELETE /api/devices/{token}`
+  before the session tokens are revoked.
+- **Messages**: in the foreground they are shown as a local notification on the
+  `vanep_default` channel. In the background the system shows messages that have a
+  `notification` block; data-only messages are shown when `data` has a `title`
+  or `body`.
+- **Tap**: the app opens the screen for `data.type`:
+
+| `data.type` | Extra `data` keys | Client | Driver |
+| --- | --- | --- | --- |
+| `chat` | `conversationToken` (required), `counterpartName` | Chat | Chat |
+| `proposal` / `proposta` | — | Proposals list | Propostas tab |
+| `contract` / `contrato` | — | Vans tab | Propostas tab (contracts section) |
 
 ---
 
@@ -170,17 +208,20 @@ must never hold real secrets.
 | `PLAY_SERVICE_ACCOUNT_JSON` | JSON key of the Google Play service account with release permission for `com.vanep.vanep_mobile` |
 | `TESTING_ENV_FILE` | Full `.env` contents for the internal testing build |
 | `PRODUCTION_ENV_FILE` | Full `.env` contents for the production build |
+| `GOOGLE_SERVICES_JSON` | Full contents of the Firebase `google-services.json` for `com.vanep.vanep_mobile` (FCM + Crashlytics) |
 
 `scripts/ci-prepare-play-deploy.sh` turns these into `android/app/upload.jks`,
-`android/key.properties`, `.env` and a service account file outside the repo.
-It only runs in CI, because it overwrites `.env` and `android/key.properties`.
+`android/key.properties`, `.env`, `android/app/google-services.json` and a
+service account file outside the repo. It only runs in CI, because it overwrites
+`.env`, `android/key.properties` and `android/app/google-services.json`.
 
 ### Run a deploy locally
 
 This publishes to Google Play for real.
 
 1. Install Ruby 3.3 and the gems: `bundle install`.
-2. Put the `.env` you want to ship at the repo root and create
+2. Put the `.env` you want to ship at the repo root, the Firebase
+   `google-services.json` at `android/app/`, and create
    `android/key.properties` pointing at the upload keystore:
 
    ```properties

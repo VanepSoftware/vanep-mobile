@@ -1485,5 +1485,7 @@
   "professionalDataVanDocuments": "Vans",
   "professionalDataCnpj": "CNPJ",
   "professionalDataLoadError": "Não deu para carregar os seus dados profissionais.",
-  "professionalDataRetry": "Tentar novamente"
+  "professionalDataRetry": "Tentar novamente",
+  "pushNotificationChannelName": "Notificações",
+  "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos"
 }

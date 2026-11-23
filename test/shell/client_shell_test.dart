@@ -30,6 +30,8 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
+import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
+import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 
 import '../modules/auth/auth_fixtures.dart';
@@ -45,6 +47,7 @@ import '../modules/dependents/presentation/dependents_page_harness.dart';
 import '../modules/drivers/drivers_fixtures.dart';
 import '../modules/drivers/presentation/drivers_presentation_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
+import '../modules/push_notifications/push_notifications_fixtures.dart';
 
 class MockDriverSearchCubit extends MockCubit<DriverSearchState>
     implements DriverSearchCubit {}
@@ -54,9 +57,8 @@ class MockPlaceAutocompleteDataSource extends Mock
 
 PlaceAutocompleteController buildAutocomplete() {
   final datasource = MockPlaceAutocompleteDataSource();
-  when(
-    () => datasource.findSuggestions(any(), any()),
-  ).thenAnswer((_) async => const Ok([]));
+  when(() => datasource.findSuggestions(any(), any()))
+      .thenAnswer((_) async => const Ok([]));
   return PlaceAutocompleteController(datasource: datasource);
 }
 
@@ -72,8 +74,11 @@ Widget _harness(
   ClientHomeCubit clientHomeCubit,
   ClientVansCubit clientVansCubit,
   Future<void> Function(BuildContext)? openDriverSearch,
-  Future<void> Function(BuildContext, Conversation)? openConversationChat,
-) {
+  Future<void> Function(BuildContext, Conversation)? openConversationChat, {
+  PushNavigationCubit? pushNavigationCubit,
+  Future<void> Function(BuildContext, ChatPushTarget)? openPushChat,
+  Future<void> Function(BuildContext)? openClientProposals,
+}) {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -92,15 +97,19 @@ Widget _harness(
         BlocProvider<ConversationsInboxCubit>.value(value: conversationsCubit),
         BlocProvider<ClientHomeCubit>.value(value: clientHomeCubit),
         BlocProvider<ClientVansCubit>.value(value: clientVansCubit),
+        BlocProvider<PushNavigationCubit>.value(
+          value: pushNavigationCubit ?? PushNavigationCubit(),
+        ),
       ],
       child: ClientShell(
         openDriverProfile: (_, _) async {},
         profile: const FakeUserProfile(),
         openDriverSearch: openDriverSearch ?? (_) async {},
         openConversationChat: openConversationChat ?? (_, _) async {},
-        openClientProposals: (_) async {},
+        openClientProposals: openClientProposals ?? (_) async {},
         openProposalDetail: (_, _) async {},
         openNegotiationChat: (_, _) async {},
+        openPushChat: openPushChat ?? (_, _) async {},
       ),
     ),
   );
@@ -123,6 +132,9 @@ void main() {
   Widget harness({
     Future<void> Function(BuildContext)? openDriverSearch,
     Future<void> Function(BuildContext, Conversation)? openConversationChat,
+    PushNavigationCubit? pushNavigationCubit,
+    Future<void> Function(BuildContext, ChatPushTarget)? openPushChat,
+    Future<void> Function(BuildContext)? openClientProposals,
   }) {
     return _harness(
       driversCubit,
@@ -134,6 +146,9 @@ void main() {
       clientVansCubit,
       openDriverSearch,
       openConversationChat,
+      pushNavigationCubit: pushNavigationCubit,
+      openPushChat: openPushChat,
+      openClientProposals: openClientProposals,
     );
   }
 
@@ -508,4 +523,56 @@ void main() {
       expect(find.text('Lucas Silva'), findsOneWidget);
     },
   );
+
+  group('push notification targets', () {
+    testWidgets('a chat push opens the chat', (tester) async {
+      final pushNavigationCubit = PushNavigationCubit();
+      addTearDown(pushNavigationCubit.close);
+      final openedChats = <ChatPushTarget>[];
+      await tester.pumpWidget(
+        harness(
+          pushNavigationCubit: pushNavigationCubit,
+          openPushChat: (_, target) async => openedChats.add(target),
+        ),
+      );
+
+      pushNavigationCubit.openTarget(chatPushTarget);
+      await tester.pumpAndSettle();
+
+      expect(openedChats, [chatPushTarget]);
+    });
+
+    testWidgets('a proposal push opens the proposals list', (tester) async {
+      final pushNavigationCubit = PushNavigationCubit();
+      addTearDown(pushNavigationCubit.close);
+      var proposalsOpened = 0;
+      await tester.pumpWidget(
+        harness(
+          pushNavigationCubit: pushNavigationCubit,
+          openClientProposals: (_) async => proposalsOpened++,
+        ),
+      );
+
+      pushNavigationCubit.openTarget(const ProposalPushTarget());
+      await tester.pumpAndSettle();
+
+      expect(proposalsOpened, 1);
+    });
+
+    testWidgets('a contract push opens the Vans tab', (tester) async {
+      final pushNavigationCubit = PushNavigationCubit();
+      addTearDown(pushNavigationCubit.close);
+      await tester.pumpWidget(
+        harness(pushNavigationCubit: pushNavigationCubit),
+      );
+
+      pushNavigationCubit.openTarget(const ContractPushTarget());
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.widget<VanepBottomNav>(find.byType(VanepBottomNav)).currentIndex,
+        clientShellVansTabIndex,
+      );
+    });
+  });
 }

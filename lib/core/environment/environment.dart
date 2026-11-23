@@ -189,6 +189,11 @@ class Environment {
   String get conversationsWebSocketUrl =>
       '${authBaseUrl.replaceFirst(RegExp('^http'), 'ws')}/api/ws';
 
+  String get devicesEndpoint => '$authBaseUrl/api/devices';
+
+  String deviceEndpoint(String pushToken) =>
+      '$devicesEndpoint/${Uri.encodeComponent(pushToken)}';
+
   String get placesAutocompleteEndpoint =>
       'https://places.googleapis.com/v1/places:autocomplete';
 
