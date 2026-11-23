@@ -232,6 +232,13 @@
   "settingsThemeDark": "Dark",
   "settingsThemeSystemHint": "In System mode, the app follows your phone's light or dark theme.",
   "settingsThemeSaveFailed": "We couldn't save your theme choice. It will reset when you reopen the app.",
+  "settingsAppVersion": "Version {version} (build {build})",
+  "@settingsAppVersion": {
+    "placeholders": {
+      "version": {"type": "String"},
+      "build": {"type": "String"}
+    }
+  },
   "profilePrivacySecurity": "Privacy and security",
   "profileSignOutTitle": "Sign out of your account?",
   "profileSignOutMessage": "You'll be signed out on this device. You can sign in again anytime.",
