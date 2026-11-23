@@ -14,6 +14,7 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_s
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_ratings_page.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_van_photos_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_profile_sections.dart';
 
 import '../drivers_fixtures.dart';
 import 'drivers_presentation_mocks.dart';
@@ -170,7 +171,7 @@ void main() {
     await tester.pumpWidget(harness(cubit, loader));
 
     expect(find.text('1 de 1'), findsNothing);
-    expect(find.byIcon(Icons.directions_bus_outlined), findsOneWidget);
+    expect(find.byType(DriverVanIllustration), findsWidgets);
   });
 
   testWidgets('verification card opens verified documents sheet', (
@@ -242,6 +243,33 @@ void main() {
 
     expect(find.byType(DriverRatingsPage), findsOneWidget);
     expect(find.text('Muito pontual e atencioso.'), findsOneWidget);
+  });
+
+  testWidgets('shows vacancies per shift and split base price row', (
+    tester,
+  ) async {
+    seed(
+      DriverProfileState(
+        status: DriverProfileStatus.loaded,
+        profile: testDriverProfile.copyWith(
+          basePrice: 320,
+          shiftVacancies: const [
+            DriverShiftVacancyDto(shift: 'Manhã', spots: 3),
+            DriverShiftVacancyDto(shift: 'Tarde', spots: 0),
+          ],
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, loader));
+
+    expect(find.text('Manhã'), findsOneWidget);
+    expect(find.text('3 vagas'), findsOneWidget);
+    expect(find.text('Tarde'), findsOneWidget);
+    expect(find.text('Lotada'), findsOneWidget);
+    expect(find.text('A partir de'), findsOneWidget);
+    expect(find.text('R\$\u00A0320'), findsOneWidget);
+    expect(find.byIcon(Icons.request_quote_outlined), findsOneWidget);
   });
 
   testWidgets('says so when the driver has no van yet', (tester) async {

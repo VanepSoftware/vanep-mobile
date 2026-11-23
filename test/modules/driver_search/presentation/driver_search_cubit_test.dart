@@ -312,27 +312,79 @@ void main() {
   );
 
   blocTest<DriverSearchCubit, DriverSearchState>(
-    'useProfileOrigin clears custom originLabel and restores search',
+    'loadRecommended leaves search address labels and dependent selection empty',
     setUp: () {
-      stubPage(0, firstPage);
+      when(() => getRecommendedDrivers(page: any(named: 'page'))).thenAnswer(
+        (_) async => const Ok(firstPage),
+      );
+    },
+    build: buildCubit,
+    act: (cubit) => cubit.loadRecommended(),
+    verify: (cubit) {
+      expect(cubit.state.originLabel, isNull);
+      expect(cubit.state.destinationLabel, isNull);
+      expect(cubit.state.effectiveOriginLabel, isNull);
+      expect(cubit.state.effectiveDestinationLabel, isNull);
+      expect(cubit.state.selectedDependentTokens, isEmpty);
+    },
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'searchFromRoute intersects drivers when both origin and destination are set',
+    setUp: () {
       when(
-        () => getRecommendedDrivers(page: any(named: 'page')),
-      ).thenAnswer((_) async => const Ok(lastPage));
+        () => searchDriversByPlace(
+          'origin-place',
+          sessionToken: any(named: 'sessionToken'),
+          page: 0,
+        ),
+      ).thenAnswer(
+        (_) async => const Ok(
+          DriverSearchPage(
+            drivers: [
+              DriverSearchResult(token: 'd1', name: 'Atende os dois'),
+              DriverSearchResult(token: 'd2', name: 'Só embarque'),
+            ],
+            isLast: true,
+          ),
+        ),
+      );
+      when(
+        () => searchDriversByPlace(
+          'dest-place',
+          sessionToken: any(named: 'sessionToken'),
+          page: 0,
+        ),
+      ).thenAnswer(
+        (_) async => const Ok(
+          DriverSearchPage(
+            drivers: [
+              DriverSearchResult(token: 'd1', name: 'Atende os dois'),
+              DriverSearchResult(token: 'd3', name: 'Só destino'),
+            ],
+            isLast: true,
+          ),
+        ),
+      );
     },
     build: buildCubit,
     act: (cubit) async {
-      await cubit.loadRecommended();
       await cubit.searchFromRoute(
         isDestination: false,
-        placeId: 'place-1',
-        label: 'Av. Paulista',
+        placeId: 'origin-place',
+        label: 'Taguatinga',
       );
-      cubit.useProfileOrigin();
+      await cubit.searchFromRoute(
+        isDestination: true,
+        placeId: 'dest-place',
+        label: 'Colégio Horizonte',
+      );
     },
     verify: (cubit) {
-      expect(cubit.state.originLabel, isNull);
-      expect(cubit.state.isShowingRecommended, isTrue);
-      expect(cubit.state.results.map((d) => d.token), ['d2']);
+      expect(cubit.state.status, DriverSearchStatus.loaded);
+      expect(cubit.state.originPlaceId, 'origin-place');
+      expect(cubit.state.destinationPlaceId, 'dest-place');
+      expect(cubit.state.results.map((d) => d.token), ['d1']);
     },
   );
 }

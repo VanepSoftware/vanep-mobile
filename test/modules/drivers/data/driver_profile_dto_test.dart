@@ -31,6 +31,7 @@ void main() {
     });
 
     expect(profile.available, isFalse);
+    expect(profile.verified, isFalse);
     expect(profile.serviceAreas, isEmpty);
     expect(profile.vehicles, isEmpty);
     expect(profile.phone, isNull);

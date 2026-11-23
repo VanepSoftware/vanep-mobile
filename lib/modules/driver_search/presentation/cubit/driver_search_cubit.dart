@@ -7,9 +7,13 @@ import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart'
 import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/usecases/find_my_dependents.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_result.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search_failure.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/usecases/get_recommended_drivers.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/usecases/search_drivers_by_place.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
+
+const _maxRouteIntersectionPages = 5;
 
 class DriverSearchCubit extends Cubit<DriverSearchState> {
   DriverSearchCubit({
@@ -43,9 +47,6 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
     if (isClosed) return;
 
     final dependents = contextData.dependents ?? state.dependents;
-    final selectedTokens = state.selectedDependentTokens.isNotEmpty
-        ? state.selectedDependentTokens
-        : {for (final d in dependents) d.token};
 
     emit(
       result.fold(
@@ -55,7 +56,6 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
           isShowingRecommended: true,
           personalAddress: contextData.address,
           dependents: dependents,
-          selectedDependentTokens: selectedTokens,
         ),
         (page) {
           return state.copyWith(
@@ -65,12 +65,16 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
             isShowingRecommended: true,
             clearPlaceId: true,
             clearSearchedLabel: true,
+            clearOriginLabel: true,
+            clearDestinationLabel: true,
+            clearOriginPlaceId: true,
+            clearDestinationPlaceId: true,
+            routeSwapped: false,
             clearFailure: true,
             nextPage: 1,
             hasMore: !page.isLast,
             personalAddress: contextData.address,
             dependents: dependents,
-            selectedDependentTokens: selectedTokens,
           );
         },
       ),
@@ -112,6 +116,9 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
           clearFailure: true,
           clearOriginLabel: true,
           clearDestinationLabel: true,
+          clearOriginPlaceId: true,
+          clearDestinationPlaceId: true,
+          selectedDependentTokens: const {},
           routeSwapped: false,
           hasMore: false,
           nextPage: 0,
@@ -173,13 +180,142 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
     String? sessionToken,
   }) async {
     final editingOrigin = isDestination == state.routeSwapped;
+    final nextOriginLabel = editingOrigin ? label : state.originLabel;
+    final nextDestinationLabel = editingOrigin ? state.destinationLabel : label;
+    final nextOriginPlaceId = editingOrigin ? placeId : state.originPlaceId;
+    final nextDestinationPlaceId =
+        editingOrigin ? state.destinationPlaceId : placeId;
+
+    if (nextOriginPlaceId != null &&
+        nextDestinationPlaceId != null &&
+        nextOriginPlaceId != nextDestinationPlaceId) {
+      await _searchRouteIntersection(
+        originPlaceId: nextOriginPlaceId,
+        destinationPlaceId: nextDestinationPlaceId,
+        originLabel: nextOriginLabel,
+        destinationLabel: nextDestinationLabel,
+        latestLabel: label,
+        latestPlaceId: placeId,
+        latestSessionToken: sessionToken,
+        latestIsOrigin: editingOrigin,
+      );
+      return;
+    }
+
     emit(
       state.copyWith(
-        originLabel: editingOrigin ? label : state.originLabel,
-        destinationLabel: editingOrigin ? state.destinationLabel : label,
+        originLabel: nextOriginLabel,
+        destinationLabel: nextDestinationLabel,
+        originPlaceId: nextOriginPlaceId,
+        destinationPlaceId: nextDestinationPlaceId,
       ),
     );
     await searchPlace(placeId, label: label, sessionToken: sessionToken);
+  }
+
+  Future<void> _searchRouteIntersection({
+    required String originPlaceId,
+    required String destinationPlaceId,
+    required String? originLabel,
+    required String? destinationLabel,
+    required String latestLabel,
+    required String latestPlaceId,
+    required String? latestSessionToken,
+    required bool latestIsOrigin,
+  }) async {
+    emit(
+      state.copyWith(
+        status: DriverSearchStatus.searching,
+        originLabel: originLabel,
+        destinationLabel: destinationLabel,
+        originPlaceId: originPlaceId,
+        destinationPlaceId: destinationPlaceId,
+        searchedLabel: latestLabel,
+        placeId: latestPlaceId,
+        isShowingRecommended: false,
+        clearFailure: true,
+      ),
+    );
+
+    final responses = await Future.wait([
+      _collectDriversForPlace(
+        originPlaceId,
+        sessionToken: latestIsOrigin ? latestSessionToken : null,
+      ),
+      _collectDriversForPlace(
+        destinationPlaceId,
+        sessionToken: latestIsOrigin ? null : latestSessionToken,
+      ),
+    ]);
+    if (isClosed) return;
+
+    final originResult = responses[0];
+    final destinationResult = responses[1];
+
+    if (originResult case Err(:final error)) {
+      emit(
+        state.copyWith(
+          status: DriverSearchStatus.failed,
+          failure: error,
+          isShowingRecommended: false,
+        ),
+      );
+      return;
+    }
+    if (destinationResult case Err(:final error)) {
+      emit(
+        state.copyWith(
+          status: DriverSearchStatus.failed,
+          failure: error,
+          isShowingRecommended: false,
+        ),
+      );
+      return;
+    }
+
+    final originDrivers = (originResult as Ok<DriverSearchFailure, List<DriverSearchResult>>).value;
+    final destinationDrivers =
+        (destinationResult as Ok<DriverSearchFailure, List<DriverSearchResult>>).value;
+    final destinationTokens = destinationDrivers.map((d) => d.token).toSet();
+    final matched = originDrivers
+        .where((driver) => destinationTokens.contains(driver.token))
+        .toList();
+
+    emit(
+      state.copyWith(
+        status: DriverSearchStatus.loaded,
+        results: matched,
+        clearPlaceId: true,
+        nextPage: 1,
+        hasMore: false,
+        isShowingRecommended: false,
+        clearFailure: true,
+      ),
+    );
+  }
+
+  Future<Result<DriverSearchFailure, List<DriverSearchResult>>>
+  _collectDriversForPlace(String placeId, {String? sessionToken}) async {
+    final collected = <DriverSearchResult>[];
+    var page = 0;
+    while (page < _maxRouteIntersectionPages) {
+      final result = await searchDriversByPlace(
+        placeId,
+        sessionToken: page == 0 ? sessionToken : null,
+        page: page,
+      );
+      switch (result) {
+        case Err(:final error):
+          return Err(error);
+        case Ok(:final value):
+          collected.addAll(value.drivers);
+          if (value.isLast) {
+            return Ok(collected);
+          }
+          page += 1;
+      }
+    }
+    return Ok(collected);
   }
 
   void toggleDependent(String token) {
@@ -203,11 +339,9 @@ class DriverSearchCubit extends Cubit<DriverSearchState> {
   }
 
   void useProfileOrigin() {
-    if (state.destinationLabel == null && state.placeId != null) {
-      clearSearch();
-      return;
-    }
-    emit(state.copyWith(clearOriginLabel: true));
+    final defaultOrigin = state.defaultOriginText;
+    if (defaultOrigin == null) return;
+    emit(state.copyWith(originLabel: defaultOrigin));
   }
 
   Future<void> loadMore() async {

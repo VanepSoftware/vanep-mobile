@@ -73,19 +73,22 @@ class _DriverProfileBody extends StatelessWidget {
           children: [
             DriverProfileCoverCarousel(profile: profile),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DriverProfileIdentityBlock(profile: profile),
                   if (bio != null && bio.isNotEmpty) ...[
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 18),
                     VanepSection(
                       title: l10n.driverProfileBioSectionTitle,
                       child: VanepCard(
                         child: Text(
                           bio,
-                          style: context.typography.body.copyWith(height: 1.45),
+                          style: context.typography.body.copyWith(
+                            fontSize: 14,
+                            height: 1.45,
+                          ),
                         ),
                       ),
                     ),
@@ -94,13 +97,11 @@ class _DriverProfileBody extends StatelessWidget {
                   DriverProfileVacanciesCard(profile: profile),
                   const SizedBox(height: 18),
                   DriverProfileVansSection(profile: profile),
-                  const SizedBox(height: 18),
                   DriverProfileServiceSection(profile: profile),
                   if (profile.verified) ...[
                     const SizedBox(height: 18),
                     DriverProfileVerifiedCard(profile: profile),
                   ],
-                  const SizedBox(height: 18),
                   DriverProfileRatingsSection(profile: profile),
                 ],
               ),
@@ -109,14 +110,20 @@ class _DriverProfileBody extends StatelessWidget {
         ),
         Positioned(
           top: 8,
-          left: 12,
+          left: 16,
           child: SafeArea(
             bottom: false,
             child: Material(
-              color: Colors.black.withValues(alpha: 0.55),
+              color: context.palette.card,
               shape: const CircleBorder(),
+              elevation: 2,
+              shadowColor: context.palette.shadow.withValues(alpha: 0.16),
               clipBehavior: Clip.antiAlias,
-              child: BackButton(color: Colors.white),
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: BackButton(color: context.palette.textPrimary),
+              ),
             ),
           ),
         ),
@@ -139,7 +146,7 @@ class _DriverProfileBottomBar extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
         color: context.palette.card,
         border: Border(top: BorderSide(color: context.palette.divider)),
@@ -160,6 +167,7 @@ class _DriverProfileBottomBar extends StatelessWidget {
             ],
             VanepPrimaryButton(
               label: l10n.driverProfileRequestQuoteButton,
+              leadingIcon: Icons.request_quote_outlined,
               onPressed: onPressed,
             ),
           ],

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
+import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
@@ -74,9 +75,7 @@ class DriverSearchPageState extends State<DriverSearchPage> {
   String? _formattedOrigin(AppLocalizations l10n, DriverSearchState state) {
     final label = state.effectiveOriginLabel;
     if (label == null) return null;
-    if (!state.routeSwapped &&
-        state.originLabel == null &&
-        state.defaultOriginText != null) {
+    if (state.defaultOriginText != null && label == state.defaultOriginText) {
       return l10n.findVanHomePrefix(label);
     }
     return label;
@@ -85,13 +84,35 @@ class DriverSearchPageState extends State<DriverSearchPage> {
   String? _formattedDestination(AppLocalizations l10n, DriverSearchState state) {
     final label = state.effectiveDestinationLabel;
     if (label == null) return null;
-    if (state.routeSwapped &&
-        state.originLabel == null &&
-        state.defaultOriginText != null &&
-        label == state.defaultOriginText) {
+    if (state.defaultOriginText != null && label == state.defaultOriginText) {
       return l10n.findVanHomePrefix(label);
     }
     return label;
+  }
+
+  Future<void> _useRegisteredOrigin(
+    BuildContext context,
+    DriverSearchCubit cubit,
+    DriverSearchState state,
+  ) async {
+    final defaultOrigin = state.defaultOriginText;
+    if (defaultOrigin == null) return;
+    final token = widget.autocomplete.handOverSelection();
+    final result = await widget.autocomplete.datasource.findSuggestions(
+      defaultOrigin,
+      token,
+    );
+    if (!context.mounted) return;
+    if (result case Ok(:final value) when value.isNotEmpty) {
+      await cubit.searchFromRoute(
+        isDestination: false,
+        placeId: value.first.placeId,
+        label: defaultOrigin,
+        sessionToken: token,
+      );
+      return;
+    }
+    cubit.useProfileOrigin();
   }
 
   @override
@@ -127,12 +148,14 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                     context,
                     isDestination: false,
                     autocomplete: widget.autocomplete,
-                    hasActiveSearch: state.placeId != null,
+                    hasActiveSearch: state.hasActivePlaceSearch,
                     onClearSearch: cubit.clearSearch,
-                    registeredOriginLabel: state.originLabel != null
+                    registeredOriginLabel:
+                        state.originLabel != state.defaultOriginText
                         ? state.defaultOriginText
                         : null,
-                    onUseRegisteredOrigin: cubit.useProfileOrigin,
+                    onUseRegisteredOrigin: () =>
+                        _useRegisteredOrigin(context, cubit, state),
                     onSelected: (selection) => cubit.searchFromRoute(
                       isDestination: false,
                       placeId: selection.suggestion.placeId,
@@ -144,7 +167,7 @@ class DriverSearchPageState extends State<DriverSearchPage> {
                     context,
                     isDestination: true,
                     autocomplete: widget.autocomplete,
-                    hasActiveSearch: state.placeId != null,
+                    hasActiveSearch: state.hasActivePlaceSearch,
                     onClearSearch: cubit.clearSearch,
                     onSelected: (selection) => cubit.searchFromRoute(
                       isDestination: true,

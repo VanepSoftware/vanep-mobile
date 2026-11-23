@@ -39,6 +39,8 @@ class DriverSearchState extends Equatable {
     this.sortOrder = DriverSearchSortOrder.nearest,
     this.originLabel,
     this.destinationLabel,
+    this.originPlaceId,
+    this.destinationPlaceId,
     this.routeSwapped = false,
   });
 
@@ -72,13 +74,23 @@ class DriverSearchState extends Equatable {
 
   final String? destinationLabel;
 
+  final String? originPlaceId;
+
+  final String? destinationPlaceId;
+
   final bool routeSwapped;
 
   bool get hasNoResults =>
       status == DriverSearchStatus.loaded && displayedResults.isEmpty;
 
+  bool get hasActivePlaceSearch =>
+      placeId != null || originPlaceId != null || destinationPlaceId != null;
+
   bool get canLoadMore =>
-      hasMore && status == DriverSearchStatus.loaded && placeId != null;
+      hasMore &&
+      status == DriverSearchStatus.loaded &&
+      placeId != null &&
+      !(originPlaceId != null && destinationPlaceId != null);
 
   List<DriverSearchResult> get displayedResults {
     final available = results.where((driver) => driver.available).toList();
@@ -136,15 +148,11 @@ class DriverSearchState extends Equatable {
   }
 
   String? get effectiveOriginLabel {
-    final baseOrigin = originLabel ?? defaultOriginText;
-    final baseDestination = destinationLabel ?? defaultDestinationText;
-    return routeSwapped ? baseDestination : baseOrigin;
+    return routeSwapped ? destinationLabel : originLabel;
   }
 
   String? get effectiveDestinationLabel {
-    final baseOrigin = originLabel ?? defaultOriginText;
-    final baseDestination = destinationLabel ?? defaultDestinationText;
-    return routeSwapped ? baseOrigin : baseDestination;
+    return routeSwapped ? originLabel : destinationLabel;
   }
 
   DriverSearchState copyWith({
@@ -168,6 +176,10 @@ class DriverSearchState extends Equatable {
     bool clearOriginLabel = false,
     String? destinationLabel,
     bool clearDestinationLabel = false,
+    String? originPlaceId,
+    bool clearOriginPlaceId = false,
+    String? destinationPlaceId,
+    bool clearDestinationPlaceId = false,
     bool? routeSwapped,
   }) {
     return DriverSearchState(
@@ -191,6 +203,12 @@ class DriverSearchState extends Equatable {
       destinationLabel: clearDestinationLabel
           ? null
           : (destinationLabel ?? this.destinationLabel),
+      originPlaceId: clearOriginPlaceId
+          ? null
+          : (originPlaceId ?? this.originPlaceId),
+      destinationPlaceId: clearDestinationPlaceId
+          ? null
+          : (destinationPlaceId ?? this.destinationPlaceId),
       routeSwapped: routeSwapped ?? this.routeSwapped,
     );
   }
@@ -212,6 +230,8 @@ class DriverSearchState extends Equatable {
     sortOrder,
     originLabel,
     destinationLabel,
+    originPlaceId,
+    destinationPlaceId,
     routeSwapped,
   ];
 }
