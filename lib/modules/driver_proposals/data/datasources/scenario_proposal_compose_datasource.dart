@@ -1,4 +1,7 @@
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_compose_draft.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_schedule.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_terms.dart';
 
 class ProposalComposeUnavailable implements Exception {
   const ProposalComposeUnavailable({this.isNetwork = false});
@@ -33,25 +36,6 @@ ProposalComposeBlock proposalComposeBlockFor(DriverProposalScenario? scenario) {
   };
 }
 
-List<ProposalScheduleSlot> sampleProposalSchedule() {
-  const outbound = 6 * 60 + 40;
-  const inbound = 12 * 60 + 10;
-  return [
-    for (final weekday in schoolWeekdays) ...[
-      ProposalScheduleSlot(
-        weekday: weekday,
-        leg: RouteLeg.outbound,
-        minutesFromMidnight: outbound,
-      ),
-      ProposalScheduleSlot(
-        weekday: weekday,
-        leg: RouteLeg.inbound,
-        minutesFromMidnight: inbound,
-      ),
-    ],
-  ];
-}
-
 // TODO(VAN-XX): mocked proposal the driver assembles. No proposal endpoint
 // exists yet (api-java exposes contracts only). Remove sampleProposalComposeDraft,
 // ScenarioProposalComposeDataSource and DRIVER_PROPOSAL_SCENARIO together
@@ -60,27 +44,60 @@ ProposalComposeDraft sampleProposalComposeDraft({
   ProposalComposeBlock block = ProposalComposeBlock.none,
 }) {
   return ProposalComposeDraft(
-    familyName: 'Família Silva',
+    familyName: 'Família Andrade',
     students: const [
       ProposalStudentLine(
-        token: 'pedro',
-        name: 'Pedro Silva',
-        schoolName: 'Colégio Delta',
-        monthlyAmountCents: 35000,
+        token: 'theo',
+        name: 'Theo',
+        monthlyAmountCents: 32000,
       ),
       ProposalStudentLine(
-        token: 'ana',
-        name: 'Ana Silva',
-        schoolName: 'Escola Horizonte',
-        monthlyAmountCents: 28000,
+        token: 'alice',
+        name: 'Alice',
+        monthlyAmountCents: 30000,
       ),
     ],
-    schedule: sampleProposalSchedule(),
-    conditions: const ProposalConditions(
+    vans: const [
+      ProposalVanOption(
+        token: 'sprinter',
+        model: 'Sprinter',
+        plate: 'SDF4E21',
+        capacity: 16,
+        freeSeats: 4,
+      ),
+      ProposalVanOption(
+        token: 'master',
+        model: 'Master',
+        plate: 'RTA2B19',
+        capacity: 15,
+        freeSeats: 1,
+      ),
+    ],
+    selectedVanToken: 'sprinter',
+    shift: SchoolShift.afternoon,
+    requestedSlots: fullSchoolWeekSlots(),
+    slots: fullSchoolWeekSlots(),
+    times: const ProposalRouteTimes(
+      pickupStartMinutes: 12 * 60 + 5,
+      pickupEndMinutes: 12 * 60 + 15,
+      schoolArrivalMinutes: 12 * 60 + 50,
+      schoolDepartureMinutes: 18 * 60,
+      stopWaitMinutes: 5,
+    ),
+    payment: ProposalPayment(
+      installments: 12,
       dueDay: 10,
-      notes: 'Pagamento até o vencimento. Falta avisada não é descontada.',
+      startDate: DateTime(2027, 2),
+      endDate: DateTime(2027, 12, 17),
+    ),
+    conditions: const ProposalConditions(
+      reservationFee: ProposalReservationFee.oneInstallmentDeducted,
+      readjustment: ProposalReadjustment.ipcaOnRenewal,
+      cancellationNoticeDays: 30,
+      cancellationPenaltyPercent: 10,
     ),
     commissionCents: 500,
+    validityDays: 7,
     block: block,
   );
 }
