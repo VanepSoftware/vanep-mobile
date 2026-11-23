@@ -9,6 +9,8 @@ import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.d
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
 
+import '../../../core/session/session_mocks.dart';
+
 import '../auth_fixtures.dart';
 import '../auth_mocks.dart';
 import 'auth_presentation_mocks.dart';
@@ -37,9 +39,9 @@ void main() {
   group('checkSession', () {
     blocTest<AuthCubit, AuthState>(
       'emits authenticated when a session is restored',
-      setUp: () => when(
-        getCurrentSession.call,
-      ).thenAnswer((_) async => Ok<AuthFailure, AuthSession?>(session)),
+      setUp: () =>
+          when(getCurrentSession.call)
+              .thenAnswer((_) async => Ok<AuthFailure, AuthSession?>(session)),
       build: buildCubit,
       act: (cubit) => cubit.checkSession(),
       expect: () => [const AuthUnknown(), AuthAuthenticated(session)],
@@ -47,9 +49,8 @@ void main() {
 
     blocTest<AuthCubit, AuthState>(
       'emits unauthenticated when there is no session',
-      setUp: () => when(
-        getCurrentSession.call,
-      ).thenAnswer((_) async => const Ok<AuthFailure, AuthSession?>(null)),
+      setUp: () => when(getCurrentSession.call)
+          .thenAnswer((_) async => const Ok<AuthFailure, AuthSession?>(null)),
       build: buildCubit,
       act: (cubit) => cubit.checkSession(),
       expect: () => [const AuthUnknown(), const AuthUnauthenticated()],
@@ -66,9 +67,9 @@ void main() {
 
   blocTest<AuthCubit, AuthState>(
     'signOut emits unauthenticated',
-    setUp: () => when(
-      signOut.call,
-    ).thenAnswer((_) async => const Ok<AuthFailure, void>(null)),
+    setUp: () =>
+        when(signOut.call)
+            .thenAnswer((_) async => const Ok<AuthFailure, void>(null)),
     build: buildCubit,
     act: (cubit) => cubit.signOut(),
     expect: () => [const AuthUnauthenticated()],
@@ -159,6 +160,66 @@ void main() {
       verify: (_) {
         verifyNever(refreshUserProfile.call);
       },
+    );
+  });
+
+  group('session lifecycle observer', () {
+    late MockSessionLifecycleObserver sessionObserver;
+    final calls = <String>[];
+
+    setUp(() {
+      calls.clear();
+      sessionObserver = MockSessionLifecycleObserver();
+      when(sessionObserver.onSessionStarted).thenAnswer((_) async {});
+      when(sessionObserver.onSessionEnding).thenAnswer((_) async {
+        calls.add('onSessionEnding');
+      });
+      when(signOut.call).thenAnswer((_) async {
+        calls.add('signOut');
+        return const Ok<AuthFailure, void>(null);
+      });
+    });
+
+    AuthCubit buildObservedCubit() => AuthCubit(
+      getCurrentSession: getCurrentSession,
+      signOut: signOut,
+      refreshUserProfile: refreshUserProfile,
+      sessionObserver: sessionObserver,
+    );
+
+    blocTest<AuthCubit, AuthState>(
+      'startSession notifies that the session started',
+      build: buildObservedCubit,
+      act: (cubit) => cubit.startSession(session),
+      verify: (_) => verify(sessionObserver.onSessionStarted).called(1),
+    );
+
+    blocTest<AuthCubit, AuthState>(
+      'a restored session notifies that the session started',
+      setUp: () =>
+          when(getCurrentSession.call)
+              .thenAnswer((_) async => Ok<AuthFailure, AuthSession?>(session)),
+      build: buildObservedCubit,
+      act: (cubit) => cubit.checkSession(),
+      verify: (_) => verify(sessionObserver.onSessionStarted).called(1),
+    );
+
+    blocTest<AuthCubit, AuthState>(
+      'no session does not notify',
+      setUp: () => when(getCurrentSession.call)
+          .thenAnswer((_) async => const Ok<AuthFailure, AuthSession?>(null)),
+      build: buildObservedCubit,
+      act: (cubit) => cubit.checkSession(),
+      verify: (_) => verifyNever(sessionObserver.onSessionStarted),
+    );
+
+    blocTest<AuthCubit, AuthState>(
+      'signOut ends the observed session before revoking the tokens',
+      build: buildObservedCubit,
+      seed: () => AuthAuthenticated(session),
+      act: (cubit) => cubit.signOut(),
+      expect: () => [const AuthUnauthenticated()],
+      verify: (_) => expect(calls, ['onSessionEnding', 'signOut']),
     );
   });
 }

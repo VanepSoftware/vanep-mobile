@@ -5,7 +5,7 @@ import 'package:vanep_mobile/modules/client_vans/data/datasources/client_vans_da
 import 'package:vanep_mobile/modules/client_vans/data/repositories/client_vans_repository_impl.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/failures/client_vans_failure.dart';
 
-import '../fixtures/client_vans_fixtures.dart';
+import '../fixtures/client_vans_fixture.dart';
 
 class _MockClientVansDataSource extends Mock implements ClientVansDataSource {}
 

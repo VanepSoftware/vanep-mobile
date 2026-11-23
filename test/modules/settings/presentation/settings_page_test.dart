@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/core/ui/vanep_segmented_control.dart';
@@ -98,5 +99,21 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  testWidgets('shows the app version and build number at the bottom', (
+    tester,
+  ) async {
+    PackageInfo.setMockInitialValues(
+      appName: 'Vanep',
+      packageName: 'br.com.vanep',
+      version: '1.2.3',
+      buildNumber: '45',
+      buildSignature: '',
+    );
+    await pumpSettingsPage(tester);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Versão 1.2.3 (build 45)'), findsOneWidget);
   });
 }

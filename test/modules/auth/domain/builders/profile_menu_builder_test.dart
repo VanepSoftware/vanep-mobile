@@ -51,7 +51,7 @@ void main() {
       ProfileMenuId.signOut,
     ]);
     expect(enabled[ProfileMenuId.personalData], isTrue);
-    expect(enabled[ProfileMenuId.professionalData], isFalse);
+    expect(enabled[ProfileMenuId.professionalData], isTrue);
     expect(enabled[ProfileMenuId.signOut], isTrue);
     expect(menu.map((section) => section.title).toList(), [
       ProfileMenuSectionTitle.account,

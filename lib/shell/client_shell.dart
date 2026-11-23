@@ -24,6 +24,8 @@ import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cu
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_detail_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependents_page.dart';
+import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
+import 'package:vanep_mobile/modules/push_notifications/presentation/widgets/push_navigation_listener.dart';
 import 'package:vanep_mobile/shell/client_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
@@ -46,6 +48,7 @@ class ClientShell extends StatefulWidget {
     required this.openClientProposals,
     required this.openProposalDetail,
     required this.openNegotiationChat,
+    required this.openPushChat,
     super.key,
   });
 
@@ -73,6 +76,9 @@ class ClientShell extends StatefulWidget {
   )
   openNegotiationChat;
 
+  final Future<void> Function(BuildContext context, ChatPushTarget target)
+  openPushChat;
+
   @override
   State<ClientShell> createState() => ClientShellState();
 }
@@ -86,55 +92,73 @@ class ClientShellState extends State<ClientShell> {
   Widget build(BuildContext context) {
     final displayName = widget.profile.name ?? widget.profile.email ?? '';
 
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: context.palette.surface,
-      drawer: ShellAccountDrawer(profile: widget.profile),
-      onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
-        context,
-        widget.profile,
-        isOpened: isOpened,
-      ),
-      body: IndexedStack(
-        index: selectedIndex,
-        children: [
-          ClientHomeTab(
-            displayName: displayName,
-            onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
-            onNotificationsTapped: () => openNotifications(context),
-            onFindVanTapped: () => selectShellTab(clientShellVansTabIndex),
-            onAddAddressTapped: () => openAddressFormFromHome(context),
-            onAddDependentTapped: () =>
-                selectShellTab(clientShellDependentsTabIndex),
-            onProposalsTapped: () => widget.openClientProposals(context),
-            onProposalTapped: (request) =>
-                openProposalAndReloadHome(context, request),
-            onNegotiationChatTapped: (request) =>
-                widget.openNegotiationChat(context, request),
-          ),
-          ClientVansPage(
-            onSearchTapped: () => widget.openDriverSearch(context),
-            onVanTapped: (van) => openClientVanDetail(
-              context,
-              van: van,
-              onChatWithDriver: () => _openChatWithDriver(van),
-              onDependentTapped: _openDependentProfileFromVan,
+    return PushNavigationListener(
+      openTarget: openPushTarget,
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: context.palette.surface,
+        drawer: ShellAccountDrawer(profile: widget.profile),
+        onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
+          context,
+          widget.profile,
+          isOpened: isOpened,
+        ),
+        body: IndexedStack(
+          index: selectedIndex,
+          children: [
+            ClientHomeTab(
+              displayName: displayName,
+              onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
+              onNotificationsTapped: () => openNotifications(context),
+              onFindVanTapped: () => selectShellTab(clientShellVansTabIndex),
+              onAddAddressTapped: () => openAddressFormFromHome(context),
+              onAddDependentTapped: () =>
+                  selectShellTab(clientShellDependentsTabIndex),
+              onProposalsTapped: () => widget.openClientProposals(context),
+              onProposalTapped: (request) =>
+                  openProposalAndReloadHome(context, request),
+              onNegotiationChatTapped: (request) =>
+                  widget.openNegotiationChat(context, request),
             ),
-            onChatTapped: _openChatWithDriver,
-          ),
-          ConversationsInboxTab(
-            viewerSide: ConversationParticipant.client,
-            onConversationTapped: (conversation) =>
-                widget.openConversationChat(context, conversation),
-          ),
-          const DependentsPage(),
-        ],
-      ),
-      bottomNavigationBar: ClientBottomNav(
-        currentIndex: selectedIndex,
-        onDestinationSelected: selectShellTab,
+            ClientVansPage(
+              onSearchTapped: () => widget.openDriverSearch(context),
+              onVanTapped: (van) => openClientVanDetail(
+                context,
+                van: van,
+                onChatWithDriver: () => _openChatWithDriver(van),
+                onDependentTapped: _openDependentProfileFromVan,
+              ),
+              onChatTapped: _openChatWithDriver,
+            ),
+            ConversationsInboxTab(
+              viewerSide: ConversationParticipant.client,
+              onConversationTapped: (conversation) =>
+                  widget.openConversationChat(context, conversation),
+            ),
+            const DependentsPage(),
+          ],
+        ),
+        bottomNavigationBar: ClientBottomNav(
+          currentIndex: selectedIndex,
+          onDestinationSelected: selectShellTab,
+        ),
       ),
     );
+  }
+
+  Future<void> openPushTarget(
+    BuildContext context,
+    PushNavigationTarget target,
+  ) async {
+    switch (target) {
+      case ChatPushTarget():
+        await widget.openPushChat(context, target);
+      case ProposalPushTarget():
+        await widget.openClientProposals(context);
+      case ContractPushTarget():
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        selectShellTab(clientShellVansTabIndex);
+    }
   }
 
   void selectShellTab(int index) {

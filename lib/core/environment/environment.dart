@@ -161,6 +161,15 @@ class Environment {
 
   String get vehiclesEndpoint => '$authBaseUrl/api/vehicles';
 
+  String get driverComplianceEndpoint => '$driversMeEndpoint/compliance';
+
+  String get driverDocumentsEndpoint => '$authBaseUrl/api/driver-documents';
+
+  String vehicleDocumentsEndpoint(String vehicleToken) =>
+      '$vehiclesEndpoint/${Uri.encodeComponent(vehicleToken)}/documents';
+
+  String get driverCnhsEndpoint => '$authBaseUrl/api/driver-cnhs';
+
   String get myVehiclesEndpoint => '$vehiclesEndpoint/me';
 
   String vehiclePhotoEndpoint(String vehicleToken, String slot) =>
@@ -179,6 +188,11 @@ class Environment {
 
   String get conversationsWebSocketUrl =>
       '${authBaseUrl.replaceFirst(RegExp('^http'), 'ws')}/api/ws';
+
+  String get devicesEndpoint => '$authBaseUrl/api/devices';
+
+  String deviceEndpoint(String pushToken) =>
+      '$devicesEndpoint/${Uri.encodeComponent(pushToken)}';
 
   String get placesAutocompleteEndpoint =>
       'https://places.googleapis.com/v1/places:autocomplete';

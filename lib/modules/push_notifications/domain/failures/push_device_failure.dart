@@ -1,0 +1,1 @@
+enum PushDeviceFailure { network, unexpected }

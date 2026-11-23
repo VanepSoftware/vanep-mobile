@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/app.dart';
+import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
@@ -76,7 +77,13 @@ Widget _harness(AuthCubit cubit) {
     ],
     supportedLocales: AppLocalizations.supportedLocales,
     locale: const Locale('pt'),
-    home: BlocProvider<AuthCubit>.value(value: cubit, child: const AuthGate()),
+    home: MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>.value(value: cubit),
+        BlocProvider<PushNavigationCubit>(create: (_) => PushNavigationCubit()),
+      ],
+      child: const AuthGate(),
+    ),
   );
 }
 

@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:vanep_mobile/core/session/session_lifecycle_observer.dart';
 
 import 'package:vanep_mobile/modules/auth/domain/entities/auth_session.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
@@ -12,28 +16,32 @@ class AuthCubit extends Cubit<AuthState> {
     required this._getCurrentSession,
     required this._signOut,
     required this._refreshUserProfile,
+    this._sessionObserver,
   }) : super(const AuthUnknown());
 
   final GetCurrentSession _getCurrentSession;
   final SignOut _signOut;
   final RefreshUserProfile _refreshUserProfile;
+  final SessionLifecycleObserver? _sessionObserver;
 
   Future<void> checkSession() async {
     emit(const AuthUnknown());
     final result = await _getCurrentSession();
     result.fold(
       (_) => emit(const AuthUnauthenticated()),
-      (session) => emit(
-        session == null
-            ? const AuthUnauthenticated()
-            : AuthAuthenticated(session),
-      ),
+      (session) => session == null
+          ? emit(const AuthUnauthenticated())
+          : startSession(session),
     );
   }
 
-  void startSession(AuthSession session) => emit(AuthAuthenticated(session));
+  void startSession(AuthSession session) {
+    emit(AuthAuthenticated(session));
+    unawaited(_sessionObserver?.onSessionStarted());
+  }
 
   Future<void> signOut() async {
+    await _sessionObserver?.onSessionEnding();
     await _signOut();
     emit(const AuthUnauthenticated());
   }

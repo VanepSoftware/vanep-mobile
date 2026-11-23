@@ -27,7 +27,7 @@ import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_
 import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_van_detail_page.dart';
 import 'package:vanep_mobile/modules/schools/domain/entities/school.dart';
 
-import '../../client_vans/fixtures/client_vans_fixtures.dart';
+import '../../client_vans/fixtures/client_vans_fixture.dart';
 import '../dependents_fixtures.dart';
 import '../dependents_mocks.dart';
 import 'dependents_page_harness.dart';
