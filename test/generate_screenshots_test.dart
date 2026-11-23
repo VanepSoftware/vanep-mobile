@@ -18,9 +18,18 @@ import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/quote_request_setup.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_cubit.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_detail_state.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_request_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/quote_request_state.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_adjustment_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/pages/proposal_detail_page.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/pages/quote_request_page.dart';
+import 'package:vanep_mobile/modules/client_proposals/presentation/widgets/proposal_decline_sheet.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
 import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_negotiation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit.dart';
@@ -38,6 +47,9 @@ import 'package:vanep_mobile/modules/drivers/data/dtos/driver_profile_dto.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_ratings_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_van_photos_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_verification_sheet.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_draft.dart';
 import 'package:vanep_mobile/shell/client_bottom_nav.dart';
@@ -60,6 +72,7 @@ const sampleDrivers = [
     token: 'd1',
     name: 'Carlos Souza',
     rating: 4.9,
+    ratingCount: 32,
     basePrice: 320,
     experienceYears: 8,
     available: true,
@@ -69,6 +82,7 @@ const sampleDrivers = [
     token: 'd2',
     name: 'João Pedro Lima',
     rating: 4.7,
+    ratingCount: 18,
     basePrice: 300,
     experienceYears: 5,
     available: true,
@@ -89,10 +103,15 @@ const sampleCarlosProfile = DriverProfileDto(
   name: 'Carlos Souza',
   phone: '61999990000',
   rating: 4.9,
+  ratingCount: 32,
   bio: 'Transporte escolar com pontualidade, ar-condicionado e monitora.',
   experienceYears: 8,
   basePrice: 320,
   available: true,
+  workStartTime: '06:00',
+  workEndTime: '18:30',
+  workDays: 'Seg a sex',
+  waitToleranceMinutes: 5,
   serviceAreas: ['QNL 5', 'Taguatinga', 'Asa Sul'],
   vehicles: [
     DriverProfileVehicleDto(
@@ -102,6 +121,33 @@ const sampleCarlosProfile = DriverProfileDto(
       manufactureYear: 2021,
       color: 'Branca',
       capacity: 16,
+      hasAssistant: true,
+    ),
+  ],
+  shiftVacancies: [
+    DriverShiftVacancyDto(shift: 'Manhã', spots: 3),
+    DriverShiftVacancyDto(shift: 'Tarde', spots: 1),
+    DriverShiftVacancyDto(shift: 'Noite', spots: 0),
+  ],
+  ratingBreakdown: [
+    DriverRatingBreakdownDto(stars: 5, count: 27),
+    DriverRatingBreakdownDto(stars: 4, count: 4),
+    DriverRatingBreakdownDto(stars: 3, count: 1),
+    DriverRatingBreakdownDto(stars: 2, count: 0),
+    DriverRatingBreakdownDto(stars: 1, count: 0),
+  ],
+  ratings: [
+    DriverProfileRatingDto(
+      authorName: 'Patrícia S.',
+      dateLabel: 'há 2 semanas',
+      stars: 5,
+      comment: 'Muito pontual e cuidadoso com as crianças no embarque.',
+    ),
+    DriverProfileRatingDto(
+      authorName: 'Roberto M.',
+      dateLabel: 'há 1 mês',
+      stars: 5,
+      comment: 'Van sempre limpa e comunicação rápida com os pais.',
     ),
   ],
 );
@@ -244,23 +290,24 @@ Widget wrapScreenshotApp({
   required GlobalKey key,
   required Widget child,
 }) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: buildScreenshotTheme(),
-    localizationsDelegates: const [
-      AppLocalizations.delegate,
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ],
-    supportedLocales: AppLocalizations.supportedLocales,
-    locale: const Locale('pt'),
-    home: RepaintBoundary(
-      key: key,
-      child: DefaultTextStyle(
+  return RepaintBoundary(
+    key: key,
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: buildScreenshotTheme(),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('pt'),
+      builder: (context, navigator) => DefaultTextStyle(
         style: const TextStyle(fontFamily: 'Roboto', color: Colors.black),
-        child: child,
+        child: navigator ?? const SizedBox.shrink(),
       ),
+      home: child,
     ),
   );
 }
@@ -551,6 +598,8 @@ void main() {
             child: ChatPage<ClientServiceRequest>(
               counterpartName: 'Carlos Souza',
               viewerSide: ConversationParticipant.client,
+              counterpartRoleCaption: 'Motorista',
+              onViewDriverProfile: () {},
               clock: () => now,
               negotiationActions: NegotiationChatActions(
                 onSeeProposal: (_) async {},
@@ -561,6 +610,223 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 100));
       await saveScreenshot(key, '6_quote_chat_flow.png');
+    }
+  });
+
+  testWidgets('Generate Updated Subscreens and Proposals Screenshots', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390 * 2.0, 920 * 2.0);
+    tester.view.devicePixelRatio = 2.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    final outputDir = Platform.environment['VANEP_SCREENSHOTS_DIR'];
+    Future<void> saveScreenshot(GlobalKey key, String fileName) async {
+      if (outputDir == null || outputDir.isEmpty) return;
+      await capturePng(tester, key, '$outputDir/$fileName');
+    }
+
+    // 4a. Van Photos Screen
+    {
+      final key = GlobalKey();
+      await tester.pumpWidget(
+        wrapScreenshotApp(
+          key: key,
+          child: const DriverVanPhotosPage(profile: sampleCarlosProfile),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await saveScreenshot(key, '4a_driver_van_photos.png');
+    }
+
+    // 4b. Driver Ratings Screen
+    {
+      final key = GlobalKey();
+      await tester.pumpWidget(
+        wrapScreenshotApp(
+          key: key,
+          child: const DriverRatingsPage(profile: sampleCarlosProfile),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await saveScreenshot(key, '4b_driver_ratings.png');
+    }
+
+    // 4c. Driver Verification Bottom Sheet
+    {
+      final key = GlobalKey();
+      await tester.pumpWidget(
+        wrapScreenshotApp(
+          key: key,
+          child: Scaffold(
+            backgroundColor: Colors.black26,
+            body: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                child: const DriverVerificationSheet(
+                  driverName: 'Carlos Souza',
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await saveScreenshot(key, '4c_driver_verification.png');
+    }
+
+    // 2. Find Van Filters Bottom Sheet
+    {
+      final key = GlobalKey();
+      final datasource = MockPlaceAutocompleteDataSource();
+      when(() => datasource.findSuggestions(any(), any()))
+          .thenAnswer((_) async => const Ok([]));
+      final autocomplete = PlaceAutocompleteController(datasource: datasource);
+      addTearDown(autocomplete.dispose);
+
+      final cubit = MockDriverSearchCubit();
+      when(() => cubit.state).thenReturn(
+        DriverSearchState(
+          status: DriverSearchStatus.loaded,
+          results: sampleDrivers,
+          personalAddress: sampleAddress,
+          dependents: sampleDependents,
+          selectedDependentTokens: const {'dep-1'},
+          isShowingRecommended: true,
+        ),
+      );
+      when(() => cubit.stream).thenAnswer(
+        (_) => const Stream<DriverSearchState>.empty(),
+      );
+
+      await tester.pumpWidget(
+        wrapScreenshotApp(
+          key: key,
+          child: BlocProvider<DriverSearchCubit>.value(
+            value: cubit,
+            child: DriverSearchPage(
+              autocomplete: autocomplete,
+              onDriverSelected: (_) {},
+              onQuoteRequested: (_) {},
+              onInviteSubmitted: (_) {},
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byIcon(Icons.tune_rounded));
+      await tester.pumpAndSettle();
+      await saveScreenshot(key, '2_find_van_filters.png');
+    }
+
+    // 7. Proposal Detail Page
+    {
+      final key = GlobalKey();
+      final detailCubit = MockProposalDetailCubit();
+      when(() => detailCubit.state).thenReturn(
+        ProposalDetailState(
+          status: ProposalDetailStatus.ready,
+          proposalToken: testVersion2.token,
+          request: testProposalForSiblings,
+          proposal: testVersion2,
+          versions: [testVersion1, testVersion2],
+        ),
+      );
+      when(() => detailCubit.stream).thenAnswer(
+        (_) => const Stream<ProposalDetailState>.empty(),
+      );
+
+      await tester.pumpWidget(
+        wrapScreenshotApp(
+          key: key,
+          child: BlocProvider<ProposalDetailCubit>.value(
+            value: detailCubit,
+            child: ProposalDetailPage(
+              clock: () => testProposalsNow,
+              actions: ProposalDetailActions(
+                onChat: (_) {},
+                onAskAdjustment: (_, _) async => false,
+                onDecline: (_, _) async => null,
+                onAccepted: (_, _) {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await saveScreenshot(key, '7_proposal_detail.png');
+    }
+
+    // 8. Proposal Adjustment Page
+    {
+      final key = GlobalKey();
+      final adjustmentCubit = MockProposalAdjustmentCubit();
+      when(() => adjustmentCubit.state).thenReturn(
+        const ProposalAdjustmentState(),
+      );
+      when(() => adjustmentCubit.stream).thenAnswer(
+        (_) => const Stream<ProposalAdjustmentState>.empty(),
+      );
+
+      await tester.pumpWidget(
+        wrapScreenshotApp(
+          key: key,
+          child: BlocProvider<ProposalAdjustmentCubit>.value(
+            value: adjustmentCubit,
+            child: ProposalAdjustmentPage(
+              request: testProposalForSiblings,
+              proposal: testVersion2,
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await saveScreenshot(key, '8_proposal_adjustment.png');
+    }
+
+    // 9. Proposal Decline Sheet
+    {
+      final key = GlobalKey();
+      final declineCubit = MockProposalDeclineCubit();
+      when(() => declineCubit.state).thenReturn(
+        const ProposalDeclineState(),
+      );
+      when(() => declineCubit.stream).thenAnswer(
+        (_) => const Stream<ProposalDeclineState>.empty(),
+      );
+
+      await tester.pumpWidget(
+        wrapScreenshotApp(
+          key: key,
+          child: Scaffold(
+            backgroundColor: Colors.black26,
+            body: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                child: BlocProvider<ProposalDeclineCubit>.value(
+                  value: declineCubit,
+                  child: ProposalDeclineSheet(
+                    request: testProposalForSiblings,
+                    proposal: testVersion2,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await saveScreenshot(key, '9_proposal_decline.png');
     }
   });
 }

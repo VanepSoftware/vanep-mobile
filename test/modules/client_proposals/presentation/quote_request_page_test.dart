@@ -116,8 +116,9 @@ void main() {
 
       expect(find.text('Pedir orçamento'), findsOneWidget);
       expect(find.text('Carlos Souza'), findsOneWidget);
-      expect(find.text('4,8'), findsOneWidget);
-      expect(find.text('Master 2019 · 15 lugares'), findsOneWidget);
+      expect(find.byIcon(Icons.verified), findsOneWidget);
+      expect(find.text('4,8 · Master 2019 · 15 lugares'), findsOneWidget);
+      expect(find.text('Com vaga disponível'), findsOneWidget);
     });
 
     testWidgets('a driver without a rating shows only the van', (tester) async {
@@ -152,8 +153,9 @@ void main() {
     testWidgets('a ready student can be checked', (tester) async {
       await pumpQuote(tester, readyState());
 
-      expect(find.text('Bia Souza'), findsOneWidget);
-      await tester.tap(find.text('Bia Souza'));
+      expect(find.text('Bia Souza, 9 anos'), findsOneWidget);
+      expect(find.text('Colégio Delta · tarde'), findsOneWidget);
+      await tester.tap(find.text('Bia Souza, 9 anos'));
 
       verify(() => cubit.toggleStudent(testBia.token)).called(1);
     });
@@ -164,7 +166,7 @@ void main() {
       await pumpQuote(tester, readyState());
 
       expect(find.text('Cadastro incompleto'), findsOneWidget);
-      await tester.tap(find.text('Davi Souza'));
+      await tester.tap(find.text('Davi Souza, 7 anos'));
       verifyNever(() => cubit.toggleStudent(testDavi.token));
 
       await tester.tap(find.text('Completar'));
@@ -193,18 +195,19 @@ void main() {
       ).called(1);
     });
 
-    testWidgets('the route shows the whole pickup and the school', (
+    testWidgets('the route shows only neighborhood at pickup and privacy notice', (
       tester,
     ) async {
       await pumpQuote(tester, readyState(draft: biaSelected));
 
       expect(find.text('Trajeto'), findsOneWidget);
       expect(find.text('Colégio Delta'), findsOneWidget);
-      expect(find.textContaining('O motorista vê'), findsNothing);
-      final pickup = tester.widget<Text>(find.text('QNL 5 Conjunto A, 12'));
-      expect(pickup.maxLines, isNull);
-      expect(pickup.overflow, isNull);
-      expect(find.text('Taguatinga · Brasília/DF'), findsOneWidget);
+      expect(
+        find.text('O motorista vê só o bairro e o primeiro nome até o aceite.'),
+        findsOneWidget,
+      );
+      expect(find.text('QNL 5 Conjunto A, 12'), findsNothing);
+      expect(find.text('Taguatinga, Brasília'), findsOneWidget);
       expect(find.byIcon(Icons.home_outlined), findsOneWidget);
       expect(find.byIcon(Icons.school_outlined), findsOneWidget);
     });
@@ -236,13 +239,15 @@ void main() {
   });
 
   group('the footer', () {
-    testWidgets('shows the reply time without the open count and sends', (
+    testWidgets('shows the reply time with the open count and sends', (
       tester,
     ) async {
       await pumpQuote(tester, readyState(draft: biaSelected, openCount: 4));
 
-      expect(find.text('Resposta em até 72 h'), findsOneWidget);
-      expect(find.textContaining('pedidos abertos'), findsNothing);
+      expect(
+        find.text('Resposta em até 72 h · 4 de 5 pedidos abertos'),
+        findsOneWidget,
+      );
       await tester.tap(find.text('Enviar pedido'));
 
       verify(cubit.send).called(1);

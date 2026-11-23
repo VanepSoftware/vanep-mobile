@@ -251,7 +251,7 @@ void main() {
     expect(find.text('a partir de'), findsOneWidget);
     expect(find.text('R\$\u00a0320'), findsOneWidget);
     expect(find.text('/mês'), findsOneWidget);
-    expect(find.text('QNL 5 · Taguatinga'), findsOneWidget);
+    expect(find.text('QNL 5 · Taguatinga'), findsNothing);
     expect(find.textContaining('lugares'), findsNothing);
     expect(find.text('4,9'), findsOneWidget);
     await tester.tap(find.text('Pedir orçamento'));
@@ -380,17 +380,31 @@ void main() {
     verify(() => cubit.retryLoadMore()).called(1);
   });
 
-  testWidgets('shows where the driver operates under the name', (tester) async {
+  testWidgets('hides service areas clutter and shows rating count when present', (
+    tester,
+  ) async {
     seed(
       const DriverSearchState(
         status: DriverSearchStatus.loaded,
-        results: rankedResults,
+        results: [
+          DriverSearchResult(
+            token: 'd1',
+            name: 'Exato QNL 5',
+            rating: 4.9,
+            ratingCount: 32,
+            serviceAreas: ['Brasília', 'Taguatinga Norte', 'QNL 5'],
+            available: true,
+          ),
+        ],
       ),
     );
 
     await tester.pumpWidget(harness(cubit, autocomplete));
 
-    expect(find.text('Brasília · Taguatinga Norte · QNL 5'), findsOneWidget);
+    expect(find.text('Brasília · Taguatinga Norte · QNL 5'), findsNothing);
+    expect(find.text('4,9'), findsOneWidget);
+    expect(find.text('(32)'), findsOneWidget);
+    expect(find.byIcon(Icons.verified), findsOneWidget);
   });
 
   testWidgets('sort button opens sort sheet and invokes setSortOrder', (

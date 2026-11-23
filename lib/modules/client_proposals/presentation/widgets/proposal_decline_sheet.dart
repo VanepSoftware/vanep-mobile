@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
-import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_text_field.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/proposal_decline_reason.dart';
@@ -154,12 +153,58 @@ class ProposalDeclineSheetState extends State<ProposalDeclineSheet> {
                   ),
                 ),
                 const SizedBox(height: detailSectionSpacing),
-                VanepPrimaryButton(
-                  label: l10n.proposalDeclineTitle,
-                  isLoading: state.isSending,
-                  onPressed: reasonLabel != null && state.canSend
-                      ? () => sendAfterConfirming(context, reasonLabel)
-                      : null,
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 52,
+                        child: OutlinedButton(
+                          onPressed: state.isSending
+                              ? null
+                              : () => Navigator.of(context).pop(),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: context.palette.textPrimary,
+                            side: BorderSide(color: context.palette.cardBorder),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(l10n.proposalConfirmBack),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: SizedBox(
+                        height: 52,
+                        child: FilledButton(
+                          onPressed: reasonLabel != null &&
+                                  state.canSend &&
+                                  !state.isSending
+                              ? () => sendAfterConfirming(context, reasonLabel)
+                              : null,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: context.palette.danger,
+                            foregroundColor: context.palette.onAction,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: state.isSending
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.2,
+                                    color: context.palette.onAction,
+                                  ),
+                                )
+                              : Text(l10n.proposalDetailDecline),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

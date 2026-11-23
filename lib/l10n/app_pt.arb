@@ -1383,6 +1383,129 @@
   "findVanPerMonth": "/mês",
   "findVanPriceOnRequest": "Sob consulta",
   "findVanProfileButton": "Perfil",
+  "findVanRequestQuoteButton": "Pedir orçamento",
+  "driverProfileRatingSummary": "{rating} · {count, plural, =1{1 avaliação} other{{count} avaliações}}",
+  "@driverProfileRatingSummary": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileReviewsCount": "{count, plural, =1{1 avaliação} other{{count} avaliações}}",
+  "@driverProfileReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfilePhotoCounter": "{current} de {total}",
+  "@driverProfilePhotoCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedBadge": "Verificado pela Vanep",
+  "driverProfileBioSectionTitle": "Apresentação",
+  "driverProfileVacanciesSectionTitle": "Vagas e preço",
+  "driverProfileStartingFromValue": "A partir de {price}",
+  "@driverProfileStartingFromValue": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileVansSectionTitle": "Vans",
+  "driverProfileVanModelYear": "{model} · {year}",
+  "@driverProfileVanModelYear": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVanWithAssistant": "com auxiliar",
+  "driverProfileServiceSectionTitle": "Atendimento",
+  "driverProfileServiceAreasLabel": "Bairros",
+  "driverProfileWorkHoursLabel": "Expediente",
+  "driverProfileWorkHoursValue": "{start} às {end} · {days}",
+  "@driverProfileWorkHoursValue": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileWaitToleranceLabel": "Espera no ponto",
+  "driverProfileWaitToleranceValue": "{minutes, plural, =1{Até 1 min} other{Até {minutes} min}}",
+  "@driverProfileWaitToleranceValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedCardTitle": "Verificado pela Vanep",
+  "driverProfileVerifiedCardSubtitle": "CNH, curso escolar, vistoria e antecedentes",
+  "driverProfileReviewsSectionTitle": "Avaliações",
+  "driverProfileSeeAllReviews": "Ver todas",
+  "driverProfileNoReviewsYet": "Ainda sem avaliações publicadas.",
+  "driverProfileRequestQuoteButton": "Pedir orçamento",
+  "driverProfilePhotosTitle": "Fotos",
+  "driverProfilePhotosEmpty": "Nenhuma foto cadastrada ainda.",
+  "driverProfileRatingsTitle": "Avaliações",
+  "driverProfileVerifiedSheetIntro": "A Vanep confere os documentos antes de liberar o motorista na busca e acompanha os vencimentos.",
+  "driverProfileVerifiedDocCnh": "CNH categoria D ou E",
+  "driverProfileVerifiedDocCourse": "Curso de transporte escolar",
+  "driverProfileVerifiedDocBackground": "Antecedentes criminais",
+  "driverProfileVerifiedDocInspection": "Vistoria das vans",
+  "driverProfileVerifiedDocAuthorization": "Autorização escolar das vans",
+  "driverProfileVerifiedGotIt": "Entendi",
+  "driverProfileShiftVacancyAvailable": "{count, plural, =1{1 vaga} other{{count} vagas}}",
+  "@driverProfileShiftVacancyAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileShiftFull": "Lotado",
+  "chatCounterpartDriverCaption": "Motorista",
+  "chatViewDriverProfileTooltip": "Ver perfil do motorista",
+  "quoteRequestPrivacyNotice": "O motorista vê só o bairro e o primeiro nome até o aceite.",
+  "quoteRequestOptionalBadge": "opcional",
+  "quoteRequestNotesHint": "Algo que o motorista precise saber",
+  "quoteRequestOpenCountFooter": "Resposta em até 72 h · {open} de {limit} pedidos abertos",
+  "@quoteRequestOpenCountFooter": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailPrivacyNotice": "O motorista vê apenas o bairro até o aceite.",
   "findVanPrivacyNotice": "Até você aceitar uma proposta, o motorista vê só o bairro e o primeiro nome do seu filho.",
   "findVanSearchSheetTitleOrigin": "Local de embarque",
   "findVanSearchSheetTitleDestination": "Escola ou destino",

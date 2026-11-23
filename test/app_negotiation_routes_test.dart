@@ -347,6 +347,8 @@ void main() {
       expect(find.byType(ChatPage<ClientServiceRequest>), findsOneWidget);
       expect(openedChats, ['conv-created-1']);
       expect(find.text('Carlos Souza'), findsOneWidget);
+      expect(find.text('Motorista'), findsOneWidget);
+      expect(find.byTooltip('Ver perfil do motorista'), findsOneWidget);
     },
   );
 }

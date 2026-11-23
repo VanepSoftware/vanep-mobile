@@ -517,6 +517,7 @@ Future<void> openInboxConversation(
     conversationToken: conversation.token,
     counterpartName: conversationCounterpartName(conversation, viewerSide),
     viewerSide: viewerSide,
+    driverToken: conversation.driverToken,
   );
 }
 
@@ -525,7 +526,9 @@ Route<void> conversationChatRoute(
   required String conversationToken,
   required String counterpartName,
   required ConversationParticipant viewerSide,
+  String? driverToken,
 }) {
+  final l10n = AppLocalizations.of(context);
   return rolePageRoute<void>(
     context: context,
     settings: RouteSettings(name: '/${viewerSide.name}/chat'),
@@ -545,6 +548,10 @@ Route<void> conversationChatRoute(
         child: ChatPage<ClientServiceRequest>(
           counterpartName: counterpartName,
           viewerSide: ConversationParticipant.client,
+          counterpartRoleCaption: l10n?.chatCounterpartDriverCaption,
+          onViewDriverProfile: driverToken != null && driverToken.isNotEmpty
+              ? () => openDriverProfile(context, driverToken)
+              : null,
           negotiationActions: clientNegotiationChatActions(context),
         ),
       ),
@@ -575,6 +582,7 @@ Future<void> openConversationChat(
   required String conversationToken,
   required String counterpartName,
   required ConversationParticipant viewerSide,
+  String? driverToken,
 }) {
   return Navigator.of(context).push(
     conversationChatRoute(
@@ -582,6 +590,7 @@ Future<void> openConversationChat(
       conversationToken: conversationToken,
       counterpartName: counterpartName,
       viewerSide: viewerSide,
+      driverToken: driverToken,
     ),
   );
 }
@@ -608,6 +617,7 @@ Route<void> clientNegotiationChatRoute(
     conversationToken: request.conversationToken!,
     counterpartName: request.driverName,
     viewerSide: ConversationParticipant.client,
+    driverToken: request.driverToken,
   );
 }
 

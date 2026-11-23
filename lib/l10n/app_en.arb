@@ -2811,6 +2811,129 @@
   "findVanPerMonth": "/mo",
   "findVanPriceOnRequest": "On request",
   "findVanProfileButton": "Profile",
+  "findVanRequestQuoteButton": "Request quote",
+  "driverProfileRatingSummary": "{rating} · {count, plural, =1{1 review} other{{count} reviews}}",
+  "@driverProfileRatingSummary": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileReviewsCount": "{count, plural, =1{1 review} other{{count} reviews}}",
+  "@driverProfileReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfilePhotoCounter": "{current} of {total}",
+  "@driverProfilePhotoCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedBadge": "Verified by Vanep",
+  "driverProfileBioSectionTitle": "Introduction",
+  "driverProfileVacanciesSectionTitle": "Spots & price",
+  "driverProfileStartingFromValue": "Starting from {price}",
+  "@driverProfileStartingFromValue": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileVansSectionTitle": "Vans",
+  "driverProfileVanModelYear": "{model} · {year}",
+  "@driverProfileVanModelYear": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVanWithAssistant": "with assistant",
+  "driverProfileServiceSectionTitle": "Service details",
+  "driverProfileServiceAreasLabel": "Neighborhoods",
+  "driverProfileWorkHoursLabel": "Working hours",
+  "driverProfileWorkHoursValue": "{start} to {end} · {days}",
+  "@driverProfileWorkHoursValue": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileWaitToleranceLabel": "Wait at stop",
+  "driverProfileWaitToleranceValue": "{minutes, plural, =1{Up to 1 min} other{Up to {minutes} min}}",
+  "@driverProfileWaitToleranceValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedCardTitle": "Verified by Vanep",
+  "driverProfileVerifiedCardSubtitle": "Driver license, school course, inspection & background check",
+  "driverProfileReviewsSectionTitle": "Reviews",
+  "driverProfileSeeAllReviews": "See all",
+  "driverProfileNoReviewsYet": "No published reviews yet.",
+  "driverProfileRequestQuoteButton": "Request quote",
+  "driverProfilePhotosTitle": "Photos",
+  "driverProfilePhotosEmpty": "No photos added yet.",
+  "driverProfileRatingsTitle": "Reviews",
+  "driverProfileVerifiedSheetIntro": "Vanep checks all documents before listing the driver in search and tracks expiration dates.",
+  "driverProfileVerifiedDocCnh": "Category D or E driver license",
+  "driverProfileVerifiedDocCourse": "School transport certification",
+  "driverProfileVerifiedDocBackground": "Criminal background check",
+  "driverProfileVerifiedDocInspection": "Van safety inspection",
+  "driverProfileVerifiedDocAuthorization": "School transport permit",
+  "driverProfileVerifiedGotIt": "Got it",
+  "driverProfileShiftVacancyAvailable": "{count, plural, =1{1 spot} other{{count} spots}}",
+  "@driverProfileShiftVacancyAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileShiftFull": "Full",
+  "chatCounterpartDriverCaption": "Driver",
+  "chatViewDriverProfileTooltip": "View driver profile",
+  "quoteRequestPrivacyNotice": "The driver sees only your neighborhood and first name until acceptance.",
+  "quoteRequestOptionalBadge": "optional",
+  "quoteRequestNotesHint": "Anything the driver should know",
+  "quoteRequestOpenCountFooter": "Reply within 72 h · {open} of {limit} open requests",
+  "@quoteRequestOpenCountFooter": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailPrivacyNotice": "The driver sees only the neighborhood until acceptance.",
   "findVanPrivacyNotice": "Until you accept a proposal, the driver only sees your neighborhood and your child's first name.",
   "findVanSearchSheetTitleOrigin": "Pickup location",
   "findVanSearchSheetTitleDestination": "School or destination",

@@ -52,6 +52,8 @@ class ChatPage<R extends ServiceRequest> extends StatelessWidget {
   const ChatPage({
     required this.counterpartName,
     required this.viewerSide,
+    this.counterpartRoleCaption,
+    this.onViewDriverProfile,
     this.negotiationActions,
     this.clock = DateTime.now,
     super.key,
@@ -59,12 +61,15 @@ class ChatPage<R extends ServiceRequest> extends StatelessWidget {
 
   final String counterpartName;
   final ConversationParticipant viewerSide;
+  final String? counterpartRoleCaption;
+  final VoidCallback? onViewDriverProfile;
   final NegotiationChatActions<R>? negotiationActions;
   final DateTime Function() clock;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final viewProfile = onViewDriverProfile;
 
     return BlocConsumer<ChatCubit, ChatState>(
       listenWhen: (previous, current) =>
@@ -79,7 +84,19 @@ class ChatPage<R extends ServiceRequest> extends StatelessWidget {
         final actions = negotiationActions;
         return Scaffold(
           backgroundColor: context.palette.card,
-          appBar: VanepAppBar(title: counterpartName),
+          appBar: VanepAppBar(
+            title: counterpartName,
+            caption: counterpartRoleCaption,
+            actions: viewProfile == null
+                ? const []
+                : [
+                    IconButton(
+                      onPressed: viewProfile,
+                      tooltip: l10n.chatViewDriverProfileTooltip,
+                      icon: const Icon(Icons.info_outline),
+                    ),
+                  ],
+          ),
           body: actions == null
               ? ChatBody<R>(
                   state: state,

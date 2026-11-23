@@ -145,4 +145,29 @@ void main() {
     );
     verify(() => cubit.start()).called(1);
   });
+
+  testWidgets('client chat shows role caption and driver profile action', (
+    tester,
+  ) async {
+    seed(readyState);
+    var opened = false;
+
+    await tester.pumpWidget(
+      localizedHarness(
+        BlocProvider<ChatCubit>.value(
+          value: cubit,
+          child: ChatPage(
+            counterpartName: 'Carlos Motorista',
+            viewerSide: ConversationParticipant.client,
+            counterpartRoleCaption: 'Motorista',
+            onViewDriverProfile: () => opened = true,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Motorista'), findsOneWidget);
+    await tester.tap(find.byTooltip('Ver perfil do motorista'));
+    expect(opened, isTrue);
+  });
 }
