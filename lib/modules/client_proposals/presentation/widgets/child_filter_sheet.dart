@@ -4,6 +4,7 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
+import 'package:vanep_mobile/core/ui/vanep_sheet.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_proposals/domain/value_objects/client_proposals.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/formatters/client_proposals_labels.dart';
@@ -14,13 +15,8 @@ Future<void> showChildFilterSheet(
   required String? selectedChildToken,
   required ValueChanged<String?> onChildSelected,
 }) {
-  return showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: VanepColors.card,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
+  return showVanepSheet<void>(
+    context,
     builder: (sheetContext) => ChildFilterSheet(
       proposals: proposals,
       selectedChildToken: selectedChildToken,
@@ -74,58 +70,15 @@ class ChildFilterSheet extends StatelessWidget {
         ),
     ];
 
-    return SafeArea(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.85,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: VanepColors.inputBorder,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      l10n.clientProposalsFilterSheetTitle,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: VanepColors.textPrimary,
-                      ),
-                    ),
-                  ),
-                  const CloseButton(),
-                ],
-              ),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      for (final (index, option) in options.indexed) ...[
-                        if (index > 0) const Divider(),
-                        option,
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+    return VanepSheetFrame(
+      title: l10n.clientProposalsFilterSheetTitle,
+      child: Column(
+        children: [
+          for (final (index, option) in options.indexed) ...[
+            if (index > 0) const Divider(),
+            option,
+          ],
+        ],
       ),
     );
   }
@@ -191,42 +144,12 @@ class ChildFilterOption extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                ChildFilterRadio(isSelected: isSelected),
+                VanepRadioIndicator(isSelected: isSelected),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class ChildFilterRadio extends StatelessWidget {
-  const ChildFilterRadio({required this.isSelected, super.key});
-
-  final bool isSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 22,
-      height: 22,
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: isSelected ? VanepColors.action : VanepColors.textMuted,
-          width: 2,
-        ),
-      ),
-      child: isSelected
-          ? const DecoratedBox(
-              decoration: BoxDecoration(
-                color: VanepColors.action,
-                shape: BoxShape.circle,
-              ),
-            )
-          : null,
     );
   }
 }

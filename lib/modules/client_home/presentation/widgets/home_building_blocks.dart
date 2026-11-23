@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
-import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -26,41 +25,6 @@ Future<void> openUnavailableFeature(BuildContext context, String title) {
     title: title,
     message: AppLocalizations.of(context)!.comingSoon,
   );
-}
-
-class HomeSectionHeader extends StatelessWidget {
-  const HomeSectionHeader({
-    required this.title,
-    this.actionLabel,
-    this.onAction,
-    super.key,
-  });
-
-  final String title;
-  final String? actionLabel;
-  final VoidCallback? onAction;
-
-  @override
-  Widget build(BuildContext context) {
-    final label = actionLabel;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        children: [
-          Expanded(child: Text(title, style: VanepTypography.sectionTitle)),
-          if (label != null)
-            TextButton(
-              onPressed: onAction,
-              style: TextButton.styleFrom(
-                minimumSize: const Size(44, 44),
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-              ),
-              child: Text(label, style: VanepTypography.linkAction),
-            ),
-        ],
-      ),
-    );
-  }
 }
 
 class HomeIconBubble extends StatelessWidget {
@@ -151,37 +115,6 @@ class HomeRowTile extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class HomeRowsCard extends StatelessWidget {
-  const HomeRowsCard({required this.rows, super.key});
-
-  final List<Widget> rows;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: VanepColors.card,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
-        side: const BorderSide(color: VanepColors.cardBorder),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          for (final (index, row) in rows.indexed) ...[
-            if (index > 0)
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: VanepColors.divider,
-              ),
-            row,
-          ],
-        ],
       ),
     );
   }

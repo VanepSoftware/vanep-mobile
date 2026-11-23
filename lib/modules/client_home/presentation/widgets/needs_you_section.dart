@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:vanep_mobile/core/ui/vanep_rows_card.dart';
+import 'package:vanep_mobile/core/formatters/names_list.dart';
 import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/design_system/vanep_typography.dart';
 import 'package:vanep_mobile/core/domain/calendar_days.dart';
@@ -54,7 +56,7 @@ class NeedsYouSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        HomeSectionHeader(
+        VanepSectionHeader(
           title: l10n.clientHomeNeedsYouTitle,
           actionLabel: summary.hasMore ? l10n.clientHomeSeeAll : null,
           onAction: () =>
@@ -71,7 +73,7 @@ class NeedsYouSection extends StatelessWidget {
         if (featured != null && rows.isNotEmpty)
           const SizedBox(height: homeCardSpacing),
         if (rows.isNotEmpty)
-          HomeRowsCard(
+          VanepRowsCard(
             rows: [
               for (final item in rows)
                 NeedsYouRow(

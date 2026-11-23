@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:vanep_mobile/core/ui/vanep_rows_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_greeting_header.dart';
 import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
@@ -148,7 +149,7 @@ class ClientHomeBlocks extends StatelessWidget {
           ),
         ],
         const SizedBox(height: homeBlockSpacing),
-        HomeSectionHeader(title: l10n.clientHomeShortcutsTitle),
+        VanepSectionHeader(title: l10n.clientHomeShortcutsTitle),
         HomeShortcutsGrid(
           enabledShortcuts: home.enabledShortcuts,
           onShortcutTapped: (shortcut) => shortcut == HomeShortcut.proposals
@@ -157,7 +158,7 @@ class ClientHomeBlocks extends StatelessWidget {
         ),
         if (home.today is FirstStepsSection) ...[
           const SizedBox(height: homeBlockSpacing),
-          HomeSectionHeader(title: l10n.clientHomeHowItWorksTitle),
+          VanepSectionHeader(title: l10n.clientHomeHowItWorksTitle),
           const HowVanepWorksCard(),
         ],
       ],

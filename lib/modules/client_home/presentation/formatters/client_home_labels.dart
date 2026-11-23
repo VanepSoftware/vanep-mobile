@@ -5,27 +5,12 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
 
-String joinNames(AppLocalizations l10n, List<String> names) {
-  if (names.isEmpty) return '';
-  if (names.length == 1) return names.single;
-  final leading = names.sublist(0, names.length - 1).join(', ');
-  return '$leading${l10n.clientHomeNamesListLastSeparator}${names.last}';
-}
-
 String formatWeekday(AppLocalizations l10n, DateTime date) {
   return formatWeekdayName(l10n, date.weekday);
 }
 
 String formatShortWeekday(AppLocalizations l10n, DateTime date) {
-  return switch (date.weekday) {
-    DateTime.monday => l10n.clientHomeWeekdayShortMonday,
-    DateTime.tuesday => l10n.clientHomeWeekdayShortTuesday,
-    DateTime.wednesday => l10n.clientHomeWeekdayShortWednesday,
-    DateTime.thursday => l10n.clientHomeWeekdayShortThursday,
-    DateTime.friday => l10n.clientHomeWeekdayShortFriday,
-    DateTime.saturday => l10n.clientHomeWeekdayShortSaturday,
-    _ => l10n.clientHomeWeekdayShortSunday,
-  };
+  return formatWeekdayShortName(l10n, date.weekday);
 }
 
 String formatDateLine(AppLocalizations l10n, DateTime date) {

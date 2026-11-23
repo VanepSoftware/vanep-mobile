@@ -194,30 +194,242 @@
   "navDependents": "Dependents",
   "navProposals": "Proposals",
   "navProposalsAndContracts": "Proposals & contracts",
-  "driverProposalComposeTitle": "Build proposal",
-  "driverProposalFamilySection": "Family",
-  "driverProposalOneContract": "One contract for this family, one item per student.",
-  "driverProposalPriceSection": "Price per student",
-  "driverProposalPriceLabel": "Monthly fee",
-  "driverProposalScheduleSection": "Schedule",
-  "driverProposalScheduleHint": "Times calculated from the route.",
-  "driverProposalLegOutbound": "Going",
-  "driverProposalLegReturn": "Return",
-  "driverProposalConditionsSection": "Standard conditions",
-  "driverProposalDueDayLabel": "Due date",
-  "driverProposalDueDayValue": "Every day {day}",
-  "@driverProposalDueDayValue": {
+  "driverProposalComposeTitle": "New proposal",
+  "driverProposalHeaderSubtitle": "{family} · {students}",
+  "@driverProposalHeaderSubtitle": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      },
+      "students": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalVanSection": "Van",
+  "driverProposalVanName": "{model} · {plate}",
+  "@driverProposalVanName": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "plate": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalSeatsMorning": "Morning: {free, plural, =1{1 seat left} other{{free} seats left}} · {capacity} seats",
+  "@driverProposalSeatsMorning": {
+    "placeholders": {
+      "free": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalSeatsAfternoon": "Afternoon: {free, plural, =1{1 seat left} other{{free} seats left}} · {capacity} seats",
+  "@driverProposalSeatsAfternoon": {
+    "placeholders": {
+      "free": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalNoSeats": "This van has no seats for every student in this shift.",
+  "driverProposalVanSheetTitle": "Choose the van",
+  "driverProposalPriceSection": "Monthly price per student",
+  "driverProposalPriceFieldLabel": "Monthly price for {name}",
+  "@driverProposalPriceFieldLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalCurrency": "R$",
+  "driverProposalLegsBoth": "Going and return",
+  "driverProposalLegsOutboundOnly": "Going only",
+  "driverProposalLegsReturnOnly": "Return only",
+  "driverProposalLegsNone": "No legs",
+  "driverProposalFamilyTotal": "Family total",
+  "driverProposalCommission": "Vanep commission",
+  "driverProposalReceived": "You receive",
+  "driverProposalInstallmentAmount": "{count}x of {amount}",
+  "@driverProposalInstallmentAmount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalPaymentSection": "Payment",
+  "driverProposalInstallmentsLabel": "Installments",
+  "driverProposalInstallmentsValue": "{count}x · every {day}th",
+  "@driverProposalInstallmentsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalPeriodLabel": "Period",
+  "driverProposalPeriodValue": "{start} to {end}",
+  "@driverProposalPeriodValue": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalFirstDay": "1",
+  "driverProposalDayMonth": "{month} {day}",
+  "@driverProposalDayMonth": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalDayMonthYear": "{month} {day}, {year}",
+  "@driverProposalDayMonthYear": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalPaymentSheetTitle": "Installments and due day",
+  "driverProposalInstallmentsOption": "{count}x",
+  "@driverProposalInstallmentsOption": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalDueDayLabel": "Due day",
+  "driverProposalDueDayOption": "Day {day}",
+  "@driverProposalDueDayOption": {
     "placeholders": {
       "day": {
         "type": "int"
       }
     }
   },
-  "driverProposalNotesLabel": "Conditions",
-  "driverProposalMoneySection": "Vanep commission and amount received",
-  "driverProposalFamilyPays": "The family pays",
-  "driverProposalCommission": "Vanep commission",
-  "driverProposalReceived": "You receive",
+  "driverProposalScheduleSection": "Days and legs",
+  "driverProposalLegOutbound": "Going",
+  "driverProposalLegReturn": "Return",
+  "driverProposalScheduleMatchesRequest": "As requested",
+  "driverProposalScheduleDiffers": "Different from the request",
+  "driverProposalTimesSection": "Times",
+  "driverProposalEdit": "Edit",
+  "driverProposalSave": "Save",
+  "driverProposalPickupLabel": "Pickup",
+  "driverProposalPickupStartLabel": "Pickup from",
+  "driverProposalPickupEndLabel": "Pickup until",
+  "driverProposalTimeRange": "{start}–{end}",
+  "@driverProposalTimeRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProposalArrivalLabel": "Arrival",
+  "driverProposalDepartureLabel": "Departure",
+  "driverProposalStopWaitLabel": "Wait at the stop",
+  "driverProposalStopWaitValue": "up to {minutes} min",
+  "@driverProposalStopWaitValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalTimesInvalid": "Pickup must start before it ends and end before the arrival.",
+  "driverProposalConditionsSection": "Conditions",
+  "driverProposalReservationFeeLabel": "Reservation fee",
+  "driverProposalReservationFeeNone": "No fee",
+  "driverProposalReservationFeeOneInstallment": "1 installment, deducted from the 1st",
+  "driverProposalReadjustmentLabel": "Readjustment",
+  "driverProposalReadjustmentIpca": "IPCA, on renewal",
+  "driverProposalReadjustmentIgpm": "IGP-M, on renewal",
+  "driverProposalReadjustmentNone": "No readjustment",
+  "driverProposalCancellationLabel": "Cancellation",
+  "driverProposalCancellationValue": "{days} days notice + {percent}% of the balance",
+  "@driverProposalCancellationValue": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalCancellationNoPenalty": "{days} days notice, no fee",
+  "@driverProposalCancellationNoPenalty": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalNoticeLabel": "Notice",
+  "driverProposalNoticeOption": "{days} days",
+  "@driverProposalNoticeOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalPenaltyLabel": "Fee on the balance",
+  "driverProposalPenaltyOption": "{percent}%",
+  "@driverProposalPenaltyOption": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProposalMessageLabel": "Message",
+  "driverProposalOptional": "(optional)",
+  "driverProposalMessageHint": "Write something to the family",
+  "driverProposalValidity": "Proposal valid for {days} days. If accepted, the contract is generated.",
+  "@driverProposalValidity": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "driverProposalSend": "Send proposal",
   "driverProposalSent": "Proposal sent.",
   "driverProposalOverdueTitle": "Sending paused",
@@ -227,7 +439,7 @@
   "driverProposalLoadError": "Could not load the proposal.",
   "driverProposalRetry": "Try again",
   "driverProposalSendError": "Could not send the proposal.",
-  "driverProposalInvalidAmount": "Enter a price for each student.",
+  "driverProposalIncompleteDraft": "Review the proposal before sending.",
   "clientHomeNoLinkedVanTitle": "No linked van",
   "clientHomeNoLinkedVanMessage": "You don't have a van yet. Find one that serves your area.",
   "clientHomeFindVanButton": "Find a van",

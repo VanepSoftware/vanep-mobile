@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:vanep_mobile/core/ui/vanep_rows_card.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/day_progress_cards.dart';
@@ -42,7 +43,7 @@ class TodaySectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final section = this.section;
-    final todayHeader = HomeSectionHeader(title: l10n.clientHomeTodayTitle);
+    final todayHeader = VanepSectionHeader(title: l10n.clientHomeTodayTitle);
 
     final children = switch (section) {
       FirstStepsSection() => withSpacing([
@@ -69,7 +70,7 @@ class TodaySectionView extends StatelessWidget {
       ArrivedSection() => [
         ArrivalCard(section: section),
         const SizedBox(height: homeBlockSpacing),
-        HomeSectionHeader(
+        VanepSectionHeader(
           title: l10n.clientHomeTodayTitle,
           actionLabel: l10n.clientHomeSeeAll,
           onAction: () =>
