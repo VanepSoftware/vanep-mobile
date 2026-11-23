@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/media/photo_picker.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
-import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/core/network/file_uploader.dart';
 import 'package:vanep_mobile/modules/profile/data/datasources/profile_summary_remote_datasource.dart';
 import 'package:vanep_mobile/modules/profile/data/repositories/profile_summary_repository_impl.dart';
 import 'package:vanep_mobile/modules/profile/domain/repositories/profile_summary_repository.dart';
@@ -22,7 +22,7 @@ void registerProfileDependencies(GetIt getIt) {
       ProfileSummaryRemoteDataSource(
         dio: authenticatedDio,
         environment: environment,
-        photoUploader: getIt<PhotoUploader>(),
+        fileUploader: getIt<FileUploader>(),
       ),
     )
     ..registerSingleton<ProfileSummaryRepository>(

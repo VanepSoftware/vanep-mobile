@@ -1,0 +1,132 @@
+# frozen_string_literal: true
+
+require "json"
+
+opt_out_usage
+skip_docs
+default_platform(:android)
+
+REPO_ROOT = File.expand_path("../..", __dir__)
+AAB_PATH = File.join(REPO_ROOT, "build/app/outputs/bundle/release/app-release.aab")
+KEY_PROPERTIES_PATH = File.join(REPO_ROOT, "android/key.properties")
+ENV_FILE_PATH = File.join(REPO_ROOT, ".env")
+
+# O Play rejeita versionCode repetido em qualquer faixa, então o próximo
+# código sai do maior entre todas elas.
+VERSION_CODE_TRACKS = %w[internal alpha beta production].freeze
+RELEASE_STATUSES = %w[completed draft halted inProgress].freeze
+VERSION_NAME_PATTERN = /\A\d+\.\d+\.\d+\z/
+
+# Fase atual do deploy; o bloco `error` imprime a categoria para o workflow.
+DEPLOY_PHASE = { failure_category: "config" }
+
+def run_in_failure_category(category)
+  DEPLOY_PHASE[:failure_category] = category
+  yield
+end
+
+STORE_FILE_PROPERTY_PATTERN = /\A\s*storeFile\s*[=:]\s*(?<path>.+?)\s*\z/
+
+def read_store_file_path
+  store_file_match = File.readlines(KEY_PROPERTIES_PATH, chomp: true)
+    .filter_map { |line| line.match(STORE_FILE_PROPERTY_PATTERN) }
+    .first
+  UI.user_error!("android/key.properties sem storeFile") unless store_file_match
+
+  # build.gradle.kts resolve storeFile relativo ao módulo android/app.
+  File.expand_path(store_file_match[:path], File.join(REPO_ROOT, "android/app"))
+end
+
+def validate_release_signing
+  # Sem key.properties o Gradle assina com a debug key e o Play recusa o upload.
+  UI.user_error!("android/key.properties não encontrado; o release sairia assinado com a debug key") unless File.file?(KEY_PROPERTIES_PATH)
+  UI.user_error!("keystore apontado por storeFile em android/key.properties não existe") unless File.file?(read_store_file_path)
+end
+
+def validate_service_account_json
+  json_path = ENV["PLAY_SERVICE_ACCOUNT_JSON_PATH"].to_s
+  UI.user_error!("PLAY_SERVICE_ACCOUNT_JSON_PATH não definido") if json_path.empty?
+  UI.user_error!("PLAY_SERVICE_ACCOUNT_JSON_PATH aponta para um arquivo inexistente") unless File.file?(json_path)
+
+  JSON.parse(File.read(json_path))
+rescue JSON::ParserError
+  # A mensagem do ParserError inclui trechos do conteúdo; não repassar.
+  UI.user_error!("o JSON da service account do Play é inválido")
+end
+
+def validate_deploy_inputs(release_status:)
+  validate_release_signing
+  validate_service_account_json
+  UI.user_error!(".env não encontrado na raiz do repo (asset obrigatório do flutter_dotenv)") unless File.file?(ENV_FILE_PATH)
+  UI.user_error!("release_status inválido: #{release_status} (use #{RELEASE_STATUSES.join(', ')})") unless RELEASE_STATUSES.include?(release_status)
+end
+
+def read_production_version_name
+  version_name = ENV["PLAY_VERSION_NAME"].to_s
+  UI.user_error!("PLAY_VERSION_NAME deve ter o formato X.Y.Z (recebido: '#{version_name}')") unless version_name.match?(VERSION_NAME_PATTERN)
+
+  version_name
+end
+
+platform :android do
+  desc "Gera o .aab e publica na faixa de teste interno do Google Play"
+  lane :deploy_internal do
+    deploy_bundle_to_play(track: "internal", release_status: "completed")
+  end
+
+  desc "Gera o .aab com versionName de PLAY_VERSION_NAME e publica em produção no Google Play"
+  lane :deploy_production do
+    version_name = run_in_failure_category("config") { read_production_version_name }
+    deploy_bundle_to_play(
+      track: "production",
+      release_status: ENV.fetch("PLAY_RELEASE_STATUS", "completed"),
+      version_name: version_name
+    )
+  end
+
+  private_lane :deploy_bundle_to_play do |options|
+    run_in_failure_category("config") { validate_deploy_inputs(release_status: options[:release_status]) }
+
+    version_code = run_in_failure_category("play_api") { compute_next_version_code }
+    run_in_failure_category("build") do
+      build_release_bundle(version_code: version_code, version_name: options[:version_name])
+    end
+    run_in_failure_category("play_api") do
+      upload_bundle_to_play(track: options[:track], release_status: options[:release_status])
+    end
+  end
+
+  private_lane :compute_next_version_code do
+    highest_version_code = VERSION_CODE_TRACKS
+      .flat_map { |track| google_play_track_version_codes(track: track) }
+      .max || 0
+    next_version_code = highest_version_code + 1
+    UI.message("versionCode: #{next_version_code} (maior no Play: #{highest_version_code})")
+    next_version_code
+  end
+
+  private_lane :build_release_bundle do |options|
+    build_command = ["flutter", "build", "appbundle", "--release", "--build-number=#{options[:version_code]}"]
+    build_command << "--build-name=#{options[:version_name]}" if options[:version_name]
+
+    Dir.chdir(REPO_ROOT) { sh(*build_command) }
+    UI.user_error!("o build terminou sem gerar #{AAB_PATH}") unless File.file?(AAB_PATH)
+  end
+
+  private_lane :upload_bundle_to_play do |options|
+    upload_to_play_store(
+      track: options[:track],
+      release_status: options[:release_status],
+      aab: AAB_PATH,
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  error do |_lane, _exception|
+    puts "[failure_category:#{DEPLOY_PHASE[:failure_category]}]"
+  end
+end
