@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Required for API calls. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- The app locks to portrait; don't filter out devices without a portrait mode on Google Play. -->
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
     <!-- open_filex declares these, but the app only opens files from its own
          storage, and Google Play requires a declaration for media access. -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove"/>
