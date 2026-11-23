@@ -59,7 +59,9 @@ class ClientVanDetailPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: context.palette.surface,
       appBar: VanepAppBar(
-        title: vehicle.displayName,
+        title: vehicle != null && vehicle.displayName.trim().isNotEmpty
+            ? vehicle.displayName
+            : van.driver.name,
         caption: l10n.clientVanDetailCaption,
       ),
       body: ListView(
@@ -184,38 +186,42 @@ class ClientVanDetailPage extends StatelessWidget {
               style: sheetContext.typography.cardTitle.copyWith(fontSize: 16),
             ),
             const SizedBox(height: 8),
-            _DetailInfoRow(label: l10n.clientVanDetailSchool, value: dep.schoolName),
-            const Divider(height: 16),
-            _DetailInfoRow(
-              label: l10n.clientVanDetailShift,
-              value: clientVanShiftLabel(l10n, dep.shift),
+            ..._withDividers(
+              height: 16,
+              rows: [
+                if (dep.schoolName.trim().isNotEmpty)
+                  _DetailInfoRow(
+                    label: l10n.clientVanDetailSchool,
+                    value: dep.schoolName,
+                  ),
+                if (clientVanShiftLabel(l10n, dep.shift) case final shiftLabel
+                    when shiftLabel.isNotEmpty)
+                  _DetailInfoRow(
+                    label: l10n.clientVanDetailShift,
+                    value: shiftLabel,
+                  ),
+                if (dep.pickupAddress.trim().isNotEmpty)
+                  _DetailInfoRow(
+                    label: l10n.clientVanDetailPickupAddress,
+                    value: dep.pickupAddress,
+                  ),
+                if (dep.pickupTime != null || dep.returnTime != null)
+                  _DetailInfoRow(
+                    label: l10n.clientVanDetailSchedule,
+                    value: [
+                      if (dep.pickupTime != null)
+                        l10n.clientVanDetailOutboundTime(dep.pickupTime!),
+                      if (dep.returnTime != null)
+                        l10n.clientVanDetailReturnTime(dep.returnTime!),
+                    ].join(' · '),
+                  ),
+                if (dep.weekdays.isNotEmpty)
+                  _DetailInfoRow(
+                    label: l10n.clientVanDetailWeekdays,
+                    value: dep.weekdays.join(', '),
+                  ),
+              ],
             ),
-            if (dep.pickupAddress.trim().isNotEmpty) ...[
-              const Divider(height: 16),
-              _DetailInfoRow(
-                label: l10n.clientVanDetailPickupAddress,
-                value: dep.pickupAddress,
-              ),
-            ],
-            if (dep.pickupTime != null || dep.returnTime != null) ...[
-              const Divider(height: 16),
-              _DetailInfoRow(
-                label: l10n.clientVanDetailSchedule,
-                value: [
-                  if (dep.pickupTime != null)
-                    l10n.clientVanDetailOutboundTime(dep.pickupTime!),
-                  if (dep.returnTime != null)
-                    l10n.clientVanDetailReturnTime(dep.returnTime!),
-                ].join(' · '),
-              ),
-            ],
-            if (dep.weekdays.isNotEmpty) ...[
-              const Divider(height: 16),
-              _DetailInfoRow(
-                label: l10n.clientVanDetailWeekdays,
-                value: dep.weekdays.join(', '),
-              ),
-            ],
           ],
       ],
     );
@@ -226,40 +232,47 @@ class ClientVanDetailPage extends StatelessWidget {
     AppLocalizations l10n,
     ClientVanContract contract,
   ) {
-    return _showDetailSheet(
-      context,
-      title: l10n.clientVansContractRowTitle,
-      buildChildren: (_) => [
+    final period = clientVanContractPeriod(l10n, contract);
+    final rows = <Widget>[
+      if (contract.status.trim().isNotEmpty)
         _DetailInfoRow(
           label: l10n.clientVansContractSection,
           value: clientVanStatusLabel(l10n, contract.status),
         ),
-        const Divider(height: 18),
+      if (contract.installmentAmount != null)
         _DetailInfoRow(
           label: l10n.clientVanDetailMonthlyFee,
-          value: formatMoney(l10n, (contract.installmentAmount * 100).round()),
+          value: formatMoney(
+            l10n,
+            (contract.installmentAmount! * 100).round(),
+          ),
         ),
-        const Divider(height: 18),
+      if (contract.dueDay != null)
         _DetailInfoRow(
           label: l10n.clientVanDetailDueDate,
-          value: l10n.clientVansDueDay(contract.dueDay),
+          value: l10n.clientVansDueDay(contract.dueDay!),
         ),
-        const Divider(height: 18),
+      if (period != null)
         _DetailInfoRow(
           label: l10n.clientVanDetailContractPeriod,
-          value: clientVanContractPeriod(l10n, contract),
+          value: period,
         ),
-        const Divider(height: 18),
+      if (contract.installments != null)
         _DetailInfoRow(
           label: l10n.clientVanDetailInstallmentsLabel,
-          value: l10n.clientVanDetailInstallmentsCount(contract.installments),
+          value: l10n.clientVanDetailInstallmentsCount(contract.installments!),
         ),
-        const Divider(height: 18),
+      if (contract.totalAmount != null)
         _DetailInfoRow(
           label: l10n.clientVanDetailTotalAmount,
-          value: formatMoney(l10n, (contract.totalAmount * 100).round()),
+          value: formatMoney(l10n, (contract.totalAmount! * 100).round()),
         ),
-      ],
+    ];
+
+    return _showDetailSheet(
+      context,
+      title: l10n.clientVansContractRowTitle,
+      buildChildren: (_) => _withDividers(height: 18, rows: rows),
     );
   }
 
@@ -268,34 +281,54 @@ class ClientVanDetailPage extends StatelessWidget {
     AppLocalizations l10n,
   ) {
     final vehicle = van.vehicle;
+    final rows = <Widget>[
+      if (vehicle != null) ...[
+        if (vehicle.displayName.trim().isNotEmpty)
+          _DetailInfoRow(
+            label: l10n.clientVanDetailBrandModel,
+            value: vehicle.displayName,
+          ),
+        if (vehicle.plate != null && vehicle.plate!.isNotEmpty)
+          _DetailInfoRow(
+            label: l10n.clientVanDetailPlate,
+            value: vehicle.plate!,
+          ),
+        if (vehicle.manufactureYear != null)
+          _DetailInfoRow(
+            label: l10n.clientVanDetailYear,
+            value: '${vehicle.manufactureYear}',
+          ),
+        if (vehicle.color != null && vehicle.color!.trim().isNotEmpty)
+          _DetailInfoRow(
+            label: l10n.clientVanDetailColor,
+            value: vehicle.color!,
+          ),
+        if (vehicle.capacity != null)
+          _DetailInfoRow(
+            label: l10n.clientVanDetailCapacity,
+            value: l10n.clientVansSeats(vehicle.capacity!),
+          ),
+      ],
+      _DetailInfoRow(label: l10n.clientVansDriverRole, value: van.driver.name),
+    ];
+
     return _showDetailSheet(
       context,
       title: l10n.clientVansDocumentsTitle,
-      buildChildren: (_) => [
-        _DetailInfoRow(
-          label: l10n.clientVanDetailBrandModel,
-          value: vehicle.displayName,
-        ),
-        if (vehicle.plate != null && vehicle.plate!.isNotEmpty) ...[
-          const Divider(height: 18),
-          _DetailInfoRow(label: l10n.clientVanDetailPlate, value: vehicle.plate!),
-        ],
-        const Divider(height: 18),
-        _DetailInfoRow(
-          label: l10n.clientVanDetailYear,
-          value: '${vehicle.manufactureYear}',
-        ),
-        const Divider(height: 18),
-        _DetailInfoRow(label: l10n.clientVanDetailColor, value: vehicle.color),
-        const Divider(height: 18),
-        _DetailInfoRow(
-          label: l10n.clientVanDetailCapacity,
-          value: l10n.clientVansSeats(vehicle.capacity),
-        ),
-        const Divider(height: 18),
-        _DetailInfoRow(label: l10n.clientVansDriverRole, value: van.driver.name),
-      ],
+      buildChildren: (_) => _withDividers(height: 18, rows: rows),
     );
+  }
+
+  List<Widget> _withDividers({
+    required double height,
+    required List<Widget> rows,
+  }) {
+    return [
+      for (final (index, row) in rows.indexed) ...[
+        if (index > 0) Divider(height: height),
+        row,
+      ],
+    ];
   }
 
   Future<void> _showDetailSheet(

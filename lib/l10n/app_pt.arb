@@ -277,6 +277,12 @@
   "driverSearchNetworkError": "Sem conexão com o servidor. Tente novamente.",
   "driverSearchUnexpectedError": "Algo deu errado na busca. Tente novamente.",
   "driverSearchCoversWholeCity": "Atende a cidade inteira",
+  "findVanTitle": "Encontrar uma van",
+  "findVanRecommendationsHeader": "Vans em destaque",
+  "findVanSearchResultsHeader": "Vans disponíveis para este local",
+  "findVanClearSearch": "Limpar busca",
+  "findVanEmptyRegionTitle": "Nenhuma van encontrada nessa região",
+  "findVanEmptyRegionSubtitle": "Tente buscar por um bairro próximo, rua principal ou escola.",
   "dependentsSubtitle": "Gerencie quem viaja na van",
   "dependentsEmpty": "Dependentes são as pessoas que viajam na van, como seus filhos. Adicione o primeiro para pedir um orçamento.",
   "dependentsAdd": "Adicionar dependente",
@@ -1336,6 +1342,186 @@
     }
   },
   "clientVansNoConversationYet": "Ainda não há uma conversa iniciada com este motorista.",
+  "findVanPrototypeSubtitle": "Quem atende o trajeto do seu filho",
+  "findVanHaveInvite": "Tenho\nconvite",
+  "findVanHaveInviteTitle": "Entrar com convite",
+  "findVanHaveInviteSubtitle": "Digite o código ou cole o link enviado pelo motorista.",
+  "findVanHaveInviteHint": "Código do convite",
+  "findVanHaveInviteAction": "Validar convite",
+  "findVanOriginLabel": "Embarque",
+  "findVanOriginPlaceholder": "Informar endereço de embarque",
+  "findVanDestinationLabel": "Destino",
+  "findVanDestinationPlaceholder": "Buscar escola ou endereço",
+  "findVanSwapTooltip": "Inverter embarque e destino",
+  "findVanHomePrefix": "Casa · {address}",
+  "@findVanHomePrefix": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "findVanForLabel": "Para",
+  "findVanDriversCount": "{count, plural, =1{1 motorista atende esse trajeto} other{{count} motoristas atendem esse trajeto}}",
+  "@findVanDriversCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "findVanSortNearest": "Mais próximos",
+  "findVanSortRating": "Melhor avaliação",
+  "findVanSortPrice": "Menor preço",
+  "findVanSortExperience": "Mais experientes",
+  "findVanSortSheetTitle": "Ordenar motoristas",
+  "findVanNewOnVanep": "Novo na Vanep",
+  "findVanExperienceYearsShort": "{years, plural, =1{1 ano de experiência} other{{years} anos de experiência}}",
+  "@findVanExperienceYearsShort": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "findVanSpotsAvailable": "Com vaga disponível",
+  "findVanSpotsFull": "Sem vaga disponível",
+  "findVanPriceStartingFrom": "a partir de",
+  "findVanPerMonth": "/mês",
+  "findVanPriceOnRequest": "Sob consulta",
+  "findVanProfileButton": "Perfil",
+  "findVanRequestQuoteButton": "Pedir orçamento",
+  "driverProfileRatingSummary": "{rating} · {count, plural, =1{1 avaliação} other{{count} avaliações}}",
+  "@driverProfileRatingSummary": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileReviewsCount": "{count, plural, =1{1 avaliação} other{{count} avaliações}}",
+  "@driverProfileReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfilePhotoCounter": "{current} de {total}",
+  "@driverProfilePhotoCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedBadge": "Verificado pela Vanep",
+  "driverProfileBioSectionTitle": "Apresentação",
+  "driverProfileVacanciesSectionTitle": "Vagas e preço",
+  "driverProfileStartingFromValue": "A partir de {price}",
+  "@driverProfileStartingFromValue": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileVansSectionTitle": "Vans",
+  "driverProfileVanModelYear": "{model} · {year}",
+  "@driverProfileVanModelYear": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVanWithAssistant": "com auxiliar",
+  "driverProfileServiceSectionTitle": "Atendimento",
+  "driverProfileServiceAreasLabel": "Bairros",
+  "driverProfileWorkHoursLabel": "Expediente",
+  "driverProfileWorkHoursValue": "{start} às {end} · {days}",
+  "@driverProfileWorkHoursValue": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileWaitToleranceLabel": "Espera no ponto",
+  "driverProfileWaitToleranceValue": "{minutes, plural, =1{Até 1 min} other{Até {minutes} min}}",
+  "@driverProfileWaitToleranceValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedCardTitle": "Verificado pela Vanep",
+  "driverProfileVerifiedCardSubtitle": "CNH, curso escolar, vistoria e antecedentes",
+  "driverProfileReviewsSectionTitle": "Avaliações",
+  "driverProfileSeeAllReviews": "Ver todas",
+  "driverProfileNoReviewsYet": "Ainda sem avaliações publicadas.",
+  "driverProfileRequestQuoteButton": "Pedir orçamento",
+  "driverProfilePhotosTitle": "Fotos",
+  "driverProfilePhotosEmpty": "Nenhuma foto cadastrada ainda.",
+  "driverProfileRatingsTitle": "Avaliações",
+  "driverProfileVerifiedSheetIntro": "A Vanep confere os documentos antes de liberar o motorista na busca e acompanha os vencimentos.",
+  "driverProfileVerifiedDocCnh": "CNH categoria D ou E",
+  "driverProfileVerifiedDocCourse": "Curso de transporte escolar",
+  "driverProfileVerifiedDocBackground": "Antecedentes criminais",
+  "driverProfileVerifiedDocInspection": "Vistoria das vans",
+  "driverProfileVerifiedDocAuthorization": "Autorização escolar das vans",
+  "driverProfileVerifiedGotIt": "Entendi",
+  "driverProfileShiftVacancyAvailable": "{count, plural, =1{1 vaga} other{{count} vagas}}",
+  "@driverProfileShiftVacancyAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileShiftFull": "Lotado",
+  "chatCounterpartDriverCaption": "Motorista",
+  "chatViewDriverProfileTooltip": "Ver perfil do motorista",
+  "quoteRequestPrivacyNotice": "O motorista vê só o bairro e o primeiro nome até o aceite.",
+  "quoteRequestOptionalBadge": "opcional",
+  "quoteRequestNotesHint": "Algo que o motorista precise saber",
+  "quoteRequestOpenCountFooter": "Resposta em até 72 h · {open} de {limit} pedidos abertos",
+  "@quoteRequestOpenCountFooter": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailPrivacyNotice": "O motorista vê apenas o bairro até o aceite.",
+  "findVanPrivacyNotice": "Até você aceitar uma proposta, o motorista vê só o bairro e o primeiro nome do seu filho.",
+  "findVanSearchSheetTitleOrigin": "Local de embarque",
+  "findVanSearchSheetTitleDestination": "Escola ou destino",
+  "findVanUseMyAddress": "Usar meu endereço",
+  "findVanFiltersButton": "Filtros",
+  "findVanFiltersSheetTitle": "Filtros",
+  "findVanFiltersDependentSubtitle": "Escolha para quem você procura uma van",
+  "findVanFiltersNoDependents": "Nenhum dependente cadastrado no momento.",
+  "findVanFiltersApply": "Aplicar",
   "driverDocumentsPersonalTitle": "Documentos pessoais",
   "driverDocumentsVansTitle": "Documentos das vans",
   "driverDocumentsVanTitle": "Documentos da van",

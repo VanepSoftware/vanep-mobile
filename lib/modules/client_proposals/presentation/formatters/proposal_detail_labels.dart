@@ -151,3 +151,10 @@ String formatClientStudentDetail(
     ageInYears: findAgeInYears(item.dependentBirthDate, today: today),
   );
 }
+
+String formatClientStudentDetailWithoutAge(
+  AppLocalizations l10n,
+  ClientRequestItem item,
+) {
+  return formatStudentDetail(l10n, item, ageInYears: null);
+}

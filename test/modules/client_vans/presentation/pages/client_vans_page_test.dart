@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
@@ -55,7 +56,7 @@ final _secondClientVan = ClientVan(
       name: 'Pedro Silva',
       schoolName: 'Colégio Bandeirantes',
       pickupAddress: 'Av. Paulista, 500',
-      shift: 'Tarde',
+      shift: SchoolShift.afternoon,
       pickupTime: '12:30',
       returnTime: '18:00',
       weekdays: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],

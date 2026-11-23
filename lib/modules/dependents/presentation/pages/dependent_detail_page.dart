@@ -349,7 +349,10 @@ class _DependentVanSectionCard extends StatelessWidget {
 
     Widget buildCard(ClientVan? linkedVan, {bool loaded = false}) {
       final vanSubtitle = linkedVan != null
-          ? '${linkedVan.vehicle.displayName} · ${linkedVan.driver.name}'
+          ? [
+              if (linkedVan.vehicle case final v?) v.displayName,
+              linkedVan.driver.name,
+            ].join(' · ')
           : (loaded ? l10n.dependentNoLinkedVan : null);
       return VanepMenuCard(
         items: [

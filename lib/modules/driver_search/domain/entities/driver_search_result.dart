@@ -8,6 +8,7 @@ class DriverSearchResult extends Equatable implements Driver {
     required this.name,
     this.photoUrl,
     this.rating,
+    this.ratingCount,
     this.basePrice,
     this.experienceYears,
     this.available = false,
@@ -25,6 +26,8 @@ class DriverSearchResult extends Equatable implements Driver {
 
   @override
   final double? rating;
+
+  final int? ratingCount;
 
   @override
   final int? experienceYears;
@@ -44,6 +47,7 @@ class DriverSearchResult extends Equatable implements Driver {
     name,
     photoUrl,
     rating,
+    ratingCount,
     basePrice,
     experienceYears,
     available,

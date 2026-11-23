@@ -104,6 +104,7 @@ class ProposalAdjustmentPageState extends State<ProposalAdjustmentPage> {
                   children: [
                     ProposalDriverHeader(
                       request: widget.request,
+                      showVerified: true,
                       subtitle: l10n.clientProposalsForChild(
                         formatRequestChildren(l10n, widget.request),
                       ),

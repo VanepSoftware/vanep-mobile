@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:vanep_mobile/core/domain/school_shift.dart';
+
 class ClientVanDriver extends Equatable {
   const ClientVanDriver({
     required this.token,
@@ -24,9 +26,9 @@ class ClientVanVehicle extends Equatable {
     required this.token,
     required this.brand,
     required this.model,
-    required this.manufactureYear,
-    required this.color,
-    required this.capacity,
+    this.manufactureYear,
+    this.color,
+    this.capacity,
     this.plate,
     this.photoFrontUrl,
     this.photoSideUrl,
@@ -35,61 +37,62 @@ class ClientVanVehicle extends Equatable {
   final String token;
   final String brand;
   final String model;
-  final int manufactureYear;
-  final String color;
-  final int capacity;
+  final int? manufactureYear;
+  final String? color;
+  final int? capacity;
   final String? plate;
   final String? photoFrontUrl;
   final String? photoSideUrl;
 
-  String get displayName => '$brand $model';
+  String get displayName =>
+      [brand, model].where((s) => s.trim().isNotEmpty).join(' ');
 
   @override
   List<Object?> get props => [
-        token,
-        brand,
-        model,
-        manufactureYear,
-        color,
-        capacity,
-        plate,
-        photoFrontUrl,
-        photoSideUrl,
-      ];
+    token,
+    brand,
+    model,
+    manufactureYear,
+    color,
+    capacity,
+    plate,
+    photoFrontUrl,
+    photoSideUrl,
+  ];
 }
 
 class ClientVanContract extends Equatable {
   const ClientVanContract({
     required this.token,
     required this.status,
-    required this.startsOn,
-    required this.endsOn,
-    required this.totalAmount,
-    required this.installments,
-    required this.installmentAmount,
-    required this.dueDay,
+    this.startsOn,
+    this.endsOn,
+    this.totalAmount,
+    this.installments,
+    this.installmentAmount,
+    this.dueDay,
   });
 
   final String token;
   final String status;
-  final DateTime startsOn;
-  final DateTime endsOn;
-  final double totalAmount;
-  final int installments;
-  final double installmentAmount;
-  final int dueDay;
+  final DateTime? startsOn;
+  final DateTime? endsOn;
+  final double? totalAmount;
+  final int? installments;
+  final double? installmentAmount;
+  final int? dueDay;
 
   @override
   List<Object?> get props => [
-        token,
-        status,
-        startsOn,
-        endsOn,
-        totalAmount,
-        installments,
-        installmentAmount,
-        dueDay,
-      ];
+    token,
+    status,
+    startsOn,
+    endsOn,
+    totalAmount,
+    installments,
+    installmentAmount,
+    dueDay,
+  ];
 }
 
 class ClientVanDependent extends Equatable {
@@ -98,7 +101,7 @@ class ClientVanDependent extends Equatable {
     required this.name,
     required this.schoolName,
     required this.pickupAddress,
-    this.shift = 'Manhã',
+    this.shift,
     this.pickupTime,
     this.returnTime,
     this.weekdays = const ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
@@ -108,22 +111,22 @@ class ClientVanDependent extends Equatable {
   final String name;
   final String schoolName;
   final String pickupAddress;
-  final String shift;
+  final SchoolShift? shift;
   final String? pickupTime;
   final String? returnTime;
   final List<String> weekdays;
 
   @override
   List<Object?> get props => [
-        token,
-        name,
-        schoolName,
-        pickupAddress,
-        shift,
-        pickupTime,
-        returnTime,
-        weekdays,
-      ];
+    token,
+    name,
+    schoolName,
+    pickupAddress,
+    shift,
+    pickupTime,
+    returnTime,
+    weekdays,
+  ];
 }
 
 class ClientVan extends Equatable {
@@ -131,7 +134,7 @@ class ClientVan extends Equatable {
     required this.token,
     required this.status,
     required this.driver,
-    required this.vehicle,
+    this.vehicle,
     this.contract,
     this.dependents = const [],
   });
@@ -139,7 +142,7 @@ class ClientVan extends Equatable {
   final String token;
   final String status;
   final ClientVanDriver driver;
-  final ClientVanVehicle vehicle;
+  final ClientVanVehicle? vehicle;
   final ClientVanContract? contract;
   final List<ClientVanDependent> dependents;
 
@@ -147,5 +150,12 @@ class ClientVan extends Equatable {
       status.toUpperCase() == 'ACTIVE' || status.toUpperCase() == 'ATIVA';
 
   @override
-  List<Object?> get props => [token, status, driver, vehicle, contract, dependents];
+  List<Object?> get props => [
+    token,
+    status,
+    driver,
+    vehicle,
+    contract,
+    dependents,
+  ];
 }

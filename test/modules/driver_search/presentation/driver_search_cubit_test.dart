@@ -5,11 +5,14 @@ import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_page.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/entities/driver_search_result.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/failures/driver_search_failure.dart';
+import 'package:vanep_mobile/modules/driver_search/domain/usecases/get_recommended_drivers.dart';
 import 'package:vanep_mobile/modules/driver_search/domain/usecases/search_drivers_by_place.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_state.dart';
 
 class MockSearchDriversByPlace extends Mock implements SearchDriversByPlace {}
+
+class MockGetRecommendedDrivers extends Mock implements GetRecommendedDrivers {}
 
 const firstPage = DriverSearchPage(
   drivers: [DriverSearchResult(token: 'd1', name: 'Primeiro')],
@@ -23,11 +26,17 @@ const lastPage = DriverSearchPage(
 
 void main() {
   late MockSearchDriversByPlace searchDriversByPlace;
+  late MockGetRecommendedDrivers getRecommendedDrivers;
 
-  setUp(() => searchDriversByPlace = MockSearchDriversByPlace());
+  setUp(() {
+    searchDriversByPlace = MockSearchDriversByPlace();
+    getRecommendedDrivers = MockGetRecommendedDrivers();
+  });
 
-  DriverSearchCubit buildCubit() =>
-      DriverSearchCubit(searchDriversByPlace: searchDriversByPlace);
+  DriverSearchCubit buildCubit() => DriverSearchCubit(
+        searchDriversByPlace: searchDriversByPlace,
+        getRecommendedDrivers: getRecommendedDrivers,
+      );
 
   void stubPage(int page, DriverSearchPage result) {
     when(
@@ -193,6 +202,137 @@ void main() {
     verify: (cubit) {
       expect(cubit.state.nextPage, 1);
       expect(cubit.state.results, hasLength(1));
+    },
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'loadRecommended emits loaded with recommended results',
+    setUp: () {
+      when(() => getRecommendedDrivers(page: any(named: 'page'))).thenAnswer(
+        (_) async => const Ok(firstPage),
+      );
+    },
+    build: buildCubit,
+    act: (cubit) => cubit.loadRecommended(),
+    expect: () => [
+      isA<DriverSearchState>().having(
+        (s) => s.status,
+        'status',
+        DriverSearchStatus.searching,
+      ),
+      isA<DriverSearchState>()
+          .having((s) => s.status, 'status', DriverSearchStatus.loaded)
+          .having((s) => s.isShowingRecommended, 'isShowingRecommended', isTrue)
+          .having((s) => s.results, 'results', hasLength(1)),
+    ],
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'loadRecommended emits failed when request fails',
+    setUp: () {
+      when(() => getRecommendedDrivers(page: any(named: 'page'))).thenAnswer(
+        (_) async => const Err(DriverSearchFailure.network),
+      );
+    },
+    build: buildCubit,
+    act: (cubit) => cubit.loadRecommended(),
+    expect: () => [
+      isA<DriverSearchState>().having(
+        (s) => s.status,
+        'status',
+        DriverSearchStatus.searching,
+      ),
+      isA<DriverSearchState>()
+          .having((s) => s.status, 'status', DriverSearchStatus.failed)
+          .having((s) => s.failure, 'failure', DriverSearchFailure.network),
+    ],
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'clearSearch restores cached recommended results',
+    setUp: () {
+      when(() => getRecommendedDrivers(page: any(named: 'page'))).thenAnswer(
+        (_) async => const Ok(firstPage),
+      );
+      stubPage(0, lastPage);
+    },
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.loadRecommended();
+      await cubit.searchPlace('place-1', label: 'QNL 5');
+      cubit.clearSearch();
+    },
+    verify: (cubit) {
+      expect(cubit.state.isShowingRecommended, isTrue);
+      expect(cubit.state.placeId, isNull);
+      expect(cubit.state.results, firstPage.drivers);
+    },
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'filter, sort, dependent toggle, and swap actions update state',
+    setUp: () {
+      when(() => getRecommendedDrivers(page: any(named: 'page'))).thenAnswer(
+        (_) async => const Ok(
+          DriverSearchPage(
+            drivers: [
+              DriverSearchResult(
+                token: 'd1',
+                name: 'Alpha',
+                rating: 4.5,
+                basePrice: 350,
+                experienceYears: 5,
+                available: true,
+              ),
+              DriverSearchResult(
+                token: 'd2',
+                name: 'Beta',
+                rating: 4.9,
+                basePrice: 300,
+                experienceYears: 10,
+                available: false,
+              ),
+            ],
+            isLast: true,
+          ),
+        ),
+      );
+    },
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.loadRecommended();
+      cubit.setSortOrder(DriverSearchSortOrder.lowestPrice);
+      cubit.swapRoute();
+    },
+    verify: (cubit) {
+      expect(cubit.state.sortOrder, DriverSearchSortOrder.lowestPrice);
+      expect(cubit.state.routeSwapped, isTrue);
+      expect(cubit.state.displayedResults.map((d) => d.token), ['d1', 'd2']);
+    },
+  );
+
+  blocTest<DriverSearchCubit, DriverSearchState>(
+    'useProfileOrigin clears custom originLabel and restores search',
+    setUp: () {
+      stubPage(0, firstPage);
+      when(
+        () => getRecommendedDrivers(page: any(named: 'page')),
+      ).thenAnswer((_) async => const Ok(lastPage));
+    },
+    build: buildCubit,
+    act: (cubit) async {
+      await cubit.loadRecommended();
+      await cubit.searchFromRoute(
+        isDestination: false,
+        placeId: 'place-1',
+        label: 'Av. Paulista',
+      );
+      cubit.useProfileOrigin();
+    },
+    verify: (cubit) {
+      expect(cubit.state.originLabel, isNull);
+      expect(cubit.state.isShowingRecommended, isTrue);
+      expect(cubit.state.results.map((d) => d.token), ['d2']);
     },
   );
 }
