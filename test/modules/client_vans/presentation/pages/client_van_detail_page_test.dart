@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
 import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_van_detail_page.dart';
@@ -161,7 +162,7 @@ void main() {
     expect(find.text('Contrato pendente de ativação'), findsOneWidget);
   });
 
-  testWidgets('translates API shift enum values like AFTERNOON into localized labels', (
+  testWidgets('translates SchoolShift values into localized labels', (
     tester,
   ) async {
     const apiVan = ClientVan(
@@ -182,7 +183,7 @@ void main() {
           name: 'Lucas Souza',
           schoolName: 'Escola Municipal Seed',
           pickupAddress: 'Rua das Acácias, 250',
-          shift: 'AFTERNOON',
+          shift: SchoolShift.afternoon,
           pickupTime: '06:40:00',
           returnTime: '12:10:00',
         ),
@@ -200,6 +201,50 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Tarde'), findsOneWidget);
-    expect(find.text('AFTERNOON'), findsNothing);
+    expect(find.textContaining('AFTERNOON'), findsNothing);
+  });
+
+  testWidgets('omits vehicle banner and missing contract or shift fields', (
+    tester,
+  ) async {
+    const partialVan = ClientVan(
+      token: 'link-partial',
+      status: 'ACTIVE',
+      driver: ClientVanDriver(token: 'drv-partial', name: 'Marcos Silva'),
+      contract: ClientVanContract(
+        token: 'ctr-partial',
+        status: 'ACTIVE',
+      ),
+      dependents: [
+        ClientVanDependent(
+          token: 'dep-partial',
+          name: 'Sofia Costa',
+          schoolName: 'Colégio Central',
+          pickupAddress: '',
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(wrap(const ClientVanDetailPage(van: partialVan)));
+
+    expect(find.text('Marcos Silva'), findsWidgets);
+    expect(find.textContaining('Van Escolar'), findsNothing);
+    expect(find.text('Manhã'), findsNothing);
+    expect(find.textContaining('Vencimento todo dia'), findsNothing);
+
+    await tester.scrollUntilVisible(
+      find.text('Contrato'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Contrato'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Contrato'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mensalidade'), findsNothing);
+    expect(find.text('Período de vigência'), findsNothing);
+    expect(find.text('Parcelas contratadas'), findsNothing);
+    expect(find.text('Valor total'), findsNothing);
   });
 }

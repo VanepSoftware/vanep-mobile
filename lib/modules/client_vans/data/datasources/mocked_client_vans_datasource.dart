@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/client_vans/data/datasources/client_vans_datasource.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
 
@@ -43,7 +44,7 @@ class MockedClientVansDataSource implements ClientVansDataSource {
             name: 'Lucas Silva',
             schoolName: 'Colégio Santo Agostinho',
             pickupAddress: 'Rua das Flores, 123 - Jardins',
-            shift: 'Manhã',
+            shift: SchoolShift.morning,
             pickupTime: '06:40',
             returnTime: '12:10',
             weekdays: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
@@ -53,7 +54,7 @@ class MockedClientVansDataSource implements ClientVansDataSource {
             name: 'Mariana Silva',
             schoolName: 'Colégio Santo Agostinho',
             pickupAddress: 'Rua das Flores, 123 - Jardins',
-            shift: 'Manhã',
+            shift: SchoolShift.morning,
             pickupTime: '06:40',
             returnTime: '12:10',
             weekdays: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
@@ -94,7 +95,7 @@ class MockedClientVansDataSource implements ClientVansDataSource {
             name: 'Pedro Costa',
             schoolName: 'Colégio Bandeirantes',
             pickupAddress: 'Av. Paulista, 500 - Bela Vista',
-            shift: 'Tarde',
+            shift: SchoolShift.afternoon,
             pickupTime: '12:30',
             returnTime: '18:00',
             weekdays: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],

@@ -195,11 +195,12 @@ class ClientVanDependentsSection extends StatelessWidget {
 
   String _dependentSubtitle(AppLocalizations l10n, ClientVanDependent dep) {
     final shift = clientVanShiftLabel(l10n, dep.shift);
-    final days = dep.weekdays.isEmpty
-        ? shift
-        : '$shift · ${dep.weekdays.join(', ')}';
-    if (dep.schoolName.trim().isEmpty) return days;
-    return '${dep.schoolName} · $days';
+    final parts = <String>[
+      if (dep.schoolName.trim().isNotEmpty) dep.schoolName.trim(),
+      if (shift.isNotEmpty) shift,
+      if (dep.weekdays.isNotEmpty) dep.weekdays.join(', '),
+    ];
+    return parts.join(' · ');
   }
 }
 
@@ -282,11 +283,8 @@ class ClientVanContractSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final date = DateFormat('dd/MM/yyyy').format(contract.endsOn);
-    final amount = formatMoney(
-      l10n,
-      (contract.installmentAmount * 100).round(),
-    );
+    final contractSummary = _contractSummary(l10n);
+    final dueDay = contract.dueDay;
 
     return ClientVanGroupedSection(
       title: l10n.clientVansContractPaymentsSection,
@@ -294,7 +292,7 @@ class ClientVanContractSection extends StatelessWidget {
         ClientVanMenuRow(
           leading: const ClientVanIconLeading(icon: Icons.description_outlined),
           title: l10n.clientVansContractRowTitle,
-          subtitle: l10n.clientVansContractUntilSummary(date, amount),
+          subtitle: contractSummary,
           onTap: onContractTapped,
         ),
         ClientVanMenuRow(
@@ -302,11 +300,28 @@ class ClientVanContractSection extends StatelessWidget {
             icon: Icons.receipt_long_outlined,
           ),
           title: l10n.clientVansPaymentsRowTitle,
-          subtitle: l10n.clientVansDueDay(contract.dueDay),
+          subtitle: dueDay == null ? null : l10n.clientVansDueDay(dueDay),
           onTap: onPaymentsTapped,
         ),
       ],
     );
+  }
+
+  String? _contractSummary(AppLocalizations l10n) {
+    final endsOn = contract.endsOn;
+    final installmentAmount = contract.installmentAmount;
+    if (endsOn != null && installmentAmount != null) {
+      final date = DateFormat('dd/MM/yyyy').format(endsOn);
+      final amount = formatMoney(l10n, (installmentAmount * 100).round());
+      return l10n.clientVansContractUntilSummary(date, amount);
+    }
+    if (installmentAmount != null) {
+      return '${formatMoney(l10n, (installmentAmount * 100).round())}/mês';
+    }
+    if (endsOn != null) {
+      return DateFormat('dd/MM/yyyy').format(endsOn);
+    }
+    return null;
   }
 }
 
@@ -327,6 +342,12 @@ class ClientVanSecuritySection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final driverFirst = dependentFirstName(van.driver.name);
     final vehicle = van.vehicle;
+    final vehicleDocSubtitle = vehicle == null
+        ? null
+        : [
+            if (vehicle.displayName.trim().isNotEmpty) vehicle.displayName,
+            if (vehicle.manufactureYear != null) '${vehicle.manufactureYear}',
+          ].join(' · ');
 
     return ClientVanGroupedSection(
       title: l10n.clientVansSecuritySection,
@@ -336,7 +357,9 @@ class ClientVanSecuritySection extends StatelessWidget {
             icon: Icons.verified_user_outlined,
           ),
           title: l10n.clientVansDocumentsTitle,
-          subtitle: '${vehicle.displayName} · ${vehicle.manufactureYear}',
+          subtitle: vehicleDocSubtitle == null || vehicleDocSubtitle.isEmpty
+              ? van.driver.name
+              : vehicleDocSubtitle,
           onTap: onDocumentsTapped,
         ),
         ClientVanMenuRow(

@@ -68,13 +68,16 @@ class ClientVanCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      vehicle.displayName,
-                      style: context.typography.cardSubtitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    if (vehicle != null &&
+                        vehicle.displayName.trim().isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        vehicle.displayName,
+                        style: context.typography.cardSubtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
                 ),
               ),

@@ -7,6 +7,7 @@ import 'package:vanep_mobile/core/ui/vanep_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/formatters/client_vans_labels.dart';
 
 class ClientVanHeroCard extends StatelessWidget {
   const ClientVanHeroCard({
@@ -36,6 +37,9 @@ class ClientVanHeroCard extends StatelessWidget {
     final statusDotColor = van.isActive
         ? context.palette.success
         : context.palette.warning;
+    final vehicleSubtitle = vehicle == null
+        ? ''
+        : clientVanVehicleSubtitle(l10n, vehicle);
 
     return Material(
       color: context.palette.card,
@@ -49,60 +53,77 @@ class ClientVanHeroCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _VehiclePhotoBanner(
-              vehicle: vehicle,
-              statusLabel: statusLabel,
-              statusColor: statusColor,
-              statusDotColor: statusDotColor,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                vehicle.displayName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.typography.cardTitle.copyWith(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
+            if (vehicle != null) ...[
+              _VehiclePhotoBanner(
+                vehicle: vehicle,
+                statusLabel: statusLabel,
+                statusColor: statusColor,
+                statusDotColor: statusDotColor,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  vehicle.displayName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: context.typography.cardTitle.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
                               ),
-                            ),
+                              if (vehicle.manufactureYear != null)
+                                Text(
+                                  ' · ${vehicle.manufactureYear}',
+                                  style: context.typography.cardTitle.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          if (vehicleSubtitle.isNotEmpty) ...[
+                            const SizedBox(height: 3),
                             Text(
-                              ' · ${vehicle.manufactureYear}',
-                              style: context.typography.cardTitle.copyWith(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
+                              vehicleSubtitle,
+                              style: context.typography.cardSubtitle.copyWith(
+                                fontSize: 12.5,
                               ),
                             ),
                           ],
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          '${vehicle.color} · ${l10n.clientVansSeats(vehicle.capacity)}',
-                          style: context.typography.cardSubtitle.copyWith(
-                            fontSize: 12.5,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  if (vehicle.plate != null && vehicle.plate!.isNotEmpty) ...[
-                    const SizedBox(width: 12),
-                    _LicensePlateBadge(plate: vehicle.plate!),
+                    if (vehicle.plate != null && vehicle.plate!.isNotEmpty) ...[
+                      const SizedBox(width: 12),
+                      _LicensePlateBadge(plate: vehicle.plate!),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
+            ] else
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: _StatusBadgePill(
+                    statusLabel: statusLabel,
+                    statusColor: statusColor,
+                    statusDotColor: statusDotColor,
+                    background: context.palette.surface,
+                  ),
+                ),
+              ),
             Divider(height: 1, thickness: 1, color: context.palette.divider),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
@@ -233,34 +254,11 @@ class _VehiclePhotoBanner extends StatelessWidget {
           Positioned(
             top: 12,
             left: 12,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                color: context.palette.card,
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: statusDotColor,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    statusLabel,
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      color: statusColor,
-                    ),
-                  ),
-                ],
-              ),
+            child: _StatusBadgePill(
+              statusLabel: statusLabel,
+              statusColor: statusColor,
+              statusDotColor: statusDotColor,
+              background: context.palette.card,
             ),
           ),
         ],
@@ -291,6 +289,53 @@ class _VehiclePhotoBanner extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _StatusBadgePill extends StatelessWidget {
+  const _StatusBadgePill({
+    required this.statusLabel,
+    required this.statusColor,
+    required this.statusDotColor,
+    required this.background,
+  });
+
+  final String statusLabel;
+  final Color statusColor;
+  final Color statusDotColor;
+  final Color background;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: statusDotColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            statusLabel,
+            style: TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w700,
+              color: statusColor,
+            ),
+          ),
+        ],
       ),
     );
   }

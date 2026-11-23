@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/formatters/money_formatter.dart';
 import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
@@ -23,32 +24,40 @@ String clientVanVehicleSubtitle(
   ClientVanVehicle vehicle,
 ) {
   final parts = <String>[
-    '${vehicle.manufactureYear}',
-    vehicle.color,
-    l10n.clientVansSeats(vehicle.capacity),
+    if (vehicle.manufactureYear != null) '${vehicle.manufactureYear}',
+    if (vehicle.color != null && vehicle.color!.trim().isNotEmpty)
+      vehicle.color!.trim(),
+    if (vehicle.capacity != null) l10n.clientVansSeats(vehicle.capacity!),
   ];
   return parts.join(' • ');
 }
 
-String clientVanContractPeriod(
+String? clientVanContractPeriod(
   AppLocalizations l10n,
   ClientVanContract contract,
 ) {
+  final startsOn = contract.startsOn;
+  final endsOn = contract.endsOn;
+  if (startsOn == null || endsOn == null) return null;
   final format = DateFormat('dd/MM/yyyy');
-  return '${format.format(contract.startsOn)} até ${format.format(contract.endsOn)}';
+  return '${format.format(startsOn)} até ${format.format(endsOn)}';
 }
 
 String clientVanInstallmentText(
   AppLocalizations l10n,
   ClientVanContract contract,
 ) {
-  final cents = (contract.installmentAmount * 100).round();
-  final money = formatMoney(l10n, cents);
-  return '$money/mês • ${l10n.clientVansDueDay(contract.dueDay)}';
+  final parts = <String>[
+    if (contract.installmentAmount != null)
+      '${formatMoney(l10n, (contract.installmentAmount! * 100).round())}/mês',
+    if (contract.dueDay != null) l10n.clientVansDueDay(contract.dueDay!),
+  ];
+  return parts.join(' • ');
 }
 
-String clientVanShiftLabel(AppLocalizations l10n, String raw) {
-  final formatted = formatApiSchoolShift(l10n, raw).trim();
+String clientVanShiftLabel(AppLocalizations l10n, SchoolShift? shift) {
+  if (shift == null) return '';
+  final formatted = formatShift(l10n, shift).trim();
   if (formatted.isEmpty) return '';
   return formatted[0].toUpperCase() + formatted.substring(1);
 }

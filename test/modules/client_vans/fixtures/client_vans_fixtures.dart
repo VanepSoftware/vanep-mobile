@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
 
 final testClientVan = ClientVan(
@@ -34,7 +35,7 @@ final testClientVan = ClientVan(
       name: 'Lucas Silva',
       schoolName: 'Colégio Santo Agostinho',
       pickupAddress: 'Rua das Flores, 123 - Jardins',
-      shift: 'Manhã',
+      shift: SchoolShift.morning,
       pickupTime: '06:40',
       returnTime: '12:10',
       weekdays: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'],
