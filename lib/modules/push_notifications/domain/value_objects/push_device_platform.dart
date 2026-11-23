@@ -1,6 +1,6 @@
 enum PushDevicePlatform {
-  android('android'),
-  ios('ios');
+  android('ANDROID'),
+  ios('IOS');
 
   const PushDevicePlatform(this.apiName);
 

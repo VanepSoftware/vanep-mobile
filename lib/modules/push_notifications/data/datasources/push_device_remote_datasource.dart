@@ -19,7 +19,7 @@ class PushDeviceRemoteDataSource {
   }) async {
     await dio.post<void>(
       environment.devicesEndpoint,
-      data: {'token': token, 'platform': platform.apiName},
+      data: {'fcmToken': token, 'platform': platform.apiName},
     );
   }
 
