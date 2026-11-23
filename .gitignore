@@ -57,3 +57,6 @@ app.*.map.json
 lib/l10n/app_localizations*.dart
 
 workspace.code-workspace
+
+# Screen previews rendered by `make preview`
+/preview/

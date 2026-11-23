@@ -1,4 +1,4 @@
-.PHONY: all install clean pub_get setup_env translate build lint lint_fix test coverage coverage_open
+.PHONY: all install clean pub_get setup_env translate build lint lint_fix test coverage coverage_open docker_lint docker_test preview
 
 all: install
 
@@ -75,3 +75,18 @@ coverage_open: coverage
 	@echo "🌐 Generating HTML..."
 	genhtml coverage/lcov.info -o coverage/html
 	open coverage/html/index.html
+
+# --- Docker (sem Flutter local) ----------------------------------------------
+# Rodam com o Flutter do .fvmrc dentro de um container (tool/docker/flutter.sh).
+docker_lint:
+	@echo "⚡ lint (docker)..."
+	tool/docker/flutter.sh flutter analyze --fatal-infos
+
+docker_test:
+	@echo "🧪 test (docker)..."
+	tool/docker/flutter.sh flutter test
+
+# Renderiza as telas em PNG na pasta preview/ (git-ignored), sem emulador nem backend.
+preview:
+	@echo "🖼️ preview (docker)..."
+	VANEP_PREVIEW=1 tool/docker/flutter.sh flutter test test/preview --update-goldens
