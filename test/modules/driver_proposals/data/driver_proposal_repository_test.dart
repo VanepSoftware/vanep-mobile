@@ -28,12 +28,8 @@ void main() {
     final draft = await const ScenarioProposalComposeDataSource().loadCompose();
 
     expect(driverProposalScenarioFromName(''), isNull);
-    expect(draft.familyName, 'Família Silva');
-    expect(draft.students, hasLength(2));
-    expect(draft.commissionCents, 500);
-    expect(draft.block, ProposalComposeBlock.none);
-    expect(draft.schedule, hasLength(10));
-    expect(draft.conditions.dueDay, 10);
+    expect(draft, testProposalComposeDraft());
+    expect(draft.canSend, isTrue);
   });
 
   test('overdue and closed scenarios set the gate on the draft', () async {

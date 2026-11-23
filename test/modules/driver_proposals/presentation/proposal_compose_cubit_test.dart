@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/failures/driver_proposal_failure.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_compose_draft.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_terms.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_compose_cubit.dart';
 
 import '../driver_proposals_fixtures.dart';
@@ -62,9 +63,9 @@ void main() {
     'changes one student price',
     build: buildCubit,
     seed: () => ready,
-    act: (cubit) => cubit.changeStudentPrice('pedro', 40000),
+    act: (cubit) => cubit.changeStudentPrice('theo', 40000),
     expect: () => [
-      ready.withDraft(testProposalComposeDraft(pedroCents: 40000)),
+      ready.withDraft(testProposalComposeDraft(theoCents: 40000)),
     ],
   );
 
@@ -88,5 +89,57 @@ void main() {
     act: (cubit) => cubit.sendProposal(),
     expect: () => <ProposalComposeState>[],
     verify: (_) => verifyNever(() => sendDriverProposal(any())),
+  );
+
+  blocTest<ProposalComposeCubit, ProposalComposeState>(
+    'picks another van',
+    build: buildCubit,
+    seed: () => ready,
+    act: (cubit) => cubit.selectVan('master'),
+    expect: () => [
+      ready.withDraft(testProposalComposeDraft(selectedVanToken: 'master')),
+    ],
+  );
+
+  blocTest<ProposalComposeCubit, ProposalComposeState>(
+    'toggles a day and leg',
+    build: buildCubit,
+    seed: () => ready,
+    act: (cubit) => cubit.toggleSlot(testFridayReturn),
+    expect: () => [
+      ready.withDraft(
+        testProposalComposeDraft().withSlotToggled(testFridayReturn),
+      ),
+    ],
+  );
+
+  blocTest<ProposalComposeCubit, ProposalComposeState>(
+    'changes times, payment, conditions and message',
+    build: buildCubit,
+    seed: () => ready,
+    act: (cubit) => cubit
+      ..changeTimes(testRouteTimes.copyWith(schoolDepartureMinutes: 1110))
+      ..changePayment(testPayment.copyWith(installments: 10))
+      ..changeConditions(
+        testConditions.copyWith(readjustment: ProposalReadjustment.none),
+      )
+      ..changeMessage('Tenho vaga para os dois.'),
+    verify: (cubit) {
+      final draft = cubit.state.draft!;
+      expect(draft.times.schoolDepartureMinutes, 1110);
+      expect(draft.payment.installments, 10);
+      expect(draft.conditions.readjustment, ProposalReadjustment.none);
+      expect(draft.message, 'Tenho vaga para os dois.');
+    },
+  );
+
+  blocTest<ProposalComposeCubit, ProposalComposeState>(
+    'ignores a message over the limit and edits while sending',
+    build: buildCubit,
+    seed: () => ready.sending(),
+    act: (cubit) => cubit
+      ..changeMessage('x' * (proposalMessageMaxLength + 1))
+      ..selectVan('master'),
+    expect: () => <ProposalComposeState>[],
   );
 }

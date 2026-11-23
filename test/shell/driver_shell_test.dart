@@ -152,8 +152,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ProposalComposePage), findsOneWidget);
-    expect(find.text('Montar proposta'), findsOneWidget);
-    expect(find.text('Família Silva'), findsOneWidget);
+    expect(find.text('Nova proposta'), findsOneWidget);
+    expect(find.text('Família Andrade · Theo e Alice'), findsOneWidget);
   });
 
   testWidgets('students live in the Vans hub and are coming soon', (
