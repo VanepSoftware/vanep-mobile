@@ -106,4 +106,33 @@ void main() {
     expect(atTime(DateTime(2027, 3, 1), null), isNull);
     expect(atTime(DateTime(2027, 3, 1), 'soon'), isNull);
   });
+
+  test('shows the week plan when nobody rides today', () {
+    final overview = dailyOverviewFromJson({
+      'date': '2027-03-01',
+      'vans': [],
+      'upcoming': [
+        {'date': '2027-03-02', 'going': false, 'returning': false},
+        {
+          'date': '2027-03-03',
+          'going': true,
+          'returning': false,
+          'firstPickup': '06:40:00',
+        },
+      ],
+    });
+
+    final section = overview.today! as NoRouteTodaySection;
+    expect(section.nextRouteAt, DateTime(2027, 3, 3, 6, 40));
+    expect(section.week, [
+      WeekDayPlan(date: DateTime(2027, 3, 2), going: false, returning: false),
+      WeekDayPlan(date: DateTime(2027, 3, 3), going: true, returning: false),
+    ]);
+    expect(section.firstDayWithoutReturn?.date, DateTime(2027, 3, 3));
+  });
+
+  test('has no week plan without any ride ahead', () {
+    expect(noRouteTodayFromJson(const []), isNull);
+    expect(noRouteTodayFromJson(null), isNull);
+  });
 }

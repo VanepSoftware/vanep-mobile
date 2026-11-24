@@ -7,9 +7,10 @@ import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_hom
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
 
-/// Reads the client's day from GET /api/clients/me/day. Without vans today it
-/// leaves [DailyOverview.today] empty, so the home falls back to first steps,
-/// no linked van or negotiating.
+/// Reads the client's day from GET /api/clients/me/day: the vans of today or,
+/// without any, the next school days. With neither it leaves
+/// [DailyOverview.today] empty, so the home falls back to first steps, no linked
+/// van or negotiating.
 class RemoteDailyOverviewDataSource implements DailyOverviewDataSource {
   const RemoteDailyOverviewDataSource({
     required this.dio,
@@ -37,8 +38,32 @@ DailyOverview dailyOverviewFromJson(Map<String, dynamic> json) {
       .map((van) => vanDayFromJson(van, date))
       .whereType<VanDay>()
       .toList();
-  if (vans.isEmpty) return const DailyOverview();
+  if (vans.isEmpty) {
+    return DailyOverview(today: noRouteTodayFromJson(json['upcoming']));
+  }
   return DailyOverview(today: VanDaySection(vans: vans));
+}
+
+/// The week plan shown when nobody rides today, or null when no child rides in
+/// the days the API looked ahead.
+NoRouteTodaySection? noRouteTodayFromJson(Object? upcoming) {
+  if (upcoming is! List) return null;
+  final week = <WeekDayPlan>[];
+  DateTime? nextRouteAt;
+  for (final day in upcoming.whereType<Map<String, dynamic>>()) {
+    final date = DateTime.tryParse('${day['date']}');
+    if (date == null) continue;
+    week.add(
+      WeekDayPlan(
+        date: date,
+        going: day['going'] == true,
+        returning: day['returning'] == true,
+      ),
+    );
+    nextRouteAt ??= atTime(date, day['firstPickup']);
+  }
+  if (nextRouteAt == null) return null;
+  return NoRouteTodaySection(nextRouteAt: nextRouteAt, week: week);
 }
 
 VanDay? vanDayFromJson(Map<String, dynamic> json, DateTime date) {

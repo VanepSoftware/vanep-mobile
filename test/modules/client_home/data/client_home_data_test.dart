@@ -131,12 +131,10 @@ void main() {
       expect((overview.today! as ArrivedSection).events, hasLength(4));
     });
 
-    test('no route today starts on the next weekday', () async {
+    test('no route today only mocks the needs-you items', () async {
       final overview = await overviewFor(ClientHomeScenario.noRouteToday);
-      final today = overview.today! as NoRouteTodaySection;
 
-      expect(today.week, hasLength(5));
-      expect(today.nextRouteAt.weekday, DateTime.thursday);
+      expect(overview.today, isNull);
       expect(overview.needsYou, hasLength(3));
     });
   });

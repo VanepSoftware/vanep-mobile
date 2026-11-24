@@ -10,24 +10,6 @@ import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.da
 DateTime dayAt(DateTime day, int hour, [int minute = 0]) =>
     DateTime(day.year, day.month, day.day, hour, minute);
 
-DateTime nextWeekdayAfter(DateTime day) {
-  var candidate = DateTime(day.year, day.month, day.day + 1);
-  while (candidate.weekday > DateTime.friday) {
-    candidate = DateTime(candidate.year, candidate.month, candidate.day + 1);
-  }
-  return candidate;
-}
-
-List<DateTime> nextWeekdays(DateTime day, int count) {
-  final weekdays = <DateTime>[];
-  var cursor = day;
-  while (weekdays.length < count) {
-    cursor = nextWeekdayAfter(cursor);
-    weekdays.add(cursor);
-  }
-  return weekdays;
-}
-
 // TODO(VAN-41): mocked data for development only. Every overview below is
 // fake and must be replaced by the remote data source as each endpoint lands
 // (see tasks 6.1–6.4); delete this class, ClientHomeScenario and
@@ -203,19 +185,11 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
-  // TODO(VAN-41): mocked week plan, rating, renewal and inspection items;
-  // replace with the daily route endpoint and the driver/contract endpoints
-  // that will serve these items.
+  // TODO(VAN-41): mocked rating, renewal and inspection items; replace with the
+  // driver and contract endpoints that will serve them. The week plan of a day
+  // without route already comes from the API.
   DailyOverview noRouteTodayOverview(DateTime now) {
-    final weekdays = nextWeekdays(now, 5);
     return DailyOverview(
-      today: NoRouteTodaySection(
-        nextRouteAt: dayAt(weekdays.first, 6, 40),
-        week: [
-          for (final (index, day) in weekdays.indexed)
-            WeekDayPlan(date: day, going: true, returning: index != 2),
-        ],
-      ),
       needsYou: [
         const RateDriverItem(driverName: 'Carlos Souza'),
         const RenewalItem(driverName: 'Carlos', year: 2027),
