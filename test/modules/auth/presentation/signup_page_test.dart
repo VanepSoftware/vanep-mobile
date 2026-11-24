@@ -98,7 +98,7 @@ void main() {
 
   testWidgets('Continuar asks the cubit for the next step', (tester) async {
     givenState(const SignupState(form: SignupForm(type: UserType.client)));
-    when(() => cubit.nextStep()).thenReturn(null);
+    when(() => cubit.nextStep()).thenAnswer((_) async {});
 
     await tester.pumpWidget(authTestApp(signupPage()));
     await tester.tap(find.widgetWithText(FilledButton, 'Continuar'));
@@ -330,9 +330,8 @@ void main() {
         Scaffold(
           body: Builder(
             builder: (context) => TextButton(
-              onPressed: () => Navigator.of(
-                context,
-              ).push(MaterialPageRoute<void>(builder: (_) => signupPage())),
+              onPressed: () => Navigator.of(context)
+                  .push(MaterialPageRoute<void>(builder: (_) => signupPage())),
               child: const Text('abrir'),
             ),
           ),

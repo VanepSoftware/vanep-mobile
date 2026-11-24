@@ -95,7 +95,7 @@ class SignupPage extends StatelessWidget {
                     label: state.isLastStep
                         ? l10n.signupCreateAccount
                         : l10n.signupContinue,
-                    isLoading: state.isSubmitting,
+                    isLoading: state.isBusy,
                     onPressed: state.isLastStep ? cubit.submit : cubit.nextStep,
                   ),
                 ),
@@ -359,6 +359,11 @@ class SignupPersonalFields extends StatelessWidget {
           label: l10n.signupFieldPhone,
           initialValue: form.phone,
           onChanged: cubit.updatePhone,
+          errorText: accountFieldIssueMessageOrNull(
+            l10n,
+            state.issues,
+            AccountField.phone,
+          ),
           hintText: l10n.signupPhoneHint,
           prefixIcon: Icons.phone_outlined,
           keyboardType: TextInputType.phone,

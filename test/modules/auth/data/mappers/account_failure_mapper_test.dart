@@ -74,6 +74,32 @@ void main() {
     );
   });
 
+  test('duplicates list every field the API reports at once', () {
+    expect(
+      mapAccountFailure(
+        accountApiError(
+          409,
+          envelope('email_duplicate', [
+            {'field': 'email', 'message': 'x'},
+            {'field': 'document', 'message': 'x'},
+            {'field': 'phone', 'message': 'x'},
+          ]),
+        ),
+      ),
+      const AccountValidationFailure({
+        AccountField.email: AccountFieldIssue.duplicate,
+        AccountField.document: AccountFieldIssue.duplicate,
+        AccountField.phone: AccountFieldIssue.duplicate,
+      }),
+    );
+    expect(
+      mapAccountFailure(accountApiError(409, envelope('phone_duplicate'))),
+      const AccountValidationFailure({
+        AccountField.phone: AccountFieldIssue.duplicate,
+      }),
+    );
+  });
+
   test('invalid_code and invalid_signup_ticket have their own failures', () {
     expect(
       mapAccountFailure(accountApiError(400, envelope('invalid_code'))),

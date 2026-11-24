@@ -18,18 +18,36 @@ AccountFailure mapAccountFailure(DioException error) {
     'validation_error' => AccountValidationFailure(
       rejectedFieldsOf(envelope.errors),
     ),
-    'email_duplicate' => const AccountValidationFailure({
-      AccountField.email: AccountFieldIssue.duplicate,
-    }),
-    'document_duplicate' => const AccountValidationFailure({
-      AccountField.document: AccountFieldIssue.duplicate,
-    }),
+    'email_duplicate' ||
+    'document_duplicate' ||
+    'phone_duplicate' => AccountValidationFailure(
+      duplicateFieldsOf(envelope.code, envelope.errors),
+    ),
     'invalid_code' => const InvalidCodeAccountFailure(),
     'invalid_signup_ticket' => const InvalidSignupTicketAccountFailure(),
     final code => UnexpectedAccountFailure(
       code ?? 'http_${response.statusCode}',
     ),
   };
+}
+
+/// The API lists every duplicated field in `errors`; the code names the
+/// first one, so it still works if the list is missing.
+Map<AccountField, AccountFieldIssue> duplicateFieldsOf(
+  String? code,
+  List<AuthApiFieldErrorDto> errors,
+) {
+  final fromErrors = {
+    for (final error in errors)
+      ?AccountField.fromApi(error.field): AccountFieldIssue.duplicate,
+  };
+  if (fromErrors.isNotEmpty) return fromErrors;
+  final field = switch (code) {
+    'email_duplicate' => AccountField.email,
+    'document_duplicate' => AccountField.document,
+    _ => AccountField.phone,
+  };
+  return {field: AccountFieldIssue.duplicate};
 }
 
 Map<AccountField, AccountFieldIssue> rejectedFieldsOf(
