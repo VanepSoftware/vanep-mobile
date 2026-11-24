@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver.dart';
 import 'package:vanep_mobile/modules/drivers/domain/entities/driver_profile.dart';
@@ -20,7 +22,7 @@ class DriverRepositoryImpl implements DriverRepository {
       final drivers = await remote.fetchRecentDrivers(limit: limit);
       return Ok(drivers);
     } on DioException catch (error) {
-      return Err(NetworkDriverFailure(error.message));
+      return Err(driverProfileFailureFrom(error));
     } on Object catch (error) {
       return Err(UnexpectedDriverFailure(error.toString()));
     }
@@ -41,9 +43,15 @@ class DriverRepositoryImpl implements DriverRepository {
 }
 
 DriverFailure driverProfileFailureFrom(DioException error) {
-  return switch (error.response?.statusCode) {
-    404 => const NotFoundDriverFailure(),
-    null => NetworkDriverFailure(error.message),
-    _ => UnexpectedDriverFailure(error.message),
-  };
+  final problem = ApiProblem.fromDioException(error);
+  if (problem.isNetworkFailure) return NetworkDriverFailure(error.message);
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.driverNotFound,
+    ApiErrorCodes.userDriverProfileNotFound,
+    ApiErrorCodes.requestRouteNotFound,
+  ])) {
+    return const NotFoundDriverFailure();
+  }
+  if (problem.status == 404) return const NotFoundDriverFailure();
+  return UnexpectedDriverFailure(problem.detail ?? error.message);
 }

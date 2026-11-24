@@ -97,4 +97,89 @@ void main() {
       const UnexpectedAccountFailure('mystery'),
     );
   });
+
+  group('ProblemDetail dual-format (Phase N+1)', () {
+    test('maps validation.failed with nested field error codes', () {
+      final error = accountApiError(400, {
+        'status': 400,
+        'title': 'Bad Request',
+        'detail': 'Dados inválidos.',
+        'code': 'validation.failed',
+        'errors': [
+          {
+            'field': 'name',
+            'code': 'auth.signup.name.required',
+            'message': 'Informe o nome.',
+          },
+          {
+            'field': 'document',
+            'code': 'auth.signup.document.invalid',
+            'message': 'CPF inválido.',
+          },
+        ],
+      });
+
+      expect(
+        mapAccountFailure(error),
+        const AccountValidationFailure({
+          AccountField.name: AccountFieldIssue.rejected,
+          AccountField.document: AccountFieldIssue.rejected,
+        }),
+      );
+    });
+
+    test('maps ProblemDetail duplicate and token codes', () {
+      expect(
+        mapAccountFailure(
+          accountApiError(409, {
+            'code': 'auth.signup.email.duplicate',
+            'detail': 'E-mail em uso.',
+            'field': 'email',
+          }),
+        ),
+        const AccountValidationFailure({
+          AccountField.email: AccountFieldIssue.duplicate,
+        }),
+      );
+      expect(
+        mapAccountFailure(
+          accountApiError(409, {
+            'code': 'auth.signup.document.duplicate',
+            'detail': 'CPF em uso.',
+            'field': 'document',
+          }),
+        ),
+        const AccountValidationFailure({
+          AccountField.document: AccountFieldIssue.duplicate,
+        }),
+      );
+      expect(
+        mapAccountFailure(
+          accountApiError(400, {
+            'code': 'auth.error.invalid_code',
+            'detail': 'Código inválido.',
+          }),
+        ),
+        const InvalidCodeAccountFailure(),
+      );
+      expect(
+        mapAccountFailure(
+          accountApiError(400, {
+            'code': 'auth.error.invalid_signup_ticket',
+            'detail': 'Ticket inválido.',
+          }),
+        ),
+        const InvalidSignupTicketAccountFailure(),
+      );
+      expect(
+        mapAccountFailure(
+          accountApiError(429, {
+            'code': 'request.rate_limited',
+            'detail': 'Muitas requisições.',
+          }),
+        ),
+        const TooManyRequestsAccountFailure(),
+      );
+    });
+  });
 }

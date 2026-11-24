@@ -69,6 +69,55 @@ void main() {
         const NegotiationUnexpectedFailure(),
       );
     });
+
+    test(
+      'maps known ProblemDetail codes strictly and unknown codes by status',
+      () async {
+        expect(
+          await failureOf(
+            dioFailure(404, body: {'code': 'service_request.not_found'}),
+          ),
+          const NegotiationNotFoundFailure(),
+        );
+        expect(
+          await failureOf(
+            dioFailure(
+              409,
+              body: {
+                'code': 'proposal.accept.stale',
+                'detail': 'A proposta mudou.',
+              },
+            ),
+          ),
+          const NegotiationConflictFailure(detail: 'A proposta mudou.'),
+        );
+        expect(
+          await failureOf(
+            dioFailure(
+              422,
+              body: {
+                'code': 'proposal.expired',
+                'detail': 'Proposta expirada.',
+              },
+            ),
+          ),
+          const NegotiationRejectedFailure(detail: 'Proposta expirada.'),
+        );
+        expect(
+          await failureOf(dioFailure(400, body: {'code': 'validation.failed'})),
+          const NegotiationInvalidFailure(),
+        );
+        expect(
+          await failureOf(
+            dioFailure(
+              409,
+              body: {'code': 'unknown.code', 'detail': 'Conflito.'},
+            ),
+          ),
+          const NegotiationConflictFailure(detail: 'Conflito.'),
+        );
+      },
+    );
   });
 
   test('the client repository returns what the datasource read', () async {

@@ -108,6 +108,36 @@ void main() {
     expect(await resolveFailure(), const SchoolNetworkFailure());
   });
 
+  test('maps known school and rate limit codes with detail', () async {
+    resolveThrows(
+      schoolDioFailure(
+        400,
+        body: const {
+          'code': 'school.place.not_a_school',
+          'detail': 'Este local não é uma escola.',
+        },
+      ),
+    );
+    expect(
+      await resolveFailure(),
+      const SchoolRejectedFailure(detail: 'Este local não é uma escola.'),
+    );
+
+    resolveThrows(
+      schoolDioFailure(
+        429,
+        body: const {
+          'code': 'location.place.rate_limited',
+          'detail': 'Muitas consultas.',
+        },
+      ),
+    );
+    expect(
+      await resolveFailure(),
+      const SchoolRejectedFailure(detail: 'Muitas consultas.'),
+    );
+  });
+
   test('an unreadable payload maps to unexpected', () async {
     resolveThrows(const FormatException('Empty school payload.'));
 

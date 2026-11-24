@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'package:vanep_mobile/core/network/problem_detail.dart';
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_state.dart';
@@ -12,27 +13,60 @@ import 'package:vanep_mobile/modules/ibge_locations/domain/repositories/ibge_loc
 import 'package:vanep_mobile/modules/ibge_locations/data/datasources/ibge_locations_remote_datasource.dart';
 
 CepFailure cepFailureFrom(DioException exception) {
-  final status = exception.response?.statusCode;
-  if (status == null) return CepFailure.network;
-  if (status == 400) return CepFailure.invalidFormat;
-  if (status == 429) return CepFailure.rateLimited;
-  if (status == 503) return CepFailure.unavailable;
-  if (status == 404) {
-    final code = readProblemCode(exception.response?.data);
-    if (code == 'cep.ibge.not_found') {
-      return CepFailure.cityNotInCatalog;
-    }
+  final problem = ApiProblem.fromDioException(exception);
+  if (problem.isNetworkFailure) return CepFailure.network;
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.cepInvalid,
+    ApiErrorCodes.validationFailed,
+    ApiErrorCodes.requestParameterInvalid,
+  ])) {
+    return CepFailure.invalidFormat;
+  }
+  if (problem.matchesCode(ApiErrorCodes.cepIbgeNotFound)) {
+    return CepFailure.cityNotInCatalog;
+  }
+  if (problem.matchesCode(ApiErrorCodes.cepNotFound)) {
     return CepFailure.notFound;
   }
-  return CepFailure.unexpected;
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.cepRateLimited,
+    ApiErrorCodes.requestRateLimited,
+  ])) {
+    return CepFailure.rateLimited;
+  }
+  if (problem.matchesCode(ApiErrorCodes.cepLookupFailed)) {
+    return CepFailure.unavailable;
+  }
+  return switch (problem.status) {
+    400 => CepFailure.invalidFormat,
+    404 => CepFailure.notFound,
+    429 => CepFailure.rateLimited,
+    503 => CepFailure.unavailable,
+    _ => CepFailure.unexpected,
+  };
 }
 
 IbgeLocationsFailure ibgeLocationsFailureFrom(DioException exception) {
-  final status = exception.response?.statusCode;
-  if (status == null) return IbgeLocationsFailure.network;
-  if (status == 400) return IbgeLocationsFailure.ufMissing;
-  if (status == 404) return IbgeLocationsFailure.ufNotFound;
-  return IbgeLocationsFailure.unexpected;
+  final problem = ApiProblem.fromDioException(exception);
+  if (problem.isNetworkFailure) return IbgeLocationsFailure.network;
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.cityUfRequired,
+    ApiErrorCodes.validationFailed,
+    ApiErrorCodes.requestParameterInvalid,
+  ])) {
+    return IbgeLocationsFailure.ufMissing;
+  }
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.stateUfNotFound,
+    ApiErrorCodes.stateNotFound,
+  ])) {
+    return IbgeLocationsFailure.ufNotFound;
+  }
+  return switch (problem.status) {
+    400 => IbgeLocationsFailure.ufMissing,
+    404 => IbgeLocationsFailure.ufNotFound,
+    _ => IbgeLocationsFailure.unexpected,
+  };
 }
 
 class IbgeLocationsRepositoryImpl implements IbgeLocationsRepository {

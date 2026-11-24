@@ -1,16 +1,8 @@
-const ibgeCityUnmatchedCode = 'location.city.unmatched';
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 
-const ibgeCityUnmatchedDetailMarkers = [
-  'município brasileiro',
-  'municipio brasileiro',
-  'brazilian municipality',
-];
+const ibgeCityUnmatchedCode = ApiErrorCodes.locationCityUnmatched;
 
 bool isIbgeCityUnmatchedProblem(Object? body) {
-  if (body is! Map) return false;
-  if (body['code'] == ibgeCityUnmatchedCode) return true;
-  final detail = body['detail'];
-  if (detail is! String) return false;
-  final normalized = detail.toLowerCase();
-  return ibgeCityUnmatchedDetailMarkers.any(normalized.contains);
+  return ApiProblem.fromResponseBody(body).matchesCode(ibgeCityUnmatchedCode);
 }

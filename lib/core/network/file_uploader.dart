@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 
 import 'package:vanep_mobile/core/media/photo_failure.dart';
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 
 class FileUploader {
   const FileUploader({required this.dio});
@@ -48,10 +50,31 @@ class FileUploader {
 }
 
 PhotoFailure photoFailureFrom(DioException error) {
-  return switch (error.response?.statusCode) {
-    null => PhotoFailure.network,
+  final problem = ApiProblem.fromDioException(error);
+  if (problem.isNetworkFailure) return PhotoFailure.network;
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.mediaFileTooLarge,
+    ApiErrorCodes.requestPayloadTooLarge,
+  ])) {
+    return PhotoFailure.tooLarge;
+  }
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.mediaMimeNotAllowed,
+    ApiErrorCodes.mediaFileUnreadable,
+    ApiErrorCodes.mediaFileRequired,
+  ])) {
+    return PhotoFailure.unsupportedType;
+  }
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.authForbidden,
+    ApiErrorCodes.authUnauthenticated,
+  ])) {
+    return PhotoFailure.permissionDenied;
+  }
+  return switch (problem.status) {
     413 => PhotoFailure.tooLarge,
     400 => PhotoFailure.unsupportedType,
+    403 => PhotoFailure.permissionDenied,
     _ => PhotoFailure.unexpected,
   };
 }

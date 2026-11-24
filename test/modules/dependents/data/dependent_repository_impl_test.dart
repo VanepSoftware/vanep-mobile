@@ -145,9 +145,8 @@ void main() {
     }
 
     test('on create is always the city', () async {
-      when(
-        () => remote.createDependent(any()),
-      ).thenThrow(dioFailure(404, body: dependentNotFoundProblem));
+      when(() => remote.createDependent(any()))
+          .thenThrow(dioFailure(404, body: dependentNotFoundProblem));
 
       final result = await repository.createDependent(
         buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
@@ -254,6 +253,35 @@ void main() {
       expect(result.errorOrNull, const DependentNetworkFailure());
     });
   });
+
+  test(
+    '400 validation.failed with errors[] attributes messages to fields',
+    () async {
+      when(() => remote.createDependent(any())).thenThrow(
+        dioFailure(
+          400,
+          body: const {
+            'code': 'validation.failed',
+            'detail': 'Erro de validação.',
+            'errors': [
+              {
+                'field': 'name',
+                'code': 'dependent.name.blank',
+                'message': 'Informe o nome.',
+              },
+            ],
+          },
+        ),
+      );
+
+      final result = await repository.createDependent(
+        buildDependentChangesForCreate(const DependentDraft(name: 'Helena')),
+      );
+
+      final failure = result.errorOrNull! as DependentValidationFailure;
+      expect(failure.messagesByField[DependentField.name], 'Informe o nome.');
+    },
+  );
 
   test('an unreadable payload maps to unexpected', () async {
     when(

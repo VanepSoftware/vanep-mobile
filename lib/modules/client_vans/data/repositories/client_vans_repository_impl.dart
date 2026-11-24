@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/client_vans/data/datasources/client_vans_datasource.dart';
 import 'package:vanep_mobile/modules/client_vans/domain/entities/client_van.dart';
@@ -17,7 +19,13 @@ class ClientVansRepositoryImpl implements ClientVansRepository {
       final vans = await dataSource.fetchMyVans();
       return Ok(vans);
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+      final problem = ApiProblem.fromDioException(e);
+      if (problem.matchesAnyCode(const [
+            ApiErrorCodes.authUnauthenticated,
+            ApiErrorCodes.authForbidden,
+          ]) ||
+          problem.status == 401 ||
+          problem.status == 403) {
         return const Err(ClientVansFailure.unauthenticated);
       }
       return const Err(ClientVansFailure.network);

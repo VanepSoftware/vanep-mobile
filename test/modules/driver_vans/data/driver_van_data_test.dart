@@ -163,6 +163,31 @@ void main() {
       }
     });
 
+    test('maps known ProblemDetail codes strictly', () async {
+      DioException codeError(int status, String code) => DioException(
+        requestOptions: RequestOptions(),
+        response: Response<Object?>(
+          requestOptions: RequestOptions(),
+          statusCode: status,
+          data: {'code': code},
+        ),
+      );
+
+      when(() => remote.registerVan(any()))
+          .thenThrow(codeError(409, 'vehicle.plate.duplicate'));
+      expect(
+        (await repository.registerVan(validRegistration)).errorOrNull,
+        DriverVanFailure.duplicatePlate,
+      );
+
+      when(() => remote.registerVan(any()))
+          .thenThrow(codeError(400, 'validation.failed'));
+      expect(
+        (await repository.registerVan(validRegistration)).errorOrNull,
+        DriverVanFailure.invalidData,
+      );
+    });
+
     test('maps a refused photo to a photo failure', () async {
       when(() => remote.uploadVanPhoto(any(), any(), any()))
           .thenThrow(statusError(400));

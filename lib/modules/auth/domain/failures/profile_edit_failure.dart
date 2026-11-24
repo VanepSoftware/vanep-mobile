@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
 
 enum ProfileErrorCode {
   cooldown,
@@ -17,16 +18,29 @@ enum ProfileErrorCode {
     final normalized = raw.trim().toLowerCase();
     if (normalized.isEmpty) return null;
     return switch (normalized) {
-      'cooldown' => ProfileErrorCode.cooldown,
-      'email_duplicate' => ProfileErrorCode.emailDuplicate,
-      'field_null' => ProfileErrorCode.fieldNull,
-      'phone_blank' => ProfileErrorCode.phoneBlank,
-      'email_same' => ProfileErrorCode.emailSame,
-      'email_invalid' => ProfileErrorCode.emailInvalid,
-      'email_required' => ProfileErrorCode.emailRequired,
-      'name_too_long' => ProfileErrorCode.nameTooLong,
-      'phone_too_long' => ProfileErrorCode.phoneTooLong,
-      'email_too_long' => ProfileErrorCode.emailTooLong,
+      ApiErrorCodes.legacyProfileCooldown ||
+      ApiErrorCodes.userProfileNameCooldown ||
+      ApiErrorCodes.userProfilePhoneCooldown ||
+      ApiErrorCodes.userProfileEmailCooldown ||
+      ApiErrorCodes.userProfileEmailResendCooldown => ProfileErrorCode.cooldown,
+      ApiErrorCodes.legacyProfileEmailDuplicate ||
+      ApiErrorCodes.authSignupEmailDuplicate => ProfileErrorCode.emailDuplicate,
+      ApiErrorCodes.legacyProfileFieldNull ||
+      ApiErrorCodes.userProfileFieldNull => ProfileErrorCode.fieldNull,
+      ApiErrorCodes.legacyProfilePhoneBlank ||
+      ApiErrorCodes.userProfilePhoneBlank => ProfileErrorCode.phoneBlank,
+      ApiErrorCodes.legacyProfileEmailSame ||
+      ApiErrorCodes.userProfileEmailSame => ProfileErrorCode.emailSame,
+      ApiErrorCodes.legacyProfileEmailInvalid ||
+      ApiErrorCodes.userProfileEmailInvalid => ProfileErrorCode.emailInvalid,
+      ApiErrorCodes.legacyProfileEmailRequired ||
+      ApiErrorCodes.userProfileEmailRequired => ProfileErrorCode.emailRequired,
+      ApiErrorCodes.legacyProfileNameTooLong ||
+      ApiErrorCodes.userProfileNameTooLong => ProfileErrorCode.nameTooLong,
+      ApiErrorCodes.legacyProfilePhoneTooLong ||
+      ApiErrorCodes.userProfilePhoneTooLong => ProfileErrorCode.phoneTooLong,
+      ApiErrorCodes.legacyProfileEmailTooLong ||
+      ApiErrorCodes.userProfileEmailTooLong => ProfileErrorCode.emailTooLong,
       _ => null,
     };
   }

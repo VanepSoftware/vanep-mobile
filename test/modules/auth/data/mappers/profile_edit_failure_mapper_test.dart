@@ -3,20 +3,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vanep_mobile/modules/auth/data/mappers/profile_edit_failure_mapper.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/profile_edit_failure.dart';
 
+DioException _dioError(int? statusCode, {Object? data, String? message}) {
+  final options = RequestOptions(path: '/api/user/me');
+  return DioException(
+    requestOptions: options,
+    message: message,
+    response: statusCode == null
+        ? null
+        : Response<Object?>(
+            requestOptions: options,
+            statusCode: statusCode,
+            data: data,
+          ),
+  );
+}
+
 void main() {
-  test('maps 400 phone_blank by code', () {
+  test('maps legacy 400 phone_blank by code', () {
     final failure = mapProfileEditDioException(
-      DioException(
-        requestOptions: RequestOptions(path: '/api/user/me'),
-        response: Response<Map<String, dynamic>>(
-          requestOptions: RequestOptions(path: '/api/user/me'),
-          statusCode: 400,
-          data: {
-            'message': 'blank',
-            'code': 'phone_blank',
-            'field': 'phone',
-          },
-        ),
+      _dioError(
+        400,
+        data: {'message': 'blank', 'code': 'phone_blank', 'field': 'phone'},
       ),
     );
 
@@ -29,19 +36,93 @@ void main() {
     );
   });
 
-  test('falls back to network when code is missing', () {
-    final failure = mapProfileEditDioException(
-      DioException(
-        requestOptions: RequestOptions(path: '/api/user/me'),
-        message: 'offline',
-        response: Response<Map<String, dynamic>>(
-          requestOptions: RequestOptions(path: '/api/user/me'),
-          statusCode: 400,
-          data: {'message': 'bad'},
-        ),
+  test('maps ProblemDetail cooldown and email duplicate codes with detail', () {
+    final cooldown = mapProfileEditDioException(
+      _dioError(
+        409,
+        data: {
+          'status': 409,
+          'detail': 'Aguarde antes de alterar novamente.',
+          'code': 'user.profile.name.cooldown',
+          'field': 'name',
+          'retryAfter': '2026-09-01T12:00:00.000Z',
+        },
+      ),
+    );
+    expect(
+      cooldown,
+      StructuredProfileEditFailure(
+        code: ProfileErrorCode.cooldown,
+        field: 'name',
+        retryAfter: DateTime.parse('2026-09-01T12:00:00.000Z'),
       ),
     );
 
-    expect(failure, isA<NetworkProfileEditFailure>());
+    final duplicate = mapProfileEditDioException(
+      _dioError(
+        409,
+        data: {
+          'status': 409,
+          'detail': 'E-mail já utilizado.',
+          'code': 'auth.signup.email.duplicate',
+          'field': 'email',
+        },
+      ),
+    );
+    expect(
+      duplicate,
+      const StructuredProfileEditFailure(
+        code: ProfileErrorCode.emailDuplicate,
+        field: 'email',
+      ),
+    );
+  });
+
+  test('maps validation.failed ProblemDetail via errors[] entry code', () {
+    final failure = mapProfileEditDioException(
+      _dioError(
+        400,
+        data: {
+          'status': 400,
+          'detail': 'Dados inválidos.',
+          'code': 'validation.failed',
+          'errors': [
+            {
+              'field': 'email',
+              'code': 'user.profile.email.invalid',
+              'message': 'Informe um e-mail válido.',
+            },
+          ],
+        },
+      ),
+    );
+
+    expect(
+      failure,
+      const StructuredProfileEditFailure(
+        code: ProfileErrorCode.emailInvalid,
+        field: 'email',
+      ),
+    );
+  });
+
+  test('maps unknown code or missing code on HTTP response to unexpected', () {
+    expect(
+      mapProfileEditDioException(
+        _dioError(400, data: {'detail': 'bad', 'code': 'unknown.code'}),
+      ),
+      const UnexpectedProfileEditFailure('bad'),
+    );
+    expect(
+      mapProfileEditDioException(_dioError(500, message: 'server boom')),
+      const UnexpectedProfileEditFailure('server boom'),
+    );
+  });
+
+  test('maps missing HTTP response to NetworkProfileEditFailure', () {
+    expect(
+      mapProfileEditDioException(_dioError(null, message: 'offline')),
+      const NetworkProfileEditFailure('offline'),
+    );
   });
 }

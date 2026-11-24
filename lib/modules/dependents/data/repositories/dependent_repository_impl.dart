@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'package:vanep_mobile/core/network/problem_detail.dart';
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
@@ -16,32 +17,89 @@ const Map<String, DependentField> dependentFieldsByApiName = {
   'address': DependentField.address,
 };
 
+const _notFoundCodes = {
+  ApiErrorCodes.dependentNotFound,
+  ApiErrorCodes.schoolNotFound,
+  ApiErrorCodes.addressNotFound,
+  ApiErrorCodes.clientNotFound,
+  ApiErrorCodes.clientProfileNotFound,
+  ApiErrorCodes.userAccountNotFound,
+};
+
+const _rejectedCodes = {
+  ApiErrorCodes.dependentAlreadyActive,
+  ApiErrorCodes.dependentOpenContract,
+  ApiErrorCodes.dependentOpenNegotiation,
+  ApiErrorCodes.dependentDocumentDuplicate,
+  ApiErrorCodes.addressAlreadyOwned,
+};
+
+const _validationCodes = {
+  ApiErrorCodes.validationFailed,
+  ApiErrorCodes.requestBodyUnreadable,
+  ApiErrorCodes.requestParameterInvalid,
+  ApiErrorCodes.dependentFieldNull,
+  ApiErrorCodes.dependentNameBlank,
+  ApiErrorCodes.dependentSchoolTokenBlank,
+  ApiErrorCodes.dependentClientTokenRequired,
+  ApiErrorCodes.dependentSchoolDaysWeekdayDuplicate,
+};
+
 DependentFailure dependentFailureFrom(
   DioException exception, {
   bool isCreate = false,
 }) {
-  final status = exception.response?.statusCode;
-  if (status == null) return const DependentNetworkFailure();
-  final body = exception.response?.data;
-  if (status == 404) {
-    final isCity = isCreate || readProblemCode(body) == 'city.not_found';
-    return isCity
+  final problem = ApiProblem.fromDioException(exception);
+  if (problem.isNetworkFailure) return const DependentNetworkFailure();
+
+  if (problem.matchesCode(ApiErrorCodes.cityNotFound)) {
+    return const DependentCityNotFoundFailure();
+  }
+  if (problem.matchesAnyCode(_notFoundCodes)) {
+    return isCreate
         ? const DependentCityNotFoundFailure()
         : const DependentNotFoundFailure();
   }
-  if (status == 409 || status == 422) {
-    final detail = readProblemDetail(body);
+  if (problem.matchesAnyCode(_rejectedCodes)) {
+    final detail = problem.detailText;
     return detail.isEmpty
         ? const DependentUnexpectedFailure()
         : DependentRejectedFailure(detail: detail);
   }
-  if (status != 400) return const DependentUnexpectedFailure();
+  if (problem.matchesAnyCode(_validationCodes)) {
+    return _validationFailureFrom(problem);
+  }
 
-  final field = dependentFieldsByApiName[readProblemField(body)];
-  if (field == null) return const DependentValidationFailure();
-  return DependentValidationFailure(
-    messagesByField: {field: readProblemDetail(body)},
-  );
+  return switch (problem.status) {
+    404 =>
+      isCreate
+          ? const DependentCityNotFoundFailure()
+          : const DependentNotFoundFailure(),
+    409 || 422 =>
+      problem.detailText.isEmpty
+          ? const DependentUnexpectedFailure()
+          : DependentRejectedFailure(detail: problem.detailText),
+    400 => _validationFailureFrom(problem),
+    _ => const DependentUnexpectedFailure(),
+  };
+}
+
+DependentValidationFailure _validationFailureFrom(ApiProblem problem) {
+  final byField = <DependentField, String>{};
+  for (final error in problem.errors) {
+    final mapped = dependentFieldsByApiName[error.field];
+    final message = error.message;
+    if (mapped != null && message != null && message.isNotEmpty) {
+      byField[mapped] = message;
+    }
+  }
+  if (byField.isEmpty && problem.field != null) {
+    final mapped = dependentFieldsByApiName[problem.field];
+    if (mapped != null) {
+      byField[mapped] = problem.detailText;
+    }
+  }
+  return DependentValidationFailure(messagesByField: byField);
 }
 
 class DependentRepositoryImpl implements DependentRepository {
