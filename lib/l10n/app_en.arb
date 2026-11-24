@@ -3112,5 +3112,8 @@
   "pushNotificationChannelDescription": "Chat messages, proposals and contracts",
   "@pushNotificationChannelName": {
     "description": "Android notification channel name shown in the system settings."
-  }
+  },
+  "upgradeWallTitle": "Update required",
+  "upgradeWallBody": "A new version of Vanep is available. Update the app to keep using it.",
+  "upgradeWallButton": "Update now"
 }

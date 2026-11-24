@@ -12,6 +12,7 @@ import 'package:vanep_mobile/core/media/file_opener.dart';
 import 'package:vanep_mobile/core/network/api_image_provider.dart';
 import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
 import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
+import 'package:vanep_mobile/core/ui/vanep_upgrade_wall.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
@@ -168,7 +169,9 @@ class VanepApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: AppLocalizations.supportedLocales,
-                home: const VanepIntroGate(child: AuthGate()),
+                home: const VanepUpgradeWall(
+                  child: VanepIntroGate(child: AuthGate()),
+                ),
               ),
             ),
       ),
@@ -677,9 +680,9 @@ Future<void> openClientNegotiationChat(
   ClientServiceRequest request,
 ) async {
   if (request.conversationToken == null) return;
-  await Navigator.of(context).push(
-    clientNegotiationChatRoute(context, request),
-  );
+  await Navigator.of(
+    context,
+  ).push(clientNegotiationChatRoute(context, request));
 }
 
 DriverNegotiationActions driverNegotiationActions(BuildContext context) {
