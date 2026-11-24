@@ -177,7 +177,8 @@ Android releases go to Google Play through [fastlane](https://fastlane.tools)
 
 | Trigger | Workflow | Play track | `.env` from |
 | --- | --- | --- | --- |
-| Push to `main` | `.github/workflows/cd-internal.yml` | `internal` (internal testing) | `TESTING_ENV_FILE` |
+| Push to `main` | `.github/workflows/cd-internal.yml` | `internal` (internal testing), then the same build is promoted to the closed testing track (`alpha` by default) | `TESTING_ENV_FILE` |
+| Manual (`workflow_dispatch`) | `.github/workflows/cd-internal.yml` | depends on the `tracks` input (below) | `TESTING_ENV_FILE` |
 | GitHub release published | `.github/workflows/cd-production.yml` | `production` | `PRODUCTION_ENV_FILE` |
 
 - Pushes whose head commit has `[skip ci]`, or that only touch docs (`*.md`,
@@ -190,6 +191,21 @@ Android releases go to Google Play through [fastlane](https://fastlane.tools)
 - Production currently uploads as a **draft** (`PLAY_RELEASE_STATUS: draft` in
   `cd-production.yml`), because Play rejects `completed` releases for an app that
   was never published. Remove it after the first reviewed release.
+- **Closed testing**: after uploading to `internal`, the same versionCode N (same
+  AAB, not re-uploaded) is promoted with `upload_to_play_store(track_promote_to: ...)`
+  using the same `PLAY_SERVICE_ACCOUNT_JSON`. Configure with environment variables:
+  - `PLAY_CLOSED_TRACK` (default `alpha`, the default closed testing track). If Play
+    reports an unknown track, list the tracks (`edits.tracks.list`) and set this.
+  - `PLAY_CLOSED_RELEASE_STATUS` (default `completed`). If Play refuses `completed`
+    (app never published/reviewed) run with `draft` and send it to review manually.
+    An existing draft on the closed track makes the promote fail with a clear
+    `play_api` error.
+- **Manual run** (Actions > "CD — teste interno" > Run workflow), input `tracks`:
+  - `internal+closed` (default, also the push behavior): build, publish N to
+    `internal`, promote N to the closed track.
+  - `internal`: build and publish to `internal` only.
+  - `promote-closed`: no build and no new versionCode; promotes the current highest
+    versionCode on `internal` to the closed track. Use it to retry a failed promote.
 - Only one deploy runs at a time (concurrency group `play-android-deploy`).
 - On failure the job prints a `[failure_category:config|build|play_api]` line and
   an error annotation with that category.
@@ -241,6 +257,10 @@ This publishes to Google Play for real.
    cd android
    bundle exec fastlane android deploy_internal
    ```
+
+   Lanes: `deploy_internal` (internal only), `deploy_internal_and_closed`,
+   `promote_internal_to_closed` (no build; optional `PLAY_CLOSED_TRACK` /
+   `PLAY_CLOSED_RELEASE_STATUS`).
 
    For production, also set `PLAY_VERSION_NAME=1.2.3` (and `PLAY_RELEASE_STATUS=draft`
    while the app is still a draft) and run `bundle exec fastlane android deploy_production`.
