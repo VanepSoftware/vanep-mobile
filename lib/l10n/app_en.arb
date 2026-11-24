@@ -567,6 +567,11 @@
   "assistantVansActiveSection": "Active",
   "assistantVansDecline": "Decline",
   "assistantVansAccept": "Accept",
+  "assistantVansInviteAccepted": "Invite accepted. The van now shows up among yours.",
+  "assistantVansInviteDeclined": "Invite declined.",
+  "assistantVansDeclineConfirmTitle": "Decline invite?",
+  "assistantVansDeclineConfirmMessage": "The driver will be notified and the invite will no longer be valid.",
+  "assistantVansDeclineConfirmCancel": "Back",
   "assistantVansExpiresInDays": "{count, plural, =1{Expires in 1 day} other{Expires in {count} days}}",
   "@assistantVansExpiresInDays": {
     "placeholders": {

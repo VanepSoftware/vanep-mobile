@@ -53,6 +53,16 @@ class AssistantRepositoryImpl implements AssistantRepository {
   }
 
   @override
+  Future<Result<AssistantFailure, void>> acceptInvite(String token) {
+    return guardAssistantCall(() => remote.acceptInvite(token));
+  }
+
+  @override
+  Future<Result<AssistantFailure, void>> rejectInvite(String token) {
+    return guardAssistantCall(() => remote.rejectInvite(token));
+  }
+
+  @override
   Future<Result<AssistantFailure, List<AssistantTripStop>>> getActiveTripRoute(
     String vanToken,
   ) {
