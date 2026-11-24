@@ -6,6 +6,10 @@ abstract class VanAssistant {
   String get name;
 
   VanAssistantStatus get status;
+
+  String? get email;
+
+  DateTime? get activatedAt;
 }
 
 extension VanAssistantWork on VanAssistant {

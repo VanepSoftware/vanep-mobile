@@ -149,6 +149,9 @@ void main() {
         VanAssistantStatus.active,
         VanAssistantStatus.pending,
       ]);
+      expect(assistants.first.email, 'marcos@vanep.test');
+      expect(assistants.first.activatedAt, DateTime.utc(2026, 10, 1, 12));
+      expect(assistants.last.activatedAt, isNull);
       verify(
         () => dio.get<List<dynamic>>('http://10.0.2.2:8080/api/assistants'),
       ).called(1);
