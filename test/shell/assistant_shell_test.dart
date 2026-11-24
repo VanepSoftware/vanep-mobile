@@ -19,6 +19,8 @@ import 'package:vanep_mobile/modules/auth/domain/value_objects/user_type.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/shell/assistant_shell.dart';
+import 'package:vanep_mobile/modules/auth/presentation/widgets/account_drawer.dart';
+import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
@@ -136,7 +138,9 @@ void main() {
     ], equals(['Rota', 'Alunos', 'Meu perfil']));
   });
 
-  testWidgets('switching tabs updates active coming soon view', (tester) async {
+  testWidgets('switching tabs shows students and then the profile', (
+    tester,
+  ) async {
     whenListen(
       vanSelectorCubit,
       const Stream<AssistantVanSelectorState>.empty(),
@@ -163,7 +167,12 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Meu perfil'));
     await tester.pump();
 
-    expect(find.text('Meu perfil'), findsNWidgets(2));
+    expect(find.byType(ShellAccountProfileTab), findsOneWidget);
+    expect(find.byType(AccountProfileView), findsOneWidget);
+    expect(find.text('Lucas Assistente'), findsOneWidget);
+    expect(find.text('Em breve'), findsNothing);
+    verify(() => authCubit.refreshSessionProfile()).called(1);
+    verify(() => profileSummaryCubit.refresh(UserType.assistant)).called(1);
   });
 
   testWidgets('shows loading indicator when van selector is loading', (

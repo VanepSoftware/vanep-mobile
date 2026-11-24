@@ -51,6 +51,48 @@ class ShellAccountDrawer extends StatelessWidget {
   }
 }
 
+/// The account screen as a tab: same header and menu as [ShellAccountDrawer],
+/// fed by the profile summary (GET /api/{clients,drivers,assistants}/me).
+/// Pull down to reload it.
+class ShellAccountProfileTab extends StatelessWidget {
+  const ShellAccountProfileTab({required this.profile, super.key});
+
+  final UserProfile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return BlocBuilder<ProfileSummaryCubit, ProfileSummaryState>(
+      builder: (context, summaryState) {
+        return RefreshIndicator(
+          onRefresh: () =>
+              refreshAccountWhenDrawerOpens(context, profile, isOpened: true),
+          child: AccountProfileView(
+            profile: profile,
+            photoUrl: summaryState.photoUrl,
+            rating: summaryState.rating,
+            city: summaryState.city,
+            statusLabel: assistantStatusLabel(
+              l10n,
+              summaryState.assistantStatus,
+            ),
+            statusColor: assistantStatusColor(
+              context.palette,
+              summaryState.assistantStatus,
+            ),
+            isSummaryLoading:
+                summaryState.status == ProfileSummaryStatus.loading,
+            buildPersonalDataSlots: (context) =>
+                buildShellPersonalDataSlots(context, profile),
+            openSettings: openSettingsPage,
+          ),
+        );
+      },
+    );
+  }
+}
+
 Future<void> refreshAccountWhenDrawerOpens(
   BuildContext context,
   UserProfile profile, {

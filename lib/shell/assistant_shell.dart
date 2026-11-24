@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon.dart';
 import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
@@ -16,6 +15,8 @@ import 'package:vanep_mobile/modules/assistant/presentation/widgets/assistant_va
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/shell/assistant_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
+
+const assistantProfileTabIndex = 2;
 
 class AssistantShell extends StatefulWidget {
   const AssistantShell({required this.profile, super.key});
@@ -224,10 +225,7 @@ class AssistantShellState extends State<AssistantShell> {
                 children: [
                   const AssistantTodayRoutePage(),
                   const AssistantStudentsListPage(),
-                  VanepComingSoon(
-                    title: l10n.navAssistantProfile,
-                    message: l10n.comingSoon,
-                  ),
+                  ShellAccountProfileTab(profile: widget.profile),
                 ],
               ),
             ),
@@ -242,6 +240,10 @@ class AssistantShellState extends State<AssistantShell> {
   }
 
   void selectShellTab(int index) {
+    if (index == assistantProfileTabIndex &&
+        selectedIndex != assistantProfileTabIndex) {
+      refreshAccountWhenDrawerOpens(context, widget.profile, isOpened: true);
+    }
     setState(() => selectedIndex = index);
   }
 }
