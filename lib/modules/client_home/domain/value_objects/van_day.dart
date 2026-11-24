@@ -21,9 +21,10 @@ class VanDay extends Equatable {
 
   final String driverName;
 
-  final String vehicleModel;
+  /// Null when the driver has no active vehicle.
+  final String? vehicleModel;
 
-  final String plate;
+  final String? plate;
 
   final SchoolShift shift;
 
@@ -70,19 +71,23 @@ class VanRider extends Equatable {
 
 class VanSchedule extends Equatable {
   const VanSchedule({
-    required this.boardingStartAt,
-    required this.boardingEndAt,
-    required this.schoolArrivalAt,
-    required this.schoolDepartureAt,
+    this.boardingStartAt,
+    this.boardingEndAt,
+    this.schoolArrivalAt,
+    this.schoolDepartureAt,
   });
 
-  final DateTime boardingStartAt;
+  /// First and last home pickup of the family's children; null when they only
+  /// ride back today.
+  final DateTime? boardingStartAt;
 
-  final DateTime boardingEndAt;
+  final DateTime? boardingEndAt;
 
-  final DateTime schoolArrivalAt;
+  /// Not served by the API yet: schools have no class times.
+  final DateTime? schoolArrivalAt;
 
-  final DateTime schoolDepartureAt;
+  /// School pickup of the return leg; null without a return today.
+  final DateTime? schoolDepartureAt;
 
   @override
   List<Object?> get props => [

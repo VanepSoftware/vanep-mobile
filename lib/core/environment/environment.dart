@@ -111,6 +111,8 @@ class Environment {
 
   String get clientsMeEndpoint => '$clientsEndpoint/me';
 
+  String get clientDayEndpoint => '$clientsMeEndpoint/day';
+
   String get contractReadinessEndpoint =>
       '$clientsMeEndpoint/contract-readiness';
 

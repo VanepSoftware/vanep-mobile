@@ -46,7 +46,23 @@ String formatTimeOfDay(AppLocalizations l10n, DateTime moment) {
 String formatClockTime(DateTime moment) => DateFormat.Hm().format(moment);
 
 String formatTimeWindow(AppLocalizations l10n, DateTime start, DateTime end) {
-  return '${formatTimeOfDay(l10n, start)}–${formatTimeOfDay(l10n, end)}';
+  return '${formatTimeOfDay(l10n, start)}â${formatTimeOfDay(l10n, end)}';
+}
+
+/// Placeholder for a time the API does not know.
+const missingTime = '—';
+
+String formatOptionalTimeOfDay(AppLocalizations l10n, DateTime? moment) =>
+    moment == null ? missingTime : formatTimeOfDay(l10n, moment);
+
+String formatOptionalTimeWindow(
+  AppLocalizations l10n,
+  DateTime? start,
+  DateTime? end,
+) {
+  if (start == null) return missingTime;
+  if (end == null || end == start) return formatTimeOfDay(l10n, start);
+  return formatTimeWindow(l10n, start, end);
 }
 
 String formatDayMonth(DateTime date) => DateFormat('dd/MM').format(date);

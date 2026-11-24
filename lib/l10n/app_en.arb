@@ -841,6 +841,8 @@
       }
     }
   },
+  "clientHomeVanSubtitleNoVehicle": "Leaves at {time}",
+  "@clientHomeVanSubtitleNoVehicle": {"placeholders": {"time": {"type": "String"}}},
   "clientHomeVanSubtitle": "{model} {plate} · leaves at {time}",
   "@clientHomeVanSubtitle": {
     "placeholders": {

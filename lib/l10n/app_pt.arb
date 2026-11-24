@@ -560,6 +560,7 @@
   "clientHomeShiftFullTime": "integral",
   "clientHomeVanTitle": "Van de {driver} · {shift}",
   "clientHomeVanSubtitle": "{model} {plate} · sai às {time}",
+  "clientHomeVanSubtitleNoVehicle": "Sai às {time}",
   "clientHomeVanRowSubtitle": "{names} · embarque {time}",
   "clientHomeBoarding": "Embarque",
   "clientHomeArrival": "Chegada",
