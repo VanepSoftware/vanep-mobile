@@ -27,10 +27,12 @@ class DriverHomeRemoteDataSource {
     final results = await Future.wait<Object?>([
       _fetchTodayTripsSafe(),
       _fetchClientLinksSafe(),
+      _fetchOccupancyOrNull(),
     ]);
 
     final trips = results[0] as List<DriverTripDto>;
     final clientLinks = results[1] as List<Map<String, Object?>>;
+    final occupancy = results[2] as DriverStudentsCount?;
 
     _shiftByTripId
       ..clear()
@@ -40,6 +42,7 @@ class DriverHomeRemoteDataSource {
       onboarding: onboarding,
       trips: trips,
       clientLinks: clientLinks,
+      occupancy: occupancy,
     );
   }
 
@@ -75,6 +78,19 @@ class DriverHomeRemoteDataSource {
         .whereType<Map<String, dynamic>>()
         .map(Map<String, Object?>.from)
         .toList();
+  }
+
+  /// The driver's student totals, or null when they cannot be read: the family
+  /// counter is then left out instead of breaking the home.
+  Future<DriverStudentsCount?> _fetchOccupancyOrNull() async {
+    try {
+      final response = await dio.get<Map<String, dynamic>>(
+        environment.driverOccupancyEndpoint,
+      );
+      return driverStudentsCountFromJson(response.data);
+    } on DioException {
+      return null;
+    }
   }
 
   String _resolveShift(String tripId) {

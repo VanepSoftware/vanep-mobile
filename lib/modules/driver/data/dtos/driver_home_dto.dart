@@ -74,6 +74,18 @@ class DriverTripDto {
   }
 }
 
+/// Students of the driver and how many of them have the family in the app, from
+/// GET /api/drivers/me/occupancy.
+typedef DriverStudentsCount = ({int students, int withFamily});
+
+DriverStudentsCount? driverStudentsCountFromJson(Map<String, dynamic>? json) {
+  final students = json?['students'];
+  final withFamily = json?['studentsWithFamily'];
+  if (students is! num || withFamily is! num) return null;
+  if (students < 0 || withFamily < 0) return null;
+  return (students: students.toInt(), withFamily: withFamily.toInt());
+}
+
 class DriverHomeDto {
   const DriverHomeDto._();
 
@@ -81,6 +93,7 @@ class DriverHomeDto {
     required DriverOnboardingDto onboarding,
     List<DriverTripDto> trips = const [],
     List<Map<String, Object?>> clientLinks = const [],
+    DriverStudentsCount? occupancy,
   }) {
     final validTrips = trips.where((t) => t.status != null).toList()
       ..sort((a, b) => a.shiftOrder.compareTo(b.shiftOrder));
@@ -126,9 +139,8 @@ class DriverHomeDto {
       rejectionReason: onboarding.rejectionReason,
       todayTrip: selectedDto?.toDomain(),
       laterShiftLabel: laterShiftLabel,
-      studentCount: activeStudents,
-      // TODO(VAN-66): Map family app membership when client links expose it.
-      familiesInApp: null,
+      studentCount: occupancy?.students ?? activeStudents,
+      familiesInApp: occupancy?.withFamily,
       // TODO(VAN-66): Map nextConfirmation and contactLabel when the API supplies
       // stops and contact details; enable confirmation after its endpoint exists.
       nextConfirmation: null,

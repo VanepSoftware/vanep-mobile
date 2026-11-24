@@ -127,6 +127,18 @@ void main() {
         );
 
     when(
+      () => dio.get<Map<String, dynamic>>(
+        testEnvironment.driverOccupancyEndpoint,
+      ),
+    ).thenAnswer(
+      (_) async => Response(
+        requestOptions: RequestOptions(),
+        statusCode: 200,
+        data: {'shifts': [], 'students': 5, 'studentsWithFamily': 3},
+      ),
+    );
+
+    when(
       () => dio.post<Map<String, dynamic>>(
         testEnvironment.driverTripsStartEndpoint,
         data: any(named: 'data'),
@@ -146,8 +158,8 @@ void main() {
     expect(data.todayTrip?.status, TripStatus.notStarted);
     expect(data.todayTrip?.label, 'MORNING');
     expect(data.outsideWorkingHours, isTrue);
-    expect(data.studentCount, 2);
-    expect(data.familiesInApp, isNull);
+    expect(data.studentCount, 5);
+    expect(data.familiesInApp, 3);
     expect(data.nextConfirmation, isNull);
     expect(data.contactLabel, isNull);
 
@@ -159,4 +171,56 @@ void main() {
       ),
     ).called(1);
   });
+
+  test(
+    'keeps the home without a family counter when occupancy fails',
+    () async {
+      when(
+        () => dio.get<Map<String, dynamic>>(
+          testEnvironment.driverOnboardingEndpoint,
+        ),
+      ).thenAnswer(
+        (_) async => Response(
+          requestOptions: RequestOptions(),
+          statusCode: 200,
+          data: {
+            'driverToken': 'driver-1',
+            'approvalStatus': 'APPROVED',
+            'canSubmit': false,
+            'cnhStep': {'completed': true, 'pendingItems': <String>[]},
+          },
+        ),
+      );
+      when(
+        () => dio.get<List<dynamic>>(testEnvironment.driverTripsTodayEndpoint),
+      ).thenAnswer(
+        (_) async => Response(
+          requestOptions: RequestOptions(),
+          statusCode: 200,
+          data: <dynamic>[],
+        ),
+      );
+      when(
+        () => dio.get<List<dynamic>>(testEnvironment.clientDriversMeEndpoint),
+      ).thenAnswer(
+        (_) async => Response(
+          requestOptions: RequestOptions(),
+          statusCode: 200,
+          data: [
+            {'token': 'link-1', 'status': 'ACTIVE'},
+          ],
+        ),
+      );
+      when(
+        () => dio.get<Map<String, dynamic>>(
+          testEnvironment.driverOccupancyEndpoint,
+        ),
+      ).thenThrow(DioException(requestOptions: RequestOptions()));
+
+      final data = await repository.load();
+
+      expect(data.studentCount, 1);
+      expect(data.familiesInApp, isNull);
+    },
+  );
 }
