@@ -15,6 +15,7 @@ ENV_FILE_PATH = File.join(REPO_ROOT, ".env")
 # código sai do maior entre todas elas.
 VERSION_CODE_TRACKS = %w[internal alpha beta production].freeze
 RELEASE_STATUSES = %w[completed draft halted inProgress].freeze
+INTERNAL_TRACK = "internal"
 VERSION_NAME_PATTERN = /\A\d+\.\d+\.\d+\z/
 
 # Fase atual do deploy; o bloco `error` imprime a categoria para o workflow.
@@ -61,6 +62,22 @@ def validate_deploy_inputs(release_status:)
   UI.user_error!("release_status inválido: #{release_status} (use #{RELEASE_STATUSES.join(', ')})") unless RELEASE_STATUSES.include?(release_status)
 end
 
+# Faixa de teste fechado (padrão do Play: alpha) e status da release promovida.
+def closed_track
+  ENV.fetch("PLAY_CLOSED_TRACK", "alpha")
+end
+
+def closed_release_status
+  ENV.fetch("PLAY_CLOSED_RELEASE_STATUS", "completed")
+end
+
+def validate_promote_inputs
+  validate_service_account_json
+  status = closed_release_status
+  UI.user_error!("PLAY_CLOSED_RELEASE_STATUS inválido: #{status} (use #{RELEASE_STATUSES.join(', ')})") unless RELEASE_STATUSES.include?(status)
+  UI.user_error!("PLAY_CLOSED_TRACK não pode ser igual a #{INTERNAL_TRACK}") if closed_track == INTERNAL_TRACK
+end
+
 def read_production_version_name
   version_name = ENV["PLAY_VERSION_NAME"].to_s
   UI.user_error!("PLAY_VERSION_NAME deve ter o formato X.Y.Z (recebido: '#{version_name}')") unless version_name.match?(VERSION_NAME_PATTERN)
@@ -71,7 +88,24 @@ end
 platform :android do
   desc "Gera o .aab e publica na faixa de teste interno do Google Play"
   lane :deploy_internal do
-    deploy_bundle_to_play(track: "internal", release_status: "completed")
+    deploy_bundle_to_play(track: INTERNAL_TRACK, release_status: "completed")
+  end
+
+  desc "Publica em internal e promove o mesmo versionCode (sem reenviar o .aab) para o teste fechado"
+  lane :deploy_internal_and_closed do
+    version_code = deploy_bundle_to_play(track: INTERNAL_TRACK, release_status: "completed")
+    promote_play_track(version_code: version_code)
+  end
+
+  desc "Promove a release completed atual de internal para o teste fechado, sem build nem novo versionCode (retry)"
+  lane :promote_internal_to_closed do
+    run_in_failure_category("config") { validate_promote_inputs }
+    version_code = run_in_failure_category("play_api") do
+      current = google_play_track_version_codes(track: INTERNAL_TRACK).max
+      UI.user_error!("nenhuma release encontrada na faixa #{INTERNAL_TRACK}") unless current
+      current
+    end
+    promote_play_track(version_code: version_code)
   end
 
   desc "Gera o .aab com versionName de PLAY_VERSION_NAME e publica em produção no Google Play"
@@ -93,6 +127,36 @@ platform :android do
     end
     run_in_failure_category("play_api") do
       upload_bundle_to_play(track: options[:track], release_status: options[:release_status])
+    end
+    version_code
+  end
+
+  private_lane :promote_play_track do |options|
+    run_in_failure_category("config") { validate_promote_inputs }
+    run_in_failure_category("play_api") do
+      begin
+        upload_to_play_store(
+          track: INTERNAL_TRACK,
+          track_promote_to: closed_track,
+          version_code: options[:version_code],
+          # Filtra a release na ORIGEM (internal); o status do destino vai abaixo.
+          release_status: "completed",
+          track_promote_release_status: closed_release_status,
+          skip_upload_apk: true,
+          skip_upload_aab: true,
+          skip_upload_metadata: true,
+          skip_upload_changelogs: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true
+        )
+      rescue StandardError => e
+        hint = if e.message =~ /draft/i
+          "há um rascunho na faixa #{closed_track}; envie-o para revisão ou descarte-o no Play Console, ou rode com PLAY_CLOSED_RELEASE_STATUS=draft"
+        else
+          "se a faixa for desconhecida, ajuste PLAY_CLOSED_TRACK (liste com edits.tracks.list); se completed foi recusado, use PLAY_CLOSED_RELEASE_STATUS=draft"
+        end
+        UI.user_error!("falha ao promover versionCode #{options[:version_code]} de #{INTERNAL_TRACK} para #{closed_track}: #{e.message}. #{hint}")
+      end
     end
   end
 
