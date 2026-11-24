@@ -1,3 +1,4 @@
+import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
@@ -110,6 +111,7 @@ void registerDependentsDependencies(GetIt getIt) {
         lookupCep: getIt<LookupCep>(),
         listStates: getIt<ListStates>(),
         listCities: getIt<ListCities>(),
+        findMyPersonalAddress: getIt<FindMyPersonalAddress>(),
       ),
     )
     ..registerFactoryParam<DependentSchoolDaysCubit, String, void>(

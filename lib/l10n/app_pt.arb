@@ -749,6 +749,7 @@
   "dependentRowSchool": "Escola",
   "dependentRowSchoolDays": "Dias e turnos",
   "dependentRowPickup": "Embarque",
+  "dependentPickupUseProfileAddress": "Usar o endereço do meu perfil",
   "dependentRowVan": "Van",
   "dependentRowContract": "Contrato",
   "dependentRowPersonalData": "Dados pessoais",

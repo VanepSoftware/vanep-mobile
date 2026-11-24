@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_state.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
@@ -24,6 +25,7 @@ class DependentPickupState extends Equatable implements DependentEditorState {
     this.catalogFailure,
     this.showAddressIssues = false,
     this.saved,
+    this.profileAddress,
   });
 
   factory DependentPickupState.editing(Dependent dependent) {
@@ -55,6 +57,8 @@ class DependentPickupState extends Equatable implements DependentEditorState {
 
   final Dependent? saved;
 
+  final PersonalAddress? profileAddress;
+
   @override
   bool get isSaving => status == DependentEditorStatus.saving;
 
@@ -68,6 +72,12 @@ class DependentPickupState extends Equatable implements DependentEditorState {
 
   Set<PostalAddressIssue> get addressIssues =>
       findAddressIssues(draft, snapshot: snapshot);
+
+  bool get canUseProfileAddress {
+    final profile = profileAddress;
+    if (profile == null || isSaving) return false;
+    return !draft.address.sameContentAs(profile.toDraft());
+  }
 
   bool get hasChanges => isDependentAddressEdited(draft, snapshot);
 
@@ -88,6 +98,7 @@ class DependentPickupState extends Equatable implements DependentEditorState {
     bool clearCatalogFailure = false,
     bool? showAddressIssues,
     Dependent? saved,
+    PersonalAddress? profileAddress,
   }) {
     return DependentPickupState(
       snapshot: snapshot,
@@ -103,6 +114,7 @@ class DependentPickupState extends Equatable implements DependentEditorState {
           : catalogFailure ?? this.catalogFailure,
       showAddressIssues: showAddressIssues ?? this.showAddressIssues,
       saved: saved ?? this.saved,
+      profileAddress: profileAddress ?? this.profileAddress,
     );
   }
 
@@ -119,5 +131,6 @@ class DependentPickupState extends Equatable implements DependentEditorState {
     catalogFailure,
     showAddressIssues,
     saved,
+    profileAddress,
   ];
 }

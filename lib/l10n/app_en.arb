@@ -1559,6 +1559,7 @@
   "dependentRowSchool": "School",
   "dependentRowSchoolDays": "Days and shifts",
   "dependentRowPickup": "Pickup",
+  "dependentPickupUseProfileAddress": "Use my profile address",
   "dependentRowVan": "Van",
   "dependentRowContract": "Contract",
   "dependentRowPersonalData": "Personal data",
