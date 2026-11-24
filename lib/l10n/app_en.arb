@@ -2709,39 +2709,21 @@
       }
     }
   },
-  "driverHomeGreetingMorning": "Good morning, {name}!",
-  "@driverHomeGreetingMorning": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "driverHomeGreetingSaturday": "Happy Saturday, {name}!",
-  "@driverHomeGreetingSaturday": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "driverHomeGreetingMorningCompleted": "Morning completed",
   "driverHomeSubtitleIncomplete": "Almost ready to receive students through Vanep.",
   "driverHomeSubtitleUnderReview": "Your registration has been submitted.",
   "driverHomeSubtitleRejected": "Your registration needs attention.",
   "driverHomeSubtitleBuildingRoute": "Registration approved. Welcome to Vanep.",
-  "driverHomeSubtitleBeforeDeparture": "Wednesday, October 14",
-  "driverHomeSubtitleInProgress": "Outbound · since 6:21 AM",
-  "driverHomeSubtitleShiftCompleted": "Wednesday, October 14 · good job, {name}",
-  "@driverHomeSubtitleShiftCompleted": {
+  "driverHomeSubtitleShiftCompletedOn": "{date} · good job, {name}",
+  "@driverHomeSubtitleShiftCompletedOn": {
     "placeholders": {
+      "date": {
+        "type": "String"
+      },
       "name": {
         "type": "String"
       }
     }
   },
-  "driverHomeSubtitleNoRouteToday": "Saturday, October 17",
-  "driverHomeSubtitleBlocked": "Thursday, November 12 · 2 items to resolve",
   "driverHomeIncompleteOverline": "Registration",
   "driverHomeIncompleteHeadline": "Complete your registration to appear in search",
   "driverHomeIncompleteStep1": "Personal details",

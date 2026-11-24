@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/core/ui/vanep_greeting_header.dart';
 import 'package:vanep_mobile/core/ui/vanep_home_top_bar.dart';
@@ -42,7 +43,8 @@ class DriverHomeTabState extends State<DriverHomeTab> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final cubit = context.read<DriverHomeCubit>();
-    final navigation = widget.navigation ?? PendingDriverHomeNavigation(context);
+    final navigation =
+        widget.navigation ?? PendingDriverHomeNavigation(context);
     return SafeArea(
       bottom: false,
       child: BlocBuilder<DriverHomeCubit, DriverHomeState>(
@@ -64,6 +66,7 @@ class DriverHomeTabState extends State<DriverHomeTab> {
                   displayName: widget.displayName,
                   shiftStartTime: state.shiftStartTime,
                   phase: resolved?.phase,
+                  shift: data?.todayTrip?.label,
                 ),
                 const SizedBox(height: 14),
                 if (state.loading || state.busy)
@@ -119,12 +122,20 @@ class DriverHomeGreetingSection extends StatelessWidget {
     required this.displayName,
     required this.shiftStartTime,
     required this.phase,
+    this.shift,
+    this.today,
     super.key,
   });
 
   final String displayName;
   final String shiftStartTime;
   final HomePhase? phase;
+
+  /// Shift of today's trip as returned by the API (e.g. `MORNING`).
+  final String? shift;
+
+  /// Date shown in the subtitle; defaults to the device clock.
+  final DateTime? today;
 
   String extractFirstName() {
     final trimmed = displayName.trim();
@@ -144,6 +155,9 @@ class DriverHomeGreetingSection extends StatelessWidget {
       );
     }
     final firstName = extractFirstName();
+    final date = toBeginningOfSentenceCase(
+      DateFormat.MMMMEEEEd(l10n.localeName).format(today ?? DateTime.now()),
+    );
     final (title, subtitle, showVerifiedIcon) = switch (phase!) {
       HomePhase.incomplete => (
         l10n.driverHomeGreetingHello(firstName),
@@ -166,28 +180,28 @@ class DriverHomeGreetingSection extends StatelessWidget {
         true,
       ),
       HomePhase.beforeDeparture => (
-        l10n.driverHomeGreetingMorning(firstName),
-        l10n.driverHomeSubtitleBeforeDeparture,
+        l10n.driverHomeGreetingHello(firstName),
+        date,
         false,
       ),
       HomePhase.inProgress => (
         l10n.driverHomeInProgress,
-        l10n.driverHomeSubtitleInProgress,
+        shift == null ? date : localizeDriverShift(l10n, shift!),
         false,
       ),
       HomePhase.shiftCompleted => (
-        l10n.driverHomeGreetingMorningCompleted,
-        l10n.driverHomeSubtitleShiftCompleted(firstName),
+        l10n.driverHomeCompleted,
+        l10n.driverHomeSubtitleShiftCompletedOn(date, firstName),
         false,
       ),
       HomePhase.noRouteToday => (
-        l10n.driverHomeGreetingSaturday(firstName),
-        l10n.driverHomeSubtitleNoRouteToday,
+        l10n.driverHomeGreetingHello(firstName),
+        date,
         false,
       ),
       HomePhase.blocked => (
         l10n.driverHomeGreetingHelloPlain(firstName),
-        l10n.driverHomeSubtitleBlocked,
+        date,
         false,
       ),
     };
@@ -285,8 +299,9 @@ class PendingDriverHomeNavigation implements DriverHomeNavigation {
     Shortcut.absences => AppLocalizations.of(context)!.driverHomeAbsences,
     Shortcut.financial => AppLocalizations.of(context)!.driverHomeFinancial,
     Shortcut.assistants => AppLocalizations.of(context)!.driverHomeAssistants,
-    Shortcut.documents =>
-      AppLocalizations.of(context)!.driverHomeDocumentsShortcut,
+    Shortcut.documents => AppLocalizations.of(
+      context,
+    )!.driverHomeDocumentsShortcut,
   });
 
   @override

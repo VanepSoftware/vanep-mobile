@@ -49,12 +49,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Olá, Carlos!'), findsOneWidget);
     expect(find.text('Seu expediente começa às 6h00'), findsOneWidget);
-    expect(find.text('Saída 6h20'), findsOneWidget);
+    expect(find.text('Antes de sair'), findsOneWidget);
     await tester.ensureVisible(find.text('Deslize para iniciar a rota'));
     await tester.tap(find.text('Deslize para iniciar a rota'));
     await tester.pumpAndSettle();
     expect(repository.starts, 1);
-    expect(find.text('Próxima parada · 5 de 10'.toUpperCase()), findsOneWidget);
+    expect(find.text('EM ROTA · MANHÃ'), findsOneWidget);
+    // The API did not send nextConfirmation, so no invented next stop is shown.
+    expect(find.text('PRÓXIMA PARADA'), findsNothing);
   });
 
   testWidgets(
@@ -143,7 +145,7 @@ void main() {
   );
 
   testWidgets(
-    'shiftCompleted Renovação para 2027 row is tappable and opens coming soon page',
+    'shiftCompleted shows the real next shift and opens the trip report',
     (tester) async {
       final repository = HomeRepository()
         ..data = const DriverHomeData(
@@ -151,25 +153,71 @@ void main() {
           todayTrip: Trip(
             id: 'trip',
             status: TripStatus.completed,
-            label: 'Manhã',
+            label: 'MORNING',
           ),
-          laterShiftLabel: 'Tarde',
+          laterShiftLabel: 'AFTERNOON',
         );
       final cubit = DriverHomeCubit(repository: repository);
       addTearDown(cubit.close);
       await tester.pumpWidget(harness(cubit));
       await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(
-        find.text('Renovação para 2027'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Renovação para 2027'));
+      expect(find.text('Próximo turno: Tarde'), findsOneWidget);
+      expect(find.text('Renovação para 2027'), findsNothing);
+      await tester.ensureVisible(find.text('Ver relatório da viagem'));
+      await tester.tap(find.text('Ver relatório da viagem'));
       await tester.pumpAndSettle();
       expect(find.text('Em breve'), findsOneWidget);
     },
   );
+
+  group('greeting derives date and shift from real data', () {
+    Future<void> pumpGreeting(
+      WidgetTester tester,
+      HomePhase phase, {
+      String? shift,
+    }) => tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('pt'),
+        home: Scaffold(
+          body: DriverHomeGreetingSection(
+            displayName: 'Carlos Souza',
+            shiftStartTime: '',
+            phase: phase,
+            shift: shift,
+            today: DateTime(2026, 11, 24),
+          ),
+        ),
+      ),
+    );
+
+    for (final phase in [
+      HomePhase.beforeDeparture,
+      HomePhase.noRouteToday,
+      HomePhase.blocked,
+    ]) {
+      testWidgets('$phase shows the injected date', (tester) async {
+        await pumpGreeting(tester, phase);
+        expect(find.text('Terça-feira, 24 de novembro'), findsOneWidget);
+      });
+    }
+
+    testWidgets('inProgress shows the trip shift', (tester) async {
+      await pumpGreeting(tester, HomePhase.inProgress, shift: 'NIGHT');
+      expect(find.text('Em rota'), findsOneWidget);
+      expect(find.text('Noite'), findsOneWidget);
+    });
+
+    testWidgets('shiftCompleted combines date and first name', (tester) async {
+      await pumpGreeting(tester, HomePhase.shiftCompleted);
+      expect(find.text('Turno concluído'), findsOneWidget);
+      expect(
+        find.text('Terça-feira, 24 de novembro · bom trabalho, Carlos'),
+        findsOneWidget,
+      );
+    });
+  });
 
   for (final action in StopAction.values) {
     testWidgets(
