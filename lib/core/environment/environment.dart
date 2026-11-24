@@ -172,6 +172,13 @@ class Environment {
 
   String get myVehiclesEndpoint => '$vehiclesEndpoint/me';
 
+  String get notificationsEndpoint => '$authBaseUrl/api/notifications';
+
+  String notificationReadEndpoint(String token) =>
+      '$notificationsEndpoint/${Uri.encodeComponent(token)}/read';
+
+  String get notificationsReadAllEndpoint => '$notificationsEndpoint/read-all';
+
   String vehiclePhotoEndpoint(String vehicleToken, String slot) =>
       '$vehiclesEndpoint/${Uri.encodeComponent(vehicleToken)}/$slot';
 

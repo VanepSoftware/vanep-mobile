@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
+import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/widgets/account_drawer.dart';
+import 'package:vanep_mobile/modules/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:vanep_mobile/modules/notifications/presentation/pages/notifications_page.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/modules/profile/presentation/formatters/assistant_status_label.dart';
 import 'package:vanep_mobile/modules/settings/presentation/pages/settings_page.dart';
@@ -62,10 +64,12 @@ Future<void> refreshAccountWhenDrawerOpens(
 }
 
 Future<void> openNotifications(BuildContext context) {
-  final l10n = AppLocalizations.of(context)!;
-  return openComingSoonPage(
-    context,
-    title: l10n.navNotifications,
-    message: l10n.comingSoon,
+  return Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => BlocProvider<NotificationsCubit>(
+        create: (_) => getIt<NotificationsCubit>()..load(),
+        child: const NotificationsPage(),
+      ),
+    ),
   );
 }

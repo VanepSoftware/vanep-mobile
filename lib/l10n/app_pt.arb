@@ -1681,5 +1681,10 @@
   "professionalDataLoadError": "Não deu para carregar os seus dados profissionais.",
   "professionalDataRetry": "Tentar novamente",
   "pushNotificationChannelName": "Notificações",
-  "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos"
+  "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos",
+  "notificationsMarkAllRead": "Marcar todas como lidas",
+  "notificationsLoadError": "Não foi possível carregar suas notificações.",
+  "notificationsRetry": "Tentar novamente",
+  "notificationsEmptyTitle": "Nenhuma notificação",
+  "notificationsEmptyMessage": "Quando algo acontecer com suas propostas e viagens, avisamos aqui."
 }
