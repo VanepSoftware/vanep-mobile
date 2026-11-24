@@ -9,7 +9,6 @@ import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/core/ui/vanep_bottom_nav.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
-import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
@@ -346,7 +345,7 @@ void main() {
     expect(find.byType(VanepComingSoonPage), findsOneWidget);
   });
 
-  testWidgets('offers the service areas screen when the step is pending', (
+  testWidgets('does not show the service areas card, even when pending', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -358,69 +357,10 @@ void main() {
       ),
     );
 
-    expect(find.byType(ServiceAreasOnboardingBanner), findsOneWidget);
-  });
-
-  testWidgets('does not offer it when nothing is pending', (tester) async {
-    await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
-
-    expect(find.byType(ServiceAreasOnboardingBanner), findsNothing);
-  });
-
-  testWidgets('skipping keeps full access to the app', (tester) async {
-    await tester.pumpWidget(
-      harness(
-        cubit,
-        authCubit,
-        profileSummaryCubit,
-        pendingSteps: const [OnboardingStep.serviceArea],
-      ),
-    );
-
-    await tester.tap(find.text('Depois'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ServiceAreasOnboardingBanner), findsNothing);
+    expect(find.text('Falta dizer onde você atende'), findsNothing);
+    expect(find.text('Cadastrar agora'), findsNothing);
     expect(find.text('Olá, Ana!'), findsOneWidget);
   });
-
-  testWidgets('accepting opens the service areas screen', (tester) async {
-    var opened = false;
-    await tester.pumpWidget(
-      harness(
-        cubit,
-        authCubit,
-        profileSummaryCubit,
-        pendingSteps: const [OnboardingStep.serviceArea],
-        openServiceAreas: (_) async => opened = true,
-      ),
-    );
-
-    await tester.tap(find.text('Cadastrar agora'));
-    await tester.pumpAndSettle();
-
-    expect(opened, isTrue);
-  });
-
-  testWidgets('rereads the pending steps after the areas screen closes', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      harness(
-        cubit,
-        authCubit,
-        profileSummaryCubit,
-        pendingSteps: const [OnboardingStep.serviceArea],
-        openServiceAreas: (_) async {},
-      ),
-    );
-
-    await tester.tap(find.text('Cadastrar agora'));
-    await tester.pumpAndSettle();
-
-    verify(() => authCubit.refreshSessionProfile()).called(1);
-  });
-
   group('push notification targets', () {
     testWidgets('a chat push pending before mount opens the chat', (
       tester,
