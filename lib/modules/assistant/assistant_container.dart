@@ -54,7 +54,10 @@ void registerAssistantDependencies(GetIt getIt) {
       const MockedAssistantVansDataSource(),
     )
     ..registerSingleton<AssistantVansRepository>(
-      AssistantVansRepositoryImpl(dataSource: getIt<AssistantVansDataSource>()),
+      AssistantVansRepositoryImpl(
+        remote: getIt<AssistantRemoteDataSource>(),
+        dataSource: getIt<AssistantVansDataSource>(),
+      ),
     )
     ..registerFactory<FindAssistantVans>(
       () => FindAssistantVans(getIt<AssistantVansRepository>()),

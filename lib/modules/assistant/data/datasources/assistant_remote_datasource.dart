@@ -16,6 +16,10 @@ abstract class AssistantRemoteDataSource {
 
   Future<List<AssistantVanDto>> fetchLinkedVans();
 
+  /// The invite waiting for the signed-in assistant, or null when there is
+  /// none or it already expired.
+  Future<AssistantInviteDto?> fetchPendingInvite();
+
   Future<void> acceptInvite(String token);
 
   Future<void> rejectInvite(String token);
@@ -79,6 +83,22 @@ class AssistantRemoteDataSourceImpl implements AssistantRemoteDataSource {
         .whereType<Map<String, dynamic>>()
         .map((e) => AssistantVanDto.fromJson(Map<String, Object?>.from(e)))
         .toList();
+  }
+
+  @override
+  Future<AssistantInviteDto?> fetchPendingInvite() async {
+    try {
+      final response = await dio.get<Map<String, dynamic>>(
+        '${environment.assistantsMeEndpoint}/invite',
+      );
+      final data = response.data;
+      if (data == null) return null;
+      return AssistantInviteDto.fromJson(Map<String, Object?>.from(data));
+    } on DioException catch (error) {
+      final status = error.response?.statusCode;
+      if (status == 404 || status == 410) return null;
+      rethrow;
+    }
   }
 
   @override

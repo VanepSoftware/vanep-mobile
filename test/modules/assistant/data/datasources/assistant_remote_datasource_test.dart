@@ -168,4 +168,58 @@ void main() {
       ).called(1);
     });
   });
+
+  group('fetchPendingInvite', () {
+    DioException httpError(int status) => DioException(
+      requestOptions: RequestOptions(path: ''),
+      response: Response<void>(
+        requestOptions: RequestOptions(path: ''),
+        statusCode: status,
+      ),
+    );
+
+    test('reads the invite with the driver summary and expiry', () async {
+      when(() => dio.get<Map<String, dynamic>>(any())).thenAnswer(
+        (_) async => _response<Map<String, dynamic>>({
+          'token': 'inv-123',
+          'expiresAt': '2026-12-01T12:00:00Z',
+          'driver': {'name': 'Pedro', 'photo': '/p.jpg', 'rating': 4.8},
+        }),
+      );
+
+      final invite = await datasource.fetchPendingInvite();
+
+      expect(invite!.token, 'inv-123');
+      expect(invite.driverName, 'Pedro');
+      expect(invite.driverRating, 4.8);
+      expect(invite.expiresAt, DateTime.utc(2026, 12, 1, 12));
+      expect(invite.vehicleDescription, isNull);
+      verify(
+        () => dio.get<Map<String, dynamic>>(
+          'https://api.vanep.test/api/assistants/me/invite',
+        ),
+      ).called(1);
+    });
+
+    for (final status in [404, 410]) {
+      test('returns null when the API answers $status', () async {
+        when(
+          () => dio.get<Map<String, dynamic>>(any()),
+        ).thenThrow(httpError(status));
+
+        expect(await datasource.fetchPendingInvite(), isNull);
+      });
+    }
+
+    test('rethrows other errors', () async {
+      when(
+        () => dio.get<Map<String, dynamic>>(any()),
+      ).thenThrow(httpError(500));
+
+      expect(
+        () => datasource.fetchPendingInvite(),
+        throwsA(isA<DioException>()),
+      );
+    });
+  });
 }
