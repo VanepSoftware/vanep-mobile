@@ -1233,6 +1233,14 @@
     }
   },
   "clientHomeRatingIsAnonymous": "Your rating is anonymous.",
+  "clientHomeRateConfirmTitle": "Rate {driver}?",
+  "@clientHomeRateConfirmTitle": {"placeholders": {"driver": {"type": "String"}}},
+  "clientHomeRateConfirmMessage": "You are about to send {stars}. A rating cannot be changed once sent.",
+  "@clientHomeRateConfirmMessage": {"placeholders": {"stars": {"type": "String"}}},
+  "clientHomeRateConfirmSend": "Send",
+  "clientHomeRateConfirmCancel": "Back",
+  "clientHomeRateSent": "Rating sent. Thank you!",
+  "clientHomeRateFailed": "We could not send your rating.",
   "clientHomeRateStars": "{count, plural, =1{1 star} other{{count} stars}}",
   "@clientHomeRateStars": {
     "placeholders": {

@@ -181,13 +181,12 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
     );
   }
 
-  // TODO(VAN-41): mocked rating, renewal and inspection items; replace with the
-  // driver and contract endpoints that will serve them. The week plan of a day
+  // TODO(VAN-41): mocked renewal and inspection items; replace with the driver
+  // and contract endpoints that will serve them. Rating items come from the API. The week plan of a day
   // without route already comes from the API.
   DailyOverview noRouteTodayOverview(DateTime now) {
     return DailyOverview(
       needsYou: [
-        const RateDriverItem(driverName: 'Carlos Souza'),
         const RenewalItem(driverName: 'Carlos', year: 2027),
         VehicleInspectionExpiredItem(
           driverName: 'Carlos',

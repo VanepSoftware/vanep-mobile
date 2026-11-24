@@ -154,6 +154,7 @@ void main() {
     late MockClientHomeRepository repository;
     late MockResolveSectionWithoutVan resolveSectionWithoutVan;
     late MockFindNegotiationHighlights findNegotiationHighlights;
+    late MockFindDriversToRate findDriversToRate;
 
     setUpAll(() => registerFallbackValue(NegotiationHighlights.none));
 
@@ -161,6 +162,8 @@ void main() {
       repository = MockClientHomeRepository();
       resolveSectionWithoutVan = MockResolveSectionWithoutVan();
       findNegotiationHighlights = MockFindNegotiationHighlights();
+      findDriversToRate = MockFindDriversToRate();
+      when(findDriversToRate.call).thenAnswer((_) async => const []);
       when(findNegotiationHighlights.call)
           .thenAnswer((_) async => NegotiationHighlights.none);
     });
@@ -169,6 +172,7 @@ void main() {
       repository: repository,
       resolveSectionWithoutVan: resolveSectionWithoutVan,
       findNegotiationHighlights: findNegotiationHighlights,
+      findDriversToRate: findDriversToRate,
       prioritizeNeedsYouItems: const PrioritizeNeedsYouItems(),
       resolveEnabledShortcuts: const ResolveEnabledShortcuts(),
       resolveHomeHeadline: const ResolveHomeHeadline(),
@@ -180,6 +184,15 @@ void main() {
         repository.findDailyOverview,
       ).thenAnswer((_) async => Ok<ClientHomeFailure, DailyOverview>(overview));
     }
+
+    test('adds the drivers waiting for a rating to needs-you', () async {
+      overviewReturns(DailyOverview(today: testBeforeRouteSection));
+      when(findDriversToRate.call).thenAnswer((_) async => [testRateCarlos]);
+
+      final home = (await buildUseCase()()).valueOrNull!;
+
+      expect(home.needsYou.visible, [testRateCarlos]);
+    });
 
     test('uses the section from the overview when there is one', () async {
       overviewReturns(

@@ -104,6 +104,10 @@ class Environment {
 
   String get clientDriversMeEndpoint => '$clientDriversEndpoint/me';
 
+  String get driverRatingsEndpoint => '$authBaseUrl/api/driver-ratings';
+
+  String get driverRatingStatusEndpoint => '$driverRatingsEndpoint/status';
+
   String clientDriverContractsEndpoint(String clientDriverToken) =>
       '$clientDriversEndpoint/${Uri.encodeComponent(clientDriverToken)}/contracts';
 

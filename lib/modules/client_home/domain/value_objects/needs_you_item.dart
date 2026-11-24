@@ -160,7 +160,9 @@ final class VehicleInspectionExpiredItem extends NeedsYouItem {
 }
 
 final class RateDriverItem extends NeedsYouItem {
-  const RateDriverItem({required this.driverName});
+  const RateDriverItem({required this.driverToken, required this.driverName});
+
+  final String driverToken;
 
   final String driverName;
 
@@ -171,7 +173,7 @@ final class RateDriverItem extends NeedsYouItem {
   DateTime? get deadline => null;
 
   @override
-  List<Object?> get props => [driverName];
+  List<Object?> get props => [driverToken, driverName];
 }
 
 class NeedsYouSummary extends Equatable {

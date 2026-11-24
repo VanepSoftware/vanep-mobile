@@ -2,6 +2,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/client_home/data/datasources/daily_overview_datasource.dart';
 import 'package:vanep_mobile/modules/client_home/domain/repositories/client_home_repository.dart';
+import 'package:vanep_mobile/modules/client_home/domain/repositories/driver_rating_repository.dart';
+import 'package:vanep_mobile/modules/client_home/domain/usecases/find_drivers_to_rate.dart';
+import 'package:vanep_mobile/modules/client_home/domain/usecases/rate_driver.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/find_negotiation_highlights.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/load_client_home.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_section_without_van.dart';
@@ -18,6 +21,13 @@ class MockResolveSectionWithoutVan extends Mock
     implements ResolveSectionWithoutVan {}
 
 class MockLoadClientHome extends Mock implements LoadClientHome {}
+
+class MockFindDriversToRate extends Mock implements FindDriversToRate {}
+
+class MockRateDriver extends Mock implements RateDriver {}
+
+class MockDriverRatingRepository extends Mock
+    implements DriverRatingRepository {}
 
 class MockFindNegotiationHighlights extends Mock
     implements FindNegotiationHighlights {}

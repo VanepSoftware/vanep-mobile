@@ -82,7 +82,10 @@ final testInspectionExpired = VehicleInspectionExpiredItem(
   regularizeBy: DateTime(2026, 10, 31),
 );
 
-const testRateCarlos = RateDriverItem(driverName: 'Carlos Souza');
+const testRateCarlos = RateDriverItem(
+  driverToken: 'drv-carlos',
+  driverName: 'Carlos Souza',
+);
 
 final testCarlosMorningVan = VanDay(
   driverName: 'Carlos',

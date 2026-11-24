@@ -135,7 +135,8 @@ void main() {
       final overview = await overviewFor(ClientHomeScenario.noRouteToday);
 
       expect(overview.today, isNull);
-      expect(overview.needsYou, hasLength(3));
+      expect(overview.needsYou, hasLength(2));
+      expect(overview.needsYou.whereType<RateDriverItem>(), isEmpty);
     });
   });
 }
