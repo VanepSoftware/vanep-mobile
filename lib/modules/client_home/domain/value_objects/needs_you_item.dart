@@ -142,21 +142,21 @@ final class RenewalItem extends NeedsYouItem {
 final class VehicleInspectionExpiredItem extends NeedsYouItem {
   const VehicleInspectionExpiredItem({
     required this.driverName,
-    required this.regularizeBy,
+    required this.expiredOn,
   });
 
   final String driverName;
 
-  final DateTime regularizeBy;
+  final DateTime expiredOn;
 
   @override
   NeedsYouTier get tier => NeedsYouTier.followUp;
 
   @override
-  DateTime? get deadline => regularizeBy;
+  DateTime? get deadline => expiredOn;
 
   @override
-  List<Object?> get props => [driverName, regularizeBy];
+  List<Object?> get props => [driverName, expiredOn];
 }
 
 final class RateDriverItem extends NeedsYouItem {

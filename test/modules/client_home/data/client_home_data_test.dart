@@ -135,7 +135,11 @@ void main() {
       final overview = await overviewFor(ClientHomeScenario.noRouteToday);
 
       expect(overview.today, isNull);
-      expect(overview.needsYou, hasLength(2));
+      expect(overview.needsYou, hasLength(1));
+      expect(
+        overview.needsYou.whereType<VehicleInspectionExpiredItem>(),
+        isEmpty,
+      );
       expect(overview.needsYou.whereType<RateDriverItem>(), isEmpty);
     });
   });

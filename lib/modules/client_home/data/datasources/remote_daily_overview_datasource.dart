@@ -4,6 +4,7 @@ import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/client_home/data/datasources/daily_overview_datasource.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
+import 'package:vanep_mobile/modules/client_home/domain/value_objects/needs_you_item.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
 
@@ -33,13 +34,17 @@ DailyOverview dailyOverviewFromJson(Map<String, dynamic> json) {
   final date = DateTime.tryParse('${json['date']}');
   final rawVans = json['vans'];
   if (date == null || rawVans is! List) return const DailyOverview();
+  final needsYou = expiredInspectionsFromJson(json['expiredInspections']);
   final vans = rawVans
       .whereType<Map<String, dynamic>>()
       .map((van) => vanDayFromJson(van, date))
       .whereType<VanDay>()
       .toList();
   if (vans.isEmpty) {
-    return DailyOverview(today: noRouteTodayFromJson(json['upcoming']));
+    return DailyOverview(
+      today: noRouteTodayFromJson(json['upcoming']),
+      needsYou: needsYou,
+    );
   }
   return DailyOverview(
     today: VanDaySection(
@@ -48,7 +53,26 @@ DailyOverview dailyOverviewFromJson(Map<String, dynamic> json) {
         json['childrenWithoutVan'],
       ),
     ),
+    needsYou: needsYou,
   );
+}
+
+List<VehicleInspectionExpiredItem> expiredInspectionsFromJson(
+  Object? inspections,
+) {
+  if (inspections is! List) return const [];
+  final items = <VehicleInspectionExpiredItem>[];
+  for (final inspection in inspections.whereType<Map<String, dynamic>>()) {
+    final expiredOn = DateTime.tryParse('${inspection['expiredOn']}');
+    if (expiredOn == null) continue;
+    items.add(
+      VehicleInspectionExpiredItem(
+        driverName: firstName(inspection['driverName'] as String? ?? ''),
+        expiredOn: expiredOn,
+      ),
+    );
+  }
+  return items;
 }
 
 List<ChildWithoutRoute> childrenWithoutVanFromJson(Object? children) {

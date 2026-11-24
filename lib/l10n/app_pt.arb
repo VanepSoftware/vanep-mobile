@@ -634,7 +634,7 @@
   "clientHomeRenewalFor": "Renovação para {year}",
   "clientHomeDriverSentProposal": "{driver} mandou a proposta",
   "clientHomeInspectionExpired": "Vistoria da van venceu",
-  "clientHomeInspectionDeadline": "{driver} tem até {date} para regularizar",
+  "clientHomeInspectionExpiredOn": "A vistoria da van de {driver} venceu em {date}",
   "clientHomeRateVan": "Como está a van de {driver}?",
   "clientHomeRatingIsAnonymous": "Sua avaliação é anônima.",
   "clientHomeRateConfirmTitle": "Avaliar {driver}?",

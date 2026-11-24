@@ -5,6 +5,7 @@ import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/client_home/data/datasources/remote_daily_overview_datasource.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/client_home.dart';
+import 'package:vanep_mobile/modules/client_home/domain/value_objects/needs_you_item.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/today_section.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/van_day.dart';
 
@@ -148,6 +149,30 @@ void main() {
     final section = overview.today! as VanDaySection;
     expect(section.childrenWithoutRoute, const [
       ChildWithoutRoute(name: 'Davi', reason: NoRouteReason.noVanYet),
+    ]);
+  });
+
+  test('warns about expired inspections even without vans today', () {
+    final overview = dailyOverviewFromJson({
+      'date': '2027-03-01',
+      'vans': [],
+      'upcoming': [],
+      'expiredInspections': [
+        {
+          'driverToken': 'drv-carlos',
+          'driverName': 'Carlos Souza',
+          'expiredOn': '2027-02-20',
+        },
+        {'driverName': 'Sem data'},
+      ],
+    });
+
+    expect(overview.today, isNull);
+    expect(overview.needsYou, [
+      VehicleInspectionExpiredItem(
+        driverName: 'Carlos',
+        expiredOn: DateTime(2027, 2, 20),
+      ),
     ]);
   });
 }

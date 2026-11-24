@@ -1213,8 +1213,8 @@
     }
   },
   "clientHomeInspectionExpired": "Van inspection expired",
-  "clientHomeInspectionDeadline": "{driver} has until {date} to fix it",
-  "@clientHomeInspectionDeadline": {
+  "clientHomeInspectionExpiredOn": "The inspection of {driver}'s van expired on {date}",
+  "@clientHomeInspectionExpiredOn": {
     "placeholders": {
       "driver": {
         "type": "String"

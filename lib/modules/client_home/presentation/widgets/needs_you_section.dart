@@ -397,9 +397,9 @@ class NeedsYouRow extends StatelessWidget {
           foreground: context.palette.warning,
         ),
         title: l10n.clientHomeInspectionExpired,
-        subtitle: l10n.clientHomeInspectionDeadline(
+        subtitle: l10n.clientHomeInspectionExpiredOn(
           item.driverName,
-          formatDayMonth(item.regularizeBy),
+          formatDayMonth(item.expiredOn),
         ),
         onTap: () =>
             openUnavailableFeature(context, l10n.clientHomeInspectionExpired),
