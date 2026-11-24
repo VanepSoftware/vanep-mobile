@@ -135,4 +135,19 @@ void main() {
     expect(noRouteTodayFromJson(const []), isNull);
     expect(noRouteTodayFromJson(null), isNull);
   });
+
+  test('lists the children still without a van next to the vans', () {
+    final overview = dailyOverviewFromJson({
+      'date': '2027-03-01',
+      'vans': [carlosMorning()],
+      'childrenWithoutVan': [
+        {'dependentToken': 'dep-davi', 'name': 'Davi Lima'},
+      ],
+    });
+
+    final section = overview.today! as VanDaySection;
+    expect(section.childrenWithoutRoute, const [
+      ChildWithoutRoute(name: 'Davi', reason: NoRouteReason.noVanYet),
+    ]);
+  });
 }

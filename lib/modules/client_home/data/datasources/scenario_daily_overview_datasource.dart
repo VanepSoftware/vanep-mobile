@@ -53,9 +53,6 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
             live: liveTrip(now),
           ),
         ],
-        childrenWithoutRoute: const [
-          ChildWithoutRoute(name: 'Pedro', reason: NoRouteReason.noVanYet),
-        ],
       ),
       needsYou: [
         PaymentItem(
@@ -95,7 +92,6 @@ class ScenarioDailyOverviewDataSource implements DailyOverviewDataSource {
             name: 'Bia',
             reason: NoRouteReason.goesWithGuardian,
           ),
-          ChildWithoutRoute(name: 'Davi', reason: NoRouteReason.noVanYet),
         ],
       ),
       needsYou: [

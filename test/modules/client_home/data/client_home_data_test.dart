@@ -104,7 +104,7 @@ void main() {
       final today = overview.today! as VanDaySection;
 
       expect(today.liveVan?.riders.map((rider) => rider.name), ['Ana']);
-      expect(today.childrenWithoutRoute.single.name, 'Pedro');
+      expect(today.childrenWithoutRoute, isEmpty);
       expect(today.isVanApproaching, isFalse);
       expect(overview.needsYou.whereType<ContractToSignItem>(), isNotEmpty);
     });
@@ -114,7 +114,7 @@ void main() {
       final today = overview.today! as VanDaySection;
 
       expect(today.vans, hasLength(2));
-      expect(today.childrenWithoutRoute, hasLength(2));
+      expect(today.childrenWithoutRoute.single.name, 'Bia');
     });
 
     test('van arriving is approaching with the child day', () async {

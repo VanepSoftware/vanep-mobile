@@ -41,7 +41,25 @@ DailyOverview dailyOverviewFromJson(Map<String, dynamic> json) {
   if (vans.isEmpty) {
     return DailyOverview(today: noRouteTodayFromJson(json['upcoming']));
   }
-  return DailyOverview(today: VanDaySection(vans: vans));
+  return DailyOverview(
+    today: VanDaySection(
+      vans: vans,
+      childrenWithoutRoute: childrenWithoutVanFromJson(
+        json['childrenWithoutVan'],
+      ),
+    ),
+  );
+}
+
+List<ChildWithoutRoute> childrenWithoutVanFromJson(Object? children) {
+  if (children is! List) return const [];
+  return [
+    for (final child in children.whereType<Map<String, dynamic>>())
+      ChildWithoutRoute(
+        name: firstName(child['name'] as String? ?? ''),
+        reason: NoRouteReason.noVanYet,
+      ),
+  ];
 }
 
 /// The week plan shown when nobody rides today, or null when no child rides in
