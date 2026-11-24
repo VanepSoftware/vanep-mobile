@@ -2819,11 +2819,11 @@
   "driverHomeNextStopEta": "600 m · 2 min",
   "driverHomeNextStopDefaultAddress": "QNL 5, Conjunto J, house 12",
   "driverHomeNextStopDefaultStudents": "Beatriz and Gabriel",
-  "driverHomeSlideConfirmCount": "Slide to confirm ({count})",
-  "@driverHomeSlideConfirmCount": {
+  "driverHomeSlideConfirm": "Slide to confirm {action}",
+  "@driverHomeSlideConfirm": {
     "placeholders": {
-      "count": {
-        "type": "int"
+      "action": {
+        "type": "String"
       }
     }
   },

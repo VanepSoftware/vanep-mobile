@@ -15,12 +15,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: VanepCard(
-            isError: true,
-            child: Text('Rejected'),
-          ),
-        ),
+        home: Scaffold(body: VanepCard(isError: true, child: Text('Rejected'))),
       ),
     );
     final card = tester.widget<VanepCard>(find.byType(VanepCard));
@@ -81,9 +76,7 @@ void main() {
     expect(driverHomeFixture(HomePhase.inProgress).nextConfirmation, isNotNull);
   });
 
-  testWidgets('DriverListRow triggers onTap when tapped', (
-    tester,
-  ) async {
+  testWidgets('DriverListRow triggers onTap when tapped', (tester) async {
     var tapped = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -140,6 +133,14 @@ void main() {
             ),
           ),
         );
+        final actionLabel = action == StopAction.boarding
+            ? 'embarque'
+            : 'desembarque';
+        expect(
+          find.text('Deslize para confirmar $actionLabel'),
+          findsOneWidget,
+        );
+        expect(find.textContaining('('), findsNothing);
         final handle = find.byType(GestureDetector);
         await tester.tap(handle);
         await tester.pumpAndSettle();

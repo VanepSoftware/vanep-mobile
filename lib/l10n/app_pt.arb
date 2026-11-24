@@ -1391,11 +1391,11 @@
   "driverHomeNextStopEta": "600 m · 2 min",
   "driverHomeNextStopDefaultAddress": "QNL 5, Conjunto J, casa 12",
   "driverHomeNextStopDefaultStudents": "Beatriz e Gabriel",
-  "driverHomeSlideConfirmCount": "Deslize para confirmar ({count})",
-  "@driverHomeSlideConfirmCount": {
+  "driverHomeSlideConfirm": "Deslize para confirmar {action}",
+  "@driverHomeSlideConfirm": {
     "placeholders": {
-      "count": {
-        "type": "int"
+      "action": {
+        "type": "String"
       }
     }
   },

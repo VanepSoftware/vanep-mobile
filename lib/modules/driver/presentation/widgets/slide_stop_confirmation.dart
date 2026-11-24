@@ -25,8 +25,7 @@ class SlideStopConfirmationState extends State<SlideStopConfirmation> {
   bool dragging = false;
 
   Future<void> finishDrag() async {
-    final complete =
-        dragging && progress >= 1 && widget.enabled && !submitting;
+    final complete = dragging && progress >= 1 && widget.enabled && !submitting;
     setState(() {
       progress = 0;
       dragging = false;
@@ -69,7 +68,7 @@ class SlideStopConfirmationState extends State<SlideStopConfirmation> {
                 Padding(
                   padding: const EdgeInsets.only(left: 48, right: 12),
                   child: Text(
-                    l10n.driverHomeSlideConfirmCount(2),
+                    l10n.driverHomeSlideConfirm(action),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 15,
