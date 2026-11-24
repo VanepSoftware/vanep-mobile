@@ -8,8 +8,8 @@ import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_mai
 import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_primitives.dart';
 import 'package:vanep_mobile/modules/driver/presentation/widgets/slide_stop_confirmation.dart';
 
-// TODO(VAN-66): Replace static trip KPIs (14 alunos, 10 paradas, 2 ausências, Marcos na van)
-// once the driver trip summary endpoint returns live counts and assigned assistant metadata.
+// TODO(VAN-66): Show departure time, stop/absence counts and the assigned assistant once the
+// driver trip summary endpoint returns them. Until then only DriverHomeData values are rendered.
 class DriverBeforeDepartureCard extends StatelessWidget {
   const DriverBeforeDepartureCard({
     required this.data,
@@ -32,7 +32,6 @@ class DriverBeforeDepartureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final trip = data.todayTrip!;
-    final studentsToday = data.studentCount > 0 ? '${data.studentCount}' : '14';
     return DriverNavyCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -44,7 +43,11 @@ class DriverBeforeDepartureCard extends StatelessWidget {
                 child: Semantics(
                   label: l10n.driverHomeBeforeDeparture,
                   child: Text(
-                    l10n.driverHomeBeforeDepartureOverline.toUpperCase(),
+                    l10n
+                        .driverHomeTripShiftOverline(
+                          localizeDriverShift(l10n, trip.label),
+                        )
+                        .toUpperCase(),
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
@@ -76,7 +79,7 @@ class DriverBeforeDepartureCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            l10n.driverHomeBeforeDepartureHeading,
+            l10n.driverHomeBeforeDeparture,
             style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w800,
@@ -85,83 +88,9 @@ class DriverBeforeDepartureCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: DriverNavyStatBox(
-                  value: studentsToday,
-                  label: l10n.driverHomeStatStudentsToday,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DriverNavyStatBox(
-                  value: '10',
-                  label: l10n.driverHomeStatStops,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DriverNavyStatBox(
-                  value: '2',
-                  label: l10n.driverHomeStatAbsences,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Container(
-                width: 38,
-                height: 38,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE3F3EA),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  l10n.driverHomeCrewInitials,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: DriverHomeTokens.success,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.driverHomeCrewName,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      l10n.driverHomeCrewRole,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xB3FFFFFF),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                l10n.driverHomeCrewOnline,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF7CE3A8),
-                ),
-              ),
-            ],
+          DriverNavyStatBox(
+            value: '${data.studentCount}',
+            label: l10n.driverHomeStatActiveStudents,
           ),
           const SizedBox(height: 14),
           Container(
@@ -270,8 +199,8 @@ class DriverNavyStatBox extends StatelessWidget {
   );
 }
 
-// TODO(VAN-66): Replace static active stop address, ETA ("600 m · 2 min") and 7/14 progress segments
-// once the active trip tracking endpoint provides real-time stop progress and student list per stop.
+// TODO(VAN-66): Show on-board progress, stop address and ETA once the active trip tracking
+// endpoint provides them. The next-stop block only renders when the API supplies nextConfirmation.
 class DriverInProgressCard extends StatelessWidget {
   const DriverInProgressCard({
     required this.data,
@@ -291,17 +220,6 @@ class DriverInProgressCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final trip = data.todayTrip!;
     final next = data.nextConfirmation;
-    final studentNames =
-        next?.studentName ?? l10n.driverHomeNextStopDefaultStudents;
-    final confirmation =
-        next ??
-        StopConfirmation(
-          tripId: trip.id,
-          stopId: 'stop-default',
-          studentId: 'student-default',
-          studentName: studentNames,
-          action: StopAction.boarding,
-        );
     return DriverNavyCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -321,7 +239,11 @@ class DriverInProgressCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    l10n.driverHomeInProgressOverline.toUpperCase(),
+                    l10n
+                        .driverHomeInProgressShiftOverline(
+                          localizeDriverShift(l10n, trip.label),
+                        )
+                        .toUpperCase(),
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
@@ -352,60 +274,19 @@ class DriverInProgressCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              const Text(
-                '7',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                  height: 1.0,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                l10n.driverHomeOnBoardCount(14),
+          Align(
+            alignment: Alignment.centerRight,
+            child: InkWell(
+              onTap: enabled ? () => navigation.openChecklist(trip.id) : null,
+              child: Text(
+                l10n.driverHomeChecklist,
                 style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xCCFFFFFF),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF8EC5FF),
                 ),
               ),
-              const Spacer(),
-              InkWell(
-                onTap: enabled ? () => navigation.openChecklist(trip.id) : null,
-                child: Text(
-                  l10n.driverHomeChecklist,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF8EC5FF),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              for (var index = 0; index < 14; index++) ...[
-                if (index > 0) const SizedBox(width: 3),
-                Expanded(
-                  child: Container(
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: index < 7
-                          ? const Color(0xFF8EC5FF)
-                          : const Color(0x2EFFFFFF),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                  ),
-                ),
-              ],
-            ],
+            ),
           ),
           const SizedBox(height: 16),
           Container(
@@ -417,117 +298,40 @@ class DriverInProgressCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      l10n.driverHomeNextStopLabel.toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.66,
-                        color: DriverHomeTokens.textSecondary,
-                      ),
+                if (next != null) ...[
+                  Text(
+                    l10n.driverHomeNextStopLabel.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.66,
+                      color: DriverHomeTokens.textSecondary,
                     ),
-                    Text(
-                      l10n.driverHomeNextStopEta,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: DriverHomeTokens.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  l10n.driverHomeNextStopDefaultAddress,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: DriverHomeTokens.textPrimary,
-                    letterSpacing: -0.25,
                   ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 54,
-                      height: 32,
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: DriverHomeTokens.warningSoft,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 2),
-                            ),
-                            child: const Text(
-                              'B',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                color: DriverHomeTokens.warning,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 22,
-                            child: Container(
-                              width: 32,
-                              height: 32,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: DriverHomeTokens.actionSoft,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
-                              ),
-                              child: const Text(
-                                'G',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                  color: DriverHomeTokens.action,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                  const SizedBox(height: 6),
+                  Text(
+                    next.studentName,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: DriverHomeTokens.textPrimary,
+                      letterSpacing: -0.25,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        studentNames,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: DriverHomeTokens.textPrimary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                SlideStopConfirmation(
-                  key: ValueKey((
-                    confirmation.tripId,
-                    confirmation.stopId,
-                    confirmation.studentId,
-                    confirmation.action,
-                  )),
-                  confirmation: confirmation,
-                  enabled: enabled && next != null && onConfirmStop != null,
-                  onConfirmed: () => onConfirmStop!(confirmation),
-                ),
-                const SizedBox(height: 10),
+                  ),
+                  const SizedBox(height: 14),
+                  SlideStopConfirmation(
+                    key: ValueKey((
+                      next.tripId,
+                      next.stopId,
+                      next.studentId,
+                      next.action,
+                    )),
+                    confirmation: next,
+                    enabled: enabled && onConfirmStop != null,
+                    onConfirmed: () => onConfirmStop!(next),
+                  ),
+                  const SizedBox(height: 10),
+                ],
                 Row(
                   children: [
                     Expanded(
@@ -615,8 +419,8 @@ class DriverInProgressCard extends StatelessWidget {
   }
 }
 
-// TODO(VAN-66): Replace static completed shift summary ("7h24", "13 alunos entregues", 0/1/1h03)
-// once the completed trip summary endpoint returns actual delivery metrics.
+// TODO(VAN-66): Show end time, delivered students and duration KPIs once the completed trip
+// summary endpoint returns them.
 class DriverShiftCompletedCard extends StatelessWidget {
   const DriverShiftCompletedCard({
     required this.data,
@@ -630,6 +434,9 @@ class DriverShiftCompletedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final shift = data.todayTrip == null
+        ? null
+        : localizeDriverShift(l10n, data.todayTrip!.label);
     final nextShiftLabel = data.laterShiftLabel == null
         ? null
         : l10n.driverHomeNextShift(
@@ -666,10 +473,9 @@ class DriverShiftCompletedCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Semantics(
-                      label: l10n.driverHomeCompleted,
-                      child: Text(
-                        l10n.driverHomeCompletedOverline.toUpperCase(),
+                    if (shift != null) ...[
+                      Text(
+                        shift.toUpperCase(),
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
@@ -677,10 +483,10 @@ class DriverShiftCompletedCard extends StatelessWidget {
                           color: DriverHomeTokens.success,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
+                      const SizedBox(height: 2),
+                    ],
                     Text(
-                      l10n.driverHomeCompletedHeadline,
+                      l10n.driverHomeCompleted,
                       style: const TextStyle(
                         fontSize: 21,
                         fontWeight: FontWeight.w800,
@@ -688,37 +494,18 @@ class DriverShiftCompletedCard extends StatelessWidget {
                         letterSpacing: -0.3,
                       ),
                     ),
-                    if (nextShiftLabel != null)
-                      Semantics(
-                        label: nextShiftLabel,
-                        child: const SizedBox.shrink(),
+                    if (nextShiftLabel != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        nextShiftLabel,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: DriverHomeTokens.textSecondary,
+                        ),
                       ),
+                    ],
                   ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: DriverCompletedKpiBox(
-                  value: '0',
-                  label: l10n.driverHomeCompletedKpiUnchecked,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DriverCompletedKpiBox(
-                  value: '1',
-                  label: l10n.driverHomeCompletedKpiAbsent,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DriverCompletedKpiBox(
-                  value: l10n.driverHomeCompletedKpiDurationValue,
-                  label: l10n.driverHomeCompletedKpiDurationLabel,
                 ),
               ),
             ],
@@ -752,51 +539,8 @@ class DriverShiftCompletedCard extends StatelessWidget {
   }
 }
 
-class DriverCompletedKpiBox extends StatelessWidget {
-  const DriverCompletedKpiBox({
-    required this.value,
-    required this.label,
-    super.key,
-  });
-
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: const Color(0xFFD5ECDF)),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            color: DriverHomeTokens.textPrimary,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: DriverHomeTokens.textSecondary,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-// TODO(VAN-66): Replace static next route schedule ("segunda, 6h20 · Manhã 16 alunos · tarde 12 alunos")
-// once the driver calendar endpoint returns the next scheduled operating day.
+// TODO(VAN-66): Show the next scheduled operating day once the driver calendar endpoint
+// returns it.
 class DriverNoRouteTodayCard extends StatelessWidget {
   const DriverNoRouteTodayCard({super.key});
 
@@ -831,24 +575,12 @@ class DriverNoRouteTodayCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Semantics(
-                  label: l10n.driverHomeNoRouteTitle,
-                  child: Text(
-                    l10n.driverHomeNoRouteNextTitle,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: DriverHomeTokens.textPrimary,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 2),
                 Text(
-                  l10n.driverHomeNoRouteNextSubtitle,
+                  l10n.driverHomeNoRouteTitle,
                   style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: DriverHomeTokens.textSecondary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: DriverHomeTokens.textPrimary,
                   ),
                 ),
               ],
@@ -860,8 +592,8 @@ class DriverNoRouteTodayCard extends StatelessWidget {
   }
 }
 
-// TODO(VAN-66): Replace static invoice amount and due date ("R$ 49,90", "10/11")
-// once the driver billing/subscription endpoint provides open invoice details.
+// TODO(VAN-66): Show the open invoice amount and due date once the driver billing endpoint
+// provides them.
 class DriverBlockedCard extends StatelessWidget {
   const DriverBlockedCard({
     required this.data,
@@ -910,7 +642,7 @@ class DriverBlockedCard extends StatelessWidget {
                     Semantics(
                       label: l10n.driverHomeBlockedTitle,
                       child: Text(
-                        l10n.driverHomeBlockedOverline.toUpperCase(),
+                        l10n.driverHomeBlockedTitle.toUpperCase(),
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
@@ -932,7 +664,7 @@ class DriverBlockedCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      l10n.driverHomeBlockedSubtitle,
+                      data.blockReason.localize(l10n),
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -945,18 +677,17 @@ class DriverBlockedCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          Semantics(
+          VanepPrimaryButton(
             label: l10n.driverHomeRegularize,
-            child: VanepPrimaryButton(
-              label: l10n.driverHomePayAmountWithPix,
-              onPressed: navigation.openRegularization,
-            ),
-          ),
-          const SizedBox(height: 8),
-          VanepSecondaryButton(
-            label: l10n.driverHomeSeeInvoice,
             onPressed: navigation.openRegularization,
           ),
+          if (data.subscriptionBlocked) ...[
+            const SizedBox(height: 8),
+            VanepSecondaryButton(
+              label: l10n.driverHomeSeeInvoice,
+              onPressed: navigation.openRegularization,
+            ),
+          ],
         ],
       ),
     );

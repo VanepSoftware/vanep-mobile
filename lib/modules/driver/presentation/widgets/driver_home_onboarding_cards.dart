@@ -5,8 +5,8 @@ import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dar
 import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_main_card.dart';
 import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_primitives.dart';
 
-// TODO(VAN-66): Replace static onboarding step breakdown (3 of 6, Sprinter 2021, CNH/CRLV progress)
-// once the driver onboarding summary endpoint exposes per-step completion and vehicle metadata.
+// TODO(VAN-66): Mark completed steps, show overall progress and vehicle details once the driver
+// onboarding summary endpoint exposes per-step completion. Until then steps are listed neutrally.
 class DriverIncompleteCard extends StatelessWidget {
   const DriverIncompleteCard({required this.navigation, super.key});
 
@@ -39,78 +39,62 @@ class DriverIncompleteCard extends StatelessWidget {
               letterSpacing: -0.3,
             ),
           ),
-          const SizedBox(height: 14),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: const LinearProgressIndicator(
-              value: 0.5,
-              minHeight: 6,
-              backgroundColor: Color(0x2EFFFFFF),
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8EC5FF)),
-            ),
-          ),
           const SizedBox(height: 16),
-          DriverIncompleteDoneStepRow(title: l10n.driverHomeIncompleteStep1),
-          const SizedBox(height: 10),
-          DriverIncompleteDoneStepRow(title: l10n.driverHomeIncompleteStep2),
-          const SizedBox(height: 10),
-          DriverIncompleteDoneStepRow(title: l10n.driverHomeIncompleteStep3),
-          const SizedBox(height: 10),
-          DriverIncompleteNumberedStepRow(
-            number: '4',
-            title: l10n.driverHomeIncompleteStep4Title,
-            subtitle: l10n.driverHomeIncompleteStep4Hint,
-            trailingBadge: l10n.driverHomeIncompleteStepNow,
-            highlighted: true,
-          ),
-          const SizedBox(height: 10),
-          DriverIncompleteNumberedStepRow(
-            number: '5',
-            title: l10n.driverHomeIncompleteStep5Title,
-            subtitle: l10n.driverHomeIncompleteStep5Hint,
-            highlighted: false,
-          ),
-          const SizedBox(height: 10),
-          DriverIncompleteNumberedStepRow(
-            number: '6',
-            title: l10n.driverHomeIncompleteStep6Title,
-            subtitle: l10n.driverHomeIncompleteStep6Hint,
-            highlighted: false,
-          ),
+          for (final (index, step) in [
+            (l10n.driverHomeIncompleteStep1, null),
+            (l10n.driverHomeIncompleteStep2, null),
+            (l10n.driverHomeIncompleteStep3, null),
+            (
+              l10n.driverHomeIncompleteStep4Title,
+              l10n.driverHomeIncompleteStep4Hint,
+            ),
+            (
+              l10n.driverHomeIncompleteStep5Title,
+              l10n.driverHomeIncompleteStep5Hint,
+            ),
+            (
+              l10n.driverHomeIncompleteStep6Title,
+              l10n.driverHomeIncompleteStep6Hint,
+            ),
+          ].indexed) ...[
+            if (index > 0) const SizedBox(height: 10),
+            DriverIncompleteNumberedStepRow(
+              number: '${index + 1}',
+              title: step.$1,
+              subtitle: step.$2,
+            ),
+          ],
           const SizedBox(height: 18),
-          Semantics(
-            label: l10n.driverHomeCompleteRegistration,
-            child: SizedBox(
-              height: 48,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: DriverHomeTokens.brand,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+          SizedBox(
+            height: 48,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: DriverHomeTokens.brand,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                onPressed: () => navigation.openShortcut(Shortcut.documents),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      l10n.driverHomeIncompleteSendCnh,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: DriverHomeTokens.brand,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Icon(
-                      Icons.arrow_forward,
-                      size: 18,
+              ),
+              onPressed: () => navigation.openShortcut(Shortcut.documents),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    l10n.driverHomeCompleteRegistration,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
                       color: DriverHomeTokens.brand,
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(
+                    Icons.arrow_forward,
+                    size: 18,
+                    color: DriverHomeTokens.brand,
+                  ),
+                ],
               ),
             ),
           ),
@@ -129,53 +113,17 @@ class DriverIncompleteCard extends StatelessWidget {
   }
 }
 
-class DriverIncompleteDoneStepRow extends StatelessWidget {
-  const DriverIncompleteDoneStepRow({required this.title, super.key});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      Container(
-        width: 24,
-        height: 24,
-        decoration: const BoxDecoration(
-          color: Color(0xFF8EC5FF),
-          shape: BoxShape.circle,
-        ),
-        child: const Icon(Icons.check, size: 16, color: DriverHomeTokens.brand),
-      ),
-      const SizedBox(width: 12),
-      Expanded(
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Color(0xD1FFFFFF),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
 class DriverIncompleteNumberedStepRow extends StatelessWidget {
   const DriverIncompleteNumberedStepRow({
     required this.number,
     required this.title,
-    required this.subtitle,
-    required this.highlighted,
-    this.trailingBadge,
+    this.subtitle,
     super.key,
   });
 
   final String number;
   final String title;
-  final String subtitle;
-  final bool highlighted;
-  final String? trailingBadge;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -187,19 +135,14 @@ class DriverIncompleteNumberedStepRow extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(
-            color: highlighted
-                ? const Color(0xFF8EC5FF)
-                : const Color(0x52FFFFFF),
-            width: highlighted ? 2 : 1.5,
-          ),
+          border: Border.all(color: const Color(0x52FFFFFF), width: 1.5),
         ),
         child: Text(
           number,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w800,
-            color: highlighted ? Colors.white : const Color(0xB3FFFFFF),
+            color: Color(0xB3FFFFFF),
           ),
         ),
       ),
@@ -216,38 +159,26 @@ class DriverIncompleteNumberedStepRow extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Color(0xBAFFFFFF),
+            if (subtitle != null) ...[
+              const SizedBox(height: 2),
+              Text(
+                subtitle!,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xBAFFFFFF),
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
-      if (trailingBadge != null) ...[
-        const SizedBox(width: 8),
-        Padding(
-          padding: const EdgeInsets.only(top: 2),
-          child: Text(
-            trailingBadge!,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF8EC5FF),
-            ),
-          ),
-        ),
-      ],
     ],
   );
 }
 
-// TODO(VAN-66): Replace static submission timestamp ("12/10 · 18h40") with the backend
-// submittedAt timestamp from the driver registration review endpoint.
+// TODO(VAN-66): Show the submission timestamp once the driver registration review endpoint
+// returns submittedAt.
 class DriverUnderReviewCard extends StatelessWidget {
   const DriverUnderReviewCard({required this.navigation, super.key});
 
@@ -455,14 +386,6 @@ class DriverReviewTimeline extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: DriverHomeTokens.textPrimary,
                 ),
-              ),
-            ),
-            Text(
-              l10n.driverHomeTimelineSentTime,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: DriverHomeTokens.textSecondary,
               ),
             ),
           ],
