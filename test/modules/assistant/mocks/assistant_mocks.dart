@@ -1,5 +1,4 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_students_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_repository.dart';
 import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_students_repository.dart';
 import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_vans_repository.dart';
@@ -30,8 +29,5 @@ class MockRespondToAssistantInvite extends Mock
 
 class MockAssistantStudentsRepository extends Mock
     implements AssistantStudentsRepository {}
-
-class MockAssistantStudentsDataSource extends Mock
-    implements AssistantStudentsDataSource {}
 
 class MockFindAssistantStudents extends Mock implements FindAssistantStudents {}

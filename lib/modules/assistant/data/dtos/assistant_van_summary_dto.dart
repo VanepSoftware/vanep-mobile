@@ -1,4 +1,5 @@
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_van_dto.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_students_overview.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 
 /// Reads one item of GET /api/assistants/me/vans: a shift the assistant works
@@ -22,4 +23,15 @@ int? minutesOfDay(Object? value) {
   final minute = int.tryParse(parts[1]);
   if (hour == null || minute == null) return null;
   return hour * 60 + minute;
+}
+
+/// Reads one item of GET /api/assistants/me/vans/{vanToken}/students.
+AssistantStudentSummary assistantStudentFromJson(Map<String, Object?> json) {
+  return AssistantStudentSummary(
+    token: json['token'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    stopNumber: (json['stopNumber'] as num?)?.toInt() ?? 0,
+    placeName: json['placeName'] as String? ?? '',
+    hasFamilyInApp: json['hasFamilyInApp'] != false,
+  );
 }

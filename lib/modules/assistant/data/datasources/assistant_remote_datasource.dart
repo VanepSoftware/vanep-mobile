@@ -4,6 +4,7 @@ import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_invite_dto.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_lean_signup_request_dto.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_van_summary_dto.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_students_overview.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_trip_checklist_dto.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_van_dto.dart';
@@ -23,6 +24,12 @@ abstract class AssistantRemoteDataSource {
 
   /// How many drivers the assistant worked with before the current one.
   Future<int> fetchFormerLinkCount();
+
+  /// The students of one shift of the van, in stop order.
+  Future<List<AssistantStudentSummary>> fetchStudents(
+    String vanToken,
+    String shift,
+  );
 
   /// The invite waiting for the signed-in assistant, or null when there is
   /// none or it already expired.
@@ -87,6 +94,23 @@ class AssistantRemoteDataSourceImpl implements AssistantRemoteDataSource {
         .map(
           (json) =>
               assistantVanSummaryFromJson(Map<String, Object?>.from(json)),
+        )
+        .toList();
+  }
+
+  @override
+  Future<List<AssistantStudentSummary>> fetchStudents(
+    String vanToken,
+    String shift,
+  ) async {
+    final response = await dio.get<List<dynamic>>(
+      '${environment.assistantsMeEndpoint}/vans/${Uri.encodeComponent(vanToken)}/students',
+      queryParameters: {'shift': shift},
+    );
+    return (response.data ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(
+          (json) => assistantStudentFromJson(Map<String, Object?>.from(json)),
         )
         .toList();
   }

@@ -287,4 +287,48 @@ void main() {
       expect(await datasource.fetchFormerLinkCount(), 0);
     });
   });
+
+  group('fetchStudents', () {
+    test('reads the students of one shift of the van', () async {
+      when(
+        () => dio.get<List<dynamic>>(
+          any(),
+          queryParameters: any(named: 'queryParameters'),
+        ),
+      ).thenAnswer(
+        (_) async => _response<List<dynamic>>([
+          {
+            'token': 'p-ana',
+            'name': 'Ana Oliveira',
+            'stopNumber': 1,
+            'placeName': 'Centro',
+            'hasFamilyInApp': true,
+          },
+          {
+            'token': 'p-bia',
+            'name': 'Bia Lima',
+            'stopNumber': 2,
+            'placeName': 'Escola B',
+            'hasFamilyInApp': false,
+          },
+        ]),
+      );
+
+      final students = await datasource.fetchStudents('van-1', 'MORNING');
+
+      expect(students.map((student) => student.name), [
+        'Ana Oliveira',
+        'Bia Lima',
+      ]);
+      expect(students.first.stopNumber, 1);
+      expect(students.last.hasFamilyInApp, isFalse);
+      expect(students.first.isAbsentToday, isFalse);
+      verify(
+        () => dio.get<List<dynamic>>(
+          'https://api.vanep.test/api/assistants/me/vans/van-1/students',
+          queryParameters: {'shift': 'MORNING'},
+        ),
+      ).called(1);
+    });
+  });
 }
