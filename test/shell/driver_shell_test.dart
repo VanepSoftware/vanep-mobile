@@ -24,6 +24,8 @@ import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/pus
 import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
+import 'package:vanep_mobile/modules/notifications/presentation/pages/notifications_page.dart';
+
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/conversations/conversations_fixtures.dart';
@@ -33,6 +35,7 @@ import '../modules/profile/profile_mocks.dart';
 import '../modules/push_notifications/push_notifications_fixtures.dart';
 import '../modules/driver_van_central/driver_van_central_mocks.dart';
 import '../modules/driver_van_central/driver_van_central_fixtures.dart';
+import '../modules/notifications/notifications_doubles.dart';
 
 Widget harness(
   DriverHomeCubit cubit,
@@ -335,15 +338,15 @@ void main() {
     expect(opened, [testConversation]);
   });
 
-  testWidgets('the bell opens the notifications coming soon page', (
-    tester,
-  ) async {
+  testWidgets('the bell opens the notifications page', (tester) async {
+    final notifications = registerNotificationsCubitDouble();
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
 
     await tester.tap(find.byTooltip('Notificações'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(VanepComingSoonPage), findsOneWidget);
+    expect(find.byType(NotificationsPage), findsOneWidget);
+    verify(notifications.load).called(1);
   });
 
   testWidgets('offers the service areas screen when the step is pending', (
