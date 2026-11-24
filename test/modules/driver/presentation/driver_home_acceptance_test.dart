@@ -15,11 +15,11 @@ const titles = {
   HomePhase.incomplete: 'Complete seu cadastro para aparecer na busca',
   HomePhase.underReview: 'A Vanep está conferindo seus documentos',
   HomePhase.rejected: 'Cadastro rejeitado',
-  HomePhase.inProgress: 'de 14 a bordo',
-  HomePhase.beforeDeparture: 'Saída 6h20',
-  HomePhase.shiftCompleted: '13 alunos entregues',
+  HomePhase.inProgress: 'EM ROTA · MANHÃ',
+  HomePhase.beforeDeparture: 'Antes de sair',
+  HomePhase.shiftCompleted: 'Turno concluído',
   HomePhase.buildingRoute: 'Traga os alunos que você já tem',
-  HomePhase.noRouteToday: 'Próxima rota: segunda, 6h20',
+  HomePhase.noRouteToday: 'Sem rota hoje',
 };
 
 const shortcuts = [
@@ -158,5 +158,147 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(repository.confirmations, 1);
+  });
+
+  group('cards reflect the repository data instead of fixed values', () {
+    Future<DriverHomeFixtureRepository> pumpData(
+      WidgetTester tester,
+      DriverHomeData data,
+    ) async {
+      final repository = DriverHomeFixtureRepository(data);
+      final cubit = DriverHomeCubit(repository: repository);
+      addTearDown(cubit.close);
+      await tester.pumpWidget(harness(cubit));
+      await tester.pumpAndSettle();
+      return repository;
+    }
+
+    Finder inCard(String text) => find.descendant(
+      of: find.byType(DriverHomeMainCard),
+      matching: find.text(text),
+    );
+
+    for (final (count, shift, shiftLabel) in [
+      (0, 'MORNING', 'MANHÃ'),
+      (9, 'AFTERNOON', 'TARDE'),
+      (27, 'NIGHT', 'NOITE'),
+    ]) {
+      testWidgets('before departure: $count students on $shift', (
+        tester,
+      ) async {
+        await pumpData(
+          tester,
+          DriverHomeData(
+            registration: RegistrationStatus.approved,
+            todayTrip: Trip(
+              id: 'trip-$count',
+              status: TripStatus.notStarted,
+              label: shift,
+            ),
+            studentCount: count,
+          ),
+        );
+        expect(inCard('$count'), findsOneWidget);
+        expect(inCard('ROTA · $shiftLabel'), findsOneWidget);
+        expect(inCard('14'), findsNothing);
+      });
+    }
+
+    for (final (name, action, actionLabel) in [
+      ('Joana Prado', StopAction.boarding, 'embarque'),
+      ('Rafael Lima', StopAction.disembarking, 'desembarque'),
+    ]) {
+      testWidgets('in progress: next stop for $name', (tester) async {
+        final repository = await pumpData(
+          tester,
+          DriverHomeData(
+            registration: RegistrationStatus.approved,
+            todayTrip: const Trip(
+              id: 'trip',
+              status: TripStatus.inProgress,
+              label: 'AFTERNOON',
+            ),
+            nextConfirmation: StopConfirmation(
+              tripId: 'trip',
+              stopId: 'stop-$name',
+              studentId: 'student-$name',
+              studentName: name,
+              action: action,
+            ),
+            contactLabel: 'Responsável de $name',
+          ),
+        );
+        expect(inCard('EM ROTA · TARDE'), findsOneWidget);
+        expect(inCard(name), findsOneWidget);
+        expect(inCard('Deslize para confirmar $actionLabel'), findsOneWidget);
+        expect(inCard('Ligar: Responsável de $name'), findsOneWidget);
+        final slider = find.descendant(
+          of: find.byType(DriverHomeMainCard),
+          matching: find.byType(SlideStopConfirmation),
+        );
+        await tester.ensureVisible(slider);
+        await tester.drag(
+          find.descendant(of: slider, matching: find.byType(GestureDetector)),
+          const Offset(800, 0),
+        );
+        await tester.pumpAndSettle();
+        expect(repository.confirmations, 1);
+      });
+    }
+
+    testWidgets('in progress without nextConfirmation shows no stop', (
+      tester,
+    ) async {
+      await pumpData(
+        tester,
+        const DriverHomeData(
+          registration: RegistrationStatus.approved,
+          todayTrip: Trip(
+            id: 'trip',
+            status: TripStatus.inProgress,
+            label: 'MORNING',
+          ),
+        ),
+      );
+      expect(find.byType(SlideStopConfirmation), findsNothing);
+      expect(inCard('PRÓXIMA PARADA'), findsNothing);
+    });
+
+    for (final (later, label) in [('AFTERNOON', 'Tarde'), ('NIGHT', 'Noite')]) {
+      testWidgets('shift completed: next shift $later', (tester) async {
+        await pumpData(
+          tester,
+          DriverHomeData(
+            registration: RegistrationStatus.approved,
+            todayTrip: const Trip(
+              id: 'trip',
+              status: TripStatus.completed,
+              label: 'MORNING',
+            ),
+            laterShiftLabel: later,
+          ),
+        );
+        expect(inCard('Próximo turno: $label'), findsOneWidget);
+      });
+    }
+
+    for (final (families, total) in [(0, 4), (2, 4), (4, 4)]) {
+      testWidgets('no route today: $families of $total families', (
+        tester,
+      ) async {
+        await pumpData(
+          tester,
+          DriverHomeData(
+            registration: RegistrationStatus.approved,
+            studentCount: total,
+            familiesInApp: families,
+          ),
+        );
+        expect(
+          find.text('$families de $total com família no app'),
+          findsOneWidget,
+        );
+      });
+    }
   });
 }
