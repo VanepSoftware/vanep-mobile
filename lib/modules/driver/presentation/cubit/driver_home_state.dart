@@ -12,6 +12,7 @@ class DriverHomeState extends Equatable {
     this.error,
     this.sharingLocation = false,
     this.shiftStartTime = '',
+    this.confirmedStop,
   });
 
   final DriverHomeData? data;
@@ -20,6 +21,10 @@ class DriverHomeState extends Equatable {
   final DriverHomeMessage? error;
   final bool sharingLocation;
   final String shiftStartTime;
+
+  /// Stop the API accepted in the latest slide confirmation. Cleared when the
+  /// next command starts, so the UI announces each confirmation once.
+  final StopConfirmation? confirmedStop;
 
   bool get onShift => data?.isOperating ?? false;
   DriverShift get shift => onShift ? DriverShift.on : DriverShift.off;
@@ -32,6 +37,8 @@ class DriverHomeState extends Equatable {
     bool clearError = false,
     bool? sharingLocation,
     String? shiftStartTime,
+    StopConfirmation? confirmedStop,
+    bool clearConfirmedStop = false,
   }) => DriverHomeState(
     data: data ?? this.data,
     loading: loading ?? this.loading,
@@ -39,6 +46,9 @@ class DriverHomeState extends Equatable {
     error: clearError ? null : error ?? this.error,
     sharingLocation: sharingLocation ?? this.sharingLocation,
     shiftStartTime: shiftStartTime ?? this.shiftStartTime,
+    confirmedStop: clearConfirmedStop
+        ? null
+        : confirmedStop ?? this.confirmedStop,
   );
 
   @override
@@ -49,5 +59,6 @@ class DriverHomeState extends Equatable {
     error,
     sharingLocation,
     shiftStartTime,
+    confirmedStop,
   ];
 }

@@ -170,6 +170,99 @@ void main() {
     },
   );
 
+  for (final (action, message) in [
+    (StopAction.boarding, 'Embarque de Ana confirmado'),
+    (StopAction.disembarking, 'Desembarque de Ana confirmado'),
+  ]) {
+    testWidgets('slide confirmation of $action shows a success message', (
+      tester,
+    ) async {
+      final next = StopConfirmation(
+        tripId: 'trip',
+        stopId: 'stop',
+        studentId: 's',
+        studentName: 'Ana',
+        action: action,
+      );
+      final repository = HomeRepository()
+        ..data = DriverHomeData(
+          registration: RegistrationStatus.approved,
+          nextConfirmation: next,
+          todayTrip: const Trip(
+            id: 'trip',
+            status: TripStatus.inProgress,
+            label: 'MORNING',
+          ),
+        );
+      final cubit = DriverHomeCubit(repository: repository);
+      addTearDown(cubit.close);
+      await tester.pumpWidget(harness(cubit));
+      await tester.pumpAndSettle();
+      expect(find.text(message), findsNothing);
+      final slider = find.byType(SlideStopConfirmation);
+      await tester.ensureVisible(slider);
+      await tester.drag(
+        find.descendant(of: slider, matching: find.byType(GestureDetector)),
+        const Offset(800, 0),
+      );
+      await tester.pumpAndSettle();
+      expect(repository.confirmations, 1);
+      expect(find.text(message), findsOneWidget);
+    });
+  }
+
+  testWidgets('a rejected slide confirmation shows no success message', (
+    tester,
+  ) async {
+    final repository = HomeRepository()
+      ..data = const DriverHomeData(
+        registration: RegistrationStatus.approved,
+        nextConfirmation: StopConfirmation(
+          tripId: 'trip',
+          stopId: 'stop',
+          studentId: 's',
+          studentName: 'Ana',
+          action: StopAction.boarding,
+        ),
+        todayTrip: Trip(
+          id: 'trip',
+          status: TripStatus.inProgress,
+          label: 'MORNING',
+        ),
+      );
+    final cubit = DriverHomeCubit(repository: repository);
+    addTearDown(cubit.close);
+    await tester.pumpWidget(harness(cubit));
+    await tester.pumpAndSettle();
+    // The API moved on to another stop before the driver finished sliding.
+    repository.data = const DriverHomeData(
+      registration: RegistrationStatus.approved,
+      nextConfirmation: StopConfirmation(
+        tripId: 'trip',
+        stopId: 'other',
+        studentId: 'b',
+        studentName: 'Bruno',
+        action: StopAction.boarding,
+      ),
+      todayTrip: Trip(
+        id: 'trip',
+        status: TripStatus.inProgress,
+        label: 'MORNING',
+      ),
+    );
+    final slider = find.byType(SlideStopConfirmation);
+    await tester.ensureVisible(slider);
+    await tester.drag(
+      find.descendant(of: slider, matching: find.byType(GestureDetector)),
+      const Offset(800, 0),
+    );
+    await tester.pumpAndSettle();
+    expect(repository.confirmations, 0);
+    expect(find.textContaining('confirmado'), findsNothing);
+    // The stop-changed banner is shown instead (at the top of the list).
+    expect(cubit.state.error, DriverHomeMessage.stopChanged);
+  });
+
   group('greeting derives date and shift from real data', () {
     Future<void> pumpGreeting(
       WidgetTester tester,

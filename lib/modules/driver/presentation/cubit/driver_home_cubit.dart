@@ -48,7 +48,9 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
         if (!rules.canConfirm(fresh, expected)) {
           return DriverHomeMessage.stopChanged;
         }
-        await source.confirmStop(fresh.nextConfirmation!);
+        final confirmed = fresh.nextConfirmation!;
+        await source.confirmStop(confirmed);
+        if (!isClosed) emit(state.copyWith(confirmedStop: confirmed));
         return null;
       });
 
@@ -65,7 +67,9 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
       emit(state.copyWith(error: DriverHomeMessage.unavailable));
       return;
     }
-    emit(state.copyWith(busy: true, clearError: true));
+    emit(
+      state.copyWith(busy: true, clearError: true, clearConfirmedStop: true),
+    );
     try {
       final fresh = await source.load();
       if (isClosed) return;

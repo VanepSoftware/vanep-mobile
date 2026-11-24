@@ -47,7 +47,12 @@ class DriverHomeTabState extends State<DriverHomeTab> {
         widget.navigation ?? PendingDriverHomeNavigation(context);
     return SafeArea(
       bottom: false,
-      child: BlocBuilder<DriverHomeCubit, DriverHomeState>(
+      child: BlocConsumer<DriverHomeCubit, DriverHomeState>(
+        listenWhen: (previous, current) =>
+            current.confirmedStop != null &&
+            current.confirmedStop != previous.confirmedStop,
+        listener: (context, state) =>
+            showStopConfirmedMessage(context, state.confirmedStop!),
         builder: (context, state) {
           final data = state.data;
           final resolved = data == null ? null : cubit.rules.resolve(data);
@@ -115,6 +120,31 @@ class DriverHomeTabState extends State<DriverHomeTab> {
       ),
     );
   }
+}
+
+void showStopConfirmedMessage(
+  BuildContext context,
+  StopConfirmation confirmation,
+) {
+  final l10n = AppLocalizations.of(context)!;
+  final name = confirmation.studentName;
+  final message = confirmation.action == StopAction.boarding
+      ? l10n.driverHomeBoardingConfirmed(name)
+      : l10n.driverHomeDisembarkingConfirmed(name);
+  ScaffoldMessenger.maybeOf(context)
+    ?..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: DriverHomeTokens.success),
+            const SizedBox(width: 12),
+            Expanded(child: Text(message)),
+          ],
+        ),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
 }
 
 class DriverHomeGreetingSection extends StatelessWidget {

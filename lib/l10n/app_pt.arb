@@ -1355,6 +1355,22 @@
       }
     }
   },
+  "driverHomeBoardingConfirmed": "Embarque de {name} confirmado",
+  "@driverHomeBoardingConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeDisembarkingConfirmed": "Desembarque de {name} confirmado",
+  "@driverHomeDisembarkingConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "driverHomeExceptionAction": "Exceção",
   "driverHomeWazeAction": "Waze",
   "driverHomeDrivingNotice": "Com a van andando, deixe as baixas com o auxiliar.",
