@@ -20,7 +20,7 @@ class AssistantVanSelectorCubit extends Cubit<AssistantVanSelectorState> {
         final newSelected = value.isEmpty
             ? null
             : (state.selectedVan != null &&
-                    value.any((v) => v.token == state.selectedVan!.token))
+                    value.contains(state.selectedVan))
                 ? state.selectedVan
                 : value.first;
         emit(

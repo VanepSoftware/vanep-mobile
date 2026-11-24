@@ -13,10 +13,10 @@ const testEnvironment = Environment(
 );
 
 Response<T> _response<T>(T? data, {int statusCode = 200}) => Response<T>(
-      requestOptions: RequestOptions(path: ''),
-      statusCode: statusCode,
-      data: data,
-    );
+  requestOptions: RequestOptions(path: ''),
+  statusCode: statusCode,
+  data: data,
+);
 
 void main() {
   late MockDio dio;
@@ -74,9 +74,8 @@ void main() {
 
   group('registerWithInvite', () {
     test('posts lean signup payload to signup assistant endpoint', () async {
-      when(
-        () => dio.post<void>(any(), data: any(named: 'data')),
-      ).thenAnswer((_) async => _response<void>(null));
+      when(() => dio.post<void>(any(), data: any(named: 'data')))
+          .thenAnswer((_) async => _response<void>(null));
 
       const request = AssistantLeanSignupRequestDto(
         inviteToken: 'inv-tok',
@@ -101,9 +100,7 @@ void main() {
 
   group('fetchLinkedVans', () {
     test('returns list of vans when API returns a non-empty list', () async {
-      when(
-        () => dio.get<List<dynamic>>(any()),
-      ).thenAnswer(
+      when(() => dio.get<List<dynamic>>(any())).thenAnswer(
         (_) async => _response<List<dynamic>>([
           {
             'token': 'van-1',
@@ -111,7 +108,7 @@ void main() {
             'driverName': 'Pedro',
             'plate': 'ABC-1234',
             'model': 'Sprinter',
-          }
+          },
         ]),
       );
 
@@ -127,9 +124,8 @@ void main() {
     });
 
     test('returns empty list when response data is null', () async {
-      when(
-        () => dio.get<List<dynamic>>(any()),
-      ).thenAnswer((_) async => _response<List<dynamic>>(null));
+      when(() => dio.get<List<dynamic>>(any()))
+          .thenAnswer((_) async => _response<List<dynamic>>(null));
 
       final vans = await datasource.fetchLinkedVans();
 
@@ -139,9 +135,8 @@ void main() {
 
   group('acceptInvite and rejectInvite', () {
     test('posts to accept endpoint', () async {
-      when(
-        () => dio.post<void>(any(), data: any(named: 'data')),
-      ).thenAnswer((_) async => _response<void>(null));
+      when(() => dio.post<void>(any(), data: any(named: 'data')))
+          .thenAnswer((_) async => _response<void>(null));
 
       await datasource.acceptInvite('inv-tok');
 
@@ -154,9 +149,8 @@ void main() {
     });
 
     test('posts to reject endpoint', () async {
-      when(
-        () => dio.post<void>(any(), data: any(named: 'data')),
-      ).thenAnswer((_) async => _response<void>(null));
+      when(() => dio.post<void>(any(), data: any(named: 'data')))
+          .thenAnswer((_) async => _response<void>(null));
 
       await datasource.rejectInvite('inv-tok');
 
@@ -203,23 +197,94 @@ void main() {
 
     for (final status in [404, 410]) {
       test('returns null when the API answers $status', () async {
-        when(
-          () => dio.get<Map<String, dynamic>>(any()),
-        ).thenThrow(httpError(status));
+        when(() => dio.get<Map<String, dynamic>>(any()))
+            .thenThrow(httpError(status));
 
         expect(await datasource.fetchPendingInvite(), isNull);
       });
     }
 
     test('rethrows other errors', () async {
-      when(
-        () => dio.get<Map<String, dynamic>>(any()),
-      ).thenThrow(httpError(500));
+      when(() => dio.get<Map<String, dynamic>>(any()))
+          .thenThrow(httpError(500));
 
       expect(
         () => datasource.fetchPendingInvite(),
         throwsA(isA<DioException>()),
       );
+    });
+  });
+
+  group('fetchVanSummaries', () {
+    test('reads each shift with its numbers of today', () async {
+      when(() => dio.get<List<dynamic>>(any())).thenAnswer(
+        (_) async => _response<List<dynamic>>([
+          {
+            'token': 'van-1',
+            'driverToken': 'drv-1',
+            'driverName': 'Carlos Mendes',
+            'plate': 'SDF4E21',
+            'model': 'Sprinter',
+            'shift': 'MORNING',
+            'departureTime': '06:20:00',
+            'studentCount': 16,
+            'hasRouteToday': true,
+          },
+          {
+            'token': 'van-1',
+            'driverToken': 'drv-1',
+            'driverName': 'Carlos Mendes',
+            'plate': 'SDF4E21',
+            'model': 'Sprinter',
+            'shift': 'AFTERNOON',
+            'departureTime': null,
+            'studentCount': 9,
+            'hasRouteToday': false,
+          },
+        ]),
+      );
+
+      final vans = await datasource.fetchVanSummaries();
+
+      expect(vans.map((summary) => summary.van.shift), [
+        'MORNING',
+        'AFTERNOON',
+      ]);
+      expect(vans.first.departureMinutes, 6 * 60 + 20);
+      expect(vans.first.studentCount, 16);
+      expect(vans.first.hasRouteToday, isTrue);
+      expect(vans.last.departureMinutes, isNull);
+      expect(vans.last.hasRouteToday, isFalse);
+      verify(
+        () => dio.get<List<dynamic>>(
+          'https://api.vanep.test/api/assistants/me/vans',
+        ),
+      ).called(1);
+    });
+  });
+
+  group('fetchFormerLinkCount', () {
+    test('reads formerLinkCount from the assistant summary', () async {
+      when(() => dio.get<Map<String, dynamic>>(any())).thenAnswer(
+        (_) async => _response<Map<String, dynamic>>({
+          'token': 'asst-1',
+          'formerLinkCount': 2,
+        }),
+      );
+
+      expect(await datasource.fetchFormerLinkCount(), 2);
+      verify(
+        () => dio.get<Map<String, dynamic>>(
+          'https://api.vanep.test/api/assistants/me',
+        ),
+      ).called(1);
+    });
+
+    test('is zero when the API leaves it out', () async {
+      when(() => dio.get<Map<String, dynamic>>(any()))
+          .thenAnswer((_) async => _response<Map<String, dynamic>>({}));
+
+      expect(await datasource.fetchFormerLinkCount(), 0);
     });
   });
 }

@@ -92,7 +92,7 @@ class AssistantVanSelectorSheet extends StatelessWidget {
                     Divider(height: 1, color: context.palette.divider),
                 itemBuilder: (context, index) {
                   final van = vans[index];
-                  final isSelected = van.token == selectedVan?.token;
+                  final isSelected = van == selectedVan;
 
                   final shiftText = formatApiSchoolShift(l10n, van.shift);
                   final subtitle = shiftText.isEmpty

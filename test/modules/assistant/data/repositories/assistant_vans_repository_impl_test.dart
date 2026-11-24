@@ -7,14 +7,12 @@ import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_vans_
 import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 
 import '../../fixtures/assistant_fixtures.dart';
-import '../../mocks/assistant_mocks.dart';
 
 class MockAssistantRemoteDataSource extends Mock
     implements AssistantRemoteDataSource {}
 
 void main() {
   late MockAssistantRemoteDataSource remote;
-  late MockAssistantVansDataSource dataSource;
   late AssistantVansRepositoryImpl repository;
 
   final apiInvite = AssistantInviteDto(
@@ -26,26 +24,25 @@ void main() {
 
   setUp(() {
     remote = MockAssistantRemoteDataSource();
-    dataSource = MockAssistantVansDataSource();
-    repository = AssistantVansRepositoryImpl(
-      remote: remote,
-      dataSource: dataSource,
-    );
-    when(
-      () => dataSource.findVansOverview(),
-    ).thenAnswer((_) async => testAssistantVansOverview);
+    repository = AssistantVansRepositoryImpl(remote: remote);
+    when(() => remote.fetchVanSummaries())
+        .thenAnswer((_) async => testAssistantVansOverview.activeVans);
+    when(() => remote.fetchFormerLinkCount()).thenAnswer((_) async => 2);
   });
 
-  test('takes the pending invite from the API and the vans from the '
-      'data source', () async {
-    when(() => remote.fetchPendingInvite()).thenAnswer((_) async => apiInvite);
+  test(
+    'joins the invite, the vans and the former links from the API',
+    () async {
+      when(() => remote.fetchPendingInvite())
+          .thenAnswer((_) async => apiInvite);
 
-    final overview = (await repository.findVansOverview()).valueOrNull!;
+      final overview = (await repository.findVansOverview()).valueOrNull!;
 
-    expect(overview.pendingInvite, apiInvite);
-    expect(overview.activeVans, testAssistantVansOverview.activeVans);
-    expect(overview.formerVanCount, testAssistantVansOverview.formerVanCount);
-  });
+      expect(overview.pendingInvite, apiInvite);
+      expect(overview.activeVans, testAssistantVansOverview.activeVans);
+      expect(overview.formerVanCount, 2);
+    },
+  );
 
   test('has no pending invite when the API has none', () async {
     when(() => remote.fetchPendingInvite()).thenAnswer((_) async => null);
@@ -55,10 +52,10 @@ void main() {
     expect(overview.pendingInvite, isNull);
   });
 
-  test('fails when the invite request fails', () async {
-    when(() => remote.fetchPendingInvite()).thenThrow(
-      DioException(requestOptions: RequestOptions(path: '')),
-    );
+  test('fails when one of the requests fails', () async {
+    when(() => remote.fetchPendingInvite()).thenAnswer((_) async => null);
+    when(() => remote.fetchVanSummaries())
+        .thenThrow(DioException(requestOptions: RequestOptions(path: '')));
 
     final result = await repository.findVansOverview();
 

@@ -6,14 +6,16 @@ import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dar
 class AssistantVanSummary extends Equatable {
   const AssistantVanSummary({
     required this.van,
-    required this.departureMinutes,
+    this.departureMinutes,
     required this.studentCount,
     required this.hasRouteToday,
   });
 
   final AssistantVan van;
 
-  final int departureMinutes;
+  /// First pickup of the shift today, in minutes after midnight; null when
+  /// the shift does not run today.
+  final int? departureMinutes;
 
   final int studentCount;
 

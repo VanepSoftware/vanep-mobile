@@ -138,17 +138,20 @@ class AssistantVanCard extends StatelessWidget {
     final (surface, accent) = tones[toneIndex % tones.length];
     final title = l10n.assistantVansVanTitle(firstNameOf(van.driverName));
     final subtitle = assistantVanSubtitle(l10n, van);
-    final departure = l10n.assistantVansDeparture(
-      formatDepartureTime(
-        summary.departureMinutes,
-        languageCode: Localizations.localeOf(context).languageCode,
-      ),
-    );
+    final departureMinutes = summary.departureMinutes;
+    final departure = departureMinutes == null
+        ? null
+        : l10n.assistantVansDeparture(
+            formatDepartureTime(
+              departureMinutes,
+              languageCode: Localizations.localeOf(context).languageCode,
+            ),
+          );
     final students = l10n.assistantVansStudentCount(summary.studentCount);
 
     return Semantics(
       container: true,
-      label: '$title, $subtitle, $departure, $students',
+      label: [title, subtitle, ?departure, students].join(', '),
       child: VanepCard(
         child: Column(
           children: [
@@ -183,14 +186,16 @@ class AssistantVanCard extends StatelessWidget {
             Divider(height: 24, color: context.palette.divider),
             Row(
               children: [
-                Icon(
-                  Icons.schedule_rounded,
-                  size: 18,
-                  color: context.palette.textSecondary,
-                ),
-                const SizedBox(width: 6),
-                Text(departure, style: context.typography.cardSubtitle),
-                const SizedBox(width: 16),
+                if (departure != null) ...[
+                  Icon(
+                    Icons.schedule_rounded,
+                    size: 18,
+                    color: context.palette.textSecondary,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(departure, style: context.typography.cardSubtitle),
+                  const SizedBox(width: 16),
+                ],
                 Icon(
                   Icons.groups_rounded,
                   size: 18,

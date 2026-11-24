@@ -5,7 +5,6 @@ import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/assistant_remote_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_students_datasource.dart';
-import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_vans_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_repository_impl.dart';
 import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_students_repository_impl.dart';
 import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_vans_repository_impl.dart';
@@ -50,14 +49,8 @@ void registerAssistantDependencies(GetIt getIt) {
     ..registerFactory<GetLinkedVans>(
       () => GetLinkedVans(getIt<AssistantRepository>()),
     )
-    ..registerSingleton<AssistantVansDataSource>(
-      const MockedAssistantVansDataSource(),
-    )
     ..registerSingleton<AssistantVansRepository>(
-      AssistantVansRepositoryImpl(
-        remote: getIt<AssistantRemoteDataSource>(),
-        dataSource: getIt<AssistantVansDataSource>(),
-      ),
+      AssistantVansRepositoryImpl(remote: getIt<AssistantRemoteDataSource>()),
     )
     ..registerFactory<FindAssistantVans>(
       () => FindAssistantVans(getIt<AssistantVansRepository>()),

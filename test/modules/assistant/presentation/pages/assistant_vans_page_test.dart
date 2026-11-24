@@ -208,4 +208,27 @@ void main() {
       expect(find.text('Recusar convite?'), findsNothing);
     });
   });
+
+  testWidgets('leaves the departure out when the shift does not run today', (
+    tester,
+  ) async {
+    await pumpPage(
+      tester,
+      readyState(
+        const AssistantVansOverview(
+          activeVans: [
+            AssistantVanSummary(
+              van: testAssistantVanPrimary,
+              studentCount: 16,
+              hasRouteToday: false,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.textContaining('Saída'), findsNothing);
+    expect(find.text('16 alunos'), findsOneWidget);
+    expect(find.text('Rota de hoje'), findsNothing);
+  });
 }

@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_invite_dto.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_lean_signup_request_dto.dart';
+import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_van_summary_dto.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_trip_checklist_dto.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_van_dto.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/boarding_status.dart';
@@ -15,6 +17,12 @@ abstract class AssistantRemoteDataSource {
   Future<void> registerWithInvite(AssistantLeanSignupRequestDto request);
 
   Future<List<AssistantVanDto>> fetchLinkedVans();
+
+  /// The shifts the assistant works, with the numbers of today.
+  Future<List<AssistantVanSummary>> fetchVanSummaries();
+
+  /// How many drivers the assistant worked with before the current one.
+  Future<int> fetchFormerLinkCount();
 
   /// The invite waiting for the signed-in assistant, or null when there is
   /// none or it already expired.
@@ -42,10 +50,7 @@ abstract class AssistantRemoteDataSource {
 }
 
 class AssistantRemoteDataSourceImpl implements AssistantRemoteDataSource {
-  AssistantRemoteDataSourceImpl({
-    required this.dio,
-    required this.environment,
-  });
+  AssistantRemoteDataSourceImpl({required this.dio, required this.environment});
 
   final Dio dio;
 
@@ -70,6 +75,28 @@ class AssistantRemoteDataSourceImpl implements AssistantRemoteDataSource {
       environment.signupAssistantEndpoint,
       data: request.toJson(),
     );
+  }
+
+  @override
+  Future<List<AssistantVanSummary>> fetchVanSummaries() async {
+    final response = await dio.get<List<dynamic>>(
+      '${environment.assistantsMeEndpoint}/vans',
+    );
+    return (response.data ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(
+          (json) =>
+              assistantVanSummaryFromJson(Map<String, Object?>.from(json)),
+        )
+        .toList();
+  }
+
+  @override
+  Future<int> fetchFormerLinkCount() async {
+    final response = await dio.get<Map<String, dynamic>>(
+      environment.assistantsMeEndpoint,
+    );
+    return (response.data?['formerLinkCount'] as num?)?.toInt() ?? 0;
   }
 
   @override
