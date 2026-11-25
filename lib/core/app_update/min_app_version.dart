@@ -1,6 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 
+// Retrigger CI.
 /// Remote Config parameter (String, e.g. "1.2.0"). Apps with a lower version
 /// are blocked behind the upgrade wall. "0.0.0" (or empty) blocks nobody.
 const minAppVersionKey = 'min_app_version';
