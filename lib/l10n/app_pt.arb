@@ -1814,39 +1814,21 @@
       }
     }
   },
-  "driverHomeGreetingMorning": "Bom dia, {name}!",
-  "@driverHomeGreetingMorning": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "driverHomeGreetingSaturday": "Bom sábado, {name}!",
-  "@driverHomeGreetingSaturday": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "driverHomeGreetingMorningCompleted": "Manhã concluída",
   "driverHomeSubtitleIncomplete": "Falta pouco para receber alunos pela Vanep.",
   "driverHomeSubtitleUnderReview": "Seu cadastro foi enviado.",
   "driverHomeSubtitleRejected": "Seu cadastro precisa de correção.",
   "driverHomeSubtitleBuildingRoute": "Cadastro aprovado. Bem-vindo à Vanep.",
-  "driverHomeSubtitleBeforeDeparture": "Quarta, 14 de outubro",
-  "driverHomeSubtitleInProgress": "Ida · desde 6h21",
-  "driverHomeSubtitleShiftCompleted": "Quarta, 14 de outubro · bom trabalho, {name}",
-  "@driverHomeSubtitleShiftCompleted": {
+  "driverHomeSubtitleShiftCompletedOn": "{date} · bom trabalho, {name}",
+  "@driverHomeSubtitleShiftCompletedOn": {
     "placeholders": {
+      "date": {
+        "type": "String"
+      },
       "name": {
         "type": "String"
       }
     }
   },
-  "driverHomeSubtitleNoRouteToday": "Sábado, 17 de outubro",
-  "driverHomeSubtitleBlocked": "Quinta, 12 de novembro · 2 coisas para resolver",
   "driverHomeIncompleteOverline": "Cadastro",
   "driverHomeIncompleteHeadline": "Complete seu cadastro para aparecer na busca",
   "driverHomeIncompleteStep1": "Dados pessoais",
