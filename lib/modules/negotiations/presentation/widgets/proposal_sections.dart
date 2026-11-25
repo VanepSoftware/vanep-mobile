@@ -93,17 +93,23 @@ List<VanepWeekLegsRow<RouteLeg>> weekLegsRowsOfDays(
 }
 
 class DetailSection extends StatelessWidget {
-  const DetailSection({required this.title, required this.child, super.key});
+  const DetailSection({
+    required this.title,
+    required this.child,
+    this.trailing,
+    super.key,
+  });
 
   final String title;
   final Widget child;
+  final String? trailing;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ProposalsSectionTitle(title: title),
+        ProposalsSectionTitle(title: title, trailing: trailing),
         VanepCard(child: child),
       ],
     );

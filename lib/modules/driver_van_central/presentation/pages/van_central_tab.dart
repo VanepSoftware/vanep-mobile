@@ -19,6 +19,7 @@ class VanCentralTab extends StatelessWidget {
     required this.onOpenVanDetails,
     required this.onOpenServiceAreas,
     required this.onOpenStudents,
+    required this.onOpenVanDocuments,
     required this.onOpenComingSoon,
     super.key,
   });
@@ -27,6 +28,7 @@ class VanCentralTab extends StatelessWidget {
   final Future<void> Function() onOpenVanDetails;
   final Future<void> Function() onOpenServiceAreas;
   final Future<void> Function(DriverVan van) onOpenStudents;
+  final Future<void> Function(DriverVan van) onOpenVanDocuments;
   final Future<void> Function(String title) onOpenComingSoon;
 
   @override
@@ -46,6 +48,10 @@ class VanCentralTab extends StatelessWidget {
       onOpenStudents: () {
         final van = cubit.state.selectedVan;
         if (van != null) openThenRefresh(() => onOpenStudents(van));
+      },
+      onOpenVanDocuments: () {
+        final van = cubit.state.selectedVan;
+        if (van != null) openThenRefresh(() => onOpenVanDocuments(van));
       },
       onOpenComingSoon: onOpenComingSoon,
       onAcceptingStudentsChanged: cubit.setAcceptingStudents,

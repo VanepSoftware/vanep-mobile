@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/app.dart';
+import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
@@ -21,6 +22,8 @@ import 'package:vanep_mobile/modules/auth/presentation/cubit/start_session.dart'
 import 'package:vanep_mobile/modules/auth/presentation/pages/login_page.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_state.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_state.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_state.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
@@ -74,7 +77,13 @@ Widget _harness(AuthCubit cubit) {
     ],
     supportedLocales: AppLocalizations.supportedLocales,
     locale: const Locale('pt'),
-    home: BlocProvider<AuthCubit>.value(value: cubit, child: const AuthGate()),
+    home: MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>.value(value: cubit),
+        BlocProvider<PushNavigationCubit>(create: (_) => PushNavigationCubit()),
+      ],
+      child: const AuthGate(),
+    ),
   );
 }
 
@@ -83,6 +92,9 @@ class MockDriverSearchCubit extends MockCubit<DriverSearchState>
 
 class MockPlaceAutocompleteDataSource extends Mock
     implements PlaceAutocompleteDataSource {}
+
+class MockClientVansCubit extends MockCubit<ClientVansState>
+    implements ClientVansCubit {}
 
 class MockAssistantVanSelectorCubit extends MockCubit<AssistantVanSelectorState>
     implements AssistantVanSelectorCubit {}
@@ -171,6 +183,7 @@ void main() {
       const Stream<DriverSearchState>.empty(),
       initialState: const DriverSearchState(),
     );
+    when(searchCubit.loadRecommended).thenAnswer((_) async {});
     final clientHomeCubit = MockClientHomeCubit();
     whenListen(
       clientHomeCubit,
@@ -181,11 +194,19 @@ void main() {
       ),
     );
     when(clientHomeCubit.loadHome).thenAnswer((_) async {});
+    final clientVansCubit = MockClientVansCubit();
+    whenListen(
+      clientVansCubit,
+      const Stream<ClientVansState>.empty(),
+      initialState: const ClientVansState(),
+    );
+    when(clientVansCubit.loadVans).thenAnswer((_) async {});
     final autocompleteDatasource = MockPlaceAutocompleteDataSource();
     when(() => autocompleteDatasource.findSuggestions(any(), any()))
         .thenAnswer((_) async => const Ok([]));
     getIt
       ..registerFactory<ClientHomeCubit>(() => clientHomeCubit)
+      ..registerFactory<ClientVansCubit>(() => clientVansCubit)
       ..registerFactory<DriversCubit>(() => driversCubit)
       ..registerFactory<ProfileSummaryCubit>(() => profileSummaryCubit)
       ..registerFactory<DriverSearchCubit>(() => searchCubit)

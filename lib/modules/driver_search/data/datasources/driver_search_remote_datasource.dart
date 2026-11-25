@@ -15,6 +15,7 @@ DriverSearchResult driverSearchResultFromJson(Map<String, Object?> json) {
     name: json['name'] as String? ?? '',
     photoUrl: json['photo'] as String?,
     rating: (json['rating'] as num?)?.toDouble(),
+    ratingCount: (json['ratingCount'] as num?)?.toInt(),
     basePrice: (json['basePrice'] as num?)?.toDouble(),
     experienceYears: (json['experienceYears'] as num?)?.toInt(),
     available: json['available'] as bool? ?? false,
@@ -43,6 +44,7 @@ class DriverSearchRemoteDataSource {
   final Environment environment;
 
   String get endpoint => '${environment.driversEndpoint}/search';
+  String get recommendedEndpoint => environment.driversRecommendedEndpoint;
 
   Future<DriverSearchPage> searchByPlace(
     String placeId,
@@ -56,6 +58,20 @@ class DriverSearchRemoteDataSource {
         'page': page,
         if (sessionToken != null && sessionToken.isNotEmpty)
           'sessionToken': sessionToken,
+      },
+    );
+    return readSearchPage(response.data);
+  }
+
+  Future<DriverSearchPage> fetchRecommended({
+    int page = 0,
+    int size = 20,
+  }) async {
+    final response = await dio.get<Map<String, dynamic>>(
+      recommendedEndpoint,
+      queryParameters: {
+        'page': page,
+        'size': size,
       },
     );
     return readSearchPage(response.data);

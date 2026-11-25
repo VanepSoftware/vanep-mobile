@@ -62,6 +62,8 @@ abstract class DriverProfileSummaryDto
     required String token,
     @JsonKey(name: 'photo') String? photoUrl,
     double? rating,
+    int? ratingCount,
+    int? experienceYears,
     String? city,
     @JsonKey(
       fromJson: DriverApprovalStatus.fromApi,

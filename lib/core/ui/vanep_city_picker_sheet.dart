@@ -32,12 +32,17 @@ Future<void> showVanepCityPickerSheet(
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
-    builder: (sheetContext) => Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
-      ),
-      child: builder(sheetContext),
-    ),
+    builder: (sheetContext) {
+      final media = MediaQuery.of(sheetContext);
+      final maxHeight = (media.size.height - media.padding.top) * 0.92;
+      return ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: media.viewInsets.bottom),
+          child: builder(sheetContext),
+        ),
+      );
+    },
   );
 }
 
@@ -84,7 +89,8 @@ class _VanepCityPickerSheetState extends State<VanepCityPickerSheet> {
     final l10n = AppLocalizations.of(context)!;
 
     return SafeArea(
-      child: Padding(
+      top: false,
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,

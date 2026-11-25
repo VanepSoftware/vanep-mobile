@@ -1,0 +1,5 @@
+package_name("com.vanep.vanep_mobile")
+
+# Caminho do JSON da service account do Play. No CI é exportado por
+# scripts/ci-prepare-play-deploy.sh (arquivo temporário fora do repo).
+json_key_file(ENV["PLAY_SERVICE_ACCOUNT_JSON_PATH"])
