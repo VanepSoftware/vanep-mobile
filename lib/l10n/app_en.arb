@@ -3113,6 +3113,12 @@
   "@pushNotificationChannelName": {
     "description": "Android notification channel name shown in the system settings."
   },
+  "upgradeWallTitle": "Update required",
+  "upgradeWallBody": "A new version of Vanep is available. Update the app to keep using it.",
+  "upgradeNoticeTitle": "Update available",
+  "upgradeNoticeBody": "A new version of Vanep is on the Play Store. Update when you can.",
+  "upgradeNoticeLater": "Later",
+  "upgradeWallButton": "Update now",
   "driverHomeUnavailable": "Home data is not available yet.",
   "driverHomeRefreshFailed": "Could not refresh home.",
   "driverHomeStopChanged": "The stop changed. Check the details and slide again.",
