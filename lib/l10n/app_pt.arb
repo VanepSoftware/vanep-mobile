@@ -1681,5 +1681,11 @@
   "professionalDataLoadError": "Não deu para carregar os seus dados profissionais.",
   "professionalDataRetry": "Tentar novamente",
   "pushNotificationChannelName": "Notificações",
-  "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos"
+  "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos",
+  "upgradeWallTitle": "Atualização necessária",
+  "upgradeWallBody": "Uma nova versão do Vanep está disponível. Atualize o app para continuar usando.",
+  "upgradeNoticeTitle": "Atualização disponível",
+  "upgradeNoticeBody": "Há uma nova versão do Vanep na Play Store. Atualize quando puder.",
+  "upgradeNoticeLater": "Depois",
+  "upgradeWallButton": "Atualizar agora"
 }
