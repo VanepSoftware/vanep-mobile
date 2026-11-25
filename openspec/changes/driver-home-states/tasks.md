@@ -40,9 +40,10 @@ Presentation boundaries are provisional until measured against each predecessor.
 
 ## Phase 4 — Cards and shortcuts (`feat/VAN-66-home-cards`)
 
-- [ ] 4.1 Decouple main-card actions from the concrete Cubit through callbacks.
-- [ ] 4.2 Deliver main-card states and six fixed shortcuts with widget tests.
-- [ ] 4.3 Run analysis/widget tests, measure diff and open PR.
+- [x] 4.1 Decouple main-card actions from the concrete Cubit through callbacks.
+- [x] 4.2 Deliver main-card states and six fixed shortcuts with widget tests.
+- [x] 4.3 Run analysis/widget tests, measure diff and open PR.
+- [x] 4.4 Render only `DriverHomeData` values in production cards; hide KPIs, feed items and copy without an API source behind `TODO(VAN-66)` (review on #183).
 
 ## Phase 5 — Home integration (`feat/VAN-66-home-integration`)
 
@@ -60,4 +61,4 @@ Presentation boundaries are provisional until measured against each predecessor.
 
 ## API limitations
 
-Next stop/contact, stop confirmation, real driver-student count and family app membership remain backend dependencies. Unknown family membership stays null; known values include 100% (D12). Full destination screens are separate features. The simulated preview must never become the production entrypoint.
+Next stop/contact, stop confirmation, real driver-student count and family app membership remain backend dependencies. Unknown family membership stays null; known values include 100% (D12). Full destination screens are separate features. The simulated preview must never become the production entrypoint. Production widgets never fall back to invented counts, names, times or amounts: without API data the field or section is hidden.
