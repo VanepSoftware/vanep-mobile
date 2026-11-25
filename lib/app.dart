@@ -111,9 +111,16 @@ import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/van_
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 
 class VanepApp extends StatelessWidget {
-  const VanepApp({required this.initialThemePreference, super.key});
+  const VanepApp({
+    required this.initialThemePreference,
+    this.minAppVersion,
+    super.key,
+  });
 
   final ThemePreference initialThemePreference;
+
+  /// Blocks the app below this version (see [VanepUpgradeWall]).
+  final String? minAppVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -169,8 +176,9 @@ class VanepApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: AppLocalizations.supportedLocales,
-                home: const VanepUpgradeWall(
-                  child: VanepIntroGate(child: AuthGate()),
+                home: VanepUpgradeWall(
+                  minAppVersion: minAppVersion,
+                  child: const VanepIntroGate(child: AuthGate()),
                 ),
               ),
             ),
@@ -680,9 +688,8 @@ Future<void> openClientNegotiationChat(
   ClientServiceRequest request,
 ) async {
   if (request.conversationToken == null) return;
-  await Navigator.of(
-    context,
-  ).push(clientNegotiationChatRoute(context, request));
+  await Navigator.of(context)
+      .push(clientNegotiationChatRoute(context, request));
 }
 
 DriverNegotiationActions driverNegotiationActions(BuildContext context) {

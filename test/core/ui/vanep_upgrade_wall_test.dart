@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:version/version.dart';
 import 'package:vanep_mobile/core/ui/vanep_upgrade_wall.dart';
-import 'package:vanep_mobile/l10n/app_localizations.dart';
 
 import 'localized_harness.dart';
 
@@ -32,17 +31,11 @@ class _AndroidOS extends UpgraderOS {
   UpgraderOSType get currentOSType => UpgraderOSType.android;
 }
 
-class _TestUpgrader extends Upgrader {
-  _TestUpgrader({super.storeController, super.upgraderOS})
-    : super(durationUntilAlertAgain: Duration.zero);
-
-  @override
-  UpgraderMessages determineMessages(BuildContext context) {
-    return VanepUpgraderMessages(AppLocalizations.of(context)!);
-  }
-}
-
-Upgrader _upgrader({required String installed, required String store}) {
+Upgrader _upgrader({
+  required String installed,
+  required String store,
+  String? minAppVersion,
+}) {
   SharedPreferences.setMockInitialValues({});
   PackageInfo.setMockInitialValues(
     appName: 'Vanep',
@@ -52,7 +45,8 @@ Upgrader _upgrader({required String installed, required String store}) {
     buildNumber: '99',
     buildSignature: '',
   );
-  return _TestUpgrader(
+  return VanepUpgrader(
+    minAppVersion: minAppVersion,
     storeController: UpgraderStoreController(
       onAndroid: () => _FakeStore(store),
     ),
@@ -75,34 +69,100 @@ Future<void> _pump(WidgetTester tester, Upgrader upgrader) async {
 }
 
 void main() {
-  testWidgets('blocks the app when the store version is newer', (tester) async {
-    await _pump(tester, _upgrader(installed: '1.0.0', store: '1.0.1'));
+  group('mandatory (installed < minAppVersion)', () {
+    testWidgets('blocks the app, no way out', (tester) async {
+      await _pump(
+        tester,
+        _upgrader(installed: '1.0.0', store: '1.0.1', minAppVersion: '1.0.1'),
+      );
 
-    expect(find.text('Atualização necessária'), findsOneWidget);
-    expect(find.text('Atualizar agora'), findsOneWidget);
-    expect(find.text('Depois'), findsNothing);
-    expect(find.text('Ignorar'), findsNothing);
+      expect(find.text('Atualização necessária'), findsOneWidget);
+      expect(find.text('Atualizar agora'), findsOneWidget);
+      expect(find.text('Depois'), findsNothing);
+      expect(find.text('Ignorar'), findsNothing);
+    });
+
+    testWidgets('cannot be dismissed by tapping outside', (tester) async {
+      await _pump(
+        tester,
+        _upgrader(installed: '1.0.0', store: '1.0.1', minAppVersion: '1.0.1'),
+      );
+
+      await tester.tapAt(const Offset(2, 2));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Atualização necessária'), findsOneWidget);
+    });
+
+    testWidgets('cannot be dismissed with the back button', (tester) async {
+      await _pump(
+        tester,
+        _upgrader(installed: '1.0.0', store: '1.0.1', minAppVersion: '1.0.1'),
+      );
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Atualização necessária'), findsOneWidget);
+    });
   });
 
-  testWidgets('cannot be dismissed by tapping outside', (tester) async {
-    await _pump(tester, _upgrader(installed: '1.0.0', store: '1.0.1'));
+  group('soft notice (installed >= minAppVersion, store newer)', () {
+    testWidgets('a patch update does not block', (tester) async {
+      await _pump(
+        tester,
+        _upgrader(installed: '1.0.0', store: '1.0.1', minAppVersion: '1.0.0'),
+      );
 
-    await tester.tapAt(const Offset(2, 2));
-    await tester.pumpAndSettle();
+      expect(find.text('Atualização disponível'), findsOneWidget);
+      expect(find.text('Atualização necessária'), findsNothing);
+      expect(find.text('Depois'), findsOneWidget);
+    });
 
-    expect(find.text('Atualização necessária'), findsOneWidget);
+    testWidgets('no minAppVersion means never blocked', (tester) async {
+      await _pump(tester, _upgrader(installed: '1.0.0', store: '1.0.1'));
+
+      expect(find.text('Atualização disponível'), findsOneWidget);
+      expect(find.text('Depois'), findsOneWidget);
+    });
+
+    testWidgets('"Depois" dismisses it', (tester) async {
+      await _pump(tester, _upgrader(installed: '1.0.0', store: '1.0.1'));
+
+      await tester.tap(find.text('Depois'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Atualização disponível'), findsNothing);
+      expect(find.text('app'), findsOneWidget);
+    });
+
+    testWidgets('invalid minAppVersion never blocks', (tester) async {
+      await _pump(
+        tester,
+        _upgrader(installed: '1.0.0', store: '1.0.1', minAppVersion: 'abc'),
+      );
+
+      expect(find.text('Atualização necessária'), findsNothing);
+    });
   });
 
-  testWidgets('lets the app through when versions are equal', (tester) async {
-    await _pump(tester, _upgrader(installed: '1.0.1', store: '1.0.1'));
+  group('no update', () {
+    testWidgets('lets the app through when versions are equal', (tester) async {
+      await _pump(
+        tester,
+        _upgrader(installed: '1.0.1', store: '1.0.1', minAppVersion: '1.0.1'),
+      );
 
-    expect(find.text('Atualização necessária'), findsNothing);
-    expect(find.text('app'), findsOneWidget);
-  });
+      expect(find.text('Atualização necessária'), findsNothing);
+      expect(find.text('Atualização disponível'), findsNothing);
+      expect(find.text('app'), findsOneWidget);
+    });
 
-  testWidgets('lets the app through when installed is newer', (tester) async {
-    await _pump(tester, _upgrader(installed: '1.1.0', store: '1.0.1'));
+    testWidgets('lets the app through when installed is newer', (tester) async {
+      await _pump(tester, _upgrader(installed: '1.1.0', store: '1.0.1'));
 
-    expect(find.text('Atualização necessária'), findsNothing);
+      expect(find.text('Atualização disponível'), findsNothing);
+      expect(find.text('Atualização necessária'), findsNothing);
+    });
   });
 }

@@ -3115,5 +3115,8 @@
   },
   "upgradeWallTitle": "Update required",
   "upgradeWallBody": "A new version of Vanep is available. Update the app to keep using it.",
+  "upgradeNoticeTitle": "Update available",
+  "upgradeNoticeBody": "A new version of Vanep is on the Play Store. Update when you can.",
+  "upgradeNoticeLater": "Later",
   "upgradeWallButton": "Update now"
 }

@@ -1684,5 +1684,8 @@
   "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos",
   "upgradeWallTitle": "Atualização necessária",
   "upgradeWallBody": "Uma nova versão do Vanep está disponível. Atualize o app para continuar usando.",
+  "upgradeNoticeTitle": "Atualização disponível",
+  "upgradeNoticeBody": "Há uma nova versão do Vanep na Play Store. Atualize quando puder.",
+  "upgradeNoticeLater": "Depois",
   "upgradeWallButton": "Atualizar agora"
 }
