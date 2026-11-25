@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Flutter: escolher device/emulador e rodar",
+    "command": "R=\"$ZED_WORKTREE_ROOT\"; [ -f \"$R/pubspec.yaml\" ] || R=\"$R/vanep-mobile\"; cd \"$R\" || exit 1; bash \"$R/.zed/flutter-device.sh\" run",
+    "use_new_terminal": true,
+    "reveal": "always"
+  },
+  {
+    "label": "Flutter: ligar emulador (escolher)",
+    "command": "R=\"$ZED_WORKTREE_ROOT\"; [ -f \"$R/pubspec.yaml\" ] || R=\"$R/vanep-mobile\"; cd \"$R\" || exit 1; bash \"$R/.zed/flutter-device.sh\" emulator",
+    "use_new_terminal": true,
+    "reveal": "always"
+  },
+  {
+    "label": "Flutter: rodar (device padrão do flutter)",
+    "command": "R=\"$ZED_WORKTREE_ROOT\"; [ -f \"$R/pubspec.yaml\" ] || R=\"$R/vanep-mobile\"; cd \"$R\" || exit 1; if [ -f .fvmrc ] && command -v fvm >/dev/null; then fvm flutter run; else flutter run; fi",
+    "use_new_terminal": true,
+    "reveal": "always"
+  },
+  {
+    "label": "Flutter: listar devices e emuladores",
+    "command": "R=\"$ZED_WORKTREE_ROOT\"; [ -f \"$R/pubspec.yaml\" ] || R=\"$R/vanep-mobile\"; cd \"$R\" || exit 1; f() { if [ -f .fvmrc ] && command -v fvm >/dev/null; then fvm flutter \"$@\"; else flutter \"$@\"; fi; }; f devices; f emulators",
+    "use_new_terminal": false,
+    "reveal": "always"
+  },
+  {
+    "label": "Flutter: build_runner",
+    "command": "R=\"$ZED_WORKTREE_ROOT\"; [ -f \"$R/pubspec.yaml\" ] || R=\"$R/vanep-mobile\"; cd \"$R\" || exit 1; if [ -f .fvmrc ] && command -v fvm >/dev/null; then fvm dart run build_runner build --delete-conflicting-outputs; else dart run build_runner build --delete-conflicting-outputs; fi",
+    "use_new_terminal": false,
+    "reveal": "always"
+  }
+]
