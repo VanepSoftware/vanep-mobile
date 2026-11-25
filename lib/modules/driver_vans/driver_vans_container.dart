@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/media/photo_picker.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
-import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/core/network/file_uploader.dart';
 import 'package:vanep_mobile/modules/driver_vans/data/datasources/driver_van_remote_datasource.dart';
 import 'package:vanep_mobile/modules/driver_vans/data/repositories/driver_van_repository_impl.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/repositories/driver_van_repository.dart';
@@ -19,7 +19,7 @@ void registerDriverVansDependencies(GetIt getIt) {
       DriverVanRemoteDataSource(
         dio: getIt<Dio>(instanceName: authenticatedDioName),
         environment: getIt<Environment>(),
-        photoUploader: getIt<PhotoUploader>(),
+        fileUploader: getIt<FileUploader>(),
       ),
     )
     ..registerSingleton<DriverVanRepository>(

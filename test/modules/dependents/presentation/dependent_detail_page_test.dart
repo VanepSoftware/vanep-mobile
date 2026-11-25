@@ -22,11 +22,18 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_sch
 import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_school_page.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_readiness_card.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/widgets/dependent_school_week_bar.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_state.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/pages/client_van_detail_page.dart';
 import 'package:vanep_mobile/modules/schools/domain/entities/school.dart';
 
+import '../../client_vans/fixtures/client_vans_fixture.dart';
 import '../dependents_fixtures.dart';
 import '../dependents_mocks.dart';
 import 'dependents_page_harness.dart';
+
+class MockClientVansCubit extends MockCubit<ClientVansState>
+    implements ClientVansCubit {}
 
 const pedro = TestDependent(
   token: 'dep-pedro',
@@ -155,6 +162,35 @@ void main() {
       expect(find.byType(DependentSchoolWeekBar), findsOneWidget);
     });
 
+    testWidgets(
+      'tapping Van menu item opens ClientVanDetailPage when van is linked',
+      (tester) async {
+        final vansCubit = MockClientVansCubit();
+        whenListen(
+          vansCubit,
+          const Stream<ClientVansState>.empty(),
+          initialState: ClientVansState(
+            status: ClientVansStatus.loaded,
+            vans: [testClientVan],
+          ),
+        );
+        getIt.registerSingleton<ClientVansCubit>(vansCubit);
+
+        const lucas = TestDependent(token: 'dep-test-01', name: 'Lucas Silva');
+        seed(readyWith([lucas]));
+
+        await openDetail(tester, 'dep-test-01');
+
+        await tester.ensureVisible(find.text('Van'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Van'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Mercedes-Benz Sprinter 415 CDI'), findsWidgets);
+        expect(find.text('ABC-4E21'), findsOneWidget);
+      },
+    );
+
     testWidgets('the school row shows only the name of the school', (
       tester,
     ) async {
@@ -255,6 +291,70 @@ void main() {
 
     expect(find.byType(DependentDetailView), findsOneWidget);
     expect(find.byType(SnackBar), findsNothing);
+  });
+
+  testWidgets('tapping Van redirects directly to the linked van detail', (
+    tester,
+  ) async {
+    final vansCubit = MockClientVansCubit();
+    whenListen(
+      vansCubit,
+      const Stream<ClientVansState>.empty(),
+      initialState: ClientVansState(
+        status: ClientVansStatus.loaded,
+        vans: [testClientVan],
+      ),
+    );
+    when(() => vansCubit.loadVans()).thenAnswer((_) async {});
+    getIt.registerSingleton<ClientVansCubit>(vansCubit);
+
+    const lucas = TestDependent(token: 'dep-test-01', name: 'Lucas Silva');
+    seed(readyWith([lucas]));
+    await openDetail(tester, 'dep-test-01');
+
+    expect(
+      find.text('Mercedes-Benz Sprinter 415 CDI · Carlos Alberto Silva'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('Van'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ClientVanDetailPage), findsOneWidget);
+    expect(find.text('ABC-4E21'), findsOneWidget);
+  });
+
+  testWidgets('shows feedback when dependent has no linked van', (
+    tester,
+  ) async {
+    final vansCubit = MockClientVansCubit();
+    whenListen(
+      vansCubit,
+      const Stream<ClientVansState>.empty(),
+      initialState: ClientVansState(
+        status: ClientVansStatus.loaded,
+        vans: [testClientVan],
+      ),
+    );
+    when(() => vansCubit.loadVans()).thenAnswer((_) async {});
+    getIt.registerSingleton<ClientVansCubit>(vansCubit);
+
+    seed(readyWith([pedro]));
+    await openDetail(tester, 'dep-pedro');
+
+    await tester.tap(find.text('Van'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ClientVanDetailPage), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byType(SnackBar),
+        matching: find.text(
+          'Este dependente ainda não está vinculado a uma van.',
+        ),
+      ),
+      findsOneWidget,
+    );
   });
 
   group('default dependent menu', () {

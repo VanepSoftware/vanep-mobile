@@ -65,6 +65,7 @@ const testDriverProfile = DriverProfileDto(
   rating: 4.8,
   bio: 'Levo criança há 8 anos.',
   experienceYears: 8,
+  verified: true,
   serviceAreas: ['Taguatinga', 'Ceilândia', 'Águas Claras'],
   vehicles: [
     DriverProfileVehicleDto(

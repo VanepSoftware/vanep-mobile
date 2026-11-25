@@ -168,4 +168,25 @@ void main() {
 
     expect(result.errorOrNull, DriverSearchFailure.placeNotResolved);
   });
+
+  test('fetchRecommended delegates to remote and returns ok', () async {
+    when(() => remote.fetchRecommended(page: any(named: 'page'))).thenAnswer(
+      (_) async => readSearchPage(rankedPage),
+    );
+
+    final result = await repository.fetchRecommended(page: 0);
+
+    expect(result.isOk, isTrue);
+    expect(result.valueOrNull?.drivers.length, 3);
+  });
+
+  test('fetchRecommended maps dio failure to DriverSearchFailure', () async {
+    when(() => remote.fetchRecommended(page: any(named: 'page'))).thenThrow(
+      dioFailure(null),
+    );
+
+    final result = await repository.fetchRecommended(page: 0);
+
+    expect(result.errorOrNull, DriverSearchFailure.network);
+  });
 }

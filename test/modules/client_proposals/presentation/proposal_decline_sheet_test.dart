@@ -58,7 +58,9 @@ void main() {
   ) async {
     await pumpSheet(tester, const ProposalDeclineState());
 
-    expect(find.text('Recusar proposta'), findsNWidgets(2));
+    expect(find.text('Recusar proposta'), findsOneWidget);
+    expect(find.text('Voltar'), findsOneWidget);
+    expect(find.text('Recusar'), findsOneWidget);
     expect(find.text('Carlos Souza'), findsOneWidget);
     expect(
       find.text('R\$${nbsp}300/mês · 12x · Para Ana e Pedro'),
@@ -87,7 +89,7 @@ void main() {
   testWidgets('declining waits for a reason', (tester) async {
     await pumpSheet(tester, const ProposalDeclineState());
 
-    await tester.tap(find.text('Recusar proposta').last);
+    await tester.tap(find.text('Recusar'));
 
     verifyNever(() => cubit.send(reasonLabel: any(named: 'reasonLabel')));
   });
@@ -115,7 +117,7 @@ void main() {
       const ProposalDeclineState(reason: ProposalDeclineReason.choseAnotherVan),
     );
 
-    await tester.tap(find.text('Recusar proposta').last);
+    await tester.tap(find.text('Recusar'));
     await tester.pumpAndSettle();
 
     expect(find.text('Recusar proposta?'), findsOneWidget);
@@ -125,7 +127,7 @@ void main() {
       ),
       findsOneWidget,
     );
-    await tester.tap(find.text('Recusar'));
+    await tester.tap(find.text('Recusar').last);
     await tester.pumpAndSettle();
 
     verify(() => cubit.send(reasonLabel: 'Escolhi outra van')).called(1);
@@ -139,9 +141,9 @@ void main() {
       const ProposalDeclineState(reason: ProposalDeclineReason.choseAnotherVan),
     );
 
-    await tester.tap(find.text('Recusar proposta').last);
+    await tester.tap(find.text('Recusar'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Voltar'));
+    await tester.tap(find.text('Voltar').last);
     await tester.pumpAndSettle();
 
     verifyNever(() => cubit.send(reasonLabel: any(named: 'reasonLabel')));

@@ -8,15 +8,29 @@ const proposalsSectionSpacing = 16.0;
 const proposalsCardSpacing = 12.0;
 
 class ProposalsSectionTitle extends StatelessWidget {
-  const ProposalsSectionTitle({required this.title, super.key});
+  const ProposalsSectionTitle({
+    required this.title,
+    this.trailing,
+    super.key,
+  });
 
   final String title;
+  final String? trailing;
 
   @override
   Widget build(BuildContext context) {
+    final trailing = this.trailing;
     return Padding(
       padding: const EdgeInsets.only(bottom: proposalsCardSpacing),
-      child: Text(title, style: context.typography.sectionTitle),
+      child: Row(
+        children: [
+          Expanded(child: Text(title, style: context.typography.sectionTitle)),
+          if (trailing != null && trailing.isNotEmpty) ...[
+            const SizedBox(width: 8),
+            Text(trailing, style: context.typography.cardSubtitle),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -25,6 +39,7 @@ class ProposalPersonHeader extends StatelessWidget {
   const ProposalPersonHeader({
     required this.avatar,
     required this.name,
+    this.nameTrailing,
     this.subtitle,
     this.subtitleLeading,
     this.trailing,
@@ -33,12 +48,14 @@ class ProposalPersonHeader extends StatelessWidget {
 
   final Widget avatar;
   final String name;
+  final Widget? nameTrailing;
   final String? subtitle;
   final Widget? subtitleLeading;
   final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
+    final nameTrailing = this.nameTrailing;
     final subtitle = this.subtitle;
     final subtitleLeading = this.subtitleLeading;
     final trailing = this.trailing;
@@ -50,9 +67,19 @@ class ProposalPersonHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                name,
-                style: context.typography.cardTitle.copyWith(fontSize: 15),
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      name,
+                      style: context.typography.cardTitle.copyWith(fontSize: 15),
+                    ),
+                  ),
+                  if (nameTrailing != null) ...[
+                    const SizedBox(width: 4),
+                    nameTrailing,
+                  ],
+                ],
               ),
               if (subtitle != null) ...[
                 const SizedBox(height: 2),

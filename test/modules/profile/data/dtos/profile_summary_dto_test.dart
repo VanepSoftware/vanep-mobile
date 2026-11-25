@@ -48,6 +48,25 @@ void main() {
     expect(dto.approvalStatus, DriverApprovalStatus.approved);
   });
 
+  test('fromJson reads the rating count and the years of experience', () {
+    final dto = DriverProfileSummaryDto.fromJson({
+      'token': 'summary-token-1',
+      'rating': 4.9,
+      'ratingCount': 32,
+      'experienceYears': 8,
+    });
+
+    expect(dto.ratingCount, 32);
+    expect(dto.experienceYears, 8);
+  });
+
+  test('a back without them leaves both empty', () {
+    final dto = DriverProfileSummaryDto.fromJson({'token': 'summary-token-1'});
+
+    expect(dto.ratingCount, isNull);
+    expect(dto.experienceYears, isNull);
+  });
+
   test('fromJson maps assistant summary with pendingInvite', () {
     final dto = AssistantProfileSummaryDto.fromJson({
       'token': 'assistant-summary-1',

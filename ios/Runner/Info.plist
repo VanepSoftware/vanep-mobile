@@ -3,13 +3,18 @@
 <plist version="1.0">
 <dict>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>O Vanep usa suas fotos para a foto de perfil e as fotos da van.</string>
+	<string>O Vanep usa suas fotos para a foto de perfil, as fotos da van e os seus documentos.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>O Vanep usa a câmera para tirar a foto de perfil e as fotos da van.</string>
+	<string>O Vanep usa a câmera para tirar a foto de perfil e as fotos da van e para escanear os seus documentos.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>pt-BR</string>
+		<string>en</string>
+	</array>
 	<key>CFBundleDisplayName</key>
 	<string>Vanep</string>
 	<key>CFBundleExecutable</key>

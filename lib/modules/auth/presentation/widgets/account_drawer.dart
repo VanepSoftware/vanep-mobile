@@ -26,6 +26,7 @@ class AccountDrawer extends StatelessWidget {
     this.isSummaryLoading = false,
     this.buildPersonalDataSlots,
     this.openSettings,
+    this.openProfessionalData,
     super.key,
   });
 
@@ -38,6 +39,7 @@ class AccountDrawer extends StatelessWidget {
   final bool isSummaryLoading;
   final PersonalDataSlotsBuilder? buildPersonalDataSlots;
   final Future<void> Function(BuildContext context)? openSettings;
+  final Future<void> Function(BuildContext context)? openProfessionalData;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +74,7 @@ class AccountDrawer extends StatelessWidget {
                   id,
                   buildPersonalDataSlots: buildPersonalDataSlots,
                   openSettings: openSettings,
+                  openProfessionalData: openProfessionalData,
                 ),
                 pendingEmailConfirmation: hasPendingEmailConfirmation,
               ),
@@ -89,6 +92,7 @@ Future<void> handleProfileMenuSelection(
   ProfileMenuId id, {
   PersonalDataSlotsBuilder? buildPersonalDataSlots,
   Future<void> Function(BuildContext context)? openSettings,
+  Future<void> Function(BuildContext context)? openProfessionalData,
 }) async {
   switch (id) {
     case ProfileMenuId.personalData:
@@ -108,8 +112,9 @@ Future<void> handleProfileMenuSelection(
       await openSettings?.call(context);
     case ProfileMenuId.signOut:
       await confirmAndSignOut(context);
-    case ProfileMenuId.paymentMethods:
     case ProfileMenuId.professionalData:
+      await openProfessionalData?.call(context);
+    case ProfileMenuId.paymentMethods:
     case ProfileMenuId.assistantInvite:
     case ProfileMenuId.privacySecurity:
       break;

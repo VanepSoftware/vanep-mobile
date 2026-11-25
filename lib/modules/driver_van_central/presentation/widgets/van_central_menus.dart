@@ -12,6 +12,7 @@ class VanCentralActions {
     required this.onOpenVanDetails,
     required this.onOpenServiceAreas,
     required this.onOpenStudents,
+    required this.onOpenVanDocuments,
     required this.onOpenComingSoon,
     required this.onAcceptingStudentsChanged,
   });
@@ -20,6 +21,7 @@ class VanCentralActions {
   final VoidCallback onOpenVanDetails;
   final VoidCallback onOpenServiceAreas;
   final VoidCallback onOpenStudents;
+  final VoidCallback onOpenVanDocuments;
   final ValueChanged<String> onOpenComingSoon;
   final ValueChanged<bool> onAcceptingStudentsChanged;
 }
@@ -128,10 +130,11 @@ class VanCentralMenus extends StatelessWidget {
               subtitle: l10n.vanCentralVanDataHint,
               onTap: actions.onOpenVanDetails,
             ),
-            comingSoonItem(
-              l10n.vanCentralVanDocuments,
-              Icons.description_outlined,
-              l10n.vanCentralVanDocumentsHint,
+            VanepMenuItem(
+              label: l10n.vanCentralVanDocuments,
+              icon: Icons.description_outlined,
+              subtitle: l10n.vanCentralVanDocumentsHint,
+              onTap: actions.onOpenVanDocuments,
             ),
           ],
         ),
