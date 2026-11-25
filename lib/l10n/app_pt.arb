@@ -1168,56 +1168,6 @@
   "assistantStudentsEmpty": "Nenhum aluno encontrado.",
   "assistantLinkRevokedTitle": "Acesso revogado",
   "assistantLinkRevokedMessage": "O motorista removeu seu vínculo com esta van.",
-  "driverHomeUnavailable": "Os dados do início ainda não estão disponíveis.",
-  "driverHomeRefreshFailed": "Não foi possível atualizar o início.",
-  "driverHomeStopChanged": "A parada mudou. Confira os dados e deslize novamente.",
-  "driverHomeRefreshAfterAction": "Ação concluída. Atualize a tela para ver o estado atual.",
-  "driverHomeActionFailed": "Não foi possível concluir a ação. Tente novamente.",
-  "driverHomeApprovalRequired": "Seu cadastro precisa estar aprovado para iniciar a rota.",
-  "driverHomeNoPendingRoute": "Não há rota aguardando início.",
-  "driverHomeSubscription": "Regularize sua assinatura Vanep.",
-  "driverHomeDocuments": "Atualize os documentos vencidos.",
-  "driverHomeBothBlocked": "Regularize sua assinatura Vanep. Atualize os documentos vencidos.",
-  "driverHomeBlockedTitle": "Regularização necessária",
-  "driverHomeIncompleteTitle": "Complete seu cadastro",
-  "driverHomeIncompleteDescription": "Acesse Documentos para concluir as informações pendentes.",
-  "driverHomeReviewTitle": "Cadastro em análise",
-  "driverHomeReviewDescription": "Aguarde a análise dos documentos enviados.",
-  "driverHomeRejectedTitle": "Cadastro rejeitado",
-  "driverHomeRejectedDescription": "Consulte os documentos para verificar o motivo.",
-  "driverHomeInProgress": "Em rota",
-  "driverHomeBeforeDeparture": "Antes de sair",
-  "driverHomeCompleted": "Turno concluído",
-  "driverHomeBuildingTitle": "Vamos montar sua rota",
-  "driverHomeBuildingDescription": "Seu cadastro está aprovado. Adicione alunos para organizar sua rota.",
-  "driverHomeNoRouteTitle": "Sem rota hoje",
-  "driverHomeNoRouteDescription": "Acompanhe e organize seu negócio pelos atalhos abaixo.",
-  "driverHomeRegularize": "Regularizar",
-  "driverHomeCompleteRegistration": "Completar cadastro",
-  "driverHomeResubmit": "Corrigir e reenviar",
-  "driverHomeChecklist": "Checklist",
-  "driverHomeStartRoute": "Iniciar rota",
-  "driverHomeAddStudents": "Adicionar alunos",
-  "driverHomeStudents": "Alunos",
-  "driverHomeRoute": "Rota e paradas",
-  "driverHomeAbsences": "Ausências e ajustes",
-  "driverHomeFinancial": "Financeiro",
-  "driverHomeAssistants": "Auxiliares",
-  "driverHomeDocumentsShortcut": "Documentos",
-  "driverHomeRetry": "Tentar novamente",
-  "driverHomeOutsideHours": "Você está fora do expediente.",
-  "driverHomeRegularization": "Regularização",
-  "driverHomeContact": "Contato da parada",
-  "driverHomeBoarding": "embarque",
-  "driverHomeDisembarking": "desembarque",
-  "driverHomeMorning": "Manhã",
-  "driverHomeAfternoon": "Tarde",
-  "driverHomeNight": "Noite",
-  "driverHomeFulltime": "Integral",
-  "driverHomeNextShift": "Próximo turno: {shift}",
-  "@driverHomeNextShift": {
-    "placeholders": {
-      "shift": {
   "clientVansTitle": "Minhas vans",
   "clientVansSubtitle": "Vans escolares vinculadas à sua conta",
   "clientVansEmptyTitle": "Nenhuma van vinculada",
@@ -1268,26 +1218,6 @@
       }
     }
   },
-  "driverHomeTripShiftOverline": "Rota · {shift}",
-  "@driverHomeTripShiftOverline": {
-    "placeholders": {
-      "shift": {
-        "type": "String"
-      }
-    }
-  },
-  "driverHomeInProgressShiftOverline": "Em rota · {shift}",
-  "@driverHomeInProgressShiftOverline": {
-    "placeholders": {
-      "shift": {
-        "type": "String"
-      }
-    }
-  },
-  "driverHomeCall": "Ligar: {contact}",
-  "@driverHomeCall": {
-    "placeholders": {
-      "contact": {
   "clientVansDependentNoVan": "Nenhuma van vinculada a este dependente.",
   "clientVansAnotherVanChip": "Outra van",
   "clientVansVanSelectorTitle": "Van de {driver}",
@@ -1298,24 +1228,6 @@
       }
     }
   },
-  "driverHomeFamilyCounter": "{count} de {total} com família no app",
-  "@driverHomeFamilyCounter": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "driverHomeSlideStudent": "{student}: deslize para confirmar {action}",
-  "@driverHomeSlideStudent": {
-    "placeholders": {
-      "student": {
-        "type": "String"
-      },
-      "action": {
   "clientVansActiveContractBadge": "Contrato ativo",
   "clientVansPendingContractBadge": "Contrato pendente",
   "clientVansPhotoPlaceholder": "Foto da van (frente e lateral)",
@@ -1350,10 +1262,6 @@
       }
     }
   },
-  "driverHomeSlideHint": "Deslize da esquerda até o fim para confirmar {action}",
-  "@driverHomeSlideHint": {
-    "placeholders": {
-      "action": {
   "clientVansPaymentsRowTitle": "Pagamentos",
   "clientVansSecuritySection": "Segurança",
   "clientVansDocumentsTitle": "Documentos do motorista e da van",
@@ -1365,10 +1273,6 @@
       }
     }
   },
-  "driverHomePreviewTitle": "Prévia de teste — dados simulados",
-  "driverHomeShortcutsTitle": "Atalhos",
-  "driverHomeGreetingHello": "Olá, {name}!",
-  "@driverHomeGreetingHello": {
   "clientVansRateDriverSubtitle": "Anônimo, uma vez por contrato",
   "clientVansCancelContractTitle": "Cancelar contrato",
   "clientVansCancelContractSubtitle": "Aviso de 30 dias e multa de 10% do saldo",
@@ -1387,10 +1291,6 @@
       }
     }
   },
-  "driverHomeGreetingHelloPlain": "Olá, {name}",
-  "@driverHomeGreetingHelloPlain": {
-    "placeholders": {
-      "name": {
   "clientVanDetailBrandModel": "Marca / Modelo",
   "clientVanDetailMonthlyFee": "Mensalidade",
   "clientVanDetailDueDate": "Vencimento",
@@ -1414,10 +1314,6 @@
       }
     }
   },
-  "driverHomeGreetingMorning": "Bom dia, {name}!",
-  "@driverHomeGreetingMorning": {
-    "placeholders": {
-      "name": {
   "clientVanDetailReturnTime": "Volta: {time}",
   "@clientVanDetailReturnTime": {
     "placeholders": {
@@ -1426,10 +1322,6 @@
       }
     }
   },
-  "driverHomeGreetingSaturday": "Bom sábado, {name}!",
-  "@driverHomeGreetingSaturday": {
-    "placeholders": {
-      "name": {
   "clientVansScheduleBothTimes": "Embarque {pickup} · volta {returnTime}",
   "@clientVansScheduleBothTimes": {
     "placeholders": {
@@ -1441,17 +1333,6 @@
       }
     }
   },
-  "driverHomeGreetingMorningCompleted": "Manhã concluída",
-  "driverHomeSubtitleIncomplete": "Falta pouco para receber alunos pela Vanep.",
-  "driverHomeSubtitleUnderReview": "Seu cadastro foi enviado.",
-  "driverHomeSubtitleRejected": "Seu cadastro precisa de correção.",
-  "driverHomeSubtitleBuildingRoute": "Cadastro aprovado. Bem-vindo à Vanep.",
-  "driverHomeSubtitleBeforeDeparture": "Quarta, 14 de outubro",
-  "driverHomeSubtitleInProgress": "Ida · desde 6h21",
-  "driverHomeSubtitleShiftCompleted": "Quarta, 14 de outubro · bom trabalho, {name}",
-  "@driverHomeSubtitleShiftCompleted": {
-    "placeholders": {
-      "name": {
   "clientVansSchedulePickupOnly": "Embarque {pickup}",
   "@clientVansSchedulePickupOnly": {
     "placeholders": {
@@ -1480,50 +1361,6 @@
       }
     }
   },
-  "driverHomeSubtitleNoRouteToday": "Sábado, 17 de outubro",
-  "driverHomeSubtitleBlocked": "Quinta, 12 de novembro · 2 coisas para resolver",
-  "driverHomeIncompleteOverline": "Cadastro",
-  "driverHomeIncompleteHeadline": "Complete seu cadastro para aparecer na busca",
-  "driverHomeIncompleteStep1": "Dados pessoais",
-  "driverHomeIncompleteStep2": "Perfil profissional",
-  "driverHomeIncompleteStep3": "Van",
-  "driverHomeIncompleteStep4Title": "CNH",
-  "driverHomeIncompleteStep4Hint": "Foto da habilitação e validade",
-  "driverHomeIncompleteStepNow": "Agora",
-  "driverHomeIncompleteStep5Title": "Documentos",
-  "driverHomeIncompleteStep5Hint": "CRLV, vistoria e autorização",
-  "driverHomeIncompleteStep6Title": "Áreas de atendimento",
-  "driverHomeIncompleteStep6Hint": "Bairros e escolas que você atende",
-  "driverHomeIncompleteFooter": "Depois do envio, a análise leva até 2 dias úteis.",
-  "driverHomeUnderReviewOverline": "Em análise",
-  "driverHomeUnderReviewHeadline": "A Vanep está conferindo seus documentos",
-  "driverHomeUnderReviewSubtitle": "Resposta em até 2 dias úteis, aqui e por e-mail.",
-  "driverHomeTimelineSent": "Enviado",
-  "driverHomeTimelineInReview": "Em análise",
-  "driverHomeTimelineApproved": "Aprovado",
-  "driverHomeTimelineApprovedHint": "Libera iniciar rota e receber propostas",
-  "driverHomeSeeSentDocuments": "Ver o que foi enviado",
-  "driverHomeMeanwhileAdvanceRoute": "Enquanto isso, adiante sua rota",
-  "driverHomeAdvanceStudentsTitle": "Cadastre seus alunos atuais",
-  "driverHomeAdvanceStudentsHint": "Entram na rota já no primeiro dia",
-  "driverHomeAdvanceAssistantTitle": "Convide seu auxiliar",
-  "driverHomeAdvanceAssistantHint": "Ele dá as baixas com você",
-  "driverHomeBuildingOverline": "Monte sua rota",
-  "driverHomeBuildingHeadline": "Traga os alunos que você já tem",
-  "driverHomeBuildingStep1Title": "Cadastre os alunos atuais",
-  "driverHomeBuildingStep1Hint": "Nome, escola e endereço",
-  "driverHomeBuildingStep2Title": "Convide as famílias",
-  "driverHomeBuildingStep2Hint": "Pelo WhatsApp, para receberem os avisos",
-  "driverHomeBuildingStep3Title": "Convide seu auxiliar",
-  "driverHomeBuildingStep3Hint": "Ele dá as baixas enquanto você dirige.",
-  "driverHomeShareParentGroupLink": "Mandar link no grupo de pais",
-  "driverHomeStatActiveStudents": "alunos ativos",
-  "driverHomeLocationTitle": "Compartilhar localização",
-  "driverHomeLocationSubtitle": "Os pais veem a van só durante a rota",
-  "driverHomeSlideToStartRoute": "Deslize para iniciar a rota",
-  "driverHomeInviteAction": "Convidar",
-  "driverHomeMissingFamiliesHint": "{count, plural, =1{1 família ainda sem avisos de embarque} other{{count} famílias ainda sem avisos de embarque}}",
-  "@driverHomeMissingFamiliesHint": {
   "findVanForLabel": "Para",
   "findVanDriversCount": "{count, plural, =1{1 motorista atende esse trajeto} other{{count} motoristas atendem esse trajeto}}",
   "@findVanDriversCount": {
@@ -1533,13 +1370,6 @@
       }
     }
   },
-  "driverHomeAllFamiliesInAppHint": "Todas as famílias já recebem avisos no app",
-  "driverHomeParentsSeeVan": "Pais veem a van",
-  "driverHomeNextStopLabel": "Próxima parada",
-  "driverHomeOnBoardCount": "de {total} a bordo",
-  "@driverHomeOnBoardCount": {
-    "placeholders": {
-      "total": {
   "findVanSortNearest": "Mais próximos",
   "findVanSortRating": "Melhor avaliação",
   "findVanSortPrice": "Menor preço",
@@ -1554,32 +1384,6 @@
       }
     }
   },
-  "driverHomeNextStopLabel": "Próxima parada · 5 de 10",
-  "driverHomeNextStopEta": "600 m · 2 min",
-  "driverHomeNextStopDefaultAddress": "QNL 5, Conjunto J, casa 12",
-  "driverHomeNextStopDefaultStudents": "Beatriz e Gabriel",
-  "driverHomeSlideConfirm": "Deslize para confirmar {action}",
-  "@driverHomeSlideConfirm": {
-    "placeholders": {
-      "action": {
-        "type": "String"
-      }
-    }
-  },
-  "driverHomeExceptionAction": "Exceção",
-  "driverHomeWazeAction": "Waze",
-  "driverHomeDrivingNotice": "Com a van andando, deixe as baixas com o auxiliar.",
-  "driverHomeEndRouteAction": "Encerrar rota",
-  "driverHomeEndRouteHint": "Se houver aluno sem baixa, o app avisa antes de encerrar.",
-  "driverHomeSeeTripReport": "Ver relatório da viagem",
-  "driverHomeYourBusinessSection": "Seu negócio",
-  "driverHomeSprinterSeatsTitle": "Vagas na Sprinter",
-  "driverHomeSprinterSeatsTotal": "16 lugares",
-  "driverHomeMorningFull": "lotada",
-  "driverHomeAfternoonVacancies": "4 vagas",
-  "driverHomeOfTotal": "de {total}",
-  "@driverHomeOfTotal": {
-    "placeholders": {
   "findVanSpotsAvailable": "Com vaga disponível",
   "findVanSpotsFull": "Sem vaga disponível",
   "findVanPriceStartingFrom": "a partir de",
@@ -1617,11 +1421,6 @@
       }
     }
   },
-  "driverHomeActiveContractsLabel": "Contratos ativos",
-  "driverHomeActiveContractsRevenue": "R$ 8.400/mês contratados",
-  "driverHomeStudentsWithFamilyLabel": "Alunos com família no app",
-  "driverHomeInviteCount": "Convidar {count}",
-  "@driverHomeInviteCount": {
   "driverProfileVerifiedBadge": "Verificado pela Vanep",
   "driverProfileBioSectionTitle": "Apresentação",
   "driverProfileVacanciesSectionTitle": "Vagas e preço",
@@ -1697,28 +1496,6 @@
       }
     }
   },
-  "driverHomeSubscriptionSection": "Assinatura Vanep · outubro",
-  "driverHomeSubscriptionDue": "Vence 10/11",
-  "driverHomeMonthlyPlan": "Plano mensal",
-  "driverHomeMonthlyPlanPrice": "R$ 49,90",
-  "driverHomeMonthlyPlanHint": "As comissões ficam dentro do valor de cada contrato.",
-  "driverHomePayWithPix": "Pagar com PIX",
-  "driverHomeInspectionWarningTitle": "Vistoria semestral vence em 12 dias",
-  "driverHomeInspectionWarningSubtitle": "Sem ela, os pedidos novos param",
-  "driverHomeBlockedOverline": "Assinatura vencida",
-  "driverHomeBlockedHeadline": "Novas propostas estão pausadas",
-  "driverHomeSeeInvoice": "Ver fatura",
-  "driverHomeExpiredDocumentTitle": "Documento vencido",
-  "driverHomeExpiredDocumentSubtitle": "Pedidos novos pausados até você enviar o documento.",
-  "driverHomeSendNewDocument": "Enviar novo documento",
-  "driverHomeMeanwhileSection": "Enquanto isso",
-  "driverHomeMeanwhileRoutes": "Rotas, checklist e avisos aos pais",
-  "driverHomeMeanwhileContracts": "Contratos ativos e renovações já assinadas",
-  "driverHomeMeanwhileProposals": "Responder pedidos e enviar propostas",
-  "driverHomeMeanwhileSearch": "Aparecer na busca"
-  "driverHomeMeanwhileSearch": "Aparecer na busca",
-  "driverHomeAfternoonRouteStudents": "12 alunos",
-  "driverHomeReleasedBadge": "Liberada"
   "driverProfileShiftFull": "Lotada",
   "chatCounterpartDriverCaption": "Motorista",
   "chatViewDriverProfileTooltip": "Ver perfil do motorista",
@@ -1904,5 +1681,240 @@
   "professionalDataLoadError": "Não deu para carregar os seus dados profissionais.",
   "professionalDataRetry": "Tentar novamente",
   "pushNotificationChannelName": "Notificações",
-  "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos"
+  "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos",
+  "driverHomeUnavailable": "Os dados do início ainda não estão disponíveis.",
+  "driverHomeRefreshFailed": "Não foi possível atualizar o início.",
+  "driverHomeStopChanged": "A parada mudou. Confira os dados e deslize novamente.",
+  "driverHomeRefreshAfterAction": "Ação concluída. Atualize a tela para ver o estado atual.",
+  "driverHomeActionFailed": "Não foi possível concluir a ação. Tente novamente.",
+  "driverHomeApprovalRequired": "Seu cadastro precisa estar aprovado para iniciar a rota.",
+  "driverHomeNoPendingRoute": "Não há rota aguardando início.",
+  "driverHomeSubscription": "Regularize sua assinatura Vanep.",
+  "driverHomeDocuments": "Atualize os documentos vencidos.",
+  "driverHomeBothBlocked": "Regularize sua assinatura Vanep. Atualize os documentos vencidos.",
+  "driverHomeBlockedTitle": "Regularização necessária",
+  "driverHomeIncompleteTitle": "Complete seu cadastro",
+  "driverHomeIncompleteDescription": "Acesse Documentos para concluir as informações pendentes.",
+  "driverHomeReviewTitle": "Cadastro em análise",
+  "driverHomeReviewDescription": "Aguarde a análise dos documentos enviados.",
+  "driverHomeRejectedTitle": "Cadastro rejeitado",
+  "driverHomeRejectedDescription": "Consulte os documentos para verificar o motivo.",
+  "driverHomeInProgress": "Em rota",
+  "driverHomeBeforeDeparture": "Antes de sair",
+  "driverHomeCompleted": "Turno concluído",
+  "driverHomeBuildingTitle": "Vamos montar sua rota",
+  "driverHomeBuildingDescription": "Seu cadastro está aprovado. Adicione alunos para organizar sua rota.",
+  "driverHomeNoRouteTitle": "Sem rota hoje",
+  "driverHomeNoRouteDescription": "Acompanhe e organize seu negócio pelos atalhos abaixo.",
+  "driverHomeRegularize": "Regularizar",
+  "driverHomeCompleteRegistration": "Completar cadastro",
+  "driverHomeResubmit": "Corrigir e reenviar",
+  "driverHomeChecklist": "Checklist",
+  "driverHomeStartRoute": "Iniciar rota",
+  "driverHomeAddStudents": "Adicionar alunos",
+  "driverHomeStudents": "Alunos",
+  "driverHomeRoute": "Rota e paradas",
+  "driverHomeAbsences": "Ausências e ajustes",
+  "driverHomeFinancial": "Financeiro",
+  "driverHomeAssistants": "Auxiliares",
+  "driverHomeDocumentsShortcut": "Documentos",
+  "driverHomeRetry": "Tentar novamente",
+  "driverHomeOutsideHours": "Você está fora do expediente.",
+  "driverHomeRegularization": "Regularização",
+  "driverHomeContact": "Contato da parada",
+  "driverHomeBoarding": "embarque",
+  "driverHomeDisembarking": "desembarque",
+  "driverHomeMorning": "Manhã",
+  "driverHomeAfternoon": "Tarde",
+  "driverHomeNight": "Noite",
+  "driverHomeFulltime": "Integral",
+  "driverHomeNextShift": "Próximo turno: {shift}",
+  "@driverHomeNextShift": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeTripShiftOverline": "Rota · {shift}",
+  "@driverHomeTripShiftOverline": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeInProgressShiftOverline": "Em rota · {shift}",
+  "@driverHomeInProgressShiftOverline": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeCall": "Ligar: {contact}",
+  "@driverHomeCall": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeFamilyCounter": "{count} de {total} com família no app",
+  "@driverHomeFamilyCounter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeSlideStudent": "{student}: deslize para confirmar {action}",
+  "@driverHomeSlideStudent": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSlideHint": "Deslize da esquerda até o fim para confirmar {action}",
+  "@driverHomeSlideHint": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomePreviewTitle": "Prévia de teste — dados simulados",
+  "driverHomeShortcutsTitle": "Atalhos",
+  "driverHomeGreetingHello": "Olá, {name}!",
+  "@driverHomeGreetingHello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingHelloPlain": "Olá, {name}",
+  "@driverHomeGreetingHelloPlain": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingMorning": "Bom dia, {name}!",
+  "@driverHomeGreetingMorning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingSaturday": "Bom sábado, {name}!",
+  "@driverHomeGreetingSaturday": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingMorningCompleted": "Manhã concluída",
+  "driverHomeSubtitleIncomplete": "Falta pouco para receber alunos pela Vanep.",
+  "driverHomeSubtitleUnderReview": "Seu cadastro foi enviado.",
+  "driverHomeSubtitleRejected": "Seu cadastro precisa de correção.",
+  "driverHomeSubtitleBuildingRoute": "Cadastro aprovado. Bem-vindo à Vanep.",
+  "driverHomeSubtitleBeforeDeparture": "Quarta, 14 de outubro",
+  "driverHomeSubtitleInProgress": "Ida · desde 6h21",
+  "driverHomeSubtitleShiftCompleted": "Quarta, 14 de outubro · bom trabalho, {name}",
+  "@driverHomeSubtitleShiftCompleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSubtitleNoRouteToday": "Sábado, 17 de outubro",
+  "driverHomeSubtitleBlocked": "Quinta, 12 de novembro · 2 coisas para resolver",
+  "driverHomeIncompleteOverline": "Cadastro",
+  "driverHomeIncompleteHeadline": "Complete seu cadastro para aparecer na busca",
+  "driverHomeIncompleteStep1": "Dados pessoais",
+  "driverHomeIncompleteStep2": "Perfil profissional",
+  "driverHomeIncompleteStep3": "Van",
+  "driverHomeIncompleteStep4Title": "CNH",
+  "driverHomeIncompleteStep4Hint": "Foto da habilitação e validade",
+  "driverHomeIncompleteStepNow": "Agora",
+  "driverHomeIncompleteStep5Title": "Documentos",
+  "driverHomeIncompleteStep5Hint": "CRLV, vistoria e autorização",
+  "driverHomeIncompleteStep6Title": "Áreas de atendimento",
+  "driverHomeIncompleteStep6Hint": "Bairros e escolas que você atende",
+  "driverHomeIncompleteFooter": "Depois do envio, a análise leva até 2 dias úteis.",
+  "driverHomeUnderReviewOverline": "Em análise",
+  "driverHomeUnderReviewHeadline": "A Vanep está conferindo seus documentos",
+  "driverHomeUnderReviewSubtitle": "Resposta em até 2 dias úteis, aqui e por e-mail.",
+  "driverHomeTimelineSent": "Enviado",
+  "driverHomeTimelineInReview": "Em análise",
+  "driverHomeTimelineApproved": "Aprovado",
+  "driverHomeTimelineApprovedHint": "Libera iniciar rota e receber propostas",
+  "driverHomeSeeSentDocuments": "Ver o que foi enviado",
+  "driverHomeMeanwhileAdvanceRoute": "Enquanto isso, adiante sua rota",
+  "driverHomeAdvanceStudentsTitle": "Cadastre seus alunos atuais",
+  "driverHomeAdvanceStudentsHint": "Entram na rota já no primeiro dia",
+  "driverHomeAdvanceAssistantTitle": "Convide seu auxiliar",
+  "driverHomeAdvanceAssistantHint": "Ele dá as baixas com você",
+  "driverHomeBuildingOverline": "Monte sua rota",
+  "driverHomeBuildingHeadline": "Traga os alunos que você já tem",
+  "driverHomeBuildingStep1Title": "Cadastre os alunos atuais",
+  "driverHomeBuildingStep1Hint": "Nome, escola e endereço",
+  "driverHomeBuildingStep2Title": "Convide as famílias",
+  "driverHomeBuildingStep2Hint": "Pelo WhatsApp, para receberem os avisos",
+  "driverHomeBuildingStep3Title": "Convide seu auxiliar",
+  "driverHomeBuildingStep3Hint": "Ele dá as baixas enquanto você dirige.",
+  "driverHomeShareParentGroupLink": "Mandar link no grupo de pais",
+  "driverHomeStatActiveStudents": "alunos ativos",
+  "driverHomeLocationTitle": "Compartilhar localização",
+  "driverHomeLocationSubtitle": "Os pais veem a van só durante a rota",
+  "driverHomeSlideToStartRoute": "Deslize para iniciar a rota",
+  "driverHomeInviteAction": "Convidar",
+  "driverHomeMissingFamiliesHint": "{count, plural, =1{1 família ainda sem avisos de embarque} other{{count} famílias ainda sem avisos de embarque}}",
+  "@driverHomeMissingFamiliesHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeAllFamiliesInAppHint": "Todas as famílias já recebem avisos no app",
+  "driverHomeParentsSeeVan": "Pais veem a van",
+  "driverHomeNextStopLabel": "Próxima parada",
+  "driverHomeSlideConfirm": "Deslize para confirmar {action}",
+  "@driverHomeSlideConfirm": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeExceptionAction": "Exceção",
+  "driverHomeWazeAction": "Waze",
+  "driverHomeDrivingNotice": "Com a van andando, deixe as baixas com o auxiliar.",
+  "driverHomeEndRouteAction": "Encerrar rota",
+  "driverHomeEndRouteHint": "Se houver aluno sem baixa, o app avisa antes de encerrar.",
+  "driverHomeSeeTripReport": "Ver relatório da viagem",
+  "driverHomeYourBusinessSection": "Seu negócio",
+  "driverHomeBlockedHeadline": "Novas propostas estão pausadas",
+  "driverHomeSeeInvoice": "Ver fatura",
+  "driverHomeExpiredDocumentTitle": "Documento vencido",
+  "driverHomeExpiredDocumentSubtitle": "Pedidos novos pausados até você enviar o documento.",
+  "driverHomeSendNewDocument": "Enviar novo documento",
+  "driverHomeMeanwhileSection": "Enquanto isso",
+  "driverHomeMeanwhileRoutes": "Rotas, checklist e avisos aos pais",
+  "driverHomeMeanwhileContracts": "Contratos ativos e renovações já assinadas",
+  "driverHomeMeanwhileProposals": "Responder pedidos e enviar propostas",
+  "driverHomeMeanwhileSearch": "Aparecer na busca"
 }
