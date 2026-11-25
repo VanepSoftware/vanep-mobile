@@ -34,9 +34,9 @@ Presentation boundaries are provisional until measured against each predecessor.
 
 ## Phase 3 — Presentation primitives (`feat/VAN-66-home-primitives`)
 
-- [ ] 3.1 Extract localization, shared card error styling and slide control with tests.
-- [ ] 3.2 Extract test fixtures and verify full-drag-only confirmation.
-- [ ] 3.3 Run analysis/component tests, measure diff and open PR.
+- [x] 3.1 Extract localization, shared card error styling and slide control with tests.
+- [x] 3.2 Extract test fixtures and verify full-drag-only confirmation.
+- [x] 3.3 Run analysis/component tests, measure diff and open PR.
 
 ## Phase 4 — Cards and shortcuts (`feat/VAN-66-home-cards`)
 
