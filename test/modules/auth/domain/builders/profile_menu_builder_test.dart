@@ -71,7 +71,7 @@ void main() {
       ProfileMenuId.privacySecurity,
       ProfileMenuId.signOut,
     ]);
-    expect(enabledById(menu)[ProfileMenuId.assistantInvite], isFalse);
+    expect(enabledById(menu)[ProfileMenuId.assistantInvite], isTrue);
   });
 
   test('settings is enabled for every user type', () {

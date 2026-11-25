@@ -12,6 +12,7 @@ String assistantFailureMessage(
     AssistantFailure.revokedInvite => l10n.assistantFailureRevoked,
     AssistantFailure.invalidPersonalData =>
       l10n.assistantFailureInvalidPersonalData,
+    AssistantFailure.routeUnavailable => l10n.assistantFailureRouteUnavailable,
     AssistantFailure.unauthorized => l10n.assistantFailureUnauthorized,
     AssistantFailure.network => l10n.assistantFailureNetwork,
     AssistantFailure.unexpected => l10n.assistantFailureUnexpected,

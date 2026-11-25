@@ -27,6 +27,7 @@ class AccountDrawer extends StatelessWidget {
     this.buildPersonalDataSlots,
     this.openSettings,
     this.openProfessionalData,
+    this.openAssistantVans,
     super.key,
   });
 
@@ -40,6 +41,7 @@ class AccountDrawer extends StatelessWidget {
   final PersonalDataSlotsBuilder? buildPersonalDataSlots;
   final Future<void> Function(BuildContext context)? openSettings;
   final Future<void> Function(BuildContext context)? openProfessionalData;
+  final Future<void> Function(BuildContext context)? openAssistantVans;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,7 @@ class AccountDrawer extends StatelessWidget {
           buildPersonalDataSlots: buildPersonalDataSlots,
           openSettings: openSettings,
           openProfessionalData: openProfessionalData,
+          openAssistantVans: openAssistantVans,
         ),
       ),
     );
@@ -77,6 +80,7 @@ class AccountProfileView extends StatelessWidget {
     this.buildPersonalDataSlots,
     this.openSettings,
     this.openProfessionalData,
+    this.openAssistantVans,
     this.padding = const EdgeInsets.fromLTRB(16, 20, 16, 24),
     super.key,
   });
@@ -91,6 +95,7 @@ class AccountProfileView extends StatelessWidget {
   final PersonalDataSlotsBuilder? buildPersonalDataSlots;
   final Future<void> Function(BuildContext context)? openSettings;
   final Future<void> Function(BuildContext context)? openProfessionalData;
+  final Future<void> Function(BuildContext context)? openAssistantVans;
   final EdgeInsetsGeometry padding;
 
   @override
@@ -124,6 +129,7 @@ class AccountProfileView extends StatelessWidget {
               buildPersonalDataSlots: buildPersonalDataSlots,
               openSettings: openSettings,
               openProfessionalData: openProfessionalData,
+              openAssistantVans: openAssistantVans,
             ),
             pendingEmailConfirmation: hasPendingEmailConfirmation,
           ),
@@ -140,6 +146,7 @@ Future<void> handleProfileMenuSelection(
   PersonalDataSlotsBuilder? buildPersonalDataSlots,
   Future<void> Function(BuildContext context)? openSettings,
   Future<void> Function(BuildContext context)? openProfessionalData,
+  Future<void> Function(BuildContext context)? openAssistantVans,
 }) async {
   switch (id) {
     case ProfileMenuId.personalData:
@@ -161,8 +168,9 @@ Future<void> handleProfileMenuSelection(
       await confirmAndSignOut(context);
     case ProfileMenuId.professionalData:
       await openProfessionalData?.call(context);
-    case ProfileMenuId.paymentMethods:
     case ProfileMenuId.assistantInvite:
+      await openAssistantVans?.call(context);
+    case ProfileMenuId.paymentMethods:
     case ProfileMenuId.privacySecurity:
       break;
   }

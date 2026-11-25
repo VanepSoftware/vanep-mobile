@@ -74,7 +74,7 @@ const _assistantMenu = [
     _enabledPersonalData,
   ], title: ProfileMenuSectionTitle.account),
   ProfileMenuSection([
-    ProfileMenuEntry(id: ProfileMenuId.assistantInvite, enabled: false),
+    ProfileMenuEntry(id: ProfileMenuId.assistantInvite, enabled: true),
   ], title: ProfileMenuSectionTitle.services),
   _settingsSection,
   _signOutSection,

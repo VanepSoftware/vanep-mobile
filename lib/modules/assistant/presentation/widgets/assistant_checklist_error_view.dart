@@ -14,15 +14,20 @@ class AssistantChecklistErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return VanepErrorView(
-      message: assistantFailureMessage(l10n, state.failure!),
-      retryLabel: l10n.assistantVansRetry,
-      onRetry: () {
-        final vanToken = state.vanToken;
-        if (vanToken != null) {
-          context.read<AssistantChecklistCubit>().loadRoute(vanToken);
-        }
-      },
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: VanepErrorView(
+          message: assistantFailureMessage(l10n, state.failure!),
+          retryLabel: l10n.assistantVansRetry,
+          onRetry: () {
+            final vanToken = state.vanToken;
+            if (vanToken != null) {
+              context.read<AssistantChecklistCubit>().loadRoute(vanToken);
+            }
+          },
+        ),
+      ),
     );
   }
 }

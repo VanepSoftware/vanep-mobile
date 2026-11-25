@@ -87,7 +87,7 @@ IconData profileMenuIcon(ProfileMenuId id) {
     ProfileMenuId.personalData => Icons.person_outline,
     ProfileMenuId.paymentMethods => Icons.credit_card_outlined,
     ProfileMenuId.professionalData => Icons.work_outline,
-    ProfileMenuId.assistantInvite => Icons.mail_outline,
+    ProfileMenuId.assistantInvite => Icons.airport_shuttle_outlined,
     ProfileMenuId.settings => Icons.settings_outlined,
     ProfileMenuId.privacySecurity => Icons.shield_outlined,
     ProfileMenuId.signOut => Icons.logout,

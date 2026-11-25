@@ -36,6 +36,13 @@ class AssistantVansPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.palette.surface,
+      appBar: Navigator.of(context).canPop()
+          ? AppBar(
+              backgroundColor: context.palette.surface,
+              surfaceTintColor: context.palette.surface,
+              elevation: 0,
+            )
+          : null,
       body: SafeArea(
         child: BlocConsumer<AssistantVansCubit, AssistantVansState>(
           listenWhen: (previous, current) =>

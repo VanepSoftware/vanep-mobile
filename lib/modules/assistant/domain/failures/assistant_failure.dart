@@ -5,6 +5,7 @@ enum AssistantFailure {
   revokedInvite,
   unauthorized,
   invalidPersonalData,
+  routeUnavailable,
   network,
   unexpected,
 }

@@ -78,6 +78,7 @@ import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_c
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_van_registration_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_page.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
+import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_students_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
 import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
@@ -243,6 +244,9 @@ class AuthGate extends StatelessWidget {
                 ),
                 BlocProvider<AssistantChecklistCubit>(
                   create: (_) => getIt<AssistantChecklistCubit>(),
+                ),
+                BlocProvider<AssistantStudentsCubit>(
+                  create: (_) => getIt<AssistantStudentsCubit>(),
                 ),
                 BlocProvider<ProfileSummaryCubit>(
                   create: (_) => getIt<ProfileSummaryCubit>(),
@@ -677,9 +681,8 @@ Future<void> openClientNegotiationChat(
   ClientServiceRequest request,
 ) async {
   if (request.conversationToken == null) return;
-  await Navigator.of(context).push(
-    clientNegotiationChatRoute(context, request),
-  );
+  await Navigator.of(context)
+      .push(clientNegotiationChatRoute(context, request));
 }
 
 DriverNegotiationActions driverNegotiationActions(BuildContext context) {
