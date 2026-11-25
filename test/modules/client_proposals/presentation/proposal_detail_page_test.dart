@@ -97,8 +97,7 @@ void main() {
       expect(find.text('Proposta'), findsOneWidget);
       expect(find.text('Para Ana e Pedro'), findsOneWidget);
       expect(find.text('Carlos Souza'), findsOneWidget);
-      expect(find.text('4,8'), findsOneWidget);
-      expect(find.text('Master 2019 · 15 lugares'), findsOneWidget);
+      expect(find.text('4,8 · Master 2019 · 15 lugares'), findsOneWidget);
       expect(find.text('VERSÃO 2'), findsOneWidget);
       expect(
         find.descendant(
@@ -112,18 +111,19 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('R\$${nbsp}3.600 no total'), findsOneWidget);
-      expect(find.byIcon(Icons.verified), findsNothing);
+      expect(find.byIcon(Icons.verified), findsOneWidget);
     });
 
-    testWidgets('shows each student with the school', (tester) async {
+    testWidgets('shows each student with the school and privacy notice', (
+      tester,
+    ) async {
       await pumpDetail(tester, proposalState(testVersion2));
 
       expect(find.text('Alunos'), findsOneWidget);
-      expect(find.text('Ana Souza'), findsOneWidget);
-      expect(find.text('8 anos · Colégio Delta, tarde'), findsOneWidget);
-      expect(find.text('Pedro Souza'), findsOneWidget);
-      expect(find.text('11 anos · Colégio Delta, tarde'), findsOneWidget);
-      expect(find.textContaining('O motorista vê'), findsNothing);
+      expect(find.text('Ana Souza, 8 anos'), findsOneWidget);
+      expect(find.text('Colégio Delta, tarde'), findsNWidgets(2));
+      expect(find.text('Pedro Souza, 11 anos'), findsOneWidget);
+      expect(find.text('O motorista vê apenas o bairro até o aceite.'), findsOneWidget);
     });
 
     testWidgets('shows the days, the times and the terms', (tester) async {
@@ -592,7 +592,7 @@ void main() {
 
       expect(find.text('Pedido'), findsOneWidget);
       expect(find.text('João Lima'), findsOneWidget);
-      expect(find.text('Lucas Souza'), findsOneWidget);
+      expect(find.text('Lucas Souza, 6 anos'), findsOneWidget);
       expect(find.text('Dias e trechos'), findsOneWidget);
       expect(find.text('Início desejado'), findsOneWidget);
       expect(find.text('1 fev 2027'), findsOneWidget);

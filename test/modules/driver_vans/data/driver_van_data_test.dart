@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/media/photo_failure.dart';
-import 'package:vanep_mobile/core/network/photo_uploader.dart';
+import 'package:vanep_mobile/core/network/file_uploader.dart';
 import 'package:vanep_mobile/modules/driver_vans/data/datasources/driver_van_remote_datasource.dart';
 import 'package:vanep_mobile/modules/driver_vans/data/repositories/driver_van_repository_impl.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/failures/driver_van_failure.dart';
@@ -15,7 +15,7 @@ import '../driver_vans_mocks.dart';
 
 class MockDio extends Mock implements Dio {}
 
-class MockPhotoUploader extends Mock implements PhotoUploader {}
+class MockFileUploader extends Mock implements FileUploader {}
 
 const environment = Environment(
   authBaseUrl: 'http://10.0.2.2:8080',
@@ -32,18 +32,18 @@ DioException statusError(int? status) => DioException(
 void main() {
   group('DriverVanRemoteDataSource', () {
     late MockDio dio;
-    late MockPhotoUploader uploader;
+    late MockFileUploader uploader;
     late DriverVanRemoteDataSource remote;
 
     setUpAll(() => registerFallbackValue(testPickedPhoto));
 
     setUp(() {
       dio = MockDio();
-      uploader = MockPhotoUploader();
+      uploader = MockFileUploader();
       remote = DriverVanRemoteDataSource(
         dio: dio,
         environment: environment,
-        photoUploader: uploader,
+        fileUploader: uploader,
       );
     });
 
@@ -98,7 +98,13 @@ void main() {
     );
 
     test('sends each side of the van to its own route', () async {
-      when(() => uploader.upload(any(), any())).thenAnswer((_) async {});
+      when(
+        () => uploader.upload(
+          any(),
+          path: any(named: 'path'),
+          fileName: any(named: 'fileName'),
+        ),
+      ).thenAnswer((_) async {});
 
       await remote.uploadVanPhoto('van-1', VanPhotoSide.front, testPickedPhoto);
       await remote.uploadVanPhoto('van-1', VanPhotoSide.side, testPickedPhoto);
@@ -106,13 +112,15 @@ void main() {
       verify(
         () => uploader.upload(
           'http://10.0.2.2:8080/api/vehicles/van-1/photo-front',
-          testPickedPhoto,
+          path: testPickedPhoto.path,
+          fileName: testPickedPhoto.fileName,
         ),
       ).called(1);
       verify(
         () => uploader.upload(
           'http://10.0.2.2:8080/api/vehicles/van-1/photo-side',
-          testPickedPhoto,
+          path: testPickedPhoto.path,
+          fileName: testPickedPhoto.fileName,
         ),
       ).called(1);
     });
@@ -156,9 +164,8 @@ void main() {
     });
 
     test('maps a refused photo to a photo failure', () async {
-      when(
-        () => remote.uploadVanPhoto(any(), any(), any()),
-      ).thenThrow(statusError(400));
+      when(() => remote.uploadVanPhoto(any(), any(), any()))
+          .thenThrow(statusError(400));
 
       final result = await repository.uploadVanPhoto(
         'van-1',

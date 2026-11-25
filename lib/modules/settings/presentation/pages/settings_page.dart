@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
@@ -33,7 +34,11 @@ class SettingsPage extends StatelessWidget {
         appBar: VanepAppBar(title: l10n.profileSettings),
         body: ListView(
           padding: const EdgeInsets.all(20),
-          children: const [ThemePreferenceSection()],
+          children: const [
+            ThemePreferenceSection(),
+            SizedBox(height: 24),
+            AppVersionFooter(),
+          ],
         ),
       ),
     );
@@ -76,6 +81,35 @@ class ThemePreferenceSection extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AppVersionFooter extends StatefulWidget {
+  const AppVersionFooter({super.key});
+
+  @override
+  State<AppVersionFooter> createState() => _AppVersionFooterState();
+}
+
+class _AppVersionFooterState extends State<AppVersionFooter> {
+  late final Future<PackageInfo> _packageInfo = PackageInfo.fromPlatform();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return FutureBuilder<PackageInfo>(
+      future: _packageInfo,
+      builder: (context, snapshot) {
+        final info = snapshot.data;
+        if (info == null) return const SizedBox.shrink();
+        return Center(
+          child: Text(
+            l10n.settingsAppVersion(info.version, info.buildNumber),
+            style: context.typography.cardSubtitle,
+          ),
+        );
+      },
     );
   }
 }

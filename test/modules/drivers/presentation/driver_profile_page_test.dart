@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
-import 'package:vanep_mobile/core/ui/vanep_cover_background.dart';
 import 'package:vanep_mobile/core/ui/vanep_photo_slot.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/drivers/data/dtos/driver_profile_dto.dart';
@@ -13,7 +12,9 @@ import 'package:vanep_mobile/modules/drivers/domain/failures/driver_failure.dart
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_cubit.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/cubit/driver_profile_state.dart';
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
-import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_ratings_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_van_photos_page.dart';
+import 'package:vanep_mobile/modules/drivers/presentation/widgets/driver_profile_sections.dart';
 
 import '../drivers_fixtures.dart';
 import 'drivers_presentation_mocks.dart';
@@ -73,25 +74,7 @@ void main() {
     expect(find.text('Pedir orçamento'), findsNothing);
   });
 
-  testWidgets('shows who the driver is and where they work', (tester) async {
-    seed(
-      const DriverProfileState(
-        status: DriverProfileStatus.loaded,
-        profile: testDriverProfile,
-      ),
-    );
-
-    await tester.pumpWidget(harness(cubit, loader));
-
-    expect(find.text('Carlos Souza'), findsOneWidget);
-    expect(find.text('8 anos de experiência'), findsOneWidget);
-    expect(find.text('4.8 / 5.0'), findsOneWidget);
-    expect(find.text('Taguatinga, Ceilândia, Águas Claras'), findsOneWidget);
-    expect(find.text('(61) 99999-0000'), findsOneWidget);
-    expect(find.text('Levo criança há 8 anos.'), findsOneWidget);
-  });
-
-  testWidgets('shows each van with a slot for the front and side photos', (
+  testWidgets('shows public driver identity, bio, areas and hides phone', (
     tester,
   ) async {
     seed(
@@ -103,10 +86,45 @@ void main() {
 
     await tester.pumpWidget(harness(cubit, loader));
 
-    expect(find.text('Sprinter 2021 · Mercedes-Benz'), findsOneWidget);
-    expect(find.text('15 lugares · Branca'), findsOneWidget);
-    expect(find.text('Fotos da van'), findsOneWidget);
+    expect(find.text('Carlos Souza'), findsOneWidget);
+    expect(find.byIcon(Icons.verified), findsOneWidget);
+    expect(find.text('8 anos de experiência'), findsOneWidget);
+    expect(find.text('4,8'), findsWidgets);
+    expect(find.text('Taguatinga, Ceilândia, Águas Claras'), findsOneWidget);
+    expect(find.text('Levo criança há 8 anos.'), findsOneWidget);
+    expect(find.text('(61) 99999-0000'), findsNothing);
+  });
+
+  testWidgets('lists vans without plates and opens photos screen on tap', (
+    tester,
+  ) async {
+    seed(
+      const DriverProfileState(
+        status: DriverProfileStatus.loaded,
+        profile: testDriverProfile,
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, loader));
+
+    expect(find.text('Sprinter · 2021'), findsOneWidget);
+    expect(find.text('Branca · 15 lugares'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('Sprinter · 2021'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Sprinter · 2021'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sprinter · 2021'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DriverVanPhotosPage), findsOneWidget);
+    expect(find.text('Fotos'), findsOneWidget);
     expect(find.byType(VanepPhotoSlot), findsNWidgets(2));
+    expect(find.text('Frente'), findsOneWidget);
+    expect(find.text('Lateral'), findsOneWidget);
   });
 
   testWidgets('loads the van photo through the authenticated loader', (
@@ -137,47 +155,10 @@ void main() {
     await tester.pump();
 
     verify(() => loader.loadBytes('/api/vehicles/van-1/photo-front')).called(1);
-    expect(find.byType(VanepPhotoPlaceholder), findsNWidgets(2));
+    expect(find.text('1 de 1'), findsOneWidget);
   });
 
-  testWidgets('the first van photo also becomes the header background', (
-    tester,
-  ) async {
-    seed(
-      const DriverProfileState(
-        status: DriverProfileStatus.loaded,
-        profile: DriverProfileDto(
-          token: 'driver-1',
-          name: 'Carlos Souza',
-          vehicles: [
-            DriverProfileVehicleDto(
-              token: 'van-1',
-              brand: 'Mercedes-Benz',
-              model: 'Sprinter',
-              manufactureYear: 2021,
-              color: 'Branca',
-              capacity: 15,
-              photoFrontUrl: '/api/vehicles/van-1/photo-front',
-            ),
-          ],
-        ),
-      ),
-    );
-
-    await tester.pumpWidget(harness(cubit, loader));
-
-    final cover = tester.widget<VanepCoverBackground>(
-      find.byType(VanepCoverBackground),
-    );
-    expect(cover.photoUrl, '/api/vehicles/van-1/photo-front');
-    expect(find.byType(VanepPhotoSlot), findsNWidgets(2));
-    expect(
-      tester.widget<AppBar>(find.byType(AppBar)).foregroundColor,
-      VanepColors.onBrand,
-    );
-  });
-
-  testWidgets('without van photos the header keeps its plain background', (
+  testWidgets('without van photos shows plain placeholder without counter pill', (
     tester,
   ) async {
     seed(
@@ -189,11 +170,106 @@ void main() {
 
     await tester.pumpWidget(harness(cubit, loader));
 
-    final cover = tester.widget<VanepCoverBackground>(
-      find.byType(VanepCoverBackground),
+    expect(find.text('1 de 1'), findsNothing);
+    expect(find.byType(DriverVanIllustration), findsWidgets);
+  });
+
+  testWidgets('verification card opens verified documents sheet', (
+    tester,
+  ) async {
+    seed(
+      const DriverProfileState(
+        status: DriverProfileStatus.loaded,
+        profile: testDriverProfile,
+      ),
     );
-    expect(cover.photoUrl, isNull);
-    expect(tester.widget<AppBar>(find.byType(AppBar)).foregroundColor, isNull);
+
+    await tester.pumpWidget(harness(cubit, loader));
+    await tester.scrollUntilVisible(
+      find.text('Verificado pela Vanep'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Verificado pela Vanep'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Verificado pela Vanep'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('CNH categoria D ou E'), findsOneWidget);
+    expect(find.text('Curso de transporte escolar'), findsOneWidget);
+    expect(find.text('Antecedentes criminais'), findsOneWidget);
+    expect(find.text('Vistoria das vans'), findsOneWidget);
+    expect(find.text('Autorização escolar das vans'), findsOneWidget);
+
+    await tester.tap(find.text('Entendi'));
+    await tester.pumpAndSettle();
+    expect(find.text('CNH categoria D ou E'), findsNothing);
+  });
+
+  testWidgets('reviews section opens all ratings screen', (tester) async {
+    seed(
+      DriverProfileState(
+        status: DriverProfileStatus.loaded,
+        profile: testDriverProfile.copyWith(
+          rating: 4.9,
+          ratingCount: 32,
+          ratingBreakdown: const [
+            DriverRatingBreakdownDto(stars: 5, count: 28),
+            DriverRatingBreakdownDto(stars: 4, count: 4),
+          ],
+          ratings: const [
+            DriverProfileRatingDto(
+              authorName: 'Patrícia S.',
+              dateLabel: 'há 2 semanas',
+              stars: 5,
+              comment: 'Muito pontual e atencioso.',
+            ),
+          ],
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, loader));
+    await tester.scrollUntilVisible(
+      find.text('Ver todas'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Ver todas'));
+    await tester.pumpAndSettle();
+    expect(find.text('Patrícia S.'), findsOneWidget);
+    await tester.tap(find.text('Ver todas'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DriverRatingsPage), findsOneWidget);
+    expect(find.text('Muito pontual e atencioso.'), findsOneWidget);
+  });
+
+  testWidgets('shows vacancies per shift and split base price row', (
+    tester,
+  ) async {
+    seed(
+      DriverProfileState(
+        status: DriverProfileStatus.loaded,
+        profile: testDriverProfile.copyWith(
+          basePrice: 320,
+          shiftVacancies: const [
+            DriverShiftVacancyDto(shift: 'Manhã', spots: 3),
+            DriverShiftVacancyDto(shift: 'Tarde', spots: 0),
+          ],
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(harness(cubit, loader));
+
+    expect(find.text('Manhã'), findsOneWidget);
+    expect(find.text('3 vagas'), findsOneWidget);
+    expect(find.text('Tarde'), findsOneWidget);
+    expect(find.text('Lotada'), findsOneWidget);
+    expect(find.text('A partir de'), findsOneWidget);
+    expect(find.text('R\$\u00A0320'), findsOneWidget);
+    expect(find.byIcon(Icons.request_quote_outlined), findsOneWidget);
   });
 
   testWidgets('says so when the driver has no van yet', (tester) async {
@@ -210,7 +286,6 @@ void main() {
       find.text('Este motorista ainda não cadastrou uma van.'),
       findsOneWidget,
     );
-    expect(find.text('Fotos da van'), findsNothing);
   });
 
   testWidgets('the quote button opens the quote request to this driver', (

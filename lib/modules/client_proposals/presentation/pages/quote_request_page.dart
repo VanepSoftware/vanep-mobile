@@ -5,7 +5,9 @@ import 'package:vanep_mobile/core/design_system/vanep_colors.dart';
 import 'package:vanep_mobile/core/formatters/calendar_date_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/core/formatters/postal_address_display.dart';
+import 'package:vanep_mobile/core/formatters/school_shift_label.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
+import 'package:vanep_mobile/core/ui/vanep_chip.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
@@ -197,6 +199,7 @@ class QuoteRequestBody extends StatelessWidget {
                       QuoteStudentOption(
                         student: student,
                         isSelected: draft.isSelected(student.dependent.token),
+                        today: state.today,
                         onComplete: () => completeAndRefresh(
                           context,
                           () => actions.onCompleteStudent(
@@ -238,6 +241,14 @@ class QuoteDriverHeader extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final rating = driver.rating;
     final van = driver.vehicles.isEmpty ? null : driver.vehicles.first;
+    final ratingLabel = rating == null
+        ? null
+        : formatProposalRating(l10n, rating);
+    final vanLabel = van == null
+        ? null
+        : l10n.negotiationVehicle(van.model, van.manufactureYear, van.capacity);
+    final subtitle = [?ratingLabel, ?vanLabel].join(' · ');
+
     return VanepCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -245,9 +256,10 @@ class QuoteDriverHeader extends StatelessWidget {
           ProposalPersonHeader(
             avatar: VanepPersonAvatar(name: driver.name),
             name: driver.name,
-            subtitle: rating == null
-                ? null
-                : formatProposalRating(l10n, rating),
+            nameTrailing: driver.verified
+                ? Icon(Icons.verified, size: 16, color: context.palette.action)
+                : null,
+            subtitle: subtitle.isEmpty ? null : subtitle,
             subtitleLeading: rating == null
                 ? null
                 : const Icon(
@@ -255,18 +267,14 @@ class QuoteDriverHeader extends StatelessWidget {
                     size: 15,
                     color: VanepColors.ratingStar,
                   ),
+            trailing: driver.available
+                ? VanepChip(
+                    label: l10n.findVanSpotsAvailable,
+                    background: context.palette.successSurface,
+                    foreground: context.palette.success,
+                  )
+                : null,
           ),
-          if (van != null) ...[
-            const SizedBox(height: 10),
-            DetailNotice(
-              icon: Icons.airport_shuttle_outlined,
-              text: l10n.negotiationVehicle(
-                van.model,
-                van.manufactureYear,
-                van.capacity,
-              ),
-            ),
-          ],
           if (!driver.available) ...[
             const SizedBox(height: 10),
             DetailNotice(text: l10n.quoteRequestDriverUnavailable),
@@ -282,12 +290,14 @@ class QuoteStudentOption extends StatelessWidget {
     required this.student,
     required this.isSelected,
     required this.onComplete,
+    this.today,
     super.key,
   });
 
   final QuoteStudent student;
   final bool isSelected;
   final VoidCallback onComplete;
+  final DateTime? today;
 
   @override
   Widget build(BuildContext context) {
@@ -295,6 +305,23 @@ class QuoteStudentOption extends StatelessWidget {
     final cubit = context.read<QuoteRequestCubit>();
     final dependent = student.dependent;
     final isReady = student.isReady;
+    final ageLabel = today == null
+        ? null
+        : formatChildAge(l10n, dependent, today!);
+    final title = ageLabel == null
+        ? dependent.name
+        : '${dependent.name}, $ageLabel';
+    final schoolName = dependent.school?.name.trim();
+    final uniqueShifts = {
+      for (final day in student.week.days) day.shift,
+    };
+    final shiftLabel = uniqueShifts.length == 1
+        ? formatShift(l10n, uniqueShifts.first)
+        : null;
+    final readySubtitle = [
+      if (schoolName != null && schoolName.isNotEmpty) schoolName,
+      ?shiftLabel,
+    ].join(' · ');
 
     return Row(
       children: [
@@ -318,13 +345,18 @@ class QuoteStudentOption extends StatelessWidget {
                             : null,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    VanepPersonAvatar(
+                      name: dependent.name,
+                      size: 36,
+                      dimmed: !isReady,
+                    ),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            dependent.name,
+                            title,
                             style: context.typography.cardTitle.copyWith(
                               color: isReady
                                   ? context.palette.textPrimary
@@ -337,6 +369,11 @@ class QuoteStudentOption extends StatelessWidget {
                               style: context.typography.cardSubtitle.copyWith(
                                 color: context.palette.warning,
                               ),
+                            )
+                          else if (readySubtitle.isNotEmpty)
+                            Text(
+                              readySubtitle,
+                              style: context.typography.cardSubtitle,
                             ),
                         ],
                       ),
@@ -369,9 +406,8 @@ class QuoteStudentLegs extends StatelessWidget {
     final cubit = context.read<QuoteRequestCubit>();
     final name = this.name;
     return DetailSection(
-      title: name == null
-          ? l10n.proposalDetailDaysTitle
-          : '${l10n.proposalDetailDaysTitle} · ${joinFirstNames(l10n, [name])}',
+      title: l10n.proposalDetailDaysTitle,
+      trailing: name == null ? null : joinFirstNames(l10n, [name]),
       child: VanepWeekLegsGrid<RouteLeg>(
         rows: weekLegsRowsOfDraft(l10n, item),
         onToggled: (leg, weekday) =>
@@ -407,6 +443,11 @@ class QuoteRouteSection extends StatelessWidget {
               ),
             ...buildStops(l10n, student.dependent),
           ],
+          const SizedBox(height: 14),
+          DetailNotice(
+            icon: Icons.visibility_off_outlined,
+            text: l10n.quoteRequestPrivacyNotice,
+          ),
         ],
       ),
     );
@@ -420,8 +461,8 @@ class QuoteRouteSection extends StatelessWidget {
         QuoteRouteStop(
           icon: Icons.home_outlined,
           label: l10n.quoteRequestPickup,
-          title: displayAddress(pickup).street,
-          details: displayAddress(pickup).details,
+          title: pickupNeighborhoodTitle(pickup),
+          details: '',
           isLast: school == null,
         ),
       if (school != null)
@@ -436,6 +477,14 @@ class QuoteRouteSection extends StatelessWidget {
           isLast: true,
         ),
     ];
+  }
+
+  String pickupNeighborhoodTitle(DependentAddress address) {
+    final neighborhood = address.neighborhood?.trim();
+    if (neighborhood != null && neighborhood.isNotEmpty) {
+      return '$neighborhood, ${address.cityName}';
+    }
+    return address.cityName;
   }
 
   PostalAddressDisplayFields displayAddress(DependentAddress address) {
@@ -613,8 +662,12 @@ class QuoteNotesFieldState extends State<QuoteNotesField> {
     final l10n = AppLocalizations.of(context)!;
     return VanepTextField(
       label: l10n.proposalAdjustmentMessage,
+      labelTrailing: Text(
+        l10n.quoteRequestOptionalBadge,
+        style: context.typography.cardSubtitle,
+      ),
       controller: controller,
-      hintText: l10n.proposalAdjustmentOptional,
+      hintText: l10n.quoteRequestNotesHint,
       maxLength: serviceRequestNotesMaxLength,
       minLines: 3,
       maxLines: 6,
@@ -700,7 +753,10 @@ class QuoteRequestFooter extends StatelessWidget {
             Text(
               state.hasReachedLimit
                   ? l10n.quoteRequestLimitReached(openRequestsLimit)
-                  : l10n.quoteRequestFooter,
+                  : l10n.quoteRequestOpenCountFooter(
+                      state.openCount,
+                      openRequestsLimit,
+                    ),
               textAlign: TextAlign.center,
               style: context.typography.cardSubtitle.copyWith(
                 color: state.hasReachedLimit

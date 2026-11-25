@@ -100,6 +100,13 @@ class Environment {
   String driverProfileEndpoint(String driverToken) =>
       '$driversEndpoint/${Uri.encodeComponent(driverToken)}/profile';
 
+  String get clientDriversEndpoint => '$authBaseUrl/api/client-drivers';
+
+  String get clientDriversMeEndpoint => '$clientDriversEndpoint/me';
+
+  String clientDriverContractsEndpoint(String clientDriverToken) =>
+      '$clientDriversEndpoint/${Uri.encodeComponent(clientDriverToken)}/contracts';
+
   String get clientsEndpoint => '$authBaseUrl/api/clients';
 
   String get clientsMeEndpoint => '$clientsEndpoint/me';
@@ -126,8 +133,6 @@ class Environment {
   String get driverTripsTodayEndpoint => '$driversMeEndpoint/trips/today';
 
   String get driverTripsStartEndpoint => '$driversMeEndpoint/trips/start';
-
-  String get clientDriversMeEndpoint => '$authBaseUrl/api/client-drivers/me';
 
   String get driverOccupancyEndpoint => '$driversMeEndpoint/occupancy';
 
@@ -156,6 +161,15 @@ class Environment {
 
   String get vehiclesEndpoint => '$authBaseUrl/api/vehicles';
 
+  String get driverComplianceEndpoint => '$driversMeEndpoint/compliance';
+
+  String get driverDocumentsEndpoint => '$authBaseUrl/api/driver-documents';
+
+  String vehicleDocumentsEndpoint(String vehicleToken) =>
+      '$vehiclesEndpoint/${Uri.encodeComponent(vehicleToken)}/documents';
+
+  String get driverCnhsEndpoint => '$authBaseUrl/api/driver-cnhs';
+
   String get myVehiclesEndpoint => '$vehiclesEndpoint/me';
 
   String vehiclePhotoEndpoint(String vehicleToken, String slot) =>
@@ -174,6 +188,11 @@ class Environment {
 
   String get conversationsWebSocketUrl =>
       '${authBaseUrl.replaceFirst(RegExp('^http'), 'ws')}/api/ws';
+
+  String get devicesEndpoint => '$authBaseUrl/api/devices';
+
+  String deviceEndpoint(String pushToken) =>
+      '$devicesEndpoint/${Uri.encodeComponent(pushToken)}';
 
   String get placesAutocompleteEndpoint =>
       'https://places.googleapis.com/v1/places:autocomplete';

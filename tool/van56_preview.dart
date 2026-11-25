@@ -57,6 +57,7 @@ void main() {
             onOpenVanDetails: () async {},
             onOpenServiceAreas: () async {},
             onOpenStudents: (_) async {},
+            onOpenVanDocuments: (_) async {},
             onOpenComingSoon: (_) async {},
           ),
         ),

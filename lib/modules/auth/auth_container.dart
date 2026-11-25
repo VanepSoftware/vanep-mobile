@@ -9,6 +9,7 @@ import 'package:vanep_mobile/core/network/access_token_source.dart';
 import 'package:vanep_mobile/core/network/auth_interceptor.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/core/session/session_lifecycle_observer.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/lookup_cep.dart';
@@ -214,6 +215,9 @@ void registerAuthDependencies(
         getCurrentSession: getIt<GetCurrentSession>(),
         signOut: getIt<SignOut>(),
         refreshUserProfile: getIt<RefreshUserProfile>(),
+        sessionObserver: getIt.isRegistered<SessionLifecycleObserver>()
+            ? getIt<SessionLifecycleObserver>()
+            : null,
       ),
     );
 }
