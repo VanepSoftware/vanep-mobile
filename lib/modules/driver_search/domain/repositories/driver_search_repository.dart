@@ -8,4 +8,8 @@ abstract class DriverSearchRepository {
     String? sessionToken, {
     int page,
   });
+
+  Future<Result<DriverSearchFailure, DriverSearchPage>> fetchRecommended({
+    int page = 0,
+  });
 }

@@ -145,6 +145,13 @@
   "settingsThemeDark": "Escuro",
   "settingsThemeSystemHint": "No modo Sistema, o app segue o tema claro ou escuro do seu celular.",
   "settingsThemeSaveFailed": "Não foi possível salvar sua escolha de tema. Ela volta ao padrão quando você reabrir o app.",
+  "settingsAppVersion": "Versão {version} (build {build})",
+  "@settingsAppVersion": {
+    "placeholders": {
+      "version": {"type": "String"},
+      "build": {"type": "String"}
+    }
+  },
   "profilePrivacySecurity": "Privacidade e segurança",
   "profileSignOutTitle": "Sair da conta?",
   "profileSignOutMessage": "Sua sessão neste aparelho será encerrada. Você pode entrar de novo quando quiser.",
@@ -270,6 +277,12 @@
   "driverSearchNetworkError": "Sem conexão com o servidor. Tente novamente.",
   "driverSearchUnexpectedError": "Algo deu errado na busca. Tente novamente.",
   "driverSearchCoversWholeCity": "Atende a cidade inteira",
+  "findVanTitle": "Encontrar uma van",
+  "findVanRecommendationsHeader": "Vans em destaque",
+  "findVanSearchResultsHeader": "Vans disponíveis para este local",
+  "findVanClearSearch": "Limpar busca",
+  "findVanEmptyRegionTitle": "Nenhuma van encontrada nessa região",
+  "findVanEmptyRegionSubtitle": "Tente buscar por um bairro próximo, rua principal ou escola.",
   "dependentsSubtitle": "Gerencie quem viaja na van",
   "dependentsEmpty": "Dependentes são as pessoas que viajam na van, como seus filhos. Adicione o primeiro para pedir um orçamento.",
   "dependentsAdd": "Adicionar dependente",
@@ -700,7 +713,7 @@
   "vanCentralVanData": "Dados e fotos",
   "vanCentralVanDataHint": "Placa, modelo, capacidade",
   "vanCentralVanDocuments": "Documentos da van",
-  "vanCentralVanDocumentsHint": "CRLV e vistoria semestral",
+  "vanCentralVanDocumentsHint": "CRLV, vistoria e autorização escolar",
   "vanCentralAccepting": "Aceitando novos alunos",
   "vanCentralAcceptingOneShift": "Só {shift} tem vaga",
   "vanCentralAcceptingSeveralShifts": "Há vaga {shifts}",
@@ -1205,6 +1218,52 @@
   "@driverHomeNextShift": {
     "placeholders": {
       "shift": {
+  "clientVansTitle": "Minhas vans",
+  "clientVansSubtitle": "Vans escolares vinculadas à sua conta",
+  "clientVansEmptyTitle": "Nenhuma van vinculada",
+  "clientVansEmptyMessage": "Você ainda não possui vans vinculadas aos seus dependentes. Encontre motoristas escolares para solicitar um transporte seguro.",
+  "clientVansFindVanButton": "Buscar vans escolares",
+  "clientVansAddNewVan": "Buscar outra van",
+  "clientVansDriverSection": "Motorista responsável",
+  "clientVansContractSection": "Contrato e Mensalidade",
+  "clientVansDependentsSection": "Dependentes nesta van",
+  "clientVansChatDriver": "Conversar com motorista",
+  "clientVansContractDetails": "Ver contrato",
+  "clientVansActiveBadge": "Ativa",
+  "clientVansPendingBadge": "Pendente",
+  "clientVansDueDay": "Vencimento todo dia {day}",
+  "@clientVansDueDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVansSeats": "{count} lugares",
+  "@clientVansSeats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVansLoadError": "Não foi possível carregar suas vans.",
+  "clientVansRetry": "Tentar novamente",
+  "clientVanDetailTitle": "Detalhes da van",
+  "clientVanDetailCaption": "Informações completas e contrato",
+  "clientVanDetailVehicleSection": "Veículo",
+  "clientVanDetailPlate": "Placa",
+  "clientVanDetailColor": "Cor",
+  "clientVanDetailYear": "Ano de fabricação",
+  "clientVanDetailCapacity": "Capacidade",
+  "clientVanDetailShift": "Turno",
+  "clientVanDetailSchedule": "Horários",
+  "clientVanDetailPickupAddress": "Ponto de embarque",
+  "clientVanDetailWeekdays": "Dias de atendimento",
+  "clientVansDriverLabel": "Motorista: {name}",
+  "@clientVansDriverLabel": {
+    "placeholders": {
+      "name": {
         "type": "String"
       }
     }
@@ -1229,6 +1288,12 @@
   "@driverHomeCall": {
     "placeholders": {
       "contact": {
+  "clientVansDependentNoVan": "Nenhuma van vinculada a este dependente.",
+  "clientVansAnotherVanChip": "Outra van",
+  "clientVansVanSelectorTitle": "Van de {driver}",
+  "@clientVansVanSelectorTitle": {
+    "placeholders": {
+      "driver": {
         "type": "String"
       }
     }
@@ -1251,6 +1316,36 @@
         "type": "String"
       },
       "action": {
+  "clientVansActiveContractBadge": "Contrato ativo",
+  "clientVansPendingContractBadge": "Contrato pendente",
+  "clientVansPhotoPlaceholder": "Foto da van (frente e lateral)",
+  "clientVansDriverRole": "Motorista",
+  "clientVansCallDriver": "Ligar para {name}",
+  "@clientVansCallDriver": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansOnVanSection": "Na van",
+  "clientVansRoutineSection": "Rotina",
+  "clientVansScheduleStopsTitle": "Horários e paradas",
+  "clientVansReportAbsenceTitle": "Avisar falta",
+  "clientVansReportAbsenceSubtitle": "Hoje ou em dias futuros",
+  "clientVansAdjustStopTitle": "Ajustar parada",
+  "clientVansAdjustStopSubtitle": "Só vale para o dia; o motorista aprova",
+  "clientVansTripHistoryTitle": "Histórico de viagens",
+  "clientVansTripHistorySubtitle": "Embarques e chegadas, dia a dia",
+  "clientVansContractPaymentsSection": "Contrato e pagamentos",
+  "clientVansContractRowTitle": "Contrato",
+  "clientVansContractUntilSummary": "Até {date} · {amount}/mês",
+  "@clientVansContractUntilSummary": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "amount": {
         "type": "String"
       }
     }
@@ -1259,6 +1354,13 @@
   "@driverHomeSlideHint": {
     "placeholders": {
       "action": {
+  "clientVansPaymentsRowTitle": "Pagamentos",
+  "clientVansSecuritySection": "Segurança",
+  "clientVansDocumentsTitle": "Documentos do motorista e da van",
+  "clientVansRateDriverTitle": "Avaliar {name}",
+  "@clientVansRateDriverTitle": {
+    "placeholders": {
+      "name": {
         "type": "String"
       }
     }
@@ -1267,6 +1369,18 @@
   "driverHomeShortcutsTitle": "Atalhos",
   "driverHomeGreetingHello": "Olá, {name}!",
   "@driverHomeGreetingHello": {
+  "clientVansRateDriverSubtitle": "Anônimo, uma vez por contrato",
+  "clientVansCancelContractTitle": "Cancelar contrato",
+  "clientVansCancelContractSubtitle": "Aviso de 30 dias e multa de 10% do saldo",
+  "clientVanNoDependents": "Nenhum dependente vinculado a esta van ainda.",
+  "clientVanNoContract": "Contrato pendente de ativação",
+  "clientVanDriverPhoneTitle": "Telefone do motorista",
+  "clientVanDriverPhoneMissing": "Telefone não informado pelo motorista.",
+  "clientVanCopyPhone": "Copiar número",
+  "clientVanPhoneCopied": "Número copiado.",
+  "dependentNoLinkedVan": "Este dependente ainda não está vinculado a uma van.",
+  "clientVanDependentNotInList": "Não foi possível abrir o perfil de {name}.",
+  "@clientVanDependentNotInList": {
     "placeholders": {
       "name": {
         "type": "String"
@@ -1277,6 +1391,25 @@
   "@driverHomeGreetingHelloPlain": {
     "placeholders": {
       "name": {
+  "clientVanDetailBrandModel": "Marca / Modelo",
+  "clientVanDetailMonthlyFee": "Mensalidade",
+  "clientVanDetailDueDate": "Vencimento",
+  "clientVanDetailContractPeriod": "Período de vigência",
+  "clientVanDetailInstallmentsLabel": "Parcelas contratadas",
+  "clientVanDetailInstallmentsCount": "{count, plural, =1{1 parcela} other{{count} parcelas}}",
+  "@clientVanDetailInstallmentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVanDetailTotalAmount": "Valor total",
+  "clientVanDetailSchool": "Colégio",
+  "clientVanDetailOutboundTime": "Ida: {time}",
+  "@clientVanDetailOutboundTime": {
+    "placeholders": {
+      "time": {
         "type": "String"
       }
     }
@@ -1285,6 +1418,10 @@
   "@driverHomeGreetingMorning": {
     "placeholders": {
       "name": {
+  "clientVanDetailReturnTime": "Volta: {time}",
+  "@clientVanDetailReturnTime": {
+    "placeholders": {
+      "time": {
         "type": "String"
       }
     }
@@ -1293,6 +1430,13 @@
   "@driverHomeGreetingSaturday": {
     "placeholders": {
       "name": {
+  "clientVansScheduleBothTimes": "Embarque {pickup} · volta {returnTime}",
+  "@clientVansScheduleBothTimes": {
+    "placeholders": {
+      "pickup": {
+        "type": "String"
+      },
+      "returnTime": {
         "type": "String"
       }
     }
@@ -1308,6 +1452,30 @@
   "@driverHomeSubtitleShiftCompleted": {
     "placeholders": {
       "name": {
+  "clientVansSchedulePickupOnly": "Embarque {pickup}",
+  "@clientVansSchedulePickupOnly": {
+    "placeholders": {
+      "pickup": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansNoConversationYet": "Ainda não há uma conversa iniciada com este motorista.",
+  "findVanPrototypeSubtitle": "Quem atende o trajeto do seu filho",
+  "findVanHaveInvite": "Tenho\nconvite",
+  "findVanHaveInviteTitle": "Entrar com convite",
+  "findVanHaveInviteSubtitle": "Digite o código ou cole o link enviado pelo motorista.",
+  "findVanHaveInviteHint": "Código do convite",
+  "findVanHaveInviteAction": "Validar convite",
+  "findVanOriginLabel": "Embarque",
+  "findVanOriginPlaceholder": "Informar endereço de embarque",
+  "findVanDestinationLabel": "Destino",
+  "findVanDestinationPlaceholder": "Buscar escola ou endereço",
+  "findVanSwapTooltip": "Inverter embarque e destino",
+  "findVanHomePrefix": "Casa · {address}",
+  "@findVanHomePrefix": {
+    "placeholders": {
+      "address": {
         "type": "String"
       }
     }
@@ -1356,6 +1524,9 @@
   "driverHomeInviteAction": "Convidar",
   "driverHomeMissingFamiliesHint": "{count, plural, =1{1 família ainda sem avisos de embarque} other{{count} famílias ainda sem avisos de embarque}}",
   "@driverHomeMissingFamiliesHint": {
+  "findVanForLabel": "Para",
+  "findVanDriversCount": "{count, plural, =1{1 motorista atende esse trajeto} other{{count} motoristas atendem esse trajeto}}",
+  "@findVanDriversCount": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -1365,6 +1536,28 @@
   "driverHomeAllFamiliesInAppHint": "Todas as famílias já recebem avisos no app",
   "driverHomeParentsSeeVan": "Pais veem a van",
   "driverHomeNextStopLabel": "Próxima parada",
+  "driverHomeOnBoardCount": "de {total} a bordo",
+  "@driverHomeOnBoardCount": {
+    "placeholders": {
+      "total": {
+  "findVanSortNearest": "Mais próximos",
+  "findVanSortRating": "Melhor avaliação",
+  "findVanSortPrice": "Menor preço",
+  "findVanSortExperience": "Mais experientes",
+  "findVanSortSheetTitle": "Ordenar motoristas",
+  "findVanNewOnVanep": "Novo na Vanep",
+  "findVanExperienceYearsShort": "{years, plural, =1{1 ano de experiência} other{{years} anos de experiência}}",
+  "@findVanExperienceYearsShort": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeNextStopLabel": "Próxima parada · 5 de 10",
+  "driverHomeNextStopEta": "600 m · 2 min",
+  "driverHomeNextStopDefaultAddress": "QNL 5, Conjunto J, casa 12",
+  "driverHomeNextStopDefaultStudents": "Beatriz e Gabriel",
   "driverHomeSlideConfirm": "Deslize para confirmar {action}",
   "@driverHomeSlideConfirm": {
     "placeholders": {
@@ -1380,6 +1573,139 @@
   "driverHomeEndRouteHint": "Se houver aluno sem baixa, o app avisa antes de encerrar.",
   "driverHomeSeeTripReport": "Ver relatório da viagem",
   "driverHomeYourBusinessSection": "Seu negócio",
+  "driverHomeSprinterSeatsTitle": "Vagas na Sprinter",
+  "driverHomeSprinterSeatsTotal": "16 lugares",
+  "driverHomeMorningFull": "lotada",
+  "driverHomeAfternoonVacancies": "4 vagas",
+  "driverHomeOfTotal": "de {total}",
+  "@driverHomeOfTotal": {
+    "placeholders": {
+  "findVanSpotsAvailable": "Com vaga disponível",
+  "findVanSpotsFull": "Sem vaga disponível",
+  "findVanPriceStartingFrom": "a partir de",
+  "findVanPerMonth": "/mês",
+  "findVanPriceOnRequest": "Sob consulta",
+  "findVanProfileButton": "Perfil",
+  "findVanRequestQuoteButton": "Pedir orçamento",
+  "driverProfileRatingSummary": "{rating} · {count, plural, =1{1 avaliação} other{{count} avaliações}}",
+  "@driverProfileRatingSummary": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileReviewsCount": "{count, plural, =1{1 avaliação} other{{count} avaliações}}",
+  "@driverProfileReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfilePhotoCounter": "{current} de {total}",
+  "@driverProfilePhotoCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeActiveContractsLabel": "Contratos ativos",
+  "driverHomeActiveContractsRevenue": "R$ 8.400/mês contratados",
+  "driverHomeStudentsWithFamilyLabel": "Alunos com família no app",
+  "driverHomeInviteCount": "Convidar {count}",
+  "@driverHomeInviteCount": {
+  "driverProfileVerifiedBadge": "Verificado pela Vanep",
+  "driverProfileBioSectionTitle": "Apresentação",
+  "driverProfileVacanciesSectionTitle": "Vagas e preço",
+  "driverProfileStartingFromLabel": "A partir de",
+  "driverProfileStartingFromValue": "A partir de {price}",
+  "@driverProfileStartingFromValue": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileVansSectionTitle": "Vans",
+  "driverProfileVanModelYear": "{model} · {year}",
+  "@driverProfileVanModelYear": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVanWithAssistant": "com auxiliar",
+  "driverProfileServiceSectionTitle": "Atendimento",
+  "driverProfileServiceAreasLabel": "Bairros",
+  "driverProfileWorkHoursLabel": "Expediente",
+  "driverProfileWorkHoursValue": "{start} às {end} · {days}",
+  "@driverProfileWorkHoursValue": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileWaitToleranceLabel": "Espera no ponto",
+  "driverProfileWaitToleranceValue": "{minutes, plural, =1{Até 1 min} other{Até {minutes} min}}",
+  "@driverProfileWaitToleranceValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedCardTitle": "Verificado pela Vanep",
+  "driverProfileVerifiedCardSubtitle": "Habilitação, antecedentes e documentos das vans",
+  "driverProfileReviewsSectionTitle": "Avaliações",
+  "driverProfileSeeAllReviews": "Ver todas",
+  "driverProfileNoReviewsYet": "Ainda sem avaliações publicadas.",
+  "driverProfileRequestQuoteButton": "Pedir orçamento",
+  "driverProfilePhotosTitle": "Fotos",
+  "driverProfilePhotosEmpty": "Nenhuma foto cadastrada ainda.",
+  "driverProfileRatingsTitle": "Avaliações",
+  "driverProfileVerifiedSheetIntro": "A Vanep confere os documentos antes de liberar o motorista na busca e acompanha os vencimentos.",
+  "driverProfileVerifiedDocCnh": "CNH categoria D ou E",
+  "driverProfileVerifiedDocCourse": "Curso de transporte escolar",
+  "driverProfileVerifiedDocBackground": "Antecedentes criminais",
+  "driverProfileVerifiedDocInspection": "Vistoria das vans",
+  "driverProfileVerifiedDocAuthorization": "Autorização escolar das vans",
+  "driverProfileVerifiedGotIt": "Entendi",
+  "driverProfileShiftVacancyAvailable": "{count, plural, =1{1 vaga} other{{count} vagas}}",
+  "@driverProfileShiftVacancyAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeSubscriptionSection": "Assinatura Vanep · outubro",
+  "driverHomeSubscriptionDue": "Vence 10/11",
+  "driverHomeMonthlyPlan": "Plano mensal",
+  "driverHomeMonthlyPlanPrice": "R$ 49,90",
+  "driverHomeMonthlyPlanHint": "As comissões ficam dentro do valor de cada contrato.",
+  "driverHomePayWithPix": "Pagar com PIX",
+  "driverHomeInspectionWarningTitle": "Vistoria semestral vence em 12 dias",
+  "driverHomeInspectionWarningSubtitle": "Sem ela, os pedidos novos param",
+  "driverHomeBlockedOverline": "Assinatura vencida",
   "driverHomeBlockedHeadline": "Novas propostas estão pausadas",
   "driverHomeSeeInvoice": "Ver fatura",
   "driverHomeExpiredDocumentTitle": "Documento vencido",
@@ -1390,4 +1716,193 @@
   "driverHomeMeanwhileContracts": "Contratos ativos e renovações já assinadas",
   "driverHomeMeanwhileProposals": "Responder pedidos e enviar propostas",
   "driverHomeMeanwhileSearch": "Aparecer na busca"
+  "driverHomeMeanwhileSearch": "Aparecer na busca",
+  "driverHomeAfternoonRouteStudents": "12 alunos",
+  "driverHomeReleasedBadge": "Liberada"
+  "driverProfileShiftFull": "Lotada",
+  "chatCounterpartDriverCaption": "Motorista",
+  "chatViewDriverProfileTooltip": "Ver perfil do motorista",
+  "quoteRequestPrivacyNotice": "O motorista vê só o bairro e o primeiro nome até o aceite.",
+  "quoteRequestOptionalBadge": "opcional",
+  "quoteRequestNotesHint": "Algo que o motorista precise saber",
+  "quoteRequestOpenCountFooter": "Resposta em até 72 h · {open} de {limit} pedidos abertos",
+  "@quoteRequestOpenCountFooter": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailPrivacyNotice": "O motorista vê apenas o bairro até o aceite.",
+  "findVanPrivacyNotice": "Até você aceitar uma proposta, o motorista vê só o bairro e o primeiro nome do seu filho.",
+  "findVanSearchSheetTitleOrigin": "Local de embarque",
+  "findVanSearchSheetTitleDestination": "Escola ou destino",
+  "findVanUseMyAddress": "Usar meu endereço",
+  "findVanFiltersButton": "Filtros",
+  "findVanFiltersSheetTitle": "Filtros",
+  "findVanFiltersDependentSubtitle": "Escolha para quem você procura uma van",
+  "findVanFiltersNoDependents": "Nenhum dependente cadastrado no momento.",
+  "findVanFiltersApply": "Aplicar",
+  "driverDocumentsPersonalTitle": "Documentos pessoais",
+  "driverDocumentsVansTitle": "Documentos das vans",
+  "driverDocumentsVanTitle": "Documentos da van",
+  "driverDocumentsPendingSection": "Pendentes",
+  "driverDocumentsSentSection": "Enviados",
+  "driverDocumentsOptionalSection": "Opcionais",
+  "driverDocumentsPersonalPrivacy": "Seus documentos só são vistos pela equipe Vanep que faz a análise.",
+  "driverDocumentsVansPrivacy": "Os documentos das vans só são vistos pela equipe Vanep que faz a análise.",
+  "driverDocumentsVanPendingCount": "{count, plural, =1{1 pendente} other{{count} pendentes}}",
+  "@driverDocumentsVanPendingCount": {"placeholders": {"count": {"type": "int"}}},
+  "driverDocumentsVanUpToDate": "Em dia",
+  "driverDocumentsNoVanTitle": "Cadastre sua van para enviar os documentos dela",
+  "driverDocumentsNoVanAction": "Cadastrar van",
+  "driverDocumentsLoadError": "Não deu para carregar os documentos.",
+  "driverDocumentsRetry": "Tentar novamente",
+  "documentTypeDriverLicense": "CNH",
+  "documentTypeSchoolDriverCourse": "Curso especializado",
+  "documentTypeCriminalRecord": "Certidão criminal",
+  "documentTypeMunicipalAuthorization": "Alvará municipal",
+  "documentTypeVehicleRegistration": "CRLV",
+  "documentTypeVehicleInspection": "Vistoria semestral",
+  "documentTypeSchoolVehicleAuthorization": "Autorização escolar",
+  "documentStateNotSent": "Não enviado",
+  "documentStateOptional": "Opcional",
+  "documentStateRejected": "Reprovado",
+  "documentStateExpired": "Vencido",
+  "documentStateUnderReview": "Em análise",
+  "documentStateApproved": "Aprovado",
+  "documentStateRenewalUnderReview": "Nova versão em análise",
+  "documentStateExpiringSoon": "{days, plural, =0{Vence hoje} =1{Vence amanhã} other{Vence em {days} dias}}",
+  "@documentStateExpiringSoon": {"placeholders": {"days": {"type": "int"}}},
+  "documentStateNotSentOptional": "Não enviado · Opcional",
+  "documentDetailPersonalCaption": "Documento pessoal",
+  "documentDetailSentSection": "O que foi enviado",
+  "documentDetailAboutSection": "Sobre o documento",
+  "documentDetailIssuer": "Quem emite",
+  "documentDetailValidity": "Validade",
+  "documentDetailFile": "Arquivo",
+  "documentDetailViewFile": "Ver arquivo",
+  "documentDetailNumber": "Número",
+  "documentDetailCategory": "Categoria",
+  "documentDetailPlate": "Placa",
+  "documentDetailValidUntil": "Válido até",
+  "documentDetailSentOn": "Enviado em",
+  "documentDetailCurrentVersion": "Versão em vigor",
+  "documentDetailNewVersion": "Nova versão",
+  "documentDetailApprovedOn": "Aprovado em {date}",
+  "@documentDetailApprovedOn": {"placeholders": {"date": {"type": "String"}}},
+  "documentDetailSentOnDate": "Enviado em {date}",
+  "@documentDetailSentOnDate": {"placeholders": {"date": {"type": "String"}}},
+  "documentDetailValidUntilDate": "Válido até {date}",
+  "@documentDetailValidUntilDate": {"placeholders": {"date": {"type": "String"}}},
+  "documentDetailUnderReviewNote": "A Vanep confere em até 2 dias úteis. Você recebe a resposta aqui e por e-mail.",
+  "documentDetailExpiringNote": "Envie a nova versão antes do vencimento. Com documento vencido, o app bloqueia novas rotas até a nova versão ser aprovada.",
+  "documentDetailExpiredNote": "Este documento venceu. Envie a versão em dia para ele voltar a valer.",
+  "documentDetailRenewalNote": "A versão em vigor continua valendo até a nova ser aprovada.",
+  "documentDetailVanepMessage": "Mensagem da equipe Vanep",
+  "documentDetailRejectedNote": "O resto do seu cadastro continua valendo. Este documento precisa ser enviado de novo.",
+  "documentDetailNotFound": "Este documento não está mais na sua lista.",
+  "documentFileOpenError": "Não deu para abrir o arquivo.",
+  "documentRejectionIllegible": "Documento ilegível ou cortado",
+  "documentRejectionExpired": "Documento vencido",
+  "documentRejectionDataMismatch": "Dados não conferem com o cadastro",
+  "documentRejectionWrongType": "Tipo de documento errado",
+  "documentRejectionIncomplete": "Faltam páginas, frente ou verso",
+  "documentRejectionNotEligible": "Não serve para transporte escolar",
+  "documentRejectionOther": "Outro motivo",
+  "documentActionSend": "Enviar",
+  "documentActionResend": "Reenviar",
+  "documentActionSendNew": "Enviar nova versão",
+  "documentActionSendUpdated": "Enviar versão atualizada",
+  "documentAboutDriverLicense": "Carteira Nacional de Habilitação. Para transporte escolar, o Código de Trânsito exige categoria D ou E.",
+  "documentAboutSchoolDriverCourse": "Curso para condutores de transporte escolar, exigido pelo Código de Trânsito. Precisa de atualização periódica.",
+  "documentAboutCriminalRecord": "Certidão de antecedentes criminais. O nome precisa estar igual ao do seu cadastro.",
+  "documentAboutMunicipalAuthorization": "Licença da prefeitura para fazer transporte escolar na cidade. Nem toda cidade exige: se a sua não exige, você não precisa enviar.",
+  "documentAboutVehicleRegistration": "Certificado de Registro e Licenciamento do Veículo. É renovado todo ano, depois do licenciamento. A versão digital (CRLV-e) fica na Carteira Digital de Trânsito.",
+  "documentAboutVehicleInspection": "Inspeção dos equipamentos obrigatórios e de segurança do veículo escolar, exigida pelo Código de Trânsito a cada seis meses.",
+  "documentAboutSchoolVehicleAuthorization": "Autorização do órgão de trânsito para o veículo fazer transporte escolar. Além de enviar aqui, ela precisa ficar afixada dentro da van, em local visível.",
+  "documentIssuerDetran": "DETRAN",
+  "documentIssuerCourse": "Autoescola (CFC) ou entidade credenciada",
+  "documentIssuerCriminalRecord": "Polícia Federal ou Polícia Civil do estado",
+  "documentIssuerMunicipalAuthorization": "Prefeitura ou órgão de trânsito da cidade",
+  "documentValidityDriverLicense": "A da própria CNH",
+  "documentValidityCourse": "5 anos",
+  "documentValidityMunicipalAuthorization": "Definida pela prefeitura",
+  "documentValidityVehicleRegistration": "1 ano (exercício)",
+  "documentValidityVehicleInspection": "6 meses",
+  "documentSourceTitle": "Como você quer enviar?",
+  "documentSourceScanner": "Escanear com a câmera",
+  "documentSourceScannerHint": "Fotografe o documento agora com a câmera. Se ele tiver verso, fotografe os dois lados.",
+  "documentSourceGallery": "Escolher da galeria",
+  "documentSourceGalleryHint": "Uma foto que você já tirou",
+  "documentSourcePdf": "Escolher arquivo PDF",
+  "documentSourcePdfHint": "Se você baixou do site do órgão ou recebeu por e-mail",
+  "documentSourceTip": "Documento inteiro na foto, sem reflexo e com tudo legível. PDF, JPG ou PNG de até 10 MB.",
+  "documentCapturePermissionDenied": "Permita o acesso à câmera ou às fotos nas configurações do celular para enviar o documento.",
+  "documentFileTooLarge": "O arquivo passou de 10 MB. Escaneie de novo com menos páginas ou escolha um arquivo menor.",
+  "documentCaptureFailed": "Não deu para abrir o arquivo. Tente de novo.",
+  "documentScanPagePosition": "{index} de {total}",
+  "@documentScanPagePosition": {"placeholders": {"index": {"type": "int"}, "total": {"type": "int"}}},
+  "documentScanPageLabel": "Página {index}",
+  "@documentScanPageLabel": {"placeholders": {"index": {"type": "int"}}},
+  "documentSendingTitle": "Enviando…",
+  "documentSendingProgress": "{sent} de {total} MB",
+  "@documentSendingProgress": {"placeholders": {"sent": {"type": "String"}, "total": {"type": "String"}}},
+  "documentSendingPercent": "{percent}%",
+  "@documentSendingPercent": {"placeholders": {"percent": {"type": "int"}}},
+  "documentSendingKeepOpen": "Mantenha o app aberto até terminar.",
+  "documentSentTitle": "Documento enviado",
+  "documentSentMessage": "A Vanep confere em até 2 dias úteis. Você recebe a resposta aqui e por e-mail.",
+  "documentSentStillMissing": "Pendências",
+  "documentSentBack": "Voltar para os documentos",
+  "documentSendFailedTitle": "Não deu para enviar",
+  "documentSendFailedMessage": "A conexão caiu no meio do envio. O arquivo continua aqui, é só tentar de novo.",
+  "documentSendRetry": "Tentar de novo",
+  "documentSendChangeFile": "Trocar arquivo",
+  "documentSubmissionPendingExists": "Já existe um envio deste documento em andamento.",
+  "documentSubmissionAlreadyReviewed": "Este envio já foi revisado. Confira a situação do documento.",
+  "documentSubmissionUnsupportedFile": "Este tipo de arquivo não é aceito. Envie PDF, JPG ou PNG.",
+  "documentSubmissionUnexpected": "Não deu para enviar o documento. Tente de novo.",
+  "documentSendingCaption": "{document} · {van}",
+  "@documentSendingCaption": {"placeholders": {"document": {"type": "String"}, "van": {"type": "String"}}},
+  "documentConfirmSubmit": "Enviar para análise",
+  "documentConfirmChangeFile": "Trocar arquivo",
+  "documentConfirmChecklistTitle": "Antes de enviar, confira",
+  "documentConfirmCheckReadable": "Dá para ler tudo",
+  "documentConfirmCheckWhole": "O documento aparece inteiro, sem cortes",
+  "documentConfirmCheckBothSides": "Frente e verso, quando tiver",
+  "documentConfirmOpenPdf": "Abrir PDF",
+  "documentConfirmViewPage": "Ver em tela cheia",
+  "documentFormatPdf": "PDF",
+  "documentFormatJpg": "JPG",
+  "documentFormatPng": "PNG",
+  "documentFormatWebp": "WEBP",
+  "documentFileSummaryWithPages": "{format} · {pages, plural, =1{1 página} other{{pages} páginas}} · {size} MB",
+  "@documentFileSummaryWithPages": {"placeholders": {"format": {"type": "String"}, "pages": {"type": "int"}, "size": {"type": "String"}}},
+  "documentFileSummary": "{format} · {size} MB",
+  "@documentFileSummary": {"placeholders": {"format": {"type": "String"}, "size": {"type": "String"}}},
+  "professionalDataRating": "{rating} ({count})",
+  "@professionalDataRating": {"placeholders": {"rating": {"type": "String"}, "count": {"type": "int"}}},
+  "professionalDataExperience": "{years, plural, =1{1 ano de experiência} other{{years} anos de experiência}}",
+  "@professionalDataExperience": {"placeholders": {"years": {"type": "int"}}},
+  "professionalDataHeaderLine": "{first} · {second}",
+  "@professionalDataHeaderLine": {"placeholders": {"first": {"type": "String"}, "second": {"type": "String"}}},
+  "professionalDataVerified": "Motorista verificado",
+  "professionalDataEdit": "Editar foto e apresentação",
+  "professionalDataPublicProfile": "Ver perfil público",
+  "professionalDataAttendanceSection": "Atendimento",
+  "professionalDataDocumentsSection": "Documentos",
+  "professionalDataCompanySection": "Empresa",
+  "professionalDataWorkHours": "Expediente",
+  "professionalDataWaitTime": "Espera no ponto",
+  "professionalDataPersonalDocuments": "Pessoais",
+  "professionalDataVanDocuments": "Vans",
+  "professionalDataCnpj": "CNPJ",
+  "professionalDataLoadError": "Não deu para carregar os seus dados profissionais.",
+  "professionalDataRetry": "Tentar novamente",
+  "pushNotificationChannelName": "Notificações",
+  "pushNotificationChannelDescription": "Mensagens do chat, propostas e contratos"
 }

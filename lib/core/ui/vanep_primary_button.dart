@@ -9,6 +9,7 @@ class VanepPrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.isLoading = false,
     this.onBrand = false,
+    this.leadingIcon,
     this.trailingIcon,
     super.key,
   });
@@ -17,6 +18,7 @@ class VanepPrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
   final bool onBrand;
+  final IconData? leadingIcon;
   final IconData? trailingIcon;
 
   @override
@@ -55,6 +57,10 @@ class VanepPrimaryButton extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  if (leadingIcon != null) ...[
+                    Icon(leadingIcon, size: 20),
+                    const SizedBox(width: 8),
+                  ],
                   Flexible(
                     child: Text(
                       label,

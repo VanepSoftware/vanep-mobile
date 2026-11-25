@@ -1,0 +1,161 @@
+name: CD — teste interno (Google Play)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      tracks:
+        description: >-
+          internal+closed = build, publica em internal e promove o mesmo versionCode para o teste fechado;
+          internal = só publica em internal;
+          promote-closed = só promove a release completed atual de internal para o teste fechado (sem build, sem novo versionCode; use para retry)
+        type: choice
+        default: internal+closed
+        options:
+          - internal+closed
+          - internal
+          - promote-closed
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Detecta mudanças de código
+    if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Filtra caminhos
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          # Mesma regra do ci.yml: commits só de docs não publicam.
+          predicate-quantifier: "some-with-excludes"
+          filters: |
+            code:
+              - '**'
+              - '!**/*.md'
+              - '!docs/**'
+              - '!openspec/**'
+
+  deploy:
+    name: Publica no Google Play (interno / fechado)
+    needs: changes
+    # No push, respeita o filtro de caminhos; no dispatch, o filtro não se aplica.
+    if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || (needs.changes.result == 'success' && needs.changes.outputs.code == 'true')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # Um deploy no Play por vez (internal e produção compartilham o grupo),
+    # para o cálculo do próximo versionCode não colidir.
+    concurrency:
+      group: play-android-deploy
+      cancel-in-progress: false
+    env:
+      # Push usa o default (internal+closed).
+      PLAY_TRACKS: ${{ inputs.tracks || 'internal+closed' }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Verifica secrets obrigatórios
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          TESTING_ENV_FILE: ${{ secrets.TESTING_ENV_FILE }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          missing_secrets=()
+          for secret_name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS \
+            ANDROID_KEY_PASSWORD PLAY_SERVICE_ACCOUNT_JSON TESTING_ENV_FILE GOOGLE_SERVICES_JSON; do
+            if [ -z "${!secret_name}" ]; then
+              missing_secrets+=("$secret_name")
+            fi
+          done
+          if [ "${#missing_secrets[@]}" -gt 0 ]; then
+            echo "::error title=Secrets ausentes::Cadastre em Settings > Secrets and variables > Actions: ${missing_secrets[*]}"
+            exit 1
+          fi
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Read FVM config
+        if: ${{ env.PLAY_TRACKS != 'promote-closed' }}
+        id: fvm
+        uses: kuhnroyal/flutter-fvm-config-action@v3
+        with:
+          path: .fvmrc
+
+      - uses: actions/setup-java@v6
+        if: ${{ env.PLAY_TRACKS != 'promote-closed' }}
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        if: ${{ env.PLAY_TRACKS != 'promote-closed' }}
+        with:
+          flutter-version: ${{ steps.fvm.outputs.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Cache do Gradle
+        if: ${{ env.PLAY_TRACKS != 'promote-closed' }}
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle.kts', 'android/gradle.properties', 'android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: ${{ env.PLAY_TRACKS != 'promote-closed' }}
+        run: flutter pub get
+
+      - name: Generate code (build_runner)
+        if: ${{ env.PLAY_TRACKS != 'promote-closed' }}
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Prepara keystore, .env, google-services.json e service account
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          DART_DEFINE_ENV_FILE: ${{ secrets.TESTING_ENV_FILE }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: bash scripts/ci-prepare-play-deploy.sh
+
+      - name: Publica no Google Play (fastlane)
+        working-directory: android
+        env:
+          FASTLANE_OPT_OUT_USAGE: "YES"
+          FASTLANE_SKIP_UPDATE_CHECK: "1"
+          FASTLANE_HIDE_CHANGELOG: "1"
+        run: |
+          set -o pipefail
+          case "$PLAY_TRACKS" in
+            internal+closed) lane=deploy_internal_and_closed ;;
+            internal) lane=deploy_internal ;;
+            promote-closed) lane=promote_internal_to_closed ;;
+            *) echo "::error title=Input inválido::tracks desconhecido: $PLAY_TRACKS"; exit 1 ;;
+          esac
+          fastlane_log="$RUNNER_TEMP/fastlane.log"
+          if bundle exec fastlane android "$lane" 2>&1 | tee "$fastlane_log"; then
+            exit 0
+          fi
+          failure_category="$(grep -oE '\[failure_category:[a-z_]+\]' "$fastlane_log" | tail -n 1 | sed -E 's/^\[failure_category:([a-z_]+)\]$/\1/' || true)"
+          echo "::error title=Deploy no Google Play falhou::categoria ${failure_category:-config} — veja o log deste passo"
+          exit 1

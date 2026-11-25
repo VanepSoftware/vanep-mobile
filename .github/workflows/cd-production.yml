@@ -1,0 +1,125 @@
+name: CD — produção (Google Play)
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Publica em produção
+    # Pré-releases do GitHub não vão para produção.
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # Um deploy no Play por vez (internal e produção compartilham o grupo),
+    # para o cálculo do próximo versionCode não colidir.
+    concurrency:
+      group: play-android-deploy
+      cancel-in-progress: false
+    env:
+      # app em rascunho no Play rejeita release completed em produção; remover após a primeira publicação revisada
+      PLAY_RELEASE_STATUS: draft
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Extrai versionName do tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version_name="${RELEASE_TAG#v}"
+          if ! [[ "$version_name" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error title=Tag inválido::O tag da release deve ser vX.Y.Z (ex.: v1.2.3)"
+            exit 1
+          fi
+          echo "PLAY_VERSION_NAME=$version_name" >> "$GITHUB_ENV"
+
+      - name: Verifica secrets obrigatórios
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          PRODUCTION_ENV_FILE: ${{ secrets.PRODUCTION_ENV_FILE }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          missing_secrets=()
+          for secret_name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS \
+            ANDROID_KEY_PASSWORD PLAY_SERVICE_ACCOUNT_JSON PRODUCTION_ENV_FILE GOOGLE_SERVICES_JSON; do
+            if [ -z "${!secret_name}" ]; then
+              missing_secrets+=("$secret_name")
+            fi
+          done
+          if [ "${#missing_secrets[@]}" -gt 0 ]; then
+            echo "::error title=Secrets ausentes::Cadastre em Settings > Secrets and variables > Actions: ${missing_secrets[*]}"
+            exit 1
+          fi
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Read FVM config
+        id: fvm
+        uses: kuhnroyal/flutter-fvm-config-action@v3
+        with:
+          path: .fvmrc
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Cache do Gradle
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle.kts', 'android/gradle.properties', 'android/gradle/wrapper/gradle-wrapper.properties', 'pubspec.lock') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate code (build_runner)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Prepara keystore, .env, google-services.json e service account
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          DART_DEFINE_ENV_FILE: ${{ secrets.PRODUCTION_ENV_FILE }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: bash scripts/ci-prepare-play-deploy.sh
+
+      - name: Publica no Google Play (fastlane deploy_production)
+        working-directory: android
+        env:
+          FASTLANE_OPT_OUT_USAGE: "YES"
+          FASTLANE_SKIP_UPDATE_CHECK: "1"
+          FASTLANE_HIDE_CHANGELOG: "1"
+        run: |
+          set -o pipefail
+          fastlane_log="$RUNNER_TEMP/fastlane.log"
+          if bundle exec fastlane android deploy_production 2>&1 | tee "$fastlane_log"; then
+            exit 0
+          fi
+          failure_category="$(grep -oE '\[failure_category:[a-z_]+\]' "$fastlane_log" | tail -n 1 | sed -E 's/^\[failure_category:([a-z_]+)\]$/\1/' || true)"
+          echo "::error title=Deploy no Google Play falhou::categoria ${failure_category:-config} — veja o log deste passo"
+          exit 1
