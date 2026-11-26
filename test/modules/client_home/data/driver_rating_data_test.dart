@@ -77,6 +77,28 @@ void main() {
     expect(await FindDriversToRate(repository: repository)(), isEmpty);
   });
 
+  test('a status that fails hides only that driver', () async {
+    linksReturn([
+      {'driverToken': 'drv-carlos', 'driverName': 'Carlos Souza'},
+      {'driverToken': 'drv-rita', 'driverName': 'Rita Lima'},
+    ]);
+    statusReturns('drv-carlos', true);
+    when(
+      () => dio.get<Map<String, dynamic>>(
+        any(),
+        queryParameters: {'driverToken': 'drv-rita'},
+      ),
+    ).thenAnswer(
+      (_) async => throw DioException(requestOptions: RequestOptions(path: '')),
+    );
+
+    final items = await FindDriversToRate(repository: repository)();
+
+    expect(items, const [
+      RateDriverItem(driverToken: 'drv-carlos', driverName: 'Carlos Souza'),
+    ]);
+  });
+
   test('posts the stars as the rating', () async {
     when(() => dio.post<void>(any(), data: any(named: 'data')))
         .thenAnswer((_) async => ok<void>(null));

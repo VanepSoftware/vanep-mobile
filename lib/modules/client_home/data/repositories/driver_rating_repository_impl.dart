@@ -16,13 +16,22 @@ class DriverRatingRepositoryImpl implements DriverRatingRepository {
     return _guard(() async {
       final drivers = await remote.fetchMyDrivers();
       final allowed = await Future.wait([
-        for (final driver in drivers) remote.canRate(driver.token),
+        for (final driver in drivers) canRateOrFalse(driver.token),
       ]);
       return [
         for (final (index, driver) in drivers.indexed)
           if (allowed[index]) driver,
       ];
     });
+  }
+
+  /// A status that cannot be read hides only that driver, not the whole list.
+  Future<bool> canRateOrFalse(String driverToken) async {
+    try {
+      return await remote.canRate(driverToken);
+    } on DioException {
+      return false;
+    }
   }
 
   @override
