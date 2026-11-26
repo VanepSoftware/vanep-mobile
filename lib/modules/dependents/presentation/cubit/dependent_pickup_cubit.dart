@@ -29,7 +29,7 @@ class DependentPickupCubit extends Cubit<DependentPickupState>
     required this.lookupCep,
     required this.listStates,
     required this.listCities,
-    this.findMyPersonalAddress,
+    required this.findMyPersonalAddress,
     this.cepLookupDebounce = dependentCepLookupDebounce,
   }) : super(DependentPickupState.editing(dependent));
 
@@ -37,7 +37,7 @@ class DependentPickupCubit extends Cubit<DependentPickupState>
   final LookupCep lookupCep;
   final ListStates listStates;
   final ListCities listCities;
-  final FindMyPersonalAddress? findMyPersonalAddress;
+  final FindMyPersonalAddress findMyPersonalAddress;
   @override
   final Duration cepLookupDebounce;
 
@@ -71,9 +71,7 @@ class DependentPickupCubit extends Cubit<DependentPickupState>
   }
 
   Future<void> loadProfileAddress() async {
-    final find = findMyPersonalAddress;
-    if (find == null) return;
-    final result = await find();
+    final result = await findMyPersonalAddress();
     if (isClosed) return;
     if (result case Ok<PersonalAddressFailure, PersonalAddress?>(
       :final value?,
