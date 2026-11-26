@@ -13,7 +13,7 @@ import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/pus
 /// in AndroidManifest.xml, so background notifications share the channel.
 const pushNotificationChannelId = 'vanep_default';
 
-const pushNotificationIcon = '@mipmap/ic_launcher';
+const pushNotificationIcon = '@drawable/ic_stat_notification';
 
 class FlutterLocalNotificationDisplay implements LocalNotificationDisplay {
   FlutterLocalNotificationDisplay({
