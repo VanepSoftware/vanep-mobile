@@ -28,6 +28,8 @@ import 'package:vanep_mobile/shell/driver_shell.dart';
 
 import 'package:vanep_mobile/modules/notifications/presentation/pages/notifications_page.dart';
 
+import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_assistants_page.dart';
+
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/conversations/conversations_fixtures.dart';
@@ -551,4 +553,45 @@ void main() {
       expect(find.byType(VanepComingSoonPage), findsOneWidget);
     },
   );
+
+  testWidgets('the Auxiliares shortcut on home opens the assistant team', (
+    tester,
+  ) async {
+    final approvedCubit = DriverHomeCubit(
+      repository: _StubHomeRepository(
+        const DriverHomeData(registration: RegistrationStatus.approved),
+      ),
+    );
+    addTearDown(approvedCubit.close);
+    final centralCubit = readyVanCentralCubit();
+
+    await tester.pumpWidget(
+      harness(
+        approvedCubit,
+        authCubit,
+        profileSummaryCubit,
+        vanCentralCubit: centralCubit,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final shortcut = find.text('Auxiliares');
+    await tester.scrollUntilVisible(
+      shortcut,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(shortcut);
+    await tester.pumpAndSettle();
+    await tester.tap(shortcut);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(VanAssistantsPage), findsOneWidget);
+    expect(find.byType(VanepComingSoonPage), findsNothing);
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+
+    verify(() => centralCubit.refresh()).called(1);
+  });
 }

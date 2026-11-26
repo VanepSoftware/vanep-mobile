@@ -22,32 +22,44 @@ class NotificationsPage extends StatelessWidget {
         final cubit = context.read<NotificationsCubit>();
         return Scaffold(
           backgroundColor: context.palette.surface,
-          appBar: AppBar(
-            title: Text(l10n.navNotifications),
-            actions: [
+          appBar: AppBar(title: Text(l10n.navNotifications)),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Below the app bar: beside the title it cuts it on narrow screens.
               if (state.hasUnread)
-                TextButton(
-                  onPressed: cubit.markAllRead,
-                  child: Text(l10n.notificationsMarkAllRead),
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: TextButton(
+                      onPressed: cubit.markAllRead,
+                      child: Text(l10n.notificationsMarkAllRead),
+                    ),
+                  ),
                 ),
+              Expanded(
+                child: switch (state.status) {
+                  NotificationsStatus.loading => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  NotificationsStatus.loadFailed => VanepErrorView(
+                    message: l10n.notificationsLoadError,
+                    retryLabel: l10n.notificationsRetry,
+                    onRetry: cubit.load,
+                  ),
+                  NotificationsStatus.loaded when state.items.isEmpty =>
+                    VanepComingSoon(
+                      title: l10n.notificationsEmptyTitle,
+                      message: l10n.notificationsEmptyMessage,
+                    ),
+                  NotificationsStatus.loaded => _NotificationsList(
+                    state: state,
+                  ),
+                },
+              ),
             ],
           ),
-          body: switch (state.status) {
-            NotificationsStatus.loading => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            NotificationsStatus.loadFailed => VanepErrorView(
-              message: l10n.notificationsLoadError,
-              retryLabel: l10n.notificationsRetry,
-              onRetry: cubit.load,
-            ),
-            NotificationsStatus.loaded when state.items.isEmpty =>
-              VanepComingSoon(
-                title: l10n.notificationsEmptyTitle,
-                message: l10n.notificationsEmptyMessage,
-              ),
-            NotificationsStatus.loaded => _NotificationsList(state: state),
-          },
         );
       },
     );

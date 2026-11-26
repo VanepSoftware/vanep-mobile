@@ -42,7 +42,12 @@ DailyOverview dailyOverviewFromJson(Map<String, dynamic> json) {
       .toList();
   if (vans.isEmpty) {
     return DailyOverview(
-      today: noRouteTodayFromJson(json['upcoming']),
+      today: noRouteTodayFromJson(
+        json['upcoming'],
+        childrenWithoutRoute: childrenWithoutVanFromJson(
+          json['childrenWithoutVan'],
+        ),
+      ),
       needsYou: needsYou,
     );
   }
@@ -88,7 +93,10 @@ List<ChildWithoutRoute> childrenWithoutVanFromJson(Object? children) {
 
 /// The week plan shown when nobody rides today, or null when no child rides in
 /// the days the API looked ahead.
-NoRouteTodaySection? noRouteTodayFromJson(Object? upcoming) {
+NoRouteTodaySection? noRouteTodayFromJson(
+  Object? upcoming, {
+  List<ChildWithoutRoute> childrenWithoutRoute = const [],
+}) {
   if (upcoming is! List) return null;
   final week = <WeekDayPlan>[];
   DateTime? nextRouteAt;
@@ -105,7 +113,11 @@ NoRouteTodaySection? noRouteTodayFromJson(Object? upcoming) {
     nextRouteAt ??= atTime(date, day['firstPickup']);
   }
   if (nextRouteAt == null) return null;
-  return NoRouteTodaySection(nextRouteAt: nextRouteAt, week: week);
+  return NoRouteTodaySection(
+    nextRouteAt: nextRouteAt,
+    week: week,
+    childrenWithoutRoute: childrenWithoutRoute,
+  );
 }
 
 VanDay? vanDayFromJson(Map<String, dynamic> json, DateTime date) {

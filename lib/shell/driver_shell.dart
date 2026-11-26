@@ -20,6 +20,7 @@ import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/s
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
 import 'package:vanep_mobile/modules/push_notifications/presentation/widgets/push_navigation_listener.dart';
+import 'package:vanep_mobile/shell/driver_home_navigation.dart';
 import 'package:vanep_mobile/shell/driver_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
@@ -133,7 +134,9 @@ class DriverShellState extends State<DriverShell> {
                     children: [
                       DriverHomeTab(
                         displayName: displayName,
-                        navigation: widget.homeNavigation,
+                        navigation:
+                            widget.homeNavigation ??
+                            ShellDriverHomeNavigation(context),
                         onMenuTapped: () =>
                             scaffoldKey.currentState?.openDrawer(),
                         onNotificationsTapped: () => openNotifications(context),

@@ -80,7 +80,11 @@ class TodaySectionView extends StatelessWidget {
           const AlertsPreferencesRow(),
         ]),
       ],
-      NoRouteTodaySection() => [NoRouteTodayCard(section: section)],
+      NoRouteTodaySection() => withSpacing([
+        NoRouteTodayCard(section: section),
+        if (section.childrenWithoutRoute.isNotEmpty)
+          ChildrenWithoutRouteRow(children: section.childrenWithoutRoute),
+      ]),
     };
 
     return Column(

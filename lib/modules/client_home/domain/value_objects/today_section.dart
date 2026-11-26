@@ -152,11 +152,17 @@ final class ArrivedSection extends TodaySection {
 }
 
 final class NoRouteTodaySection extends TodaySection {
-  const NoRouteTodaySection({required this.nextRouteAt, required this.week});
+  const NoRouteTodaySection({
+    required this.nextRouteAt,
+    required this.week,
+    this.childrenWithoutRoute = const [],
+  });
 
   final DateTime nextRouteAt;
 
   final List<WeekDayPlan> week;
+
+  final List<ChildWithoutRoute> childrenWithoutRoute;
 
   @override
   bool get hasLinkedVan => true;
@@ -169,7 +175,7 @@ final class NoRouteTodaySection extends TodaySection {
   }
 
   @override
-  List<Object?> get props => [nextRouteAt, week];
+  List<Object?> get props => [nextRouteAt, week, childrenWithoutRoute];
 }
 
 class WeekDayPlan extends Equatable {
