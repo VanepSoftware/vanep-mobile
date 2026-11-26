@@ -434,6 +434,43 @@ void main() {
     verify(() => authCubit.refreshSessionProfile()).called(1);
   });
 
+  testWidgets('the service areas card stays below the status bar', (
+    tester,
+  ) async {
+    const statusBar = 48.0;
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.padding = const FakeViewPadding(top: statusBar);
+    tester.view.viewPadding = const FakeViewPadding(top: statusBar);
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      harness(
+        cubit,
+        authCubit,
+        profileSummaryCubit,
+        pendingSteps: const [OnboardingStep.serviceArea],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final title = find.text('Falta dizer onde você atende');
+    expect(tester.getTopLeft(title).dy, greaterThan(statusBar));
+
+    final tabPadding = MediaQuery.paddingOf(
+      tester.element(find.byType(IndexedStack)),
+    );
+    expect(tabPadding.top, 0);
+
+    await tester.tap(find.text('Depois'));
+    await tester.pumpAndSettle();
+
+    expect(
+      MediaQuery.paddingOf(tester.element(find.byType(IndexedStack))).top,
+      statusBar,
+    );
+  });
+
   group('push notification targets', () {
     testWidgets('a chat push pending before mount opens the chat', (
       tester,
