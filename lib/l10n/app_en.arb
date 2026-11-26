@@ -3112,5 +3112,244 @@
   "pushNotificationChannelDescription": "Chat messages, proposals and contracts",
   "@pushNotificationChannelName": {
     "description": "Android notification channel name shown in the system settings."
-  }
+  },
+  "upgradeWallTitle": "Update required",
+  "upgradeWallBody": "A new version of Vanep is available. Update the app to keep using it.",
+  "upgradeNoticeTitle": "Update available",
+  "upgradeNoticeBody": "A new version of Vanep is on the Play Store. Update when you can.",
+  "upgradeNoticeLater": "Later",
+  "upgradeWallButton": "Update now",
+  "driverHomeUnavailable": "Home data is not available yet.",
+  "driverHomeRefreshFailed": "Could not refresh home.",
+  "driverHomeStopChanged": "The stop changed. Check the details and slide again.",
+  "driverHomeRefreshAfterAction": "Action completed. Refresh to see the current status.",
+  "driverHomeActionFailed": "Could not complete the action. Try again.",
+  "driverHomeApprovalRequired": "Your registration must be approved to start the route.",
+  "driverHomeNoPendingRoute": "There is no route waiting to start.",
+  "driverHomeSubscription": "Update your Vanep subscription.",
+  "driverHomeDocuments": "Update expired documents.",
+  "driverHomeBothBlocked": "Update your Vanep subscription and expired documents.",
+  "driverHomeBlockedTitle": "Update required",
+  "driverHomeIncompleteTitle": "Complete your registration",
+  "driverHomeIncompleteDescription": "Open Documents to complete pending information.",
+  "driverHomeReviewTitle": "Registration under review",
+  "driverHomeReviewDescription": "Please wait for your documents to be reviewed.",
+  "driverHomeRejectedTitle": "Registration rejected",
+  "driverHomeRejectedDescription": "Check Documents for the reason.",
+  "driverHomeInProgress": "On route",
+  "driverHomeBeforeDeparture": "Before departure",
+  "driverHomeCompleted": "Shift completed",
+  "driverHomeBuildingTitle": "Let’s build your route",
+  "driverHomeBuildingDescription": "Your registration is approved. Add students to organize your route.",
+  "driverHomeNoRouteTitle": "No route today",
+  "driverHomeNoRouteDescription": "Manage your business using the shortcuts below.",
+  "driverHomeRegularize": "Update",
+  "driverHomeCompleteRegistration": "Complete registration",
+  "driverHomeResubmit": "Correct and resubmit",
+  "driverHomeChecklist": "Checklist",
+  "driverHomeStartRoute": "Start route",
+  "driverHomeAddStudents": "Add students",
+  "driverHomeStudents": "Students",
+  "driverHomeRoute": "Route and stops",
+  "driverHomeAbsences": "Absences and adjustments",
+  "driverHomeFinancial": "Finances",
+  "driverHomeAssistants": "Assistants",
+  "driverHomeDocumentsShortcut": "Documents",
+  "driverHomeRetry": "Try again",
+  "driverHomeOutsideHours": "You are outside working hours.",
+  "driverHomeRegularization": "Updates",
+  "driverHomeContact": "Stop contact",
+  "driverHomeBoarding": "boarding",
+  "driverHomeDisembarking": "disembarking",
+  "driverHomeMorning": "Morning",
+  "driverHomeAfternoon": "Afternoon",
+  "driverHomeNight": "Night",
+  "driverHomeFulltime": "Full day",
+  "driverHomeNextShift": "Next shift: {shift}",
+  "@driverHomeNextShift": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeTripShiftOverline": "Route · {shift}",
+  "@driverHomeTripShiftOverline": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeInProgressShiftOverline": "On route · {shift}",
+  "@driverHomeInProgressShiftOverline": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeCall": "Call: {contact}",
+  "@driverHomeCall": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeFamilyCounter": "{count} of {total} with family in the app",
+  "@driverHomeFamilyCounter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeSlideStudent": "{student}: slide to confirm {action}",
+  "@driverHomeSlideStudent": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSlideHint": "Slide from left to right to confirm {action}",
+  "@driverHomeSlideHint": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomePreviewTitle": "Test preview — simulated data",
+  "driverHomeShortcutsTitle": "Shortcuts",
+  "driverHomeGreetingHello": "Hello, {name}!",
+  "@driverHomeGreetingHello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingHelloPlain": "Hello, {name}",
+  "@driverHomeGreetingHelloPlain": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSubtitleIncomplete": "Almost ready to receive students through Vanep.",
+  "driverHomeSubtitleUnderReview": "Your registration has been submitted.",
+  "driverHomeSubtitleRejected": "Your registration needs attention.",
+  "driverHomeSubtitleBuildingRoute": "Registration approved. Welcome to Vanep.",
+  "driverHomeSubtitleShiftCompletedOn": "{date} · good job, {name}",
+  "@driverHomeSubtitleShiftCompletedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeIncompleteOverline": "Registration",
+  "driverHomeIncompleteHeadline": "Complete your registration to appear in search",
+  "driverHomeIncompleteStep1": "Personal details",
+  "driverHomeIncompleteStep2": "Professional profile",
+  "driverHomeIncompleteStep3": "Van",
+  "driverHomeIncompleteStep4Title": "Driver's license (CNH)",
+  "driverHomeIncompleteStep4Hint": "License photo and expiration date",
+  "driverHomeIncompleteStepNow": "Now",
+  "driverHomeIncompleteStep5Title": "Documents",
+  "driverHomeIncompleteStep5Hint": "CRLV, inspection and permit",
+  "driverHomeIncompleteStep6Title": "Service areas",
+  "driverHomeIncompleteStep6Hint": "Neighborhoods and schools you serve",
+  "driverHomeIncompleteFooter": "After submission, review takes up to 2 business days.",
+  "driverHomeUnderReviewOverline": "Under review",
+  "driverHomeUnderReviewHeadline": "Vanep is reviewing your documents",
+  "driverHomeUnderReviewSubtitle": "Response within 2 business days, here and by email.",
+  "driverHomeTimelineSent": "Submitted",
+  "driverHomeTimelineInReview": "Under review",
+  "driverHomeTimelineApproved": "Approved",
+  "driverHomeTimelineApprovedHint": "Unlocks starting routes and receiving proposals",
+  "driverHomeSeeSentDocuments": "See submitted documents",
+  "driverHomeMeanwhileAdvanceRoute": "Meanwhile, set up your route",
+  "driverHomeAdvanceStudentsTitle": "Add your current students",
+  "driverHomeAdvanceStudentsHint": "They join your route on day one",
+  "driverHomeAdvanceAssistantTitle": "Invite your assistant",
+  "driverHomeAdvanceAssistantHint": "They handle check-offs with you",
+  "driverHomeBuildingOverline": "Build your route",
+  "driverHomeBuildingHeadline": "Bring the students you already drive",
+  "driverHomeBuildingStep1Title": "Register current students",
+  "driverHomeBuildingStep1Hint": "Name, school and address",
+  "driverHomeBuildingStep2Title": "Invite families",
+  "driverHomeBuildingStep2Hint": "Via WhatsApp, so they get alerts",
+  "driverHomeBuildingStep3Title": "Invite your assistant",
+  "driverHomeBuildingStep3Hint": "They handle check-offs while you drive.",
+  "driverHomeShareParentGroupLink": "Send link in parents group",
+  "driverHomeStatActiveStudents": "active students",
+  "driverHomeLocationTitle": "Share location",
+  "driverHomeLocationSubtitle": "Parents see the van only during the route",
+  "driverHomeSlideToStartRoute": "Slide to start route",
+  "driverHomeInviteAction": "Invite",
+  "driverHomeMissingFamiliesHint": "{count, plural, =1{1 family still without boarding alerts} other{{count} families still without boarding alerts}}",
+  "@driverHomeMissingFamiliesHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeAllFamiliesInAppHint": "All families already receive alerts in the app",
+  "driverHomeParentsSeeVan": "Parents see the van",
+  "driverHomeNextStopLabel": "Next stop",
+  "driverHomeSlideConfirm": "Slide to confirm {action}",
+  "@driverHomeSlideConfirm": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeBoardingConfirmed": "Boarding confirmed for {name}",
+  "@driverHomeBoardingConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeDisembarkingConfirmed": "Drop-off confirmed for {name}",
+  "@driverHomeDisembarkingConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeExceptionAction": "Exception",
+  "driverHomeWazeAction": "Waze",
+  "driverHomeDrivingNotice": "While the van is moving, leave check-offs to your assistant.",
+  "driverHomeEndRouteAction": "End route",
+  "driverHomeEndRouteHint": "If any student is unchecked, the app warns before ending.",
+  "driverHomeSeeTripReport": "See trip report",
+  "driverHomeYourBusinessSection": "Your business",
+  "driverHomeBlockedHeadline": "New proposals are paused",
+  "driverHomeSeeInvoice": "See invoice",
+  "driverHomeExpiredDocumentTitle": "Expired document",
+  "driverHomeExpiredDocumentSubtitle": "New requests are paused until you upload the document.",
+  "driverHomeSendNewDocument": "Upload new document",
+  "driverHomeMeanwhileSection": "Meanwhile",
+  "driverHomeMeanwhileRoutes": "Routes, checklist and parent alerts",
+  "driverHomeMeanwhileContracts": "Active contracts and signed renewals",
+  "driverHomeMeanwhileProposals": "Reply to requests and send proposals",
+  "driverHomeMeanwhileSearch": "Appear in search"
 }
