@@ -12,6 +12,7 @@ import 'package:vanep_mobile/core/media/file_opener.dart';
 import 'package:vanep_mobile/core/network/api_image_provider.dart';
 import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
 import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
+import 'package:vanep_mobile/core/ui/vanep_upgrade_wall.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
@@ -111,9 +112,16 @@ import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/van_
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 
 class VanepApp extends StatelessWidget {
-  const VanepApp({required this.initialThemePreference, super.key});
+  const VanepApp({
+    required this.initialThemePreference,
+    this.minAppVersion,
+    super.key,
+  });
 
   final ThemePreference initialThemePreference;
+
+  /// Blocks the app below this version (see [VanepUpgradeWall]).
+  final String? minAppVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +177,10 @@ class VanepApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: AppLocalizations.supportedLocales,
-                home: const VanepIntroGate(child: AuthGate()),
+                home: VanepUpgradeWall(
+                  minAppVersion: minAppVersion,
+                  child: const VanepIntroGate(child: AuthGate()),
+                ),
               ),
             ),
       ),

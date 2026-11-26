@@ -13,6 +13,8 @@ import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/s
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
+import 'package:vanep_mobile/modules/driver/domain/entities/driver_home_data.dart';
+import 'package:vanep_mobile/modules/driver/domain/repositories/driver_home_repository.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
@@ -36,6 +38,17 @@ import '../modules/push_notifications/push_notifications_fixtures.dart';
 import '../modules/driver_van_central/driver_van_central_mocks.dart';
 import '../modules/driver_van_central/driver_van_central_fixtures.dart';
 import '../modules/notifications/notifications_doubles.dart';
+
+class _StubHomeRepository implements DriverHomeRepository {
+  _StubHomeRepository(this.data);
+  final DriverHomeData data;
+  @override
+  Future<DriverHomeData> load() async => data;
+  @override
+  Future<void> startTrip(String tripId) async {}
+  @override
+  Future<void> confirmStop(StopConfirmation confirmation) async {}
+}
 
 Widget harness(
   DriverHomeCubit cubit,
@@ -424,6 +437,43 @@ void main() {
     verify(() => authCubit.refreshSessionProfile()).called(1);
   });
 
+  testWidgets('the service areas card stays below the status bar', (
+    tester,
+  ) async {
+    const statusBar = 48.0;
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.padding = const FakeViewPadding(top: statusBar);
+    tester.view.viewPadding = const FakeViewPadding(top: statusBar);
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      harness(
+        cubit,
+        authCubit,
+        profileSummaryCubit,
+        pendingSteps: const [OnboardingStep.serviceArea],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final title = find.text('Falta dizer onde você atende');
+    expect(tester.getTopLeft(title).dy, greaterThan(statusBar));
+
+    final tabPadding = MediaQuery.paddingOf(
+      tester.element(find.byType(IndexedStack)),
+    );
+    expect(tabPadding.top, 0);
+
+    await tester.tap(find.text('Depois'));
+    await tester.pumpAndSettle();
+
+    expect(
+      MediaQuery.paddingOf(tester.element(find.byType(IndexedStack))).top,
+      statusBar,
+    );
+  });
+
   group('push notification targets', () {
     testWidgets('a chat push pending before mount opens the chat', (
       tester,
@@ -478,4 +528,27 @@ void main() {
       });
     }
   });
+
+  testWidgets(
+    'tapping Adicionar alunos on home opens Alunos coming soon page',
+    (tester) async {
+      final approvedCubit = DriverHomeCubit(
+        repository: _StubHomeRepository(
+          const DriverHomeData(registration: RegistrationStatus.approved),
+        ),
+      );
+      addTearDown(approvedCubit.close);
+
+      await tester.pumpWidget(
+        harness(approvedCubit, authCubit, profileSummaryCubit),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.text('Adicionar alunos'));
+      await tester.tap(find.text('Adicionar alunos'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(VanepComingSoonPage), findsOneWidget);
+    },
+  );
 }

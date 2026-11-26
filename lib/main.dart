@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import 'package:vanep_mobile/app.dart';
+import 'package:vanep_mobile/core/app_update/min_app_version.dart';
 import 'package:vanep_mobile/core/crash_reporting/crash_reporting.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
@@ -48,12 +50,14 @@ Future<void> main() async {
   // Firebase is configured for Android only (google-services.json); iOS has no
   // GoogleService-Info.plist or APNs key yet, and initializeApp would throw.
   final firebaseEnabled = defaultTargetPlatform == TargetPlatform.android;
+  String? minAppVersion;
   if (firebaseEnabled) {
     await Firebase.initializeApp();
     await startCrashReporting(
       FirebaseCrashlytics.instance,
       collectionEnabled: !kDebugMode,
     );
+    minAppVersion = await loadMinAppVersion(FirebaseRemoteConfig.instance);
   }
 
   await dotenv.load();
@@ -100,5 +104,10 @@ Future<void> main() async {
   registerNotificationsDependencies(getIt);
 
   final themePreference = await getIt<GetThemePreference>()();
-  runApp(VanepApp(initialThemePreference: themePreference));
+  runApp(
+    VanepApp(
+      initialThemePreference: themePreference,
+      minAppVersion: minAppVersion,
+    ),
+  );
 }

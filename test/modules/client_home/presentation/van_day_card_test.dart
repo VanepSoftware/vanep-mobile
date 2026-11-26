@@ -52,6 +52,20 @@ void main() {
     expect(find.textContaining('Sprinter SDF4E21'), findsOneWidget);
   });
 
+  testWidgets('a boarding window is joined by an en dash', (tester) async {
+    await pump(
+      tester,
+      apiVan(
+        schedule: VanSchedule(
+          boardingStartAt: DateTime(2027, 3, 1, 6, 40),
+          boardingEndAt: DateTime(2027, 3, 1, 6, 50),
+        ),
+      ),
+    );
+
+    expect(find.textContaining('6h40\u20136h50'), findsOneWidget);
+  });
+
   testWidgets('a single boarding time is not shown as a window', (
     tester,
   ) async {

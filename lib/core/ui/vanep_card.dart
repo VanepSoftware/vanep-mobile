@@ -9,6 +9,7 @@ class VanepCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(16),
     this.onTap,
     this.highlighted = false,
+    this.isError = false,
     this.borderColor,
     super.key,
   });
@@ -17,18 +18,25 @@ class VanepCard extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final VoidCallback? onTap;
   final bool highlighted;
+  final bool isError;
   final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: highlighted ? context.palette.actionSurface : context.palette.card,
+      color: isError
+          ? Theme.of(context).colorScheme.errorContainer
+          : highlighted
+          ? context.palette.actionSurface
+          : context.palette.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(VanepTheme.cardRadius),
         side: BorderSide(
           color:
               borderColor ??
-              (highlighted
+              (isError
+                  ? Theme.of(context).colorScheme.error
+                  : highlighted
                   ? context.palette.action
                   : context.palette.cardBorder),
         ),

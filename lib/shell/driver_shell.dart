@@ -11,6 +11,7 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/conversations_inbox_tab.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_home_tab.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_main_card.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
@@ -39,10 +40,12 @@ class DriverShell extends StatefulWidget {
     required this.openConversationChat,
     required this.proposalsActions,
     required this.openPushChat,
+    this.homeNavigation,
     super.key,
   });
 
   final UserProfile profile;
+  final DriverHomeNavigation? homeNavigation;
 
   final Future<void> Function(BuildContext context) openServiceAreas;
 
@@ -113,41 +116,53 @@ class DriverShellState extends State<DriverShell> {
         body: Column(
           children: [
             if (shouldOfferServiceAreas)
-              ServiceAreasOnboardingBanner(
-                onStart: () => openServiceAreasAndRefreshProfile(context),
-                onSkip: () => setState(() => onboardingDismissed = true),
+              SafeArea(
+                bottom: false,
+                child: ServiceAreasOnboardingBanner(
+                  onStart: () => openServiceAreasAndRefreshProfile(context),
+                  onSkip: () => setState(() => onboardingDismissed = true),
+                ),
               ),
             Expanded(
-              child: IndexedStack(
-                index: selectedIndex,
-                children: [
-                  DriverHomeTab(
-                    displayName: displayName,
-                    onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
-                    onNotificationsTapped: () => openNotifications(context),
+              child: Builder(
+                builder: (bodyContext) => MediaQuery.removePadding(
+                  context: bodyContext,
+                  removeTop: shouldOfferServiceAreas,
+                  child: IndexedStack(
+                    index: selectedIndex,
+                    children: [
+                      DriverHomeTab(
+                        displayName: displayName,
+                        navigation: widget.homeNavigation,
+                        onMenuTapped: () =>
+                            scaffoldKey.currentState?.openDrawer(),
+                        onNotificationsTapped: () => openNotifications(context),
+                      ),
+                      VanCentralTab(
+                        onRegisterVan: () =>
+                            widget.openVanRegistration(context),
+                        onOpenVanDetails: () => widget.openMyVans(context),
+                        onOpenServiceAreas: () =>
+                            openServiceAreasAndRefreshProfile(context),
+                        onOpenStudents: (van) =>
+                            widget.openVanStudents(context, van),
+                        onOpenVanDocuments: (van) =>
+                            widget.openVanDocuments(context, van),
+                        onOpenComingSoon: (title) => openComingSoonPage(
+                          context,
+                          title: title,
+                          message: l10n.comingSoon,
+                        ),
+                      ),
+                      DriverProposalsTab(actions: widget.proposalsActions),
+                      ConversationsInboxTab(
+                        viewerSide: ConversationParticipant.driver,
+                        onConversationTapped: (conversation) =>
+                            widget.openConversationChat(context, conversation),
+                      ),
+                    ],
                   ),
-                  VanCentralTab(
-                    onRegisterVan: () => widget.openVanRegistration(context),
-                    onOpenVanDetails: () => widget.openMyVans(context),
-                    onOpenServiceAreas: () =>
-                        openServiceAreasAndRefreshProfile(context),
-                    onOpenStudents: (van) =>
-                        widget.openVanStudents(context, van),
-                    onOpenVanDocuments: (van) =>
-                        widget.openVanDocuments(context, van),
-                    onOpenComingSoon: (title) => openComingSoonPage(
-                      context,
-                      title: title,
-                      message: l10n.comingSoon,
-                    ),
-                  ),
-                  DriverProposalsTab(actions: widget.proposalsActions),
-                  ConversationsInboxTab(
-                    viewerSide: ConversationParticipant.driver,
-                    onConversationTapped: (conversation) =>
-                        widget.openConversationChat(context, conversation),
-                  ),
-                ],
+                ),
               ),
             ),
           ],

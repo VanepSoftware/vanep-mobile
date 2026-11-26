@@ -6,6 +6,7 @@ import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_controller.dart';
 import 'package:vanep_mobile/core/places/place_autocomplete_datasource.dart';
 import 'package:vanep_mobile/core/places/school_place_types.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
 import 'package:vanep_mobile/modules/contract_readiness/domain/usecases/find_contract_readiness.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';
@@ -110,6 +111,7 @@ void registerDependentsDependencies(GetIt getIt) {
         lookupCep: getIt<LookupCep>(),
         listStates: getIt<ListStates>(),
         listCities: getIt<ListCities>(),
+        findMyPersonalAddress: getIt<FindMyPersonalAddress>(),
       ),
     )
     ..registerFactoryParam<DependentSchoolDaysCubit, String, void>(
