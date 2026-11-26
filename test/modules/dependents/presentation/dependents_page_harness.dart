@@ -18,6 +18,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cu
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/brazilian_city.dart';
 
 import '../../../core/ui/localized_harness.dart';
+import '../../auth/presentation/auth_presentation_mocks.dart';
 import '../../ibge_locations/ibge_locations_fixture.dart';
 import '../../ibge_locations/ibge_locations_mocks.dart';
 import '../dependents_mocks.dart';
@@ -79,8 +80,10 @@ class DependentEditorDoubles {
   final MockLookupCep lookupCep = MockLookupCep();
   final MockListStates listStates = MockListStates();
   final MockListCities listCities = MockListCities();
+  final MockFindMyPersonalAddress findMyAddress = MockFindMyPersonalAddress();
 
   void register() {
+    when(() => findMyAddress()).thenAnswer((_) async => const Ok(null));
     when(() => autocomplete.session).thenReturn(session);
     when(session.currentToken).thenReturn('sess-1');
     when(autocomplete.dispose).thenReturn(null);
@@ -129,6 +132,7 @@ class DependentEditorDoubles {
           lookupCep: lookupCep,
           listStates: listStates,
           listCities: listCities,
+          findMyPersonalAddress: findMyAddress,
           cepLookupDebounce: Duration.zero,
         ),
       );

@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/di/service_locator.dart';
+import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
+import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_city_picker_sheet.dart';
 import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/core/ui/vanep_map_placeholder.dart';
 import 'package:vanep_mobile/core/ui/vanep_postal_address_form.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependent_pickup_cubit.dart';
@@ -35,7 +38,8 @@ class DependentPickupPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return BlocProvider(
-      create: (_) => getIt<DependentPickupCubit>(param1: dependent),
+      create: (_) =>
+          getIt<DependentPickupCubit>(param1: dependent)..loadProfileAddress(),
       child: DependentEditorFrame(
         title: l10n.dependentRowPickup,
         caption: dependentFirstName(dependent.name),
@@ -89,6 +93,13 @@ class DependentPickupBody extends StatelessWidget {
               actionLabel: l10n.mapAdjustAction,
             ),
             const SizedBox(height: 20),
+            if (state.canUseProfileAddress) ...[
+              DependentUseProfileAddressCard(
+                address: state.profileAddress!,
+                onTap: cubit.useProfileAddress,
+              ),
+              const SizedBox(height: 16),
+            ],
             VanepPostalAddressForm(
               draft: state.draft.address,
               ufOptions: [for (final option in state.catalogStates) option.uf],
@@ -147,6 +158,58 @@ class DependentPickupCityPicker extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class DependentUseProfileAddressCard extends StatelessWidget {
+  const DependentUseProfileAddressCard({
+    required this.address,
+    required this.onTap,
+    super.key,
+  });
+
+  final PersonalAddress address;
+  final VoidCallback onTap;
+
+  String get summary {
+    final number = address.number?.trim() ?? '';
+    final neighborhood = address.neighborhood?.trim() ?? '';
+    final street = number.isEmpty
+        ? address.street
+        : '${address.street}, $number';
+    final place = [
+      if (neighborhood.isNotEmpty) neighborhood,
+      '${address.cityName}/${address.stateUf}',
+    ].join(' · ');
+    return '$street\n$place';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return VanepCard(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(Icons.home_outlined, color: context.palette.action),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.dependentPickupUseProfileAddress,
+                  style: context.typography.cardTitle,
+                ),
+                const SizedBox(height: 2),
+                Text(summary, style: context.typography.cardSubtitle),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
