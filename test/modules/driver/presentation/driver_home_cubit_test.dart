@@ -95,6 +95,7 @@ void main() {
     );
     expect(repository.confirmations, 0);
     expect(cubit.state.error, DriverHomeMessage.stopChanged);
+    expect(cubit.state.confirmedStop, isNull);
   });
   test(
     'blocked active trip still accepts a matching slide confirmation',
@@ -118,8 +119,36 @@ void main() {
       );
       await cubit.confirmBySlide(next);
       expect(repository.confirmations, 1);
+      expect(cubit.state.confirmedStop, same(next));
     },
   );
+  test('a confirmed stop is cleared when the next command starts', () async {
+    const next = StopConfirmation(
+      tripId: 'trip',
+      stopId: 'stop',
+      studentId: 's',
+      studentName: 'Ana',
+      action: StopAction.boarding,
+    );
+    repository.data = const DriverHomeData(
+      registration: RegistrationStatus.approved,
+      nextConfirmation: next,
+      todayTrip: Trip(id: 'trip', status: TripStatus.inProgress, label: 'M'),
+    );
+    await cubit.confirmBySlide(next);
+    expect(cubit.state.confirmedStop, same(next));
+    await cubit.confirmBySlide(
+      const StopConfirmation(
+        tripId: 'trip',
+        stopId: 'old',
+        studentId: 's',
+        studentName: 'Ana',
+        action: StopAction.boarding,
+      ),
+    );
+    expect(cubit.state.confirmedStop, isNull);
+    expect(cubit.state.error, DriverHomeMessage.stopChanged);
+  });
   test('failed refresh preserves the last known trip', () async {
     await cubit.refresh();
     final previous = cubit.state.data;

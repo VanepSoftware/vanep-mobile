@@ -3319,6 +3319,22 @@
       }
     }
   },
+  "driverHomeBoardingConfirmed": "Boarding confirmed for {name}",
+  "@driverHomeBoardingConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeDisembarkingConfirmed": "Drop-off confirmed for {name}",
+  "@driverHomeDisembarkingConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "driverHomeExceptionAction": "Exception",
   "driverHomeWazeAction": "Waze",
   "driverHomeDrivingNotice": "While the van is moving, leave check-offs to your assistant.",
