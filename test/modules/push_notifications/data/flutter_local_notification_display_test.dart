@@ -23,6 +23,10 @@ void main() {
     );
   });
 
+  test('the notification icon is the Android small-icon drawable', () {
+    expect(pushNotificationIcon, '@drawable/ic_stat_notification');
+  });
+
   test('the channel matches the manifest default channel', () {
     expect(display.channel.id, 'vanep_default');
     expect(display.channel.name, 'Notificações');
