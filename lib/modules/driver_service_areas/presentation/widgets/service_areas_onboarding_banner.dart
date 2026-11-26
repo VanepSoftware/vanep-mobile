@@ -34,14 +34,16 @@ class ServiceAreasOnboardingBanner extends StatelessWidget {
               style: context.typography.cardSubtitle,
             ),
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            OverflowBar(
+              alignment: MainAxisAlignment.end,
+              overflowAlignment: OverflowBarAlignment.end,
+              spacing: 8,
+              overflowSpacing: 4,
               children: [
                 TextButton(
                   onPressed: onSkip,
                   child: Text(l10n.serviceAreasOnboardingSkip),
                 ),
-                const SizedBox(width: 8),
                 FilledButton(
                   onPressed: onStart,
                   child: Text(l10n.serviceAreasOnboardingStart),

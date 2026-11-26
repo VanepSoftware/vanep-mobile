@@ -116,42 +116,53 @@ class DriverShellState extends State<DriverShell> {
         body: Column(
           children: [
             if (shouldOfferServiceAreas)
-              ServiceAreasOnboardingBanner(
-                onStart: () => openServiceAreasAndRefreshProfile(context),
-                onSkip: () => setState(() => onboardingDismissed = true),
+              SafeArea(
+                bottom: false,
+                child: ServiceAreasOnboardingBanner(
+                  onStart: () => openServiceAreasAndRefreshProfile(context),
+                  onSkip: () => setState(() => onboardingDismissed = true),
+                ),
               ),
             Expanded(
-              child: IndexedStack(
-                index: selectedIndex,
-                children: [
-                  DriverHomeTab(
-                    displayName: displayName,
-                    navigation: widget.homeNavigation,
-                    onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
-                    onNotificationsTapped: () => openNotifications(context),
+              child: Builder(
+                builder: (bodyContext) => MediaQuery.removePadding(
+                  context: bodyContext,
+                  removeTop: shouldOfferServiceAreas,
+                  child: IndexedStack(
+                    index: selectedIndex,
+                    children: [
+                      DriverHomeTab(
+                        displayName: displayName,
+                        navigation: widget.homeNavigation,
+                        onMenuTapped: () =>
+                            scaffoldKey.currentState?.openDrawer(),
+                        onNotificationsTapped: () => openNotifications(context),
+                      ),
+                      VanCentralTab(
+                        onRegisterVan: () =>
+                            widget.openVanRegistration(context),
+                        onOpenVanDetails: () => widget.openMyVans(context),
+                        onOpenServiceAreas: () =>
+                            openServiceAreasAndRefreshProfile(context),
+                        onOpenStudents: (van) =>
+                            widget.openVanStudents(context, van),
+                        onOpenVanDocuments: (van) =>
+                            widget.openVanDocuments(context, van),
+                        onOpenComingSoon: (title) => openComingSoonPage(
+                          context,
+                          title: title,
+                          message: l10n.comingSoon,
+                        ),
+                      ),
+                      DriverProposalsTab(actions: widget.proposalsActions),
+                      ConversationsInboxTab(
+                        viewerSide: ConversationParticipant.driver,
+                        onConversationTapped: (conversation) =>
+                            widget.openConversationChat(context, conversation),
+                      ),
+                    ],
                   ),
-                  VanCentralTab(
-                    onRegisterVan: () => widget.openVanRegistration(context),
-                    onOpenVanDetails: () => widget.openMyVans(context),
-                    onOpenServiceAreas: () =>
-                        openServiceAreasAndRefreshProfile(context),
-                    onOpenStudents: (van) =>
-                        widget.openVanStudents(context, van),
-                    onOpenVanDocuments: (van) =>
-                        widget.openVanDocuments(context, van),
-                    onOpenComingSoon: (title) => openComingSoonPage(
-                      context,
-                      title: title,
-                      message: l10n.comingSoon,
-                    ),
-                  ),
-                  DriverProposalsTab(actions: widget.proposalsActions),
-                  ConversationsInboxTab(
-                    viewerSide: ConversationParticipant.driver,
-                    onConversationTapped: (conversation) =>
-                        widget.openConversationChat(context, conversation),
-                  ),
-                ],
+                ),
               ),
             ),
           ],
