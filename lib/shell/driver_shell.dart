@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/domain/entities/user_profile.dart';
+import 'package:vanep_mobile/modules/auth/domain/value_objects/onboarding_step.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation.dart';
 import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_message.dart';
@@ -14,6 +15,7 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
+import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
 import 'package:vanep_mobile/modules/push_notifications/presentation/widgets/push_navigation_listener.dart';
@@ -73,6 +75,14 @@ class DriverShellState extends State<DriverShell> {
 
   int selectedIndex = 0;
 
+  bool onboardingDismissed = false;
+
+  bool get shouldOfferServiceAreas =>
+      !onboardingDismissed &&
+      widget.profile.pendingOnboardingSteps.contains(
+        OnboardingStep.serviceArea,
+      );
+
   Future<void> openProfessionalDataThenRefreshCentral(
     BuildContext drawerContext,
   ) async {
@@ -102,6 +112,11 @@ class DriverShellState extends State<DriverShell> {
         ),
         body: Column(
           children: [
+            if (shouldOfferServiceAreas)
+              ServiceAreasOnboardingBanner(
+                onStart: () => openServiceAreasAndRefreshProfile(context),
+                onSkip: () => setState(() => onboardingDismissed = true),
+              ),
             Expanded(
               child: IndexedStack(
                 index: selectedIndex,
