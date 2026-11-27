@@ -2,6 +2,7 @@ import 'package:vanep_mobile/core/domain/calendar_days.dart';
 import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/shift_seats.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_turn.dart';
@@ -135,4 +136,26 @@ String? proposalDraftErrorLabel(
 
 String formatDriverVan(AppLocalizations l10n, DriverVan van) {
   return '${l10n.negotiationVehicle(van.model, van.manufactureYear, van.capacity)} · ${van.plate}';
+}
+
+String formatShiftOccupancy(AppLocalizations l10n, ShiftSeats seats) {
+  return l10n.driverSeatsOccupancy(
+    seats.passengers,
+    seats.capacity,
+    l10n.vanCentralShiftVacancies(seats.vacancies),
+  );
+}
+
+String formatSeatsAfterAccept(AppLocalizations l10n, ShiftSeats seats) {
+  final passengers = seats.passengersAfterAccept;
+  return seats.exceedsCapacity
+      ? l10n.driverSeatsAfterAcceptOverCapacity(passengers, seats.capacity)
+      : l10n.driverSeatsAfterAccept(passengers, seats.capacity);
+}
+
+String formatShiftVacancies(AppLocalizations l10n, ShiftSeats seats) {
+  return l10n.driverSeatsShiftVacancies(
+    operationShiftLabel(l10n, seats.shift),
+    l10n.vanCentralShiftVacancies(seats.vacancies),
+  );
 }

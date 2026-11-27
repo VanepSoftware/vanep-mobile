@@ -1,11 +1,15 @@
+import 'package:vanep_mobile/core/domain/school_shift.dart';
 import 'package:vanep_mobile/core/domain/weekday.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/driver_negotiations.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/shift_seats.dart';
+import 'package:vanep_mobile/core/domain/schedule/operation_shift.dart';
 import 'package:vanep_mobile/modules/driver_vans/data/dtos/driver_van_dto.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/negotiation_page.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_status.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/service_request_status.dart';
 
+import '../driver_van_central/driver_van_central_fixtures.dart';
 import '../negotiations/negotiations_fixtures.dart';
 
 final driverNow = DateTime(2026, 10, 2, 9);
@@ -95,4 +99,26 @@ final wednesdayOutboundOnly = [
   for (final weekday in [Weekday.monday, Weekday.tuesday])
     TestRequestedDay(weekday: weekday),
   const TestRequestedDay(weekday: Weekday.wednesday, needsReturn: false),
+];
+
+const afternoonOccupancy = TestDriverOccupancy(
+  shifts: [TestShiftOccupancy(OperationShift.afternoon, 12)],
+  students: 12,
+  studentsWithFamily: 0,
+);
+
+const afternoonSeats = ShiftSeats(
+  shift: OperationShift.afternoon,
+  passengers: 12,
+  capacity: 15,
+  requested: 2,
+);
+
+const afternoonDays = [
+  TestRequestedDay(weekday: Weekday.monday, schoolShift: SchoolShift.afternoon),
+];
+
+final afternoonSiblings = [
+  TestDriverRequestItem(days: afternoonDays),
+  TestDriverRequestItem(dependentToken: 'dep-alice', days: afternoonDays),
 ];

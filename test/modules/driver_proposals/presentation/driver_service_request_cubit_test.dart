@@ -16,12 +16,19 @@ import '../driver_proposals_mocks.dart';
 void main() {
   group('DriverServiceRequestCubit', () {
     late MockFindDriverServiceRequest findRequest;
+    late MockLoadRequestSeats loadSeats;
 
-    setUp(() => findRequest = MockFindDriverServiceRequest());
+    setUp(() {
+      findRequest = MockFindDriverServiceRequest();
+      loadSeats = MockLoadRequestSeats();
+      when(() => loadSeats(newRequestForSiblings))
+          .thenAnswer((_) async => const []);
+    });
 
     DriverServiceRequestCubit build() => DriverServiceRequestCubit(
       requestToken: 'request-new',
       findServiceRequest: findRequest,
+      loadRequestSeats: loadSeats,
     );
 
     blocTest<DriverServiceRequestCubit, DriverServiceRequestState>(
@@ -44,6 +51,26 @@ void main() {
     );
 
     blocTest<DriverServiceRequestCubit, DriverServiceRequestState>(
+      'shows the van seats after the request',
+      setUp: () {
+        when(() => findRequest('request-new'))
+            .thenAnswer((_) async => Ok(newRequestForSiblings));
+        when(() => loadSeats(newRequestForSiblings))
+            .thenAnswer((_) async => const [afternoonSeats]);
+      },
+      build: build,
+      act: (cubit) => cubit.load(),
+      skip: 2,
+      expect: () => [
+        DriverServiceRequestState(
+          status: DriverServiceRequestStatus.ready,
+          request: newRequestForSiblings,
+          seats: const [afternoonSeats],
+        ),
+      ],
+    );
+
+    blocTest<DriverServiceRequestCubit, DriverServiceRequestState>(
       'a request already answered cannot be answered again',
       setUp: () => when(() => findRequest('request-new')).thenAnswer(
         (_) async =>
@@ -51,7 +78,10 @@ void main() {
       ),
       build: build,
       act: (cubit) => cubit.load(),
-      verify: (cubit) => expect(cubit.state.canAnswer, isFalse),
+      verify: (cubit) {
+        expect(cubit.state.canAnswer, isFalse);
+        verifyZeroInteractions(loadSeats);
+      },
     );
 
     blocTest<DriverServiceRequestCubit, DriverServiceRequestState>(

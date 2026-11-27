@@ -2233,6 +2233,62 @@
   "driverAdjustmentSeeFullProposal": "See full proposal",
   "driverAdjustmentReplacesNotice": "A new version replaces the previous one.",
   "driverProposalsNewVersion": "New version",
+  "driverSeatsTitle": "Van seats",
+  "@driverSeatsTitle": {
+    "description": "Seats section title"
+  },
+  "driverSeatsOccupancy": "{passengers} of {capacity} · {vacancies}",
+  "@driverSeatsOccupancy": {
+    "description": "Occupancy of a shift",
+    "placeholders": {
+      "passengers": { "type": "int" },
+      "capacity": { "type": "int" },
+      "vacancies": { "type": "String" }
+    }
+  },
+  "driverSeatsAfterAccept": "After accepting: {passengers} of {capacity}",
+  "@driverSeatsAfterAccept": {
+    "description": "Projected occupancy",
+    "placeholders": {
+      "passengers": { "type": "int" },
+      "capacity": { "type": "int" }
+    }
+  },
+  "driverSeatsAfterAcceptOverCapacity": "Over capacity: {passengers} of {capacity}",
+  "@driverSeatsAfterAcceptOverCapacity": {
+    "description": "Projected occupancy above the van capacity",
+    "placeholders": {
+      "passengers": { "type": "int" },
+      "capacity": { "type": "int" }
+    }
+  },
+  "driverSeatsShiftVacancies": "{shift}: {vacancies}",
+  "@driverSeatsShiftVacancies": {
+    "description": "Vacancies of a shift",
+    "placeholders": {
+      "shift": { "type": "String" },
+      "vacancies": { "type": "String" }
+    }
+  },
+  "driverSeatsTodayNotice": "Based on today's occupancy.",
+  "@driverSeatsTodayNotice": {
+    "description": "Seats reference date"
+  },
+  "driverAdjustmentKeepCurrent": "Keep current",
+  "@driverAdjustmentKeepCurrent": {
+    "description": "Keep the current proposal"
+  },
+  "driverAdjustmentKeepCurrentNotice": "To keep this version, tell the family in the chat. It stays valid until {date}.",
+  "@driverAdjustmentKeepCurrentNotice": {
+    "description": "How to keep the current version",
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "driverAdjustmentEndNegotiation": "End negotiation",
+  "@driverAdjustmentEndNegotiation": {
+    "description": "Decline the request being negotiated"
+  },
   "proposalComposerTitle": "New proposal",
   "proposalComposerLoadError": "Couldn't open the proposal.",
   "proposalComposerValuesTitle": "Amounts",

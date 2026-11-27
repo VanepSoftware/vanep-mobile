@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/ui/vanep_current_dot.dart';
 import 'package:vanep_mobile/core/ui/vanep_week_legs_grid.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/driver_proposal_detail.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/shift_seats.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
@@ -84,8 +85,9 @@ void main() {
 
     Future<void> pumpRequest(
       WidgetTester tester,
-      DriverServiceRequest request,
-    ) async {
+      DriverServiceRequest request, {
+      List<ShiftSeats> seats = const [],
+    }) async {
       useTallScreen(tester);
       whenListen(
         cubit,
@@ -93,6 +95,7 @@ void main() {
         initialState: DriverServiceRequestState(
           status: DriverServiceRequestStatus.ready,
           request: request,
+          seats: seats,
         ),
       );
       await tester.pumpWidget(
@@ -211,6 +214,24 @@ void main() {
 
       expect(calls, ['compose null']);
       expect(find.text('abrir'), findsOneWidget);
+    });
+
+    testWidgets('shows the van seats of an open request', (tester) async {
+      await pumpRequest(
+        tester,
+        requestWithNotes,
+        seats: const [afternoonSeats],
+      );
+
+      expect(find.text('Vagas na van'), findsOneWidget);
+      expect(find.text('12 de 15 · 3 vagas'), findsOneWidget);
+      expect(find.text('Após o aceite: 14 de 15'), findsOneWidget);
+    });
+
+    testWidgets('without seats the section is hidden', (tester) async {
+      await pumpRequest(tester, requestWithNotes);
+
+      expect(find.text('Vagas na van'), findsNothing);
     });
 
     testWidgets('an answered request has no footer', (tester) async {
@@ -389,10 +410,18 @@ void main() {
       expect(find.text('Histórico'), findsOneWidget);
     });
 
-    testWidgets('there is no keep current and no earnings', (tester) async {
+    testWidgets('keep current opens the conversation', (tester) async {
       await pumpProposal(tester, adjustment);
 
-      expect(find.textContaining('Manter'), findsNothing);
+      expect(find.textContaining('avise a família no chat'), findsOneWidget);
+      await tester.tap(find.text('Manter atual'));
+
+      expect(calls, ['chat conversation-1']);
+    });
+
+    testWidgets('there are no earnings', (tester) async {
+      await pumpProposal(tester, adjustment);
+
       expect(find.textContaining('receberia'), findsNothing);
     });
 
@@ -407,10 +436,10 @@ void main() {
       expect(calls, ['compose 1']);
     });
 
-    testWidgets('decline declines the request', (tester) async {
+    testWidgets('end negotiation declines the request', (tester) async {
       await pumpProposal(tester, adjustment);
 
-      await tester.tap(find.text('Recusar'));
+      await tester.tap(find.text('Encerrar negociação'));
       await tester.pumpAndSettle();
 
       expect(calls, ['decline request-adjust']);
@@ -444,6 +473,7 @@ void main() {
       expect(find.text('Saio às 6h30.'), findsOneWidget);
       expect(find.text('Recusar'), findsNothing);
       expect(find.text('Nova versão'), findsNothing);
+      expect(find.text('Manter atual'), findsNothing);
       expect(find.text('Aceitar'), findsNothing);
     });
 

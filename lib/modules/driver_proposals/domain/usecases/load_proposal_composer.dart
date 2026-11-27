@@ -1,5 +1,6 @@
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/proposal_composer_setup.dart';
+import 'package:vanep_mobile/modules/driver_van_central/domain/usecases/find_driver_occupancy.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/failures/driver_van_failure.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/usecases/list_my_vans.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
@@ -18,6 +19,7 @@ class LoadProposalComposer {
     required this.findServiceRequest,
     required this.findProposal,
     required this.listMyVans,
+    required this.findDriverOccupancy,
   });
 
   final FindDriverServiceRequest findServiceRequest;
@@ -26,14 +28,17 @@ class LoadProposalComposer {
 
   final ListMyVans listMyVans;
 
+  final FindDriverOccupancy findDriverOccupancy;
+
   Future<Result<NegotiationFailure, ProposalComposerSetup>> call(
     String requestToken, {
     String? previousProposalToken,
   }) async {
-    final (requestResult, proposalResult, vansResult) = await (
+    final (requestResult, proposalResult, vansResult, occupancyResult) = await (
       findServiceRequest(requestToken),
       findPreviousVersion(previousProposalToken),
       listMyVans(),
+      findDriverOccupancy(),
     ).wait;
     final vansFailure = vansResult.errorOrNull;
     final failure =
@@ -46,6 +51,7 @@ class LoadProposalComposer {
         request: requestResult.valueOrNull!,
         vans: vansResult.valueOrNull!,
         previousVersion: proposalResult.valueOrNull,
+        occupancy: occupancyResult.valueOrNull,
       ),
     );
   }

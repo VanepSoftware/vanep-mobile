@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_driver_proposal.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_proposal_composer.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_request_seats.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
@@ -33,6 +34,8 @@ class MockListDriverProposalVersions extends Mock
     implements ListDriverProposalVersions {}
 
 class MockDeclineServiceRequest extends Mock implements DeclineServiceRequest {}
+
+class MockLoadRequestSeats extends Mock implements LoadRequestSeats {}
 
 class MockSendProposal extends Mock implements SendProposal {}
 
