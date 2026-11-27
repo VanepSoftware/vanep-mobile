@@ -132,6 +132,28 @@ void main() {
     expect(section.firstDayWithoutReturn?.date, DateTime(2027, 3, 3));
   });
 
+  test('keeps the children without a van on a day without route', () {
+    final overview = dailyOverviewFromJson({
+      'date': '2027-03-01',
+      'vans': [],
+      'upcoming': [
+        {
+          'date': '2027-03-02',
+          'going': true,
+          'returning': true,
+          'firstPickup': '06:40:00',
+        },
+      ],
+      'childrenWithoutVan': [
+        {'dependentToken': 'dep-davi', 'name': 'Davi Lima'},
+      ],
+    });
+
+    final section = overview.today! as NoRouteTodaySection;
+    expect(section.childrenWithoutRoute, const [
+      ChildWithoutRoute(name: 'Davi', reason: NoRouteReason.noVanYet),
+    ]);
+  });
   test('has no week plan without any ride ahead', () {
     expect(noRouteTodayFromJson(const []), isNull);
     expect(noRouteTodayFromJson(null), isNull);
