@@ -9,6 +9,7 @@ import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/propo
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/proposal_composer_page.dart';
+import 'package:vanep_mobile/modules/driver_van_central/domain/entities/driver_occupancy.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
@@ -33,10 +34,12 @@ ProposalComposerState readyState({
   List<DriverVan> vans = const [masterVan],
   int? totalAmountCents,
   int? installments,
+  DriverOccupancy? occupancy,
 }) {
   final setup = ProposalComposerSetup.from(
     request: requestWithWednesdayOutbound,
     vans: vans,
+    occupancy: occupancy,
   );
   return ProposalComposerState(
     today: today,
@@ -87,6 +90,26 @@ void main() {
     );
     await tester.pump();
   }
+
+  testWidgets('the only van shows the vacancies of the requested shift', (
+    tester,
+  ) async {
+    await pumpComposer(tester, readyState(occupancy: afternoonOccupancy));
+
+    expect(find.text('Tarde: 3 vagas'), findsOneWidget);
+  });
+
+  testWidgets('with two vans no vacancies are shown', (tester) async {
+    await pumpComposer(
+      tester,
+      readyState(
+        vans: const [masterVan, sprinterVan],
+        occupancy: afternoonOccupancy,
+      ),
+    );
+
+    expect(find.textContaining('Tarde: '), findsNothing);
+  });
 
   testWidgets('titles the proposal with the parent and the children', (
     tester,

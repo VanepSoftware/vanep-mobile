@@ -17,7 +17,7 @@ import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/drive
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/formatters/driver_proposals_labels.dart';
-import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_service_request_page.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_adjustment_footer.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_request_sections.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/proposal.dart';
@@ -121,15 +121,15 @@ class DriverProposalPage extends StatelessWidget {
             ),
           },
           bottomNavigationBar: detail != null && adjustment != null
-              ? DriverAnswerFooter(
-                  primaryLabel: l10n.driverProposalsNewVersion,
-                  onDecline: () => declineAndLeave(
+              ? DriverAdjustmentFooter(
+                  onKeepCurrent: onChat,
+                  onEndNegotiation: () => declineAndLeave(
                     context,
                     actions: actions,
                     request: detail.request,
                     reload: cubit.load,
                   ),
-                  onPrimary: () => composeAndLeave(
+                  onNewVersion: () => composeAndLeave(
                     context,
                     actions: actions,
                     request: detail.request,
@@ -179,6 +179,15 @@ class DriverAdjustmentBody extends StatelessWidget {
         NegotiationHistorySection(events: detail.history),
         const SizedBox(height: detailSectionSpacing),
         DetailNotice(text: l10n.driverAdjustmentReplacesNotice),
+        if (actions.chatWith(detail.request) != null) ...[
+          const SizedBox(height: 10),
+          DetailNotice(
+            icon: Icons.chat_bubble_outline,
+            text: l10n.driverAdjustmentKeepCurrentNotice(
+              formatDayAndMonth(l10n, detail.proposal.validUntil),
+            ),
+          ),
+        ],
       ],
     );
   }

@@ -6,6 +6,7 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/domain/usecases/find_driver_occupancy.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/usecases/list_my_vans.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/decline_service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/find_driver_proposal.dart';
@@ -14,6 +15,8 @@ import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_driver_pr
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/list_driver_service_requests.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/send_proposal.dart';
 
+import '../driver_van_central/driver_van_central_mocks.dart'
+    show MockFindDriverOccupancy;
 import '../driver_vans/driver_vans_mocks.dart';
 import 'driver_proposals_mocks.dart';
 
@@ -34,7 +37,8 @@ void main() {
       )
       ..registerFactory<DeclineServiceRequest>(MockDeclineServiceRequest.new)
       ..registerFactory<SendProposal>(MockSendProposal.new)
-      ..registerFactory<ListMyVans>(MockListMyVans.new);
+      ..registerFactory<ListMyVans>(MockListMyVans.new)
+      ..registerFactory<FindDriverOccupancy>(MockFindDriverOccupancy.new);
     registerDriverProposalsDependencies(getIt);
   });
 

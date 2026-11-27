@@ -17,6 +17,7 @@ import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposa
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/formatters/driver_proposals_labels.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/proposal_composer_fields.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_van_seats.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_adjustment_policy.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/value_objects/proposal_cancellation_policy.dart';
@@ -346,6 +347,7 @@ class ComposerVanSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final cubit = context.read<ProposalComposerCubit>();
     final selected = setup.draft.vehicleToken;
+    final seats = setup.requestedShiftSeats;
     return DetailSection(
       title: l10n.proposalComposerVanTitle,
       child: Column(
@@ -373,11 +375,13 @@ class ComposerVanSection extends StatelessWidget {
                 isSelected: van.token == selected,
                 onTap: () => cubit.chooseVehicle(van.token),
               ),
-          ] else
+          ] else ...[
             DetailNotice(
               icon: Icons.airport_shuttle_outlined,
               text: formatDriverVan(l10n, setup.vans.single),
             ),
+            if (seats.isNotEmpty) DriverVanVacancies(seats: seats),
+          ],
         ],
       ),
     );

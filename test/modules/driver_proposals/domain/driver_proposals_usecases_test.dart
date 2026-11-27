@@ -3,9 +3,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_driver_proposal.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_proposal_composer.dart';
+import 'package:vanep_mobile/modules/driver_van_central/domain/failures/van_central_failure.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/failures/driver_van_failure.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/failures/negotiation_failure.dart';
 
+import '../../driver_van_central/driver_van_central_mocks.dart'
+    show MockFindDriverOccupancy;
 import '../../driver_vans/driver_vans_mocks.dart';
 import '../driver_proposals_fixtures.dart';
 import '../driver_proposals_mocks.dart';
@@ -15,12 +18,16 @@ void main() {
   late MockFindDriverServiceRequest findRequest;
   late MockListDriverProposalVersions listVersions;
   late MockListMyVans listMyVans;
+  late MockFindDriverOccupancy findOccupancy;
 
   setUp(() {
     findProposal = MockFindDriverProposal();
     findRequest = MockFindDriverServiceRequest();
     listVersions = MockListDriverProposalVersions();
     listMyVans = MockListMyVans();
+    findOccupancy = MockFindDriverOccupancy();
+    when(() => findOccupancy())
+        .thenAnswer((_) async => const Ok(afternoonOccupancy));
     when(() => findRequest('request-adjust'))
         .thenAnswer((_) async => Ok(adjustmentRequest));
     when(() => findProposal('proposal-v1'))
@@ -67,6 +74,7 @@ void main() {
       findServiceRequest: findRequest,
       findProposal: findProposal,
       listMyVans: listMyVans,
+      findDriverOccupancy: findOccupancy,
     );
 
     test('a first proposal reads only the request and the vans', () async {
@@ -74,6 +82,16 @@ void main() {
 
       expect(result.valueOrNull!.vans, [masterVan]);
       verifyNever(() => findProposal(any()));
+    });
+
+    test('a failed occupancy still opens the composer', () async {
+      when(() => findOccupancy())
+          .thenAnswer((_) async => const Err(VanCentralFailure.network));
+
+      final result = await useCase()('request-adjust');
+
+      expect(result.valueOrNull!.occupancy, isNull);
+      expect(result.valueOrNull!.requestedShiftSeats, isEmpty);
     });
 
     test('a new version also reads the previous one', () async {

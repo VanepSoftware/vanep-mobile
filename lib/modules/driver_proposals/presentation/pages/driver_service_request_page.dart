@@ -7,11 +7,13 @@ import 'package:vanep_mobile/core/ui/vanep_page_chrome.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/value_objects/shift_seats.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_state.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/formatters/driver_proposals_labels.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_request_sections.dart';
+import 'package:vanep_mobile/modules/driver_proposals/presentation/widgets/driver_van_seats.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/entities/service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/formatters/negotiation_labels.dart';
 import 'package:vanep_mobile/modules/negotiations/presentation/widgets/proposal_sections.dart';
@@ -68,6 +70,7 @@ class DriverServiceRequestPage extends StatelessWidget {
                   request: request,
                   actions: actions,
                   now: clock(),
+                  seats: state.canAnswer ? state.seats : const [],
                 ),
               ),
             DriverServiceRequestStatus.loadFailed => VanepErrorView(
@@ -107,12 +110,14 @@ class DriverServiceRequestBody extends StatelessWidget {
     required this.request,
     required this.actions,
     required this.now,
+    this.seats = const [],
     super.key,
   });
 
   final DriverServiceRequest request;
   final DriverNegotiationActions actions;
   final DateTime now;
+  final List<ShiftSeats> seats;
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +139,10 @@ class DriverServiceRequestBody extends StatelessWidget {
         DriverRequestedDaysSection(request: request),
         const SizedBox(height: detailSectionSpacing),
         DriverRequestTermsCard(request: request),
+        if (seats.isNotEmpty) ...[
+          const SizedBox(height: detailSectionSpacing),
+          DriverVanSeatsSection(seats: seats),
+        ],
         if (notes != null && notes.trim().isNotEmpty) ...[
           const SizedBox(height: detailSectionSpacing),
           DetailTextSection(

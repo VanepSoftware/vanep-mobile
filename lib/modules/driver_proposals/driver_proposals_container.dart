@@ -2,11 +2,13 @@ import 'package:get_it/get_it.dart';
 
 import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_driver_proposal.dart';
 import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_proposal_composer.dart';
+import 'package:vanep_mobile/modules/driver_proposals/domain/usecases/load_request_seats.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_service_request_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/proposal_composer_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/request_decline_cubit.dart';
+import 'package:vanep_mobile/modules/driver_van_central/domain/usecases/find_driver_occupancy.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/usecases/list_my_vans.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/decline_service_request.dart';
 import 'package:vanep_mobile/modules/negotiations/domain/usecases/find_driver_proposal.dart';
@@ -29,6 +31,13 @@ void registerDriverProposalsDependencies(GetIt getIt) {
         findServiceRequest: getIt<FindDriverServiceRequest>(),
         findProposal: getIt<FindDriverProposal>(),
         listMyVans: getIt<ListMyVans>(),
+        findDriverOccupancy: getIt<FindDriverOccupancy>(),
+      ),
+    )
+    ..registerFactory<LoadRequestSeats>(
+      () => LoadRequestSeats(
+        listMyVans: getIt<ListMyVans>(),
+        findDriverOccupancy: getIt<FindDriverOccupancy>(),
       ),
     )
     ..registerFactory<DriverNegotiationsCubit>(
@@ -40,6 +49,7 @@ void registerDriverProposalsDependencies(GetIt getIt) {
       (requestToken, _) => DriverServiceRequestCubit(
         requestToken: requestToken,
         findServiceRequest: getIt<FindDriverServiceRequest>(),
+        loadRequestSeats: getIt<LoadRequestSeats>(),
       ),
     )
     ..registerFactoryParam<RequestDeclineCubit, String, void>(
