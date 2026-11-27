@@ -35,7 +35,7 @@ String signatureDeadlineLabel(
   if (hoursLeft < hoursLeftThreshold) {
     return l10n.clientHomeHoursLeft(hoursLeft.clamp(0, hoursLeftThreshold));
   }
-  return l10n.clientHomeUntilDate(formatDayMonth(signBy));
+  return l10n.clientHomeUntilDate(formatDayMonth(l10n, signBy));
 }
 
 class NeedsYouSection extends StatelessWidget {
@@ -399,7 +399,7 @@ class NeedsYouRow extends StatelessWidget {
         title: l10n.clientHomeInspectionExpired,
         subtitle: l10n.clientHomeInspectionExpiredOn(
           item.driverName,
-          formatDayMonth(item.expiredOn),
+          formatDayMonth(l10n, item.expiredOn),
         ),
         onTap: () =>
             openUnavailableFeature(context, l10n.clientHomeInspectionExpired),

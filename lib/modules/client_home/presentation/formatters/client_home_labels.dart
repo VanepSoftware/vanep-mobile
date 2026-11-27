@@ -65,7 +65,8 @@ String formatOptionalTimeWindow(
   return formatTimeWindow(l10n, start, end);
 }
 
-String formatDayMonth(DateTime date) => DateFormat('dd/MM').format(date);
+String formatDayMonth(AppLocalizations l10n, DateTime date) =>
+    DateFormat.Md(l10n.localeName).format(date);
 
 String formatMonthName(AppLocalizations l10n, DateTime date) {
   return DateFormat.MMMM(l10n.localeName).format(date);
