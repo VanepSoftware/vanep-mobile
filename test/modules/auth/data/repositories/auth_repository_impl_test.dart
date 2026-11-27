@@ -65,12 +65,10 @@ void main() {
       'requests the grant, fetches the profile and saves the session',
       () async {
         stubPasswordGrant();
-        when(
-          () => remote.fetchProfile(any()),
-        ).thenAnswer((_) async => testUserProfileDto);
-        when(
-          () => local.saveSession(any()),
-        ).thenAnswer((_) => Future<void>.value());
+        when(() => remote.fetchProfile(any()))
+            .thenAnswer((_) async => testUserProfileDto);
+        when(() => local.saveSession(any()))
+            .thenAnswer((_) => Future<void>.value());
 
         final result = await repository.signInWithPassword(
           email: 'ana@vanep.com.br',
@@ -118,18 +116,14 @@ void main() {
 
   group('signInWithGoogle', () {
     test('sends the Google ID token and starts the session', () async {
-      when(
-        googleIdTokens.requestIdToken,
-      ).thenAnswer((_) async => 'google-id-token');
-      when(
-        () => remote.requestGoogleGrant(any()),
-      ).thenAnswer((_) async => testTokenResponseDto);
-      when(
-        () => remote.fetchProfile(any()),
-      ).thenAnswer((_) async => testUserProfileDto);
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+      when(googleIdTokens.requestIdToken)
+          .thenAnswer((_) async => 'google-id-token');
+      when(() => remote.requestGoogleGrant(any()))
+          .thenAnswer((_) async => testTokenResponseDto);
+      when(() => remote.fetchProfile(any()))
+          .thenAnswer((_) async => testUserProfileDto);
+      when(() => local.saveSession(any()))
+          .thenAnswer((_) => Future<void>.value());
 
       final result = await repository.signInWithGoogle();
 
@@ -147,9 +141,8 @@ void main() {
     });
 
     test('an SDK error is a Google sign-in failure', () async {
-      when(
-        googleIdTokens.requestIdToken,
-      ).thenThrow(const GoogleIdTokenException('clientConfigurationError'));
+      when(googleIdTokens.requestIdToken)
+          .thenThrow(const GoogleIdTokenException('clientConfigurationError'));
 
       final result = await repository.signInWithGoogle();
 
@@ -160,9 +153,8 @@ void main() {
     });
 
     test('a new Google user gets the registration ticket', () async {
-      when(
-        googleIdTokens.requestIdToken,
-      ).thenAnswer((_) async => 'google-id-token');
+      when(googleIdTokens.requestIdToken)
+          .thenAnswer((_) async => 'google-id-token');
       final options = RequestOptions(path: '/oauth2/token');
       when(() => remote.requestGoogleGrant(any())).thenThrow(
         DioException(
@@ -216,9 +208,8 @@ void main() {
       when(() => remote.refresh(any())).thenAnswer(
         (_) async => testTokenResponseDto.copyWith(accessToken: 'access-2'),
       );
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+      when(() => local.saveSession(any()))
+          .thenAnswer((_) => Future<void>.value());
 
       final result = await repository.currentSession();
 
@@ -266,9 +257,8 @@ void main() {
       when(() => remote.refresh(any())).thenAnswer(
         (_) async => testTokenResponseDto.copyWith(accessToken: 'access-2'),
       );
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+      when(() => local.saveSession(any()))
+          .thenAnswer((_) => Future<void>.value());
 
       final result = await repository.refreshSession();
 
@@ -288,9 +278,8 @@ void main() {
           refreshToken: 'refresh-2',
         );
       });
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+      when(() => local.saveSession(any()))
+          .thenAnswer((_) => Future<void>.value());
 
       final results = await Future.wait([
         repository.refreshSession(),
@@ -312,9 +301,8 @@ void main() {
       when(() => remote.refresh(any())).thenAnswer(
         (_) async => testTokenResponseDto.copyWith(accessToken: 'access-2'),
       );
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+      when(() => local.saveSession(any()))
+          .thenAnswer((_) => Future<void>.value());
 
       await repository.refreshSession();
       await repository.refreshSession();
@@ -328,9 +316,8 @@ void main() {
       'revokes both tokens, clears the local session and signs out of Google',
       () async {
         when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
-        when(
-          () => remote.revoke(any(), any()),
-        ).thenAnswer((_) => Future<void>.value());
+        when(() => remote.revoke(any(), any()))
+            .thenAnswer((_) => Future<void>.value());
         when(local.clearSession).thenAnswer((_) => Future<void>.value());
         when(googleIdTokens.signOut).thenAnswer((_) => Future<void>.value());
 
@@ -368,9 +355,8 @@ void main() {
         pendingEmail: 'novo@vanep.com.br',
       );
       when(profileRemote.fetchMe).thenAnswer((_) async => updated);
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+      when(() => local.saveSession(any()))
+          .thenAnswer((_) => Future<void>.value());
 
       final result = await repository.refreshUserProfile();
 
@@ -422,12 +408,10 @@ void main() {
           email: 'ana@vanep.com.br',
           type: UserType.driver,
         );
-        when(
-          () => profileRemote.patchMe(any()),
-        ).thenAnswer((_) async => updated);
-        when(
-          () => local.saveSession(any()),
-        ).thenAnswer((_) => Future<void>.value());
+        when(() => profileRemote.patchMe(any()))
+            .thenAnswer((_) async => updated);
+        when(() => local.saveSession(any()))
+            .thenAnswer((_) => Future<void>.value());
 
         final builder = ProfilePatchRequestBuilder()..setName('Maria Silva');
         final result = await repository.patchUserProfile(builder.build());
@@ -450,8 +434,9 @@ void main() {
             requestOptions: RequestOptions(path: '/api/user/me'),
             statusCode: 409,
             data: {
-              'message': 'cooldown',
-              'code': 'cooldown',
+              'status': 409,
+              'detail': 'cooldown',
+              'code': 'user.profile.name.cooldown',
               'field': 'name',
               'retryAfter': '2026-09-01T12:00:00.000Z',
             },
@@ -473,9 +458,8 @@ void main() {
   group('requestEmailChange', () {
     test('posts email change then fetches me once', () async {
       when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
-      when(
-        () => profileRemote.requestEmailChange(any()),
-      ).thenAnswer((_) => Future<void>.value());
+      when(() => profileRemote.requestEmailChange(any()))
+          .thenAnswer((_) => Future<void>.value());
       const updated = UserProfileDto(
         token: 'user-token-1',
         email: 'ana@vanep.com.br',
@@ -483,20 +467,18 @@ void main() {
         type: UserType.driver,
       );
       when(profileRemote.fetchMe).thenAnswer((_) async => updated);
-      when(
-        () => local.saveSession(any()),
-      ).thenAnswer((_) => Future<void>.value());
+      when(() => local.saveSession(any()))
+          .thenAnswer((_) => Future<void>.value());
 
       final result = await repository.requestEmailChange('novo@vanep.com.br');
 
       expect(result.valueOrNull?.pendingEmail, 'novo@vanep.com.br');
-      verify(
-        () => profileRemote.requestEmailChange('novo@vanep.com.br'),
-      ).called(1);
+      verify(() => profileRemote.requestEmailChange('novo@vanep.com.br'))
+          .called(1);
       verify(profileRemote.fetchMe).called(1);
     });
 
-    test('maps email_duplicate 409', () async {
+    test('maps auth.signup.email.duplicate 409', () async {
       when(local.readSession).thenAnswer((_) async => testAuthSessionDto());
       when(() => profileRemote.requestEmailChange(any())).thenThrow(
         DioException(
@@ -505,8 +487,9 @@ void main() {
             requestOptions: RequestOptions(path: '/api/user/me/email-change'),
             statusCode: 409,
             data: {
-              'message': 'taken',
-              'code': 'email_duplicate',
+              'status': 409,
+              'detail': 'taken',
+              'code': 'auth.signup.email.duplicate',
               'field': 'email',
             },
           ),

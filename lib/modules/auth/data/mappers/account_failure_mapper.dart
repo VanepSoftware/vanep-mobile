@@ -4,7 +4,6 @@ import 'package:vanep_mobile/core/network/api_error_codes.dart';
 import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/modules/auth/domain/failures/account_failure.dart';
 import 'package:vanep_mobile/modules/auth/domain/value_objects/account_field.dart';
-import 'package:vanep_mobile/modules/auth/data/dtos/auth_api_error_dto.dart';
 
 AccountFailure mapAccountFailure(DioException error) {
   final problem = ApiProblem.fromDioException(error);
@@ -14,28 +13,21 @@ AccountFailure mapAccountFailure(DioException error) {
     return const TooManyRequestsAccountFailure();
   }
 
-  final body = error.response?.data;
-  if (body is! Map) {
+  if (error.response?.data is! Map) {
     return UnexpectedAccountFailure('http_${problem.status}');
   }
 
-  final envelope = AuthApiErrorDto.fromJson(Map<String, Object?>.from(body));
-  return switch (envelope.code) {
-    ApiErrorCodes.legacyAuthValidationError ||
+  return switch (problem.code) {
     ApiErrorCodes.validationFailed => AccountValidationFailure(
-      rejectedFieldsOf(envelope.errors, fallbackField: envelope.field),
+      rejectedFieldsOf(problem.errors, fallbackField: problem.field),
     ),
-    ApiErrorCodes.legacyAuthEmailDuplicate ||
     ApiErrorCodes.authSignupEmailDuplicate => const AccountValidationFailure({
       AccountField.email: AccountFieldIssue.duplicate,
     }),
-    ApiErrorCodes.legacyAuthDocumentDuplicate ||
     ApiErrorCodes.authSignupDocumentDuplicate => const AccountValidationFailure(
       {AccountField.document: AccountFieldIssue.duplicate},
     ),
-    ApiErrorCodes.legacyAuthInvalidCode ||
     ApiErrorCodes.authErrorInvalidCode => const InvalidCodeAccountFailure(),
-    ApiErrorCodes.legacyAuthInvalidSignupTicket ||
     ApiErrorCodes.authErrorInvalidSignupTicket =>
       const InvalidSignupTicketAccountFailure(),
     final code => UnexpectedAccountFailure(code ?? 'http_${problem.status}'),
@@ -43,7 +35,7 @@ AccountFailure mapAccountFailure(DioException error) {
 }
 
 Map<AccountField, AccountFieldIssue> rejectedFieldsOf(
-  List<AuthApiFieldErrorDto> errors, {
+  List<ApiProblemFieldError> errors, {
   String? fallbackField,
 }) {
   final mapped = {

@@ -30,13 +30,6 @@ abstract final class ApiErrorCodes {
   static const authSignupEmailDuplicate = 'auth.signup.email.duplicate';
   static const authSignupDocumentDuplicate = 'auth.signup.document.duplicate';
 
-  // Legado pré-N+1 de conta (manter até Fase M2)
-  static const legacyAuthValidationError = 'validation_error';
-  static const legacyAuthEmailDuplicate = 'email_duplicate';
-  static const legacyAuthDocumentDuplicate = 'document_duplicate';
-  static const legacyAuthInvalidCode = 'invalid_code';
-  static const legacyAuthInvalidSignupTicket = 'invalid_signup_ticket';
-
   // Perfil do usuário
   static const userAccountNotFound = 'user.account.not_found';
   static const userDriverProfileNotFound = 'user.driver_profile.not_found';
@@ -54,18 +47,6 @@ abstract final class ApiErrorCodes {
   static const userProfileNameTooLong = 'user.profile.name.too_long';
   static const userProfilePhoneTooLong = 'user.profile.phone.too_long';
   static const userProfileEmailTooLong = 'user.profile.email.too_long';
-
-  // Legado pré-N+1 de perfil (manter até Fase M2)
-  static const legacyProfileCooldown = 'cooldown';
-  static const legacyProfileEmailDuplicate = 'email_duplicate';
-  static const legacyProfileFieldNull = 'field_null';
-  static const legacyProfilePhoneBlank = 'phone_blank';
-  static const legacyProfileEmailSame = 'email_same';
-  static const legacyProfileEmailInvalid = 'email_invalid';
-  static const legacyProfileEmailRequired = 'email_required';
-  static const legacyProfileNameTooLong = 'name_too_long';
-  static const legacyProfilePhoneTooLong = 'phone_too_long';
-  static const legacyProfileEmailTooLong = 'email_too_long';
 
   // Localização, endereços, cidades e CEP
   static const locationCityUnmatched = 'location.city.unmatched';
