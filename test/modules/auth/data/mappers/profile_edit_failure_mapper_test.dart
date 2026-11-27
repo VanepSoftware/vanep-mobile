@@ -19,64 +19,68 @@ DioException _dioError(int? statusCode, {Object? data, String? message}) {
 }
 
 void main() {
-  test('maps legacy 400 phone_blank by code', () {
-    final failure = mapProfileEditDioException(
-      _dioError(
-        400,
-        data: {'message': 'blank', 'code': 'phone_blank', 'field': 'phone'},
-      ),
-    );
+  test(
+    'maps ProblemDetail phone_blank, cooldown and email duplicate codes',
+    () {
+      expect(
+        mapProfileEditDioException(
+          _dioError(
+            400,
+            data: {
+              'status': 400,
+              'detail': 'Informe o telefone.',
+              'code': 'user.profile.phone.blank',
+              'field': 'phone',
+            },
+          ),
+        ),
+        const StructuredProfileEditFailure(
+          code: ProfileErrorCode.phoneBlank,
+          field: 'phone',
+        ),
+      );
 
-    expect(
-      failure,
-      const StructuredProfileEditFailure(
-        code: ProfileErrorCode.phoneBlank,
-        field: 'phone',
-      ),
-    );
-  });
+      final cooldown = mapProfileEditDioException(
+        _dioError(
+          409,
+          data: {
+            'status': 409,
+            'detail': 'Aguarde antes de alterar novamente.',
+            'code': 'user.profile.name.cooldown',
+            'field': 'name',
+            'retryAfter': '2026-09-01T12:00:00.000Z',
+          },
+        ),
+      );
+      expect(
+        cooldown,
+        StructuredProfileEditFailure(
+          code: ProfileErrorCode.cooldown,
+          field: 'name',
+          retryAfter: DateTime.parse('2026-09-01T12:00:00.000Z'),
+        ),
+      );
 
-  test('maps ProblemDetail cooldown and email duplicate codes with detail', () {
-    final cooldown = mapProfileEditDioException(
-      _dioError(
-        409,
-        data: {
-          'status': 409,
-          'detail': 'Aguarde antes de alterar novamente.',
-          'code': 'user.profile.name.cooldown',
-          'field': 'name',
-          'retryAfter': '2026-09-01T12:00:00.000Z',
-        },
-      ),
-    );
-    expect(
-      cooldown,
-      StructuredProfileEditFailure(
-        code: ProfileErrorCode.cooldown,
-        field: 'name',
-        retryAfter: DateTime.parse('2026-09-01T12:00:00.000Z'),
-      ),
-    );
-
-    final duplicate = mapProfileEditDioException(
-      _dioError(
-        409,
-        data: {
-          'status': 409,
-          'detail': 'E-mail já utilizado.',
-          'code': 'auth.signup.email.duplicate',
-          'field': 'email',
-        },
-      ),
-    );
-    expect(
-      duplicate,
-      const StructuredProfileEditFailure(
-        code: ProfileErrorCode.emailDuplicate,
-        field: 'email',
-      ),
-    );
-  });
+      final duplicate = mapProfileEditDioException(
+        _dioError(
+          409,
+          data: {
+            'status': 409,
+            'detail': 'E-mail já utilizado.',
+            'code': 'auth.signup.email.duplicate',
+            'field': 'email',
+          },
+        ),
+      );
+      expect(
+        duplicate,
+        const StructuredProfileEditFailure(
+          code: ProfileErrorCode.emailDuplicate,
+          field: 'email',
+        ),
+      );
+    },
+  );
 
   test('maps validation.failed ProblemDetail via errors[] entry code', () {
     final failure = mapProfileEditDioException(
@@ -106,18 +110,27 @@ void main() {
     );
   });
 
-  test('maps unknown code or missing code on HTTP response to unexpected', () {
-    expect(
-      mapProfileEditDioException(
-        _dioError(400, data: {'detail': 'bad', 'code': 'unknown.code'}),
-      ),
-      const UnexpectedProfileEditFailure('bad'),
-    );
-    expect(
-      mapProfileEditDioException(_dioError(500, message: 'server boom')),
-      const UnexpectedProfileEditFailure('server boom'),
-    );
-  });
+  test(
+    'maps legacy, unknown or missing code on HTTP response to unexpected',
+    () {
+      expect(
+        mapProfileEditDioException(
+          _dioError(400, data: {'detail': 'bad', 'code': 'phone_blank'}),
+        ),
+        const UnexpectedProfileEditFailure('bad'),
+      );
+      expect(
+        mapProfileEditDioException(
+          _dioError(400, data: {'detail': 'bad', 'code': 'unknown.code'}),
+        ),
+        const UnexpectedProfileEditFailure('bad'),
+      );
+      expect(
+        mapProfileEditDioException(_dioError(500, message: 'server boom')),
+        const UnexpectedProfileEditFailure('server boom'),
+      );
+    },
+  );
 
   test('maps missing HTTP response to NetworkProfileEditFailure', () {
     expect(

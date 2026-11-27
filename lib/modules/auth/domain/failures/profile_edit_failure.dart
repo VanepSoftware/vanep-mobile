@@ -18,28 +18,18 @@ enum ProfileErrorCode {
     final normalized = raw.trim().toLowerCase();
     if (normalized.isEmpty) return null;
     return switch (normalized) {
-      ApiErrorCodes.legacyProfileCooldown ||
       ApiErrorCodes.userProfileNameCooldown ||
       ApiErrorCodes.userProfilePhoneCooldown ||
       ApiErrorCodes.userProfileEmailCooldown ||
       ApiErrorCodes.userProfileEmailResendCooldown => ProfileErrorCode.cooldown,
-      ApiErrorCodes.legacyProfileEmailDuplicate ||
       ApiErrorCodes.authSignupEmailDuplicate => ProfileErrorCode.emailDuplicate,
-      ApiErrorCodes.legacyProfileFieldNull ||
       ApiErrorCodes.userProfileFieldNull => ProfileErrorCode.fieldNull,
-      ApiErrorCodes.legacyProfilePhoneBlank ||
       ApiErrorCodes.userProfilePhoneBlank => ProfileErrorCode.phoneBlank,
-      ApiErrorCodes.legacyProfileEmailSame ||
       ApiErrorCodes.userProfileEmailSame => ProfileErrorCode.emailSame,
-      ApiErrorCodes.legacyProfileEmailInvalid ||
       ApiErrorCodes.userProfileEmailInvalid => ProfileErrorCode.emailInvalid,
-      ApiErrorCodes.legacyProfileEmailRequired ||
       ApiErrorCodes.userProfileEmailRequired => ProfileErrorCode.emailRequired,
-      ApiErrorCodes.legacyProfileNameTooLong ||
       ApiErrorCodes.userProfileNameTooLong => ProfileErrorCode.nameTooLong,
-      ApiErrorCodes.legacyProfilePhoneTooLong ||
       ApiErrorCodes.userProfilePhoneTooLong => ProfileErrorCode.phoneTooLong,
-      ApiErrorCodes.legacyProfileEmailTooLong ||
       ApiErrorCodes.userProfileEmailTooLong => ProfileErrorCode.emailTooLong,
       _ => null,
     };

@@ -35,7 +35,12 @@ void main() {
         response: Response<Object?>(
           requestOptions: options,
           statusCode: 409,
-          data: {'code': 'email_duplicate', 'message': 'x', 'errors': []},
+          data: {
+            'status': 409,
+            'code': 'auth.signup.email.duplicate',
+            'detail': 'x',
+            'field': 'email',
+          },
         ),
       ),
     );
@@ -50,7 +55,7 @@ void main() {
     );
   });
 
-  test('verifyEmail maps invalid_code', () async {
+  test('verifyEmail maps auth.error.invalid_code', () async {
     final options = RequestOptions(path: '/api/auth/email/verify');
     when(
       () => remote.verifyEmail(
@@ -63,7 +68,11 @@ void main() {
         response: Response<Object?>(
           requestOptions: options,
           statusCode: 400,
-          data: {'code': 'invalid_code', 'message': 'x', 'errors': []},
+          data: {
+            'status': 400,
+            'code': 'auth.error.invalid_code',
+            'detail': 'x',
+          },
         ),
       ),
     );
@@ -97,7 +106,11 @@ void main() {
         response: Response<Object?>(
           requestOptions: options,
           statusCode: 400,
-          data: {'code': 'invalid_signup_ticket', 'message': 'x', 'errors': []},
+          data: {
+            'status': 400,
+            'code': 'auth.error.invalid_signup_ticket',
+            'detail': 'x',
+          },
         ),
       ),
     );
@@ -118,7 +131,7 @@ void main() {
     expect(result.isOk, isTrue);
   });
 
-  test('resetPassword maps invalid_code', () async {
+  test('resetPassword maps auth.error.invalid_code', () async {
     final options = RequestOptions(path: '/api/auth/password/reset');
     when(
       () => remote.resetPassword(
@@ -132,7 +145,11 @@ void main() {
         response: Response<Object?>(
           requestOptions: options,
           statusCode: 400,
-          data: {'code': 'invalid_code', 'message': 'x', 'errors': []},
+          data: {
+            'status': 400,
+            'code': 'auth.error.invalid_code',
+            'detail': 'x',
+          },
         ),
       ),
     );
