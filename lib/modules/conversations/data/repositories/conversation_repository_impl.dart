@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/conversations/data/datasources/conversation_realtime_datasource.dart';
 import 'package:vanep_mobile/modules/conversations/data/datasources/conversation_remote_datasource.dart';
@@ -10,8 +12,30 @@ import 'package:vanep_mobile/modules/conversations/domain/repositories/conversat
 import 'package:vanep_mobile/modules/conversations/domain/value_objects/conversation_realtime_event.dart';
 
 ConversationFailure conversationFailureFrom(DioException exception) {
-  return switch (exception.response?.statusCode) {
-    null => const ConversationNetworkFailure(),
+  final problem = ApiProblem.fromDioException(exception);
+  if (problem.isNetworkFailure) return const ConversationNetworkFailure();
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.conversationNotFound,
+    ApiErrorCodes.requestRouteNotFound,
+  ])) {
+    return const ConversationNotFoundFailure();
+  }
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.authForbidden,
+    ApiErrorCodes.authUnauthenticated,
+  ])) {
+    return const ConversationForbiddenFailure();
+  }
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.validationFailed,
+    ApiErrorCodes.requestBodyUnreadable,
+    ApiErrorCodes.requestParameterInvalid,
+    ApiErrorCodes.conversationMessageBodyRequired,
+    ApiErrorCodes.conversationMessageBodyTooLong,
+  ])) {
+    return const ConversationMessageRejectedFailure();
+  }
+  return switch (problem.status) {
     400 => const ConversationMessageRejectedFailure(),
     403 => const ConversationForbiddenFailure(),
     404 => const ConversationNotFoundFailure(),

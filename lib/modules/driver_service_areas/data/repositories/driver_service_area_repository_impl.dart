@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'package:vanep_mobile/core/network/city_unmatched_problem.dart';
-import 'package:vanep_mobile/core/network/problem_detail.dart';
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/domain/entities/service_area_draft.dart';
@@ -9,25 +9,50 @@ import 'package:vanep_mobile/modules/driver_service_areas/domain/failures/servic
 import 'package:vanep_mobile/modules/driver_service_areas/domain/repositories/driver_service_area_repository.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/data/datasources/driver_service_area_remote_datasource.dart';
 
-const districtRequiredMarker = 'bairro';
-const tooManyAreasMarker = 'máximo';
+const _placeNotResolvedCodes = {
+  ApiErrorCodes.driverServiceAreaAreaTokenUnknown,
+  ApiErrorCodes.driverServiceAreaAreasRequired,
+  ApiErrorCodes.driverServiceAreaItemInvalid,
+  ApiErrorCodes.driverServiceAreaPlaceIdTooLong,
+  ApiErrorCodes.driverServiceAreaAreaTokenTooLong,
+  ApiErrorCodes.driverServiceAreaSessionTokenTooLong,
+  ApiErrorCodes.locationPlaceNotResolvable,
+  ApiErrorCodes.locationPlaceNotFound,
+  ApiErrorCodes.locationCountryUnsupported,
+  ApiErrorCodes.locationStateUnsupported,
+  ApiErrorCodes.locationComponentUnknownType,
+  ApiErrorCodes.validationFailed,
+  ApiErrorCodes.requestBodyUnreadable,
+  ApiErrorCodes.requestParameterInvalid,
+};
 
 ServiceAreaFailure serviceAreaFailureFrom(DioException exception) {
-  final status = exception.response?.statusCode;
-  if (status == null) return ServiceAreaFailure.network;
-  if (status == 429) return ServiceAreaFailure.rateLimited;
-  if (status != 400) return ServiceAreaFailure.unexpected;
-  if (isIbgeCityUnmatchedProblem(exception.response?.data)) {
+  final problem = ApiProblem.fromDioException(exception);
+  if (problem.isNetworkFailure) return ServiceAreaFailure.network;
+  if (problem.matchesCode(ApiErrorCodes.locationCityUnmatched)) {
     return ServiceAreaFailure.cityUnmatched;
   }
-  final detail = readProblemDetail(exception.response?.data).toLowerCase();
-  if (detail.contains(tooManyAreasMarker)) {
+  if (problem.matchesCode(ApiErrorCodes.driverServiceAreaAreasTooMany)) {
     return ServiceAreaFailure.tooManyAreas;
   }
-  if (detail.contains(districtRequiredMarker)) {
+  if (problem.matchesCode(ApiErrorCodes.driverServiceAreaDistrictRequired)) {
     return ServiceAreaFailure.districtRequired;
   }
-  return ServiceAreaFailure.placeNotResolved;
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.locationPlaceRateLimited,
+    ApiErrorCodes.requestRateLimited,
+  ])) {
+    return ServiceAreaFailure.rateLimited;
+  }
+  if (problem.matchesAnyCode(_placeNotResolvedCodes)) {
+    return ServiceAreaFailure.placeNotResolved;
+  }
+
+  return switch (problem.status) {
+    429 => ServiceAreaFailure.rateLimited,
+    400 => ServiceAreaFailure.placeNotResolved,
+    _ => ServiceAreaFailure.unexpected,
+  };
 }
 
 class DriverServiceAreaRepositoryImpl implements DriverServiceAreaRepository {

@@ -1,17 +1,13 @@
+import 'package:vanep_mobile/core/network/api_problem.dart';
+
 String readProblemDetail(Object? body) {
-  if (body is! Map) return '';
-  final detail = body['detail'] ?? body['message'];
-  return detail is String ? detail : '';
+  return ApiProblem.fromResponseBody(body).detailText;
 }
 
 String readProblemField(Object? body) {
-  if (body is! Map) return '';
-  final field = body['field'];
-  return field is String ? field : '';
+  return ApiProblem.fromResponseBody(body).field ?? '';
 }
 
 String readProblemCode(Object? body) {
-  if (body is! Map) return '';
-  final code = body['code'];
-  return code is String ? code : '';
+  return ApiProblem.fromResponseBody(body).code ?? '';
 }

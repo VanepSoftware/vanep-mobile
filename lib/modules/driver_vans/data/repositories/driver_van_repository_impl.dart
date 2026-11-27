@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 
 import 'package:vanep_mobile/core/media/photo_failure.dart';
 import 'package:vanep_mobile/core/media/picked_photo.dart';
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/core/network/file_uploader.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
@@ -52,8 +54,22 @@ class DriverVanRepositoryImpl implements DriverVanRepository {
 }
 
 DriverVanFailure driverVanFailureFrom(DioException error) {
-  return switch (error.response?.statusCode) {
-    null => DriverVanFailure.network,
+  final problem = ApiProblem.fromDioException(error);
+  if (problem.isNetworkFailure) return DriverVanFailure.network;
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.vehiclePlateDuplicate,
+    ApiErrorCodes.vehicleAlreadyActive,
+  ])) {
+    return DriverVanFailure.duplicatePlate;
+  }
+  if (problem.matchesAnyCode(const [
+    ApiErrorCodes.validationFailed,
+    ApiErrorCodes.requestBodyUnreadable,
+    ApiErrorCodes.requestParameterInvalid,
+  ])) {
+    return DriverVanFailure.invalidData;
+  }
+  return switch (problem.status) {
     409 => DriverVanFailure.duplicatePlate,
     400 => DriverVanFailure.invalidData,
     _ => DriverVanFailure.unexpected,

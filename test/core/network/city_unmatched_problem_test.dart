@@ -9,25 +9,34 @@ void main() {
     );
   });
 
-  test('recognizes the Portuguese detail the back sends today', () {
+  test('recognizes nested validation error code when present', () {
+    expect(
+      isIbgeCityUnmatchedProblem({
+        'code': 'validation.failed',
+        'errors': [
+          {'field': 'placeId', 'code': 'location.city.unmatched'},
+        ],
+      }),
+      isTrue,
+    );
+  });
+
+  test('ignores Portuguese or English detail text without code', () {
     expect(
       isIbgeCityUnmatchedProblem({
         'detail':
             'Este nome de cidade não corresponde a um município brasileiro. '
             'Escolha outra sugestão.',
       }),
-      isTrue,
+      isFalse,
     );
-  });
-
-  test('recognizes the English detail', () {
     expect(
       isIbgeCityUnmatchedProblem({
         'detail':
             'This city name does not match a Brazilian municipality. '
             'Choose another suggestion.',
       }),
-      isTrue,
+      isFalse,
     );
   });
 

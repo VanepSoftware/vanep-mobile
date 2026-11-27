@@ -40,26 +40,33 @@ void main() {
   });
 
   test('preserves the order returned by the API', () async {
-    when(() => remote.searchByPlace(any(), any())).thenAnswer(
-      (_) async => readSearchPage(rankedPage),
-    );
+    when(() => remote.searchByPlace(any(), any()))
+        .thenAnswer((_) async => readSearchPage(rankedPage));
 
     final result = await repository.searchByPlace('place-qnl5', null);
 
-    expect(
-      result.valueOrNull?.drivers.map((driver) => driver.token).toList(),
-      ['driver-qnl5', 'driver-taguatinga', 'driver-cidade'],
-    );
+    expect(result.valueOrNull?.drivers.map((driver) => driver.token).toList(), [
+      'driver-qnl5',
+      'driver-taguatinga',
+      'driver-cidade',
+    ]);
   });
 
   test('reports whether there are more pages to load', () {
-    expect(readSearchPage(const {'content': <Object?>[], 'last': false}).isLast, isFalse);
-    expect(readSearchPage(const {'content': <Object?>[], 'last': true}).isLast, isTrue);
+    expect(
+      readSearchPage(const {'content': <Object?>[], 'last': false}).isLast,
+      isFalse,
+    );
+    expect(
+      readSearchPage(const {'content': <Object?>[], 'last': true}).isLast,
+      isTrue,
+    );
   });
 
   test('an empty page is an empty result, not a failure', () async {
-    when(() => remote.searchByPlace(any(), any()))
-        .thenAnswer((_) async => readSearchPage(const {'content': <Object?>[]}));
+    when(
+      () => remote.searchByPlace(any(), any()),
+    ).thenAnswer((_) async => readSearchPage(const {'content': <Object?>[]}));
 
     final result = await repository.searchByPlace('place-qnl5', null);
 
@@ -126,7 +133,12 @@ void main() {
   test('the entity has no residential address field', () {
     final drivers = readSearchPage(const {
       'content': [
-        {'token': 'driver-1', 'name': 'Fabio', 'street': 'Rua X', 'zipCode': '70000000'},
+        {
+          'token': 'driver-1',
+          'name': 'Fabio',
+          'street': 'Rua X',
+          'zipCode': '70000000',
+        },
       ],
     });
 
@@ -135,34 +147,43 @@ void main() {
   });
 
   test('400 with the unmatched city code is cityUnmatched', () async {
-    when(() => remote.searchByPlace(any(), any())).thenThrow(
-      dioFailure(400, {'code': 'location.city.unmatched'}),
-    );
+    when(() => remote.searchByPlace(any(), any()))
+        .thenThrow(dioFailure(400, {'code': 'location.city.unmatched'}));
 
     final result = await repository.searchByPlace('place-qnl5', null);
 
     expect(result.errorOrNull, DriverSearchFailure.cityUnmatched);
   });
 
-  test('400 with the unmatched detail is cityUnmatched in both languages', () async {
-    for (final detail in [
-      'Este nome de cidade não corresponde a um município brasileiro.',
-      'This city name does not match a Brazilian municipality.',
-    ]) {
-      when(
-        () => remote.searchByPlace(any(), any()),
-      ).thenThrow(dioFailure(400, {'detail': detail}));
+  test(
+    'detail text without city unmatched code is not matched as cityUnmatched',
+    () async {
+      for (final detail in [
+        'Este nome de cidade não corresponde a um município brasileiro.',
+        'This city name does not match a Brazilian municipality.',
+      ]) {
+        when(() => remote.searchByPlace(any(), any()))
+            .thenThrow(dioFailure(400, {'detail': detail}));
 
-      final result = await repository.searchByPlace('place-qnl5', null);
+        final result = await repository.searchByPlace('place-qnl5', null);
 
-      expect(result.errorOrNull, DriverSearchFailure.cityUnmatched);
-    }
+        expect(result.errorOrNull, DriverSearchFailure.placeNotResolved);
+      }
+    },
+  );
+
+  test('maps rate limit code regardless of HTTP status', () async {
+    when(() => remote.searchByPlace(any(), any()))
+        .thenThrow(dioFailure(429, {'code': 'location.place.rate_limited'}));
+
+    final result = await repository.searchByPlace('place-qnl5', null);
+
+    expect(result.errorOrNull, DriverSearchFailure.rateLimited);
   });
 
   test('any other 400 is still placeNotResolved', () async {
-    when(() => remote.searchByPlace(any(), any())).thenThrow(
-      dioFailure(400, {'detail': 'Endereço não encontrado.'}),
-    );
+    when(() => remote.searchByPlace(any(), any()))
+        .thenThrow(dioFailure(400, {'detail': 'Endereço não encontrado.'}));
 
     final result = await repository.searchByPlace('place-qnl5', null);
 
@@ -170,9 +191,8 @@ void main() {
   });
 
   test('fetchRecommended delegates to remote and returns ok', () async {
-    when(() => remote.fetchRecommended(page: any(named: 'page'))).thenAnswer(
-      (_) async => readSearchPage(rankedPage),
-    );
+    when(() => remote.fetchRecommended(page: any(named: 'page')))
+        .thenAnswer((_) async => readSearchPage(rankedPage));
 
     final result = await repository.fetchRecommended(page: 0);
 
@@ -181,9 +201,8 @@ void main() {
   });
 
   test('fetchRecommended maps dio failure to DriverSearchFailure', () async {
-    when(() => remote.fetchRecommended(page: any(named: 'page'))).thenThrow(
-      dioFailure(null),
-    );
+    when(() => remote.fetchRecommended(page: any(named: 'page')))
+        .thenThrow(dioFailure(null));
 
     final result = await repository.fetchRecommended(page: 0);
 

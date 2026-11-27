@@ -8,6 +8,9 @@ abstract class AuthApiErrorDto with _$AuthApiErrorDto {
   const factory AuthApiErrorDto({
     String? code,
     String? message,
+    String? detail,
+    int? status,
+    String? field,
     @Default(<AuthApiFieldErrorDto>[]) List<AuthApiFieldErrorDto> errors,
   }) = _AuthApiErrorDto;
 
@@ -17,8 +20,11 @@ abstract class AuthApiErrorDto with _$AuthApiErrorDto {
 
 @freezed
 abstract class AuthApiFieldErrorDto with _$AuthApiFieldErrorDto {
-  const factory AuthApiFieldErrorDto({String? field, String? message}) =
-      _AuthApiFieldErrorDto;
+  const factory AuthApiFieldErrorDto({
+    String? field,
+    String? code,
+    String? message,
+  }) = _AuthApiFieldErrorDto;
 
   factory AuthApiFieldErrorDto.fromJson(Map<String, Object?> json) =>
       _$AuthApiFieldErrorDtoFromJson(json);

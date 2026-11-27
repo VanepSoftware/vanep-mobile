@@ -1,48 +1,58 @@
 import 'package:dio/dio.dart';
 
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 
+const _unauthorizedCodes = {
+  ApiErrorCodes.authUnauthenticated,
+  ApiErrorCodes.authForbidden,
+  ApiErrorCodes.assistantInviteForbidden,
+  ApiErrorCodes.assistantLinkForbidden,
+};
+
+const _invalidInviteCodes = {
+  ApiErrorCodes.assistantInviteNotFound,
+  ApiErrorCodes.assistantInviteEmailNotFound,
+};
+
+const _invalidPersonalDataCodes = {
+  ApiErrorCodes.validationFailed,
+  ApiErrorCodes.requestBodyUnreadable,
+  ApiErrorCodes.requestParameterInvalid,
+  ApiErrorCodes.assistantInviteEmailInvalid,
+  ApiErrorCodes.assistantInviteEmailRequired,
+  ApiErrorCodes.assistantInviteWrongUserType,
+  ApiErrorCodes.assistantInviteNotUnlinked,
+  ApiErrorCodes.authSignupEmailDuplicate,
+  ApiErrorCodes.authSignupDocumentDuplicate,
+};
+
 AssistantFailure mapAssistantFailure(DioException exception) {
-  final response = exception.response;
-  if (response == null) return AssistantFailure.network;
+  final problem = ApiProblem.fromDioException(exception);
+  if (problem.isNetworkFailure) return AssistantFailure.network;
 
-  final statusCode = response.statusCode;
-  if (statusCode == 401 || statusCode == 403) {
-    return AssistantFailure.unauthorized;
-  }
-  if (statusCode == 404) {
-    return AssistantFailure.invalidInviteCode;
-  }
-
-  final body = response.data;
-  final code = _extractErrorCode(body);
-
-  if (code.contains('expired')) {
+  if (problem.matchesCode(ApiErrorCodes.assistantInviteExpired)) {
     return AssistantFailure.expiredInvite;
   }
-  if (code.contains('already_used') || code.contains('alreadyused')) {
+  if (problem.matchesCode(ApiErrorCodes.assistantInviteNotPending)) {
     return AssistantFailure.alreadyUsedInvite;
   }
-  if (code.contains('revoked')) {
-    return AssistantFailure.revokedInvite;
+  if (problem.matchesAnyCode(_unauthorizedCodes)) {
+    return AssistantFailure.unauthorized;
   }
-  if (code.contains('invalid_code') || code.contains('not_found')) {
+  if (problem.matchesAnyCode(_invalidInviteCodes)) {
     return AssistantFailure.invalidInviteCode;
   }
-  if (statusCode == 400 || code.contains('validation')) {
+  if (problem.matchesAnyCode(_invalidPersonalDataCodes)) {
     return AssistantFailure.invalidPersonalData;
   }
 
-  return AssistantFailure.unexpected;
-}
-
-String _extractErrorCode(Object? body) {
-  if (body is Map) {
-    final code = body['code'] ?? body['error'] ?? body['message'];
-    if (code is String) return code.toLowerCase();
-  }
-  if (body is String) {
-    return body.toLowerCase();
-  }
-  return '';
+  return switch (problem.status) {
+    401 || 403 => AssistantFailure.unauthorized,
+    404 => AssistantFailure.invalidInviteCode,
+    410 => AssistantFailure.expiredInvite,
+    400 => AssistantFailure.invalidPersonalData,
+    _ => AssistantFailure.unexpected,
+  };
 }

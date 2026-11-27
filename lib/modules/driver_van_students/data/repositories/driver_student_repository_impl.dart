@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'package:vanep_mobile/core/network/problem_detail.dart';
+import 'package:vanep_mobile/core/network/api_error_codes.dart';
+import 'package:vanep_mobile/core/network/api_problem.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/driver_van_students/data/datasources/driver_student_remote_datasource.dart';
 import 'package:vanep_mobile/modules/driver_van_students/domain/entities/driver_student.dart';
@@ -8,6 +9,33 @@ import 'package:vanep_mobile/modules/driver_van_students/domain/entities/family_
 import 'package:vanep_mobile/modules/driver_van_students/domain/failures/driver_student_failure.dart';
 import 'package:vanep_mobile/modules/driver_van_students/domain/repositories/driver_student_repository.dart';
 import 'package:vanep_mobile/modules/driver_van_students/domain/value_objects/unlinked_passenger_draft.dart';
+
+const _notFoundCodes = {
+  ApiErrorCodes.unlinkedPassengerNotFound,
+  ApiErrorCodes.unlinkedPassengerSchoolNotFound,
+  ApiErrorCodes.driverStudentVehicleNotFound,
+  ApiErrorCodes.familyInviteNotFound,
+  ApiErrorCodes.familyInviteDependentNotFound,
+  ApiErrorCodes.schoolNotFound,
+  ApiErrorCodes.vehicleNotFound,
+  ApiErrorCodes.userDriverProfileNotFound,
+  ApiErrorCodes.requestRouteNotFound,
+};
+
+const _rejectedCodes = {
+  ApiErrorCodes.unlinkedPassengerVehicleNotOwned,
+  ApiErrorCodes.unlinkedPassengerFieldNull,
+  ApiErrorCodes.unlinkedPassengerNameRequired,
+  ApiErrorCodes.familyInviteAlreadyLinked,
+  ApiErrorCodes.familyInviteLinkBlocked,
+  ApiErrorCodes.familyInviteConcurrentRequest,
+  ApiErrorCodes.familyMatchNotPending,
+  ApiErrorCodes.familyMatchAlreadyPending,
+  ApiErrorCodes.familyMatchDependentAlreadyLinked,
+  ApiErrorCodes.validationFailed,
+  ApiErrorCodes.requestBodyUnreadable,
+  ApiErrorCodes.requestParameterInvalid,
+};
 
 class DriverStudentRepositoryImpl implements DriverStudentRepository {
   const DriverStudentRepositoryImpl({required this.remote});
@@ -58,10 +86,16 @@ class DriverStudentRepositoryImpl implements DriverStudentRepository {
 }
 
 DriverStudentFailure driverStudentFailureFrom(DioException exception) {
-  final response = exception.response;
-  if (response == null) return const DriverStudentNetworkFailure();
-  final detail = readProblemDetail(response.data);
-  return switch (response.statusCode) {
+  final problem = ApiProblem.fromDioException(exception);
+  if (problem.isNetworkFailure) return const DriverStudentNetworkFailure();
+  if (problem.matchesAnyCode(_notFoundCodes)) {
+    return const DriverStudentNotFoundFailure();
+  }
+  final detail = problem.detailText;
+  if (problem.matchesAnyCode(_rejectedCodes) && detail.isNotEmpty) {
+    return DriverStudentRejectedFailure(detail: detail);
+  }
+  return switch (problem.status) {
     404 => const DriverStudentNotFoundFailure(),
     400 ||
     409 ||

@@ -53,9 +53,7 @@ void main() {
   }
 
   test('a malformed payload maps to an unexpected failure', () async {
-    when(
-      remote.listMyConversations,
-    ).thenThrow(const FormatException('bad'));
+    when(remote.listMyConversations).thenThrow(const FormatException('bad'));
 
     final result = await repository.listMyConversations();
 
@@ -64,13 +62,59 @@ void main() {
 
   test('watchConversation forwards the realtime events', () {
     final received = ConversationMessageReceived(testDriverMessage);
-    when(
-      () => realtime.watchConversation('conversation-1'),
-    ).thenAnswer((_) => Stream.value(received));
+    when(() => realtime.watchConversation('conversation-1'))
+        .thenAnswer((_) => Stream.value(received));
 
     expect(
       repository.watchConversation('conversation-1'),
       emitsInOrder([received, emitsDone]),
+    );
+  });
+
+  test('maps known ProblemDetail codes strictly', () async {
+    DioException codeError(int status, String code) {
+      final options = RequestOptions(path: '/api/conversations');
+      return DioException(
+        requestOptions: options,
+        response: Response<Object?>(
+          requestOptions: options,
+          statusCode: status,
+          data: {'code': code},
+        ),
+      );
+    }
+
+    when(
+      () => remote.sendMessage(conversationToken: 'conversation-1', body: 'Oi'),
+    ).thenThrow(codeError(404, 'conversation.not_found'));
+    expect(
+      (await repository.sendMessage(
+        conversationToken: 'conversation-1',
+        body: 'Oi',
+      )).errorOrNull,
+      const ConversationNotFoundFailure(),
+    );
+
+    when(
+      () => remote.sendMessage(conversationToken: 'conversation-1', body: 'Oi'),
+    ).thenThrow(codeError(403, 'auth.forbidden'));
+    expect(
+      (await repository.sendMessage(
+        conversationToken: 'conversation-1',
+        body: 'Oi',
+      )).errorOrNull,
+      const ConversationForbiddenFailure(),
+    );
+
+    when(
+      () => remote.sendMessage(conversationToken: 'conversation-1', body: 'Oi'),
+    ).thenThrow(codeError(400, 'validation.failed'));
+    expect(
+      (await repository.sendMessage(
+        conversationToken: 'conversation-1',
+        body: 'Oi',
+      )).errorOrNull,
+      const ConversationMessageRejectedFailure(),
     );
   });
 }

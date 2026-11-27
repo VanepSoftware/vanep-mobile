@@ -9,7 +9,10 @@ void main() {
       ProfileErrorCode.emailDuplicate,
     );
     expect(ProfileErrorCode.fromApi('field_null'), ProfileErrorCode.fieldNull);
-    expect(ProfileErrorCode.fromApi('phone_blank'), ProfileErrorCode.phoneBlank);
+    expect(
+      ProfileErrorCode.fromApi('phone_blank'),
+      ProfileErrorCode.phoneBlank,
+    );
     expect(ProfileErrorCode.fromApi('email_same'), ProfileErrorCode.emailSame);
     expect(
       ProfileErrorCode.fromApi('email_invalid'),
@@ -29,6 +32,61 @@ void main() {
     );
     expect(
       ProfileErrorCode.fromApi('email_too_long'),
+      ProfileErrorCode.emailTooLong,
+    );
+  });
+
+  test('fromApi maps ProblemDetail codes too', () {
+    expect(
+      ProfileErrorCode.fromApi('user.profile.name.cooldown'),
+      ProfileErrorCode.cooldown,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.phone.cooldown'),
+      ProfileErrorCode.cooldown,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.email.cooldown'),
+      ProfileErrorCode.cooldown,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.email.resend.cooldown'),
+      ProfileErrorCode.cooldown,
+    );
+    expect(
+      ProfileErrorCode.fromApi('auth.signup.email.duplicate'),
+      ProfileErrorCode.emailDuplicate,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.field.null'),
+      ProfileErrorCode.fieldNull,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.phone.blank'),
+      ProfileErrorCode.phoneBlank,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.email.same'),
+      ProfileErrorCode.emailSame,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.email.invalid'),
+      ProfileErrorCode.emailInvalid,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.email.required'),
+      ProfileErrorCode.emailRequired,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.name.too_long'),
+      ProfileErrorCode.nameTooLong,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.phone.too_long'),
+      ProfileErrorCode.phoneTooLong,
+    );
+    expect(
+      ProfileErrorCode.fromApi('user.profile.email.too_long'),
       ProfileErrorCode.emailTooLong,
     );
   });

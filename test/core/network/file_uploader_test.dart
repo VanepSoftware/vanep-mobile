@@ -111,6 +111,35 @@ void main() {
     expect(photoFailureFrom(statusError(null)), PhotoFailure.network);
     expect(photoFailureFrom(statusError(413)), PhotoFailure.tooLarge);
     expect(photoFailureFrom(statusError(400)), PhotoFailure.unsupportedType);
-    expect(photoFailureFrom(statusError(403)), PhotoFailure.unexpected);
+    expect(photoFailureFrom(statusError(403)), PhotoFailure.permissionDenied);
+    expect(photoFailureFrom(statusError(500)), PhotoFailure.unexpected);
+  });
+
+  test('prefers known ProblemDetail codes when present', () {
+    DioException codeError(int status, String code) => DioException(
+      requestOptions: RequestOptions(),
+      response: Response<Object?>(
+        requestOptions: RequestOptions(),
+        statusCode: status,
+        data: {'code': code},
+      ),
+    );
+
+    expect(
+      photoFailureFrom(codeError(413, 'media.file.too_large')),
+      PhotoFailure.tooLarge,
+    );
+    expect(
+      photoFailureFrom(codeError(400, 'media.mime.not_allowed')),
+      PhotoFailure.unsupportedType,
+    );
+    expect(
+      photoFailureFrom(codeError(400, 'media.file.unreadable')),
+      PhotoFailure.unsupportedType,
+    );
+    expect(
+      photoFailureFrom(codeError(403, 'auth.forbidden')),
+      PhotoFailure.permissionDenied,
+    );
   });
 }
