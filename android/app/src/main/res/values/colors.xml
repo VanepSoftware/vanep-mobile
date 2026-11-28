@@ -2,4 +2,6 @@
 <resources>
     <!-- Must match VanepColors.brandNavy so the native splash blends into the Flutter intro. -->
     <color name="vanep_splash_background">#022856</color>
+    <!-- Must match VanepColors.brandNavy — accent behind the notification icon in the tray. -->
+    <color name="notification_color">#022856</color>
 </resources>

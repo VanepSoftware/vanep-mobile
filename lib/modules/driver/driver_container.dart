@@ -1,7 +1,33 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-
+import 'package:vanep_mobile/core/environment/environment.dart';
+import 'package:vanep_mobile/core/network/dio_client.dart';
+import 'package:vanep_mobile/modules/driver/data/datasources/driver_home_remote_datasource.dart';
+import 'package:vanep_mobile/modules/driver/data/repositories/driver_home_repository_impl.dart';
+import 'package:vanep_mobile/modules/driver/domain/repositories/driver_home_repository.dart';
 import 'package:vanep_mobile/modules/driver/presentation/cubit/driver_home_cubit.dart';
 
 void registerDriverHomeDependencies(GetIt getIt) {
-  getIt.registerFactory<DriverHomeCubit>(DriverHomeCubit.new);
+  if (!getIt.isRegistered<DriverHomeRepository>() &&
+      getIt.isRegistered<Environment>() &&
+      getIt.isRegistered<Dio>(instanceName: authenticatedDioName)) {
+    getIt
+      ..registerSingleton<DriverHomeRemoteDataSource>(
+        DriverHomeRemoteDataSource(
+          dio: getIt<Dio>(instanceName: authenticatedDioName),
+          environment: getIt<Environment>(),
+        ),
+      )
+      ..registerSingleton<DriverHomeRepository>(
+        DriverHomeRepositoryImpl(remote: getIt<DriverHomeRemoteDataSource>()),
+      );
+  }
+
+  getIt.registerFactory<DriverHomeCubit>(
+    () => DriverHomeCubit(
+      repository: getIt.isRegistered<DriverHomeRepository>()
+          ? getIt<DriverHomeRepository>()
+          : null,
+    ),
+  );
 }

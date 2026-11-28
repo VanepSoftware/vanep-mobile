@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/personal_address_failure.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_cities.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/usecases/list_states.dart';
@@ -26,6 +29,7 @@ class DependentPickupCubit extends Cubit<DependentPickupState>
     required this.lookupCep,
     required this.listStates,
     required this.listCities,
+    required this.findMyPersonalAddress,
     this.cepLookupDebounce = dependentCepLookupDebounce,
   }) : super(DependentPickupState.editing(dependent));
 
@@ -33,6 +37,7 @@ class DependentPickupCubit extends Cubit<DependentPickupState>
   final LookupCep lookupCep;
   final ListStates listStates;
   final ListCities listCities;
+  final FindMyPersonalAddress findMyPersonalAddress;
   @override
   final Duration cepLookupDebounce;
 
@@ -61,6 +66,30 @@ class DependentPickupCubit extends Cubit<DependentPickupState>
         catalogCities: edit.catalogCities,
         catalogFailure: edit.catalogFailure,
         clearCatalogFailure: edit.clearCatalogFailure,
+      ),
+    );
+  }
+
+  Future<void> loadProfileAddress() async {
+    final result = await findMyPersonalAddress();
+    if (isClosed) return;
+    if (result case Ok<PersonalAddressFailure, PersonalAddress?>(
+      :final value?,
+    )) {
+      emit(state.copyWith(profileAddress: value));
+    }
+  }
+
+  void useProfileAddress() {
+    final profile = state.profileAddress;
+    if (profile == null || state.isSaving) return;
+    cancelAddressLookup();
+    emitAddressEdit(
+      PostalAddressEdit(
+        address: profile.toDraft(),
+        isLookingUpCep: false,
+        clearCepFailure: true,
+        clearCatalogFailure: true,
       ),
     );
   }
