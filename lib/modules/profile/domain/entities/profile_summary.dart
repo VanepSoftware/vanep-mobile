@@ -20,6 +20,10 @@ abstract class ClientProfileSummary extends ProfileSummary {
 abstract class DriverProfileSummary extends ProfileSummary {
   double? get rating;
 
+  int? get ratingCount;
+
+  int? get experienceYears;
+
   String? get city;
 
   DriverApprovalStatus? get approvalStatus;

@@ -10,6 +10,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/pages/dependent_pic
 import 'package:vanep_mobile/modules/ibge_locations/domain/entities/cep_lookup.dart';
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.dart';
 
+import '../../auth/personal_address_fixture.dart';
 import '../../ibge_locations/ibge_locations_fixture.dart';
 import '../dependents_fixtures.dart';
 import '../dependents_mocks.dart';
@@ -107,5 +108,37 @@ void main() {
     expect(draft.address.number, '10');
     expect(result, anaWithAddress);
     expect(find.byType(DependentPickupPage), findsNothing);
+  });
+
+  testWidgets('offers the profile address and fills the form with it', (
+    tester,
+  ) async {
+    when(() => doubles.findMyAddress())
+        .thenAnswer((_) async => Ok(fakePersonalAddress()));
+    await openEditor(tester, anaWithoutAddress);
+
+    expect(find.text('Usar o endereço do meu perfil'), findsOneWidget);
+    expect(find.textContaining('QND 12, 10'), findsOneWidget);
+
+    await tester.tap(find.text('Usar o endereço do meu perfil'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('72120-120'), findsOneWidget);
+    expect(find.text('QND 12'), findsOneWidget);
+    expect(find.text('Usar o endereço do meu perfil'), findsNothing);
+    expect(
+      tester
+          .widget<VanepPrimaryButton>(find.byType(VanepPrimaryButton))
+          .onPressed,
+      isNotNull,
+    );
+  });
+
+  testWidgets('does not offer it when the user has no registered address', (
+    tester,
+  ) async {
+    await openEditor(tester, anaWithoutAddress);
+
+    expect(find.text('Usar o endereço do meu perfil'), findsNothing);
   });
 }

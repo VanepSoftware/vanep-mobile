@@ -11,11 +11,15 @@ import 'package:vanep_mobile/modules/conversations/domain/entities/conversation_
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/pages/conversations_inbox_tab.dart';
 import 'package:vanep_mobile/modules/driver/presentation/pages/driver_home_tab.dart';
+import 'package:vanep_mobile/modules/driver/presentation/widgets/driver_home_main_card.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/pages/driver_proposals_tab.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_central_tab.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/widgets/service_areas_onboarding_banner.dart';
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
+import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
+import 'package:vanep_mobile/modules/push_notifications/presentation/widgets/push_navigation_listener.dart';
 import 'package:vanep_mobile/shell/driver_bottom_nav.dart';
 import 'package:vanep_mobile/shell/shell_account_drawer.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme_context.dart';
@@ -31,12 +35,17 @@ class DriverShell extends StatefulWidget {
     required this.openMyVans,
     required this.openVanRegistration,
     required this.openVanStudents,
+    required this.openVanDocuments,
+    required this.openProfessionalData,
     required this.openConversationChat,
     required this.proposalsActions,
+    required this.openPushChat,
+    this.homeNavigation,
     super.key,
   });
 
   final UserProfile profile;
+  final DriverHomeNavigation? homeNavigation;
 
   final Future<void> Function(BuildContext context) openServiceAreas;
 
@@ -47,10 +56,18 @@ class DriverShell extends StatefulWidget {
   final Future<void> Function(BuildContext context, DriverVan van)
   openVanStudents;
 
+  final Future<void> Function(BuildContext context, DriverVan van)
+  openVanDocuments;
+
+  final Future<void> Function(BuildContext context) openProfessionalData;
+
   final Future<void> Function(BuildContext context, Conversation conversation)
   openConversationChat;
 
   final DriverProposalsTabActions proposalsActions;
+
+  final Future<void> Function(BuildContext context, ChatPushTarget target)
+  openPushChat;
 
   @override
   State<DriverShell> createState() => DriverShellState();
@@ -69,64 +86,106 @@ class DriverShellState extends State<DriverShell> {
         OnboardingStep.serviceArea,
       );
 
+  Future<void> openProfessionalDataThenRefreshCentral(
+    BuildContext drawerContext,
+  ) async {
+    await widget.openProfessionalData(drawerContext);
+    if (!mounted) return;
+    await context.read<VanCentralCubit>().refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final displayName = widget.profile.name ?? widget.profile.email ?? '';
 
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: context.palette.surface,
-      drawer: ShellAccountDrawer(profile: widget.profile),
-      onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
-        context,
-        widget.profile,
-        isOpened: isOpened,
-      ),
-      body: Column(
-        children: [
-          if (shouldOfferServiceAreas)
-            ServiceAreasOnboardingBanner(
-              onStart: () => openServiceAreasAndRefreshProfile(context),
-              onSkip: () => setState(() => onboardingDismissed = true),
-            ),
-          Expanded(
-            child: IndexedStack(
-              index: selectedIndex,
-              children: [
-                DriverHomeTab(
-                  displayName: displayName,
-                  onMenuTapped: () => scaffoldKey.currentState?.openDrawer(),
-                  onNotificationsTapped: () => openNotifications(context),
+    return PushNavigationListener(
+      openTarget: openPushTarget,
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: context.palette.surface,
+        drawer: ShellAccountDrawer(
+          profile: widget.profile,
+          openProfessionalData: openProfessionalDataThenRefreshCentral,
+        ),
+        onDrawerChanged: (isOpened) => refreshAccountWhenDrawerOpens(
+          context,
+          widget.profile,
+          isOpened: isOpened,
+        ),
+        body: Column(
+          children: [
+            if (shouldOfferServiceAreas)
+              SafeArea(
+                bottom: false,
+                child: ServiceAreasOnboardingBanner(
+                  onStart: () => openServiceAreasAndRefreshProfile(context),
+                  onSkip: () => setState(() => onboardingDismissed = true),
                 ),
-                VanCentralTab(
-                  onRegisterVan: () => widget.openVanRegistration(context),
-                  onOpenVanDetails: () => widget.openMyVans(context),
-                  onOpenServiceAreas: () =>
-                      openServiceAreasAndRefreshProfile(context),
-                  onOpenStudents: (van) => widget.openVanStudents(context, van),
-                  onOpenComingSoon: (title) => openComingSoonPage(
-                    context,
-                    title: title,
-                    message: l10n.comingSoon,
+              ),
+            Expanded(
+              child: Builder(
+                builder: (bodyContext) => MediaQuery.removePadding(
+                  context: bodyContext,
+                  removeTop: shouldOfferServiceAreas,
+                  child: IndexedStack(
+                    index: selectedIndex,
+                    children: [
+                      DriverHomeTab(
+                        displayName: displayName,
+                        navigation: widget.homeNavigation,
+                        onMenuTapped: () =>
+                            scaffoldKey.currentState?.openDrawer(),
+                        onNotificationsTapped: () => openNotifications(context),
+                      ),
+                      VanCentralTab(
+                        onRegisterVan: () =>
+                            widget.openVanRegistration(context),
+                        onOpenVanDetails: () => widget.openMyVans(context),
+                        onOpenServiceAreas: () =>
+                            openServiceAreasAndRefreshProfile(context),
+                        onOpenStudents: (van) =>
+                            widget.openVanStudents(context, van),
+                        onOpenVanDocuments: (van) =>
+                            widget.openVanDocuments(context, van),
+                        onOpenComingSoon: (title) => openComingSoonPage(
+                          context,
+                          title: title,
+                          message: l10n.comingSoon,
+                        ),
+                      ),
+                      DriverProposalsTab(actions: widget.proposalsActions),
+                      ConversationsInboxTab(
+                        viewerSide: ConversationParticipant.driver,
+                        onConversationTapped: (conversation) =>
+                            widget.openConversationChat(context, conversation),
+                      ),
+                    ],
                   ),
                 ),
-                DriverProposalsTab(actions: widget.proposalsActions),
-                ConversationsInboxTab(
-                  viewerSide: ConversationParticipant.driver,
-                  onConversationTapped: (conversation) =>
-                      widget.openConversationChat(context, conversation),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: DriverBottomNav(
-        currentIndex: selectedIndex,
-        onDestinationSelected: selectShellTab,
+          ],
+        ),
+        bottomNavigationBar: DriverBottomNav(
+          currentIndex: selectedIndex,
+          onDestinationSelected: selectShellTab,
+        ),
       ),
     );
+  }
+
+  Future<void> openPushTarget(
+    BuildContext context,
+    PushNavigationTarget target,
+  ) async {
+    switch (target) {
+      case ChatPushTarget():
+        await widget.openPushChat(context, target);
+      case ProposalPushTarget() || ContractPushTarget():
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        selectShellTab(driverShellProposalsTabIndex);
+    }
   }
 
   Future<void> openServiceAreasAndRefreshProfile(BuildContext context) async {

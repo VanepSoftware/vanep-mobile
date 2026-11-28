@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:vanep_mobile/modules/assistant/presentation/guards/assistant_route_guard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,8 +8,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vanep_mobile/core/design_system/vanep_theme.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/network/api_image_loader.dart';
+import 'package:vanep_mobile/core/media/file_opener.dart';
+import 'package:vanep_mobile/core/network/api_image_provider.dart';
 import 'package:vanep_mobile/core/ui/vanep_brand_splash.dart';
 import 'package:vanep_mobile/core/ui/vanep_intro_gate.dart';
+import 'package:vanep_mobile/core/ui/vanep_upgrade_wall.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_cubit.dart';
 import 'package:vanep_mobile/modules/auth/presentation/cubit/auth_state.dart';
@@ -21,6 +26,7 @@ import 'package:vanep_mobile/modules/conversations/presentation/cubit/chat_cubit
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/conversations_inbox_cubit.dart';
 import 'package:vanep_mobile/modules/conversations/presentation/cubit/negotiation_timeline_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
+import 'package:vanep_mobile/modules/client_vans/presentation/cubit/client_vans_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/client_proposals_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_adjustment_cubit.dart';
 import 'package:vanep_mobile/modules/client_proposals/presentation/cubit/proposal_decline_cubit.dart';
@@ -50,6 +56,22 @@ import 'package:vanep_mobile/modules/drivers/presentation/cubit/drivers_cubit.da
 import 'package:vanep_mobile/modules/drivers/presentation/pages/driver_profile_page.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/cubit/driver_search_cubit.dart';
 import 'package:vanep_mobile/modules/driver_search/presentation/pages/driver_search_page.dart';
+import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
+import 'package:vanep_mobile/modules/driver_professional_data/presentation/cubit/professional_data_cubit.dart';
+import 'package:vanep_mobile/modules/driver_professional_data/presentation/pages/professional_data_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/personal_documents_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/widgets/document_source_sheet.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_submission_flow_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_submission_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_action.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/document_file_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_detail_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/document_image_page.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/value_objects/document_type.dart';
+import 'package:vanep_mobile/modules/driver_documents/domain/usecases/document_groups.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/cubit/driver_compliance_cubit.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/formatters/document_labels.dart';
+import 'package:vanep_mobile/modules/driver_documents/presentation/pages/vehicle_documents_page.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/cubit/driver_service_areas_cubit.dart';
 import 'package:vanep_mobile/modules/driver_service_areas/presentation/pages/driver_service_areas_page.dart';
 import 'package:vanep_mobile/modules/driver_vans/presentation/cubit/driver_vans_cubit.dart';
@@ -59,6 +81,8 @@ import 'package:vanep_mobile/modules/driver_vans/presentation/pages/driver_vans_
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_checklist_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
 import 'package:vanep_mobile/modules/profile/presentation/cubit/profile_summary_cubit.dart';
+import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/push_navigation_target.dart';
+import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/shell/assistant_shell.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_negotiations_cubit.dart';
 import 'package:vanep_mobile/modules/driver_proposals/presentation/cubit/driver_proposal_cubit.dart';
@@ -87,9 +111,16 @@ import 'package:vanep_mobile/modules/driver_van_students/presentation/pages/van_
 import 'package:vanep_mobile/modules/driver_vans/domain/entities/driver_van.dart';
 
 class VanepApp extends StatelessWidget {
-  const VanepApp({required this.initialThemePreference, super.key});
+  const VanepApp({
+    required this.initialThemePreference,
+    this.minAppVersion,
+    super.key,
+  });
 
   final ThemePreference initialThemePreference;
+
+  /// Blocks the app below this version (see [VanepUpgradeWall]).
+  final String? minAppVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +134,9 @@ class VanepApp extends StatelessWidget {
           BlocProvider<ThemePreferenceCubit>(
             create: (_) =>
                 getIt<ThemePreferenceCubit>(param1: initialThemePreference),
+          ),
+          BlocProvider<PushNavigationCubit>.value(
+            value: getIt<PushNavigationCubit>(),
           ),
         ],
         child:
@@ -142,7 +176,10 @@ class VanepApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: AppLocalizations.supportedLocales,
-                home: const VanepIntroGate(child: AuthGate()),
+                home: VanepUpgradeWall(
+                  minAppVersion: minAppVersion,
+                  child: const VanepIntroGate(child: AuthGate()),
+                ),
               ),
             ),
       ),
@@ -188,6 +225,9 @@ class AuthGate extends StatelessWidget {
                 openMyVans: openDriverVans,
                 openVanRegistration: openDriverVanRegistration,
                 openVanStudents: openDriverVanStudents,
+                openVanDocuments: (context, van) =>
+                    openDriverVanDocuments(context, van: van),
+                openProfessionalData: openDriverProfessionalData,
                 openConversationChat: (context, conversation) =>
                     openInboxConversation(
                       context,
@@ -199,6 +239,11 @@ class AuthGate extends StatelessWidget {
                       openDriverServiceRequest(context, request),
                   onOpenProposal: (request) =>
                       openDriverProposal(context, request),
+                ),
+                openPushChat: (context, target) => openPushChatTarget(
+                  context,
+                  target,
+                  viewerSide: ConversationParticipant.driver,
                 ),
               ),
             ),
@@ -236,6 +281,9 @@ class AuthGate extends StatelessWidget {
                 BlocProvider<ClientHomeCubit>(
                   create: (_) => getIt<ClientHomeCubit>()..loadHome(),
                 ),
+                BlocProvider<ClientVansCubit>(
+                  create: (_) => getIt<ClientVansCubit>()..loadVans(),
+                ),
               ],
               child: ClientShell(
                 profile: session.profile,
@@ -250,6 +298,11 @@ class AuthGate extends StatelessWidget {
                 openClientProposals: openClientProposals,
                 openProposalDetail: openProposalDetail,
                 openNegotiationChat: openClientNegotiationChat,
+                openPushChat: (context, target) => openPushChatTarget(
+                  context,
+                  target,
+                  viewerSide: ConversationParticipant.client,
+                ),
               ),
             ),
           },
@@ -272,7 +325,7 @@ Future<void> openDriverSearch(BuildContext context) async {
       context: context,
       settings: const RouteSettings(name: '/search'),
       builder: (_) => BlocProvider<DriverSearchCubit>(
-        create: (_) => getIt<DriverSearchCubit>(),
+        create: (_) => getIt<DriverSearchCubit>()..loadRecommended(),
         child: DriverSearchPage(
           autocomplete: autocomplete,
           onDriverSelected: (driverToken) =>
@@ -325,11 +378,19 @@ Future<void> openQuoteRequest(BuildContext context, String driverToken) {
                 ),
             onCompleteClientField: (field) =>
                 openClientReadinessField(context, field),
-            onSent: (_) =>
-                Navigator.of(context)
-                    .pushReplacement(clientProposalsRoute(context)),
-            onOpenNegotiation: (request) =>
-                openProposalDetail(context, request),
+            onSent: (request) {
+              final navigator = Navigator.of(context);
+              if (request.conversationToken != null) {
+                navigator.pushReplacement(
+                  clientNegotiationChatRoute(context, request),
+                );
+              } else {
+                navigator.pushReplacement(clientProposalsRoute(context));
+              }
+            },
+            onOpenNegotiation: (request) => request.conversationToken != null
+                ? openClientNegotiationChat(context, request)
+                : openProposalDetail(context, request),
           ),
         ),
       ),
@@ -505,6 +566,63 @@ Future<void> openInboxConversation(
     conversationToken: conversation.token,
     counterpartName: conversationCounterpartName(conversation, viewerSide),
     viewerSide: viewerSide,
+    driverToken: conversation.driverToken,
+  );
+}
+
+Route<void> conversationChatRoute(
+  BuildContext context, {
+  required String conversationToken,
+  required String counterpartName,
+  required ConversationParticipant viewerSide,
+  String? driverToken,
+}) {
+  final l10n = AppLocalizations.of(context);
+  return rolePageRoute<void>(
+    context: context,
+    settings: RouteSettings(name: '/${viewerSide.name}/chat'),
+    builder: (_) => switch (viewerSide) {
+      ConversationParticipant.client => MultiBlocProvider(
+        providers: [
+          BlocProvider<ChatCubit>(
+            create: (_) => getIt<ChatCubit>(param1: conversationToken)..start(),
+          ),
+          BlocProvider<NegotiationTimelineCubit<ClientServiceRequest>>(
+            create: (_) =>
+                getIt<NegotiationTimelineCubit<ClientServiceRequest>>(
+                  param1: conversationToken,
+                )..load(),
+          ),
+        ],
+        child: ChatPage<ClientServiceRequest>(
+          counterpartName: counterpartName,
+          viewerSide: ConversationParticipant.client,
+          counterpartRoleCaption: l10n?.chatCounterpartDriverCaption,
+          onViewDriverProfile: driverToken != null && driverToken.isNotEmpty
+              ? () => openDriverProfile(context, driverToken)
+              : null,
+          negotiationActions: clientNegotiationChatActions(context),
+        ),
+      ),
+      ConversationParticipant.driver => MultiBlocProvider(
+        providers: [
+          BlocProvider<ChatCubit>(
+            create: (_) => getIt<ChatCubit>(param1: conversationToken)..start(),
+          ),
+          BlocProvider<NegotiationTimelineCubit<DriverServiceRequest>>(
+            create: (_) =>
+                getIt<NegotiationTimelineCubit<DriverServiceRequest>>(
+                  param1: conversationToken,
+                )..load(),
+          ),
+        ],
+        child: ChatPage<DriverServiceRequest>(
+          counterpartName: counterpartName,
+          viewerSide: ConversationParticipant.driver,
+          negotiationActions: driverNegotiationChatActions(context),
+        ),
+      ),
+    },
   );
 }
 
@@ -513,52 +631,29 @@ Future<void> openConversationChat(
   required String conversationToken,
   required String counterpartName,
   required ConversationParticipant viewerSide,
+  String? driverToken,
 }) {
   return Navigator.of(context).push(
-    rolePageRoute<void>(
-      context: context,
-      settings: RouteSettings(name: '/${viewerSide.name}/chat'),
-      builder: (_) => switch (viewerSide) {
-        ConversationParticipant.client => MultiBlocProvider(
-          providers: [
-            BlocProvider<ChatCubit>(
-              create: (_) =>
-                  getIt<ChatCubit>(param1: conversationToken)..start(),
-            ),
-            BlocProvider<NegotiationTimelineCubit<ClientServiceRequest>>(
-              create: (_) =>
-                  getIt<NegotiationTimelineCubit<ClientServiceRequest>>(
-                    param1: conversationToken,
-                  )..load(),
-            ),
-          ],
-          child: ChatPage<ClientServiceRequest>(
-            counterpartName: counterpartName,
-            viewerSide: ConversationParticipant.client,
-            negotiationActions: clientNegotiationChatActions(context),
-          ),
-        ),
-        ConversationParticipant.driver => MultiBlocProvider(
-          providers: [
-            BlocProvider<ChatCubit>(
-              create: (_) =>
-                  getIt<ChatCubit>(param1: conversationToken)..start(),
-            ),
-            BlocProvider<NegotiationTimelineCubit<DriverServiceRequest>>(
-              create: (_) =>
-                  getIt<NegotiationTimelineCubit<DriverServiceRequest>>(
-                    param1: conversationToken,
-                  )..load(),
-            ),
-          ],
-          child: ChatPage<DriverServiceRequest>(
-            counterpartName: counterpartName,
-            viewerSide: ConversationParticipant.driver,
-            negotiationActions: driverNegotiationChatActions(context),
-          ),
-        ),
-      },
+    conversationChatRoute(
+      context,
+      conversationToken: conversationToken,
+      counterpartName: counterpartName,
+      viewerSide: viewerSide,
+      driverToken: driverToken,
     ),
+  );
+}
+
+Future<void> openPushChatTarget(
+  BuildContext context,
+  ChatPushTarget target, {
+  required ConversationParticipant viewerSide,
+}) {
+  return openConversationChat(
+    context,
+    conversationToken: target.conversationToken,
+    counterpartName: target.counterpartName,
+    viewerSide: viewerSide,
   );
 }
 
@@ -575,18 +670,26 @@ NegotiationChatActions<ClientServiceRequest> clientNegotiationChatActions(
   );
 }
 
+Route<void> clientNegotiationChatRoute(
+  BuildContext context,
+  ClientServiceRequest request,
+) {
+  return conversationChatRoute(
+    context,
+    conversationToken: request.conversationToken!,
+    counterpartName: request.driverName,
+    viewerSide: ConversationParticipant.client,
+    driverToken: request.driverToken,
+  );
+}
+
 Future<void> openClientNegotiationChat(
   BuildContext context,
   ClientServiceRequest request,
 ) async {
-  final conversationToken = request.conversationToken;
-  if (conversationToken == null) return;
-  await openConversationChat(
-    context,
-    conversationToken: conversationToken,
-    counterpartName: request.driverName,
-    viewerSide: ConversationParticipant.client,
-  );
+  if (request.conversationToken == null) return;
+  await Navigator.of(context)
+      .push(clientNegotiationChatRoute(context, request));
 }
 
 DriverNegotiationActions driverNegotiationActions(BuildContext context) {
@@ -716,6 +819,264 @@ Future<void> openDriverVans(BuildContext context) {
       builder: (_) => BlocProvider<DriverVansCubit>(
         create: (_) => getIt<DriverVansCubit>()..loadVans(),
         child: const DriverVansPage(),
+      ),
+    ),
+  );
+}
+
+Widget provideDriverCompliance(
+  DriverComplianceCubit? compliance,
+  Widget child,
+) {
+  if (compliance != null) {
+    return BlocProvider<DriverComplianceCubit>.value(
+      value: compliance,
+      child: child,
+    );
+  }
+  return BlocProvider<DriverComplianceCubit>(
+    create: (_) => getIt<DriverComplianceCubit>()..load(),
+    child: child,
+  );
+}
+
+Future<void> openDriverProfessionalData(BuildContext context) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/professional-data'),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<ProfessionalDataCubit>(
+            create: (_) => getIt<ProfessionalDataCubit>()..load(),
+          ),
+          BlocProvider<DriverComplianceCubit>(
+            create: (_) => getIt<DriverComplianceCubit>()..load(),
+          ),
+        ],
+        child: Builder(
+          builder: (pageContext) {
+            final l10n = AppLocalizations.of(pageContext)!;
+            final compliance = pageContext.read<DriverComplianceCubit>();
+            return ProfessionalDataPage(
+              actions: ProfessionalDataActions(
+                onOpenServiceAreas: () => openDriverServiceAreas(pageContext),
+                onOpenPersonalDocuments: () => openDriverPersonalDocuments(
+                  pageContext,
+                  compliance: compliance,
+                ),
+                onOpenVanDocuments: () =>
+                    openDriverVanDocuments(pageContext, compliance: compliance),
+                onOpenComingSoon: (title) => openComingSoonPage(
+                  pageContext,
+                  title: title,
+                  message: l10n.comingSoon,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverPersonalDocuments(
+  BuildContext context, {
+  DriverComplianceCubit? compliance,
+}) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/personal'),
+      builder: (_) => provideDriverCompliance(
+        compliance,
+        Builder(
+          builder: (pageContext) => PersonalDocumentsPage(
+            onOpenDocument: (entry) =>
+                openDriverDocumentDetail(pageContext, entry),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverVanDocuments(
+  BuildContext context, {
+  DriverVan? van,
+  DriverComplianceCubit? compliance,
+}) {
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/vans'),
+      builder: (_) => provideDriverCompliance(
+        compliance,
+        Builder(
+          builder: (pageContext) => VehicleDocumentsPage(
+            onlyVehicleToken: van?.token,
+            onOpenDocument: (entry, vehicle) => openDriverDocumentDetail(
+              pageContext,
+              entry,
+              vehicleToken: vehicle.token,
+            ),
+            onRegisterVan: () async {
+              await openDriverVanRegistration(pageContext);
+              if (!pageContext.mounted) return;
+              await pageContext.read<DriverComplianceCubit>().refresh();
+            },
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDriverDocumentDetail(
+  BuildContext context,
+  DocumentEntry entry, {
+  String? vehicleToken,
+}) {
+  return Navigator.of(context).push(
+    driverDocumentDetailRoute(
+      context,
+      context.read<DriverComplianceCubit>(),
+      entry,
+      vehicleToken: vehicleToken,
+    ),
+  );
+}
+
+Route<void> driverDocumentDetailRoute(
+  BuildContext context,
+  DriverComplianceCubit compliance,
+  DocumentEntry entry, {
+  String? vehicleToken,
+}) {
+  final type = entry.requirement.type;
+  return rolePageRoute<void>(
+    context: context,
+    settings: const RouteSettings(name: '/driver/documents/detail'),
+    builder: (_) => MultiBlocProvider(
+      providers: [
+        BlocProvider<DriverComplianceCubit>.value(value: compliance),
+        BlocProvider<DocumentFileCubit>(
+          create: (_) => getIt<DocumentFileCubit>(),
+        ),
+      ],
+      child: Builder(
+        builder: (pageContext) => DocumentDetailPage(
+          type: type,
+          vehicleToken: vehicleToken,
+          onSend: () => openDocumentSubmission(
+            pageContext,
+            type: type,
+            vehicleToken: vehicleToken,
+          ),
+          onOpenImage: (imageUrl) =>
+              openDocumentImage(pageContext, type, imageUrl),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> openDocumentSubmission(
+  BuildContext context, {
+  required DocumentType type,
+  String? vehicleToken,
+}) async {
+  final compliance = context.read<DriverComplianceCubit>();
+  final l10n = AppLocalizations.of(context)!;
+  final loaded = compliance.state.compliance;
+  final vehicle = vehicleToken == null || loaded == null
+      ? null
+      : findVehicle(loaded, vehicleToken);
+  final vehicleCaption = vehicle == null
+      ? null
+      : l10n.vanStudentsCaption(vehicle.model, vehicle.plate);
+  final cubit = getIt<DocumentSubmissionCubit>(
+    param1: type,
+    param2: vehicleToken,
+  );
+  final picked = await showDocumentSourceSheet(context, cubit);
+  if (!picked || !context.mounted) {
+    await cubit.close();
+    return;
+  }
+  await Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/submission'),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<DriverComplianceCubit>.value(value: compliance),
+          BlocProvider<DocumentSubmissionCubit>.value(value: cubit),
+        ],
+        child: Builder(
+          builder: (pageContext) => DocumentSubmissionFlowPage(
+            vehicleCaption: vehicleCaption,
+            onOpenPdf: getIt<FileOpener>().open,
+            onBackToDocuments: () =>
+                Navigator.of(pageContext).popUntil(isOutsideDocumentFlow),
+            onOpenPending: (entry, pendingVehicleToken) => unawaited(
+              replaceDocumentFlowWithDetail(
+                pageContext,
+                compliance,
+                entry,
+                vehicleToken: pendingVehicleToken,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  await cubit.close();
+}
+
+const driverDocumentFlowRoutes = {
+  '/driver/documents/detail',
+  '/driver/documents/submission',
+};
+
+bool isOutsideDocumentFlow(Route<dynamic> route) =>
+    !driverDocumentFlowRoutes.contains(route.settings.name);
+
+Future<void> replaceDocumentFlowWithDetail(
+  BuildContext context,
+  DriverComplianceCubit compliance,
+  DocumentEntry entry, {
+  String? vehicleToken,
+}) {
+  final navigator = Navigator.of(context);
+  return navigator.pushAndRemoveUntil(
+    driverDocumentDetailRoute(
+      navigator.context,
+      compliance,
+      entry,
+      vehicleToken: vehicleToken,
+    ),
+    isOutsideDocumentFlow,
+  );
+}
+
+Future<void> openDocumentImage(
+  BuildContext context,
+  DocumentType type,
+  String imageUrl,
+) {
+  final l10n = AppLocalizations.of(context)!;
+  return Navigator.of(context).push(
+    rolePageRoute<void>(
+      context: context,
+      settings: const RouteSettings(name: '/driver/documents/file'),
+      builder: (_) => DocumentImagePage(
+        title: documentTypeLabel(l10n, type),
+        images: [
+          ApiImageProvider(path: imageUrl, loader: getIt<ApiImageLoader>()),
+        ],
       ),
     ),
   );

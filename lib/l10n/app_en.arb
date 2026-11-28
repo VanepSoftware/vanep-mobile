@@ -232,6 +232,13 @@
   "settingsThemeDark": "Dark",
   "settingsThemeSystemHint": "In System mode, the app follows your phone's light or dark theme.",
   "settingsThemeSaveFailed": "We couldn't save your theme choice. It will reset when you reopen the app.",
+  "settingsAppVersion": "Version {version} (build {build})",
+  "@settingsAppVersion": {
+    "placeholders": {
+      "version": {"type": "String"},
+      "build": {"type": "String"}
+    }
+  },
   "profilePrivacySecurity": "Privacy and security",
   "profileSignOutTitle": "Sign out of your account?",
   "profileSignOutMessage": "You'll be signed out on this device. You can sign in again anytime.",
@@ -357,6 +364,12 @@
   "driverSearchNetworkError": "No connection to the server. Please try again.",
   "driverSearchUnexpectedError": "Something went wrong. Please try again.",
   "driverSearchCoversWholeCity": "Covers the whole city",
+  "findVanTitle": "Find a van",
+  "findVanRecommendationsHeader": "Featured vans",
+  "findVanSearchResultsHeader": "Available vans for this location",
+  "findVanClearSearch": "Clear search",
+  "findVanEmptyRegionTitle": "No vans found in this area",
+  "findVanEmptyRegionSubtitle": "Try searching for a neighboring area, main street, or nearby school.",
   "dependentsSubtitle": "Manage who rides the van",
   "dependentsEmpty": "Dependents are the people who ride the van, like your children. Add the first one to request a quote.",
   "dependentsAdd": "Add dependent",
@@ -1500,7 +1513,7 @@
   "vanCentralVanData": "Details and photos",
   "vanCentralVanDataHint": "Plate, model, capacity",
   "vanCentralVanDocuments": "Van documents",
-  "vanCentralVanDocumentsHint": "Registration and inspection",
+  "vanCentralVanDocumentsHint": "Registration, inspection and school authorization",
   "vanCentralAccepting": "Accepting new students",
   "vanCentralAcceptingOneShift": "Only {shift} has seats",
   "vanCentralAcceptingSeveralShifts": "Seats {shifts}",
@@ -1546,6 +1559,7 @@
   "dependentRowSchool": "School",
   "dependentRowSchoolDays": "Days and shifts",
   "dependentRowPickup": "Pickup",
+  "dependentPickupUseProfileAddress": "Use my profile address",
   "dependentRowVan": "Van",
   "dependentRowContract": "Contract",
   "dependentRowPersonalData": "Personal data",
@@ -2582,5 +2596,761 @@
   "assistantFilterAll": "All",
   "assistantStudentsEmpty": "No students found.",
   "assistantLinkRevokedTitle": "Access revoked",
-  "assistantLinkRevokedMessage": "The driver removed your link to this van."
+  "assistantLinkRevokedMessage": "The driver removed your link to this van.",
+  "clientVansTitle": "My vans",
+  "clientVansSubtitle": "School vans linked to your account",
+  "clientVansEmptyTitle": "No linked vans",
+  "clientVansEmptyMessage": "You don't have any school vans linked to your dependents yet. Find school drivers to request transportation.",
+  "clientVansFindVanButton": "Find school vans",
+  "clientVansAddNewVan": "Find another van",
+  "clientVansDriverSection": "Assigned driver",
+  "clientVansContractSection": "Contract and Payment",
+  "clientVansDependentsSection": "Dependents in this van",
+  "clientVansChatDriver": "Chat with driver",
+  "clientVansContractDetails": "View contract",
+  "clientVansActiveBadge": "Active",
+  "clientVansPendingBadge": "Pending",
+  "clientVansDueDay": "Due every day {day}",
+  "@clientVansDueDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVansSeats": "{count} seats",
+  "@clientVansSeats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVansLoadError": "Could not load your vans.",
+  "clientVansRetry": "Try again",
+  "clientVanDetailTitle": "Van details",
+  "clientVanDetailCaption": "Full information and contract",
+  "clientVanDetailVehicleSection": "Vehicle",
+  "clientVanDetailPlate": "Plate",
+  "clientVanDetailColor": "Color",
+  "clientVanDetailYear": "Manufacture year",
+  "clientVanDetailCapacity": "Capacity",
+  "clientVanDetailShift": "Shift",
+  "clientVanDetailSchedule": "Schedule",
+  "clientVanDetailPickupAddress": "Pickup point",
+  "clientVanDetailWeekdays": "Service days",
+  "clientVansDriverLabel": "Driver: {name}",
+  "@clientVansDriverLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansDependentNoVan": "No van linked to this dependent.",
+  "clientVansAnotherVanChip": "Another van",
+  "clientVansVanSelectorTitle": "{driver}'s van",
+  "@clientVansVanSelectorTitle": {
+    "placeholders": {
+      "driver": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansActiveContractBadge": "Active contract",
+  "clientVansPendingContractBadge": "Pending contract",
+  "clientVansPhotoPlaceholder": "Van photo (front and side)",
+  "clientVansDriverRole": "Driver",
+  "clientVansCallDriver": "Call {name}",
+  "@clientVansCallDriver": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansOnVanSection": "On the van",
+  "clientVansRoutineSection": "Routine",
+  "clientVansScheduleStopsTitle": "Schedule and stops",
+  "clientVansReportAbsenceTitle": "Report absence",
+  "clientVansReportAbsenceSubtitle": "Today or future days",
+  "clientVansAdjustStopTitle": "Adjust stop",
+  "clientVansAdjustStopSubtitle": "For today only; driver approves",
+  "clientVansTripHistoryTitle": "Trip history",
+  "clientVansTripHistorySubtitle": "Pickups and arrivals, day by day",
+  "clientVansContractPaymentsSection": "Contract and payments",
+  "clientVansContractRowTitle": "Contract",
+  "clientVansContractUntilSummary": "Until {date} · {amount}/mo",
+  "@clientVansContractUntilSummary": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansPaymentsRowTitle": "Payments",
+  "clientVansSecuritySection": "Safety",
+  "clientVansDocumentsTitle": "Driver and van documents",
+  "clientVansRateDriverTitle": "Rate {name}",
+  "@clientVansRateDriverTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansRateDriverSubtitle": "Anonymous, once per contract",
+  "clientVansCancelContractTitle": "Cancel contract",
+  "clientVansCancelContractSubtitle": "30-day notice and 10% remaining balance fee",
+  "clientVanNoDependents": "No dependents linked to this van yet.",
+  "clientVanNoContract": "Contract pending activation",
+  "clientVanDriverPhoneTitle": "Driver phone",
+  "clientVanDriverPhoneMissing": "Driver phone number not provided.",
+  "clientVanCopyPhone": "Copy number",
+  "clientVanPhoneCopied": "Number copied.",
+  "dependentNoLinkedVan": "This dependent is not linked to a van yet.",
+  "clientVanDependentNotInList": "Could not open {name}'s profile.",
+  "@clientVanDependentNotInList": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVanDetailBrandModel": "Make / Model",
+  "clientVanDetailMonthlyFee": "Monthly fee",
+  "clientVanDetailDueDate": "Due date",
+  "clientVanDetailContractPeriod": "Contract period",
+  "clientVanDetailInstallmentsLabel": "Contracted installments",
+  "clientVanDetailInstallmentsCount": "{count, plural, =1{1 installment} other{{count} installments}}",
+  "@clientVanDetailInstallmentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "clientVanDetailTotalAmount": "Total amount",
+  "clientVanDetailSchool": "School",
+  "clientVanDetailOutboundTime": "Outbound: {time}",
+  "@clientVanDetailOutboundTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVanDetailReturnTime": "Return: {time}",
+  "@clientVanDetailReturnTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansScheduleBothTimes": "Pickup {pickup} · return {returnTime}",
+  "@clientVansScheduleBothTimes": {
+    "placeholders": {
+      "pickup": {
+        "type": "String"
+      },
+      "returnTime": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansSchedulePickupOnly": "Pickup {pickup}",
+  "@clientVansSchedulePickupOnly": {
+    "placeholders": {
+      "pickup": {
+        "type": "String"
+      }
+    }
+  },
+  "clientVansNoConversationYet": "There is no conversation started with this driver yet.",
+  "findVanPrototypeSubtitle": "Who serves your child's route",
+  "findVanHaveInvite": "I have\nan invite",
+  "findVanHaveInviteTitle": "Join with invite",
+  "findVanHaveInviteSubtitle": "Enter the code or paste the link sent by the driver.",
+  "findVanHaveInviteHint": "Invite code",
+  "findVanHaveInviteAction": "Check invite",
+  "findVanOriginLabel": "Pickup",
+  "findVanOriginPlaceholder": "Enter pickup address",
+  "findVanDestinationLabel": "Destination",
+  "findVanDestinationPlaceholder": "Search school or address",
+  "findVanSwapTooltip": "Swap pickup and destination",
+  "findVanHomePrefix": "Home · {address}",
+  "@findVanHomePrefix": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "findVanForLabel": "For",
+  "findVanDriversCount": "{count, plural, =1{1 driver serves this route} other{{count} drivers serve this route}}",
+  "@findVanDriversCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "findVanSortNearest": "Nearest",
+  "findVanSortRating": "Highest rated",
+  "findVanSortPrice": "Lowest price",
+  "findVanSortExperience": "Most experienced",
+  "findVanSortSheetTitle": "Sort drivers",
+  "findVanNewOnVanep": "New on Vanep",
+  "findVanExperienceYearsShort": "{years, plural, =1{1 year of experience} other{{years} years of experience}}",
+  "@findVanExperienceYearsShort": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "findVanSpotsAvailable": "Spots available",
+  "findVanSpotsFull": "No spots available",
+  "findVanPriceStartingFrom": "starting at",
+  "findVanPerMonth": "/mo",
+  "findVanPriceOnRequest": "On request",
+  "findVanProfileButton": "Profile",
+  "findVanRequestQuoteButton": "Request quote",
+  "driverProfileRatingSummary": "{rating} · {count, plural, =1{1 review} other{{count} reviews}}",
+  "@driverProfileRatingSummary": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileReviewsCount": "{count, plural, =1{1 review} other{{count} reviews}}",
+  "@driverProfileReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfilePhotoCounter": "{current} of {total}",
+  "@driverProfilePhotoCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedBadge": "Verified by Vanep",
+  "driverProfileBioSectionTitle": "Introduction",
+  "driverProfileVacanciesSectionTitle": "Spots & price",
+  "driverProfileStartingFromLabel": "Starting from",
+  "driverProfileStartingFromValue": "Starting from {price}",
+  "@driverProfileStartingFromValue": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileVansSectionTitle": "Vans",
+  "driverProfileVanModelYear": "{model} · {year}",
+  "@driverProfileVanModelYear": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVanWithAssistant": "with assistant",
+  "driverProfileServiceSectionTitle": "Service details",
+  "driverProfileServiceAreasLabel": "Neighborhoods",
+  "driverProfileWorkHoursLabel": "Working hours",
+  "driverProfileWorkHoursValue": "{start} to {end} · {days}",
+  "@driverProfileWorkHoursValue": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "driverProfileWaitToleranceLabel": "Wait at stop",
+  "driverProfileWaitToleranceValue": "{minutes, plural, =1{Up to 1 min} other{Up to {minutes} min}}",
+  "@driverProfileWaitToleranceValue": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileVerifiedCardTitle": "Verified by Vanep",
+  "driverProfileVerifiedCardSubtitle": "License, background check, and van documents",
+  "driverProfileReviewsSectionTitle": "Reviews",
+  "driverProfileSeeAllReviews": "See all",
+  "driverProfileNoReviewsYet": "No published reviews yet.",
+  "driverProfileRequestQuoteButton": "Request quote",
+  "driverProfilePhotosTitle": "Photos",
+  "driverProfilePhotosEmpty": "No photos added yet.",
+  "driverProfileRatingsTitle": "Reviews",
+  "driverProfileVerifiedSheetIntro": "Vanep checks all documents before listing the driver in search and tracks expiration dates.",
+  "driverProfileVerifiedDocCnh": "Category D or E driver license",
+  "driverProfileVerifiedDocCourse": "School transport certification",
+  "driverProfileVerifiedDocBackground": "Criminal background check",
+  "driverProfileVerifiedDocInspection": "Van safety inspection",
+  "driverProfileVerifiedDocAuthorization": "School transport permit",
+  "driverProfileVerifiedGotIt": "Got it",
+  "driverProfileShiftVacancyAvailable": "{count, plural, =1{1 spot} other{{count} spots}}",
+  "@driverProfileShiftVacancyAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverProfileShiftFull": "Full",
+  "chatCounterpartDriverCaption": "Driver",
+  "chatViewDriverProfileTooltip": "View driver profile",
+  "quoteRequestPrivacyNotice": "The driver sees only your neighborhood and first name until acceptance.",
+  "quoteRequestOptionalBadge": "optional",
+  "quoteRequestNotesHint": "Anything the driver should know",
+  "quoteRequestOpenCountFooter": "Reply within 72 h · {open} of {limit} open requests",
+  "@quoteRequestOpenCountFooter": {
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "proposalDetailPrivacyNotice": "The driver sees only the neighborhood until acceptance.",
+  "findVanPrivacyNotice": "Until you accept a proposal, the driver only sees your neighborhood and your child's first name.",
+  "findVanSearchSheetTitleOrigin": "Pickup location",
+  "findVanSearchSheetTitleDestination": "School or destination",
+  "findVanUseMyAddress": "Use my address",
+  "findVanFiltersButton": "Filters",
+  "findVanFiltersSheetTitle": "Filters",
+  "findVanFiltersDependentSubtitle": "Choose who you are looking for a van for",
+  "findVanFiltersNoDependents": "No dependents registered yet.",
+  "findVanFiltersApply": "Apply",
+  "driverDocumentsPersonalTitle": "Personal documents",
+  "driverDocumentsVansTitle": "Van documents",
+  "driverDocumentsVanTitle": "Van documents",
+  "driverDocumentsPendingSection": "Pending",
+  "driverDocumentsSentSection": "Sent",
+  "driverDocumentsOptionalSection": "Optional",
+  "driverDocumentsPersonalPrivacy": "Only the Vanep review team sees your documents.",
+  "driverDocumentsVansPrivacy": "Only the Vanep review team sees the van documents.",
+  "driverDocumentsVanPendingCount": "{count, plural, =1{1 pending} other{{count} pending}}",
+  "@driverDocumentsVanPendingCount": {"placeholders": {"count": {"type": "int"}}},
+  "driverDocumentsVanUpToDate": "Up to date",
+  "driverDocumentsNoVanTitle": "Register your van to send its documents",
+  "driverDocumentsNoVanAction": "Register van",
+  "driverDocumentsLoadError": "We couldn't load the documents.",
+  "driverDocumentsRetry": "Try again",
+  "documentTypeDriverLicense": "Driver's license",
+  "documentTypeSchoolDriverCourse": "School transport course",
+  "documentTypeCriminalRecord": "Criminal record certificate",
+  "documentTypeMunicipalAuthorization": "Municipal license",
+  "documentTypeVehicleRegistration": "Vehicle registration (CRLV)",
+  "documentTypeVehicleInspection": "Six-month inspection",
+  "documentTypeSchoolVehicleAuthorization": "School transport authorization",
+  "documentStateNotSent": "Not sent",
+  "documentStateOptional": "Optional",
+  "documentStateRejected": "Rejected",
+  "documentStateExpired": "Expired",
+  "documentStateUnderReview": "Under review",
+  "documentStateApproved": "Approved",
+  "documentStateRenewalUnderReview": "New version under review",
+  "documentStateExpiringSoon": "{days, plural, =0{Expires today} =1{Expires tomorrow} other{Expires in {days} days}}",
+  "@documentStateExpiringSoon": {"placeholders": {"days": {"type": "int"}}},
+  "documentStateNotSentOptional": "Not sent · Optional",
+  "documentDetailPersonalCaption": "Personal document",
+  "documentDetailSentSection": "What was sent",
+  "documentDetailAboutSection": "About the document",
+  "documentDetailIssuer": "Issued by",
+  "documentDetailValidity": "Validity",
+  "documentDetailFile": "File",
+  "documentDetailViewFile": "View file",
+  "documentDetailNumber": "Number",
+  "documentDetailCategory": "Category",
+  "documentDetailPlate": "Plate",
+  "documentDetailValidUntil": "Valid until",
+  "documentDetailSentOn": "Sent on",
+  "documentDetailCurrentVersion": "Version in force",
+  "documentDetailNewVersion": "New version",
+  "documentDetailApprovedOn": "Approved on {date}",
+  "@documentDetailApprovedOn": {"placeholders": {"date": {"type": "String"}}},
+  "documentDetailSentOnDate": "Sent on {date}",
+  "@documentDetailSentOnDate": {"placeholders": {"date": {"type": "String"}}},
+  "documentDetailValidUntilDate": "Valid until {date}",
+  "@documentDetailValidUntilDate": {"placeholders": {"date": {"type": "String"}}},
+  "documentDetailUnderReviewNote": "Vanep reviews it within 2 business days. You get the answer here and by email.",
+  "documentDetailExpiringNote": "Send the new version before it expires. With an expired document, the app blocks new routes until the new version is approved.",
+  "documentDetailExpiredNote": "This document has expired. Send the current version for it to count again.",
+  "documentDetailRenewalNote": "The version in force keeps counting until the new one is approved.",
+  "documentDetailVanepMessage": "Message from the Vanep team",
+  "documentDetailRejectedNote": "The rest of your registration still counts. This document needs to be sent again.",
+  "documentDetailNotFound": "This document is no longer on your list.",
+  "documentFileOpenError": "We couldn't open the file.",
+  "documentRejectionIllegible": "Unreadable or cut-off document",
+  "documentRejectionExpired": "Expired document",
+  "documentRejectionDataMismatch": "Data does not match the registration",
+  "documentRejectionWrongType": "Wrong type of document",
+  "documentRejectionIncomplete": "Missing pages, front or back",
+  "documentRejectionNotEligible": "Does not qualify for school transport",
+  "documentRejectionOther": "Other reason",
+  "documentActionSend": "Send",
+  "documentActionResend": "Send again",
+  "documentActionSendNew": "Send new version",
+  "documentActionSendUpdated": "Send updated version",
+  "documentAboutDriverLicense": "National driver's license. For school transport, the Traffic Code requires category D or E.",
+  "documentAboutSchoolDriverCourse": "Course for school transport drivers, required by the Traffic Code. It needs periodic renewal.",
+  "documentAboutCriminalRecord": "Criminal record certificate. The name must match your registration.",
+  "documentAboutMunicipalAuthorization": "City license to provide school transport. Not every city requires it: if yours does not, you do not need to send it.",
+  "documentAboutVehicleRegistration": "Vehicle registration and licensing certificate. It is renewed every year after licensing. The digital version (CRLV-e) is in the Carteira Digital de Trânsito app.",
+  "documentAboutVehicleInspection": "Inspection of the mandatory and safety equipment of the school vehicle, required by the Traffic Code every six months.",
+  "documentAboutSchoolVehicleAuthorization": "Traffic authority authorization for the vehicle to provide school transport. Besides sending it here, it must be posted inside the van, in plain sight.",
+  "documentIssuerDetran": "DETRAN",
+  "documentIssuerCourse": "Driving school (CFC) or accredited entity",
+  "documentIssuerCriminalRecord": "Federal Police or State Civil Police",
+  "documentIssuerMunicipalAuthorization": "City hall or city traffic authority",
+  "documentValidityDriverLicense": "The one on the license",
+  "documentValidityCourse": "5 years",
+  "documentValidityMunicipalAuthorization": "Set by the city",
+  "documentValidityVehicleRegistration": "1 year (licensing year)",
+  "documentValidityVehicleInspection": "6 months",
+  "documentSourceTitle": "How do you want to send it?",
+  "documentSourceScanner": "Scan with the camera",
+  "documentSourceScannerHint": "Take a photo of the document now with the camera. If it has a back, photograph both sides.",
+  "documentSourceGallery": "Choose from the gallery",
+  "documentSourceGalleryHint": "A photo you already took",
+  "documentSourcePdf": "Choose a PDF file",
+  "documentSourcePdfHint": "If you downloaded it from the agency's site or got it by email",
+  "documentSourceTip": "The whole document in the picture, no glare and everything readable. PDF, JPG or PNG up to 10 MB.",
+  "documentCapturePermissionDenied": "Allow access to the camera or photos in the phone settings to send the document.",
+  "documentFileTooLarge": "The file is over 10 MB. Scan again with fewer pages or choose a smaller file.",
+  "documentCaptureFailed": "We couldn't open the file. Try again.",
+  "documentScanPagePosition": "{index} of {total}",
+  "@documentScanPagePosition": {"placeholders": {"index": {"type": "int"}, "total": {"type": "int"}}},
+  "documentScanPageLabel": "Page {index}",
+  "@documentScanPageLabel": {"placeholders": {"index": {"type": "int"}}},
+  "documentSendingTitle": "Sending…",
+  "documentSendingProgress": "{sent} of {total} MB",
+  "@documentSendingProgress": {"placeholders": {"sent": {"type": "String"}, "total": {"type": "String"}}},
+  "documentSendingPercent": "{percent}%",
+  "@documentSendingPercent": {"placeholders": {"percent": {"type": "int"}}},
+  "documentSendingKeepOpen": "Keep the app open until it finishes.",
+  "documentSentTitle": "Document sent",
+  "documentSentMessage": "Vanep reviews it within 2 business days. You get the answer here and by email.",
+  "documentSentStillMissing": "To do",
+  "documentSentBack": "Back to the documents",
+  "documentSendFailedTitle": "We couldn't send it",
+  "documentSendFailedMessage": "The connection dropped during the upload. The file is still here, just try again.",
+  "documentSendRetry": "Try again",
+  "documentSendChangeFile": "Change file",
+  "documentSubmissionPendingExists": "There is already an upload of this document in progress.",
+  "documentSubmissionAlreadyReviewed": "This upload was already reviewed. Check the document status.",
+  "documentSubmissionUnsupportedFile": "This file type is not accepted. Send a PDF, JPG or PNG.",
+  "documentSubmissionUnexpected": "We couldn't send the document. Try again.",
+  "documentSendingCaption": "{document} · {van}",
+  "@documentSendingCaption": {"placeholders": {"document": {"type": "String"}, "van": {"type": "String"}}},
+  "documentConfirmSubmit": "Send for review",
+  "documentConfirmChangeFile": "Change file",
+  "documentConfirmChecklistTitle": "Before sending, check",
+  "documentConfirmCheckReadable": "Everything is readable",
+  "documentConfirmCheckWhole": "The whole document shows, nothing cut off",
+  "documentConfirmCheckBothSides": "Front and back, when it has both",
+  "documentConfirmOpenPdf": "Open PDF",
+  "documentConfirmViewPage": "View full screen",
+  "documentFormatPdf": "PDF",
+  "documentFormatJpg": "JPG",
+  "documentFormatPng": "PNG",
+  "documentFormatWebp": "WEBP",
+  "documentFileSummaryWithPages": "{format} · {pages, plural, =1{1 page} other{{pages} pages}} · {size} MB",
+  "@documentFileSummaryWithPages": {"placeholders": {"format": {"type": "String"}, "pages": {"type": "int"}, "size": {"type": "String"}}},
+  "documentFileSummary": "{format} · {size} MB",
+  "@documentFileSummary": {"placeholders": {"format": {"type": "String"}, "size": {"type": "String"}}},
+  "professionalDataRating": "{rating} ({count})",
+  "@professionalDataRating": {"placeholders": {"rating": {"type": "String"}, "count": {"type": "int"}}},
+  "professionalDataExperience": "{years, plural, =1{1 year of experience} other{{years} years of experience}}",
+  "@professionalDataExperience": {"placeholders": {"years": {"type": "int"}}},
+  "professionalDataHeaderLine": "{first} · {second}",
+  "@professionalDataHeaderLine": {"placeholders": {"first": {"type": "String"}, "second": {"type": "String"}}},
+  "professionalDataVerified": "Verified driver",
+  "professionalDataEdit": "Edit photo and introduction",
+  "professionalDataPublicProfile": "See public profile",
+  "professionalDataAttendanceSection": "Service",
+  "professionalDataDocumentsSection": "Documents",
+  "professionalDataCompanySection": "Company",
+  "professionalDataWorkHours": "Working hours",
+  "professionalDataWaitTime": "Waiting at the stop",
+  "professionalDataPersonalDocuments": "Personal",
+  "professionalDataVanDocuments": "Vans",
+  "professionalDataCnpj": "CNPJ",
+  "professionalDataLoadError": "We couldn't load your professional data.",
+  "professionalDataRetry": "Try again",
+  "pushNotificationChannelName": "Notifications",
+  "pushNotificationChannelDescription": "Chat messages, proposals and contracts",
+  "@pushNotificationChannelName": {
+    "description": "Android notification channel name shown in the system settings."
+  },
+  "upgradeWallTitle": "Update required",
+  "upgradeWallBody": "A new version of Vanep is available. Update the app to keep using it.",
+  "upgradeNoticeTitle": "Update available",
+  "upgradeNoticeBody": "A new version of Vanep is on the Play Store. Update when you can.",
+  "upgradeNoticeLater": "Later",
+  "upgradeWallButton": "Update now",
+  "driverHomeUnavailable": "Home data is not available yet.",
+  "driverHomeRefreshFailed": "Could not refresh home.",
+  "driverHomeStopChanged": "The stop changed. Check the details and slide again.",
+  "driverHomeRefreshAfterAction": "Action completed. Refresh to see the current status.",
+  "driverHomeActionFailed": "Could not complete the action. Try again.",
+  "driverHomeApprovalRequired": "Your registration must be approved to start the route.",
+  "driverHomeNoPendingRoute": "There is no route waiting to start.",
+  "driverHomeSubscription": "Update your Vanep subscription.",
+  "driverHomeDocuments": "Update expired documents.",
+  "driverHomeBothBlocked": "Update your Vanep subscription and expired documents.",
+  "driverHomeBlockedTitle": "Update required",
+  "driverHomeIncompleteTitle": "Complete your registration",
+  "driverHomeIncompleteDescription": "Open Documents to complete pending information.",
+  "driverHomeReviewTitle": "Registration under review",
+  "driverHomeReviewDescription": "Please wait for your documents to be reviewed.",
+  "driverHomeRejectedTitle": "Registration rejected",
+  "driverHomeRejectedDescription": "Check Documents for the reason.",
+  "driverHomeInProgress": "On route",
+  "driverHomeBeforeDeparture": "Before departure",
+  "driverHomeCompleted": "Shift completed",
+  "driverHomeBuildingTitle": "Let’s build your route",
+  "driverHomeBuildingDescription": "Your registration is approved. Add students to organize your route.",
+  "driverHomeNoRouteTitle": "No route today",
+  "driverHomeNoRouteDescription": "Manage your business using the shortcuts below.",
+  "driverHomeRegularize": "Update",
+  "driverHomeCompleteRegistration": "Complete registration",
+  "driverHomeResubmit": "Correct and resubmit",
+  "driverHomeChecklist": "Checklist",
+  "driverHomeStartRoute": "Start route",
+  "driverHomeAddStudents": "Add students",
+  "driverHomeStudents": "Students",
+  "driverHomeRoute": "Route and stops",
+  "driverHomeAbsences": "Absences and adjustments",
+  "driverHomeFinancial": "Finances",
+  "driverHomeAssistants": "Assistants",
+  "driverHomeDocumentsShortcut": "Documents",
+  "driverHomeRetry": "Try again",
+  "driverHomeOutsideHours": "You are outside working hours.",
+  "driverHomeRegularization": "Updates",
+  "driverHomeContact": "Stop contact",
+  "driverHomeBoarding": "boarding",
+  "driverHomeDisembarking": "disembarking",
+  "driverHomeMorning": "Morning",
+  "driverHomeAfternoon": "Afternoon",
+  "driverHomeNight": "Night",
+  "driverHomeFulltime": "Full day",
+  "driverHomeNextShift": "Next shift: {shift}",
+  "@driverHomeNextShift": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeTripShiftOverline": "Route · {shift}",
+  "@driverHomeTripShiftOverline": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeInProgressShiftOverline": "On route · {shift}",
+  "@driverHomeInProgressShiftOverline": {
+    "placeholders": {
+      "shift": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeCall": "Call: {contact}",
+  "@driverHomeCall": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeFamilyCounter": "{count} of {total} with family in the app",
+  "@driverHomeFamilyCounter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeSlideStudent": "{student}: slide to confirm {action}",
+  "@driverHomeSlideStudent": {
+    "placeholders": {
+      "student": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSlideHint": "Slide from left to right to confirm {action}",
+  "@driverHomeSlideHint": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomePreviewTitle": "Test preview — simulated data",
+  "driverHomeShortcutsTitle": "Shortcuts",
+  "driverHomeGreetingHello": "Hello, {name}!",
+  "@driverHomeGreetingHello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeGreetingHelloPlain": "Hello, {name}",
+  "@driverHomeGreetingHelloPlain": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeSubtitleIncomplete": "Almost ready to receive students through Vanep.",
+  "driverHomeSubtitleUnderReview": "Your registration has been submitted.",
+  "driverHomeSubtitleRejected": "Your registration needs attention.",
+  "driverHomeSubtitleBuildingRoute": "Registration approved. Welcome to Vanep.",
+  "driverHomeSubtitleShiftCompletedOn": "{date} · good job, {name}",
+  "@driverHomeSubtitleShiftCompletedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeIncompleteOverline": "Registration",
+  "driverHomeIncompleteHeadline": "Complete your registration to appear in search",
+  "driverHomeIncompleteStep1": "Personal details",
+  "driverHomeIncompleteStep2": "Professional profile",
+  "driverHomeIncompleteStep3": "Van",
+  "driverHomeIncompleteStep4Title": "Driver's license (CNH)",
+  "driverHomeIncompleteStep4Hint": "License photo and expiration date",
+  "driverHomeIncompleteStepNow": "Now",
+  "driverHomeIncompleteStep5Title": "Documents",
+  "driverHomeIncompleteStep5Hint": "CRLV, inspection and permit",
+  "driverHomeIncompleteStep6Title": "Service areas",
+  "driverHomeIncompleteStep6Hint": "Neighborhoods and schools you serve",
+  "driverHomeIncompleteFooter": "After submission, review takes up to 2 business days.",
+  "driverHomeUnderReviewOverline": "Under review",
+  "driverHomeUnderReviewHeadline": "Vanep is reviewing your documents",
+  "driverHomeUnderReviewSubtitle": "Response within 2 business days, here and by email.",
+  "driverHomeTimelineSent": "Submitted",
+  "driverHomeTimelineInReview": "Under review",
+  "driverHomeTimelineApproved": "Approved",
+  "driverHomeTimelineApprovedHint": "Unlocks starting routes and receiving proposals",
+  "driverHomeSeeSentDocuments": "See submitted documents",
+  "driverHomeMeanwhileAdvanceRoute": "Meanwhile, set up your route",
+  "driverHomeAdvanceStudentsTitle": "Add your current students",
+  "driverHomeAdvanceStudentsHint": "They join your route on day one",
+  "driverHomeAdvanceAssistantTitle": "Invite your assistant",
+  "driverHomeAdvanceAssistantHint": "They handle check-offs with you",
+  "driverHomeBuildingOverline": "Build your route",
+  "driverHomeBuildingHeadline": "Bring the students you already drive",
+  "driverHomeBuildingStep1Title": "Register current students",
+  "driverHomeBuildingStep1Hint": "Name, school and address",
+  "driverHomeBuildingStep2Title": "Invite families",
+  "driverHomeBuildingStep2Hint": "Via WhatsApp, so they get alerts",
+  "driverHomeBuildingStep3Title": "Invite your assistant",
+  "driverHomeBuildingStep3Hint": "They handle check-offs while you drive.",
+  "driverHomeShareParentGroupLink": "Send link in parents group",
+  "driverHomeStatActiveStudents": "active students",
+  "driverHomeLocationTitle": "Share location",
+  "driverHomeLocationSubtitle": "Parents see the van only during the route",
+  "driverHomeSlideToStartRoute": "Slide to start route",
+  "driverHomeInviteAction": "Invite",
+  "driverHomeMissingFamiliesHint": "{count, plural, =1{1 family still without boarding alerts} other{{count} families still without boarding alerts}}",
+  "@driverHomeMissingFamiliesHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driverHomeAllFamiliesInAppHint": "All families already receive alerts in the app",
+  "driverHomeParentsSeeVan": "Parents see the van",
+  "driverHomeNextStopLabel": "Next stop",
+  "driverHomeSlideConfirm": "Slide to confirm {action}",
+  "@driverHomeSlideConfirm": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeBoardingConfirmed": "Boarding confirmed for {name}",
+  "@driverHomeBoardingConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeDisembarkingConfirmed": "Drop-off confirmed for {name}",
+  "@driverHomeDisembarkingConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "driverHomeExceptionAction": "Exception",
+  "driverHomeWazeAction": "Waze",
+  "driverHomeDrivingNotice": "While the van is moving, leave check-offs to your assistant.",
+  "driverHomeEndRouteAction": "End route",
+  "driverHomeEndRouteHint": "If any student is unchecked, the app warns before ending.",
+  "driverHomeSeeTripReport": "See trip report",
+  "driverHomeYourBusinessSection": "Your business",
+  "driverHomeBlockedHeadline": "New proposals are paused",
+  "driverHomeSeeInvoice": "See invoice",
+  "driverHomeExpiredDocumentTitle": "Expired document",
+  "driverHomeExpiredDocumentSubtitle": "New requests are paused until you upload the document.",
+  "driverHomeSendNewDocument": "Upload new document",
+  "driverHomeMeanwhileSection": "Meanwhile",
+  "driverHomeMeanwhileRoutes": "Routes, checklist and parent alerts",
+  "driverHomeMeanwhileContracts": "Active contracts and signed renewals",
+  "driverHomeMeanwhileProposals": "Reply to requests and send proposals",
+  "driverHomeMeanwhileSearch": "Appear in search"
 }

@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/core/places/places_container.dart';
+import 'package:vanep_mobile/modules/auth/domain/usecases/find_my_personal_address.dart';
 import 'package:vanep_mobile/modules/contract_readiness/contract_readiness_container.dart';
 import 'package:vanep_mobile/modules/dependents/dependents_container.dart';
 import 'package:vanep_mobile/modules/dependents/domain/repositories/dependent_school_days_repository.dart';
@@ -21,6 +22,7 @@ import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cu
 import 'package:vanep_mobile/modules/ibge_locations/ibge_locations_container.dart';
 import 'package:vanep_mobile/modules/schools/schools_container.dart';
 
+import '../auth/presentation/auth_presentation_mocks.dart';
 import 'dependents_fixtures.dart';
 import 'dependents_mocks.dart';
 
@@ -34,6 +36,7 @@ void main() {
     registerPlacesDependencies(getIt, platform: TargetPlatform.android);
     registerIbgeLocationsDependencies(getIt);
     registerSchoolsDependencies(getIt);
+    getIt.registerFactory<FindMyPersonalAddress>(MockFindMyPersonalAddress.new);
     registerContractReadinessDependencies(getIt);
     registerDependentsDependencies(getIt);
   });

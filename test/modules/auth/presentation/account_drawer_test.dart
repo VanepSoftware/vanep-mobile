@@ -80,6 +80,7 @@ Widget drawerHarness(
   Color? statusColor,
   bool isSummaryLoading = false,
   Future<void> Function(BuildContext context)? openSettings,
+  Future<void> Function(BuildContext context)? openProfessionalData,
 }) {
   return MaterialApp(
     localizationsDelegates: const [
@@ -102,6 +103,7 @@ Widget drawerHarness(
           statusColor: statusColor,
           isSummaryLoading: isSummaryLoading,
           openSettings: openSettings,
+          openProfessionalData: openProfessionalData,
         ),
       ),
     ),
@@ -200,6 +202,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(openedSettings, 1);
+  });
+
+  testWidgets('professional data opens the professional data screen', (
+    tester,
+  ) async {
+    var opened = 0;
+    await tester.pumpWidget(
+      drawerHarness(
+        cubit,
+        const FakeUserProfile(),
+        openProfessionalData: (_) async => opened++,
+      ),
+    );
+
+    await tester.tap(find.text('Dados profissionais'));
+    await tester.pumpAndSettle();
+
+    expect(opened, 1);
   });
 
   testWidgets('disabled menu items do not navigate', (tester) async {

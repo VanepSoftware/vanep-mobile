@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/domain/postal_address_draft.dart';
 import 'package:vanep_mobile/core/result/result.dart';
+import 'package:vanep_mobile/modules/auth/domain/entities/personal_address.dart';
+import 'package:vanep_mobile/modules/auth/domain/failures/personal_address_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/entities/dependent.dart';
 import 'package:vanep_mobile/modules/dependents/domain/failures/dependent_failure.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/dependent_changes.dart';
@@ -19,6 +21,8 @@ import 'package:vanep_mobile/modules/ibge_locations/domain/failures/cep_failure.
 import 'package:vanep_mobile/modules/ibge_locations/domain/failures/ibge_locations_failure.dart';
 
 import '../../../core/domain/postal_address_draft_fixture.dart';
+import '../../auth/personal_address_fixture.dart';
+import '../../auth/presentation/auth_presentation_mocks.dart';
 import '../../ibge_locations/ibge_locations_fixture.dart';
 import '../../ibge_locations/ibge_locations_mocks.dart';
 import '../dependents_fixtures.dart';
@@ -37,6 +41,7 @@ void main() {
   late MockLookupCep lookupCep;
   late MockListStates listStates;
   late MockListCities listCities;
+  late MockFindMyPersonalAddress findMyAddress;
 
   setUpAll(registerDependentFallbackValues);
 
@@ -45,6 +50,7 @@ void main() {
     lookupCep = MockLookupCep();
     listStates = MockListStates();
     listCities = MockListCities();
+    findMyAddress = MockFindMyPersonalAddress();
     when(() => listStates()).thenAnswer(
       (_) async => Ok(fakeIbgeLocationsPage(items: const [fakeDfState])),
     );
@@ -61,6 +67,7 @@ void main() {
     lookupCep: lookupCep,
     listStates: listStates,
     listCities: listCities,
+    findMyPersonalAddress: findMyAddress,
     cepLookupDebounce: Duration.zero,
   );
 
@@ -640,6 +647,89 @@ void main() {
     expect(
       cubit.state.addressIssues,
       contains(PostalAddressIssue.cityRequired),
+    );
+  });
+
+  group('profile address', () {
+    const withoutAddress = TestDependent(token: 'dep-bia', name: 'Bia Souza');
+
+    void profileReturns(Result<PersonalAddressFailure, PersonalAddress?> r) {
+      when(() => findMyAddress()).thenAnswer((_) async => r);
+    }
+
+    blocTest<DependentPickupCubit, DependentPickupState>(
+      'loads the address the user registered at sign-up',
+      setUp: () => profileReturns(Ok(fakePersonalAddress())),
+      build: () => buildCubit(dependent: withoutAddress),
+      act: (cubit) => cubit.loadProfileAddress(),
+      verify: (cubit) {
+        expect(cubit.state.profileAddress, fakePersonalAddress());
+        expect(cubit.state.canUseProfileAddress, isTrue);
+      },
+    );
+
+    blocTest<DependentPickupCubit, DependentPickupState>(
+      'offers nothing when the user has no registered address',
+      setUp: () => profileReturns(const Ok(null)),
+      build: () => buildCubit(dependent: withoutAddress),
+      act: (cubit) => cubit.loadProfileAddress(),
+      verify: (cubit) {
+        expect(cubit.state.profileAddress, isNull);
+        expect(cubit.state.canUseProfileAddress, isFalse);
+      },
+    );
+
+    blocTest<DependentPickupCubit, DependentPickupState>(
+      'a failed lookup offers nothing and does not block the form',
+      setUp: () => profileReturns(const Err(PersonalAddressFailure.network)),
+      build: () => buildCubit(dependent: withoutAddress),
+      act: (cubit) => cubit.loadProfileAddress(),
+      verify: (cubit) {
+        expect(cubit.state.profileAddress, isNull);
+        expect(cubit.state.failure, isNull);
+        expect(cubit.state.status, DependentEditorStatus.editing);
+      },
+    );
+
+    blocTest<DependentPickupCubit, DependentPickupState>(
+      'using it fills the whole address and makes the step savable',
+      setUp: () => profileReturns(Ok(fakePersonalAddress())),
+      build: () => buildCubit(dependent: withoutAddress),
+      act: (cubit) async {
+        await cubit.loadProfileAddress();
+        cubit.useProfileAddress();
+      },
+      verify: (cubit) {
+        final address = cubit.state.draft.address;
+        expect(address.zipCode, '72120120');
+        expect(address.street, 'QND 12');
+        expect(address.number, '10');
+        expect(address.complement, 'Casa 2');
+        expect(address.neighborhood, 'Taguatinga');
+        expect(address.cityToken, 'city-brasilia');
+        expect(address.uf, 'DF');
+        expect(cubit.state.canSave, isTrue);
+        expect(cubit.state.canUseProfileAddress, isFalse);
+      },
+    );
+
+    blocTest<DependentPickupCubit, DependentPickupState>(
+      'using it replaces an address typed before',
+      setUp: () => profileReturns(Ok(fakePersonalAddress())),
+      build: () => buildCubit(dependent: withoutAddress),
+      act: (cubit) async {
+        cubit.updateStreet('Rua digitada');
+        await cubit.loadProfileAddress();
+        cubit.useProfileAddress();
+      },
+      verify: (cubit) => expect(cubit.state.draft.address.street, 'QND 12'),
+    );
+
+    blocTest<DependentPickupCubit, DependentPickupState>(
+      'using it without a loaded address changes nothing',
+      build: () => buildCubit(dependent: withoutAddress),
+      act: (cubit) => cubit.useProfileAddress(),
+      expect: () => <DependentPickupState>[],
     );
   });
 }

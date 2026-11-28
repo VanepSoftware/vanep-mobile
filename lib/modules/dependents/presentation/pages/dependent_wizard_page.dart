@@ -210,7 +210,8 @@ class DependentWizardStepView extends StatelessWidget {
       ),
       DependentWizardStep.pickup => BlocProvider(
         create: (_) =>
-            getIt<DependentPickupCubit>(param1: state.savedDependent),
+            getIt<DependentPickupCubit>(param1: state.savedDependent)
+              ..loadProfileAddress(),
         child: DependentEditorFrame(
           title: title,
           caption: caption,
