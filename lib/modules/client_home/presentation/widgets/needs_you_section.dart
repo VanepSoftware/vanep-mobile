@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vanep_mobile/core/formatters/installments_formatter.dart';
 import 'package:vanep_mobile/core/formatters/names_formatter.dart';
@@ -10,7 +11,10 @@ import 'package:vanep_mobile/core/ui/vanep_installment_price.dart';
 import 'package:vanep_mobile/core/ui/vanep_person_avatar.dart';
 import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
+import 'package:vanep_mobile/core/ui/vanep_confirm_dialog.dart';
+import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
+import 'package:vanep_mobile/modules/client_home/presentation/cubit/client_home_cubit.dart';
 import 'package:vanep_mobile/modules/client_home/domain/value_objects/needs_you_item.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/widgets/home_negotiation_actions.dart';
 import 'package:vanep_mobile/modules/client_home/presentation/formatters/client_home_labels.dart';
@@ -31,7 +35,7 @@ String signatureDeadlineLabel(
   if (hoursLeft < hoursLeftThreshold) {
     return l10n.clientHomeHoursLeft(hoursLeft.clamp(0, hoursLeftThreshold));
   }
-  return l10n.clientHomeUntilDate(formatDayMonth(signBy));
+  return l10n.clientHomeUntilDate(formatDayMonth(l10n, signBy));
 }
 
 class NeedsYouSection extends StatelessWidget {
@@ -393,9 +397,9 @@ class NeedsYouRow extends StatelessWidget {
           foreground: context.palette.warning,
         ),
         title: l10n.clientHomeInspectionExpired,
-        subtitle: l10n.clientHomeInspectionDeadline(
+        subtitle: l10n.clientHomeInspectionExpiredOn(
           item.driverName,
-          formatDayMonth(item.regularizeBy),
+          formatDayMonth(l10n, item.expiredOn),
         ),
         onTap: () =>
             openUnavailableFeature(context, l10n.clientHomeInspectionExpired),
@@ -404,7 +408,10 @@ class NeedsYouRow extends StatelessWidget {
         leading: VanepPersonAvatar(name: item.driverName),
         title: l10n.clientHomeRateVan(firstNameOf(item.driverName)),
         subtitle: l10n.clientHomeRatingIsAnonymous,
-        footer: RateStars(driverName: item.driverName),
+        footer: RateStars(
+          driverToken: item.driverToken,
+          driverName: item.driverName,
+        ),
       ),
     };
   }
@@ -453,7 +460,13 @@ class PaymentRow extends StatelessWidget {
 }
 
 class RateStars extends StatelessWidget {
-  const RateStars({required this.driverName, super.key});
+  const RateStars({
+    required this.driverToken,
+    required this.driverName,
+    super.key,
+  });
+
+  final String driverToken;
 
   final String driverName;
 
@@ -468,10 +481,8 @@ class RateStars extends StatelessWidget {
           for (var stars = 1; stars <= rateStarsCount; stars++)
             IconButton(
               tooltip: l10n.clientHomeRateStars(stars),
-              onPressed: () => openUnavailableFeature(
-                context,
-                l10n.clientHomeRateVan(firstNameOf(driverName)),
-              ),
+              onPressed: () =>
+                  confirmRating(context, driverToken, driverName, stars),
               icon: Icon(
                 Icons.star_border_rounded,
                 color: context.palette.textMuted,
@@ -481,5 +492,33 @@ class RateStars extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Asks before sending, since a rating cannot be changed afterwards.
+Future<void> confirmRating(
+  BuildContext context,
+  String driverToken,
+  String driverName,
+  int stars,
+) async {
+  final l10n = AppLocalizations.of(context)!;
+  final cubit = context.read<ClientHomeCubit>();
+  final messengerContext = Navigator.of(context).context;
+  final name = firstNameOf(driverName);
+  final confirmed = await showVanepConfirmDialog(
+    context: context,
+    title: l10n.clientHomeRateConfirmTitle(name),
+    message: l10n.clientHomeRateConfirmMessage(l10n.clientHomeRateStars(stars)),
+    confirmLabel: l10n.clientHomeRateConfirmSend,
+    cancelLabel: l10n.clientHomeRateConfirmCancel,
+  );
+  if (!confirmed) return;
+  final sent = await cubit.rate(driverToken, stars);
+  if (!messengerContext.mounted) return;
+  if (sent) {
+    VanepFeedback.showInfo(messengerContext, l10n.clientHomeRateSent);
+  } else {
+    VanepFeedback.showError(messengerContext, l10n.clientHomeRateFailed);
   }
 }

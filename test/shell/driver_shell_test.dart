@@ -26,6 +26,10 @@ import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/pus
 import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/shell/driver_shell.dart';
 
+import 'package:vanep_mobile/modules/notifications/presentation/pages/notifications_page.dart';
+
+import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_assistants_page.dart';
+
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/conversations/conversations_fixtures.dart';
@@ -35,6 +39,7 @@ import '../modules/profile/profile_mocks.dart';
 import '../modules/push_notifications/push_notifications_fixtures.dart';
 import '../modules/driver_van_central/driver_van_central_mocks.dart';
 import '../modules/driver_van_central/driver_van_central_fixtures.dart';
+import '../modules/notifications/notifications_doubles.dart';
 
 class _StubHomeRepository implements DriverHomeRepository {
   _StubHomeRepository(this.data);
@@ -348,15 +353,15 @@ void main() {
     expect(opened, [testConversation]);
   });
 
-  testWidgets('the bell opens the notifications coming soon page', (
-    tester,
-  ) async {
+  testWidgets('the bell opens the notifications page', (tester) async {
+    final notifications = registerNotificationsCubitDouble();
     await tester.pumpWidget(harness(cubit, authCubit, profileSummaryCubit));
 
     await tester.tap(find.byTooltip('Notificações'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(VanepComingSoonPage), findsOneWidget);
+    expect(find.byType(NotificationsPage), findsOneWidget);
+    verify(notifications.load).called(1);
   });
 
   testWidgets('offers the service areas screen when the step is pending', (
@@ -548,4 +553,45 @@ void main() {
       expect(find.byType(VanepComingSoonPage), findsOneWidget);
     },
   );
+
+  testWidgets('the Auxiliares shortcut on home opens the assistant team', (
+    tester,
+  ) async {
+    final approvedCubit = DriverHomeCubit(
+      repository: _StubHomeRepository(
+        const DriverHomeData(registration: RegistrationStatus.approved),
+      ),
+    );
+    addTearDown(approvedCubit.close);
+    final centralCubit = readyVanCentralCubit();
+
+    await tester.pumpWidget(
+      harness(
+        approvedCubit,
+        authCubit,
+        profileSummaryCubit,
+        vanCentralCubit: centralCubit,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final shortcut = find.text('Auxiliares');
+    await tester.scrollUntilVisible(
+      shortcut,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(shortcut);
+    await tester.pumpAndSettle();
+    await tester.tap(shortcut);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(VanAssistantsPage), findsOneWidget);
+    expect(find.byType(VanepComingSoonPage), findsNothing);
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+
+    verify(() => centralCubit.refresh()).called(1);
+  });
 }

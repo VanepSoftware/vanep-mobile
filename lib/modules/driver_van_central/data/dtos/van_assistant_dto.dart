@@ -15,6 +15,8 @@ abstract class VanAssistantDto with _$VanAssistantDto implements VanAssistant {
       toJson: vanAssistantStatusToApi,
     )
     required VanAssistantStatus status,
+    String? email,
+    DateTime? activatedAt,
   }) = _VanAssistantDto;
 
   factory VanAssistantDto.fromJson(Map<String, Object?> json) =>

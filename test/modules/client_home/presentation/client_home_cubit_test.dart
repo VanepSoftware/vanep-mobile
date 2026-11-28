@@ -12,16 +12,19 @@ import '../client_home_mocks.dart';
 
 void main() {
   late MockLoadClientHome loadClientHome;
+  late MockRateDriver rateDriver;
 
-  setUp(() => loadClientHome = MockLoadClientHome());
+  setUp(() {
+    loadClientHome = MockLoadClientHome();
+    rateDriver = MockRateDriver();
+  });
 
   ClientHomeCubit buildCubit() =>
-      ClientHomeCubit(loadClientHome: loadClientHome);
+      ClientHomeCubit(loadClientHome: loadClientHome, rateDriver: rateDriver);
 
   void loadReturns(ClientHome home) {
-    when(
-      loadClientHome.call,
-    ).thenAnswer((_) async => Ok<ClientHomeFailure, ClientHome>(home));
+    when(loadClientHome.call)
+        .thenAnswer((_) async => Ok<ClientHomeFailure, ClientHome>(home));
   }
 
   final home = testClientHome();
@@ -78,4 +81,29 @@ void main() {
       expect(cubit.state.hasLoadFailed, isFalse);
     },
   );
+
+  group('rate', () {
+    test('sends the rating and reloads the home', () async {
+      when(() => rateDriver('drv-carlos', 4))
+          .thenAnswer((_) async => const Ok<ClientHomeFailure, void>(null));
+      loadReturns(home);
+
+      final cubit = buildCubit();
+      expect(await cubit.rate('drv-carlos', 4), isTrue);
+
+      verify(loadClientHome.call).called(1);
+    });
+
+    test('keeps the home when the rating fails', () async {
+      when(() => rateDriver('drv-carlos', 4)).thenAnswer(
+        (_) async =>
+            const Err<ClientHomeFailure, void>(ClientHomeFailure.network),
+      );
+
+      final cubit = buildCubit();
+      expect(await cubit.rate('drv-carlos', 4), isFalse);
+
+      verifyNever(loadClientHome.call);
+    });
+  });
 }

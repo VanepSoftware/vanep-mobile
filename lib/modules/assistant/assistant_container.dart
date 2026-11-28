@@ -4,8 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/core/network/dio_client.dart';
 import 'package:vanep_mobile/modules/assistant/data/datasources/assistant_remote_datasource.dart';
-import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_students_datasource.dart';
-import 'package:vanep_mobile/modules/assistant/data/datasources/mocked_assistant_vans_datasource.dart';
 import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_repository_impl.dart';
 import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_students_repository_impl.dart';
 import 'package:vanep_mobile/modules/assistant/data/repositories/assistant_vans_repository_impl.dart';
@@ -14,6 +12,7 @@ import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_stu
 import 'package:vanep_mobile/modules/assistant/domain/repositories/assistant_vans_repository.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/find_assistant_students.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/find_assistant_vans.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/respond_to_assistant_invite.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/get_active_trip_route.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/get_linked_vans.dart';
 import 'package:vanep_mobile/modules/assistant/domain/usecases/record_no_show.dart';
@@ -49,17 +48,20 @@ void registerAssistantDependencies(GetIt getIt) {
     ..registerFactory<GetLinkedVans>(
       () => GetLinkedVans(getIt<AssistantRepository>()),
     )
-    ..registerSingleton<AssistantVansDataSource>(
-      const MockedAssistantVansDataSource(),
-    )
     ..registerSingleton<AssistantVansRepository>(
-      AssistantVansRepositoryImpl(dataSource: getIt<AssistantVansDataSource>()),
+      AssistantVansRepositoryImpl(remote: getIt<AssistantRemoteDataSource>()),
     )
     ..registerFactory<FindAssistantVans>(
       () => FindAssistantVans(getIt<AssistantVansRepository>()),
     )
+    ..registerFactory<RespondToAssistantInvite>(
+      () => RespondToAssistantInvite(getIt<AssistantRepository>()),
+    )
     ..registerFactory<AssistantVansCubit>(
-      () => AssistantVansCubit(findAssistantVans: getIt<FindAssistantVans>()),
+      () => AssistantVansCubit(
+        findAssistantVans: getIt<FindAssistantVans>(),
+        respondToAssistantInvite: getIt<RespondToAssistantInvite>(),
+      ),
     )
     ..registerFactory<GetActiveTripRoute>(
       () => GetActiveTripRoute(getIt<AssistantRepository>()),
@@ -80,12 +82,9 @@ void registerAssistantDependencies(GetIt getIt) {
         recordNoShow: getIt<RecordNoShow>(),
       ),
     )
-    ..registerSingleton<AssistantStudentsDataSource>(
-      const MockedAssistantStudentsDataSource(),
-    )
     ..registerSingleton<AssistantStudentsRepository>(
       AssistantStudentsRepositoryImpl(
-        dataSource: getIt<AssistantStudentsDataSource>(),
+        remote: getIt<AssistantRemoteDataSource>(),
       ),
     )
     ..registerFactory<FindAssistantStudents>(

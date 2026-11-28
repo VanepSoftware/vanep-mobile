@@ -22,7 +22,7 @@ class AssistantRepositoryImpl implements AssistantRepository {
   Future<Result<AssistantFailure, AssistantInvite>> validateInvite(
     String codeOrToken,
   ) {
-    return guardAssistantCall(() => remote.validateInvite(codeOrToken));
+    return guardInviteCall(() => remote.validateInvite(codeOrToken));
   }
 
   @override
@@ -44,7 +44,7 @@ class AssistantRepositoryImpl implements AssistantRepository {
       password: password,
       acceptTerms: acceptTerms,
     );
-    return guardAssistantCall(() => remote.registerWithInvite(dto));
+    return guardInviteCall(() => remote.registerWithInvite(dto));
   }
 
   @override
@@ -53,10 +53,20 @@ class AssistantRepositoryImpl implements AssistantRepository {
   }
 
   @override
+  Future<Result<AssistantFailure, void>> acceptInvite(String token) {
+    return guardInviteCall(() => remote.acceptInvite(token));
+  }
+
+  @override
+  Future<Result<AssistantFailure, void>> rejectInvite(String token) {
+    return guardInviteCall(() => remote.rejectInvite(token));
+  }
+
+  @override
   Future<Result<AssistantFailure, List<AssistantTripStop>>> getActiveTripRoute(
     String vanToken,
   ) {
-    return guardAssistantCall(() => remote.fetchActiveTripRoute(vanToken));
+    return guardRouteCall(() => remote.fetchActiveTripRoute(vanToken));
   }
 
   @override
@@ -66,7 +76,7 @@ class AssistantRepositoryImpl implements AssistantRepository {
     required BoardingStatus status,
     required ConfirmationSource confirmedBy,
   }) {
-    return guardAssistantCall(
+    return guardRouteCall(
       () => remote.updateChecklistStatus(
         vanToken: vanToken,
         studentTokens: studentTokens,
@@ -83,7 +93,7 @@ class AssistantRepositoryImpl implements AssistantRepository {
     required NoShowReason reason,
     ConfirmationSource confirmedBy = ConfirmationSource.assistant,
   }) {
-    return guardAssistantCall(
+    return guardRouteCall(
       () => remote.recordNoShow(
         vanToken: vanToken,
         studentToken: studentToken,
@@ -94,13 +104,26 @@ class AssistantRepositoryImpl implements AssistantRepository {
   }
 }
 
-Future<Result<AssistantFailure, T>> guardAssistantCall<T>(
+Future<Result<AssistantFailure, T>> guardInviteCall<T>(
   Future<T> Function() call,
-) async {
+) {
+  return guardAssistantCall(call, notFound: AssistantFailure.invalidInviteCode);
+}
+
+Future<Result<AssistantFailure, T>> guardRouteCall<T>(
+  Future<T> Function() call,
+) {
+  return guardAssistantCall(call, notFound: AssistantFailure.routeUnavailable);
+}
+
+Future<Result<AssistantFailure, T>> guardAssistantCall<T>(
+  Future<T> Function() call, {
+  AssistantFailure notFound = AssistantFailure.unexpected,
+}) async {
   try {
     return Ok(await call());
   } on DioException catch (exception) {
-    return Err(mapAssistantFailure(exception));
+    return Err(mapAssistantFailure(exception, notFound: notFound));
   } on FormatException {
     return const Err(AssistantFailure.unexpected);
   } catch (_) {

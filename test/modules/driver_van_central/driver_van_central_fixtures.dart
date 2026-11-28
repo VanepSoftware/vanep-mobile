@@ -50,6 +50,8 @@ class TestVanAssistant implements VanAssistant {
     required this.token,
     required this.name,
     required this.status,
+    this.email,
+    this.activatedAt,
   });
 
   @override
@@ -60,6 +62,12 @@ class TestVanAssistant implements VanAssistant {
 
   @override
   final VanAssistantStatus status;
+
+  @override
+  final String? email;
+
+  @override
+  final DateTime? activatedAt;
 }
 
 const testOccupancy = TestDriverOccupancy(

@@ -33,10 +33,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        buildTestableWidget(
-          currentIndex: 0,
-          onDestinationSelected: (_) {},
-        ),
+        buildTestableWidget(currentIndex: 0, onDestinationSelected: (_) {}),
       );
 
       final nav = tester.widget<VanepBottomNav>(find.byType(VanepBottomNav));
@@ -73,10 +70,7 @@ void main() {
 
     testWidgets('provides semantic labels for accessibility', (tester) async {
       await tester.pumpWidget(
-        buildTestableWidget(
-          currentIndex: 0,
-          onDestinationSelected: (_) {},
-        ),
+        buildTestableWidget(currentIndex: 0, onDestinationSelected: (_) {}),
       );
 
       expect(find.bySemanticsLabel('Rota'), findsOneWidget);

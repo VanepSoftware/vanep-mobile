@@ -104,12 +104,18 @@ class Environment {
 
   String get clientDriversMeEndpoint => '$clientDriversEndpoint/me';
 
+  String get driverRatingsEndpoint => '$authBaseUrl/api/driver-ratings';
+
+  String get driverRatingStatusEndpoint => '$driverRatingsEndpoint/status';
+
   String clientDriverContractsEndpoint(String clientDriverToken) =>
       '$clientDriversEndpoint/${Uri.encodeComponent(clientDriverToken)}/contracts';
 
   String get clientsEndpoint => '$authBaseUrl/api/clients';
 
   String get clientsMeEndpoint => '$clientsEndpoint/me';
+
+  String get clientDayEndpoint => '$clientsMeEndpoint/day';
 
   String get contractReadinessEndpoint =>
       '$clientsMeEndpoint/contract-readiness';
@@ -171,6 +177,13 @@ class Environment {
   String get driverCnhsEndpoint => '$authBaseUrl/api/driver-cnhs';
 
   String get myVehiclesEndpoint => '$vehiclesEndpoint/me';
+
+  String get notificationsEndpoint => '$authBaseUrl/api/notifications';
+
+  String notificationReadEndpoint(String token) =>
+      '$notificationsEndpoint/${Uri.encodeComponent(token)}/read';
+
+  String get notificationsReadAllEndpoint => '$notificationsEndpoint/read-all';
 
   String vehiclePhotoEndpoint(String vehicleToken, String slot) =>
       '$vehiclesEndpoint/${Uri.encodeComponent(vehicleToken)}/$slot';

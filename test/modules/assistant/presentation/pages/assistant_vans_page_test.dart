@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
 import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/respond_to_assistant_invite.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_vans_cubit.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_vans_state.dart';
@@ -151,5 +152,83 @@ void main() {
     await tester.tap(find.text('Tentar novamente'));
 
     verify(() => cubit.loadVans()).called(1);
+  });
+
+  group('pending invite actions', () {
+    final inviteState = AssistantVansState(
+      status: AssistantVansStatus.ready,
+      overview: AssistantVansOverview(
+        pendingInvite: buildAssistantPendingInvite(
+          expiresIn: const Duration(days: 3),
+        ),
+      ),
+    );
+
+    setUp(() {
+      when(() => cubit.respondToInvite(any())).thenAnswer((_) async {});
+    });
+
+    setUpAll(() => registerFallbackValue(InviteResponse.accept));
+
+    testWidgets('accepting answers the invite right away', (tester) async {
+      await pumpPage(tester, inviteState);
+
+      await tester.tap(find.text('Aceitar'));
+      await tester.pump();
+
+      verify(() => cubit.respondToInvite(InviteResponse.accept)).called(1);
+    });
+
+    testWidgets('declining asks for confirmation first', (tester) async {
+      await pumpPage(tester, inviteState);
+
+      await tester.tap(find.text('Recusar'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Recusar convite?'), findsOneWidget);
+      verifyNever(() => cubit.respondToInvite(any()));
+
+      await tester.tap(find.text('Recusar').last);
+      await tester.pumpAndSettle();
+
+      verify(() => cubit.respondToInvite(InviteResponse.reject)).called(1);
+    });
+
+    testWidgets('disables both buttons while an answer is being sent', (
+      tester,
+    ) async {
+      await pumpPage(
+        tester,
+        inviteState.copyWith(respondingInvite: InviteResponse.accept),
+      );
+
+      await tester.tap(find.text('Recusar'));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('Recusar convite?'), findsNothing);
+    });
+  });
+
+  testWidgets('leaves the departure out when the shift does not run today', (
+    tester,
+  ) async {
+    await pumpPage(
+      tester,
+      readyState(
+        const AssistantVansOverview(
+          activeVans: [
+            AssistantVanSummary(
+              van: testAssistantVanPrimary,
+              studentCount: 16,
+              hasRouteToday: false,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.textContaining('Saída'), findsNothing);
+    expect(find.text('16 alunos'), findsOneWidget);
+    expect(find.text('Rota de hoje'), findsNothing);
   });
 }

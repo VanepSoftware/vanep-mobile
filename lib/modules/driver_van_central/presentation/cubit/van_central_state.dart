@@ -45,7 +45,8 @@ class VanCentralState extends Equatable {
   bool get hasVans => vans.isNotEmpty;
 
   // The API reports totals for the driver, not for an individual vehicle.
-  DriverOccupancy? get selectedVanOccupancy => vans.length == 1 ? occupancy : null;
+  DriverOccupancy? get selectedVanOccupancy =>
+      vans.length == 1 ? occupancy : null;
 
   DriverVan? get selectedVan {
     if (vans.isEmpty) return null;

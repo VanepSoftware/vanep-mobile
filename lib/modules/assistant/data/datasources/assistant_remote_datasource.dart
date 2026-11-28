@@ -3,6 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:vanep_mobile/core/environment/environment.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_invite_dto.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_lean_signup_request_dto.dart';
+import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_van_summary_dto.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_students_overview.dart';
+import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_trip_checklist_dto.dart';
 import 'package:vanep_mobile/modules/assistant/data/dtos/assistant_van_dto.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/boarding_status.dart';
@@ -15,6 +18,22 @@ abstract class AssistantRemoteDataSource {
   Future<void> registerWithInvite(AssistantLeanSignupRequestDto request);
 
   Future<List<AssistantVanDto>> fetchLinkedVans();
+
+  /// The shifts the assistant works, with the numbers of today.
+  Future<List<AssistantVanSummary>> fetchVanSummaries();
+
+  /// How many drivers the assistant worked with before the current one.
+  Future<int> fetchFormerLinkCount();
+
+  /// The students of one shift of the van, in stop order.
+  Future<List<AssistantStudentSummary>> fetchStudents(
+    String vanToken,
+    String shift,
+  );
+
+  /// The invite waiting for the signed-in assistant, or null when there is
+  /// none or it already expired.
+  Future<AssistantInviteDto?> fetchPendingInvite();
 
   Future<void> acceptInvite(String token);
 
@@ -38,10 +57,7 @@ abstract class AssistantRemoteDataSource {
 }
 
 class AssistantRemoteDataSourceImpl implements AssistantRemoteDataSource {
-  AssistantRemoteDataSourceImpl({
-    required this.dio,
-    required this.environment,
-  });
+  AssistantRemoteDataSourceImpl({required this.dio, required this.environment});
 
   final Dio dio;
 
@@ -69,6 +85,45 @@ class AssistantRemoteDataSourceImpl implements AssistantRemoteDataSource {
   }
 
   @override
+  Future<List<AssistantVanSummary>> fetchVanSummaries() async {
+    final response = await dio.get<List<dynamic>>(
+      '${environment.assistantsMeEndpoint}/vans',
+    );
+    return (response.data ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(
+          (json) =>
+              assistantVanSummaryFromJson(Map<String, Object?>.from(json)),
+        )
+        .toList();
+  }
+
+  @override
+  Future<List<AssistantStudentSummary>> fetchStudents(
+    String vanToken,
+    String shift,
+  ) async {
+    final response = await dio.get<List<dynamic>>(
+      '${environment.assistantsMeEndpoint}/vans/${Uri.encodeComponent(vanToken)}/students',
+      queryParameters: {'shift': shift},
+    );
+    return (response.data ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(
+          (json) => assistantStudentFromJson(Map<String, Object?>.from(json)),
+        )
+        .toList();
+  }
+
+  @override
+  Future<int> fetchFormerLinkCount() async {
+    final response = await dio.get<Map<String, dynamic>>(
+      environment.assistantsMeEndpoint,
+    );
+    return (response.data?['formerLinkCount'] as num?)?.toInt() ?? 0;
+  }
+
+  @override
   Future<List<AssistantVanDto>> fetchLinkedVans() async {
     final response = await dio.get<List<dynamic>>(
       '${environment.assistantsMeEndpoint}/vans',
@@ -79,6 +134,22 @@ class AssistantRemoteDataSourceImpl implements AssistantRemoteDataSource {
         .whereType<Map<String, dynamic>>()
         .map((e) => AssistantVanDto.fromJson(Map<String, Object?>.from(e)))
         .toList();
+  }
+
+  @override
+  Future<AssistantInviteDto?> fetchPendingInvite() async {
+    try {
+      final response = await dio.get<Map<String, dynamic>>(
+        '${environment.assistantsMeEndpoint}/invite',
+      );
+      final data = response.data;
+      if (data == null) return null;
+      return AssistantInviteDto.fromJson(Map<String, Object?>.from(data));
+    } on DioException catch (error) {
+      final status = error.response?.statusCode;
+      if (status == 404 || status == 410) return null;
+      rethrow;
+    }
   }
 
   @override

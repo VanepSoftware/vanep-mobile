@@ -49,7 +49,24 @@ String formatTimeWindow(AppLocalizations l10n, DateTime start, DateTime end) {
   return '${formatTimeOfDay(l10n, start)}–${formatTimeOfDay(l10n, end)}';
 }
 
-String formatDayMonth(DateTime date) => DateFormat('dd/MM').format(date);
+/// Placeholder for a time the API does not know.
+const missingTime = '—';
+
+String formatOptionalTimeOfDay(AppLocalizations l10n, DateTime? moment) =>
+    moment == null ? missingTime : formatTimeOfDay(l10n, moment);
+
+String formatOptionalTimeWindow(
+  AppLocalizations l10n,
+  DateTime? start,
+  DateTime? end,
+) {
+  if (start == null) return missingTime;
+  if (end == null || end == start) return formatTimeOfDay(l10n, start);
+  return formatTimeWindow(l10n, start, end);
+}
+
+String formatDayMonth(AppLocalizations l10n, DateTime date) =>
+    DateFormat.Md(l10n.localeName).format(date);
 
 String formatMonthName(AppLocalizations l10n, DateTime date) {
   return DateFormat.MMMM(l10n.localeName).format(date);

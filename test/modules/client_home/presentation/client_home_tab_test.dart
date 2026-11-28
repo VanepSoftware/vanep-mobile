@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/modules/client_home/presentation/widgets/van_day_cards.dart';
 import 'package:vanep_mobile/core/ui/vanep_card.dart';
 import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/core/ui/vanep_error_view.dart';
@@ -388,6 +389,28 @@ void main() {
     expect(find.text('Renovação para 2027'), findsOneWidget);
     expect(find.text('Vistoria da van venceu'), findsOneWidget);
     expect(find.text('Como está a van de Carlos?'), findsOneWidget);
+  });
+
+  testWidgets('no route today still lists the child without a van', (
+    tester,
+  ) async {
+    await pumpReady(
+      tester,
+      testClientHome(
+        today: NoRouteTodaySection(
+          nextRouteAt: testNoRouteTodaySection.nextRouteAt,
+          week: testNoRouteTodaySection.week,
+          childrenWithoutRoute: const [
+            ChildWithoutRoute(name: 'Davi', reason: NoRouteReason.noVanYet),
+          ],
+        ),
+        date: testSaturdayMorning,
+      ),
+    );
+
+    expect(find.text('Sem rota hoje'), findsOneWidget);
+    expect(find.text('Davi'), findsOneWidget);
+    expect(find.byType(ChildrenWithoutRouteRow), findsOneWidget);
   });
 
   group('needs you', () {

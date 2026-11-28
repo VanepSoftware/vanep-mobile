@@ -24,6 +24,10 @@ abstract class AssistantRepository {
 
   Future<Result<AssistantFailure, List<AssistantVan>>> getLinkedVans();
 
+  Future<Result<AssistantFailure, void>> acceptInvite(String token);
+
+  Future<Result<AssistantFailure, void>> rejectInvite(String token);
+
   Future<Result<AssistantFailure, List<AssistantTripStop>>> getActiveTripRoute(
     String vanToken,
   );

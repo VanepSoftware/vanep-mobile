@@ -16,6 +16,16 @@ String vanTitle(AppLocalizations l10n, VanDay van) {
   return l10n.clientHomeVanTitle(van.driverName, formatShift(l10n, van.shift));
 }
 
+String vanSubtitle(AppLocalizations l10n, VanDay van) {
+  final departure = formatTimeOfDay(l10n, van.departureAt);
+  final model = van.vehicleModel;
+  final plate = van.plate;
+  if (model == null || plate == null) {
+    return l10n.clientHomeVanSubtitleNoVehicle(departure);
+  }
+  return l10n.clientHomeVanSubtitle(model, plate, departure);
+}
+
 List<String> riderNames(VanDay van) =>
     van.riders.map((rider) => rider.name).toList();
 
@@ -49,11 +59,7 @@ class VanDayCard extends StatelessWidget {
                       style: context.typography.cardTitle,
                     ),
                     Text(
-                      l10n.clientHomeVanSubtitle(
-                        van.vehicleModel,
-                        van.plate,
-                        formatTimeOfDay(l10n, van.departureAt),
-                      ),
+                      vanSubtitle(l10n, van),
                       style: context.typography.cardSubtitle,
                     ),
                   ],
@@ -127,7 +133,7 @@ class VanScheduleRow extends StatelessWidget {
           flex: 4,
           child: ScheduleCell(
             label: l10n.clientHomeBoarding,
-            value: formatTimeWindow(
+            value: formatOptionalTimeWindow(
               l10n,
               schedule.boardingStartAt,
               schedule.boardingEndAt,
@@ -138,14 +144,14 @@ class VanScheduleRow extends StatelessWidget {
           flex: 3,
           child: ScheduleCell(
             label: l10n.clientHomeArrival,
-            value: formatTimeOfDay(l10n, schedule.schoolArrivalAt),
+            value: formatOptionalTimeOfDay(l10n, schedule.schoolArrivalAt),
           ),
         ),
         Expanded(
           flex: 3,
           child: ScheduleCell(
             label: l10n.clientHomeDeparture,
-            value: formatTimeOfDay(l10n, schedule.schoolDepartureAt),
+            value: formatOptionalTimeOfDay(l10n, schedule.schoolDepartureAt),
           ),
         ),
       ],
@@ -227,7 +233,10 @@ class VanDayRow extends StatelessWidget {
           title: vanTitle(l10n, van),
           subtitle: l10n.clientHomeVanRowSubtitle(
             joinNames(l10n, names),
-            formatTimeOfDay(l10n, van.schedule.boardingStartAt),
+            formatTimeOfDay(
+              l10n,
+              van.schedule.boardingStartAt ?? van.departureAt,
+            ),
           ),
           onTap: () => openUnavailableFeature(context, vanTitle(l10n, van)),
         ),

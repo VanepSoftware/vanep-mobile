@@ -27,6 +27,7 @@ class AccountDrawer extends StatelessWidget {
     this.buildPersonalDataSlots,
     this.openSettings,
     this.openProfessionalData,
+    this.openAssistantVans,
     super.key,
   });
 
@@ -40,6 +41,62 @@ class AccountDrawer extends StatelessWidget {
   final PersonalDataSlotsBuilder? buildPersonalDataSlots;
   final Future<void> Function(BuildContext context)? openSettings;
   final Future<void> Function(BuildContext context)? openProfessionalData;
+  final Future<void> Function(BuildContext context)? openAssistantVans;
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: context.palette.surface,
+      child: SafeArea(
+        child: AccountProfileView(
+          profile: profile,
+          photoUrl: photoUrl,
+          rating: rating,
+          city: city,
+          statusLabel: statusLabel,
+          statusColor: statusColor,
+          isSummaryLoading: isSummaryLoading,
+          buildPersonalDataSlots: buildPersonalDataSlots,
+          openSettings: openSettings,
+          openProfessionalData: openProfessionalData,
+          openAssistantVans: openAssistantVans,
+        ),
+      ),
+    );
+  }
+}
+
+/// Profile header plus the account menu, shown inside [AccountDrawer] and as
+/// the profile tab of shells that have one.
+class AccountProfileView extends StatelessWidget {
+  const AccountProfileView({
+    required this.profile,
+    this.photoUrl,
+    this.rating,
+    this.city,
+    this.statusLabel,
+    this.statusColor,
+    this.isSummaryLoading = false,
+    this.buildPersonalDataSlots,
+    this.openSettings,
+    this.openProfessionalData,
+    this.openAssistantVans,
+    this.padding = const EdgeInsets.fromLTRB(16, 20, 16, 24),
+    super.key,
+  });
+
+  final UserProfile profile;
+  final String? photoUrl;
+  final double? rating;
+  final String? city;
+  final String? statusLabel;
+  final Color? statusColor;
+  final bool isSummaryLoading;
+  final PersonalDataSlotsBuilder? buildPersonalDataSlots;
+  final Future<void> Function(BuildContext context)? openSettings;
+  final Future<void> Function(BuildContext context)? openProfessionalData;
+  final Future<void> Function(BuildContext context)? openAssistantVans;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
@@ -47,41 +104,37 @@ class AccountDrawer extends StatelessWidget {
     final displayName = profile.name ?? profile.email ?? '';
     final hasPendingEmailConfirmation = profile.pendingEmail != null;
 
-    return Drawer(
-      backgroundColor: context.palette.surface,
-      child: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-          children: [
-            ProfileHeader(
-              name: displayName,
-              email: profile.email,
-              photoUrl: photoUrl,
-              rating: rating,
-              city: city,
-              statusLabel: statusLabel,
-              statusColor: statusColor,
-              isSummaryLoading: isSummaryLoading,
-            ),
-            const SizedBox(height: 24),
-            for (var index = 0; index < sections.length; index++) ...[
-              if (index > 0) const SizedBox(height: 16),
-              ProfileMenuSectionView(
-                section: sections[index],
-                onItemSelected: (id) => handleProfileMenuSelection(
-                  context,
-                  profile,
-                  id,
-                  buildPersonalDataSlots: buildPersonalDataSlots,
-                  openSettings: openSettings,
-                  openProfessionalData: openProfessionalData,
-                ),
-                pendingEmailConfirmation: hasPendingEmailConfirmation,
-              ),
-            ],
-          ],
+    return ListView(
+      padding: padding,
+      children: [
+        ProfileHeader(
+          name: displayName,
+          email: profile.email,
+          photoUrl: photoUrl,
+          rating: rating,
+          city: city,
+          statusLabel: statusLabel,
+          statusColor: statusColor,
+          isSummaryLoading: isSummaryLoading,
         ),
-      ),
+        const SizedBox(height: 24),
+        for (var index = 0; index < sections.length; index++) ...[
+          if (index > 0) const SizedBox(height: 16),
+          ProfileMenuSectionView(
+            section: sections[index],
+            onItemSelected: (id) => handleProfileMenuSelection(
+              context,
+              profile,
+              id,
+              buildPersonalDataSlots: buildPersonalDataSlots,
+              openSettings: openSettings,
+              openProfessionalData: openProfessionalData,
+              openAssistantVans: openAssistantVans,
+            ),
+            pendingEmailConfirmation: hasPendingEmailConfirmation,
+          ),
+        ],
+      ],
     );
   }
 }
@@ -93,6 +146,7 @@ Future<void> handleProfileMenuSelection(
   PersonalDataSlotsBuilder? buildPersonalDataSlots,
   Future<void> Function(BuildContext context)? openSettings,
   Future<void> Function(BuildContext context)? openProfessionalData,
+  Future<void> Function(BuildContext context)? openAssistantVans,
 }) async {
   switch (id) {
     case ProfileMenuId.personalData:
@@ -114,8 +168,9 @@ Future<void> handleProfileMenuSelection(
       await confirmAndSignOut(context);
     case ProfileMenuId.professionalData:
       await openProfessionalData?.call(context);
-    case ProfileMenuId.paymentMethods:
     case ProfileMenuId.assistantInvite:
+      await openAssistantVans?.call(context);
+    case ProfileMenuId.paymentMethods:
     case ProfileMenuId.privacySecurity:
       break;
   }

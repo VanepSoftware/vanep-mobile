@@ -1,6 +1,7 @@
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/client_home/domain/failures/client_home_failure.dart';
 import 'package:vanep_mobile/modules/client_home/domain/repositories/client_home_repository.dart';
+import 'package:vanep_mobile/modules/client_home/domain/usecases/find_drivers_to_rate.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/find_negotiation_highlights.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/prioritize_needs_you_items.dart';
 import 'package:vanep_mobile/modules/client_home/domain/usecases/resolve_enabled_shortcuts.dart';
@@ -16,6 +17,7 @@ class LoadClientHome {
     required this.repository,
     required this.resolveSectionWithoutVan,
     required this.findNegotiationHighlights,
+    required this.findDriversToRate,
     required this.prioritizeNeedsYouItems,
     required this.resolveEnabledShortcuts,
     required this.resolveHomeHeadline,
@@ -28,6 +30,8 @@ class LoadClientHome {
 
   final FindNegotiationHighlights findNegotiationHighlights;
 
+  final FindDriversToRate findDriversToRate;
+
   final PrioritizeNeedsYouItems prioritizeNeedsYouItems;
 
   final ResolveEnabledShortcuts resolveEnabledShortcuts;
@@ -37,9 +41,10 @@ class LoadClientHome {
   final DateTime Function() clock;
 
   Future<Result<ClientHomeFailure, ClientHome>> call() async {
-    final (overviewResult, highlights) = await (
+    final (overviewResult, highlights, ratings) = await (
       repository.findDailyOverview(),
       findNegotiationHighlights(),
+      findDriversToRate(),
     ).wait;
     final overviewFailure = overviewResult.errorOrNull;
     if (overviewFailure != null) return Err(overviewFailure);
@@ -51,7 +56,11 @@ class LoadClientHome {
       (today) => Ok(
         assembleHome(
           today: today,
-          needsYou: [...overview.needsYou, ...highlights.needsYouItems],
+          needsYou: [
+            ...overview.needsYou,
+            ...highlights.needsYouItems,
+            ...ratings,
+          ],
         ),
       ),
     );

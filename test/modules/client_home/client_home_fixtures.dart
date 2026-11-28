@@ -79,10 +79,13 @@ const testRenewal = RenewalItem(driverName: 'Carlos', year: 2027);
 
 final testInspectionExpired = VehicleInspectionExpiredItem(
   driverName: 'Carlos',
-  regularizeBy: DateTime(2026, 10, 31),
+  expiredOn: DateTime(2026, 10, 31),
 );
 
-const testRateCarlos = RateDriverItem(driverName: 'Carlos Souza');
+const testRateCarlos = RateDriverItem(
+  driverToken: 'drv-carlos',
+  driverName: 'Carlos Souza',
+);
 
 final testCarlosMorningVan = VanDay(
   driverName: 'Carlos',

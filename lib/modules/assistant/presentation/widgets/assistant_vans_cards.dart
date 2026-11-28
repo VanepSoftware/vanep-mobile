@@ -8,6 +8,7 @@ import 'package:vanep_mobile/core/ui/vanep_primary_button.dart';
 import 'package:vanep_mobile/core/ui/vanep_secondary_button.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_invite.dart';
+import 'package:vanep_mobile/modules/assistant/domain/usecases/respond_to_assistant_invite.dart';
 import 'package:vanep_mobile/modules/assistant/domain/value_objects/assistant_vans_overview.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/formatters/assistant_vans_labels.dart';
 
@@ -19,8 +20,8 @@ List<(Color, Color)> vanIconTonesOf(VanepPalette palette) => [
 ];
 
 // TODO(VAN-68): the buttons of these cards do nothing until the screens they
-// open exist: Detalhes -> VAN-69, Rota de hoje -> VAN-71, Aceitar and Recusar
-// -> invite accept/reject (already in AssistantRemoteDataSource), Vínculos
+// open exist: Detalhes -> VAN-69, Rota de hoje -> VAN-71,
+// Vínculos
 // anteriores -> no task yet. Replace each call site and delete this function.
 void doNothingYet() {}
 
@@ -28,6 +29,9 @@ class AssistantPendingInviteCard extends StatelessWidget {
   const AssistantPendingInviteCard({
     required this.invite,
     required this.daysLeft,
+    required this.onAccept,
+    required this.onDecline,
+    this.respondingInvite,
     super.key,
   });
 
@@ -35,16 +39,24 @@ class AssistantPendingInviteCard extends StatelessWidget {
 
   final int daysLeft;
 
+  final VoidCallback onAccept;
+
+  final VoidCallback onDecline;
+
+  final InviteResponse? respondingInvite;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final expiry = daysLeft < 1
         ? l10n.assistantVansExpiresToday
         : l10n.assistantVansExpiresInDays(daysLeft);
+    final busy = respondingInvite != null;
 
     return Semantics(
       container: true,
-      label: '${invite.driverName}, ${invite.vehicleDescription ?? ''}, $expiry',
+      label:
+          '${invite.driverName}, ${invite.vehicleDescription ?? ''}, $expiry',
       child: VanepCard(
         highlighted: true,
         child: Column(
@@ -86,14 +98,16 @@ class AssistantPendingInviteCard extends StatelessWidget {
                 Expanded(
                   child: VanepSecondaryButton(
                     label: l10n.assistantVansDecline,
-                    onPressed: doNothingYet,
+                    onPressed: busy ? null : onDecline,
+                    isLoading: respondingInvite == InviteResponse.reject,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: VanepPrimaryButton(
                     label: l10n.assistantVansAccept,
-                    onPressed: doNothingYet,
+                    onPressed: busy ? null : onAccept,
+                    isLoading: respondingInvite == InviteResponse.accept,
                   ),
                 ),
               ],
@@ -124,17 +138,20 @@ class AssistantVanCard extends StatelessWidget {
     final (surface, accent) = tones[toneIndex % tones.length];
     final title = l10n.assistantVansVanTitle(firstNameOf(van.driverName));
     final subtitle = assistantVanSubtitle(l10n, van);
-    final departure = l10n.assistantVansDeparture(
-      formatDepartureTime(
-        summary.departureMinutes,
-        languageCode: Localizations.localeOf(context).languageCode,
-      ),
-    );
+    final departureMinutes = summary.departureMinutes;
+    final departure = departureMinutes == null
+        ? null
+        : l10n.assistantVansDeparture(
+            formatDepartureTime(
+              departureMinutes,
+              languageCode: Localizations.localeOf(context).languageCode,
+            ),
+          );
     final students = l10n.assistantVansStudentCount(summary.studentCount);
 
     return Semantics(
       container: true,
-      label: '$title, $subtitle, $departure, $students',
+      label: [title, subtitle, ?departure, students].join(', '),
       child: VanepCard(
         child: Column(
           children: [
@@ -169,14 +186,16 @@ class AssistantVanCard extends StatelessWidget {
             Divider(height: 24, color: context.palette.divider),
             Row(
               children: [
-                Icon(
-                  Icons.schedule_rounded,
-                  size: 18,
-                  color: context.palette.textSecondary,
-                ),
-                const SizedBox(width: 6),
-                Text(departure, style: context.typography.cardSubtitle),
-                const SizedBox(width: 16),
+                if (departure != null) ...[
+                  Icon(
+                    Icons.schedule_rounded,
+                    size: 18,
+                    color: context.palette.textSecondary,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(departure, style: context.typography.cardSubtitle),
+                  const SizedBox(width: 16),
+                ],
                 Icon(
                   Icons.groups_rounded,
                   size: 18,
@@ -239,7 +258,9 @@ class AssistantFormerVansTile extends StatelessWidget {
                 color: context.palette.textSecondary,
               ),
               const SizedBox(width: 12),
-              Expanded(child: Text(label, style: context.typography.ratingLabel)),
+              Expanded(
+                child: Text(label, style: context.typography.ratingLabel),
+              ),
               Icon(
                 Icons.chevron_right_rounded,
                 color: context.palette.textSecondary,

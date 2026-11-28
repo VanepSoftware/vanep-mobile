@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/modules/client_home/client_home_container.dart';
 import 'package:vanep_mobile/modules/client_home/data/datasources/client_home_scenario.dart';
-import 'package:vanep_mobile/modules/client_home/data/datasources/empty_daily_overview_datasource.dart';
 import 'package:vanep_mobile/modules/client_home/data/datasources/scenario_daily_overview_datasource.dart';
 import 'package:vanep_mobile/modules/client_home/data/repositories/client_home_repository_impl.dart';
 import 'package:vanep_mobile/modules/client_home/domain/failures/client_home_failure.dart';
@@ -24,9 +23,8 @@ void main() {
         dataSource.findDailyOverview,
       ).thenAnswer((_) async => DailyOverview(today: testBeforeRouteSection));
 
-      final result = await ClientHomeRepositoryImpl(
-        dataSource: dataSource,
-      ).findDailyOverview();
+      final result = await ClientHomeRepositoryImpl(dataSource: dataSource)
+          .findDailyOverview();
 
       expect(result.valueOrNull?.today, testBeforeRouteSection);
     });
@@ -34,32 +32,26 @@ void main() {
     test('an unexpected error becomes an unexpected failure', () async {
       when(dataSource.findDailyOverview).thenThrow(StateError('broken'));
 
-      final result = await ClientHomeRepositoryImpl(
-        dataSource: dataSource,
-      ).findDailyOverview();
+      final result = await ClientHomeRepositoryImpl(dataSource: dataSource)
+          .findDailyOverview();
 
       expect(result.errorOrNull, ClientHomeFailure.unexpected);
     });
   });
 
-  test('the empty data source has no section and nothing pending', () async {
-    final overview = await const EmptyDailyOverviewDataSource()
-        .findDailyOverview();
-
-    expect(overview, const DailyOverview());
-  });
-
   group('dailyOverviewDataSourceFor', () {
-    test('an empty scenario keeps production on the empty source', () {
-      expect(
-        dailyOverviewDataSourceFor(''),
-        isA<EmptyDailyOverviewDataSource>(),
-      );
+    test('without a scenario production reads the API', () {
+      final remote = MockDailyOverviewDataSource();
+
+      expect(dailyOverviewDataSourceFor('', remote: remote), same(remote));
     });
 
     test('a known scenario uses the scenario source', () {
       expect(
-        dailyOverviewDataSourceFor('beforeRoute'),
+        dailyOverviewDataSourceFor(
+          'beforeRoute',
+          remote: MockDailyOverviewDataSource(),
+        ),
         isA<ScenarioDailyOverviewDataSource>(),
       );
     });
@@ -112,7 +104,7 @@ void main() {
       final today = overview.today! as VanDaySection;
 
       expect(today.liveVan?.riders.map((rider) => rider.name), ['Ana']);
-      expect(today.childrenWithoutRoute.single.name, 'Pedro');
+      expect(today.childrenWithoutRoute, isEmpty);
       expect(today.isVanApproaching, isFalse);
       expect(overview.needsYou.whereType<ContractToSignItem>(), isNotEmpty);
     });
@@ -122,7 +114,7 @@ void main() {
       final today = overview.today! as VanDaySection;
 
       expect(today.vans, hasLength(2));
-      expect(today.childrenWithoutRoute, hasLength(2));
+      expect(today.childrenWithoutRoute.single.name, 'Bia');
     });
 
     test('van arriving is approaching with the child day', () async {
@@ -139,13 +131,16 @@ void main() {
       expect((overview.today! as ArrivedSection).events, hasLength(4));
     });
 
-    test('no route today starts on the next weekday', () async {
+    test('no route today only mocks the needs-you items', () async {
       final overview = await overviewFor(ClientHomeScenario.noRouteToday);
-      final today = overview.today! as NoRouteTodaySection;
 
-      expect(today.week, hasLength(5));
-      expect(today.nextRouteAt.weekday, DateTime.thursday);
-      expect(overview.needsYou, hasLength(3));
+      expect(overview.today, isNull);
+      expect(overview.needsYou, hasLength(1));
+      expect(
+        overview.needsYou.whereType<VehicleInspectionExpiredItem>(),
+        isEmpty,
+      );
+      expect(overview.needsYou.whereType<RateDriverItem>(), isEmpty);
     });
   });
 }

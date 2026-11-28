@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:vanep_mobile/core/di/service_locator.dart';
 import 'package:vanep_mobile/core/ui/vanep_bottom_nav.dart';
-import 'package:vanep_mobile/core/ui/vanep_coming_soon_page.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/dependents/domain/value_objects/school_week.dart';
 import 'package:vanep_mobile/modules/dependents/presentation/cubit/dependents_cubit.dart';
@@ -34,6 +33,8 @@ import 'package:vanep_mobile/modules/push_notifications/domain/value_objects/pus
 import 'package:vanep_mobile/modules/push_notifications/presentation/cubit/push_navigation_cubit.dart';
 import 'package:vanep_mobile/shell/client_shell.dart';
 
+import 'package:vanep_mobile/modules/notifications/presentation/pages/notifications_page.dart';
+
 import '../modules/auth/auth_fixtures.dart';
 import '../modules/auth/presentation/auth_presentation_mocks.dart';
 import '../modules/client_home/client_home_fixtures.dart';
@@ -48,6 +49,7 @@ import '../modules/drivers/drivers_fixtures.dart';
 import '../modules/drivers/presentation/drivers_presentation_mocks.dart';
 import '../modules/profile/profile_mocks.dart';
 import '../modules/push_notifications/push_notifications_fixtures.dart';
+import '../modules/notifications/notifications_doubles.dart';
 
 class MockDriverSearchCubit extends MockCubit<DriverSearchState>
     implements DriverSearchCubit {}
@@ -410,16 +412,15 @@ void main() {
     verify(authCubit.refreshSessionProfile).called(1);
   });
 
-  testWidgets('the bell opens the notifications coming soon page', (
-    tester,
-  ) async {
+  testWidgets('the bell opens the notifications page', (tester) async {
+    final notifications = registerNotificationsCubitDouble();
     await tester.pumpWidget(harness());
 
     await tester.tap(find.byTooltip('Notificações'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(VanepComingSoonPage), findsOneWidget);
-    expect(find.text('Em breve'), findsOneWidget);
+    expect(find.byType(NotificationsPage), findsOneWidget);
+    verify(notifications.load).called(1);
   });
 
   testWidgets('dependents load only when their tab is selected', (

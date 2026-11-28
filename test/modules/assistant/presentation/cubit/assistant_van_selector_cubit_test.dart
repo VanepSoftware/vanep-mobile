@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:vanep_mobile/modules/assistant/domain/entities/assistant_van.dart';
 import 'package:vanep_mobile/core/result/result.dart';
 import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 import 'package:vanep_mobile/modules/assistant/presentation/cubit/assistant_van_selector_cubit.dart';
@@ -17,25 +18,27 @@ void main() {
   });
 
   group('AssistantVanSelectorCubit', () {
-    test('initial state has isLoading=false, empty vans, and null selection', () {
-      final cubit = AssistantVanSelectorCubit(
-        getLinkedVans: mockGetLinkedVans,
-      );
+    test(
+      'initial state has isLoading=false, empty vans, and null selection',
+      () {
+        final cubit = AssistantVanSelectorCubit(
+          getLinkedVans: mockGetLinkedVans,
+        );
 
-      expect(cubit.state.isLoading, isFalse);
-      expect(cubit.state.vans, isEmpty);
-      expect(cubit.state.selectedVan, isNull);
-      expect(cubit.state.failure, isNull);
-      expect(cubit.state.hasMultipleVans, isFalse);
-      expect(cubit.state.hasActiveVan, isFalse);
-    });
+        expect(cubit.state.isLoading, isFalse);
+        expect(cubit.state.vans, isEmpty);
+        expect(cubit.state.selectedVan, isNull);
+        expect(cubit.state.failure, isNull);
+        expect(cubit.state.hasMultipleVans, isFalse);
+        expect(cubit.state.hasActiveVan, isFalse);
+      },
+    );
 
     blocTest<AssistantVanSelectorCubit, AssistantVanSelectorState>(
       'loadVans emits loading and selects the single van when exactly one is returned',
       build: () {
-        when(() => mockGetLinkedVans()).thenAnswer(
-          (_) async => const Ok([testAssistantVanPrimary]),
-        );
+        when(() => mockGetLinkedVans())
+            .thenAnswer((_) async => const Ok([testAssistantVanPrimary]));
         return AssistantVanSelectorCubit(getLinkedVans: mockGetLinkedVans);
       },
       act: (cubit) => cubit.loadVans(),
@@ -54,10 +57,8 @@ void main() {
       'loadVans emits loading and selects first van when multiple are returned',
       build: () {
         when(() => mockGetLinkedVans()).thenAnswer(
-          (_) async => const Ok([
-            testAssistantVanPrimary,
-            testAssistantVanSecondary,
-          ]),
+          (_) async =>
+              const Ok([testAssistantVanPrimary, testAssistantVanSecondary]),
         );
         return AssistantVanSelectorCubit(getLinkedVans: mockGetLinkedVans);
       },
@@ -66,10 +67,7 @@ void main() {
         const AssistantVanSelectorState(isLoading: true),
         const AssistantVanSelectorState(
           isLoading: false,
-          vans: [
-            testAssistantVanPrimary,
-            testAssistantVanSecondary,
-          ],
+          vans: [testAssistantVanPrimary, testAssistantVanSecondary],
           selectedVan: testAssistantVanPrimary,
         ),
       ],
@@ -79,10 +77,8 @@ void main() {
       'loadVans preserves existing selectedVan if still present in returned list',
       build: () {
         when(() => mockGetLinkedVans()).thenAnswer(
-          (_) async => const Ok([
-            testAssistantVanPrimary,
-            testAssistantVanSecondary,
-          ]),
+          (_) async =>
+              const Ok([testAssistantVanPrimary, testAssistantVanSecondary]),
         );
         return AssistantVanSelectorCubit(getLinkedVans: mockGetLinkedVans);
       },
@@ -97,21 +93,45 @@ void main() {
         ),
         const AssistantVanSelectorState(
           isLoading: false,
-          vans: [
-            testAssistantVanPrimary,
-            testAssistantVanSecondary,
-          ],
+          vans: [testAssistantVanPrimary, testAssistantVanSecondary],
           selectedVan: testAssistantVanSecondary,
         ),
       ],
     );
 
+    const morningShift = AssistantVan(
+      token: 'van-1',
+      driverToken: 'drv-1',
+      driverName: 'Carlos Mendes',
+      plate: 'SDF4E21',
+      model: 'Sprinter',
+      shift: 'MORNING',
+    );
+    const afternoonShift = AssistantVan(
+      token: 'van-1',
+      driverToken: 'drv-1',
+      driverName: 'Carlos Mendes',
+      plate: 'SDF4E21',
+      model: 'Sprinter',
+      shift: 'AFTERNOON',
+    );
+
+    blocTest<AssistantVanSelectorCubit, AssistantVanSelectorState>(
+      'keeps the selected shift when the same vehicle runs two shifts',
+      build: () {
+        when(() => mockGetLinkedVans())
+            .thenAnswer((_) async => const Ok([morningShift, afternoonShift]));
+        return AssistantVanSelectorCubit(getLinkedVans: mockGetLinkedVans);
+      },
+      seed: () => const AssistantVanSelectorState(selectedVan: afternoonShift),
+      act: (cubit) => cubit.loadVans(),
+      verify: (cubit) => expect(cubit.state.selectedVan, afternoonShift),
+    );
+
     blocTest<AssistantVanSelectorCubit, AssistantVanSelectorState>(
       'loadVans emits empty list and null selectedVan when backend returns empty list',
       build: () {
-        when(() => mockGetLinkedVans()).thenAnswer(
-          (_) async => const Ok([]),
-        );
+        when(() => mockGetLinkedVans()).thenAnswer((_) async => const Ok([]));
         return AssistantVanSelectorCubit(getLinkedVans: mockGetLinkedVans);
       },
       act: (cubit) => cubit.loadVans(),
@@ -128,9 +148,8 @@ void main() {
     blocTest<AssistantVanSelectorCubit, AssistantVanSelectorState>(
       'loadVans emits failure when usecase fails',
       build: () {
-        when(() => mockGetLinkedVans()).thenAnswer(
-          (_) async => const Err(AssistantFailure.network),
-        );
+        when(() => mockGetLinkedVans())
+            .thenAnswer((_) async => const Err(AssistantFailure.network));
         return AssistantVanSelectorCubit(getLinkedVans: mockGetLinkedVans);
       },
       act: (cubit) => cubit.loadVans(),

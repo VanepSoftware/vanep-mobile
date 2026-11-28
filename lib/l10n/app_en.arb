@@ -224,7 +224,8 @@
   "personalDataSubtitle": "Review and update your account details and your home address.",
   "profilePaymentMethods": "Payment methods",
   "profileProfessionalData": "Professional data",
-  "profileAssistantInvite": "Driver invite",
+  "profileAssistantInvite": "My vans",
+  "assistantFailureRouteUnavailable": "Today's route is not available yet.",
   "profileSettings": "Settings",
   "settingsAppearanceTitle": "Appearance",
   "settingsThemeSystem": "System",
@@ -567,6 +568,11 @@
   "assistantVansActiveSection": "Active",
   "assistantVansDecline": "Decline",
   "assistantVansAccept": "Accept",
+  "assistantVansInviteAccepted": "Invite accepted. The van now shows up among yours.",
+  "assistantVansInviteDeclined": "Invite declined.",
+  "assistantVansDeclineConfirmTitle": "Decline invite?",
+  "assistantVansDeclineConfirmMessage": "The driver will be notified and the invite will no longer be valid.",
+  "assistantVansDeclineConfirmCancel": "Back",
   "assistantVansExpiresInDays": "{count, plural, =1{Expires in 1 day} other{Expires in {count} days}}",
   "@assistantVansExpiresInDays": {
     "placeholders": {
@@ -836,6 +842,8 @@
       }
     }
   },
+  "clientHomeVanSubtitleNoVehicle": "Leaves at {time}",
+  "@clientHomeVanSubtitleNoVehicle": {"placeholders": {"time": {"type": "String"}}},
   "clientHomeVanSubtitle": "{model} {plate} · leaves at {time}",
   "@clientHomeVanSubtitle": {
     "placeholders": {
@@ -1206,8 +1214,8 @@
     }
   },
   "clientHomeInspectionExpired": "Van inspection expired",
-  "clientHomeInspectionDeadline": "{driver} has until {date} to fix it",
-  "@clientHomeInspectionDeadline": {
+  "clientHomeInspectionExpiredOn": "The inspection of {driver}'s van expired on {date}",
+  "@clientHomeInspectionExpiredOn": {
     "placeholders": {
       "driver": {
         "type": "String"
@@ -1226,6 +1234,14 @@
     }
   },
   "clientHomeRatingIsAnonymous": "Your rating is anonymous.",
+  "clientHomeRateConfirmTitle": "Rate {driver}?",
+  "@clientHomeRateConfirmTitle": {"placeholders": {"driver": {"type": "String"}}},
+  "clientHomeRateConfirmMessage": "You are about to send {stars}. A rating cannot be changed once sent.",
+  "@clientHomeRateConfirmMessage": {"placeholders": {"stars": {"type": "String"}}},
+  "clientHomeRateConfirmSend": "Send",
+  "clientHomeRateConfirmCancel": "Back",
+  "clientHomeRateSent": "Rating sent. Thank you!",
+  "clientHomeRateFailed": "We could not send your rating.",
   "clientHomeRateStars": "{count, plural, =1{1 star} other{{count} stars}}",
   "@clientHomeRateStars": {
     "placeholders": {
@@ -1501,6 +1517,14 @@
   "vanCentralHistoryHint": "Check-offs, times and reports",
   "vanCentralAssistants": "Assistants",
   "vanCentralAssistantsHint": "Who checks students off with you",
+  "vanAssistantsEmpty": "You have no assistants yet. Invite someone to help you with check-ins.",
+  "vanAssistantsLoadError": "We couldn't load your assistants. Pull to try again.",
+  "vanAssistantStatusActive": "Active",
+  "vanAssistantStatusPending": "Invite pending",
+  "vanAssistantStatusInactive": "Paused",
+  "vanAssistantStatusUnlinked": "Unlinked",
+  "vanAssistantSince": "Since {date}",
+  "@vanAssistantSince": {"placeholders": {"date": {"type": "String"}}},
   "vanCentralAssistantsNone": "No assistants yet",
   "vanCentralAssistantsPending": "{count, plural, =1{1 pending invite} other{{count} pending invites}}",
   "@vanCentralAssistantsPending": {
@@ -3114,6 +3138,11 @@
   "@pushNotificationChannelName": {
     "description": "Android notification channel name shown in the system settings."
   },
+  "notificationsMarkAllRead": "Mark all as read",
+  "notificationsLoadError": "We couldn't load your notifications.",
+  "notificationsRetry": "Try again",
+  "notificationsEmptyTitle": "No notifications yet",
+  "notificationsEmptyMessage": "When something happens with your proposals and rides, we'll let you know here.",
   "upgradeWallTitle": "Update required",
   "upgradeWallBody": "A new version of Vanep is available. Update the app to keep using it.",
   "upgradeNoticeTitle": "Update available",

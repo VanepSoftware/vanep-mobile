@@ -6,6 +6,7 @@ import 'package:vanep_mobile/core/ui/vanep_feedback.dart';
 import 'package:vanep_mobile/l10n/app_localizations.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_cubit.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/cubit/van_central_state.dart';
+import 'package:vanep_mobile/modules/driver_van_central/presentation/pages/van_assistants_page.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_central_menus.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_register_prompt.dart';
 import 'package:vanep_mobile/modules/driver_van_central/presentation/widgets/van_selector.dart';
@@ -53,6 +54,7 @@ class VanCentralTab extends StatelessWidget {
         final van = cubit.state.selectedVan;
         if (van != null) openThenRefresh(() => onOpenVanDocuments(van));
       },
+      onOpenAssistants: () => openThenRefresh(() => openVanAssistants(context)),
       onOpenComingSoon: onOpenComingSoon,
       onAcceptingStudentsChanged: cubit.setAcceptingStudents,
     );

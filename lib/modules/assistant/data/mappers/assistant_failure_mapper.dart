@@ -2,7 +2,10 @@ import 'package:dio/dio.dart';
 
 import 'package:vanep_mobile/modules/assistant/domain/failures/assistant_failure.dart';
 
-AssistantFailure mapAssistantFailure(DioException exception) {
+AssistantFailure mapAssistantFailure(
+  DioException exception, {
+  AssistantFailure notFound = AssistantFailure.invalidInviteCode,
+}) {
   final response = exception.response;
   if (response == null) return AssistantFailure.network;
 
@@ -11,7 +14,7 @@ AssistantFailure mapAssistantFailure(DioException exception) {
     return AssistantFailure.unauthorized;
   }
   if (statusCode == 404) {
-    return AssistantFailure.invalidInviteCode;
+    return notFound;
   }
 
   final body = response.data;

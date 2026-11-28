@@ -31,6 +31,7 @@ import 'package:vanep_mobile/modules/driver_van_students/driver_van_students_con
 import 'package:vanep_mobile/modules/driver_documents/driver_documents_container.dart';
 import 'package:vanep_mobile/modules/driver_professional_data/driver_professional_data_container.dart';
 import 'package:vanep_mobile/modules/driver_vans/driver_vans_container.dart';
+import 'package:vanep_mobile/modules/notifications/notifications_container.dart';
 import 'package:vanep_mobile/modules/drivers/drivers_container.dart';
 import 'package:vanep_mobile/modules/driver_proposals/driver_proposals_container.dart';
 import 'package:vanep_mobile/modules/driver_search/driver_search_container.dart';
@@ -100,6 +101,7 @@ Future<void> main() async {
   registerClientProposalsDependencies(getIt);
   registerClientVansDependencies(getIt);
   registerDriverProposalsDependencies(getIt);
+  registerNotificationsDependencies(getIt);
 
   final themePreference = await getIt<GetThemePreference>()();
   runApp(
